@@ -1137,6 +1137,7 @@ class SoundConverterWindow:
     sensitive_names = [ "remove", "stop_button", "convert_button" ]
 
     def __init__(self, glade):
+    
         self.widget = glade.get_widget("window")
         self.filelist = FileList(self, glade)
         self.filelist_selection = self.filelist.widget.get_selection()
@@ -1234,7 +1235,12 @@ class SoundConverterWindow:
     on_prefs_button_clicked = on_preferences_activate
 
     def on_about_activate(self, *args):
-        self.about.show()
+        about = gtk.glade.XML(GLADE, "about").get_widget("about")
+        about.set_property("name", NAME)
+        about.set_property("version", VERSION)
+        about.show()
+        # TODO
+        #self.about.show()
 
     def selection_changed(self, *args):
         self.set_sensitive()
