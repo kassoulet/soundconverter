@@ -11,6 +11,7 @@ check:
 install:
 	install -d $(bindir) $(sharedir)
 	install -m 0644 soundconverter.glade $(sharedir)
+	install -m 0644 logo.png $(sharedir)
 	sed 's,^GLADE *=.*,GLADE = "$(sharedir)/soundconverter.glade",' \
 	    soundconverter.py > make-install-temp
 	install make-install-temp $(bindir)/soundconverter
