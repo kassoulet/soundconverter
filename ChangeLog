@@ -1,6 +1,9 @@
 2004-03-24  Gautier Portet <kassoulet@gmail.com>
 
 	* Gracefully handled gnome.vfs deprecation (#3649)
+	* Fixed broken "replace messy chars" button
+	* Make use of urllib.unquote where appropriate
+	  (makedirs, replace messy chars)
 
 2004-03-24  Gautier Portet <kassoulet@gmail.com>
 

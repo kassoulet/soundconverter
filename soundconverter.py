@@ -2,6 +2,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats. 
 # Copyright 2004 Lars Wirzenius
+# Copyright 2005 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +31,7 @@ import gnome
 import gst
 import gconf
 import gobject
+import urllib
 
 try:
     # gnome.vfs is deprecated
@@ -166,13 +168,14 @@ class TargetNameGenerator:
         result = pattern % dict
         if self.replace_messy_chars:
             s = ""
+            result = urllib.unquote(result)
             for c in result:
                 if c not in self.nice_chars:
                     s += "_"
                 else:
                     s += c
-            result = s
-        
+            result = urllib.quote(s)
+
         if self.folder is None:
             folder = root
         else:
@@ -541,7 +544,7 @@ class Converter(Decoder):
         
         tuple = urlparse.urlparse(self.output_filename)
         path = tuple[2]
-        dirname = os.path.dirname(path)
+        dirname = urllib.unquote( os.path.dirname(path) )
         if not os.path.exists(dirname):
             os.makedirs(dirname)
         #elif os.path.exists(path):
@@ -960,7 +963,7 @@ class PreferencesDialog:
             index = 0
         return self.basename_patterns[index][0]
         
-    def on_replace_only_impossible_chars_toggled(self, button):
+    def UNUSED_on_replace_only_impossible_chars_toggled(self, button):
         if button.get_active():
             self.set_int("replace-messy-chars", 0)
             self.update_example()
@@ -968,7 +971,9 @@ class PreferencesDialog:
     def on_replace_messy_chars_toggled(self, button):
         if button.get_active():
             self.set_int("replace-messy-chars", 1)
-            self.update_example()
+        else:
+            self.set_int("replace-messy-chars", 0)
+        self.update_example()
 
     def change_mime_type(self, mime_type):
         self.set_string("output-mime-type", mime_type)

@@ -1093,6 +1093,7 @@ track_title
 		      <child>
 			<widget class="GtkCheckButton" id="replace_messy_chars">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Remove all chars except letters, digits and ./_-</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Replace all messy characters</property>
 			  <property name="use_underline">True</property>
