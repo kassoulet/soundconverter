@@ -1,0 +1,39 @@
+.TH SOUNDCONVERTER 1 2004-12-31 "GNOME" "GNOME User's Manual"
+.SH NAME
+soundconverter \- convert sound files to other formats
+.SH SYNOPSIS
+.BR soundconverter " [options] [file...]"
+.SH DESCRIPTION
+.B soundconverter
+is a simple tool for converting sound files to other formats.
+It can work from the command line, but is really meant for interactive
+use in the GNOME environment.
+.SH OPTIONS
+.TP
+.BR \-h ", "\-\-help
+Print out a usage summary.
+.TP
+.BR \-b ", "\-\-batch
+Convert in batch mode, from command line, without a graphical user interface. 
+You can use this from, say, shell scripts.
+.TP
+.BR \-m ", "\-\-mime\-type " \fIarg\fR"
+Set the output MIME type for batch mode. 
+The default is audio/x-vorbis. 
+Note that you probably want to set the output suffix as well.
+.TP
+.BR \-q ", "\-\-quiet
+Be quiet. 
+Don't write normal output, only errors.
+.TP
+.BR \-s ", "\-\-suffix " \fIarg\fR"
+Set the output filename suffix for batch mode. 
+The default is .ogg.
+Note that the suffix does not affect the output MIME type.
+.TP
+.BR \-t ", "\-\-tags
+Show tags for input files instead of converting them. 
+This indicates command line batch mode and disables the 
+graphical user interface.
+.SH AUTHOR
+Lars Wirzenius (liw@iki.fi).

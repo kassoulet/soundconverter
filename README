@@ -1,0 +1,63 @@
+TODO: handle exceptions even when they happen in callbacks
+TODO: give time estimates for progress bar
+TODO: choose dir, add recursively input files that need to be converted
+TODO: read GNOME HIGv2 and fix accordingly
+
+
+        README for GNOME sound converter application
+        ============================================
+        
+This is my simple sound converter application for the GNOME environment.
+It is very rudimentary. It only reads from FLAC and Ogg Vorbis files and
+only outputs Ogg Vorbis files. The output files are put into the same
+directory as the input files, with the suffix replaced with ".ogg"
+(unless that file exists already, in which it adds a number also). The
+user interface is raw, but should be simple enough.
+
+This application is somewhat less fast than various command line tools.
+Not a whole lot, however, and not enough to make me worry about
+performance for the foreseeable future. If you want ultimate
+performance, the command line tools are always going to be preferable.
+
+
+        Supported audio formats
+        -----------------------
+
+All file formats that GStreamer can read from should now be supported
+(thanks to the wonderful "decodebin" element). The output formats are
+more restricted, however, since there is no "encodebin" element to
+magically convert to any format we might want.
+
+        Type                Supported?
+        
+        Ogg Vorbis          yes
+        FLAC                yes
+        Wave                yes
+        MP3                 no
+        
+Note that since Debian won't package MP3 encoders due to patent issues,
+I have no easy way to implement support for it. I would, however, accept
+a (clean) patch, if you can write the support yourself. Alternatively,
+if someone wants to give me access to a system that has the "lame"
+GStreamer element installed, I should be able to write the support
+myself. I am, however, too lazy to install GStreamer and the related
+external parts from source, since I have no use for MP3 myself.
+
+
+        Copyright and acknowledgements
+        ------------------------------
+
+Copyright 2004 Lars Wirzenius
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
