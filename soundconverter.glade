@@ -373,7 +373,8 @@
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="logo">logo.png</property>
-  <property name="copyright" translatable="yes">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;</property>
+  <property name="copyright" translatable="yes">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
+Copyright © 2005 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="comments" translatable="yes">Convert sound files.</property>
   <property name="authors">Lars Wirzenius
 Gautier Portet</property>
