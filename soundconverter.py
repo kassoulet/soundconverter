@@ -18,7 +18,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.7"
+VERSION = "0.7.1"
 GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
@@ -27,10 +27,16 @@ pygtk.require("2.0")
 import gtk
 import gtk.glade
 import gnome
-import gnomevfs
 import gst
 import gconf
 import gobject
+
+try:
+    # gnome.vfs is deprecated
+    import gnomevfs
+except ImportError:
+    import gnome.vfs
+    gnomevfs = gnome.vfs
 
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
