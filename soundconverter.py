@@ -18,8 +18,8 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.6"
-GLADE = "soundconverter.glade"
+VERSION = "0.7"
+GLADE = "soundconverter-new.glade"
 
 # GNOME and related stuff.
 import pygtk
@@ -27,7 +27,7 @@ pygtk.require("2.0")
 import gtk
 import gtk.glade
 import gnome
-import gnome.vfs
+import gnomevfs
 import gst
 import gconf
 import gobject
@@ -49,6 +49,8 @@ import string
 # Names of columns in the file list
 VISIBLE_COLUMNS = ["Artist", "Album", "Title"]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"]
+
+MP3_CBR, MP3_ABR, MP3_VBR = range(3)
 
 
 class SoundConverterException(Exception):
@@ -135,7 +137,7 @@ class TargetNameGenerator:
         self.replace_messy_chars = yes_or_no
         
     def get_target_name(self, sound_file):
-        u = gnome.vfs.URI(sound_file.get_uri())
+        u = gnomevfs.URI(sound_file.get_uri())
         root, ext = os.path.splitext(u.path)
         if u.host_port:
             host = "%s:%s" % (u.host_name, u.host_port)
@@ -445,9 +447,9 @@ class Decoder(Pipeline):
         # way.
         uri = self.get_input_uri()
         try:
-            info = gnome.vfs.get_file_info(uri)
+            info = gnomevfs.get_file_info(uri)
             return info.size
-        except gnome.vfs.NotFoundError:
+        except gnomevfs.NotFoundError:
             return 0
 
 
@@ -494,6 +496,8 @@ class Converter(Decoder):
         self.output_filename = output_filename
         self.output_type = output_type
         self.vorbis_quality = None
+        self.mp3_bitrate = None
+        self.mp3_mode = None
         self.mp3_quality = None
         self.added_pad_already = False
 
@@ -547,6 +551,12 @@ class Converter(Decoder):
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality
 
+    def set_mp3_mode(self, mode):
+        self.mp3_mode = mode
+
+    def set_mp3_quality(self, quality):
+        self.mp3_quality = quality
+
     def add_flac_encoder(self):
         return self.make_element("flacenc", "encoder")
 
@@ -556,11 +566,41 @@ class Converter(Decoder):
     def add_oggvorbis_encoder(self):
         vorbisenc = self.make_element("vorbisenc", "encoder")
         if self.vorbis_quality is not None:
-            vorbisenc.set_property("quality", self.vorbis_quality)
+            quality_setting = (0,0.2,0.3,0.6,0.8)
+            quality = quality_setting[self.vorbis_quality]
+            
+            vorbisenc.set_property("quality", quality)
+            print("setting vorbis quality: %f" % quality)
+            
         return vorbisenc
 
     def add_mp3_encoder(self):
+    
+        cbr_quality = (64, 96, 128, 192, 256)
+        vbr_quality = (9, 7, 5, 3, 1)
+    
         mp3enc = self.make_element("lame", "encoder")
+
+        # raise algorithm quality
+        mp3enc.set_property("quality",2)
+
+        if self.mp3_mode is not None:
+            
+            if self.mp3_mode == MP3_CBR:
+                mp3enc.set_property("vbr",0)
+                mp3enc.set_property("bitrate",cbr_quality[self.mp3_quality])
+                #print "lame: ", "CBR", cbr_quality[self.mp3_quality]
+            
+            elif self.mp3_mode == MP3_ABR:
+                mp3enc.set_property("vbr",3)
+                mp3enc.set_property("vbr-mean-bitrate",cbr_quality[self.mp3_quality])
+                #print "lame: ", "ABR", cbr_quality[self.mp3_quality]
+
+            elif self.mp3_mode == MP3_VBR:
+                mp3enc.set_property("vbr",4)
+                mp3enc.set_property("vbr-quality",vbr_quality[self.mp3_quality])
+                #print "lame: ", "VBR", vbr_quality[self.mp3_quality]
+        
         return mp3enc
 
 class FileList:
@@ -683,7 +723,11 @@ class PreferencesDialog:
         "replace-messy-chars": 0,
         "output-mime-type": "audio/x-vorbis",
         "output-suffix": ".ogg",
-        "vorbis-quality": 0.3,
+        "vorbis-quality": 6,    # quality*10
+        "mp3-mode": 2,          # 0: cbr, 1: abr, 2: vbr
+        "mp3-cbr-quality": 2,
+        "mp3-abr-quality": 2,
+        "mp3-vbr-quality": 2,
     }
 
     sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -696,6 +740,7 @@ class PreferencesDialog:
         self.into_selected_folder = glade.get_widget("into_selected_folder")
         self.target_folder_chooser = glade.get_widget("target_folder_chooser")
         self.example = glade.get_widget("example_filename")
+        self.quality_tabs = glade.get_widget("quality_tabs")
         self.set_widget_initial_values(glade)
         
         self.sensitive_widgets = {}
@@ -705,6 +750,9 @@ class PreferencesDialog:
         self.set_sensitive()
 
     def set_widget_initial_values(self, glade):
+        
+        self.quality_tabs.set_show_tabs(False)
+        
         if self.get_int("same-folder-as-input"):
             w = glade.get_widget("same_folder_as_input")
         else:
@@ -728,10 +776,15 @@ class PreferencesDialog:
 
         if self.get_int("replace-messy-chars"):
             w = glade.get_widget("replace_messy_chars")
-        else:
-            w = glade.get_widget("replace_only_impossible_chars")
-        w.set_active(True)
-    
+            w.set_active(True)
+
+        # desactivate mp3 output if encoder plugin is not present
+        if not gst.element_factory_find("lame"):
+            w = glade.get_widget("output_mime_type_mp3")
+            w.set_sensitive(False)
+            
+
+
         mime_type = self.get_string("output-mime-type")
         widget_name = {
                         "audio/x-vorbis": "output_mime_type_ogg_vorbis",
@@ -742,9 +795,16 @@ class PreferencesDialog:
         if widget_name:
             w = glade.get_widget(widget_name)
             w.set_active(True)
+            self.change_mime_type(mime_type)
             
         w = glade.get_widget("vorbis_quality")
-        w.set_value(self.get_float("vorbis-quality"))
+        w.set_active(self.get_int("vorbis-quality"))
+
+        self.mp3_quality = glade.get_widget("mp3_quality")
+        w = glade.get_widget("mp3_mode")
+        mode = self.get_int("mp3-mode")
+        w.set_active(mode)
+        self.change_mp3_mode(mode)
         
         w = glade.get_widget("basename_pattern")
         model = w.get_model()
@@ -773,7 +833,12 @@ class PreferencesDialog:
 
     def generate_filename(self, sound_file):
         output_type = self.get_string("output-mime-type")
-        output_suffix = self.get_string("output-suffix")
+        output_suffix = {
+                        "audio/x-vorbis": ".ogg",
+                        "audio/x-flac": ".flac",
+                        "audio/x-wav": ".wav",
+                        "audio/mpeg": ".mp3",
+                    }.get(output_type, None)
 
         generator = TargetNameGenerator()
         generator.set_target_suffix(output_suffix)
@@ -793,6 +858,9 @@ class PreferencesDialog:
         return generator.get_target_name(sound_file)
 
     def set_sensitive(self):
+    
+        return
+    
         for widget in self.sensitive_widgets.values():
             widget.set_sensitive(False)
         
@@ -896,29 +964,67 @@ class PreferencesDialog:
             self.set_int("replace-messy-chars", 1)
             self.update_example()
 
-    def handle_mime_type_button(self, button, mime_type, suffix):
-        if button.get_active():
-            self.set_string("output-mime-type", mime_type)
-            self.set_string("output-suffix", suffix)
-            self.set_sensitive()
-            self.update_example()
+    def change_mime_type(self, mime_type):
+        self.set_string("output-mime-type", mime_type)
+        self.set_sensitive()
+        self.update_example()
+        tabs = {
+                        "audio/x-vorbis": 0,
+                        "audio/mpeg": 1,
+                        "audio/x-flac": 2,
+                        "audio/x-wav": 3,
+        }
+        self.quality_tabs.set_current_page(tabs[mime_type])
+        
+        print "setting mime:", mime_type
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
-        self.handle_mime_type_button(button, "audio/x-vorbis", ".ogg")
+        if button.get_active():
+            self.change_mime_type("audio/x-vorbis")
 
     def on_output_mime_type_flac_toggled(self, button):
-        self.handle_mime_type_button(button, "audio/x-flac", ".flac")
+        if button.get_active():
+            self.change_mime_type("audio/x-flac")
 
     def on_output_mime_type_wav_toggled(self, button):
-        self.handle_mime_type_button(button, "audio/x-wav", ".wav")
+        if button.get_active():
+            self.change_mime_type("audio/x-wav")
 
     def on_output_mime_type_mp3_toggled(self, button):
-        self.handle_mime_type_button(button, "audio/mpeg", ".mp3")
+        if button.get_active():
+            self.change_mime_type("audio/mpeg")
 
-    def on_vorbis_quality_value_changed(self, button):
-        self.set_float("vorbis-quality", button.get_value())
+    def UNUSED_on_vorbis_quality_value_changed(self, combobox):
+        self.set_int("vorbis-quality", combobox.get_active())
+        self.update_example()
+        
+    def on_vorbis_quality_changed(self, combobox):
+        self.set_int("vorbis-quality", combobox.get_active())
         self.update_example()
 
+    def change_mp3_mode(self, mode):
+        quality = ( "mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
+        self.mp3_quality.set_active(self.get_int(quality[mode]))
+
+    def on_mp3_mode_changed(self, combobox):
+        mode = combobox.get_active()
+        self.set_int("mp3-mode", mode)
+        self.change_mp3_mode(mode)
+
+    def on_mp3_quality_changed(self, combobox):
+        quality = ( "mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
+        mode = self.get_int("mp3-mode")
+        self.set_int(quality[mode], combobox.get_active())
+
+    def UNUSED_on_output_mime_type_changed(self, combobox):
+        types = (
+        ("audio/x-vorbis", ".ogg"),
+        ("audio/mpeg", ".mp3"),
+        ("audio/x-flac", ".flac"),
+        ("audio/x-wav", ".wav")
+        )
+        self.handle_mime_type_button( types[combobox.get_active()][0],
+                                      types[combobox.get_active()][1])
 
 class ConverterQueue(TaskQueue):
 
@@ -937,7 +1043,12 @@ class ConverterQueue(TaskQueue):
         output_filename = self.window.prefs.generate_filename(sound_file)
         c = Converter(sound_file, output_filename, 
                       self.window.prefs.get_string("output-mime-type"))
-        c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
+        c.set_vorbis_quality(self.window.prefs.get_int("vorbis-quality"))
+        
+        quality = ("mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
+        mode = self.window.prefs.get_int("mp3-mode")
+        c.set_mp3_mode(mode)
+        c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
         TaskQueue.add(self, c)
         self.total_bytes += c.get_size_in_bytes()
 

@@ -1,4 +1,20 @@
+2004-03-17  Gautier Portet <kassoulet@gmail.com>
+
+	* soundconverter.py: removed xing header generation when outputing mp3, since it seems
+	  to break xmms mad decoder
+	* soundconverter.glade: changed the preference dialog, for a cleaner one  
+
+2004-03-15  Gautier Portet <kassoulet@gmail.com>
+
+	* added the quality settings for vorbis and mp3
+	* soundconverter.py: some code cleanup
+
+2004-03-14  Gautier Portet <kassoulet@gmail.com>
+
+	* soundconverter.py: changed deprecated import gnome.vfs to gnomevfs
+
 2004-02-27  Gautier Portet <kassoulet@gmail.com>
+
 	* Added basic mp3 support
 
 2004-12-31  Lars Wirzenius  <liw@iki.fi>
