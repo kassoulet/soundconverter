@@ -1,7 +1,17 @@
+2004-03-23  Gautier Portet <kassoulet@gmail.com>
+
+	* soundconverter.py: added a dialog asking what to do when a file
+	exists.  
+
+2004-03-22  Gautier Portet <kassoulet@gmail.com>
+
+	* soundconverter.glade: added an Add button on toolbar, added
+	separators  
+
 2004-03-17  Gautier Portet <kassoulet@gmail.com>
 
-	* soundconverter.py: removed xing header generation when outputing mp3, since it seems
-	  to break xmms mad decoder
+	* soundconverter.py: removed xing header generation when outputing mp3, 
+	since it seems 	to break xmms mad decoder
 	* soundconverter.glade: changed the preference dialog, for a cleaner one  
 
 2004-03-15  Gautier Portet <kassoulet@gmail.com>

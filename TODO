@@ -1,0 +1,11 @@
+ . add better quality setting for each format.
+ * HIG compliant interface
+ * progress dialog
+ * handle error when overwriting a file
+ * autotools, l12n
+ * handle exceptions even when they happen in callbacks
+ * give time estimates for progress bar
+ * choose dir, add recursively input files that need to be converted
+ * fix: the program's options aren't printed with --help
+
+snip:

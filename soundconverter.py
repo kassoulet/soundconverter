@@ -19,7 +19,7 @@
 
 NAME = "SoundConverter"
 VERSION = "0.7"
-GLADE = "soundconverter-new.glade"
+GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
 import pygtk
@@ -100,7 +100,6 @@ class TargetNameCreationFailure(SoundConverterException):
     def __init__(self, name):
         SoundConverterException.__init__(self, "File exists.",
                                          "The file %s exists already")
-
 
 class TargetNameGenerator:
 
@@ -216,6 +215,7 @@ class ErrorPrinter:
 
 
 error = None
+
 
 
 class BackgroundTask:
@@ -538,8 +538,8 @@ class Converter(Decoder):
         dirname = os.path.dirname(path)
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        elif os.path.exists(path):
-            raise ConversionTargetExists(self.output_filename)
+        #elif os.path.exists(path):
+        #    raise ConversionTargetExists(self.output_filename)
 
         sink = self.make_element("gnomevfssink", "sink")
         sink.set_property("location", self.output_filename)
@@ -1026,6 +1026,15 @@ class PreferencesDialog:
         self.handle_mime_type_button( types[combobox.get_active()][0],
                                       types[combobox.get_active()][1])
 
+
+class ConverterQueueCanceled(SoundConverterException):
+
+    """Exception thrown when a ConverterQueue is canceled."""
+
+    def __init__(self):
+        SoundConverterException.__init__(self, "Convertion Canceled", "")
+
+
 class ConverterQueue(TaskQueue):
 
     """Background task for converting many files."""
@@ -1041,6 +1050,35 @@ class ConverterQueue(TaskQueue):
 
     def add(self, sound_file):
         output_filename = self.window.prefs.generate_filename(sound_file)
+        
+        path = urlparse.urlparse(output_filename) [2]
+        
+        if os.path.exists(path):
+
+            dialog = self.window.existsdialog
+
+            msg = \
+            "The output file <i>%s</i> " \
+            "exists already.\n" \
+            "Do you want to skip the file, overwrite it or cancel the conversion?\n" % \
+            ( os.path.basename(path) )
+
+            dialog.message.set_markup(msg)
+
+            result = dialog.run()
+            dialog.hide()
+            if result == 1: 
+                # overwrite
+                os.remove(path)
+            elif result == 0: 
+                # skip file
+                return
+            else:
+                # cancel operation
+                # TODO
+                raise ConverterQueueCanceled()
+                #self.stop()
+            
         c = Converter(sound_file, output_filename, 
                       self.window.prefs.get_string("output-mime-type"))
         c.set_vorbis_quality(self.window.prefs.get_int("vorbis-quality"))
@@ -1068,11 +1106,8 @@ class ConverterQueue(TaskQueue):
         total_time = self.run_finish_times[4] - self.run_start_times[4]
         user_time = self.run_finish_times[0] - self.run_start_times[0]
         system_time = self.run_finish_times[1] - self.run_start_times[1]
-        self.window.set_status("Conversion done. " +
-                               "%s total time (%s user, %s system)" %
-                               (self.format_time(total_time),
-                                self.format_time(user_time),
-                                self.format_time(system_time)))
+        self.window.set_status("Conversion done. ( in %s )" % 
+                               self.format_time(total_time))
 
     def format_time(self, seconds):
         units = [(86400, "d"),
@@ -1107,6 +1142,7 @@ class SoundConverterWindow:
         self.filelist_selection = self.filelist.widget.get_selection()
         self.filelist_selection.connect("changed", self.selection_changed)
         self.existsdialog = glade.get_widget("existsdialog")
+        self.existsdialog.message = glade.get_widget("exists_message")
         self.existslabel = glade.get_widget("existslabel")
         self.progressbar = glade.get_widget("progressbar")
         self.status = glade.get_widget("statustext")
@@ -1173,10 +1209,14 @@ class SoundConverterWindow:
         self.set_sensitive()
 
     def on_convert_button_clicked(self, *args):
-        for fields in self.filelist.get_files():
-            self.converter.add(fields["META"])
-        self.converter.run()
-        self.set_sensitive()
+        try:
+            for fields in self.filelist.get_files():
+                self.converter.add(fields["META"])
+        except ConverterQueueCanceled:
+            print "canceling conversion."
+        else:
+            self.converter.run()
+            self.set_sensitive()
         
     def on_stop_button_clicked(self, *args):
         self.converter.stop()
@@ -1190,7 +1230,7 @@ class SoundConverterWindow:
 
     def on_preferences_activate(self, *args):
         self.prefs.run()
-
+        
     on_prefs_button_clicked = on_preferences_activate
 
     def on_about_activate(self, *args):
