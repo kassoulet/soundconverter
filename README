@@ -1,7 +1,3 @@
-TODO: handle exceptions even when they happen in callbacks
-TODO: give time estimates for progress bar
-TODO: choose dir, add recursively input files that need to be converted
-TODO: read GNOME HIGv2 and fix accordingly
 
 
         README for GNOME sound converter application
@@ -33,7 +29,7 @@ magically convert to any format we might want.
         Ogg Vorbis          yes
         FLAC                yes
         Wave                yes
-        MP3                 no
+        MP3                 yes (only 128kbps constant birate)
         
 Note that since Debian won't package MP3 encoders due to patent issues,
 I have no easy way to implement support for it. I would, however, accept

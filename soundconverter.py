@@ -18,7 +18,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.5"
+VERSION = "0.6"
 GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
@@ -517,6 +517,14 @@ class Converter(Decoder):
         pad.link(audioconverter.get_pad("sink"))
         
         encoder = self.encoders[self.output_type]()
+        if not encoder:
+            # TODO: add proper error management when an encoder cannot be created
+            dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+                        gtk.BUTTONS_OK, " Cannot create a decoder for '%s' format." % \
+                        self.output_type )
+            dialog.run()
+            dialog.hide()
+            return
         self.add(encoder)
         print "using encoder: %s (%s)" % \
             (encoder.get_factory().get_name(), encoder.get_factory().get_longname())
@@ -553,9 +561,6 @@ class Converter(Decoder):
 
     def add_mp3_encoder(self):
         mp3enc = self.make_element("lame", "encoder")
-        mp3enc.set_property("vbr",False)
-        mp3enc.set_property("bitrate",192/2)
-        #mp3enc.set_property("mode",3)
         return mp3enc
 
 class FileList:
