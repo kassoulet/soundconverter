@@ -1,9 +1,19 @@
+2004-04-15  Gautier Portet <kassoulet@gmail.com>
+
+	* reverted quality setting to 'real-world' quantities
+	  -> values stored in gconf are now the values passed
+       	  to gstreamer and not meaningless enums.
+       	* added a label showing an aproximate bitrate in the
+          preference window
+
+
 2004-03-24  Gautier Portet <kassoulet@gmail.com>
 
 	* Gracefully handled gnome.vfs deprecation (#3649)
 	* Fixed broken "replace messy chars" button
-	* Make use of urllib.unquote where appropriate
+	* Make use of urllib.unquote where appropriate (#3655)
 	  (makedirs, replace messy chars)
+	* Making release version 0.7.1 
 
 2004-03-24  Gautier Portet <kassoulet@gmail.com>
 

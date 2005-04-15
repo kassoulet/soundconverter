@@ -19,7 +19,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.7.1"
+VERSION = "0.7.2"
 GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
@@ -32,6 +32,8 @@ import gst
 import gconf
 import gobject
 import urllib
+
+import time
 
 try:
     # gnome.vfs is deprecated
@@ -575,40 +577,25 @@ class Converter(Decoder):
     def add_oggvorbis_encoder(self):
         vorbisenc = self.make_element("vorbisenc", "encoder")
         if self.vorbis_quality is not None:
-            quality_setting = (0,0.2,0.3,0.6,0.8)
-            quality = quality_setting[self.vorbis_quality]
-            
-            vorbisenc.set_property("quality", quality)
-            print("setting vorbis quality: %f" % quality)
+            vorbisenc.set_property("quality", self.vorbis_quality)
+            print("setting vorbis quality: %f" % self.vorbis_quality)
             
         return vorbisenc
 
     def add_mp3_encoder(self):
-    
-        cbr_quality = (64, 96, 128, 192, 256)
-        vbr_quality = (9, 7, 5, 3, 1)
-    
         mp3enc = self.make_element("lame", "encoder")
 
         # raise algorithm quality
         mp3enc.set_property("quality",2)
 
         if self.mp3_mode is not None:
-            
-            if self.mp3_mode == MP3_CBR:
-                mp3enc.set_property("vbr",0)
-                mp3enc.set_property("bitrate",cbr_quality[self.mp3_quality])
-                #print "lame: ", "CBR", cbr_quality[self.mp3_quality]
-            
-            elif self.mp3_mode == MP3_ABR:
-                mp3enc.set_property("vbr",3)
-                mp3enc.set_property("vbr-mean-bitrate",cbr_quality[self.mp3_quality])
-                #print "lame: ", "ABR", cbr_quality[self.mp3_quality]
-
-            elif self.mp3_mode == MP3_VBR:
-                mp3enc.set_property("vbr",4)
-                mp3enc.set_property("vbr-quality",vbr_quality[self.mp3_quality])
-                #print "lame: ", "VBR", vbr_quality[self.mp3_quality]
+            properties = {
+                "cbr" : (0,"bitrate"),
+                "abr" : (3,"vbr-mean-bitrate"),
+                "vbr" : (4,"vbr-bitrate"),
+            }
+            mp3enc.set_property("vbr", properties[self.mp3_mode][0])
+            mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
         
         return mp3enc
 
@@ -732,7 +719,7 @@ class PreferencesDialog:
         "replace-messy-chars": 0,
         "output-mime-type": "audio/x-vorbis",
         "output-suffix": ".ogg",
-        "vorbis-quality": 6,    # quality*10
+        "vorbis-quality": 0.6,
         "mp3-mode": 2,          # 0: cbr, 1: abr, 2: vbr
         "mp3-cbr-quality": 2,
         "mp3-abr-quality": 2,
@@ -749,7 +736,12 @@ class PreferencesDialog:
         self.into_selected_folder = glade.get_widget("into_selected_folder")
         self.target_folder_chooser = glade.get_widget("target_folder_chooser")
         self.example = glade.get_widget("example_filename")
+        self.aprox_bitrate = glade.get_widget("aprox_bitrate")
         self.quality_tabs = glade.get_widget("quality_tabs")
+
+        self.target_bitrate = None
+
+        self.convert_setting_from_old_version()
         self.set_widget_initial_values(glade)
         
         self.sensitive_widgets = {}
@@ -757,6 +749,46 @@ class PreferencesDialog:
             self.sensitive_widgets[name] = glade.get_widget(name)
             assert self.sensitive_widgets[name] != None
         self.set_sensitive()
+
+
+    def convert_setting_from_old_version(self):
+        """ try to convert previous settings"""
+        
+        # TODO: why not just reseting the settings if we cannot load them ?
+        
+        # vorbis quality was stored as an int enum
+        try:
+            self.get_float("vorbis-quality")
+        except gobject.GError:
+            old_quality = self.get_int("vorbis-quality")
+            self.gconf.unset(self.path("vorbis-quality"))
+            quality_setting = (0,0.2,0.3,0.6,0.8)
+            self.set_float("vorbis-quality", quality_setting[old_quality])
+            
+        # mp3 quality was stored as an int enum
+        cbr = self.get_int("mp3-cbr-quality")
+        if cbr <= 4:
+
+            abr = self.get_int("mp3-abr-quality")
+            vbr = self.get_int("mp3-vbr-quality")
+
+            cbr_quality = (64, 96, 128, 192, 256)
+            vbr_quality = (9, 7, 5, 3, 1)
+
+            self.set_int("mp3-cbr-quality", cbr_quality[cbr])
+            self.set_int("mp3-abr-quality", cbr_quality[abr])
+            self.set_int("mp3-vbr-quality", vbr_quality[vbr])
+
+        # mp3 mode was stored as an int enum
+        try:
+            self.get_string("mp3-mode")
+        except gobject.GError:
+            old_mode = self.get_int("mp3-mode")
+            self.gconf.unset(self.path("mp3-mode"))
+            modes = ("cbr","abr","vbr")
+            self.set_string("mp3-mode", modes[old_mode])
+
+        self.gconf.clear_cache()
 
     def set_widget_initial_values(self, glade):
         
@@ -792,8 +824,6 @@ class PreferencesDialog:
             w = glade.get_widget("output_mime_type_mp3")
             w.set_sensitive(False)
             
-
-
         mime_type = self.get_string("output-mime-type")
         widget_name = {
                         "audio/x-vorbis": "output_mime_type_ogg_vorbis",
@@ -807,13 +837,13 @@ class PreferencesDialog:
             self.change_mime_type(mime_type)
             
         w = glade.get_widget("vorbis_quality")
-        w.set_active(self.get_int("vorbis-quality"))
+        #w.set_active(self.get_int("vorbis-quality"))
 
         self.mp3_quality = glade.get_widget("mp3_quality")
-        w = glade.get_widget("mp3_mode")
-        mode = self.get_int("mp3-mode")
-        w.set_active(mode)
-        self.change_mp3_mode(mode)
+        #w = glade.get_widget("mp3_mode")
+        #mode = self.get_int("mp3-mode")
+        #w.set_active(mode)
+        #self.change_mp3_mode(mode)
         
         w = glade.get_widget("basename_pattern")
         model = w.get_model()
@@ -829,6 +859,41 @@ class PreferencesDialog:
         self.into_selected_folder.set_label("Into folder %s" % 
                                         self.get_string("selected-folder"))
 
+
+    def get_bitrate_from_settings(self):
+        bitrate = 0
+        aprox = True
+        mode = self.get_string("mp3-mode")
+
+        mime_type = self.get_string("output-mime-type")
+        
+        if mime_type == "audio/x-vorbis":
+            quality = self.get_float("vorbis-quality")*10
+            quality = int(quality)
+            bitrates = (64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500)
+            bitrate = bitrates[quality]
+            
+        elif mime_type == "audio/mpeg":
+            quality = {
+                "cbr": "mp3-cbr-quality",
+                "abr": "mp3-abr-quality",
+                "vbr": "mp3-vbr-quality"
+            }
+            bitrate = self.get_int(quality[mode])
+            if mode == "vbr":
+                bitrate = 666
+            if mode == "cbr":
+                aprox = False
+
+        if bitrate:
+            if aprox:
+                return "~%d" % bitrate
+            else:
+                return "%d" % bitrate
+        else:
+            return "N/A"
+
+
     def update_example(self):
         sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
         sound_file.add_tags({
@@ -839,6 +904,10 @@ class PreferencesDialog:
             "track-count": 11L,
         })
         self.example.set_text(self.generate_filename(sound_file))
+        
+        bitrate = self.get_bitrate_from_settings()
+        markup = "<small>Target bitrate: %s</small>" % self.get_bitrate_from_settings()
+        self.aprox_bitrate.set_markup( markup )
 
     def generate_filename(self, sound_file):
         output_type = self.get_string("output-mime-type")
@@ -996,7 +1065,7 @@ class PreferencesDialog:
     def on_output_mime_type_flac_toggled(self, button):
         if button.get_active():
             self.change_mime_type("audio/x-flac")
-
+        
     def on_output_mime_type_wav_toggled(self, button):
         if button.get_active():
             self.change_mime_type("audio/x-wav")
@@ -1007,25 +1076,66 @@ class PreferencesDialog:
 
     def UNUSED_on_vorbis_quality_value_changed(self, combobox):
         self.set_int("vorbis-quality", combobox.get_active())
-        self.update_example()
         
     def on_vorbis_quality_changed(self, combobox):
-        self.set_int("vorbis-quality", combobox.get_active())
+        quality = (0,0.2,0.4,0.6,0.8)
+        self.set_float("vorbis-quality", quality[combobox.get_active()])
+        
         self.update_example()
 
     def change_mp3_mode(self, mode):
-        quality = ( "mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
-        self.mp3_quality.set_active(self.get_int(quality[mode]))
+        keys = { 
+            "cbr": "mp3-cbr-quality",
+            "abr": "mp3-abr-quality",
+            "vbr": "mp3-vbr-quality",
+        }
+        quality = self.get_int(keys[mode])
+        
+        print "\nchange mp3 mode"
+        print "quality:", quality
+        
+        quality_to_preset = {
+            "cbr": (64, 96, 128, 192, 256),
+            "abr": (64, 96, 128, 192, 256),
+            "vbr": (1, 3, 5, 7, 9), # inverted !
+        }
+
+        active = 0
+        for i in quality_to_preset[mode]:
+            print "  " , quality , " <-> " , i
+            if quality <= i:
+                print "I choose #", active, " = ", quality_to_preset[mode][active]
+                break
+            active+=1
+            
+        if mode == "vbr": 
+            active = 4-active
+
+        self.mp3_quality.set_active(active)
+        self.update_example()
 
     def on_mp3_mode_changed(self, combobox):
-        mode = combobox.get_active()
-        self.set_int("mp3-mode", mode)
+        mode = ("cbr","abr","vbr")[combobox.get_active()]
+        self.set_string("mp3-mode", mode)
         self.change_mp3_mode(mode)
 
     def on_mp3_quality_changed(self, combobox):
-        quality = ( "mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
-        mode = self.get_int("mp3-mode")
-        self.set_int(quality[mode], combobox.get_active())
+        keys = {
+            "cbr": "mp3-cbr-quality",
+            "abr": "mp3-abr-quality",
+            "vbr": "mp3-vbr-quality"
+        }
+        quality = {
+            "cbr": (64, 96, 128, 192, 256),
+            "abr": (64, 96, 128, 192, 256),
+            "vbr": (9, 7, 5, 3, 1),
+        }
+        mode = self.get_string("mp3-mode")
+        self.set_int(keys[mode], quality[mode][combobox.get_active()])
+
+        self.update_example()
+        print "%s[%d] = %s" % (keys[mode], combobox.get_active(), quality[mode][combobox.get_active()])
+
 
     def UNUSED_on_output_mime_type_changed(self, combobox):
         types = (
@@ -1092,10 +1202,14 @@ class ConverterQueue(TaskQueue):
             
         c = Converter(sound_file, output_filename, 
                       self.window.prefs.get_string("output-mime-type"))
-        c.set_vorbis_quality(self.window.prefs.get_int("vorbis-quality"))
+        c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
         
-        quality = ("mp3-cbr-quality", "mp3-abr-quality", "mp3-vbr-quality")
-        mode = self.window.prefs.get_int("mp3-mode")
+        quality = {
+            "cbr": "mp3-cbr-quality",
+            "abr": "mp3-abr-quality",
+            "vbr": "mp3-vbr-quality"
+        }
+        mode = self.window.prefs.get_string("mp3-mode")
         c.set_mp3_mode(mode)
         c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
         TaskQueue.add(self, c)
