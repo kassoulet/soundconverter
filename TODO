@@ -2,7 +2,6 @@
  
  * use a raw quality setting
  * display aprox. bitrate
- * optimise the speed
  * choose dir, add recursively input files that need to be converted
  * give time estimates for progress bar
  * HIG compliant interface
@@ -12,4 +11,5 @@
  * add support for GNOME encoding profiles
 
  * bug: the program's options aren't printed with --help
- * bug: the dialog can only be showed once
+
+ -ok- bug: the dialog can only be showed once
