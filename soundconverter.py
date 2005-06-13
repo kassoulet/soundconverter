@@ -28,6 +28,7 @@ pygtk.require("2.0")
 import gtk
 import gtk.glade
 import gnome
+import gnome.ui
 import gst
 import gconf
 import gobject
@@ -55,9 +56,22 @@ import urllib
 import urlparse
 import string
 
+#localization
+import locale
+import gettext
+PACKAGE = "soundconverter"
+gettext.bindtextdomain(PACKAGE,'/usr/share/locale')
+locale.setlocale(locale.LC_ALL,'')
+gettext.textdomain(PACKAGE)
+gettext.install(PACKAGE,localedir=None,unicode=1)
+
+gtk.glade.bindtextdomain(PACKAGE,'/usr/share/locale')
+gtk.glade.textdomain(PACKAGE)
+
+TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-VISIBLE_COLUMNS = ["Artist", "Album", "Title"]
+VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"]
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
@@ -108,8 +122,8 @@ class TargetNameCreationFailure(SoundConverterException):
     """Exception thrown when TargetNameGenerator can't create name."""
 
     def __init__(self, name):
-        SoundConverterException.__init__(self, "File exists.",
-                                         "The file %s exists already")
+        SoundConverterException.__init__(self, _("File exists."),
+                                         _("The file %s exists already"))
 
 class TargetNameGenerator:
 
@@ -218,7 +232,7 @@ class ErrorDialog:
 class ErrorPrinter:
 
     def show(self, primary, secondary):
-        sys.stderr.write("\n\nError: %s\n%s\n" % (primary, secondary))
+        sys.stderr.write(_("\n\nError: %s\n%s\n") % (primary, secondary))
         sys.exit(1)
 
     def show_exception(self, e):
@@ -245,7 +259,7 @@ class BackgroundTask:
         except SoundConverterException, e:
             error.show_exception(e)
             return
-        self.id = gtk.idle_add(self.do_work)
+        self.id = gobject.idle_add(self.do_work)
         self.run_start_times = os.times()
     
     def do_work(self):
@@ -264,7 +278,7 @@ class BackgroundTask:
     def stop(self):
         """Stop task processing. Finish() is not called."""
         if 'id' in dir(self) and self.id is not None:
-            gtk.idle_remove(self.id)
+            gobject.source_remove(self.id)
             self.id = None
 
     def setup(self):
@@ -358,18 +372,14 @@ class TaskQueue(BackgroundTask):
 class NoLink(SoundConverterException):
     
     def __init__(self):
-        SoundConverterException.__init__(self, "Internal error",
-                                "Couldn't link GStreamer elements. " +
-                                "Please report this as a bug.")
+        SoundConverterException.__init__(self, _("Internal error"),
+                                _("Couldn't link GStreamer elements.\n Please report this as a bug."))
 
 class UnknownType(SoundConverterException):
     
     def __init__(self, uri, mime_type):
-        SoundConverterException.__init__(self, "Unknown type %s" % mime_type,
-                                ("The file %s is of an unknown type. " +
-                                "Please ask the developers to add support " +
-                                "for files of this type if it is important " +
-                                "to you.") % uri)
+        SoundConverterException.__init__(self, _("Unknown type %s") % mime_type,
+                                (_("The file %s is of an unknown type.\n Please ask the developers to add support\n for files of this type if it is important\n to you.")) % uri)
 
 
 class Pipeline(BackgroundTask):
@@ -478,7 +488,11 @@ class TagReader(Decoder):
 
     def found_tag(self, decoder, something, taglist):
         self.sound_file.add_tags(taglist)
-        self.found_tags = True
+        # tags from ogg vorbis files comes with two callbacks,
+        # the first callback containing just the stream serial number.
+        # The second callback contains the tags we're interested in.
+        if not taglist.has_key('serial'):
+            self.found_tags = True
 
     def work(self):
         return Decoder.work(self) and not self.found_tags
@@ -492,9 +506,8 @@ class TagReader(Decoder):
 class ConversionTargetExists(SoundConverterException):
 
     def __init__(self, uri):
-        SoundConverterException.__init__(self, "Target exists.",
-                                         ("The output file %s already " +
-                                         "exists.") % uri)
+        SoundConverterException.__init__(self, _("Target exists."),
+                                         (_("The output file %s already exists.")) % uri)
 
 
 class Converter(Decoder):
@@ -645,7 +658,7 @@ class FileList:
                     uri = uri.strip()
                     if uri:
                         self.add_file(SoundFile(uri))
-                context.finish(gtk.TRUE, gtk.FALSE, time)
+                context.finish(True, False, time)
 
     def get_files(self):
         files = []
@@ -661,6 +674,7 @@ class FileList:
     def add_file(self, sound_file):
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.append_file)
+	
         self.tagreaders.add(tagreader)
         if not self.tagreaders.is_running():
             self.tagreaders.run()
@@ -670,11 +684,11 @@ class FileList:
 
         fields = {}
         for key in ALL_COLUMNS:
-            fields[key] = "unknown"
+            fields[key] = _("unknown")
         fields["META"] = sound_file
 
-        for field, tagname in [("Title", "title"), ("Artist", "artist"),
-                               ("Album", "album")]:
+        for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
+                               (_("Album"), "album")]:
             fields[field] = sound_file.get_tag(tagname, fields[field])
 
         iter = self.model.append()
@@ -699,15 +713,15 @@ class PreferencesDialog:
     root = "/apps/SoundConverter"
     
     basename_patterns = [
-        ("%(.inputname)s", "Same as input, but with new suffix"),
-        ("%(track-number)02d-%(title)s", "Track number - title"),
-        ("%(title)s", "Track title"),
-        ("%(artist)s-%(title)s", "Artist - title"),
+        ("%(.inputname)s", _("Same as input, but with new suffix")),
+        ("%(track-number)02d-%(title)s", _("Track number - title")),
+        ("%(title)s", _("Track title")),
+        ("%(artist)s-%(title)s", _("Artist - title")),
     ]
     
     subfolder_patterns = [
-        ("%(artist)s/%(album)s", "artist/album"),
-        ("%(artist)s-%(album)s", "artist-album"),
+        ("%(artist)s/%(album)s", _("artist/album")),
+        ("%(artist)s-%(album)s", _("artist-album")),
     ]
     
     defaults = {
@@ -856,7 +870,7 @@ class PreferencesDialog:
         self.update_example()
 
     def update_selected_folder(self):
-        self.into_selected_folder.set_label("Into folder %s" % 
+        self.into_selected_folder.set_label(_("Into folder %s") % 
                                         self.get_string("selected-folder"))
 
 
@@ -906,7 +920,7 @@ class PreferencesDialog:
         self.example.set_text(self.generate_filename(sound_file))
         
         bitrate = self.get_bitrate_from_settings()
-        markup = "<small>Target bitrate: %s</small>" % self.get_bitrate_from_settings()
+        markup = _("<small>Target bitrate: %s</small>") % self.get_bitrate_from_settings()
         self.aprox_bitrate.set_markup( markup )
 
     def generate_filename(self, sound_file):
@@ -1056,7 +1070,7 @@ class PreferencesDialog:
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
         
-        print "setting mime:", mime_type
+        print _("setting mime:"), mime_type
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
@@ -1091,8 +1105,8 @@ class PreferencesDialog:
         }
         quality = self.get_int(keys[mode])
         
-        print "\nchange mp3 mode"
-        print "quality:", quality
+        print _("\nchange mp3 mode")
+        print _("quality: %f") % quality
         
         quality_to_preset = {
             "cbr": (64, 96, 128, 192, 256),
@@ -1104,7 +1118,7 @@ class PreferencesDialog:
         for i in quality_to_preset[mode]:
             print "  " , quality , " <-> " , i
             if quality <= i:
-                print "I choose #", active, " = ", quality_to_preset[mode][active]
+                print _("I choose #%s = %s") % (active, quality_to_preset[mode][active])
                 break
             active+=1
             
@@ -1153,7 +1167,7 @@ class ConverterQueueCanceled(SoundConverterException):
     """Exception thrown when a ConverterQueue is canceled."""
 
     def __init__(self):
-        SoundConverterException.__init__(self, "Convertion Canceled", "")
+        SoundConverterException.__init__(self, _("Convertion Canceled"), "")
 
 
 class ConverterQueue(TaskQueue):
@@ -1179,9 +1193,7 @@ class ConverterQueue(TaskQueue):
             dialog = self.window.existsdialog
 
             msg = \
-            "The output file <i>%s</i> " \
-            "exists already.\n" \
-            "Do you want to skip the file, overwrite it or cancel the conversion?\n" % \
+            _("The output file <i>%s</i>\n exists already.\n Do you want to skip the file, overwrite it or cancel the conversion?\n") % \
             ( os.path.basename(path) )
 
             dialog.message.set_markup(msg)
@@ -1231,7 +1243,7 @@ class ConverterQueue(TaskQueue):
         total_time = self.run_finish_times[4] - self.run_start_times[4]
         user_time = self.run_finish_times[0] - self.run_start_times[0]
         system_time = self.run_finish_times[1] - self.run_start_times[1]
-        self.window.set_status("Conversion done. ( in %s )" % 
+        self.window.set_status(_("Conversion done. ( in %s )") % 
                                self.format_time(total_time))
 
     def format_time(self, seconds):
@@ -1275,7 +1287,7 @@ class SoundConverterWindow:
         self.about = glade.get_widget("about")
         self.prefs = PreferencesDialog(glade)
         
-        self.addchooser = gtk.FileChooserDialog("Add files...",
+        self.addchooser = gtk.FileChooserDialog(_("Add files..."),
                                                 self.widget,
                                                 gtk.FILE_CHOOSER_ACTION_OPEN,
                                                 (gtk.STOCK_CANCEL, 
@@ -1339,7 +1351,7 @@ class SoundConverterWindow:
             for fields in self.filelist.get_files():
                 self.converter.add(fields["META"])
         except ConverterQueueCanceled:
-            print "canceling conversion."
+            print _("canceling conversion.")
         else:
             self.converter.run()
             self.set_sensitive()
@@ -1363,6 +1375,7 @@ class SoundConverterWindow:
         about = gtk.glade.XML(GLADE, "about").get_widget("about")
         about.set_property("name", NAME)
         about.set_property("version", VERSION)
+        about.set_property("translator_credits", TRANSLATORS)
         about.show()
         # TODO
         #self.about.show()
@@ -1488,7 +1501,7 @@ def get(key):
 
 
 def print_help(*args):
-    print "Usage: %s [options] [soundfile ...]" % sys.argv[0]
+    print _("Usage: %s [options] [soundfile ...]") % sys.argv[0]
     for short, long, func, doc in options:
         print
         if short[-1] == ":":
@@ -1503,28 +1516,22 @@ def print_help(*args):
 options = [
 
     ("h", "help", print_help,
-     "Print out a usage summary."),
+     _("Print out a usage summary.")),
 
     ("b", "batch", lambda optarg: set("mode", "batch"),
-     "Convert in batch mode, from command line, without a graphical user " +
-     "interface. You can use this from, say, shell scripts."),
+     _("Convert in batch mode, from command line, without a graphical user\n interface. You can use this from, say, shell scripts.")),
 
     ("m:", "mime-type=", lambda optarg: set("cli-output-type", optarg),
-     "Set the output MIME type for batch mode. The default is " +
-     get("cli-output-type") + ". Note that you probably want to set " +
-     "the output suffix as well."),
+     _("Set the output MIME type for batch mode. The default is\n %s . Note that you probably want to set\n the output suffix as well.") % get("cli-output-type")),
      
     ("q", "quiet", lambda optarg: set("quiet", True),
-     "Be quiet. Don't write normal output, only errors."),
+     _("Be quiet. Don't write normal output, only errors.")),
 
     ("s:", "suffix=", lambda optarg: set("cli-output-suffix", optarg),
-     "Set the output filename suffix for batch mode. The default is " +
-     get("cli-output-suffix") + ". Note that the suffix does not affect " +
-     "the output MIME type."),
+     _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get("cli-output-suffix")),
 
     ("t", "tags", lambda optarg: set("mode", "tags"),
-     "Show tags for input files instead of converting them. This indicates " +
-     "command line batch mode and disables the graphical user interface."),
+     _("Show tags for input files instead of converting them. This indicates \n command line batch mode and disables the graphical user interface.")),
 
     ]
 

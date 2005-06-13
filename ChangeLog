@@ -1,3 +1,9 @@
+2004-06-13  Gautier Portet <kassoulet@gmail.com>
+	* added french tranlation. 
+	  (thanks Guillaume Bedot <littletux@zarb.org>)
+	* fixed a bug causing ogg tags to be ignored.
+	  (thanks Noa Resare <noa@resare.com>)
+
 2004-04-15  Gautier Portet <kassoulet@gmail.com>
 
 	* reverted quality setting to 'real-world' quantities
