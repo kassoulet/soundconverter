@@ -19,7 +19,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.7.2"
+VERSION = "0.8.0"
 GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
@@ -71,8 +71,9 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
+#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
 VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
-ALL_COLUMNS = VISIBLE_COLUMNS + ["META"]
+ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
 
@@ -473,7 +474,6 @@ class Decoder(Pipeline):
         except gnomevfs.NotFoundError:
             return 0
 
-
 class TagReader(Decoder):
 
     """A GstPipeline background task for finding meta tags in a file."""
@@ -486,8 +486,10 @@ class TagReader(Decoder):
     def set_found_tag_hook(self, found_tag_hook):
         self.found_tag_hook = found_tag_hook
 
+
     def found_tag(self, decoder, something, taglist):
         self.sound_file.add_tags(taglist)
+
         # tags from ogg vorbis files comes with two callbacks,
         # the first callback containing just the stream serial number.
         # The second callback contains the tags we're interested in.
@@ -560,12 +562,14 @@ class Converter(Decoder):
         tuple = urlparse.urlparse(self.output_filename)
         path = tuple[2]
         dirname = urllib.unquote( os.path.dirname(path) )
-        if not os.path.exists(dirname):
+        if dirname and not os.path.exists(dirname):
+            print "Creating Folders: '%s'" % dirname
             os.makedirs(dirname)
         #elif os.path.exists(path):
         #    raise ConversionTargetExists(self.output_filename)
 
         sink = self.make_element("gnomevfssink", "sink")
+        print "Writing to: '%s'" % self.output_filename
         sink.set_property("location", self.output_filename)
         self.add(sink)
         
@@ -591,22 +595,24 @@ class Converter(Decoder):
         vorbisenc = self.make_element("vorbisenc", "encoder")
         if self.vorbis_quality is not None:
             vorbisenc.set_property("quality", self.vorbis_quality)
-            print("setting vorbis quality: %f" % self.vorbis_quality)
+            #print("setting vorbis quality: %f" % self.vorbis_quality)
             
         return vorbisenc
 
     def add_mp3_encoder(self):
+    
         mp3enc = self.make_element("lame", "encoder")
 
         # raise algorithm quality
         mp3enc.set_property("quality",2)
-
+        
         if self.mp3_mode is not None:
             properties = {
                 "cbr" : (0,"bitrate"),
                 "abr" : (3,"vbr-mean-bitrate"),
-                "vbr" : (4,"vbr-bitrate"),
+                "vbr" : (4,"vbr-quality")
             }
+
             mp3enc.set_property("vbr", properties[self.mp3_mode][0])
             mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
         
@@ -674,7 +680,7 @@ class FileList:
     def add_file(self, sound_file):
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.append_file)
-	
+
         self.tagreaders.add(tagreader)
         if not self.tagreaders.is_running():
             self.tagreaders.run()
@@ -686,6 +692,7 @@ class FileList:
         for key in ALL_COLUMNS:
             fields[key] = _("unknown")
         fields["META"] = sound_file
+        #fields["filename"] = sound_file.get_uri()
 
         for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
                                (_("Album"), "album")]:
@@ -734,10 +741,10 @@ class PreferencesDialog:
         "output-mime-type": "audio/x-vorbis",
         "output-suffix": ".ogg",
         "vorbis-quality": 0.6,
-        "mp3-mode": 2,          # 0: cbr, 1: abr, 2: vbr
-        "mp3-cbr-quality": 2,
-        "mp3-abr-quality": 2,
-        "mp3-vbr-quality": 2,
+        "mp3-mode": "vbr",          # 0: cbr, 1: abr, 2: vbr
+        "mp3-cbr-quality": 192,
+        "mp3-abr-quality": 192,
+        "mp3-vbr-quality": 3,
     }
 
     sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -769,11 +776,12 @@ class PreferencesDialog:
         """ try to convert previous settings"""
         
         # TODO: why not just reseting the settings if we cannot load them ?
-        
+            
         # vorbis quality was stored as an int enum
         try:
             self.get_float("vorbis-quality")
         except gobject.GError:
+            print "converting old vorbis setting..."
             old_quality = self.get_int("vorbis-quality")
             self.gconf.unset(self.path("vorbis-quality"))
             quality_setting = (0,0.2,0.3,0.6,0.8)
@@ -782,6 +790,7 @@ class PreferencesDialog:
         # mp3 quality was stored as an int enum
         cbr = self.get_int("mp3-cbr-quality")
         if cbr <= 4:
+            print "converting old mp3 quality setting...", cbr
 
             abr = self.get_int("mp3-abr-quality")
             vbr = self.get_int("mp3-vbr-quality")
@@ -797,6 +806,7 @@ class PreferencesDialog:
         try:
             self.get_string("mp3-mode")
         except gobject.GError:
+            print "converting old mp3 mode setting..."
             old_mode = self.get_int("mp3-mode")
             self.gconf.unset(self.path("mp3-mode"))
             modes = ("cbr","abr","vbr")
@@ -833,12 +843,16 @@ class PreferencesDialog:
             w = glade.get_widget("replace_messy_chars")
             w.set_active(True)
 
+        mime_type = self.get_string("output-mime-type")
+
         # desactivate mp3 output if encoder plugin is not present
         if not gst.element_factory_find("lame"):
+            print "LAME GStreamer plugin not found, desactivating MP3 output."
             w = glade.get_widget("output_mime_type_mp3")
             w.set_sensitive(False)
+            mime_type = self.defaults["output-mime-type"]
             
-        mime_type = self.get_string("output-mime-type")
+        
         widget_name = {
                         "audio/x-vorbis": "output_mime_type_ogg_vorbis",
                         "audio/x-flac": "output_mime_type_flac",
@@ -851,14 +865,23 @@ class PreferencesDialog:
             self.change_mime_type(mime_type)
             
         w = glade.get_widget("vorbis_quality")
-        #w.set_active(self.get_int("vorbis-quality"))
-
+        quality = self.get_float("vorbis-quality")
+        quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4}
+        for k, v in quality_setting.iteritems():
+            if abs(quality-k) < 0.01:
+                w.set_active(v)
+            
         self.mp3_quality = glade.get_widget("mp3_quality")
+        self.mp3_mode = glade.get_widget("mp3_mode")
         #w = glade.get_widget("mp3_mode")
         #mode = self.get_int("mp3-mode")
         #w.set_active(mode)
         #self.change_mp3_mode(mode)
-        
+
+        mode = self.get_string("mp3-mode")
+        self.change_mp3_mode(mode)
+
+
         w = glade.get_widget("basename_pattern")
         model = w.get_model()
         model.clear()
@@ -895,15 +918,19 @@ class PreferencesDialog:
             }
             bitrate = self.get_int(quality[mode])
             if mode == "vbr":
-                bitrate = 666
+                # hum, not really, but who cares? :)
+                bitrates = (320, 256, 224, 192, 160, 128, 112, 96, 80, 64)
+                bitrate = bitrates[bitrate]
             if mode == "cbr":
                 aprox = False
 
+        #print "bitrate: ", bitrate
+
         if bitrate:
             if aprox:
-                return "~%d" % bitrate
+                return "~%d kbps" % bitrate
             else:
-                return "%d" % bitrate
+                return "%d kbps" % bitrate
         else:
             return "N/A"
 
@@ -919,11 +946,12 @@ class PreferencesDialog:
         })
         self.example.set_text(self.generate_filename(sound_file))
         
-        bitrate = self.get_bitrate_from_settings()
+        # UNUSED bitrate = self.get_bitrate_from_settings()
         markup = _("<small>Target bitrate: %s</small>") % self.get_bitrate_from_settings()
         self.aprox_bitrate.set_markup( markup )
 
     def generate_filename(self, sound_file):
+        self.gconf.clear_cache()
         output_type = self.get_string("output-mime-type")
         output_suffix = {
                         "audio/x-vorbis": ".ogg",
@@ -969,11 +997,10 @@ class PreferencesDialog:
         return "%s/%s" % (self.root, key)
 
     def get_with_default(self, getter, key):
-        value = getter(self.path(key))
-        if value is None:
+        if self.gconf.get(self.path(key)) is None:
             return self.defaults[key]
         else:
-            return value
+            return getter(self.path(key))
 
     def get_int(self, key):
         return self.get_with_default(self.gconf.get_int, key)
@@ -1070,7 +1097,7 @@ class PreferencesDialog:
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
         
-        print _("setting mime:"), mime_type
+        #print _("setting mime:"), mime_type
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
@@ -1098,6 +1125,10 @@ class PreferencesDialog:
         self.update_example()
 
     def change_mp3_mode(self, mode):
+    
+        keys = { "cbr": 0, "abr": 1, "vbr": 2 }
+        self.mp3_mode.set_active(keys[mode]);
+    
         keys = { 
             "cbr": "mp3-cbr-quality",
             "abr": "mp3-abr-quality",
@@ -1105,27 +1136,37 @@ class PreferencesDialog:
         }
         quality = self.get_int(keys[mode])
         
-        print _("\nchange mp3 mode")
-        print _("quality: %f") % quality
+        #print _("\nchange mp3 mode")
+        #print _("quality: %f") % quality
         
+        #~ quality_to_preset = {
+            #~ "cbr": (64, 96, 128, 192, 256),
+            #~ "abr": (64, 96, 128, 192, 256),
+            #~ "vbr": (1, 3, 5, 7, 9), # inverted !
+        #~ }
+
         quality_to_preset = {
-            "cbr": (64, 96, 128, 192, 256),
-            "abr": (64, 96, 128, 192, 256),
-            "vbr": (1, 3, 5, 7, 9), # inverted !
+            "cbr": {64:0, 96:1, 128:2, 192:3, 256:4},
+            "abr": {64:0, 96:1, 128:2, 192:3, 256:4},
+            "vbr": {9:0,   7:1,   5:2,   3:3,   1:4}, # inverted !
         }
 
-        active = 0
-        for i in quality_to_preset[mode]:
-            print "  " , quality , " <-> " , i
-            if quality <= i:
-                print _("I choose #%s = %s") % (active, quality_to_preset[mode][active])
-                break
-            active+=1
-            
-        if mode == "vbr": 
-            active = 4-active
 
-        self.mp3_quality.set_active(active)
+        #~ active = 0
+        #~ for i in quality_to_preset[mode]:
+            #~ print "  " , quality , " <-> " , i
+            #~ if quality <= i:
+                #~ print _("I choose #%s = %s") % (active, quality_to_preset[mode][active])
+                #~ break
+            #~ active+=1
+            
+        #~ if mode == "vbr": 
+            #~ active = 4-active
+            
+        if quality in quality_to_preset[mode]:
+            #print "mp3 quality:", quality, mode, quality_to_preset[mode][quality]
+            self.mp3_quality.set_active(quality_to_preset[mode][quality])
+        
         self.update_example()
 
     def on_mp3_mode_changed(self, combobox):
@@ -1148,7 +1189,7 @@ class PreferencesDialog:
         self.set_int(keys[mode], quality[mode][combobox.get_active()])
 
         self.update_example()
-        print "%s[%d] = %s" % (keys[mode], combobox.get_active(), quality[mode][combobox.get_active()])
+        #print "%s[%d] = %s" % (keys[mode], combobox.get_active(), quality[mode][combobox.get_active()])
 
 
     def UNUSED_on_output_mime_type_changed(self, combobox):
@@ -1295,7 +1336,15 @@ class SoundConverterWindow:
                                                  gtk.STOCK_OPEN,
                                                     gtk.RESPONSE_OK))
         self.addchooser.set_select_multiple(True)
-        
+
+        self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
+                                                self.widget,
+                                                gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                                (gtk.STOCK_CANCEL, 
+                                                    gtk.RESPONSE_CANCEL,
+                                                 gtk.STOCK_OPEN,
+                                                    gtk.RESPONSE_OK))
+
         self.connect(glade, [self.prefs])
         
         self.about.set_property("name", NAME)
@@ -1336,6 +1385,21 @@ class SoundConverterWindow:
         if ret == gtk.RESPONSE_OK:
             for uri in self.addchooser.get_uris():
                 self.filelist.add_file(SoundFile(uri))
+        self.set_sensitive()
+
+    def on_addfolder_activate(self, *args):
+        #print "add_folder"
+        
+        ret = self.addfolderchooser.run()
+        self.addfolderchooser.hide()
+        if ret == gtk.RESPONSE_OK:
+            folder = self.addfolderchooser.get_filename()
+        
+            for root, dirs, files in os.walk(folder):
+                for name in files:
+                    f = os.path.join(root, name)
+                    self.filelist.add_file(SoundFile(f))
+        
         self.set_sensitive()
 
     def on_remove_activate(self, *args):

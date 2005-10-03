@@ -238,11 +238,30 @@
 	  <child>
 	    <widget class="GtkToolButton" id="toolbutton1">
 	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Add File(s)</property>
+	      <property name="use_underline">True</property>
 	      <property name="stock_id">gtk-add</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
 	      <signal name="clicked" handler="on_add_activate" last_modification_time="Tue, 22 Mar 2005 17:21:37 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkToolButton" id="toolbutton2">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Add Folder</property>
+	      <property name="use_underline">True</property>
+	      <property name="stock_id">gtk-directory</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">False</property>
+	      <signal name="clicked" handler="on_addfolder_activate" last_modification_time="Sat, 02 Jul 2005 12:18:17 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="expand">False</property>
@@ -292,6 +311,10 @@
 	      <property name="homogeneous">True</property>
 	    </packing>
 	  </child>
+
+	  <child>
+	    <placeholder/>
+	  </child>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
@@ -315,7 +338,7 @@
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="headers_visible">True</property>
-	      <property name="rules_hint">False</property>
+	      <property name="rules_hint">True</property>
 	      <property name="reorderable">False</property>
 	      <property name="enable_search">True</property>
 	      <property name="fixed_height_mode">False</property>
@@ -1016,7 +1039,7 @@ artist - album</property>
 
 		      <child>
 			<widget class="GtkRadioButton" id="into_selected_folder">
-			  <property name="width_request">143</property>
+			  <property name="width_request">320</property>
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Into a specified folder</property>
@@ -1145,7 +1168,7 @@ track_title
 			  <child>
 			    <widget class="GtkLabel" id="label26">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">&lt;i&gt;Exemple filename:&lt;/i&gt;</property>
+			      <property name="label" translatable="yes">&lt;i&gt;Example filename:&lt;/i&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">True</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1169,6 +1192,7 @@ track_title
 
 			  <child>
 			    <widget class="GtkLabel" id="example_filename">
+			      <property name="width_request">320</property>
 			      <property name="visible">True</property>
 			      <property name="label" translatable="yes">label27</property>
 			      <property name="use_underline">False</property>

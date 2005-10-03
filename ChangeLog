@@ -1,10 +1,26 @@
-2004-06-13  Gautier Portet <kassoulet@gmail.com>
+2005-09-28 Gautier Portet <kassoulet gmail com>
+	* applied patch from Elias for Gentoo
+
+2005-09-20 ???  Gautier Portet <kassoulet gmail com>
+	* added a display of the approximate bitrate of the output
+	* fixed output format not always displayed updated
+	  #4736 (thanks Janis)	
+	* at least a correct handling of the absence of gstreamer-lame
+	* fixed a crash whith some output folders folders
+	  #3840 (thanks Jason)
+	* added a button to add a folder recursively
+    * fixed a crash when loading preferences
+      #5128 (thanks Joe)
+
+
+
+2005-06-13  Gautier Portet <kassoulet gmail com>
 	* added french tranlation. 
 	  (thanks Guillaume Bedot <littletux@zarb.org>)
 	* fixed a bug causing ogg tags to be ignored.
 	  (thanks Noa Resare <noa@resare.com>)
 
-2004-04-15  Gautier Portet <kassoulet@gmail.com>
+2005-04-15  Gautier Portet <kassoulet gmail com>
 
 	* reverted quality setting to 'real-world' quantities
 	  -> values stored in gconf are now the values passed
@@ -13,7 +29,7 @@
           preference window
 
 
-2004-03-24  Gautier Portet <kassoulet@gmail.com>
+2005-03-24  Gautier Portet <kassoulet gmail com>
 
 	* Gracefully handled gnome.vfs deprecation (#3649)
 	* Fixed broken "replace messy chars" button
@@ -21,28 +37,28 @@
 	  (makedirs, replace messy chars)
 	* Making release version 0.7.1 
 
-2004-03-24  Gautier Portet <kassoulet@gmail.com>
+2005-03-24  Gautier Portet <kassoulet gmail com>
 
 	* Making release version 0.7
 
-2004-03-24  Gautier Portet <kassoulet@gmail.com>
+2005-03-24  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.glade: added a logo on the about box.
 	
 	* soundconverter.py: fixed about dialog showing only once (we need an 
 	optimal method for handling dialogs).
 
-2004-03-23  Gautier Portet <kassoulet@gmail.com>
+2005-03-23  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: added a dialog asking what to do when a file
 	exists.  
 
-2004-03-22  Gautier Portet <kassoulet@gmail.com>
+2005-03-22  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.glade: added an Add button on toolbar, added
 	separators.
 
-2004-03-17  Gautier Portet <kassoulet@gmail.com>
+2005-03-17  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: removed xing header generation when outputing mp3, 
 	since it seems to break xmms mad decoder.
@@ -50,47 +66,47 @@
 	* soundconverter.glade: changed the preference dialog, for a cleaner
 	one.
 
-2004-03-15  Gautier Portet <kassoulet@gmail.com>
+2005-03-15  Gautier Portet <kassoulet gmail com>
 
 	* added the quality settings for vorbis and mp3
 	
 	* soundconverter.py: some code cleanup.
 
-2004-03-14  Gautier Portet <kassoulet@gmail.com>
+2005-03-14  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: changed deprecated import gnome.vfs to gnomevfs
 
-2004-02-27  Gautier Portet <kassoulet@gmail.com>
+2005-02-27  Gautier Portet <kassoulet gmail com>
 
 	* Added basic mp3 support
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* Making release version 0.5.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* COPYING: Added.
 	
 	* README: Added copyright and license information.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Make sure all the keys used for formatting
 	target names exist in the dict used for input to the patterns.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.1: Wrote.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Better way to stop a TagReader pipeline
 	that doesn't cause Gstreamer runtime warnings. Also, allow
 	selecting multiple files in the new filechooser for adding
 	files.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.glade, soundconverter.py: Removed the addchoser
 	dialog from the Glade file. Added code to create it in the Python
@@ -99,50 +115,50 @@
 	them back, since it seems they need to be added explicitly when
 	the dialog is created. Weird.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.glade: Added a shortcut ctrl-O for adding new files.
 
-2004-12-31  Lars Wirzenius  <liw@iki.fi>
+2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Since we can deal with lots of kinds of input
 	files, let's not have a filter in the file chooser.
 
-2004-12-28  Lars Wirzenius  <liw@iki.fi>
+2004-12-28  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Now using the "decodebin" GstElement for finding
 	tags and decoding. Now we should be able to handle anything GStreamer
 	can handle for input.
 
-2004-12-27  Lars Wirzenius  <liw@iki.fi>
+2004-12-27  Lars Wirzenius  <liw iki fi>
 
 	* Making release version 0.4.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Handle error printing in cli mode as well.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: Refactoring to make
 	error dialogs and their use better.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: Added example filename
 	shown in the preferences dialog that is updated after each change.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Don't encode the name of the selected folder,
 	just subfolders that are created and the basename.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: I am no longer a klutz. Implemented the 
 	creation of subfolders according to patterns.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: User may choose whether
 	to create subfolders below the selected folder. Not that they are
@@ -150,45 +166,45 @@
 	mistake so now I need to write a ChangeLog entry as well. I am
 	such a klutz.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: User may now choose
 	whether output files are put into the same directory as the 
 	corresponding input files, or into a folder the user has 
 	specifically chosen.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: Made it possible again
 	to choose whether "messy" characters in the target filenames are
 	replaced with other characters.
 
-2004-12-24  Lars Wirzenius  <liw@iki.fi>
+2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: Simplified selection of
 	basename generation: now there is only a single ComboBox selection
 	instead of that plus two radio buttons. This should be clearer.
 
-2004-12-23  Lars Wirzenius  <liw@iki.fi>
+2004-12-23  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: The user may now
 	choose how the output file is named: basename is the same as
 	input file (but with suffix changed) or output name is
 	constructed from meta data tags.
 
-2004-12-23  Lars Wirzenius  <liw@iki.fi>
+2004-12-23  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Changed the TargetNameGenerator to support
 	keyword based patterns for location and basename.
 	
 	* soundconverterTests.py: Related changes.
 
-2004-12-23  Lars Wirzenius  <liw@iki.fi>
+2004-12-23  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Refactoring. Information about the input file
 	(location, tags) is now kept in a separate class.
 
-2004-12-23  Lars Wirzenius  <liw@iki.fi>
+2004-12-23  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Added support for audio/x-wav for file chooser
 	filter.
@@ -197,31 +213,31 @@
         Preferences dialog. Only selection of output format and Ogg
         Vorbis quality levels work for now. The rest will follow.
 
-2004-12-18  Lars Wirzenius  <liw@iki.fi>
+2004-12-18  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Set name on the filter for the file chooser.
 
-2004-12-15  Lars Wirzenius  <liw@iki.fi>
+2004-12-15  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Make the GUI report how much time was spent
 	for the conversions.
 	
 	* README: Add note about performance.
 
-2004-12-15  Lars Wirzenius  <liw@iki.fi>
+2004-12-15  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Reset the internal counters for dealing with
 	progress when the job is finished, so that if we start a new job,
 	the counters start from zero, not at the end of the previous job.
 
-2004-12-15  Lars Wirzenius  <liw@iki.fi>
+2004-12-15  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Added support for drag-and-dropping files
 	from Nautilus to the file list in Sound Converter. This was based
 	on a patch from Chris Jones, but I re-did to fit the style of
 	my code.
 
-2004-12-12  Lars Wirzenius  <liw@iki.fi>
+2004-12-12  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: In Pipeline.work, don't do anything if the
 	pipeline is stopped.
@@ -231,59 +247,59 @@
         
         * soundconverter.py: Add -q/--quiet option.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* Making release version 0.3.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Added support for Wave files as output.
         
 	* README: Updated.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Added support for Wave files (.wav,
         audio/x-wav) as input.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* Makefile: Use snd/* for simple tag finding in "make check".
 	
 	* soundconverter.py: Minor refactoring.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Changed the output pipeline to use 
 	gnomevfssink for output, rather than filesink. We now do all I/O
 	to the sound files via GNOME vfs.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Changed TargetNameGenerator to generate 
 	uris instead of filenames.
 	
 	* soundconverterTests.py: Related changes.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Input is now via gnomevfssrc, instead of
 	filesrc, and all filenames that refer to the input have been
 	converted to use file: urls.
 
-2004-12-05  Lars Wirzenius  <liw@iki.fi>
+2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Made usable from command line as well.
 
-2004-11-28  Lars Wirzenius  <liw@iki.fi>
+2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * Making release version 0.2.
 
-2004-11-28  Lars Wirzenius  <liw@iki.fi>
+2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Fixed stopping.
 
-2004-11-28  Lars Wirzenius  <liw@iki.fi>
+2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: the about dialog now shows name and version
         number.
@@ -291,7 +307,7 @@
         * soundconverter.glade: Added a bit of space around the label in
         the prefs dialog. This didn't make it less ugly, however.
 
-2004-11-28  Lars Wirzenius  <liw@iki.fi>
+2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Re-added support for vorbis-quality.
         
@@ -299,7 +315,7 @@
         
         * README: Cleanups and updates.
 
-2004-11-28  Lars Wirzenius  <liw@iki.fi>
+2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Rewrote task handling and tag reading and
         conversion stuff.
@@ -308,7 +324,7 @@
         
         * .cvsignore: Added.
 
-2004-11-08  Lars Wirzenius  <liw@iki.fi>
+2004-11-08  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Ported to work with current version
         (0.7.93-1) of python-gst. The change: can't create a
@@ -325,36 +341,36 @@
 	
 	* Makefile: Added a "check" target.
 
-2004-10-29  Lars Wirzenius  <liw@iki.fi>
+2004-10-29  Lars Wirzenius  <liw iki fi>
 
 	* Making release version 0.1.
 
-2004-10-29  Lars Wirzenius  <liw@iki.fi>
+2004-10-29  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.glade, soundconverter.py: If an output file
 	  exists, ask the user what to do.
 
-2004-10-29  Lars Wirzenius  <liw@iki.fi>
+2004-10-29  Lars Wirzenius  <liw iki fi>
 
 	* Makefile: Wrote.
 
-2004-10-29  Lars Wirzenius  <liw@iki.fi>
+2004-10-29  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.glade, soundconverter.py: Added a preferences
 	  dialog to allow setting of the quality level of the Ogg Vorbis
 	  files we create. The value is stored in GConf.
 
-2004-10-29  Lars Wirzenius  <liw@iki.fi>
+2004-10-29  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Got rid of the useless File class, since the
 	  same data is stored in the GtkListStore as well.
 
-2004-10-25  Lars Wirzenius  <liw@iki.fi>
+2004-10-25  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: More refactoring. Got rid of the useless
 	  (since we only have one window) SoundConverterApp class.
 
-2004-10-25  Lars Wirzenius  <liw@iki.fi>
+2004-10-25  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py: Refactored so that the two background tasks
 	  are based on a common base class that contains the common

@@ -3,12 +3,10 @@
         README for GNOME sound converter application
         ============================================
         
-This is my simple sound converter application for the GNOME environment.
-It is very rudimentary. It only reads from FLAC and Ogg Vorbis files and
-only outputs Ogg Vorbis files. The output files are put into the same
-directory as the input files, with the suffix replaced with ".ogg"
-(unless that file exists already, in which it adds a number also). The
-user interface is raw, but should be simple enough.
+A simple sound converter application for the GNOME environment. It reads 
+anything the GStreamer library can read, and writes WAV, FLAC, MP3, and 
+Ogg Vorbis files.
+        
 
 This application is somewhat less fast than various command line tools.
 Not a whole lot, however, and not enough to make me worry about
@@ -29,16 +27,8 @@ magically convert to any format we might want.
         Ogg Vorbis          yes
         FLAC                yes
         Wave                yes
-        MP3                 yes (only 128kbps constant birate)
+        MP3                 yes 
         
-Note that since Debian won't package MP3 encoders due to patent issues,
-I have no easy way to implement support for it. I would, however, accept
-a (clean) patch, if you can write the support yourself. Alternatively,
-if someone wants to give me access to a system that has the "lame"
-GStreamer element installed, I should be able to write the support
-myself. I am, however, too lazy to install GStreamer and the related
-external parts from source, since I have no use for MP3 myself.
-
 
         Localization
         ------------
