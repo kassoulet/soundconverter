@@ -537,6 +537,8 @@ class Converter(Decoder):
     def new_decoded_pad(self, decoder, pad, is_last):
         if self.added_pad_already:
             return
+        if not pad.get_caps():
+            return
         if "audio" not in pad.get_caps()[0].get_name():
             return
 
@@ -1218,32 +1220,60 @@ class ConverterQueue(TaskQueue):
     def __init__(self, window):
         TaskQueue.__init__(self)
         self.window = window
+        self.overwrite_action = None
         self.reset_counters()
         
     def reset_counters(self):
         self.total_bytes = 0
         self.total_for_processed_files = 0
+        self.overwrite_action = None
 
     def add(self, sound_file):
         output_filename = self.window.prefs.generate_filename(sound_file)
         
         path = urlparse.urlparse(output_filename) [2]
         
-        if os.path.exists(path):
+        path = urllib.unquote(path)
+        
+        exists = True
+        try:
+            gnomevfs.get_file_info(gnomevfs.URI(output_filename))
+        except gnomevfs.NotFoundError:
+            exists = False
+                
+        if exists:
 
-            dialog = self.window.existsdialog
+            if self.overwrite_action != None:
+                result = self.overwrite_action
+            else:
+                dialog = self.window.existsdialog
 
-            msg = \
-            _("The output file <i>%s</i>\n exists already.\n Do you want to skip the file, overwrite it or cancel the conversion?\n") % \
-            ( os.path.basename(path) )
+                dpath = os.path.basename(path)
+                dpath = dpath.replace("&","&amp;")
 
-            dialog.message.set_markup(msg)
+                msg = \
+                _("The output file <i>%s</i>\n exists already.\n Do you want to skip the file, overwrite it or cancel the conversion?\n") % \
+                ( dpath )
 
-            result = dialog.run()
-            dialog.hide()
+                dialog.message.set_markup(msg)
+
+                if self.overwrite_action != None:
+                    dialog.apply_to_all.set_active(True)
+                else:
+                    dialog.apply_to_all.set_active(False)
+
+                result = dialog.run()
+                dialog.hide()
+
+                if dialog.apply_to_all.get_active():
+                    if result == 1 or result == 0:
+                        self.overwrite_action = result
+ 
+
             if result == 1: 
                 # overwrite
-                os.remove(path)
+                #os.remove(path)
+                gnomevfs.unlink(gnomevfs.URI(output_filename))
             elif result == 0: 
                 # skip file
                 return
@@ -1322,6 +1352,7 @@ class SoundConverterWindow:
         self.filelist_selection.connect("changed", self.selection_changed)
         self.existsdialog = glade.get_widget("existsdialog")
         self.existsdialog.message = glade.get_widget("exists_message")
+        self.existsdialog.apply_to_all = glade.get_widget("apply_to_all")
         self.existslabel = glade.get_widget("existslabel")
         self.progressbar = glade.get_widget("progressbar")
         self.status = glade.get_widget("statustext")

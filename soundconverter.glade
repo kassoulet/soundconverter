@@ -581,6 +581,25 @@ Gautier Portet</property>
 		  <property name="fill">False</property>
 		</packing>
 	      </child>
+
+	      <child>
+		<widget class="GtkCheckButton" id="apply_to_all">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Apply to entire queue</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="focus_on_click">True</property>
+		  <property name="active">False</property>
+		  <property name="inconsistent">False</property>
+		  <property name="draw_indicator">True</property>
+		</widget>
+		<packing>
+		  <property name="padding">4</property>
+		  <property name="expand">False</property>
+		  <property name="fill">False</property>
+		</packing>
+	      </child>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
