@@ -71,8 +71,8 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
-VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
+VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
+#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
@@ -694,7 +694,7 @@ class FileList:
         for key in ALL_COLUMNS:
             fields[key] = _("unknown")
         fields["META"] = sound_file
-        #fields["filename"] = sound_file.get_uri()
+        fields["filename"] = sound_file.get_uri()
 
         for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
                                (_("Album"), "album")]:
@@ -1367,6 +1367,7 @@ class SoundConverterWindow:
                                                  gtk.STOCK_OPEN,
                                                     gtk.RESPONSE_OK))
         self.addchooser.set_select_multiple(True)
+        self.addchooser.set_local_only(False)
 
         self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
                                                 self.widget,
@@ -1375,6 +1376,8 @@ class SoundConverterWindow:
                                                     gtk.RESPONSE_CANCEL,
                                                  gtk.STOCK_OPEN,
                                                     gtk.RESPONSE_OK))
+        self.addfolderchooser.set_select_multiple(True)
+        self.addfolderchooser.set_local_only(False)
 
         self.connect(glade, [self.prefs])
         
@@ -1418,19 +1421,64 @@ class SoundConverterWindow:
                 self.filelist.add_file(SoundFile(uri))
         self.set_sensitive()
 
+    def vfs_walk(self, uri):
+    
+        if str(uri)[-1] != '/':
+            uri = uri.append_string("/")
+        print uri
+       
+        info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
+        print info.type, info.size
+        
+        filelist = []   
+
+        #if info.type != 2 or info.size == 0:
+        #    return filelist
+
+        try:
+            dirlist = gnomevfs.open_directory(uri)
+        except:
+            pass
+            print "*** skipping:", uri
+            return filelist
+            
+        for file_info in dirlist:
+            if file_info.name[0] == ".":
+                continue
+        
+            if file_info.type == 2:
+                print "cd", file_info.name
+                filelist.extend(
+                    self.vfs_walk(
+                        uri.resolve_relative(file_info.name)
+                        ))
+
+            if file_info.type == 1:
+                print " + ", file_info.name
+                filelist.append( str(uri.append_string(file_info.name)) )
+                #self.filelist.add_file(SoundFile( "/".join( (root, file_info.name,) ) ))
+        return filelist
+
     def on_addfolder_activate(self, *args):
         #print "add_folder"
         
         ret = self.addfolderchooser.run()
         self.addfolderchooser.hide()
         if ret == gtk.RESPONSE_OK:
-            folder = self.addfolderchooser.get_filename()
-        
-            for root, dirs, files in os.walk(folder):
-                for name in files:
-                    f = os.path.join(root, name)
-                    self.filelist.add_file(SoundFile(f))
-        
+            folders = self.addfolderchooser.get_uris()
+    
+            filelist = []
+            for folder in folders:
+                filelist.extend(self.vfs_walk(gnomevfs.URI(folder)))
+            for f in filelist:
+                self.filelist.add_file(SoundFile(f))
+            """
+                for root, dirs, files in os.walk(folder):
+                    for name in files:
+                        f = os.path.join(root, name)
+                        print f
+                        self.filelist.add_file(SoundFile(f))
+        """
         self.set_sensitive()
 
     def on_remove_activate(self, *args):
