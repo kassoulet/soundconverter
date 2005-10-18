@@ -20,6 +20,7 @@
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
   <signal name="delete_event" handler="on_window_delete_event" last_modification_time="Wed, 20 Oct 2004 11:13:34 GMT"/>
 
   <child>
@@ -31,6 +32,8 @@
       <child>
 	<widget class="GtkMenuBar" id="menubar2">
 	  <property name="visible">True</property>
+	  <property name="pack_direction">GTK_PACK_DIRECTION_LTR</property>
+	  <property name="child_pack_direction">GTK_PACK_DIRECTION_LTR</property>
 
 	  <child>
 	    <widget class="GtkMenuItem" id="file2">
@@ -426,7 +429,8 @@ Copyright © 2005 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="authors">Lars Wirzenius
 Gautier Portet</property>
   <property name="documenters">No documentation written.</property>
-  <property name="translator_credits">No translations exist.</property>
+  <property name="translator_credits">Guillaume Bedot (french)
+Dominik Zabłotny (polish)</property>
 </widget>
 
 <widget class="GtkDialog" id="existsdialog">
@@ -442,6 +446,7 @@ Gautier Portet</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -623,6 +628,7 @@ Gautier Portet</property>
   <property name="local_only">True</property>
   <property name="select_multiple">False</property>
   <property name="show_hidden">False</property>
+  <property name="do_overwrite_confirmation">False</property>
   <property name="title" translatable="yes">Where to place results?</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -635,6 +641,7 @@ Gautier Portet</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox5">
@@ -698,6 +705,7 @@ Gautier Portet</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -841,6 +849,7 @@ Gautier Portet</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">

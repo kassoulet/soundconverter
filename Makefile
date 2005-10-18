@@ -32,6 +32,7 @@ dist:
 	cp -a ChangeLog README soundconverter.py TODO soundconverter.glade soundconverter.gladep Makefile logo.png COPYING soundconverter.1 soundconverterTests.py $(PACKAGE)-$(VERSION)
 	mkdir -p $(PACKAGE)-$(VERSION)/po
 	cp -a po/fr.po $(PACKAGE)-$(VERSION)/po
+	cp -a po/pl.po $(PACKAGE)-$(VERSION)/po	
 	tar czf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)
 	rm -rf $(PACKAGE)-$(VERSION)
 

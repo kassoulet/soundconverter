@@ -58,6 +58,20 @@ su -c "cp soundconverter_LANG.mo /usr/share/locale/LANG/LC_MESSAGES/soundconvert
 Copyright 2004 Lars Wirzenius
 Copyright 2005 Gautier Portet
 
+thanks to:
+	Guillaume Bedot
+	Dominik Zabłotny <dominz wp.pl>
+	Noa Resare <noa@resare.com>
+	Nil Gradisnik <ghaefb@gmail.com>
+	Elias Autio <elias.autio@wiofso.com>
+	Thom Pischke <toms_moniker@yahoo.com>
+	Qball Cow <qball@qballcow.nl>
+	Janis Blechert
+	Brendan Martens
+	Jason Martens
+	Wouter Stomp
+	Joe Wrigley
+
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; version 2 of the License.

@@ -1,3 +1,7 @@
+2005-10-18 Gautier Portet <kassoulet gmail com>
+	* applied patch for polish tranlation
+	  (thanks Dominik)
+
 2005-10-09 Gautier Portet <kassoulet gmail com>
 	* added an option to apply to all queue the option choose
 	  when overwriting.
