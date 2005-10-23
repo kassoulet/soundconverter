@@ -94,12 +94,16 @@ class SoundFile:
 
 	"""Meta data information about a sound file (uri, tags)."""
 
-	def __init__(self, uri):
+	def __init__(self, uri, base_folder=""):
 		self.uri = uri
+		self.base_folder = base_folder
 		self.tags = {}
 		
 	def get_uri(self):
 		return self.uri
+		
+	def get_base_folder(self):
+		return self.base_folder
 		
 	def add_tags(self, taglist):
 		for key in taglist.keys():
@@ -644,10 +648,10 @@ class FileList:
 		self.widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 		
 		self.widget.drag_dest_set(gtk.DEST_DEFAULT_ALL, 
-								  map(lambda i: 
+									map(lambda i: 
 										(self.drop_mime_types[i], 0, i), 
-									  range(len(self.drop_mime_types))),
-								  gtk.gdk.ACTION_COPY)
+										range(len(self.drop_mime_types))),
+										gtk.gdk.ACTION_COPY)
 		self.widget.connect("drag_data_received", self.drag_data_received)
 
 		renderer = gtk.CellRendererText()
@@ -680,6 +684,8 @@ class FileList:
 		return files
 	
 	def add_file(self, sound_file):
+	
+		print "adding:", sound_file.get_uri(), sound_file.get_base_folder()
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file)
 
@@ -860,7 +866,7 @@ class PreferencesDialog:
 						"audio/x-flac": "output_mime_type_flac",
 						"audio/x-wav": "output_mime_type_wav",
 						"audio/mpeg": "output_mime_type_mp3",
-					  }.get(mime_type, None)
+					}.get(mime_type, None)
 		if widget_name:
 			w = glade.get_widget(widget_name)
 			w.set_active(True)
@@ -1364,7 +1370,7 @@ class SoundConverterWindow:
 												gtk.FILE_CHOOSER_ACTION_OPEN,
 												(gtk.STOCK_CANCEL, 
 													gtk.RESPONSE_CANCEL,
-												 gtk.STOCK_OPEN,
+													gtk.STOCK_OPEN,
 													gtk.RESPONSE_OK))
 		self.addchooser.set_select_multiple(True)
 		self.addchooser.set_local_only(False)
@@ -1374,7 +1380,7 @@ class SoundConverterWindow:
 												gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
 												(gtk.STOCK_CANCEL, 
 													gtk.RESPONSE_CANCEL,
-												 gtk.STOCK_OPEN,
+													gtk.STOCK_OPEN,
 													gtk.RESPONSE_OK))
 		self.addfolderchooser.set_select_multiple(True)
 		self.addfolderchooser.set_local_only(False)
@@ -1426,7 +1432,7 @@ class SoundConverterWindow:
 		if str(uri)[-1] != '/':
 			uri = uri.append_string("/")
 		print uri
-	   
+	
 		info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
 		print info.type, info.size
 		
@@ -1466,12 +1472,13 @@ class SoundConverterWindow:
 		self.addfolderchooser.hide()
 		if ret == gtk.RESPONSE_OK:
 			folders = self.addfolderchooser.get_uris()
-	
+			
+			base = os.path.commonprefix(folders)
 			filelist = []
 			for folder in folders:
 				filelist.extend(self.vfs_walk(gnomevfs.URI(folder)))
 			for f in filelist:
-				self.filelist.add_file(SoundFile(f))
+				self.filelist.add_file(SoundFile(f, base))
 			"""
 				for root, dirs, files in os.walk(folder):
 					for name in files:
