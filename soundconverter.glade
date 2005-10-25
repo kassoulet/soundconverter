@@ -430,7 +430,8 @@ Copyright © 2005 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
 Gautier Portet</property>
   <property name="documenters">No documentation written.</property>
   <property name="translator_credits">Guillaume Bedot (french)
-Dominik Zabłotny (polish)</property>
+Dominik Zabłotny (polish)
+Jonh Wendell (Brazilian)</property>
 </widget>
 
 <widget class="GtkDialog" id="existsdialog">
