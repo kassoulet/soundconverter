@@ -1,3 +1,6 @@
+2005-11-02 Gautier Portet <kassoulet gmail com>
+	* fixed tree structure being lost when importing folders 
+
 2005-10-25 Gautier Portet <kassoulet gmail com>
 	* added brazilian translation.
 	  (thanks jonh)

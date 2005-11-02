@@ -15,6 +15,9 @@ check:
 	python soundconverterTests.py
 	if [ -d snd ]; then python soundconverter.py -t snd/* > /dev/null; fi
 
+lint:
+	pylint --enable-format=n --no-docstring-rgx=.\* soundconverter.py
+
 install:
 	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(sharedir)
 	install -m 0644 soundconverter.glade $(DESTDIR)$(sharedir)

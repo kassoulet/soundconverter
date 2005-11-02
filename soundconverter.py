@@ -52,7 +52,6 @@ import os
 import inspect
 import getopt
 import textwrap
-import urllib
 import urlparse
 import string
 
@@ -71,7 +70,7 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
+VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "path", "filename"]
 #VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
@@ -94,16 +93,26 @@ class SoundFile:
 
 	"""Meta data information about a sound file (uri, tags)."""
 
-	def __init__(self, uri, base_folder=""):
-		self.uri = uri
-		self.base_folder = base_folder
+	def __init__(self, base_path, filename=None):
+		if not filename:
+			self.uri = base_path 
+			self.base_path, self.filename = os.path.split(self.uri)
+			self.base_path += "/"
+		else:
+			self.base_path = base_path
+			self.filename = filename
+			self.uri = os.path.join(base_path, filename)
+		print "SoundFile(%s, %s): %s" % ( self.base_path, self.filename, self.uri )
 		self.tags = {}
 		
 	def get_uri(self):
 		return self.uri
 		
-	def get_base_folder(self):
-		return self.base_folder
+	def get_base_path(self):
+		return self.base_path
+		
+	def get_filename(self):
+		return self.filename
 		
 	def add_tags(self, taglist):
 		for key in taglist.keys():
@@ -149,6 +158,10 @@ class TargetNameGenerator:
 	def set_exists(self, exists):
 		self.exists = exists
 
+	# This is useful for unit testing.		  
+	def set_exists(self, exists):
+		self.exists = exists
+
 	def set_target_suffix(self, suffix):
 		self.suffix = suffix
 		
@@ -172,8 +185,20 @@ class TargetNameGenerator:
 		else:
 			host = u.host_name
 
-		basename = os.path.basename(root)
-		root = os.path.dirname(root)
+		# TODO change here the base folder
+		#basename = os.path.basename(root)
+		#root = os.path.dirname(root)
+
+		print "from:", root
+		
+		root = sound_file.get_base_path()
+		basename = sound_file.get_filename()
+
+		print "root:", root
+		print "name:", basename
+
+		print "  root:", os.path.dirname(root)
+		print "  name:", os.path.basename(root)
 
 		dict = {
 			".inputname": basename,
@@ -184,7 +209,7 @@ class TargetNameGenerator:
 		}
 		for key in sound_file.keys():
 			dict[key] = sound_file[key]
-
+		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
 		if self.replace_messy_chars:
@@ -263,6 +288,7 @@ class BackgroundTask:
 			self.setup()
 		except SoundConverterException, e:
 			error.show_exception(e)
+			print "exception:", e
 			return
 		self.id = gobject.idle_add(self.do_work)
 		self.run_start_times = os.times()
@@ -278,6 +304,7 @@ class BackgroundTask:
 				return False
 		except SoundConverterException, e:
 			error.show_exception(e)
+			print "exception:", e
 			return False
 
 	def stop(self):
@@ -455,6 +482,9 @@ class Decoder(Pipeline):
 		decodebin.connect("new-decoded-pad", self.new_decoded_pad)
 		self.add(decodebin)
 
+		# TODO add error management with gstreamer 0.9 ( get_bus() )
+
+
 	def found_tag(self, decoder, something, taglist):
 		pass
 
@@ -578,7 +608,7 @@ class Converter(Decoder):
 		print "Writing to: '%s'" % self.output_filename
 		sink.set_property("location", self.output_filename)
 		self.add(sink)
-		
+	
 		self.play()
 		self.added_pad_already = True
 
@@ -611,6 +641,7 @@ class Converter(Decoder):
 
 		# raise algorithm quality
 		mp3enc.set_property("quality",2)
+		mp3enc.set_property("xingheader","true")
 		
 		if self.mp3_mode is not None:
 			properties = {
@@ -620,8 +651,11 @@ class Converter(Decoder):
 			}
 
 			mp3enc.set_property("vbr", properties[self.mp3_mode][0])
+			# TODO a bug in gstreamer ?!?
+			if self.mp3_quality == 9:
+				self.mp3_quality = 8
 			mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
-		
+	
 		return mp3enc
 
 class FileList:
@@ -685,7 +719,7 @@ class FileList:
 	
 	def add_file(self, sound_file):
 	
-		print "adding:", sound_file.get_uri(), sound_file.get_base_folder()
+		#print "adding:", sound_file.get_uri(), sound_file.get_base_path(), sound_file.get_filename()
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file)
 
@@ -700,7 +734,8 @@ class FileList:
 		for key in ALL_COLUMNS:
 			fields[key] = _("unknown")
 		fields["META"] = sound_file
-		fields["filename"] = sound_file.get_uri()
+		fields["path"] = sound_file.get_base_path()
+		fields["filename"] = sound_file.get_filename()
 
 		for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
 							   (_("Album"), "album")]:
@@ -975,7 +1010,15 @@ class PreferencesDialog:
 			path = tuple[2]
 			generator.set_folder(os.path.dirname(path))
 		else:
-			generator.set_folder(self.get_string("selected-folder"))
+
+			#import pdb
+			#pdb.set_trace()
+		
+			path, filename = os.path.split(sound_file.get_filename())
+		
+			path = ""
+		
+			generator.set_folder(os.path.join(self.get_string("selected-folder"), path))
 			if self.get_int("create-subfolders"):
 				generator.set_subfolder_pattern(
 					self.get_subfolder_pattern())
@@ -1473,12 +1516,13 @@ class SoundConverterWindow:
 		if ret == gtk.RESPONSE_OK:
 			folders = self.addfolderchooser.get_uris()
 			
-			base = os.path.commonprefix(folders)
+			base,notused = os.path.split(os.path.commonprefix(folders))
 			filelist = []
 			for folder in folders:
 				filelist.extend(self.vfs_walk(gnomevfs.URI(folder)))
 			for f in filelist:
-				self.filelist.add_file(SoundFile(f, base))
+				f = f[len(base)+1:]
+				self.filelist.add_file(SoundFile(base+"/", f))
 			"""
 				for root, dirs, files in os.walk(folder):
 					for name in files:
