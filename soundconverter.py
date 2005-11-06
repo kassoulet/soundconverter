@@ -221,10 +221,9 @@ class TargetNameGenerator:
 		#basename = os.path.basename(root)
 		#root = os.path.dirname(root)
 
-		root = sound_file.get_base_path()
+		root = urlparse.urlsplit(sound_file.get_base_path())[2]
 		basename, ext = os.path.splitext(sound_file.get_filename())
 		
-
 		dict = {
 			".inputname": basename,
 			"album": "",

@@ -1,9 +1,16 @@
 2005-11-06 Gautier Portet <kassoulet gmail com>
 	* drag and drop is now able to import a folder.
 	* better display of example filename in preferences.
+	* gnomevfs support.
+	  #1365
+	* add a temporary hack for abr/vbr mp3 with quality==9
+	  #5445
+	* release 0.8.1
+	
 
 2005-11-02 Gautier Portet <kassoulet gmail com>
-	* fixed tree structure being lost when importing folders 
+	* fixed tree structure being lost when importing folders.
+	  #5336
 
 2005-10-25 Gautier Portet <kassoulet gmail com>
 	* added brazilian translation.
@@ -17,6 +24,7 @@
 2005-10-09 Gautier Portet <kassoulet gmail com>
 	* added an option to apply to all queue the option choose
 	  when overwriting.
+	  #1341
 
 2005-09-28 Gautier Portet <kassoulet gmail com>
 	* applied patch from Elias for Gentoo
@@ -29,8 +37,8 @@
 	* fixed a crash whith some output folders folders
 	  #3840 (thanks Jason)
 	* added a button to add a folder recursively
-    * fixed a crash when loading preferences
-      #5128 (thanks Joe)
+	* fixed a crash when loading preferences
+	  #5128 (thanks Joe)
 
 
 
