@@ -70,7 +70,7 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "path", "filename"]
+VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
 #VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
@@ -136,7 +136,6 @@ class SoundFile:
 			self.base_path = base_path
 			self.filename = filename
 			self.uri = os.path.join(base_path, filename)
-		print "SoundFile(%s, %s): %s" % ( self.base_path, self.filename, self.uri )
 		self.tags = {}
 		
 	def get_uri(self):
@@ -219,20 +218,12 @@ class TargetNameGenerator:
 		else:
 			host = u.host_name
 
-		# TODO change here the base folder
 		#basename = os.path.basename(root)
 		#root = os.path.dirname(root)
 
-		print "from:", root
-		
 		root = sound_file.get_base_path()
-		basename = sound_file.get_filename()
-
-		print "root:", root
-		print "name:", basename
-
-		print "  root:", os.path.dirname(root)
-		print "  name:", os.path.basename(root)
+		basename, ext = os.path.splitext(sound_file.get_filename())
+		
 
 		dict = {
 			".inputname": basename,
@@ -665,7 +656,6 @@ class Converter(Decoder):
 		vorbisenc = self.make_element("vorbisenc", "encoder")
 		if self.vorbis_quality is not None:
 			vorbisenc.set_property("quality", self.vorbis_quality)
-			#print("setting vorbis quality: %f" % self.vorbis_quality)
 			
 		return vorbisenc
 
@@ -774,8 +764,7 @@ class FileList:
 		for key in ALL_COLUMNS:
 			fields[key] = _("unknown")
 		fields["META"] = sound_file
-		fields["path"] = sound_file.get_base_path()
-		fields["filename"] = sound_file.get_filename()
+		fields["filename"] = urllib.unquote(sound_file.get_filename())
 
 		for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
 							   (_("Album"), "album")]:
@@ -1021,15 +1010,14 @@ class PreferencesDialog:
 	def update_example(self):
 		sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
 		sound_file.add_tags({
-			"artist": "Foo Bar", 
-			"title": "Hi Ho", 
-			"album": "IS: TOO",
+			"artist": "<b>{Artist}</b>", 
+			"title": "<b>{Title}</b>", 
+			"album": "<b>{Album}</b>",
 			"track-number": 1L,
 			"track-count": 11L,
 		})
-		self.example.set_text(self.generate_filename(sound_file))
+		self.example.set_markup(self.generate_filename(sound_file))
 		
-		# UNUSED bitrate = self.get_bitrate_from_settings()
 		markup = _("<small>Target bitrate: %s</small>") % self.get_bitrate_from_settings()
 		self.aprox_bitrate.set_markup( markup )
 
