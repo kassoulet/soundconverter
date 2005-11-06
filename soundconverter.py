@@ -76,6 +76,40 @@ ALL_COLUMNS = VISIBLE_COLUMNS + ["META"]
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
 
+def vfs_walk(uri):
+	"""similar to os.path.walk, but with gnomevfs.
+	
+	uri -- the base folder uri.
+	return a list of uri.
+	
+	"""
+	if str(uri)[-1] != '/':
+		uri = uri.append_string("/")
+
+	info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
+	filelist = []	
+
+	try:
+		dirlist = gnomevfs.open_directory(uri)
+	except:
+		pass
+		print "skipping:", uri
+		return filelist
+		
+	for file_info in dirlist:
+		if file_info.name[0] == ".":
+			continue
+	
+		if file_info.type == 2:
+			filelist.extend(
+				vfs_walk(
+					uri.resolve_relative(file_info.name)
+					))
+
+		if file_info.type == 1:
+			filelist.append( str(uri.append_string(file_info.name)) )
+	return filelist
+
 
 class SoundConverterException(Exception):
 
@@ -659,7 +693,6 @@ class Converter(Decoder):
 		return mp3enc
 
 class FileList:
-
 	"""List of files added by the user."""
 
 	# List of MIME types which we accept for drops.
@@ -703,7 +736,11 @@ class FileList:
 				for uri in selection.data.split("\n"):
 					uri = uri.strip()
 					if uri:
-						self.add_file(SoundFile(uri))
+						info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_DEFAULT)
+						if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+							self.add_folder(uri)
+						else:
+							self.add_file(SoundFile(uri))
 				context.finish(True, False, time)
 
 	def get_files(self):
@@ -718,14 +755,17 @@ class FileList:
 		return files
 	
 	def add_file(self, sound_file):
-	
-		#print "adding:", sound_file.get_uri(), sound_file.get_base_path(), sound_file.get_filename()
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file)
 
 		self.tagreaders.add(tagreader)
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
+			
+	def add_folder(self, folder):
+		filelist = vfs_walk(gnomevfs.URI(folder))
+		for f in filelist:
+			self.add_file(SoundFile(f, folder))	
 			
 	def append_file(self, tagreader):
 		sound_file = tagreader.get_sound_file()
@@ -1470,43 +1510,6 @@ class SoundConverterWindow:
 				self.filelist.add_file(SoundFile(uri))
 		self.set_sensitive()
 
-	def vfs_walk(self, uri):
-	
-		if str(uri)[-1] != '/':
-			uri = uri.append_string("/")
-		print uri
-	
-		info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
-		print info.type, info.size
-		
-		filelist = []	
-
-		#if info.type != 2 or info.size == 0:
-		#	 return filelist
-
-		try:
-			dirlist = gnomevfs.open_directory(uri)
-		except:
-			pass
-			print "*** skipping:", uri
-			return filelist
-			
-		for file_info in dirlist:
-			if file_info.name[0] == ".":
-				continue
-		
-			if file_info.type == 2:
-				print "cd", file_info.name
-				filelist.extend(
-					self.vfs_walk(
-						uri.resolve_relative(file_info.name)
-						))
-
-			if file_info.type == 1:
-				print " + ", file_info.name
-				filelist.append( str(uri.append_string(file_info.name)) )
-				#self.filelist.add_file(SoundFile( "/".join( (root, file_info.name,) ) ))
-		return filelist
 
 	def on_addfolder_activate(self, *args):
 		#print "add_folder"
@@ -1519,17 +1522,10 @@ class SoundConverterWindow:
 			base,notused = os.path.split(os.path.commonprefix(folders))
 			filelist = []
 			for folder in folders:
-				filelist.extend(self.vfs_walk(gnomevfs.URI(folder)))
+				filelist.extend(vfs_walk(gnomevfs.URI(folder)))
 			for f in filelist:
 				f = f[len(base)+1:]
 				self.filelist.add_file(SoundFile(base+"/", f))
-			"""
-				for root, dirs, files in os.walk(folder):
-					for name in files:
-						f = os.path.join(root, name)
-						print f
-						self.filelist.add_file(SoundFile(f))
-		"""
 		self.set_sensitive()
 
 	def on_remove_activate(self, *args):
