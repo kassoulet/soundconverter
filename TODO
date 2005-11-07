@@ -1,4 +1,3 @@
- ? handle error when overwriting a file
  
  * give time estimates for progress bar
  * HIG compliant interface
@@ -9,6 +8,7 @@
 
  * bug: the program's options aren't printed with --help
 
+ -ok- handle error when overwriting a file
  -ok- bug: the dialog can only be showed once
  -ok- use a raw quality setting
  -ok- display aprox. bitrate

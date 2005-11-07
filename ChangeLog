@@ -1,3 +1,7 @@
+2005-11-07  Gautier Portet <kassoulet gmail com>
+
+	* fixed broken folder dropping. (#5561)
+
 2005-11-06 Gautier Portet <kassoulet gmail com>
 	* drag and drop is now able to import a folder.
 	* better display of example filename in preferences.

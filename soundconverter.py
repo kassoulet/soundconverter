@@ -128,14 +128,14 @@ class SoundFile:
 	"""Meta data information about a sound file (uri, tags)."""
 
 	def __init__(self, base_path, filename=None):
-		if not filename:
-			self.uri = base_path 
-			self.base_path, self.filename = os.path.split(self.uri)
-			self.base_path += "/"
-		else:
+		if filename:
 			self.base_path = base_path
 			self.filename = filename
 			self.uri = os.path.join(base_path, filename)
+		else:
+			self.uri = base_path 
+			self.base_path, self.filename = os.path.split(self.uri)
+			self.base_path += "/"
 		self.tags = {}
 		
 	def get_uri(self):
@@ -754,7 +754,7 @@ class FileList:
 	def add_folder(self, folder):
 		filelist = vfs_walk(gnomevfs.URI(folder))
 		for f in filelist:
-			self.add_file(SoundFile(f, folder))	
+			self.add_file(SoundFile(f[:len(folder)], f[len(folder)+1:]))	
 			
 	def append_file(self, tagreader):
 		sound_file = tagreader.get_sound_file()
