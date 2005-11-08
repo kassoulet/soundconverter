@@ -19,7 +19,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.8.0"
+VERSION = "0.8.2"
 GLADE = "soundconverter.glade"
 
 # GNOME and related stuff.
@@ -722,15 +722,19 @@ class FileList:
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			mime_type = self.drop_mime_types[mime_id]
 			if mime_type == "text/uri-list":
+				file_list = []
 				for uri in selection.data.split("\n"):
 					uri = uri.strip()
 					if uri:
 						info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_DEFAULT)
 						if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-							self.add_folder(uri)
+							file_list.extend(vfs_walk(gnomevfs.URI(uri)))
 						else:
-							self.add_file(SoundFile(uri))
+							file_list.extend(uri)
 				context.finish(True, False, time)
+				
+				base = os.path.commonprefix(file_list)
+				[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
 
 	def get_files(self):
 		files = []
@@ -750,11 +754,6 @@ class FileList:
 		self.tagreaders.add(tagreader)
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
-			
-	def add_folder(self, folder):
-		filelist = vfs_walk(gnomevfs.URI(folder))
-		for f in filelist:
-			self.add_file(SoundFile(f[:len(folder)], f[len(folder)+1:]))	
 			
 	def append_file(self, tagreader):
 		sound_file = tagreader.get_sound_file()
@@ -1348,8 +1347,10 @@ class ConverterQueue(TaskQueue):
 
 			if result == 1: 
 				# overwrite
-				#os.remove(path)
-				gnomevfs.unlink(gnomevfs.URI(output_filename))
+				try:
+					gnomevfs.unlink(gnomevfs.URI(output_filename))
+				except gnomevfs.NotFoundError:
+					pass
 			elif result == 0: 
 				# skip file
 				return

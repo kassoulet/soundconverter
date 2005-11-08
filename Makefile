@@ -3,7 +3,7 @@
 #
 
 PACKAGE=soundconverter
-VERSION=0.8.1
+VERSION=0.8.2
 
 prefix = /usr/local
 bindir = $(prefix)/bin

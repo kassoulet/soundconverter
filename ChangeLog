@@ -1,3 +1,9 @@
+2005-11-08  Gautier Portet <kassoulet gmail com>
+
+	* better folder dropping: now we generate a good base/filename for
+	  SoundFile. But it works not so well when we want to create folders
+	  based on tags, so it will need some more work.
+
 2005-11-07  Gautier Portet <kassoulet gmail com>
 
 	* fixed broken folder dropping. (#5561)
