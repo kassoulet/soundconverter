@@ -1,3 +1,15 @@
+2005-12-05  Gautier Portet  <kassoulet gmail com>
+
+	* Files types are now detected at loading, expect filtering on types
+	  soon.
+
+2005-11-29 Gautier Portet  <kassoulet gmail com>
+
+	* file list is now filled asynchronously with tags if they are
+	  present.
+	* list display is handled completely differently, hope its better like
+	  this
+
 2005-11-08  Gautier Portet <kassoulet gmail com>
 
 	* better folder dropping: now we generate a good base/filename for

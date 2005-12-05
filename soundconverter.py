@@ -70,7 +70,8 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
+#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
+VISIBLE_COLUMNS = ["filename"]
 #VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
@@ -111,6 +112,22 @@ def vfs_walk(uri):
 	return filelist
 
 
+def display_from_mime(mime):
+	mime_dict = {
+		"application/ogg": "Ogg Vorbis",
+		"audio/x-wav": "MS WAV",
+		"audio/mpeg": "MPEG 1 Layer 3 (MP3)",
+		"audio/x-flac": "FLAC",
+		"audio/x-musepack": "MusePack",
+		"audio/x-au": "AU",
+		"": "",
+		"": "",
+		"": "",
+		"": "",
+	}
+	return mime_dict[mime]
+
+
 class SoundConverterException(Exception):
 
 	def __init__(self, primary, secondary):
@@ -137,6 +154,7 @@ class SoundFile:
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
 		self.tags = {}
+		self.finished = False
 		
 	def get_uri(self):
 		return self.uri
@@ -488,6 +506,36 @@ class Pipeline(BackgroundTask):
 		elements = self.pipeline.get_list()
 		return elements[0].query(gst.QUERY_POSITION, gst.FORMAT_BYTES)
 
+class TypeFinder(Pipeline):
+	def __init__(self, sound_file):
+		Pipeline.__init__(self)
+		self.sound_file = sound_file
+		self.found_type = ""
+		
+		filesrc = self.make_element("gnomevfssrc", "src")
+		filesrc.set_property("location", self.sound_file.get_uri())
+		self.add(filesrc)
+
+		typefind = self.make_element("typefind", "typefinder")
+		typefind.connect("have_type", self.have_type)
+		self.pipeline.add(typefind)
+		filesrc.link(typefind)
+
+	def set_found_type_hook(self, found_type_hook):
+		self.found_type_hook = found_type_hook
+	
+	def have_type(self, typefind, probability, caps):
+		print "mime type:", caps.to_string(), "->", display_from_mime(caps.to_string())
+		self.found_type = caps.to_string()
+	
+	def work(self):
+		return Pipeline.work(self) and not self.found_type
+
+	def finish(self):
+		Pipeline.finish(self)
+		if self.found_type_hook:
+			self.found_type_hook(self.sound_file, self.found_type)
+
 
 class Decoder(Pipeline):
 
@@ -505,9 +553,11 @@ class Decoder(Pipeline):
 		decodebin.connect("found-tag", self.found_tag)
 		decodebin.connect("new-decoded-pad", self.new_decoded_pad)
 		self.add(decodebin)
-
+		
 		# TODO add error management with gstreamer 0.9 ( get_bus() )
 
+	def have_type(self, typefind, probability, caps):
+		pass
 
 	def found_tag(self, decoder, something, taglist):
 		pass
@@ -559,6 +609,8 @@ class TagReader(Decoder):
 
 	def finish(self):
 		Decoder.finish(self)
+		self.sound_file.finished = True
+		#if self.found_tags and self.found_tag_hook:
 		if self.found_tag_hook:
 			self.found_tag_hook(self)
 
@@ -689,7 +741,8 @@ class FileList:
 
 	def __init__(self, window, glade):
 		self.window = window
-		self.tagreaders = TaskQueue()
+		self.tagreaders  = TaskQueue()
+		self.typefinders = TaskQueue()
 		
 		args = []
 		for name in ALL_COLUMNS:
@@ -714,7 +767,7 @@ class FileList:
 		for name in VISIBLE_COLUMNS:
 			column = gtk.TreeViewColumn(name,
 										renderer, 
-										text=ALL_COLUMNS.index(name))
+										markup=ALL_COLUMNS.index(name))
 			self.widget.append_column(column)
 	
 	def drag_data_received(self, widget, context, x, y, selection, 
@@ -722,6 +775,7 @@ class FileList:
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			mime_type = self.drop_mime_types[mime_id]
 			if mime_type == "text/uri-list":
+				print selection.data
 				file_list = []
 				for uri in selection.data.split("\n"):
 					uri = uri.strip()
@@ -747,15 +801,74 @@ class FileList:
 			iter = self.model.iter_next(iter)
 		return files
 	
-	def add_file(self, sound_file):
+	def found_type(self, sound_file, mime):
+
+		#if mime == "application/ogg":
+		self.append_file(sound_file)
+
 		tagreader = TagReader(sound_file)
-		tagreader.set_found_tag_hook(self.append_file)
+		tagreader.set_found_tag_hook(self.append_file_tags)
 
 		self.tagreaders.add(tagreader)
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
+	
+	def add_file(self, sound_file):
+
+		typefinder = TypeFinder(sound_file)
+		typefinder.set_found_type_hook(self.found_type)
+		self.typefinders.add(typefinder)
+		if not self.typefinders.is_running():
+			self.typefinders.run()
 			
+<<<<<<< .mine
+	def add_folder(self, folder):
+
+		base = folder
+		filelist = vfs_walk(gnomevfs.URI(folder))
+		for f in filelist:
+			f = f[len(base)+1:]
+			self.add_file(SoundFile(base+"/", f))
+				
+	def format_cell(self, sound_file):
+		
+		template_tags    = "%(artist)s - %(album)s - <b>%(title)s</b>\n<i>%(filename)s</i>"
+		template_loading = "<i> loading tags...</i>\n<i>%(filename)s</i>"
+		template_notags  = '<span foreground="red">no tags...</span>\n<i>%(filename)s</i>'
+
+		params = {}
+		params["filename"] = urllib.unquote(sound_file.get_filename())
+		tagged = False
+		finished = False
+		for item in ("title", "artist", "album"):
+			params[item] = sound_file.get_tag(item)
+			if params[item]:
+				tagged = True
+
+		if tagged:
+			s = template_tags % params
+		else:
+			if sound_file.finished:
+				s = template_notags % params
+			else:
+				s = template_loading % params
+				
+		return s
+
+	def append_file(self, sound_file):
+
+		# TODO: check here with typefind!
+
+		iter = self.model.append()
+		sound_file.model = iter
+		self.model.set(iter, 0, self.format_cell(sound_file))
+		self.model.set(iter, 1, sound_file)
+	
+	
+	def append_file_tags(self, tagreader):
+=======
 	def append_file(self, tagreader):
+>>>>>>> .r34
 		sound_file = tagreader.get_sound_file()
 
 		fields = {}
@@ -764,14 +877,8 @@ class FileList:
 		fields["META"] = sound_file
 		fields["filename"] = urllib.unquote(sound_file.get_filename())
 
-		for field, tagname in [(_("Title"), "title"), (_("Artist"), "artist"),
-							   (_("Album"), "album")]:
-			fields[field] = sound_file.get_tag(tagname, fields[field])
+		self.model.set(sound_file.model, 0, self.format_cell(sound_file))
 
-		iter = self.model.append()
-		for i in range(len(ALL_COLUMNS)):
-			self.model.set(iter, i, fields[ALL_COLUMNS[i]])
-			
 		self.window.set_sensitive()
 
 	def remove(self, iter):

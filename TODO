@@ -1,4 +1,11 @@
  
+ 
+bugs:
+ - dropping a list a folder does not work as expected
+ - dont add dupplicate bfiles 
+
+
+ 
  * give time estimates for progress bar
  * HIG compliant interface
  * progress dialog
