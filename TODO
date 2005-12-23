@@ -1,20 +1,21 @@
  
  
 bugs:
- - dropping a list a folder does not work as expected
- - dont add dupplicate bfiles 
+ - dont add dupplicate files 
+ - find a solution when no tags & filename generated from tags
 
-
- 
+ * encoders as plugins 
+ * optional "advanced" encoder settings
  * give time estimates for progress bar
  * HIG compliant interface
- * progress dialog
+ * progress dialog ?
  * autotools, l12n
  * handle exceptions even when they happen in callbacks
- * add support for GNOME encoding profiles
+ * add support for GNOME encoding profiles ?
 
  * bug: the program's options aren't printed with --help
 
+ -ok- dropping a list a folder does not work as expected
  -ok- handle error when overwriting a file
  -ok- bug: the dialog can only be showed once
  -ok- use a raw quality setting

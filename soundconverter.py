@@ -70,12 +70,21 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
 
 # Names of columns in the file list
-#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title"), "filename"]
 VISIBLE_COLUMNS = ["filename"]
-#VISIBLE_COLUMNS = [_("Artist"), _("Album"), _("Title")]
 ALL_COLUMNS = VISIBLE_COLUMNS + ["META"] 
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
+
+# add here any format you want to be read
+mime_whitelist = (
+	"audio/", 
+	"video/", 
+	"application/ogg", 
+	"application/x-ape",
+	"application/vnd.rn-realmedia",
+	"application/x-shockwave-flash",
+)
+
 
 def vfs_walk(uri):
 	"""similar to os.path.walk, but with gnomevfs.
@@ -88,31 +97,44 @@ def vfs_walk(uri):
 		uri = uri.append_string("/")
 
 	info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
+	#info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_FIELDS_TYPE)
 	filelist = []	
 
 	try:
 		dirlist = gnomevfs.open_directory(uri)
 	except:
 		pass
-		print "skipping:", uri
+		log(_("skipping: '%s'") % uri)
 		return filelist
 		
 	for file_info in dirlist:
 		if file_info.name[0] == ".":
 			continue
 	
-		if file_info.type == 2:
+		if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 			filelist.extend(
-				vfs_walk(
-					uri.resolve_relative(file_info.name)
-					))
+				#vfs_walk(uri.resolve_relative(file_info.name)) )
+				vfs_walk(uri.append_path(file_info.name)) )
 
-		if file_info.type == 1:
-			filelist.append( str(uri.append_string(file_info.name)) )
+		if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
+			filelist.append( str(uri.append_file_name(file_info.name)) )
 	return filelist
 
+def log(message):
+	if get("quiet") == False:
+		print message
 
-def display_from_mime(mime):
+def UNUSED_sleep(duration):
+	start = time.time()
+	while time.time() < start + duration:
+		while gtk.events_pending():
+			gtk.main_iteration(gtk.FALSE)
+		time.sleep(0.001)
+
+
+
+def UNUSED_display_from_mime(mime):
+	# TODO
 	mime_dict = {
 		"application/ogg": "Ogg Vorbis",
 		"audio/x-wav": "MS WAV",
@@ -120,10 +142,6 @@ def display_from_mime(mime):
 		"audio/x-flac": "FLAC",
 		"audio/x-musepack": "MusePack",
 		"audio/x-au": "AU",
-		"": "",
-		"": "",
-		"": "",
-		"": "",
 	}
 	return mime_dict[mime]
 
@@ -153,8 +171,15 @@ class SoundFile:
 			self.uri = base_path 
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
-		self.tags = {}
-		self.finished = False
+			
+		self.tags = {
+			"track-number": 0,
+			"title":  "Unknown Title",
+			"artist": "Unknown Artist",
+			"album":  "Unknown Album",
+		}
+		self.have_tags = False
+		self.tags_read = False
 		
 	def get_uri(self):
 		return self.uri
@@ -209,10 +234,6 @@ class TargetNameGenerator:
 	def set_exists(self, exists):
 		self.exists = exists
 
-	# This is useful for unit testing.		  
-	def set_exists(self, exists):
-		self.exists = exists
-
 	def set_target_suffix(self, suffix):
 		self.suffix = suffix
 		
@@ -235,9 +256,6 @@ class TargetNameGenerator:
 			host = "%s:%s" % (u.host_name, u.host_port)
 		else:
 			host = u.host_name
-
-		#basename = os.path.basename(root)
-		#root = os.path.dirname(root)
 
 		root = urlparse.urlsplit(sound_file.get_base_path())[2]
 		basename, ext = os.path.splitext(sound_file.get_filename())
@@ -330,7 +348,6 @@ class BackgroundTask:
 			self.setup()
 		except SoundConverterException, e:
 			error.show_exception(e)
-			print "exception:", e
 			return
 		self.id = gobject.idle_add(self.do_work)
 		self.run_start_times = os.times()
@@ -346,7 +363,6 @@ class BackgroundTask:
 				return False
 		except SoundConverterException, e:
 			error.show_exception(e)
-			print "exception:", e
 			return False
 
 	def stop(self):
@@ -521,19 +537,26 @@ class TypeFinder(Pipeline):
 		self.pipeline.add(typefind)
 		filesrc.link(typefind)
 
+		#print "inspecting:", sound_file.get_uri()
+
 	def set_found_type_hook(self, found_type_hook):
 		self.found_type_hook = found_type_hook
 	
 	def have_type(self, typefind, probability, caps):
-		print "mime type:", caps.to_string(), "->", display_from_mime(caps.to_string())
-		self.found_type = caps.to_string()
+		mime_type = caps.to_string()
+		msg = "mime type: %s" % mime_type
+		for t in mime_whitelist:
+			if t in mime_type:
+				msg += " -> accepted!"
+				self.found_type = mime_type
+		log(msg)
 	
 	def work(self):
 		return Pipeline.work(self) and not self.found_type
 
 	def finish(self):
 		Pipeline.finish(self)
-		if self.found_type_hook:
+		if self.found_type_hook and self.found_type:
 			self.found_type_hook(self.sound_file, self.found_type)
 
 
@@ -596,21 +619,25 @@ class TagReader(Decoder):
 
 
 	def found_tag(self, decoder, something, taglist):
+		#sleep(1)		
+
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
 		# the first callback containing just the stream serial number.
 		# The second callback contains the tags we're interested in.
-		if not taglist.has_key('serial'):
-			self.found_tags = True
+		if taglist.has_key('serial'):
+			return
+			
+		self.found_tags = True
+		self.sound_file.have_tags = True
 
 	def work(self):
 		return Decoder.work(self) and not self.found_tags
 
 	def finish(self):
 		Decoder.finish(self)
-		self.sound_file.finished = True
-		#if self.found_tags and self.found_tag_hook:
+		self.sound_file.tags_read = True
 		if self.found_tag_hook:
 			self.found_tag_hook(self)
 
@@ -644,6 +671,7 @@ class Converter(Decoder):
 			"audio/mpeg": self.add_mp3_encoder,
 		}
 
+
 	def new_decoded_pad(self, decoder, pad, is_last):
 		if self.added_pad_already:
 			return
@@ -668,20 +696,20 @@ class Converter(Decoder):
 			dialog.hide()
 			return
 		self.add(encoder)
-		print "using encoder: %s (%s)" % \
-			(encoder.get_factory().get_name(), encoder.get_factory().get_longname())
+		log(_("using encoder: %s (%s)") % \
+			(encoder.get_factory().get_name(), encoder.get_factory().get_longname()))
 		
 		tuple = urlparse.urlparse(self.output_filename)
 		path = tuple[2]
 		dirname = urllib.unquote( os.path.dirname(path) )
 		if dirname and not os.path.exists(dirname):
-			print "Creating Folders: '%s'" % dirname
+			log("Creating Folders: '%s'" % dirname)
 			os.makedirs(dirname)
 		#elif os.path.exists(path):
 		#	 raise ConversionTargetExists(self.output_filename)
 
 		sink = self.make_element("gnomevfssink", "sink")
-		print "Writing to: '%s'" % self.output_filename
+		log(_("Writing to: '%s'") % self.output_filename)
 		sink.set_property("location", self.output_filename)
 		self.add(sink)
 	
@@ -716,7 +744,6 @@ class Converter(Decoder):
 
 		# raise algorithm quality
 		mp3enc.set_property("quality",2)
-		mp3enc.set_property("xingheader","true")
 		
 		if self.mp3_mode is not None:
 			properties = {
@@ -725,8 +752,11 @@ class Converter(Decoder):
 				"vbr" : (4,"vbr-quality")
 			}
 
+			if properties[self.mp3_mode][0]:
+				mp3enc.set_property("xingheader","true")
+			
 			mp3enc.set_property("vbr", properties[self.mp3_mode][0])
-			# TODO a bug in gstreamer ?!?
+			# TODO: a bug in gstreamer ?!?
 			if self.mp3_quality == 9:
 				self.mp3_quality = 8
 			mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
@@ -737,7 +767,7 @@ class FileList:
 	"""List of files added by the user."""
 
 	# List of MIME types which we accept for drops.
-	drop_mime_types = ["text/uri-list"]
+	drop_mime_types = ["text/uri-list", "text/plain", "STRING"]
 
 	def __init__(self, window, glade):
 		self.window = window
@@ -774,21 +804,20 @@ class FileList:
 						   mime_id, time):
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			mime_type = self.drop_mime_types[mime_id]
-			if mime_type == "text/uri-list":
-				print selection.data
-				file_list = []
-				for uri in selection.data.split("\n"):
-					uri = uri.strip()
-					if uri:
-						info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_DEFAULT)
-						if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-							file_list.extend(vfs_walk(gnomevfs.URI(uri)))
-						else:
-							file_list.extend(uri)
-				context.finish(True, False, time)
-				
-				base = os.path.commonprefix(file_list)
-				[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
+			#if mime_type == "text/uri-list":
+			file_list = []
+			for uri in selection.data.split("\n"):
+				uri = uri.strip()
+				if uri:
+					info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_DEFAULT)
+					if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+						file_list.extend(vfs_walk(gnomevfs.URI(uri)))
+					else:
+						file_list.extend(uri)
+			context.finish(True, False, time)
+			
+			base = os.path.commonprefix(file_list)
+			[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
 
 	def get_files(self):
 		files = []
@@ -805,6 +834,7 @@ class FileList:
 
 		#if mime == "application/ogg":
 		self.append_file(sound_file)
+		self.window.set_sensitive()
 
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file_tags)
@@ -821,7 +851,6 @@ class FileList:
 		if not self.typefinders.is_running():
 			self.typefinders.run()
 			
-<<<<<<< .mine
 	def add_folder(self, folder):
 
 		base = folder
@@ -832,23 +861,21 @@ class FileList:
 				
 	def format_cell(self, sound_file):
 		
-		template_tags    = "%(artist)s - %(album)s - <b>%(title)s</b>\n<i>%(filename)s</i>"
-		template_loading = "<i> loading tags...</i>\n<i>%(filename)s</i>"
-		template_notags  = '<span foreground="red">no tags...</span>\n<i>%(filename)s</i>'
+		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
+		template_loading = "<i>%s</i>\n<small>%%(filename)s</small>" \
+							% _("loading tags...")
+		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
+							% _("no tags")
 
 		params = {}
 		params["filename"] = urllib.unquote(sound_file.get_filename())
-		tagged = False
-		finished = False
 		for item in ("title", "artist", "album"):
 			params[item] = sound_file.get_tag(item)
-			if params[item]:
-				tagged = True
-
-		if tagged:
+		
+		if sound_file.have_tags:
 			s = template_tags % params
 		else:
-			if sound_file.finished:
+			if sound_file.tags_read:
 				s = template_notags % params
 			else:
 				s = template_loading % params
@@ -857,8 +884,6 @@ class FileList:
 
 	def append_file(self, sound_file):
 
-		# TODO: check here with typefind!
-
 		iter = self.model.append()
 		sound_file.model = iter
 		self.model.set(iter, 0, self.format_cell(sound_file))
@@ -866,10 +891,8 @@ class FileList:
 	
 	
 	def append_file_tags(self, tagreader):
-=======
-	def append_file(self, tagreader):
->>>>>>> .r34
 		sound_file = tagreader.get_sound_file()
+
 
 		fields = {}
 		for key in ALL_COLUMNS:
@@ -958,7 +981,7 @@ class PreferencesDialog:
 		try:
 			self.get_float("vorbis-quality")
 		except gobject.GError:
-			print "converting old vorbis setting..."
+			log("converting old vorbis setting...")
 			old_quality = self.get_int("vorbis-quality")
 			self.gconf.unset(self.path("vorbis-quality"))
 			quality_setting = (0,0.2,0.3,0.6,0.8)
@@ -967,7 +990,7 @@ class PreferencesDialog:
 		# mp3 quality was stored as an int enum
 		cbr = self.get_int("mp3-cbr-quality")
 		if cbr <= 4:
-			print "converting old mp3 quality setting...", cbr
+			log("converting old mp3 quality setting... (%d)" % cbr)
 
 			abr = self.get_int("mp3-abr-quality")
 			vbr = self.get_int("mp3-vbr-quality")
@@ -983,7 +1006,7 @@ class PreferencesDialog:
 		try:
 			self.get_string("mp3-mode")
 		except gobject.GError:
-			print "converting old mp3 mode setting..."
+			log("converting old mp3 mode setting...")
 			old_mode = self.get_int("mp3-mode")
 			self.gconf.unset(self.path("mp3-mode"))
 			modes = ("cbr","abr","vbr")
@@ -1024,7 +1047,7 @@ class PreferencesDialog:
 
 		# desactivate mp3 output if encoder plugin is not present
 		if not gst.element_factory_find("lame"):
-			print "LAME GStreamer plugin not found, desactivating MP3 output."
+			log("LAME GStreamer plugin not found, desactivating MP3 output.")
 			w = glade.get_widget("output_mime_type_mp3")
 			w.set_sensitive(False)
 			mime_type = self.defaults["output-mime-type"]
@@ -1101,8 +1124,6 @@ class PreferencesDialog:
 			if mode == "cbr":
 				aprox = False
 
-		#print "bitrate: ", bitrate
-
 		if bitrate:
 			if aprox:
 				return "~%d kbps" % bitrate
@@ -1143,12 +1164,7 @@ class PreferencesDialog:
 			path = tuple[2]
 			generator.set_folder(os.path.dirname(path))
 		else:
-
-			#import pdb
-			#pdb.set_trace()
-		
 			path, filename = os.path.split(sound_file.get_filename())
-		
 			path = ""
 		
 			generator.set_folder(os.path.join(self.get_string("selected-folder"), path))
@@ -1158,7 +1174,7 @@ class PreferencesDialog:
 		generator.set_basename_pattern(self.get_basename_pattern())
 		generator.set_replace_messy_chars(
 			self.get_int("replace-messy-chars"))
-		
+
 		return generator.get_target_name(sound_file)
 
 	def set_sensitive(self):
@@ -1257,11 +1273,6 @@ class PreferencesDialog:
 			index = 0
 		return self.basename_patterns[index][0]
 		
-	def UNUSED_on_replace_only_impossible_chars_toggled(self, button):
-		if button.get_active():
-			self.set_int("replace-messy-chars", 0)
-			self.update_example()
-
 	def on_replace_messy_chars_toggled(self, button):
 		if button.get_active():
 			self.set_int("replace-messy-chars", 1)
@@ -1299,9 +1310,6 @@ class PreferencesDialog:
 		if button.get_active():
 			self.change_mime_type("audio/mpeg")
 
-	def UNUSED_on_vorbis_quality_value_changed(self, combobox):
-		self.set_int("vorbis-quality", combobox.get_active())
-		
 	def on_vorbis_quality_changed(self, combobox):
 		quality = (0,0.2,0.4,0.6,0.8)
 		self.set_float("vorbis-quality", quality[combobox.get_active()])
@@ -1320,32 +1328,11 @@ class PreferencesDialog:
 		}
 		quality = self.get_int(keys[mode])
 		
-		#print _("\nchange mp3 mode")
-		#print _("quality: %f") % quality
-		
-		#~ quality_to_preset = {
-			#~ "cbr": (64, 96, 128, 192, 256),
-			#~ "abr": (64, 96, 128, 192, 256),
-			#~ "vbr": (1, 3, 5, 7, 9), # inverted !
-		#~ }
-
 		quality_to_preset = {
 			"cbr": {64:0, 96:1, 128:2, 192:3, 256:4},
 			"abr": {64:0, 96:1, 128:2, 192:3, 256:4},
 			"vbr": {9:0,   7:1,	  5:2,	 3:3,	1:4}, # inverted !
 		}
-
-
-		#~ active = 0
-		#~ for i in quality_to_preset[mode]:
-			#~ print "	" , quality , " <-> " , i
-			#~ if quality <= i:
-				#~ print _("I choose #%s = %s") % (active, quality_to_preset[mode][active])
-				#~ break
-			#~ active+=1
-			
-		#~ if mode == "vbr": 
-			#~ active = 4-active
 			
 		if quality in quality_to_preset[mode]:
 			#print "mp3 quality:", quality, mode, quality_to_preset[mode][quality]
@@ -1376,17 +1363,6 @@ class PreferencesDialog:
 		#print "%s[%d] = %s" % (keys[mode], combobox.get_active(), quality[mode][combobox.get_active()])
 
 
-	def UNUSED_on_output_mime_type_changed(self, combobox):
-		types = (
-		("audio/x-vorbis", ".ogg"),
-		("audio/mpeg", ".mp3"),
-		("audio/x-flac", ".flac"),
-		("audio/x-wav", ".wav")
-		)
-		self.handle_mime_type_button( types[combobox.get_active()][0],
-									  types[combobox.get_active()][1])
-
-
 class ConverterQueueCanceled(SoundConverterException):
 
 	"""Exception thrown when a ConverterQueue is canceled."""
@@ -1411,6 +1387,7 @@ class ConverterQueue(TaskQueue):
 		self.overwrite_action = None
 
 	def add(self, sound_file):
+	
 		output_filename = self.window.prefs.generate_filename(sound_file)
 		
 		path = urlparse.urlparse(output_filename) [2]
@@ -1568,6 +1545,8 @@ class SoundConverterWindow:
 		self.about.set_property("name", NAME)
 		self.about.set_property("version", VERSION)
 
+		self.convertion_waiting = False
+
 		self.converter = ConverterQueue(self)
 		
 		self.sensitive_widgets = {}
@@ -1631,16 +1610,35 @@ class SoundConverterWindow:
 			model, paths = self.filelist_selection.get_selected_rows()
 		self.set_sensitive()
 
-	def on_convert_button_clicked(self, *args):
+	def do_convert(self):
 		try:
 			for fields in self.filelist.get_files():
 				self.converter.add(fields["META"])
 		except ConverterQueueCanceled:
 			print _("canceling conversion.")
 		else:
+			self.set_status("")
 			self.converter.run()
+			self.convertion_waiting = False
 			self.set_sensitive()
-		
+
+	def try_to_launch_convertion(self):		
+		# check that all files have loaded their tags
+		not_ready = [s for s in self.filelist.get_files() if not s["META"].tags_read]
+		if not_ready:
+			# retry later
+			gobject.timeout_add(1000, self.try_to_launch_convertion)
+		else:
+			# start convertion
+			self.do_convert()
+		return False
+			
+	def on_convert_button_clicked(self, *args):
+		self.convertion_waiting = True
+		self.set_status(_("Waiting for tags..."))
+		self.set_sensitive() 
+		self.try_to_launch_convertion()
+
 	def on_stop_button_clicked(self, *args):
 		self.converter.stop()
 		self.set_sensitive()
@@ -1662,8 +1660,6 @@ class SoundConverterWindow:
 		about.set_property("version", VERSION)
 		about.set_property("translator_credits", TRANSLATORS)
 		about.show()
-		# TODO
-		#self.about.show()
 
 	def selection_changed(self, *args):
 		self.set_sensitive()
@@ -1676,10 +1672,11 @@ class SoundConverterWindow:
 			self.filelist_selection.count_selected_rows() > 0)
 		self.set_widget_sensitive("convert_button", 
 								  self.filelist.is_nonempty() and
-								  not self.converter.is_running())
+								  not self.converter.is_running() and
+								  not self.convertion_waiting)
 		self.set_widget_sensitive("stop_button", 
 								  self.converter.is_running())
-
+		
 	def set_progress(self, done_so_far, total):
 		if total == 0:
 			self.progressbar.set_text("")
@@ -1824,6 +1821,7 @@ options = [
 def main():
 	shortopts = "".join(map(lambda opt: opt[0], options))
 	longopts = map(lambda opt: opt[1], options)
+	
 	opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
 	for opt, optarg in opts:
 		for tuple in options:
