@@ -774,6 +774,8 @@ class FileList:
 		self.tagreaders  = TaskQueue()
 		self.typefinders = TaskQueue()
 		
+		self.filelist={}
+		
 		args = []
 		for name in ALL_COLUMNS:
 			if name in VISIBLE_COLUMNS:
@@ -845,6 +847,12 @@ class FileList:
 	
 	def add_file(self, sound_file):
 
+		if sound_file.get_uri() in self.filelist:
+			log("file already present: '%s'" % sound_file.get_uri())
+			return 
+
+		self.filelist[sound_file.get_uri()] = True
+
 		typefinder = TypeFinder(sound_file)
 		typefinder.set_found_type_hook(self.found_type)
 		self.typefinders.add(typefinder)
@@ -905,6 +913,8 @@ class FileList:
 		self.window.set_sensitive()
 
 	def remove(self, iter):
+		uri = self.model.get(iter, 1)[0].get_uri()
+		del self.filelist[uri]
 		self.model.remove(iter)
 		
 	def is_nonempty(self):
