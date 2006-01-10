@@ -1,18 +1,31 @@
+2006-01-10  Gautier Portet <kassoulet gmail com>
+
+	* Wow, fixed the problem when we generate filenames from tags but tags
+	  are not read when preparing filenames.
+	  This was a big mess, and I tried numerous solutions, but I will keep
+	  the only one that is working for now: just wait tags to be read
+	  before starting conversion. Sorry, this sucks...
+	  Hopefully I read that GStreamer 0.10 is very better with threads :)
+
+2006-01-07  Gautier Portet <kassoulet gmail com>
+
+	* Added the possibility to pause the conversion.
+
 2005-12-25  Gautier Portet <kassoulet gmail com>
 
-	* You will not be able now to add the same file multiple times.
+	* Files can only be added once in the list.
 
 2005-12-22  Gautier Portet <kassoulet gmail com>
 
-	* Finally got vfs_walk to work. Now folder importing is really
-	  working...
+	* Finally got walking on gnomevfs to work. Now folder importing is really
+	  usable...
 	* Added a default to tags, so tag-filled destination paths will
 	  be valid.
 
 2005-12-20  Gautier Portet  <kassoulet gmail com>
 
 	* Better type detection.
-	* Finally solved the (non?) problem when trying to convert files which
+	* Temporary solved the (non?) problem when trying to convert files which
 	  don't have tags filled yet.
 	
 

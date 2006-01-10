@@ -1,8 +1,9 @@
 #!/usr/bin/python
+# -*- coding: latin-1 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats. 
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005 Gautier Portet
+# Copyright 2005-2006 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +19,48 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+PARAM_COMBO = 0 
+
+"""
+nice in params...
+
+liste des params:
+	nom = type + details	
+		combo: liste des choix
+		boolean: rien
+		integer: min,max
+		
+vorbis: min-bitrate, max-bitrate, or just iriver-mode ?
+lame: quality, bitrate, vbr, min, max, 
+flac: fast/average/slow, 
+aac: bitrate
+wav:
+speex:
+
+format: 48000/44100/22050/11025/8000 16/8 stereo/mono
+	
+voir mpegencode		
+
+01 decoding: 19s
+
+"""
+
+
 NAME = "SoundConverter"
 VERSION = "0.8.2"
 GLADE = "soundconverter.glade"
+
+# Python standard stuff.
+import sys
+import os
+import inspect
+import getopt
+import textwrap
+import urlparse
+import string
+import thread
+import urllib
+import time
 
 # GNOME and related stuff.
 import pygtk
@@ -32,9 +72,6 @@ import gnome.ui
 import gst
 import gconf
 import gobject
-import urllib
-
-import time
 
 try:
 	# gnome.vfs is deprecated
@@ -45,15 +82,6 @@ except ImportError:
 
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
-
-# Python standard stuff.
-import sys
-import os
-import inspect
-import getopt
-import textwrap
-import urlparse
-import string
 
 #localization
 import locale
@@ -67,7 +95,11 @@ gettext.install(PACKAGE,localedir=None,unicode=1)
 gtk.glade.bindtextdomain(PACKAGE,'/usr/share/locale')
 gtk.glade.textdomain(PACKAGE)
 
-TRANSLATORS = _("Guillaume Bedot <littletux@zarb.org>")
+TRANSLATORS = _("""
+Guillaume Bedot(french)
+Dominik Zabłotny (polish) 
+Jonh Wendell (Brazilian)
+""")
 
 # Names of columns in the file list
 VISIBLE_COLUMNS = ["filename"]
@@ -80,6 +112,7 @@ mime_whitelist = (
 	"audio/", 
 	"video/", 
 	"application/ogg", 
+	"application/x-id3",
 	"application/x-ape",
 	"application/vnd.rn-realmedia",
 	"application/x-shockwave-flash",
@@ -113,7 +146,6 @@ def vfs_walk(uri):
 	
 		if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 			filelist.extend(
-				#vfs_walk(uri.resolve_relative(file_info.name)) )
 				vfs_walk(uri.append_path(file_info.name)) )
 
 		if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
@@ -124,13 +156,12 @@ def log(message):
 	if get("quiet") == False:
 		print message
 
-def UNUSED_sleep(duration):
+def sleep(duration):
 	start = time.time()
 	while time.time() < start + duration:
 		while gtk.events_pending():
-			gtk.main_iteration(gtk.FALSE)
-		time.sleep(0.001)
-
+			gtk.main_iteration(False)
+		time.sleep(0.010)
 
 
 def UNUSED_display_from_mime(mime):
@@ -250,6 +281,7 @@ class TargetNameGenerator:
 		self.replace_messy_chars = yes_or_no
 		
 	def get_target_name(self, sound_file):
+
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
 		if u.host_port:
@@ -332,7 +364,6 @@ class ErrorPrinter:
 error = None
 
 
-
 class BackgroundTask:
 
 	"""A background task.
@@ -349,12 +380,15 @@ class BackgroundTask:
 		except SoundConverterException, e:
 			error.show_exception(e)
 			return
-		self.id = gobject.idle_add(self.do_work)
+		self.paused = False
+		self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_LOW)
 		self.run_start_times = os.times()
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
+			if self.paused:
+				return True
 			if self.work():
 				return True
 			else:
@@ -484,7 +518,8 @@ class Pipeline(BackgroundTask):
 		
 	def work(self):
 		if self.pipeline.get_state() == gst.STATE_NULL:
-			return False
+			print "error: pipeline.state == null"
+			#return False
 		return self.pipeline.iterate()
 
 	def finish(self):
@@ -537,19 +572,17 @@ class TypeFinder(Pipeline):
 		self.pipeline.add(typefind)
 		filesrc.link(typefind)
 
-		#print "inspecting:", sound_file.get_uri()
-
 	def set_found_type_hook(self, found_type_hook):
 		self.found_type_hook = found_type_hook
 	
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
-		msg = "mime type: %s" % mime_type
+		self.found_type = None
 		for t in mime_whitelist:
 			if t in mime_type:
-				msg += " -> accepted!"
 				self.found_type = mime_type
-		log(msg)
+		if not self.found_type:
+			log("Mime type skipped: %s (mail us if this is an error)" % mime_type)
 	
 	def work(self):
 		return Pipeline.work(self) and not self.found_type
@@ -576,8 +609,8 @@ class Decoder(Pipeline):
 		decodebin.connect("found-tag", self.found_tag)
 		decodebin.connect("new-decoded-pad", self.new_decoded_pad)
 		self.add(decodebin)
-		
-		# TODO add error management with gstreamer 0.9 ( get_bus() )
+	
+		# TODO add error management
 
 	def have_type(self, typefind, probability, caps):
 		pass
@@ -619,7 +652,6 @@ class TagReader(Decoder):
 
 
 	def found_tag(self, decoder, something, taglist):
-		#sleep(1)		
 
 		self.sound_file.add_tags(taglist)
 
@@ -628,7 +660,7 @@ class TagReader(Decoder):
 		# The second callback contains the tags we're interested in.
 		if taglist.has_key('serial'):
 			return
-			
+
 		self.found_tags = True
 		self.sound_file.have_tags = True
 
@@ -671,7 +703,6 @@ class Converter(Decoder):
 			"audio/mpeg": self.add_mp3_encoder,
 		}
 
-
 	def new_decoded_pad(self, decoder, pad, is_last):
 		if self.added_pad_already:
 			return
@@ -704,12 +735,13 @@ class Converter(Decoder):
 		dirname = urllib.unquote( os.path.dirname(path) )
 		if dirname and not os.path.exists(dirname):
 			log("Creating Folders: '%s'" % dirname)
+			# TODO: use gnomevfs!
 			os.makedirs(dirname)
 		#elif os.path.exists(path):
 		#	 raise ConversionTargetExists(self.output_filename)
 
 		sink = self.make_element("gnomevfssink", "sink")
-		log(_("Writing to: '%s'") % self.output_filename)
+		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
 		sink.set_property("location", self.output_filename)
 		self.add(sink)
 	
@@ -1301,8 +1333,6 @@ class PreferencesDialog:
 						"audio/x-wav": 3,
 		}
 		self.quality_tabs.set_current_page(tabs[mime_type])
-		
-		#print _("setting mime:"), mime_type
 
 	def on_output_mime_type_ogg_vorbis_toggled(self, button):
 		if button.get_active():
@@ -1345,7 +1375,6 @@ class PreferencesDialog:
 		}
 			
 		if quality in quality_to_preset[mode]:
-			#print "mp3 quality:", quality, mode, quality_to_preset[mode][quality]
 			self.mp3_quality.set_active(quality_to_preset[mode][quality])
 		
 		self.update_example()
@@ -1370,7 +1399,6 @@ class PreferencesDialog:
 		self.set_int(keys[mode], quality[mode][combobox.get_active()])
 
 		self.update_example()
-		#print "%s[%d] = %s" % (keys[mode], combobox.get_active(), quality[mode][combobox.get_active()])
 
 
 class ConverterQueueCanceled(SoundConverterException):
@@ -1596,8 +1624,6 @@ class SoundConverterWindow:
 
 
 	def on_addfolder_activate(self, *args):
-		#print "add_folder"
-		
 		ret = self.addfolderchooser.run()
 		self.addfolderchooser.hide()
 		if ret == gtk.RESPONSE_OK:
@@ -1632,22 +1658,32 @@ class SoundConverterWindow:
 			self.convertion_waiting = False
 			self.set_sensitive()
 
-	def try_to_launch_convertion(self):		
-		# check that all files have loaded their tags
+	def wait_tags_and_convert(self):
 		not_ready = [s for s in self.filelist.get_files() if not s["META"].tags_read]
+
 		if not_ready:
-			# retry later
-			gobject.timeout_add(1000, self.try_to_launch_convertion)
+			self.progressbar.pulse()
+			return True
 		else:
-			# start convertion
 			self.do_convert()
-		return False
+			return False
 			
+
 	def on_convert_button_clicked(self, *args):
-		self.convertion_waiting = True
-		self.set_status(_("Waiting for tags..."))
-		self.set_sensitive() 
-		self.try_to_launch_convertion()
+	
+		if not self.converter.is_running():
+			self.convertion_waiting = True
+			self.set_status(_("Waiting for tags..."))
+			self.set_sensitive()
+			
+			gobject.timeout_add(100, self.wait_tags_and_convert)
+			
+		else:
+			self.converter.paused = not self.converter.paused
+			if self.converter.paused:
+				self.set_status(_("Paused"))
+			else: 
+				self.set_status("") 
 
 	def on_stop_button_clicked(self, *args):
 		self.converter.stop()
@@ -1681,9 +1717,9 @@ class SoundConverterWindow:
 		self.set_widget_sensitive("remove", 
 			self.filelist_selection.count_selected_rows() > 0)
 		self.set_widget_sensitive("convert_button", 
-								  self.filelist.is_nonempty() and
-								  not self.converter.is_running() and
-								  not self.convertion_waiting)
+								  self.filelist.is_nonempty())# and
+								  #not self.converter.is_running() and
+								  #not self.convertion_waiting)
 		self.set_widget_sensitive("stop_button", 
 								  self.converter.is_running())
 		

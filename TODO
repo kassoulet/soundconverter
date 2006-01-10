@@ -1,8 +1,6 @@
  
  
 bugs:
- - dont add dupplicate files 
- - find a solution when no tags & filename generated from tags
 
  * encoders as plugins 
  * optional "advanced" encoder settings
@@ -15,6 +13,8 @@ bugs:
 
  * bug: the program's options aren't printed with --help
 
+ -ok- find a solution when no tags & filename generated from tags
+ -ok- don't add dupplicate files 
  -ok- dropping a list a folder does not work as expected
  -ok- handle error when overwriting a file
  -ok- bug: the dialog can only be showed once
