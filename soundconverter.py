@@ -741,7 +741,7 @@ class Converter(Decoder):
 		if not encoder:
 			# TODO: add proper error management when an encoder cannot be created
 			dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
-						gtk.BUTTONS_OK, " Cannot create a decoder for '%s' format." % \
+						gtk.BUTTONS_OK, _("Cannot create a decoder for '%s' format.") % \
 						self.output_type )
 			dialog.run()
 			dialog.hide()
@@ -750,16 +750,19 @@ class Converter(Decoder):
 		log(_("using encoder: %s (%s)") % \
 			(encoder.get_factory().get_name(), encoder.get_factory().get_longname()))
 		
-		tuple = urlparse.urlparse(self.output_filename)
-		path = tuple[2]
-		dirname = urllib.unquote( os.path.dirname(path) )
-		if dirname and not os.path.exists(dirname):
-			log("Creating Folders: '%s'" % dirname)
-			# TODO: use gnomevfs!
-			vfs_makedirs(dirname)
-		#elif os.path.exists(path):
-		#	 raise ConversionTargetExists(self.output_filename)
-
+		uri = gnomevfs.URI(self.output_filename)
+		dirname = uri.parent
+		if dirname and not gnomevfs.exists(dirname):
+			log(_("Creating folder: '%s'") % dirname)
+			if not vfs_makedirs(str(dirname)):
+				# TODO add error management
+				dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+							gtk.BUTTONS_OK, _("Cannot create '%s' folder.") % \
+							dirname )
+				dialog.run()
+				dialog.hide()
+				return
+				
 		sink = self.make_element("gnomevfssink", "sink")
 		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
 		sink.set_property("location", self.output_filename)
