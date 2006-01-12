@@ -1,3 +1,10 @@
+2006-01-11  Gautier Portet <kassoulet gmail com>
+
+	* Makefile: Added install-local. 
+	  #1154 (Thanks Régis & Janis)
+	* Added a makedirs() that use gnomevfs, so folders will really be
+	  created now, even on remote filesystems.
+
 2006-01-10  Gautier Portet <kassoulet gmail com>
 
 	* Wow, fixed the problem when we generate filenames from tags but tags
@@ -5,7 +12,7 @@
 	  This was a big mess, and I tried numerous solutions, but I will keep
 	  the only one that is working for now: just wait tags to be read
 	  before starting conversion. Sorry, this sucks...
-	  Hopefully I read that GStreamer 0.10 is very better with threads :)
+	  Hopefully I read that GStreamer 0.10 is better with threads :)
 
 2006-01-07  Gautier Portet <kassoulet gmail com>
 

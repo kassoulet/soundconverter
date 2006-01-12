@@ -19,7 +19,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-PARAM_COMBO = 0 
 
 """
 nice in params...
@@ -151,6 +150,27 @@ def vfs_walk(uri):
 		if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
 			filelist.append( str(uri.append_file_name(file_info.name)) )
 	return filelist
+
+def vfs_makedirs(path_to_create):
+	"""Similar to os.makedirs, but with gnomevfs"""
+	
+	uri = gnomevfs.URI(path_to_create)
+	path = uri.path
+
+	# start at root
+	uri =  uri.resolve_relative("/")
+	
+	for folder in path.split("/"):
+		if not folder:
+			continue
+		uri = uri.append_path(folder)
+		try:
+			gnomevfs.make_directory(uri, 0777)
+		except gnomevfs.FileExistsError:
+			pass
+		except :
+			return False
+	return True	
 
 def log(message):
 	if get("quiet") == False:
@@ -736,7 +756,7 @@ class Converter(Decoder):
 		if dirname and not os.path.exists(dirname):
 			log("Creating Folders: '%s'" % dirname)
 			# TODO: use gnomevfs!
-			os.makedirs(dirname)
+			vfs_makedirs(dirname)
 		#elif os.path.exists(path):
 		#	 raise ConversionTargetExists(self.output_filename)
 

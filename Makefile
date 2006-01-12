@@ -1,5 +1,5 @@
 #
-# (c) 2005 Gautier Portet
+# (c) 2005-2006 Gautier Portet
 #
 
 PACKAGE=soundconverter
@@ -25,6 +25,15 @@ install:
 	sed 's,^GLADE *=.*,GLADE = "$(sharedir)/soundconverter.glade",' \
 	soundconverter.py > make-install-temp
 	install make-install-temp $(DESTDIR)$(bindir)/soundconverter
+	rm make-install-temp
+
+install-local:
+	install -d ~/bin ~/share/soundconverter
+	install -m 0644 soundconverter.glade ~/share/soundconverter
+	install -m 0644 logo.png ~/share/soundconverter
+	sed 's,^GLADE *=.*,GLADE = "~/share/soundconverter/soundconverter.glade",' \
+	soundconverter.py > make-install-temp
+	install make-install-temp ~/bin/soundconverter
 	rm make-install-temp
 
 clean:
