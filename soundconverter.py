@@ -797,7 +797,7 @@ class Converter(Decoder):
 	
 		mp3enc = self.make_element("lame", "encoder")
 
-		# raise algorithm quality
+		# raise algorithm quality, who want bad quality encoding ?
 		mp3enc.set_property("quality",2)
 		
 		if self.mp3_mode is not None:
@@ -811,9 +811,12 @@ class Converter(Decoder):
 				mp3enc.set_property("xingheader","true")
 			
 			mp3enc.set_property("vbr", properties[self.mp3_mode][0])
-			# TODO: a bug in gstreamer ?!?
 			if self.mp3_quality == 9:
-				self.mp3_quality = 8
+				# GStreamer set max bitrate to 320 but lame uses
+				# mpeg2 with vbr-quality==9, so max bitrate is 160
+				mp3enc.set_property("vbr-max-bitrate", 160)
+			
+			print "quality: %s=%s" % (properties[self.mp3_mode][1], self.mp3_quality)
 			mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
 	
 		return mp3enc

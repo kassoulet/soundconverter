@@ -1,3 +1,9 @@
+2006-01-15  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.glade: Reverted to old UI to make a release soon.
+	* soundconverter.py: Changed the gst-lame problem at vbr-quality=9
+	  handling for a cleaner one. 
+
 2006-01-11  Gautier Portet <kassoulet gmail com>
 
 	* Makefile: Added install-local. 
