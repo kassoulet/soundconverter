@@ -816,7 +816,6 @@ class Converter(Decoder):
 				# mpeg2 with vbr-quality==9, so max bitrate is 160
 				mp3enc.set_property("vbr-max-bitrate", 160)
 			
-			print "quality: %s=%s" % (properties[self.mp3_mode][1], self.mp3_quality)
 			mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
 	
 		return mp3enc
@@ -862,9 +861,9 @@ class FileList:
 	
 	def drag_data_received(self, widget, context, x, y, selection, 
 						   mime_id, time):
+
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			mime_type = self.drop_mime_types[mime_id]
-			#if mime_type == "text/uri-list":
 			file_list = []
 			for uri in selection.data.split("\n"):
 				uri = uri.strip()
@@ -873,9 +872,8 @@ class FileList:
 					if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 						file_list.extend(vfs_walk(gnomevfs.URI(uri)))
 					else:
-						file_list.extend(uri)
+						file_list.append(uri)
 			context.finish(True, False, time)
-			
 			base = os.path.commonprefix(file_list)
 			[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
 
