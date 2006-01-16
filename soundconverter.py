@@ -401,8 +401,8 @@ class BackgroundTask:
 			error.show_exception(e)
 			return
 		self.paused = False
+		self.run_start_time = time.time()
 		self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_LOW)
-		self.run_start_times = os.times()
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
@@ -412,7 +412,7 @@ class BackgroundTask:
 			if self.work():
 				return True
 			else:
-				self.run_finish_times = os.times()
+				self.run_finish_time = time.time()
 				self.finish()
 				return False
 		except SoundConverterException, e:
@@ -601,6 +601,7 @@ class TypeFinder(Pipeline):
 		for t in mime_whitelist:
 			if t in mime_type:
 				self.found_type = mime_type
+				print "mime:", mime_type
 		if not self.found_type:
 			log("Mime type skipped: %s (mail us if this is an error)" % mime_type)
 	
@@ -666,6 +667,7 @@ class TagReader(Decoder):
 		Decoder.__init__(self, sound_file)
 		self.found_tag_hook = None
 		self.found_tags = False
+		self.run_start_time = time.time()
 
 	def set_found_tag_hook(self, found_tag_hook):
 		self.found_tag_hook = found_tag_hook
@@ -685,6 +687,9 @@ class TagReader(Decoder):
 		self.sound_file.have_tags = True
 
 	def work(self):
+		if time.time()-self.run_start_time > 5:
+			# stop looking for tags after 5s 
+			return False
 		return Decoder.work(self) and not self.found_tags
 
 	def finish(self):
@@ -1534,9 +1539,7 @@ class ConverterQueue(TaskQueue):
 		self.reset_counters()
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
-		total_time = self.run_finish_times[4] - self.run_start_times[4]
-		user_time = self.run_finish_times[0] - self.run_start_times[0]
-		system_time = self.run_finish_times[1] - self.run_start_times[1]
+		total_time = self.run_finish_time - self.run_start_time
 		self.window.set_status(_("Conversion done. ( in %s )") % 
 							   self.format_time(total_time))
 
