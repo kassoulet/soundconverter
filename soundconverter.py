@@ -773,6 +773,8 @@ class Converter(Decoder):
 		sink.set_property("location", self.output_filename)
 		self.add(sink)
 	
+		self.converting = True
+	
 		self.play()
 		self.added_pad_already = True
 
@@ -1527,8 +1529,9 @@ class ConverterQueue(TaskQueue):
 		self.total_bytes += c.get_size_in_bytes()
 
 	def work_hook(self, task):
-		bytes = task.get_bytes_progress()
-		self.window.set_progress(self.total_for_processed_files + bytes,
+		if hasattr(task,"converting"): 
+			bytes = task.get_bytes_progress()
+			self.window.set_progress(self.total_for_processed_files + bytes,
 								 self.total_bytes)
 
 	def finish_hook(self, task):

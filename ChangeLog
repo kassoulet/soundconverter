@@ -1,7 +1,11 @@
+2006-01-19  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: The progressbar should be more precise now. 
+
 2006-01-16  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: hum?!?!? File dropping was *again* broken, maybe
-	  it's my evil twin which edit the code :)
+	  it's my evil twin who edits the code :)
 	* soundconverter.py: added a timeout when reading tags.
 
 2006-01-15  Gautier Portet <kassoulet gmail com>
