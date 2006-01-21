@@ -32,31 +32,21 @@ magically convert to any format we might want.
 
         Localization
         ------------
+
 These simple steps allow the translation of soundconverter:
-(you'll have to replace LANG with the appropriate 2 letters country code)
- 
-1. create or update pot file:
-xgettext ../soundconverter.py ../soundconverter.glade -o soundconverter.pot
 
-2. create po file for a new language:
-cp soundconverter.pot LANG.po
-
-or update a po file:
-msgmerge -U LANG.po soundconverter.pot
-
-3. edit the po file with your favorite po editor (gtranslator, kbabel, ...).
-
-4. create and install the binary mo file:
-msgfmt LANG.po -o soundconverter_LANG.mo
-su -c "cp soundconverter_LANG.mo /usr/share/locale/LANG/LC_MESSAGES/soundconverter.mo"
-
+ * make sure you have gettext installed.
+ * run 'make lang' to update languages files.
+ * edit your .po file in po/ folder.
+ * repeat step 2.
+ * run 'make install' and it should work.
 
 
         Copyright and acknowledgements
         ------------------------------
 
 Copyright 2004 Lars Wirzenius
-Copyright 2005 Gautier Portet
+Copyright 2005-2006 Gautier Portet
 
 thanks to:
 	Guillaume Bedot

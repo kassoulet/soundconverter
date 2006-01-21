@@ -11,7 +11,7 @@ PO_FILES=$(patsubst %,po/%.po, $(LINGUAS))
 MO_FILES=$(patsubst %.po,%.mo, $(PO_FILES))
 TRANSLATABLE_FILES=soundconverter.py soundconverter.glade
 
-DEST=$(PACKAGE)-$(VERSION) 
+DEST=$(PACKAGE)-$(VERSION)
 
 prefix = /usr/local
 bindir = $(prefix)/bin
@@ -19,7 +19,10 @@ sharedir = $(prefix)/share/soundconverter
 
 POT_FILE=po/soundconverter.pot
 
-all: $(MO_FILES)
+all: 
+	
+
+lang: $(MO_FILES)
 	
 
 $(POT_FILE): $(TRANSLATABLE_FILES)
@@ -61,15 +64,12 @@ install-local:
 
 clean:
 	rm -f *.pyc *.bak
-	rm -f po/*.mo
     
 dist:
 	mkdir -p $(DEST)
 	cp -a ChangeLog README soundconverter.py TODO soundconverter.glade soundconverter.gladep Makefile logo.png COPYING soundconverter.1 soundconverterTests.py $(DEST)
 	mkdir -p $(DEST)/po
-	cp -a po/fr.po $(DEST)/po
-	cp -a po/pl.po $(DEST)/po	
-	cp -a po/pt_BR.po $(DEST)/po	
+	cp -a $(PO_FILES) $(MO_FILES) $(DEST)/po
 	tar czf $(DEST).tar.gz $(DEST)
 	rm -rf $(DEST)
 

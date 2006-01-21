@@ -1,5 +1,25 @@
 2006-01-21  Gautier Portet <kassoulet gmail com>
 
+	Release 0.8.2
+
+	make install-local #1154
+	Pause button #1455
+
+	Unique file #5334
+	Folder dropping #5561
+	Filtering by mime #5789
+	Fixed problem with vbr #5872
+
+	French Translation
+	New list display
+	UI Changes
+	More precise progress bar
+	Async tag reading
+	Fixed gnomevfs problems with folders
+
+
+2006-01-21  Gautier Portet <kassoulet gmail com>
+
 	* Makefile: Added translations to build system.
 	* fr.po: Updated french translation.
 	* soundconverter.glade: Some minors changes.
