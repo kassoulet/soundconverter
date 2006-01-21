@@ -5,12 +5,32 @@
 PACKAGE=soundconverter
 VERSION=0.8.2
 
+LINGUAS=fr pl pt_BR
+
+PO_FILES=$(patsubst %,po/%.po, $(LINGUAS))
+MO_FILES=$(patsubst %.po,%.mo, $(PO_FILES))
+TRANSLATABLE_FILES=soundconverter.py soundconverter.glade
+
+DEST=$(PACKAGE)-$(VERSION) 
+
 prefix = /usr/local
 bindir = $(prefix)/bin
 sharedir = $(prefix)/share/soundconverter
 
-all:
+POT_FILE=po/soundconverter.pot
 
+all: $(MO_FILES)
+	
+
+$(POT_FILE): $(TRANSLATABLE_FILES)
+	xgettext $(TRANSLATABLE_FILES) -o $(POT_FILE) 
+
+$(PO_FILES): $(POT_FILE)
+	msgmerge -U $@ $(POT_FILE)
+
+$(MO_FILES): $(PO_FILES)
+	msgfmt $< -o $@
+	
 check:
 	python soundconverterTests.py
 	if [ -d snd ]; then python soundconverter.py -t snd/* > /dev/null; fi
@@ -22,6 +42,9 @@ install:
 	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(sharedir)
 	install -m 0644 soundconverter.glade $(DESTDIR)$(sharedir)
 	install -m 0644 logo.png $(DESTDIR)$(sharedir)
+	install -m 0644 po/fr.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
+	install -m 0644 po/pl.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
+	install -m 0644 po/pt_BR.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
 	sed 's,^GLADE *=.*,GLADE = "$(sharedir)/soundconverter.glade",' \
 	soundconverter.py > make-install-temp
 	install make-install-temp $(DESTDIR)$(bindir)/soundconverter
@@ -38,15 +61,17 @@ install-local:
 
 clean:
 	rm -f *.pyc *.bak
+	rm -f po/*.mo
     
 dist:
-	mkdir -p $(PACKAGE)-$(VERSION)
-	cp -a ChangeLog README soundconverter.py TODO soundconverter.glade soundconverter.gladep Makefile logo.png COPYING soundconverter.1 soundconverterTests.py $(PACKAGE)-$(VERSION)
-	mkdir -p $(PACKAGE)-$(VERSION)/po
-	cp -a po/fr.po $(PACKAGE)-$(VERSION)/po
-	cp -a po/pl.po $(PACKAGE)-$(VERSION)/po	
-	tar czf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)
-	rm -rf $(PACKAGE)-$(VERSION)
+	mkdir -p $(DEST)
+	cp -a ChangeLog README soundconverter.py TODO soundconverter.glade soundconverter.gladep Makefile logo.png COPYING soundconverter.1 soundconverterTests.py $(DEST)
+	mkdir -p $(DEST)/po
+	cp -a po/fr.po $(DEST)/po
+	cp -a po/pl.po $(DEST)/po	
+	cp -a po/pt_BR.po $(DEST)/po	
+	tar czf $(DEST).tar.gz $(DEST)
+	rm -rf $(DEST)
 
 commit:
 	svn commit

@@ -19,32 +19,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-
-"""
-nice in params...
-
-liste des params:
-	nom = type + details	
-		combo: liste des choix
-		boolean: rien
-		integer: min,max
-		
-vorbis: min-bitrate, max-bitrate, or just iriver-mode ?
-lame: quality, bitrate, vbr, min, max, 
-flac: fast/average/slow, 
-aac: bitrate
-wav:
-speex:
-
-format: 48000/44100/22050/11025/8000 16/8 stereo/mono
-	
-voir mpegencode		
-
-01 decoding: 19s
-
-"""
-
-
 NAME = "SoundConverter"
 VERSION = "0.8.2"
 GLADE = "soundconverter.glade"
@@ -94,10 +68,9 @@ gettext.install(PACKAGE,localedir=None,unicode=1)
 gtk.glade.bindtextdomain(PACKAGE,'/usr/share/locale')
 gtk.glade.textdomain(PACKAGE)
 
-TRANSLATORS = _("""
-Guillaume Bedot(french)
-Dominik Zabłotny (polish) 
-Jonh Wendell (Brazilian)
+TRANSLATORS = _("""Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)
+Dominik Zabłotny <dominz wp.pl> (polish) 
+Jonh Wendell <wendell bani.com.br> (Brazilian)
 """)
 
 # Names of columns in the file list
@@ -163,7 +136,7 @@ def vfs_makedirs(path_to_create):
 	for folder in path.split("/"):
 		if not folder:
 			continue
-		uri = uri.append_path(folder)
+		uri = uri.append_string(folder)
 		try:
 			gnomevfs.make_directory(uri, 0777)
 		except gnomevfs.FileExistsError:
@@ -601,7 +574,6 @@ class TypeFinder(Pipeline):
 		for t in mime_whitelist:
 			if t in mime_type:
 				self.found_type = mime_type
-				print "mime:", mime_type
 		if not self.found_type:
 			log("Mime type skipped: %s (mail us if this is an error)" % mime_type)
 	
@@ -891,13 +863,13 @@ class FileList:
 			file = {}
 			for c in ALL_COLUMNS:
 				file[c] = self.model.get_value(iter, ALL_COLUMNS.index(c))
-			files.append(file)
+			files.append(file["META"])
+
 			iter = self.model.iter_next(iter)
 		return files
 	
 	def found_type(self, sound_file, mime):
 
-		#if mime == "application/ogg":
 		self.append_file(sound_file)
 		self.window.set_sensitive()
 
@@ -1543,13 +1515,13 @@ class ConverterQueue(TaskQueue):
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
 		total_time = self.run_finish_time - self.run_start_time
-		self.window.set_status(_("Conversion done. ( in %s )") % 
+		self.window.set_status(_("Conversion done, in %s") % 
 							   self.format_time(total_time))
 
 	def format_time(self, seconds):
 		units = [(86400, "d"),
 				 (3600, "h"),
-				 (60, "min"),
+				 (60, "m"),
 				 (1, "s")]
 		seconds = round(seconds)
 		result = []
@@ -1572,6 +1544,7 @@ class SoundConverterWindow:
 	"""Main application class."""
 
 	sensitive_names = [ "remove", "stop_button", "convert_button" ]
+	unsensitive_when_converting = [ "remove", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "filelist", "menubar" ]
 
 	def __init__(self, glade):
 	
@@ -1617,9 +1590,14 @@ class SoundConverterWindow:
 
 		self.converter = ConverterQueue(self)
 		
+		self._lock_convert_button = False
+		
 		self.sensitive_widgets = {}
 		for name in self.sensitive_names:
 			self.sensitive_widgets[name] = glade.get_widget(name)
+		for name in self.unsensitive_when_converting:
+			self.sensitive_widgets[name] = glade.get_widget(name)
+
 		self.set_sensitive()
 
 	# This bit of code constructs a list of methods for binding to Gtk+
@@ -1678,8 +1656,8 @@ class SoundConverterWindow:
 
 	def do_convert(self):
 		try:
-			for fields in self.filelist.get_files():
-				self.converter.add(fields["META"])
+			for sound_file in self.filelist.get_files():
+				self.converter.add(sound_file)
 		except ConverterQueueCanceled:
 			print _("canceling conversion.")
 		else:
@@ -1687,36 +1665,38 @@ class SoundConverterWindow:
 			self.converter.run()
 			self.convertion_waiting = False
 			self.set_sensitive()
+		return False
 
 	def wait_tags_and_convert(self):
-		not_ready = [s for s in self.filelist.get_files() if not s["META"].tags_read]
-
+		not_ready = [s for s in self.filelist.get_files() if not s.tags_read]
 		if not_ready:
 			self.progressbar.pulse()
 			return True
-		else:
-			self.do_convert()
-			return False
+
+		self.do_convert()
+		return False
 			
 
 	def on_convert_button_clicked(self, *args):
-	
+		if self._lock_convert_button:
+			return
+
 		if not self.converter.is_running():
 			self.convertion_waiting = True
 			self.set_status(_("Waiting for tags..."))
-			self.set_sensitive()
 			
 			gobject.timeout_add(100, self.wait_tags_and_convert)
-			
 		else:
 			self.converter.paused = not self.converter.paused
 			if self.converter.paused:
 				self.set_status(_("Paused"))
 			else: 
 				self.set_status("") 
+		self.set_sensitive()
 
 	def on_stop_button_clicked(self, *args):
 		self.converter.stop()
+		self.set_status(_("Canceled")) 
 		self.set_sensitive()
 
 	def on_select_all_activate(self, *args):
@@ -1744,13 +1724,21 @@ class SoundConverterWindow:
 		self.sensitive_widgets[name].set_sensitive(sensitivity)
 
 	def set_sensitive(self):
+
+		[self.set_widget_sensitive(w, not self.converter.is_running()) 
+			for w in self.unsensitive_when_converting]
+
 		self.set_widget_sensitive("remove", 
 			self.filelist_selection.count_selected_rows() > 0)
 		self.set_widget_sensitive("convert_button", 
-								  self.filelist.is_nonempty())# and
-								  #not self.converter.is_running() and
-								  #not self.convertion_waiting)
-		self.set_widget_sensitive("stop_button", 
+								  self.filelist.is_nonempty())
+
+		self._lock_convert_button = True
+		self.sensitive_widgets["convert_button"].set_active(
+			self.converter.is_running() and not self.converter.paused )
+		self._lock_convert_button = False
+
+		self.set_widget_sensitive("stop_button",
 								  self.converter.is_running())
 		
 	def set_progress(self, done_so_far, total):

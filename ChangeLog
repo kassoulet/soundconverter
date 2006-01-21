@@ -1,3 +1,17 @@
+2006-01-21  Gautier Portet <kassoulet gmail com>
+
+	* Makefile: Added translations to build system.
+	* fr.po: Updated french translation.
+	* soundconverter.glade: Some minors changes.
+	* soundconverter.py: Some minors fixes. The UI is now unsensitive
+	  when we are converting. Fixed the convert button beiing called
+	  when we were unpausing. And that's all!
+
+2006-01-20  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fixed the convert/stop buttons, and some more
+	  minor UI fixes.
+
 2006-01-19  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: The progressbar should be more precise now. 

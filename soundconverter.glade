@@ -30,7 +30,7 @@
       <property name="spacing">0</property>
 
       <child>
-	<widget class="GtkMenuBar" id="menubar2">
+	<widget class="GtkMenuBar" id="menubar">
 	  <property name="visible">True</property>
 	  <property name="pack_direction">GTK_PACK_DIRECTION_LTR</property>
 	  <property name="child_pack_direction">GTK_PACK_DIRECTION_LTR</property>
@@ -46,15 +46,36 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="add">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">_Add</property>
+		      <property name="label" translatable="yes">_Add File</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_add_activate" last_modification_time="Wed, 20 Oct 2004 12:50:40 GMT"/>
 		      <accelerator key="O" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image6">
+			<widget class="GtkImage" id="image13">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="add_folder">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Add _Folder</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_add_folder_activate" last_modification_time="Sat, 21 Jan 2006 12:07:16 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image14">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-directory</property>
 			  <property name="icon_size">1</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
@@ -74,7 +95,7 @@
 		      <accelerator key="Delete" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image7">
+			<widget class="GtkImage" id="image15">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -185,11 +206,11 @@
 	  <child>
 	    <widget class="GtkToggleToolButton" id="convert_button">
 	      <property name="visible">True</property>
-	      <property name="active">False</property>
 	      <property name="stock_id">gtk-convert</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
+	      <property name="is_important">True</property>
+	      <property name="active">False</property>
 	      <signal name="clicked" handler="on_convert_button_clicked" last_modification_time="Wed, 20 Oct 2004 15:22:20 GMT"/>
 	    </widget>
 	    <packing>
@@ -204,7 +225,7 @@
 	      <property name="stock_id">gtk-stop</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
+	      <property name="is_important">True</property>
 	      <signal name="clicked" handler="on_stop_button_clicked" last_modification_time="Sat, 23 Oct 2004 17:19:11 GMT"/>
 	    </widget>
 	    <packing>
@@ -231,7 +252,7 @@
 	      <property name="visible">True</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
+	      <property name="is_important">True</property>
 	    </widget>
 	    <packing>
 	      <property name="expand">False</property>
@@ -240,9 +261,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolButton" id="toolbutton1">
+	    <widget class="GtkToolButton" id="toolbutton_addfile">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">Add File(s)</property>
+	      <property name="label" translatable="yes">Add File</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_id">gtk-add</property>
 	      <property name="visible_horizontal">True</property>
@@ -252,12 +273,12 @@
 	    </widget>
 	    <packing>
 	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
+	      <property name="homogeneous">False</property>
 	    </packing>
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolButton" id="toolbutton2">
+	    <widget class="GtkToolButton" id="toolbutton_addfolder">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">Add Folder</property>
 	      <property name="use_underline">True</property>
@@ -269,7 +290,7 @@
 	    </widget>
 	    <packing>
 	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
+	      <property name="homogeneous">False</property>
 	    </packing>
 	  </child>
 
@@ -292,7 +313,7 @@
 	      <property name="stock_id">gtk-preferences</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
+	      <property name="is_important">True</property>
 	      <signal name="clicked" handler="on_prefs_button_clicked" last_modification_time="Sat, 18 Dec 2004 21:26:07 GMT"/>
 	    </widget>
 	    <packing>
@@ -307,7 +328,7 @@
 	      <property name="stock_id">gtk-quit</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
+	      <property name="is_important">True</property>
 	      <signal name="clicked" handler="on_quit_button_clicked" last_modification_time="Wed, 20 Oct 2004 12:59:16 GMT"/>
 	    </widget>
 	    <packing>
@@ -315,23 +336,11 @@
 	      <property name="homogeneous">True</property>
 	    </packing>
 	  </child>
-
-	  <child>
-	    <placeholder/>
-	  </child>
-
-	  <child>
-	    <placeholder/>
-	  </child>
-
-	  <child>
-	    <placeholder/>
-	  </child>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
 	  <property name="expand">False</property>
-	  <property name="fill">False</property>
+	  <property name="fill">True</property>
 	</packing>
       </child>
 
@@ -432,11 +441,31 @@
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="logo">logo.png</property>
-  <property name="copyright" translatable="yes">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
+  <property name="copyright">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
 Copyright © 2005-2006 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="comments" translatable="yes">GNOME Sound Conversion</property>
   <property name="authors">Lars Wirzenius
-Gautier Portet</property>
+Gautier Portet
+
+Thanks to:
+        Guillaume Bedot
+        Dominik Zabłotny
+        Noa Resare
+        Nil Gradisnik
+        Elias Autio
+        Thom Pischke
+        Qball Cow
+        Janis Blechert
+        Brendan Martens
+        Jason Martens
+        Wouter Stomp
+        Joe Wrigley
+        Jonh Wendell
+        Regis Floret
+        Toni Fiz
+        Seketeli Apelete
+        Cristiano Canguçu
+</property>
   <property name="documenters">No documentation written.</property>
   <property name="translator_credits"></property>
 </widget>
