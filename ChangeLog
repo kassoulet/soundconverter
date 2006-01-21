@@ -1,5 +1,11 @@
 2006-01-21  Gautier Portet <kassoulet gmail com>
 
+	Release 0.8.3
+	
+	Added Error handling when trying to load files with invalid
+	characters...
+	
+	
 	Release 0.8.2
 
 	make install-local #1154

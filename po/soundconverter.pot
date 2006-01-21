@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-21 17:15+0100\n"
+"POT-Creation-Date: 2006-01-21 21:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,16 +28,16 @@ msgstr ""
 msgid "skipping: '%s'"
 msgstr ""
 
-#: soundconverter.py:239
+#: soundconverter.py:245
 msgid "File exists."
 msgstr ""
 
-#: soundconverter.py:240
+#: soundconverter.py:246
 #, python-format
 msgid "The file %s exists already"
 msgstr ""
 
-#: soundconverter.py:350
+#: soundconverter.py:356
 #, python-format
 msgid ""
 "\n"
@@ -46,22 +46,22 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: soundconverter.py:492
+#: soundconverter.py:498
 msgid "Internal error"
 msgstr ""
 
-#: soundconverter.py:493
+#: soundconverter.py:499
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
 
-#: soundconverter.py:498
+#: soundconverter.py:504
 #, python-format
 msgid "Unknown type %s"
 msgstr ""
 
-#: soundconverter.py:499
+#: soundconverter.py:505
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -70,91 +70,95 @@ msgid ""
 " to you."
 msgstr ""
 
-#: soundconverter.py:677
+#: soundconverter.py:683
 msgid "Target exists."
 msgstr ""
 
-#: soundconverter.py:678
+#: soundconverter.py:684
 #, python-format
 msgid "The output file %s already exists."
 msgstr ""
 
-#: soundconverter.py:721
+#: soundconverter.py:727
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr ""
 
-#: soundconverter.py:727
+#: soundconverter.py:733
 #, python-format
 msgid "using encoder: %s (%s)"
 msgstr ""
 
-#: soundconverter.py:733
+#: soundconverter.py:739
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr ""
 
-#: soundconverter.py:737
+#: soundconverter.py:743
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr ""
 
-#: soundconverter.py:744
+#: soundconverter.py:750
 #, python-format
 msgid "Writing to: '%s'"
 msgstr ""
 
-#: soundconverter.py:909
+#: soundconverter.py:914
 msgid "loading tags..."
 msgstr ""
 
-#: soundconverter.py:911
+#: soundconverter.py:916
 msgid "no tags"
 msgstr ""
 
-#: soundconverter.py:942
+#: soundconverter.py:939
+msgid "Invalid character in filename!"
+msgstr ""
+
+#: soundconverter.py:958
 msgid "unknown"
 msgstr ""
 
-#: soundconverter.py:968
+#: soundconverter.py:984
 msgid "Same as input, but with new suffix"
 msgstr ""
 
-#: soundconverter.py:969
+#: soundconverter.py:985
 msgid "Track number - title"
 msgstr ""
 
-#: soundconverter.py:970
+#: soundconverter.py:986
 msgid "Track title"
 msgstr ""
 
-#: soundconverter.py:971
+#: soundconverter.py:987
 msgid "Artist - title"
 msgstr ""
 
-#: soundconverter.py:975
+#: soundconverter.py:991
 msgid "artist/album"
 msgstr ""
 
-#: soundconverter.py:976
+#: soundconverter.py:992
 msgid "artist-album"
 msgstr ""
 
-#: soundconverter.py:1141
+#: soundconverter.py:1157
 #, python-format
 msgid "Into folder %s"
 msgstr ""
 
-#: soundconverter.py:1192
+#: soundconverter.py:1208
 #, python-format
 msgid "<small>Target bitrate: %s</small>"
 msgstr ""
 
-#: soundconverter.py:1412
+#: soundconverter.py:1429
 msgid "Convertion Canceled"
 msgstr ""
 
-#: soundconverter.py:1455
+#: soundconverter.py:1472
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -162,51 +166,51 @@ msgid ""
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
 
-#: soundconverter.py:1518
+#: soundconverter.py:1535
 #, python-format
 msgid "Conversion done, in %s"
 msgstr ""
 
-#: soundconverter.py:1564
+#: soundconverter.py:1581
 msgid "Add files..."
 msgstr ""
 
-#: soundconverter.py:1574
+#: soundconverter.py:1591
 msgid "Add Folder..."
 msgstr ""
 
-#: soundconverter.py:1662
+#: soundconverter.py:1679
 msgid "canceling conversion."
 msgstr ""
 
-#: soundconverter.py:1686
+#: soundconverter.py:1703
 msgid "Waiting for tags..."
 msgstr ""
 
-#: soundconverter.py:1692
+#: soundconverter.py:1709
 msgid "Paused"
 msgstr ""
 
-#: soundconverter.py:1699
+#: soundconverter.py:1716
 msgid "Canceled"
 msgstr ""
 
-#: soundconverter.py:1850
+#: soundconverter.py:1867
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr ""
 
-#: soundconverter.py:1865
+#: soundconverter.py:1882
 msgid "Print out a usage summary."
 msgstr ""
 
-#: soundconverter.py:1868
+#: soundconverter.py:1885
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
 
-#: soundconverter.py:1871
+#: soundconverter.py:1888
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -214,11 +218,11 @@ msgid ""
 " the output suffix as well."
 msgstr ""
 
-#: soundconverter.py:1874
+#: soundconverter.py:1891
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr ""
 
-#: soundconverter.py:1877
+#: soundconverter.py:1894
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -226,7 +230,7 @@ msgid ""
 " the output MIME type."
 msgstr ""
 
-#: soundconverter.py:1880
+#: soundconverter.py:1897
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
