@@ -145,6 +145,12 @@ def vfs_makedirs(path_to_create):
 			return False
 	return True	
 
+def markup_escape(str):
+	str = "&amp;".join(str.split("&"))
+	str = "&lt;".join(str.split("<"))
+	str = "&gt;".join(str.split(">"))
+	return str
+	
 def log(message):
 	if get("quiet") == False:
 		print message
@@ -887,7 +893,6 @@ class FileList:
 			return 
 
 		self.filelist[sound_file.get_uri()] = True
-
 		typefinder = TypeFinder(sound_file)
 		typefinder.set_found_type_hook(self.found_type)
 		self.typefinders.add(typefinder)
@@ -911,17 +916,28 @@ class FileList:
 							% _("no tags")
 
 		params = {}
-		params["filename"] = urllib.unquote(sound_file.get_filename())
+		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename()))
 		for item in ("title", "artist", "album"):
-			params[item] = sound_file.get_tag(item)
-		
-		if sound_file.have_tags:
-			s = template_tags % params
-		else:
-			if sound_file.tags_read:
-				s = template_notags % params
+			params[item] = markup_escape(sound_file.get_tag(item))
+	
+		try:	
+			if sound_file.have_tags:
+				s = template_tags % params
 			else:
-				s = template_loading % params
+				if sound_file.tags_read:
+					s = template_notags % params
+				else:
+					s = template_loading % params
+		except UnicodeDecodeError:
+			str = ""
+			for c in markup_escape(urllib.unquote(sound_file.get_uri())):
+				if ord(c) < 127:
+					str += c
+				else:
+					str += '<span foreground="yellow" background="red"><b>!</b></span>'
+
+			error.show(_("Invalid character in filename!"), str)
+			sys.exit(1)
 				
 		return s
 
@@ -1224,6 +1240,7 @@ class PreferencesDialog:
 
 	def set_sensitive(self):
 	
+		#TODO
 		return
 	
 		for widget in self.sensitive_widgets.values():
