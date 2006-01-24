@@ -2,6 +2,8 @@
 
 	* Makefile: Fixed build on Gentoo. And corrected a typo causing pl and
 	  pt to be not installed
+	* soundconverter.c|glade: Applied patch with new FileChooser.
+	  thanks Regis!
 
 2006-01-21  Gautier Portet <kassoulet gmail com>
 
