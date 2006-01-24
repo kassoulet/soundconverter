@@ -11,7 +11,7 @@ PO_FILES=$(patsubst %,po/%.po, $(LINGUAS))
 MO_FILES=$(patsubst %.po,%.mo, $(PO_FILES))
 TRANSLATABLE_FILES=soundconverter.py soundconverter.glade
 
-DEST=$(PACKAGE)-$(VERSION)
+RELEASE_NAME=$(PACKAGE)-$(VERSION)
 
 prefix = /usr/local
 bindir = $(prefix)/bin
@@ -45,9 +45,9 @@ install:
 	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(sharedir)
 	install -m 0644 soundconverter.glade $(DESTDIR)$(sharedir)
 	install -m 0644 logo.png $(DESTDIR)$(sharedir)
-	install -m 0644 po/fr.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
-	install -m 0644 po/pl.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
-	install -m 0644 po/pt_BR.mo /usr/share/locale/fr/LC_MESSAGES/soundconverter.mo
+	install -m 0644 po/fr.mo    ${DESTDIR}${prefix}/share/locale/fr/LC_MESSAGES/soundconverter.mo
+	install -m 0644 po/pl.mo    ${DESTDIR}${prefix}/share/locale/pl/LC_MESSAGES/soundconverter.mo
+	install -m 0644 po/pt_BR.mo ${DESTDIR}${prefix}/share/locale/pt-BR/LC_MESSAGES/soundconverter.mo
 	sed 's,^GLADE *=.*,GLADE = "$(sharedir)/soundconverter.glade",' \
 	soundconverter.py > make-install-temp
 	install make-install-temp $(DESTDIR)$(bindir)/soundconverter
@@ -66,12 +66,12 @@ clean:
 	rm -f *.pyc *.bak
     
 dist:
-	mkdir -p $(DEST)
+	mkdir -p $(RELEASE_NAME)
 	cp -a ChangeLog README soundconverter.py TODO soundconverter.glade soundconverter.gladep Makefile logo.png COPYING soundconverter.1 soundconverterTests.py $(DEST)
-	mkdir -p $(DEST)/po
-	cp -a $(PO_FILES) $(MO_FILES) $(DEST)/po
-	tar czf $(DEST).tar.gz $(DEST)
-	rm -rf $(DEST)
+	mkdir -p $(RELEASE_NAME)/po
+	cp -a $(PO_FILES) $(MO_FILES) $(RELEASE_NAME)/po
+	tar czf $(RELEASE_NAME).tar.gz $(RELEASE_NAME)
+	rm -rf $(RELEASE_NAME)
 
 commit:
 	svn commit
