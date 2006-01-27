@@ -1708,7 +1708,7 @@ class SoundConverterWindow:
 		self.converter.stop()
 		self.widget.destroy()
 		gtk.main_quit()
-		return gtk.TRUE
+		return True 
 
 	on_window_delete_event = close
 	on_quit_activate = close

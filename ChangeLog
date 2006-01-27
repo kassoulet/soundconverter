@@ -1,8 +1,13 @@
+2006-01-27  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Applied patch to remove stupid pygtk warning at
+	  exit. thanks Hanno!
+
 2006-01-24  Gautier Portet <kassoulet gmail com>
 
 	* Makefile: Fixed build on Gentoo. And corrected a typo causing pl and
 	  pt to be not installed
-	* soundconverter.c|glade: Applied patch with new FileChooser.
+	* soundconverter.py|glade: Applied patch with new FileChooser.
 	  thanks Regis!
 
 2006-01-21  Gautier Portet <kassoulet gmail com>
