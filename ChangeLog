@@ -1,3 +1,9 @@
+2006-02-01  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: We will now use gst_parse_launch() to create a
+	  pipeline, since it allows us to be much more flexible. Some issues
+	  with progressbar where fixed also.
+
 2006-01-27  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Applied patch to remove stupid pygtk warning at

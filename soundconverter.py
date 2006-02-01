@@ -20,7 +20,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.8.3"
+VERSION = "0.9.0"
 GLADE = "soundconverter.glade"
 
 # Python standard stuff.
@@ -113,7 +113,6 @@ def vfs_walk(uri):
 		uri = uri.append_string("/")
 
 	info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
-	#info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_FIELDS_TYPE)
 	filelist = []	
 
 	try:
@@ -161,7 +160,13 @@ def markup_escape(str):
 	str = "&lt;".join(str.split("<"))
 	str = "&gt;".join(str.split(">"))
 	return str
-	
+
+def filename_escape(str):
+	str = str.replace("'","\'")
+	str = str.replace("\"","\\\"")
+	str = str.replace("!","\!")
+	return str
+
 def log(message):
 	if get("quiet") == False:
 		print message
@@ -212,7 +217,7 @@ class SoundFile:
 			self.uri = base_path 
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
-			
+	
 		self.tags = {
 			"track-number": 0,
 			"title":  "Unknown Title",
@@ -521,7 +526,11 @@ class Pipeline(BackgroundTask):
 	"""A background task for running a GstPipeline."""
 
 	def __init__(self):
-		self.pipeline = gst.Pipeline()
+		self.pipeline = None #gst.Pipeline()
+		self.command = ""
+		self.parsed = False
+		self.signals = []
+		self.processing = False
 		
 	def setup(self):
 		self.play()
@@ -535,52 +544,57 @@ class Pipeline(BackgroundTask):
 	def finish(self):
 		self.stop_pipeline()
 
-	def make_element(self, elementkind, elementname):
-		factory = gst.element_factory_find(elementkind)
-		if factory:
-			return factory.create(elementname)
-		else:
-			return None
-	
-	def add(self, element):
-		assert self.pipeline.get_state() != gst.STATE_PLAYING
-		elements = self.pipeline.get_list()
-		self.pipeline.add(element)
-		if elements and not elements[-1].link(element):
-			raise NoLink()
+	def add_command(self, command):
+		if self.command:
+			self.command += " ! "
+		self.command += command
 
-	def pause(self):
-		self.pipeline.set_state(gst.STATE_PAUSED)
+	def add_signal(self, name, signal, callback):
+		self.signals.append( (name, signal, callback,) )
+
+	def toggle_pause(self, paused):
+		if paused:
+			self.pipeline.set_state(gst.STATE_PAUSED)
+		else:
+			self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def play(self):
+		if not self.parsed:
+			print "launching: '%s'" % self.command
+			self.pipeline = gst.parse_launch(self.command)
+			for name, signal, callback in self.signals:
+				self.pipeline.get_by_name(name).connect(signal,callback)
+			self.parsed = True
+		else:
+			print "ERROR: ALREADY PARSED!!!"
+		
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def stop_pipeline(self):
 		self.pipeline.set_state(gst.STATE_NULL)
 
 	def get_progress(self):
-		elements = self.pipeline.get_list()
-		value = elements[0].query(gst.QUERY_POSITION, gst.FORMAT_PERCENT)
-		return float(value) / float(FORMAT_PERCENT_SCALE)
+		if not self.processing:
+			return 0
+		element = self.pipeline.get_by_name("src")
+		return element.query(gst.QUERY_POSITION, gst.FORMAT_PERCENT) 
 
 	def get_bytes_progress(self):
-		elements = self.pipeline.get_list()
-		return elements[0].query(gst.QUERY_POSITION, gst.FORMAT_BYTES)
+		if not self.processing:
+			return 0
+		element = self.pipeline.get_by_name("src")
+		return element.query(gst.QUERY_POSITION, gst.FORMAT_BYTES) 
 
 class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 		self.found_type = ""
-		
-		filesrc = self.make_element("gnomevfssrc", "src")
-		filesrc.set_property("location", self.sound_file.get_uri())
-		self.add(filesrc)
-
-		typefind = self.make_element("typefind", "typefinder")
-		typefind.connect("have_type", self.have_type)
-		self.pipeline.add(typefind)
-		filesrc.link(typefind)
+	
+		command = 'gnomevfssrc location="%s" ! typefind name=typefinder' % \
+			self.sound_file.get_uri()
+		self.add_command(command)
+		self.add_signal("typefinder", "have-type", self.have_type)
 
 	def set_found_type_hook(self, found_type_hook):
 		self.found_type_hook = found_type_hook
@@ -611,15 +625,12 @@ class Decoder(Pipeline):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 		
-		filesrc = self.make_element("gnomevfssrc", "src")
-		filesrc.set_property("location", self.sound_file.get_uri())
-		self.add(filesrc)
-
-		decodebin = self.make_element("decodebin", "decodebin")
-		decodebin.connect("found-tag", self.found_tag)
-		decodebin.connect("new-decoded-pad", self.new_decoded_pad)
-		self.add(decodebin)
-	
+		command = 'gnomevfssrc location="%s" name=src ! decodebin name=decoder' % \
+			self.sound_file.get_uri()
+		self.add_command(command)
+		self.add_signal("decoder", "found-tag", self.found_tag)
+		self.add_signal("decoder", "new-decoded-pad", self.new_decoded_pad)
+		
 		# TODO add error management
 
 	def have_type(self, typefind, probability, caps):
@@ -646,6 +657,7 @@ class Decoder(Pipeline):
 			info = gnomevfs.get_file_info(uri)
 			return info.size
 		except gnomevfs.NotFoundError:
+			print "notfound:", uri
 			return 0
 
 class TagReader(Decoder):
@@ -702,6 +714,8 @@ class Converter(Decoder):
 	def __init__(self, sound_file, output_filename, output_type):
 		Decoder.__init__(self, sound_file)
 
+		self.converting = True
+		
 		self.output_filename = output_filename
 		self.output_type = output_type
 		self.vorbis_quality = None
@@ -717,19 +731,8 @@ class Converter(Decoder):
 			"audio/mpeg": self.add_mp3_encoder,
 		}
 
-	def new_decoded_pad(self, decoder, pad, is_last):
-		if self.added_pad_already:
-			return
-		if not pad.get_caps():
-			return
-		if "audio" not in pad.get_caps()[0].get_name():
-			return
-
-		self.pause()
-		
-		audioconverter = self.make_element("audioconvert", "audioconverter")
-		self.pipeline.add(audioconverter)
-		pad.link(audioconverter.get_pad("sink"))
+		self.add_command("audioconvert")
+		self.add_command("audioscale")
 		
 		encoder = self.encoders[self.output_type]()
 		if not encoder:
@@ -740,9 +743,8 @@ class Converter(Decoder):
 			dialog.run()
 			dialog.hide()
 			return
-		self.add(encoder)
-		log(_("using encoder: %s (%s)") % \
-			(encoder.get_factory().get_name(), encoder.get_factory().get_longname()))
+			
+		self.add_command(encoder)
 		
 		uri = gnomevfs.URI(self.output_filename)
 		dirname = uri.parent
@@ -756,16 +758,20 @@ class Converter(Decoder):
 				dialog.run()
 				dialog.hide()
 				return
-				
-		sink = self.make_element("gnomevfssink", "sink")
+	
+		self.add_command('gnomevfssink location=%s' % uri)
 		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
-		sink.set_property("location", self.output_filename)
-		self.add(sink)
 	
-		self.converting = True
-	
-		self.play()
+	def new_decoded_pad(self, decoder, pad, is_last):
+		if self.added_pad_already:
+			return
+		if not pad.get_caps():
+			return
+		if "audio" not in pad.get_caps()[0].get_name():
+			return
+		print "new_decoded_pad"
 		self.added_pad_already = True
+		self.processing = True
 
 	def set_vorbis_quality(self, quality):
 		self.vorbis_quality = quality
@@ -777,24 +783,20 @@ class Converter(Decoder):
 		self.mp3_quality = quality
 
 	def add_flac_encoder(self):
-		return self.make_element("flacenc", "encoder")
+		return "flacenc"
 
 	def add_wav_encoder(self):
-		return self.make_element("wavenc", "encoder")
+		return "wavenc"
 
 	def add_oggvorbis_encoder(self):
-		vorbisenc = self.make_element("vorbisenc", "encoder")
+		cmd = "vorbisenc"
 		if self.vorbis_quality is not None:
-			vorbisenc.set_property("quality", self.vorbis_quality)
-			
-		return vorbisenc
+			cmd += " quality=%s" % self.vorbis_quality
+		return cmd
 
 	def add_mp3_encoder(self):
 	
-		mp3enc = self.make_element("lame", "encoder")
-
-		# raise algorithm quality, who want bad quality encoding ?
-		mp3enc.set_property("quality",2)
+		cmd = "lame quality=2 "
 		
 		if self.mp3_mode is not None:
 			properties = {
@@ -804,17 +806,17 @@ class Converter(Decoder):
 			}
 
 			if properties[self.mp3_mode][0]:
-				mp3enc.set_property("xingheader","true")
+				cmd += "xingheader=true "
 			
-			mp3enc.set_property("vbr", properties[self.mp3_mode][0])
+			cmd += "vbr=%s " % properties[self.mp3_mode][0]
 			if self.mp3_quality == 9:
 				# GStreamer set max bitrate to 320 but lame uses
 				# mpeg2 with vbr-quality==9, so max bitrate is 160
-				mp3enc.set_property("vbr-max-bitrate", 160)
+				cmd += "vbr-max-bitrate=160 "
 			
-			mp3enc.set_property(properties[self.mp3_mode][1], self.mp3_quality)
+			cmd += "%s=%s " % (properties[self.mp3_mode][1], self.mp3_quality)
 	
-		return mp3enc
+		return cmd
 
 class FileList:
 	"""List of files added by the user."""
@@ -1145,14 +1147,9 @@ class PreferencesDialog:
 			
 		self.mp3_quality = glade.get_widget("mp3_quality")
 		self.mp3_mode = glade.get_widget("mp3_mode")
-		#w = glade.get_widget("mp3_mode")
-		#mode = self.get_int("mp3-mode")
-		#w.set_active(mode)
-		#self.change_mp3_mode(mode)
 
 		mode = self.get_string("mp3-mode")
 		self.change_mp3_mode(mode)
-
 
 		w = glade.get_widget("basename_pattern")
 		model = w.get_model()
@@ -1458,26 +1455,23 @@ class ConverterQueue(TaskQueue):
 	def add(self, sound_file):
 	
 		output_filename = self.window.prefs.generate_filename(sound_file)
-		
 		path = urlparse.urlparse(output_filename) [2]
-		
 		path = urllib.unquote(path)
-		
+	
 		exists = True
 		try:
-			gnomevfs.get_file_info(gnomevfs.URI(output_filename))
+			gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
 		except gnomevfs.NotFoundError:
 			exists = False
 				
 		if exists:
-
 			if self.overwrite_action != None:
 				result = self.overwrite_action
 			else:
 				dialog = self.window.existsdialog
 
 				dpath = os.path.basename(path)
-				dpath = dpath.replace("&","&amp;")
+				dpath = markup_escape(dpath)
 
 				msg = \
 				_("The output file <i>%s</i>\n exists already.\n Do you want to skip the file, overwrite it or cancel the conversion?\n") % \
@@ -1529,12 +1523,14 @@ class ConverterQueue(TaskQueue):
 		self.total_bytes += c.get_size_in_bytes()
 
 	def work_hook(self, task):
-		if hasattr(task,"converting"): 
+		if hasattr(task,"converting"): #TODO
 			bytes = task.get_bytes_progress()
+			#print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
 			self.window.set_progress(self.total_for_processed_files + bytes,
 								 self.total_bytes)
 
 	def finish_hook(self, task):
+		#print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
 		self.total_for_processed_files += task.get_size_in_bytes()
 
 	def finish(self):
