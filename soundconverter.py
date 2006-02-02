@@ -724,6 +724,7 @@ class Converter(Decoder):
 		self.mp3_quality = None
 		self.added_pad_already = False
 
+	def init(self):
 		self.encoders = {
 			"audio/x-vorbis": self.add_oggvorbis_encoder,
 			"audio/x-flac": self.add_flac_encoder,
@@ -1519,15 +1520,15 @@ class ConverterQueue(TaskQueue):
 		mode = self.window.prefs.get_string("mp3-mode")
 		c.set_mp3_mode(mode)
 		c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
+		c.init()
 		TaskQueue.add(self, c)
 		self.total_bytes += c.get_size_in_bytes()
 
 	def work_hook(self, task):
-		if hasattr(task,"converting"): #TODO
-			bytes = task.get_bytes_progress()
-			#print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
-			self.window.set_progress(self.total_for_processed_files + bytes,
-								 self.total_bytes)
+		bytes = task.get_bytes_progress()
+		#print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
+		self.window.set_progress(self.total_for_processed_files + bytes,
+							 self.total_bytes)
 
 	def finish_hook(self, task):
 		#print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
