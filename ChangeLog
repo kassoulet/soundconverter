@@ -1,3 +1,12 @@
+2006-02-06  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Progress dialog is working now.
+
+2006-02-03  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.glade: Corrected wrong signal called by the
+	  addfolder menuitem.
+
 2006-02-02  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Ouch, fixed broken converter pipeline.

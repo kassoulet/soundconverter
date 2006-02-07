@@ -20,7 +20,7 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.9.0"
+VERSION = "0.9.0-wip"
 GLADE = "soundconverter.glade"
 
 # Python standard stuff.
@@ -397,13 +397,22 @@ class BackgroundTask:
 			return
 		self.paused = False
 		self.run_start_time = time.time()
+		self.current_paused_time = 0
+		self.paused_time = 0
 		self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_LOW)
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
 			if self.paused:
+				if not self.current_paused_time:
+					self.current_paused_time = time.time()
 				return True
+			else:
+				if self.current_paused_time:
+					self.paused_time += time.time() - self.current_paused_time
+					self.current_paused_time = 0
+					
 			if self.work():
 				return True
 			else:
@@ -453,12 +462,15 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		self.tasks = []
 		self.running = False
+		self.tasks_number=0
+		self.tasks_current=0
 		
 	def is_running(self):
 		return self.running
 
 	def add(self, task):
 		self.tasks.append(task)
+		self.tasks_number += 1
 		
 	def get_current_task(self):
 		if self.tasks:
@@ -481,6 +493,7 @@ class TaskQueue(BackgroundTask):
 				self.finish_hook(self.tasks[0])
 				self.tasks = self.tasks[1:]
 				if self.tasks:
+					self.tasks_current += 1
 					self.tasks[0].setup()
 		return len(self.tasks) > 0
 
@@ -1525,10 +1538,15 @@ class ConverterQueue(TaskQueue):
 		self.total_bytes += c.get_size_in_bytes()
 
 	def work_hook(self, task):
+		t = self.get_current_task()
+		f = ""
+		if t:
+			f = urllib.unquote(t.sound_file.get_filename())
+			
 		bytes = task.get_bytes_progress()
 		#print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
 		self.window.set_progress(self.total_for_processed_files + bytes,
-							 self.total_bytes)
+							 self.total_bytes, f)
 
 	def finish_hook(self, task):
 		#print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
@@ -1539,6 +1557,7 @@ class ConverterQueue(TaskQueue):
 		self.reset_counters()
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
+		self.window.conversion_ended()
 		total_time = self.run_finish_time - self.run_start_time
 		self.window.set_status(_("Conversion done, in %s") % 
 							   self.format_time(total_time))
@@ -1640,7 +1659,7 @@ class SoundConverterWindow:
 
 	"""Main application class."""
 
-	sensitive_names = [ "remove", "stop_button", "convert_button" ]
+	sensitive_names = [ "remove", "convert_button" ]
 	unsensitive_when_converting = [ "remove", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "filelist", "menubar" ]
 
 	def __init__(self, glade):
@@ -1657,6 +1676,9 @@ class SoundConverterWindow:
 		self.status = glade.get_widget("statustext")
 		self.about = glade.get_widget("about")
 		self.prefs = PreferencesDialog(glade)
+
+		self.progressdialog = glade.get_widget("progressdialog")
+		self.progressfile = glade.get_widget("label_currentfile")
 
 		self.addchooser = CustomFileChooser()
 		
@@ -1771,6 +1793,10 @@ class SoundConverterWindow:
 			return
 
 		if not self.converter.is_running():
+			self.progressdialog.show()
+			self.progressdialog.set_transient_for(self.widget)
+			self.widget.set_sensitive(False)
+		
 			self.convertion_waiting = True
 			self.set_status(_("Waiting for tags..."))
 			
@@ -1783,10 +1809,16 @@ class SoundConverterWindow:
 				self.set_status("") 
 		self.set_sensitive()
 
-	def on_stop_button_clicked(self, *args):
+	def on_button_pause_clicked(self, *args):
+		self.converter.paused = not self.converter.paused
+		if self.converter.paused:
+			self.display_progress(_("Paused"))
+
+	def on_button_cancel_clicked(self, *args):
 		self.converter.stop()
 		self.set_status(_("Canceled")) 
 		self.set_sensitive()
+		self.conversion_ended()
 
 	def on_select_all_activate(self, *args):
 		self.filelist.widget.get_selection().select_all()
@@ -1809,6 +1841,10 @@ class SoundConverterWindow:
 	def selection_changed(self, *args):
 		self.set_sensitive()
 
+	def conversion_ended(self):
+		self.progressdialog.hide()
+		self.widget.set_sensitive(True)
+
 	def set_widget_sensitive(self, name, sensitivity):
 		self.sensitive_widgets[name].set_sensitive(sensitivity)
 
@@ -1826,18 +1862,28 @@ class SoundConverterWindow:
 		self.sensitive_widgets["convert_button"].set_active(
 			self.converter.is_running() and not self.converter.paused )
 		self._lock_convert_button = False
-
-		self.set_widget_sensitive("stop_button",
-								  self.converter.is_running())
+	
+	def display_progress(self, remaining):
+		self.progressbar.set_text("Converting file %d of %d  (%s)" % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
 		
-	def set_progress(self, done_so_far, total):
+	
+	def set_progress(self, done_so_far, total, current_file=""):
 		if total == 0:
 			self.progressbar.set_text("")
 			self.progressbar.set_fraction(0.0)
-		else:
-			fraction = float(done_so_far) / total
-			self.progressbar.set_fraction(fraction)
-			self.progressbar.set_text("%.1f %%" % (100.0 * fraction))
+			return
+		if done_so_far == 0:
+			return
+			
+		fraction = float(done_so_far) / total
+		self.progressbar.set_fraction(fraction)
+		t = time.time() - self.converter.run_start_time - self.converter.paused_time
+		r = (t / fraction - t)
+		s = r%60
+		m = r/60
+		remaining = "%d:%02d left" % (m,s)
+		self.display_progress(remaining)
+		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 
 	def set_status(self, text):
 		self.status.set_text(text)
