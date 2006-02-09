@@ -167,6 +167,7 @@ def filename_escape(str):
 	str = str.replace("!","\!")
 	return str
 
+
 def log(message):
 	if get("quiet") == False:
 		print message
@@ -1679,6 +1680,7 @@ class SoundConverterWindow:
 
 		self.progressdialog = glade.get_widget("progressdialog")
 		self.progressfile = glade.get_widget("label_currentfile")
+		self.progresstitle = glade.get_widget("label_title")
 
 		self.addchooser = CustomFileChooser()
 		
@@ -1793,8 +1795,10 @@ class SoundConverterWindow:
 			return
 
 		if not self.converter.is_running():
+			self.progresstitle.set_text(_("Waiting for tags"))
 			self.progressdialog.show()
 			self.progressdialog.set_transient_for(self.widget)
+			self.progress_time = time.time()
 			self.widget.set_sensitive(False)
 		
 			self.convertion_waiting = True
@@ -1864,26 +1868,36 @@ class SoundConverterWindow:
 		self._lock_convert_button = False
 	
 	def display_progress(self, remaining):
-		self.progressbar.set_text("Converting file %d of %d  (%s)" % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
-		
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
 	
 	def set_progress(self, done_so_far, total, current_file=""):
-		if total == 0:
-			self.progressbar.set_text("")
+		if (total==0) or (done_so_far==0):
+			self.progressbar.set_text(" ")
 			self.progressbar.set_fraction(0.0)
+			self.progressbar.pulse()
 			return
-		if done_so_far == 0:
+		self.progresstitle.set_text(_("Converting"))
+		
+		if time.time() < self.progress_time + 0.10:
+			# ten updates per second should be enough
 			return
-			
+		self.progress_time = time.time()
+		
+		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 		fraction = float(done_so_far) / total
 		self.progressbar.set_fraction(fraction)
 		t = time.time() - self.converter.run_start_time - self.converter.paused_time
+		
+		#if (t<5):
+			# wait a bit not to display crap
+		#	self.progressbar.pulse()
+		#	return
+			
 		r = (t / fraction - t)
 		s = r%60
 		m = r/60
-		remaining = "%d:%02d left" % (m,s)
+		remaining = _("%d:%02d left") % (m,s)
 		self.display_progress(remaining)
-		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 
 	def set_status(self, text):
 		self.status.set_text(text)
