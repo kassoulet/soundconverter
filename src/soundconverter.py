@@ -20,8 +20,8 @@
 # USA
 
 NAME = "SoundConverter"
-VERSION = "0.9.0-wip"
-GLADE = "soundconverter.glade"
+VERSION = "@version@"
+GLADE = "@datadir@/soundconverter.glade"
 
 # Python standard stuff.
 import sys

@@ -1,0 +1,44 @@
+dnl -*- Mode: autoconf -*-
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.53)
+AC_INIT(src/soundconverter.py)
+AM_INIT_AUTOMAKE(soundconverter, 0.8.4)
+
+m4_define(required_python_abi, 2.3)
+m4_define(required_python_version, 2.3.3)
+m4_define(required_pygtk_version, 2.0)
+
+dnl put the ACLOCAL flags in the makefile
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
+
+ALL_LINGUAS="fr"
+GETTEXT_PACKAGE=soundconverter
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL
+
+AM_PATH_PYTHON(required_python_abi, required_python_version)
+dnl AM_PATH_PYTHON_VERSION(required_python_abi, required_python_version)
+
+dnl Check for correctly installed pygtk
+AC_MSG_CHECKING(for pygtk required_pygtk_version installed for python required_python_abi)
+prog="
+import pygtk; pygtk.require('2.0')
+import gobject
+assert gobject.pygtk_version >= tuple(map(int, 'required_pygtk_version'.split('.')))
+"
+if $PYTHON -c "$prog" 1>&AC_FD_CC 2>&AC_FD_CC; then
+    AC_MSG_RESULT(found)
+else
+    AC_MSG_RESULT(not found)
+    AC_MSG_ERROR(required pygtk version not found)
+fi
+
+AC_OUTPUT(
+        Makefile
+        po/Makefile.in
+        src/Makefile
+        data/Makefile
+        doc/Makefile
+        )

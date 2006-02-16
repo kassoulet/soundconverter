@@ -431,7 +431,7 @@
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
-  <property name="logo">logo.png</property>
+  <property name="logo">soundconverter-logo.png</property>
   <property name="copyright">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
 Copyright © 2005-2006 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="comments" translatable="yes">GNOME Sound Conversion</property>
