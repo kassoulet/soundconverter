@@ -3,13 +3,8 @@
 appdir = $(bindir)
 app_SCRIPTS = soundconverter
 
-#gladedir = $(datadir)/soundconverter
-#dist_glade_DATA = soundconverter.png soundconverter.glade 
+gladedir = $(datadir)/soundconverter
 
-#pixmapsdir = $(datadir)/pixmaps
-#pixmaps_DATA = soundconverter-icon.png
-
-#EXTRA_DIST = soundconverter.gladep soundconverter.py
 CLEANFILES = soundconverter
 
 soundconverter: soundconverter.py

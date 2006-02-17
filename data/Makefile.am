@@ -8,3 +8,7 @@ dist_glade_DATA = soundconverter-logo.png soundconverter.glade
 
 EXTRA_DIST = soundconverter.gladep soundconverter.py
 
+## @INTLTOOL_DESKTOP_RULE@
+
+desktopdir = $(datadir)/applications
+dist_desktop_DATA = soundconverter.desktop

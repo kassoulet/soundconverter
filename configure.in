@@ -11,7 +11,7 @@ m4_define(required_pygtk_version, 2.0)
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-ALL_LINGUAS="fr"
+ALL_LINGUAS="fr pl pt_BR"
 GETTEXT_PACKAGE=soundconverter
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])

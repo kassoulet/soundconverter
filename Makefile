@@ -13,7 +13,6 @@
 # PARTICULAR PURPOSE.
 
 
-
 srcdir = .
 top_srcdir = .
 
@@ -35,10 +34,9 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = .
-DIST_COMMON = README $(am__configure_deps) $(dist_desktop_DATA) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	TODO install-sh missing mkinstalldirs
+DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
+	ChangeLog INSTALL NEWS TODO install-sh missing mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -55,15 +53,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-recursive installcheck-recursive installdirs-recursive \
 	pdf-recursive ps-recursive uninstall-info-recursive \
 	uninstall-recursive
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(desktopdir)"
-dist_desktopDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(dist_desktop_DATA)
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
@@ -86,7 +75,7 @@ AUTOCONF = ${SHELL} /home/gautier/code/soundconverter/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/gautier/code/soundconverter/missing --run autoheader
 AUTOMAKE = ${SHELL} /home/gautier/code/soundconverter/missing --run automake-1.9
 AWK = mawk
-CATALOGS =  fr.gmo
+CATALOGS =  fr.gmo pl.gmo pt_BR.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=none
@@ -103,7 +92,7 @@ ECHO_T =
 EGREP = grep -E
 EXEEXT = 
 GETTEXT_PACKAGE = soundconverter
-GMOFILES =  fr.gmo
+GMOFILES =  fr.gmo pl.gmo pt_BR.gmo
 GMSGFMT = /usr/bin/msgfmt
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -151,7 +140,7 @@ PACKAGE_STRING =
 PACKAGE_TARNAME = 
 PACKAGE_VERSION = 
 PATH_SEPARATOR = :
-POFILES =  fr.po
+POFILES =  fr.po pl.po pt_BR.po
 POSUB = po
 PO_IN_DATADIR_FALSE = 
 PO_IN_DATADIR_TRUE = 
@@ -203,8 +192,6 @@ SUBDIRS = po src data doc
 CLEANFILES = 
 EXTRA_DIST = intltool-extract.in intltool-merge.in intltool-update.in autogen.sh
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
-desktopdir = $(datadir)/applications
-dist_desktop_DATA = soundconverter.desktop
 all: all-recursive
 
 .SUFFIXES:
@@ -242,23 +229,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 uninstall-info-am:
-install-dist_desktopDATA: $(dist_desktop_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(desktopdir)" || $(mkdir_p) "$(DESTDIR)$(desktopdir)"
-	@list='$(dist_desktop_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_desktopDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(desktopdir)/$$f'"; \
-	  $(dist_desktopDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(desktopdir)/$$f"; \
-	done
-
-uninstall-dist_desktopDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_desktop_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(desktopdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(desktopdir)/$$f"; \
-	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -536,12 +506,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(DATA)
+all-am: Makefile
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(desktopdir)"; do \
-	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
-	done
 install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
@@ -587,7 +554,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-dist_desktopDATA
+install-data-am:
 
 install-exec-am:
 
@@ -615,7 +582,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-dist_desktopDATA uninstall-info-am
+uninstall-am: uninstall-info-am
 
 uninstall-info: uninstall-info-recursive
 
@@ -625,15 +592,13 @@ uninstall-info: uninstall-info-recursive
 	dist-tarZ dist-zip distcheck distclean distclean-generic \
 	distclean-recursive distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am \
-	install-dist_desktopDATA install-exec install-exec-am \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic \
+	install install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
 	maintainer-clean-recursive mostlyclean mostlyclean-generic \
 	mostlyclean-recursive pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-dist_desktopDATA \
-	uninstall-info-am
+	uninstall uninstall-am uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
