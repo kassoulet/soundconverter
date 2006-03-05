@@ -10,3 +10,5 @@ CLEANFILES = soundconverter
 soundconverter: soundconverter.py
 	sed -e s!\@datadir\@!$(gladedir)! -e s!\@version\@!$(VERSION)! < $< > $@
 	chmod +x $@
+
+EXTRA_DIST = soundconverterTests.py

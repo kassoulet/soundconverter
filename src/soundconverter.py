@@ -227,7 +227,7 @@ class SoundFile:
 		}
 		self.have_tags = False
 		self.tags_read = False
-		
+		  
 	def get_uri(self):
 		return self.uri
 		

@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+#AUTOMAKE_OPTIONS = dist-bzip2
+
 SUBDIRS = po src data doc
 
 CLEANFILES=

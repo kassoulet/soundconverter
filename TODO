@@ -1,17 +1,16 @@
  
- 
 bugs:
 
  * encoders as plugins 
  * optional "advanced" encoder settings
- * give time estimates for progress bar
  * HIG compliant interface
- * autotools, l12n
  * handle exceptions even when they happen in callbacks
  * add support for GNOME encoding profiles ?
 
  * bug: the program's options aren't printed with --help
 
+ -ok- autotools, l12n
+ -ok- give time estimates for progress bar
  -ok- progress dialog
  -ok- find a solution when no tags & filename generated from tags
  -ok- don't add dupplicate files 
