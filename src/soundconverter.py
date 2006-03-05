@@ -23,6 +23,8 @@ NAME = "SoundConverter"
 VERSION = "@version@"
 GLADE = "@datadir@/soundconverter.glade"
 
+print "%s %s" % (NAME, VERSION)
+
 # Python standard stuff.
 import sys
 import os
@@ -42,16 +44,30 @@ import gtk
 import gtk.glade
 import gnome
 import gnome.ui
-import gst
 import gconf
 import gobject
-
 try:
 	# gnome.vfs is deprecated
 	import gnomevfs
 except ImportError:
 	import gnome.vfs
 	gnomevfs = gnome.vfs
+
+# GStreamer
+try:
+	# 0.10
+	import pygst
+	pygst.require('0.10')
+	import gst
+except ImportError:
+	# 0.8
+	import gst
+	pygst = None
+print "  using Gstreamer version: %s, Python binding version: %s" % (
+		".".join([str(s) for s in gst.gst_version]), 
+		".".join([str(s) for s in gst.pygst_version]) )
+
+
 
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
@@ -553,7 +569,9 @@ class Pipeline(BackgroundTask):
 		if self.pipeline.get_state() == gst.STATE_NULL:
 			print "error: pipeline.state == null"
 			#return False
-		return self.pipeline.iterate()
+		time.sleep(0.1)
+		return True
+		#return self.pipeline.iterate()
 
 	def finish(self):
 		self.stop_pipeline()
@@ -587,17 +605,17 @@ class Pipeline(BackgroundTask):
 	def stop_pipeline(self):
 		self.pipeline.set_state(gst.STATE_NULL)
 
-	def get_progress(self):
-		if not self.processing:
-			return 0
-		element = self.pipeline.get_by_name("src")
-		return element.query(gst.QUERY_POSITION, gst.FORMAT_PERCENT) 
+	#def get_progress(self):
+	#	if not self.processing:
+	#		return 0
+	#	element = self.pipeline.get_by_name("src")
+	#	return element.query(gst.QUERY_POSITION, gst.FORMAT_PERCENT) 
 
 	def get_bytes_progress(self):
 		if not self.processing:
 			return 0
 		element = self.pipeline.get_by_name("src")
-		return element.query(gst.QUERY_POSITION, gst.FORMAT_BYTES) 
+		return element.query_position(gst.FORMAT_BYTES)[0]
 
 class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
@@ -642,7 +660,8 @@ class Decoder(Pipeline):
 		command = 'gnomevfssrc location="%s" name=src ! decodebin name=decoder' % \
 			self.sound_file.get_uri()
 		self.add_command(command)
-		self.add_signal("decoder", "found-tag", self.found_tag)
+		#self.add_signal("decoder", "found-tag", self.found_tag)
+		#self.add_signal("decoder", "found-tag", self.found_tag)
 		self.add_signal("decoder", "new-decoded-pad", self.new_decoded_pad)
 		
 		# TODO add error management
@@ -747,7 +766,7 @@ class Converter(Decoder):
 		}
 
 		self.add_command("audioconvert")
-		self.add_command("audioscale")
+		#TODO self.add_command("audioscale")
 		
 		encoder = self.encoders[self.output_type]()
 		if not encoder:
@@ -1784,7 +1803,7 @@ class SoundConverterWindow:
 		not_ready = [s for s in self.filelist.get_files() if not s.tags_read]
 		if not_ready:
 			self.progressbar.pulse()
-			return True
+		return True
 
 		self.do_convert()
 		return False
@@ -1803,8 +1822,9 @@ class SoundConverterWindow:
 		
 			self.convertion_waiting = True
 			self.set_status(_("Waiting for tags..."))
-			
-			gobject.timeout_add(100, self.wait_tags_and_convert)
+		
+			self.do_convert()
+			#gobject.timeout_add(100, self.wait_tags_and_convert)
 		else:
 			self.converter.paused = not self.converter.paused
 			if self.converter.paused:
