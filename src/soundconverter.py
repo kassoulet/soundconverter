@@ -421,6 +421,7 @@ class BackgroundTask:
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
+			print "work:",self 
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
@@ -1564,12 +1565,12 @@ class ConverterQueue(TaskQueue):
 			f = urllib.unquote(t.sound_file.get_filename())
 			
 		bytes = task.get_bytes_progress()
-		#print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
+		print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
 		self.window.set_progress(self.total_for_processed_files + bytes,
 							 self.total_bytes, f)
 
 	def finish_hook(self, task):
-		#print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
+		print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
 		self.total_for_processed_files += task.get_size_in_bytes()
 
 	def finish(self):
