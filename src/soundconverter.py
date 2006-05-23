@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats. 
 # Copyright 2004 Lars Wirzenius
@@ -46,6 +46,8 @@ import gnome
 import gnome.ui
 import gconf
 import gobject
+gobject.threads_init()
+
 try:
 	# gnome.vfs is deprecated
 	import gnomevfs
@@ -243,7 +245,8 @@ class SoundFile:
 		}
 		self.have_tags = False
 		self.tags_read = False
-		  
+		self.duration = 0	
+	  
 	def get_uri(self):
 		return self.uri
 		
@@ -562,6 +565,7 @@ class Pipeline(BackgroundTask):
 		self.parsed = False
 		self.signals = []
 		self.processing = False
+		self.eos = False
 		
 	def setup(self):
 		self.play()
@@ -570,7 +574,10 @@ class Pipeline(BackgroundTask):
 		if self.pipeline.get_state() == gst.STATE_NULL:
 			print "error: pipeline.state == null"
 			#return False
-		time.sleep(0.1)
+		#print "work:", self
+		#time.sleep(0.01)
+		if self.eos:
+			return False
 		return True
 		#return self.pipeline.iterate()
 
@@ -590,6 +597,33 @@ class Pipeline(BackgroundTask):
 			self.pipeline.set_state(gst.STATE_PAUSED)
 		else:
 			self.pipeline.set_state(gst.STATE_PLAYING)
+	def found_tag(self, decoder, something, taglist):
+		pass
+
+	def on_message(self, bus, message):
+		#import traceback ;traceback.print_stack()
+		t = message.type
+		#print message
+		if t == gst.MESSAGE_STATE_CHANGED:
+			pass
+		elif t == gst.MESSAGE_ERROR:
+			err, debug = message.parse_error()
+			print "error:", err, debug
+		elif t == gst.MESSAGE_EOS:
+			self.eos = True
+		#else:
+		#	print 'msg: %s: %s:' % (message.src.get_path_string(),
+		#					   message.type.value_nicks[1])
+		#if message.structure:
+		#	print '    %s' % message.structure.to_string()
+		if message.type.value_nicks[1] == "tag":
+			#print "   ", dir(message.parse_tag())
+			self.found_tag(self, "", message.parse_tag())	
+		#else:
+		#	print '    (no structure)'
+		return True
+
+		
 
 	def play(self):
 		if not self.parsed:
@@ -600,7 +634,13 @@ class Pipeline(BackgroundTask):
 			self.parsed = True
 		else:
 			print "ERROR: ALREADY PARSED!!!"
-		
+	
+		bus = self.pipeline.get_bus()
+		bus.add_signal_watch()
+		watch_id = bus.connect('message', self.on_message)
+		self.watch_id = watch_id
+
+	
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def stop_pipeline(self):
@@ -613,10 +653,7 @@ class Pipeline(BackgroundTask):
 	#	return element.query(gst.QUERY_POSITION, gst.FORMAT_PERCENT) 
 
 	def get_bytes_progress(self):
-		if not self.processing:
-			return 0
-		element = self.pipeline.get_by_name("src")
-		return element.query_position(gst.FORMAT_BYTES)[0]
+		return self.pipeline.query_position(gst.FORMAT_TIME)[0] 
 
 class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
@@ -624,7 +661,7 @@ class TypeFinder(Pipeline):
 		self.sound_file = sound_file
 		self.found_type = ""
 	
-		command = 'gnomevfssrc location="%s" ! typefind name=typefinder' % \
+		command = 'gnomevfssrc location="%s" ! typefind name=typefinder ! fakesink' % \
 			self.sound_file.get_uri()
 		self.add_command(command)
 		self.add_signal("typefinder", "have-type", self.have_type)
@@ -686,13 +723,15 @@ class Decoder(Pipeline):
 		# gst.QUERY_SIZE doesn't work reliably until we have ran the
 		# pipeline for a while. Thus we look at the size in a different
 		# way.
-		uri = self.get_input_uri()
-		try:
-			info = gnomevfs.get_file_info(uri)
-			return info.size
-		except gnomevfs.NotFoundError:
-			print "notfound:", uri
-			return 0
+		return self.sound_file.duration
+
+		#uri = self.get_input_uri()
+		#try:
+		#	info = gnomevfs.get_file_info(uri)
+		#	return info.size
+		#except gnomevfs.NotFoundError:
+		#	print "notfound:", uri
+		#	return 0
 
 class TagReader(Decoder):
 
@@ -703,6 +742,7 @@ class TagReader(Decoder):
 		self.found_tag_hook = None
 		self.found_tags = False
 		self.run_start_time = time.time()
+		self.add_command("fakesink")
 
 	def set_found_tag_hook(self, found_tag_hook):
 		self.found_tag_hook = found_tag_hook
@@ -715,9 +755,14 @@ class TagReader(Decoder):
 		# tags from ogg vorbis files comes with two callbacks,
 		# the first callback containing just the stream serial number.
 		# The second callback contains the tags we're interested in.
-		if taglist.has_key('serial'):
+		if "serial" in taglist.keys():
 			return
 
+		try:
+			#TODO
+			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0]
+		except:
+			pass
 		self.found_tags = True
 		self.sound_file.have_tags = True
 
@@ -796,6 +841,17 @@ class Converter(Decoder):
 	
 		self.add_command('gnomevfssink location=%s' % uri)
 		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
+	def finish(self):
+		Pipeline.finish(self)
+		
+		# Copy file permissions
+		try:
+			info = gnomevfs.get_file_info( self.sound_file.get_uri(),gnomevfs.FILE_INFO_FIELDS_PERMISSIONS)
+			gnomevfs.set_file_info(self.output_filename, info, gnomevfs.SET_FILE_INFO_PERMISSIONS)
+		except:
+			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
+
+
 	
 	def new_decoded_pad(self, decoder, pad, is_last):
 		if self.added_pad_already:
@@ -934,16 +990,17 @@ class FileList:
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
 	
-	def add_file(self, sound_file):
+	def add_files(self, sound_files):
 
-		if sound_file.get_uri() in self.filelist:
-			log("file already present: '%s'" % sound_file.get_uri())
-			return 
+		for sound_file in sound_files:
+			if sound_file.get_uri() in self.filelist:
+				log("file already present: '%s'" % sound_file.get_uri())
+				return 
 
-		self.filelist[sound_file.get_uri()] = True
-		typefinder = TypeFinder(sound_file)
-		typefinder.set_found_type_hook(self.found_type)
-		self.typefinders.add(typefinder)
+			self.filelist[sound_file.get_uri()] = True
+			typefinder = TypeFinder(sound_file)
+			typefinder.set_found_type_hook(self.found_type)
+			self.typefinders.add(typefinder)
 		if not self.typefinders.is_running():
 			self.typefinders.run()
 			
@@ -1759,8 +1816,10 @@ class SoundConverterWindow:
 		ret = self.addchooser.run()
 		self.addchooser.hide()
 		if ret == gtk.RESPONSE_OK:
+			files = []
 			for uri in self.addchooser.get_uris():
-				self.filelist.add_file(SoundFile(uri))
+				files.append(SoundFile(uri))
+			self.filelist.add_files(files)
 		self.set_sensitive()
 
 
@@ -1772,11 +1831,14 @@ class SoundConverterWindow:
 			
 			base,notused = os.path.split(os.path.commonprefix(folders))
 			filelist = []
+			files = []
 			for folder in folders:
 				filelist.extend(vfs_walk(gnomevfs.URI(folder)))
 			for f in filelist:
+				file("files","a+").write("%s\n" % f)
 				f = f[len(base)+1:]
-				self.filelist.add_file(SoundFile(base+"/", f))
+				files.append(SoundFile(base+"/", f))
+			self.filelist.add_files(files)
 		self.set_sensitive()
 
 	def on_remove_activate(self, *args):
@@ -1933,8 +1995,10 @@ def gui_main(input_files):
 	for input_file in input_files:
 		win.filelist.add_file(input_file)
 	win.set_sensitive()
+	gtk.threads_enter()
 	gtk.main()
 
+	gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
