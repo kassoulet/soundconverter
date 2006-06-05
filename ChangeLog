@@ -1,3 +1,28 @@
+2006-06-05  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: YEEPEE!!! The bug plagging the gst0.10 port is GONE !!
+	  Merge & cleanup from 0.8 branch:
+
+	* soundconverter.py: Use filesrc instead of gnomevfssrc if it's absent.
+	  (#7652) (debian #367253)
+	* soundconverter: Added Spanish translation.
+	* soundconverter: Added a custom file pattern choice. (thanks Adolfo)
+	* soundconverter.py: Fix doubled folder (#7403).
+	* soundconverter.py: Fix an uncatched InvalidURIError when adding files.
+	* soundconverter.glade: Removed preferences and exit toolbar buttons
+	  as requested (#6777).
+
+
+2006-03-29  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: More gstreamer0.10 love. The new api is nice, but
+	  porting to it sucks big time.
+
+2006-03-19  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Files permissions are copied from source file.
+	  Some more code for gstreamer0.10.
+
 2006-02-06  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Progress dialog is working now.

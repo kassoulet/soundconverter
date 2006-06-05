@@ -46,7 +46,6 @@ import gnome
 import gnome.ui
 import gconf
 import gobject
-gobject.threads_init()
 
 try:
 	# gnome.vfs is deprecated
@@ -69,8 +68,6 @@ print "  using Gstreamer version: %s, Python binding version: %s" % (
 		".".join([str(s) for s in gst.gst_version]), 
 		".".join([str(s) for s in gst.pygst_version]) )
 
-
-
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
 
@@ -89,6 +86,7 @@ gtk.glade.textdomain(PACKAGE)
 TRANSLATORS = _("""Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)
 Dominik Zabłotny <dominz wp.pl> (polish) 
 Jonh Wendell <wendell bani.com.br> (Brazilian)
+Marc E. <m4rccd yahoo.com> (Spanish)
 """)
 
 # Names of columns in the file list
@@ -130,7 +128,6 @@ def vfs_walk(uri):
 	if str(uri)[-1] != '/':
 		uri = uri.append_string("/")
 
-	info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
 	filelist = []	
 
 	try:
@@ -143,7 +140,7 @@ def vfs_walk(uri):
 	for file_info in dirlist:
 		if file_info.name[0] == ".":
 			continue
-	
+
 		if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 			filelist.extend(
 				vfs_walk(uri.append_path(file_info.name)) )
@@ -173,21 +170,32 @@ def vfs_makedirs(path_to_create):
 			return False
 	return True	
 
-def markup_escape(str):
-	str = "&amp;".join(str.split("&"))
-	str = "&lt;".join(str.split("<"))
-	str = "&gt;".join(str.split(">"))
-	return str
+# GStreamer gnomevfssrc helpers
 
-def filename_escape(str):
-	str = str.replace("'","\'")
-	str = str.replace("\"","\\\"")
-	str = str.replace("!","\!")
-	return str
+def vfs_encode_filename(filename):
+	return filename
+
+def file_encode_filename(filename):
+	return gnomevfs.get_local_path_from_uri(filename)
+	
+use_gnomevfs = False
+
+if gst.element_factory_find("gnomevfssrc"):
+	gstreamer_source = "gnomevfssrc"
+	gstreamer_sink = "gnomevfssink"
+	encode_filename = vfs_encode_filename
+	use_gnomevfs = True
+	print "  using gnomevfssrc"
+else:
+	gstreamer_source = "filesrc"
+	gstreamer_sink = "filesink"
+	encode_filename = file_encode_filename
+	print "  NOT using gnomevfssrc, look for any gnomevfs gstreamer package."
+
 
 
 def log(message):
-	if get("quiet") == False:
+	if get_option("quiet") == False:
 		print message
 
 def sleep(duration):
@@ -294,7 +302,7 @@ class TargetNameGenerator:
 		self.suffix = None
 		self.replace_messy_chars = False
 		self.max_tries = 2
-		self.exists = os.path.exists
+		self.exists = gnomevfs.exists
 
 	# This is useful for unit testing.		  
 	def set_exists(self, exists):
@@ -375,14 +383,8 @@ class ErrorDialog:
 		self.dialog.run()
 		self.dialog.hide()
 
-	def encode(self, str):
-		str = "&amp;".join(str.split("&"))
-		str = "&lt;".join(str.split("<"))
-		str = "&gt;".join(str.split(">"))
-		return str
-
 	def show_exception(self, exception):
-		self.show("<b>%s</b>" % self.encode(exception.primary),
+		self.show("<b>%s</b>" % markup_escape(exception.primary),
 				  exception.secondary)
 
 
@@ -419,15 +421,16 @@ class BackgroundTask:
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
-		self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_LOW)
+		self.id = gobject.timeout_add(100, self.do_work, priority=gobject.PRIORITY_LOW)
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
-			print "work:",self 
+			gtk.threads_enter()
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
+				gtk.threads_leave()
 				return True
 			else:
 				if self.current_paused_time:
@@ -435,13 +438,17 @@ class BackgroundTask:
 					self.current_paused_time = 0
 					
 			if self.work():
+				gtk.threads_leave()
 				return True
 			else:
 				self.run_finish_time = time.time()
 				self.finish()
+				gtk.threads_leave()
+				self = None
 				return False
 		except SoundConverterException, e:
 			error.show_exception(e)
+			gtk.threads_leave()
 			return False
 
 	def stop(self):
@@ -597,33 +604,20 @@ class Pipeline(BackgroundTask):
 			self.pipeline.set_state(gst.STATE_PAUSED)
 		else:
 			self.pipeline.set_state(gst.STATE_PLAYING)
+
 	def found_tag(self, decoder, something, taglist):
 		pass
 
 	def on_message(self, bus, message):
-		#import traceback ;traceback.print_stack()
 		t = message.type
-		#print message
-		if t == gst.MESSAGE_STATE_CHANGED:
-			pass
-		elif t == gst.MESSAGE_ERROR:
+		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			print "error:", err, debug
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
-		#else:
-		#	print 'msg: %s: %s:' % (message.src.get_path_string(),
-		#					   message.type.value_nicks[1])
-		#if message.structure:
-		#	print '    %s' % message.structure.to_string()
 		if message.type.value_nicks[1] == "tag":
-			#print "   ", dir(message.parse_tag())
 			self.found_tag(self, "", message.parse_tag())	
-		#else:
-		#	print '    (no structure)'
 		return True
-
-		
 
 	def play(self):
 		if not self.parsed:
@@ -639,20 +633,42 @@ class Pipeline(BackgroundTask):
 		bus.add_signal_watch()
 		watch_id = bus.connect('message', self.on_message)
 		self.watch_id = watch_id
-
 	
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def stop_pipeline(self):
+		if not self.pipeline:
+			print "pipeline already stopped!"
+			return
+		bus = self.pipeline.get_bus()
+		bus.disconnect(self.watch_id)
+		bus.remove_signal_watch()
 		self.pipeline.set_state(gst.STATE_NULL)
-
-	#def get_progress(self):
-	#	if not self.processing:
-	#		return 0
-	#	element = self.pipeline.get_by_name("src")
-	#	return element.query(gst.QUERY_POSITION, gst.FORMAT_PERCENT) 
+		self.pipeline = None
+		del self.watch_id
 
 	def get_bytes_progress(self):
+
+		element = self.pipeline.get_by_name("src")
+		if not element:
+			print "cannot get element"
+			return 0
+	
+		format = gst.FORMAT_BYTES
+		try:
+			p = element.query_position(format)[0]
+		except gst.QueryError:
+			p = 0
+		try:
+			d = element.query_duration(format)[0]
+		except gst.QueryError:
+			d = 0
+		#p //= gst.MSECOND
+		#d //= gst.MSECOND
+		
+		#print "%s / %s" % (gst.TIME_ARGS(p),gst.TIME_ARGS(d))
+		print "%s / %s" % (p,d)
+		
 		return self.pipeline.query_position(gst.FORMAT_TIME)[0] 
 
 class TypeFinder(Pipeline):
@@ -698,8 +714,6 @@ class Decoder(Pipeline):
 		command = 'gnomevfssrc location="%s" name=src ! decodebin name=decoder' % \
 			self.sound_file.get_uri()
 		self.add_command(command)
-		#self.add_signal("decoder", "found-tag", self.found_tag)
-		#self.add_signal("decoder", "found-tag", self.found_tag)
 		self.add_signal("decoder", "new-decoded-pad", self.new_decoded_pad)
 		
 		# TODO add error management
@@ -841,6 +855,7 @@ class Converter(Decoder):
 	
 		self.add_command('gnomevfssink location=%s' % uri)
 		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
+
 	def finish(self):
 		Pipeline.finish(self)
 		
@@ -952,7 +967,6 @@ class FileList:
 						   mime_id, time):
 
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
-			mime_type = self.drop_mime_types[mime_id]
 			file_list = []
 			for uri in selection.data.split("\n"):
 				uri = uri.strip()
@@ -968,14 +982,14 @@ class FileList:
 
 	def get_files(self):
 		files = []
-		iter = self.model.get_iter_first()
-		while iter:
-			file = {}
+		i = self.model.get_iter_first()
+		while i:
+			f = {}
 			for c in ALL_COLUMNS:
-				file[c] = self.model.get_value(iter, ALL_COLUMNS.index(c))
-			files.append(file["META"])
+				f[c] = self.model.get_value(i, ALL_COLUMNS.index(c))
+			files.append(f["META"])
 
-			iter = self.model.iter_next(iter)
+			i = self.model.iter_next(i)
 		return files
 	
 	def found_type(self, sound_file, mime):
@@ -992,9 +1006,10 @@ class FileList:
 	
 	def add_files(self, sound_files):
 
+		print "*** adding %s files" % len(sound_files)
 		for sound_file in sound_files:
 			if sound_file.get_uri() in self.filelist:
-				log("file already present: '%s'" % sound_file.get_uri())
+				log(_("file already present: '%s'") % sound_file.get_uri())
 				return 
 
 			self.filelist[sound_file.get_uri()] = True
@@ -1057,7 +1072,6 @@ class FileList:
 	def append_file_tags(self, tagreader):
 		sound_file = tagreader.get_sound_file()
 
-
 		fields = {}
 		for key in ALL_COLUMNS:
 			fields[key] = _("unknown")
@@ -1065,7 +1079,6 @@ class FileList:
 		fields["filename"] = urllib.unquote(sound_file.get_filename())
 
 		self.model.set(sound_file.model, 0, self.format_cell(sound_file))
-
 		self.window.set_sensitive()
 
 	def remove(self, iter):
@@ -1075,7 +1088,7 @@ class FileList:
 		
 	def is_nonempty(self):
 		try:
-			iter = self.model.get_iter((0,))
+			self.model.get_iter((0,))
 		except ValueError:
 			return False
 		return True
@@ -1090,6 +1103,7 @@ class PreferencesDialog:
 		("%(track-number)02d-%(title)s", _("Track number - title")),
 		("%(title)s", _("Track title")),
 		("%(artist)s-%(title)s", _("Artist - title")),
+		("Custom", _("Custom filename pattern")),
 	]
 	
 	subfolder_patterns = [
@@ -1103,6 +1117,7 @@ class PreferencesDialog:
 		"create-subfolders": 0,
 		"subfolder-pattern-index": 0,
 		"name-pattern-index": 0,
+		"custom-filename-pattern": "{Track} - {Title}",
 		"replace-messy-chars": 0,
 		"output-mime-type": "audio/x-vorbis",
 		"output-suffix": ".ogg",
@@ -1122,19 +1137,21 @@ class PreferencesDialog:
 		self.dialog = glade.get_widget("prefsdialog")
 		self.into_selected_folder = glade.get_widget("into_selected_folder")
 		self.target_folder_chooser = glade.get_widget("target_folder_chooser")
+		self.basename_pattern = glade.get_widget("basename_pattern")
+		self.custom_filename_box = glade.get_widget("custom_filename_box")
+		self.custom_filename = glade.get_widget("custom_filename")
 		self.example = glade.get_widget("example_filename")
 		self.aprox_bitrate = glade.get_widget("aprox_bitrate")
 		self.quality_tabs = glade.get_widget("quality_tabs")
 
 		self.target_bitrate = None
-
 		self.convert_setting_from_old_version()
-		self.set_widget_initial_values(glade)
 		
 		self.sensitive_widgets = {}
 		for name in self.sensitive_names:
 			self.sensitive_widgets[name] = glade.get_widget(name)
 			assert self.sensitive_widgets[name] != None
+		self.set_widget_initial_values(glade)
 		self.set_sensitive()
 
 
@@ -1201,8 +1218,8 @@ class PreferencesDialog:
 		model = w.get_model()
 		model.clear()
 		for pattern, desc in self.subfolder_patterns:
-			iter = model.append()
-			model.set(iter, 0, desc)
+			i = model.append()
+			model.set(i, 0, desc)
 		w.set_active(self.get_int("subfolder-pattern-index"))
 
 		if self.get_int("replace-messy-chars"):
@@ -1251,6 +1268,13 @@ class PreferencesDialog:
 			model.set(iter, 0, desc)
 		w.set_active(self.get_int("name-pattern-index"))
 
+		
+		self.custom_filename.set_text(self.get_string("custom-filename-pattern"))
+		if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
+			self.custom_filename_box.set_sensitive(True)
+		else:
+			self.custom_filename_box.set_sensitive(False)
+			
 		self.update_example()
 
 	def update_selected_folder(self):
@@ -1303,12 +1327,12 @@ class PreferencesDialog:
 			"track-number": 1L,
 			"track-count": 11L,
 		})
-		self.example.set_markup(self.generate_filename(sound_file))
+		self.example.set_markup(self.generate_filename(sound_file, for_display=True))
 		
 		markup = _("<small>Target bitrate: %s</small>") % self.get_bitrate_from_settings()
 		self.aprox_bitrate.set_markup( markup )
 
-	def generate_filename(self, sound_file):
+	def generate_filename(self, sound_file, for_display=False):
 		self.gconf.clear_cache()
 		output_type = self.get_string("output-mime-type")
 		output_suffix = {
@@ -1333,10 +1357,21 @@ class PreferencesDialog:
 				generator.set_subfolder_pattern(
 					self.get_subfolder_pattern())
 		generator.set_basename_pattern(self.get_basename_pattern())
-		generator.set_replace_messy_chars(
-			self.get_int("replace-messy-chars"))
+		if for_display:
+			generator.set_replace_messy_chars(False)
+		else:
+			generator.set_replace_messy_chars(
+				self.get_int("replace-messy-chars"))
 
 		return generator.get_target_name(sound_file)
+	
+	def process_custom_pattern(self, pattern):
+			pattern = pattern.replace("{Artist}", "%(artist)s")
+			pattern = pattern.replace("{Album}", "%(album)s")
+			pattern = pattern.replace("{Title}", "%(title)s")
+			pattern = pattern.replace("{Track}", "%(track-number)02d")
+			pattern = pattern.replace("{Total}", "%(track-total)02d")
+			return pattern
 
 	def set_sensitive(self):
 	
@@ -1427,14 +1462,25 @@ class PreferencesDialog:
 
 	def on_basename_pattern_changed(self, combobox):
 		self.set_int("name-pattern-index", combobox.get_active())
+		if combobox.get_active() == len(self.basename_patterns)-1:
+			self.custom_filename_box.set_sensitive(True)
+		else:
+			self.custom_filename_box.set_sensitive(False)
 		self.update_example()
 
 	def get_basename_pattern(self):
 		index = self.get_int("name-pattern-index")
 		if index < 0 or index >= len(self.basename_patterns):
 			index = 0
-		return self.basename_patterns[index][0]
-		
+		if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
+			return self.process_custom_pattern(self.custom_filename.get_text())
+		else:
+			return self.basename_patterns[index][0]
+	
+	def on_custom_filename_changed(self, entry):
+		self.set_string("custom-filename-pattern", entry.get_text())
+		self.update_example()
+	
 	def on_replace_messy_chars_toggled(self, button):
 		if button.get_active():
 			self.set_int("replace-messy-chars", 1)
@@ -1555,6 +1601,9 @@ class ConverterQueue(TaskQueue):
 			gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
 		except gnomevfs.NotFoundError:
 			exists = False
+		except gnomevfs.InvalidURIError:
+			print "Invalid URI: '%s'" % output_filename
+			return
 				
 		if exists:
 			if self.overwrite_action != None:
@@ -1597,7 +1646,6 @@ class ConverterQueue(TaskQueue):
 				# cancel operation
 				# TODO
 				raise ConverterQueueCanceled()
-				#self.stop()
 			
 		c = Converter(sound_file, output_filename, 
 					  self.window.prefs.get_string("output-mime-type"))
@@ -1760,7 +1808,6 @@ class SoundConverterWindow:
 		self.progresstitle = glade.get_widget("label_title")
 
 		self.addchooser = CustomFileChooser()
-		
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
 												self.widget,
 												gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
@@ -1769,7 +1816,7 @@ class SoundConverterWindow:
 													gtk.STOCK_OPEN,
 													gtk.RESPONSE_OK))
 		self.addfolderchooser.set_select_multiple(True)
-		self.addfolderchooser.set_local_only(False)
+		self.addfolderchooser.set_local_only(not use_gnomevfs)
 
 		self.connect(glade, [self.prefs])
 		
@@ -1796,11 +1843,11 @@ class SoundConverterWindow:
 	# class and give the same name in the .glade file.
 	
 	def connect(self, glade, objects):
-		dict = {}
-		for object in [self] + objects:
-			for name, member in inspect.getmembers(object):
-				dict[name] = member
-		glade.signal_autoconnect(dict)
+		dicts = {}
+		for o in [self] + objects:
+			for name, member in inspect.getmembers(o):
+				dicts[name] = member
+		glade.signal_autoconnect(dicts)
 
 	def close(self, *args):
 		self.converter.stop()
@@ -1835,7 +1882,6 @@ class SoundConverterWindow:
 			for folder in folders:
 				filelist.extend(vfs_walk(gnomevfs.URI(folder)))
 			for f in filelist:
-				file("files","a+").write("%s\n" % f)
 				f = f[len(base)+1:]
 				files.append(SoundFile(base+"/", f))
 			self.filelist.add_files(files)
@@ -1844,8 +1890,8 @@ class SoundConverterWindow:
 	def on_remove_activate(self, *args):
 		model, paths = self.filelist_selection.get_selected_rows()
 		while paths:
-			iter = self.filelist.model.get_iter(paths[0])
-			self.filelist.remove(iter)
+			i = self.filelist.model.get_iter(paths[0])
+			self.filelist.remove(i)
 			model, paths = self.filelist_selection.get_selected_rows()
 		self.set_sensitive()
 
@@ -1997,7 +2043,6 @@ def gui_main(input_files):
 	win.set_sensitive()
 	gtk.threads_enter()
 	gtk.main()
-
 	gtk.threads_leave()
 
 def cli_tags_main(input_files):
@@ -2070,24 +2115,24 @@ settings = {
 }
 
 
-def set(key, value):
+def set_option(key, value):
 	assert key in settings
 	settings[key] = value
 
 
-def get(key):
+def get_option(key):
 	assert key in settings
 	return settings[key]
 
 
 def print_help(*args):
 	print _("Usage: %s [options] [soundfile ...]") % sys.argv[0]
-	for short, long, func, doc in options:
+	for short_arg, long_arg, func, doc in options:
 		print
-		if short[-1] == ":":
-			print "	 -%s arg, --%sarg" % (short[:1], long)
+		if short_arg[-1] == ":":
+			print "	 -%s arg, --%sarg" % (short_arg[:1], long_arg)
 		else:
-			print "	 -%s, --%s" % (short[:1], long)
+			print "	 -%s, --%s" % (short_arg[:1], long_arg)
 		for line in textwrap.wrap(doc):
 			print "	   %s" % line
 	sys.exit(0)
@@ -2098,19 +2143,19 @@ options = [
 	("h", "help", print_help,
 	 _("Print out a usage summary.")),
 
-	("b", "batch", lambda optarg: set("mode", "batch"),
+	("b", "batch", lambda optarg: set_option("mode", "batch"),
 	 _("Convert in batch mode, from command line, without a graphical user\n interface. You can use this from, say, shell scripts.")),
 
-	("m:", "mime-type=", lambda optarg: set("cli-output-type", optarg),
-	 _("Set the output MIME type for batch mode. The default is\n %s . Note that you probably want to set\n the output suffix as well.") % get("cli-output-type")),
+	("m:", "mime-type=", lambda optarg: set_option("cli-output-type", optarg),
+	 _("Set the output MIME type for batch mode. The default is\n %s . Note that you probably want to set\n the output suffix as well.") % get_option("cli-output-type")),
 	 
-	("q", "quiet", lambda optarg: set("quiet", True),
+	("q", "quiet", lambda optarg: set_option("quiet", True),
 	 _("Be quiet. Don't write normal output, only errors.")),
 
-	("s:", "suffix=", lambda optarg: set("cli-output-suffix", optarg),
-	 _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get("cli-output-suffix")),
+	("s:", "suffix=", lambda optarg: set_option("cli-output-suffix", optarg),
+	 _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get_option("cli-output-suffix")),
 
-	("t", "tags", lambda optarg: set("mode", "tags"),
+	("t", "tags", lambda optarg: set_option("mode", "tags"),
 	 _("Show tags for input files instead of converting them. This indicates \n command line batch mode and disables the graphical user interface.")),
 
 	]
@@ -2140,9 +2185,9 @@ def main():
 	args = map(filename_to_uri, args)
 	args = map(SoundFile, args)
 
-	if get("mode") == "gui":
+	if get_option("mode") == "gui":
 		gui_main(args)
-	elif get("mode") == "tags":
+	elif get_option("mode") == "tags":
 		cli_tags_main(args)
 	else:
 		cli_convert_main(args)
