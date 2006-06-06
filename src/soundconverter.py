@@ -180,6 +180,18 @@ def file_encode_filename(filename):
 	
 use_gnomevfs = False
 
+def markup_escape(str):
+    str = "&amp;".join(str.split("&"))
+    str = "&lt;".join(str.split("<"))
+    str = "&gt;".join(str.split(">"))
+    return str
+
+def filename_escape(str):
+    str = str.replace("'","\'")
+    str = str.replace("\"","\\\"")
+    str = str.replace("!","\!")
+    return str
+
 if gst.element_factory_find("gnomevfssrc"):
 	gstreamer_source = "gnomevfssrc"
 	gstreamer_sink = "gnomevfssink"
@@ -191,6 +203,7 @@ else:
 	gstreamer_sink = "filesink"
 	encode_filename = file_encode_filename
 	print "  NOT using gnomevfssrc, look for any gnomevfs gstreamer package."
+
 
 
 
@@ -426,11 +439,11 @@ class BackgroundTask:
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
-			gtk.threads_enter()
+			#gtk.threads_enter()
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
-				gtk.threads_leave()
+				#gtk.threads_leave()
 				return True
 			else:
 				if self.current_paused_time:
@@ -438,17 +451,17 @@ class BackgroundTask:
 					self.current_paused_time = 0
 					
 			if self.work():
-				gtk.threads_leave()
+				#gtk.threads_leave()
 				return True
 			else:
 				self.run_finish_time = time.time()
 				self.finish()
-				gtk.threads_leave()
+				#gtk.threads_leave()
 				self = None
 				return False
 		except SoundConverterException, e:
 			error.show_exception(e)
-			gtk.threads_leave()
+			#gtk.threads_leave()
 			return False
 
 	def stop(self):
@@ -617,6 +630,7 @@ class Pipeline(BackgroundTask):
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
 			self.found_tag(self, "", message.parse_tag())	
+			#self.eos = True
 		return True
 
 	def play(self):
@@ -2041,9 +2055,9 @@ def gui_main(input_files):
 	for input_file in input_files:
 		win.filelist.add_file(input_file)
 	win.set_sensitive()
-	gtk.threads_enter()
+	#gtk.threads_enter()
 	gtk.main()
-	gtk.threads_leave()
+	#gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
