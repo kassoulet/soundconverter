@@ -2,7 +2,7 @@ dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
 AC_INIT(src/soundconverter.py)
-AM_INIT_AUTOMAKE(soundconverter, 0.8.4)
+AM_INIT_AUTOMAKE(soundconverter, 0.9.0-wip)
 
 m4_define(required_python_abi, 2.3)
 m4_define(required_python_version, 2.3.3)
