@@ -18,8 +18,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL
 
-AM_PATH_PYTHON(required_python_abi, required_python_version)
-dnl AM_PATH_PYTHON_VERSION(required_python_abi, required_python_version)
+AM_PATH_PYTHON(required_python_version)
 
 dnl Check for correctly installed pygtk
 AC_MSG_CHECKING(for pygtk required_pygtk_version installed for python required_python_abi)

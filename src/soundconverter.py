@@ -661,29 +661,8 @@ class Pipeline(BackgroundTask):
 		self.pipeline = None
 		del self.watch_id
 
-	def get_bytes_progress(self):
-
-		element = self.pipeline.get_by_name("src")
-		if not element:
-			print "cannot get element"
-			return 0
-	
-		format = gst.FORMAT_BYTES
-		try:
-			p = element.query_position(format)[0]
-		except gst.QueryError:
-			p = 0
-		try:
-			d = element.query_duration(format)[0]
-		except gst.QueryError:
-			d = 0
-		#p //= gst.MSECOND
-		#d //= gst.MSECOND
-		
-		#print "%s / %s" % (gst.TIME_ARGS(p),gst.TIME_ARGS(d))
-		print "%s / %s" % (p,d)
-		
-		return self.pipeline.query_position(gst.FORMAT_TIME)[0] 
+	def get_position(self):
+		return 0
 
 class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
@@ -747,19 +726,12 @@ class Decoder(Pipeline):
 	def get_input_uri(self):
 		return self.sound_file.get_uri()
 
-	def get_size_in_bytes(self):
+	def get_duration(self):
 		# gst.QUERY_SIZE doesn't work reliably until we have ran the
 		# pipeline for a while. Thus we look at the size in a different
 		# way.
 		return self.sound_file.duration
 
-		#uri = self.get_input_uri()
-		#try:
-		#	info = gnomevfs.get_file_info(uri)
-		#	return info.size
-		#except gnomevfs.NotFoundError:
-		#	print "notfound:", uri
-		#	return 0
 
 class TagReader(Decoder):
 
@@ -788,13 +760,14 @@ class TagReader(Decoder):
 
 		try:
 			#TODO
-			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0]
+			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
 		except:
 			pass
 		self.found_tags = True
 		self.sound_file.have_tags = True
 
 	def work(self):
+		
 		if time.time()-self.run_start_time > 5:
 			# stop looking for tags after 5s 
 			return False
@@ -830,6 +803,8 @@ class Converter(Decoder):
 		self.mp3_mode = None
 		self.mp3_quality = None
 		self.added_pad_already = False
+		self.time = 0
+		self.position = 0
 
 	def init(self):
 		self.encoders = {
@@ -881,6 +856,14 @@ class Converter(Decoder):
 			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
 
 
+	def _src_cb(self, pad, buffer):
+
+		if time.time() > self.time + 0.1:
+			self.time = time.time()
+			self.position = buffer.timestamp / gst.SECOND
+			if buffer.timestamp == gst.CLOCK_TIME_NONE:
+				pad.remove_buffer_probe(self.probe_id)
+		return True
 	
 	def new_decoded_pad(self, decoder, pad, is_last):
 		if self.added_pad_already:
@@ -889,10 +872,15 @@ class Converter(Decoder):
 			return
 		if "audio" not in pad.get_caps()[0].get_name():
 			return
-		print "new_decoded_pad"
+
+		pad.add_buffer_probe(self._src_cb)
+		
 		self.added_pad_already = True
 		self.processing = True
 
+	def get_position(self):
+		return self.position
+	
 	def set_vorbis_quality(self, quality):
 		self.vorbis_quality = quality
 
@@ -1600,8 +1588,8 @@ class ConverterQueue(TaskQueue):
 		self.reset_counters()
 		
 	def reset_counters(self):
-		self.total_bytes = 0
-		self.total_for_processed_files = 0
+		self.total_duration = 0
+		self.duration_processed = 0
 		self.overwrite_action = None
 
 	def add(self, sound_file):
@@ -1675,7 +1663,7 @@ class ConverterQueue(TaskQueue):
 		c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
 		c.init()
 		TaskQueue.add(self, c)
-		self.total_bytes += c.get_size_in_bytes()
+		self.total_duration += c.get_duration()
 
 	def work_hook(self, task):
 		t = self.get_current_task()
@@ -1683,14 +1671,12 @@ class ConverterQueue(TaskQueue):
 		if t:
 			f = urllib.unquote(t.sound_file.get_filename())
 			
-		bytes = task.get_bytes_progress()
-		print "work: %s+%s/%s" % (self.total_for_processed_files, bytes, self.total_bytes)
-		self.window.set_progress(self.total_for_processed_files + bytes,
-							 self.total_bytes, f)
+		self.window.set_progress(self.duration_processed + task.get_position(),
+							 self.total_duration, f)
 
 	def finish_hook(self, task):
-		print "finished: %d+=%d" % (self.total_for_processed_files, task.get_size_in_bytes())
-		self.total_for_processed_files += task.get_size_in_bytes()
+		print "finished: %d+=%d" % (self.duration_processed, task.get_duration())
+		self.duration_processed += task.get_duration()
 
 	def finish(self):
 		TaskQueue.finish(self)
@@ -2037,6 +2023,7 @@ class SoundConverterWindow:
 		#	return
 			
 		r = (t / fraction - t)
+		return
 		s = r%60
 		m = r/60
 		remaining = _("%d:%02d left") % (m,s)
