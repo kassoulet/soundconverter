@@ -287,7 +287,7 @@
 
 	  <child>
 	    <widget class="GtkSeparatorToolItem" id="separatortoolitem2">
-	      <property name="visible">True</property>
+	      <property name="visible">False</property>
 	      <property name="draw">True</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
@@ -300,7 +300,7 @@
 
 	  <child>
 	    <widget class="GtkToolButton" id="prefs_button">
-	      <property name="visible">True</property>
+	      <property name="visible">False</property>
 	      <property name="stock_id">gtk-preferences</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
@@ -315,7 +315,7 @@
 
 	  <child>
 	    <widget class="GtkToolButton" id="quit_button">
-	      <property name="visible">True</property>
+	      <property name="visible">False</property>
 	      <property name="stock_id">gtk-quit</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
