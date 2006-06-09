@@ -378,8 +378,9 @@ class TargetNameGenerator:
 
 		tuple = (u.scheme, host, result, "", u.fragment_identifier)
 		u2 = urlparse.urlunsplit(tuple)
-		if self.exists(u2):
-			raise TargetNameCreationFailure(u2)
+		#TODO:
+		#if self.exists(u2):
+		#	raise TargetNameCreationFailure(u2)
 		return u2
 
 
@@ -434,16 +435,16 @@ class BackgroundTask:
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
-		self.id = gobject.timeout_add(100, self.do_work, priority=gobject.PRIORITY_LOW)
+		#self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_LOW)
+		self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
+		#print "do_work"
 		try:
-			#gtk.threads_enter()
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
-				#gtk.threads_leave()
 				return True
 			else:
 				if self.current_paused_time:
@@ -451,17 +452,14 @@ class BackgroundTask:
 					self.current_paused_time = 0
 					
 			if self.work():
-				#gtk.threads_leave()
 				return True
 			else:
 				self.run_finish_time = time.time()
 				self.finish()
-				#gtk.threads_leave()
 				self = None
 				return False
 		except SoundConverterException, e:
 			error.show_exception(e)
-			#gtk.threads_leave()
 			return False
 
 	def stop(self):
@@ -505,7 +503,7 @@ class TaskQueue(BackgroundTask):
 		self.running = False
 		self.tasks_number=0
 		self.tasks_current=0
-		
+
 	def is_running(self):
 		return self.running
 
@@ -524,6 +522,9 @@ class TaskQueue(BackgroundTask):
 		if self.tasks:
 			self.tasks[0].setup()
 			self.setup_hook(self.tasks[0])
+
+		self.start_time = time.time()
+
 			
 	def work(self):
 		if self.tasks:
@@ -540,6 +541,9 @@ class TaskQueue(BackgroundTask):
 
 	def finish(self):
 		self.running = False
+
+		print "Queue done in %ds" % (time.time() - self.start_time)
+		
 
 	def stop(self):
 		if self.tasks:
@@ -588,6 +592,8 @@ class Pipeline(BackgroundTask):
 		self.eos = False
 		
 	def setup(self):
+		print "pipeline.setup", self.sound_file.get_filename()
+		
 		self.play()
 		
 	def work(self):
@@ -767,7 +773,7 @@ class TagReader(Decoder):
 		self.sound_file.have_tags = True
 
 	def work(self):
-		
+		#print "TagReader.work"  	
 		if time.time()-self.run_start_time > 5:
 			# stop looking for tags after 5s 
 			return False
@@ -995,16 +1001,17 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
+		print "found_type", sound_file.get_filename()
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
 
-		tagreader = TagReader(sound_file)
-		tagreader.set_found_tag_hook(self.append_file_tags)
+		#tagreader = TagReader(sound_file)
+		#tagreader.set_found_tag_hook(self.append_file_tags)
 
-		self.tagreaders.add(tagreader)
-		if not self.tagreaders.is_running():
-			self.tagreaders.run()
+		#self.tagreaders.add(tagreader)
+		#if not self.tagreaders.is_running():
+		#	self.tagreaders.run()
 	
 	def add_files(self, sound_files):
 
@@ -1015,12 +1022,27 @@ class FileList:
 				return 
 
 			self.filelist[sound_file.get_uri()] = True
+
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add(typefinder)
+
 		if not self.typefinders.is_running():
 			self.typefinders.run()
-			
+
+		#	self.append_file(sound_file)
+		#	self.window.set_sensitive()
+
+		#	tagreader = TagReader(sound_file)
+		#	tagreader.set_found_tag_hook(self.append_file_tags)
+
+		#	self.tagreaders.add(tagreader)
+		#if not self.tagreaders.is_running():
+		#	self.tagreaders.run()
+		
+	def add_file(self, sound_file):
+		self.add_files((sound_file,))
+
 	def add_folder(self, folder):
 
 		base = folder
@@ -2039,12 +2061,9 @@ def gui_main(input_files):
 	win = SoundConverterWindow(glade)
 	global error
 	error = ErrorDialog(glade)
-	for input_file in input_files:
-		win.filelist.add_file(input_file)
+	gobject.idle_add(win.filelist.add_files, input_files)
 	win.set_sensitive()
-	#gtk.threads_enter()
 	gtk.main()
-	#gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
@@ -2182,7 +2201,7 @@ def main():
 			print key, settings[key]
 		return
 	
-	
+
 	args = map(filename_to_uri, args)
 	args = map(SoundFile, args)
 

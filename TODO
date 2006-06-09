@@ -1,13 +1,16 @@
  
 bugs:
 
+ * better progress, in the statusbar
  * encoders as plugins 
  * optional "advanced" encoder settings
  * HIG compliant interface
  * handle exceptions even when they happen in callbacks
  * add support for GNOME encoding profiles ?
-
+   GNOME profiles are "recording oriented", so maybe we need
+   our own profile system. "lossless, voice, etc..."
  * bug: the program's options aren't printed with --help
+
 
  -ok- autotools, l12n
  -ok- give time estimates for progress bar
