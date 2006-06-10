@@ -83,10 +83,11 @@ gettext.install(PACKAGE,localedir=None,unicode=1)
 gtk.glade.bindtextdomain(PACKAGE,'/usr/share/locale')
 gtk.glade.textdomain(PACKAGE)
 
-TRANSLATORS = _("""Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)
+TRANSLATORS = _("""
+Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)
 Dominik Zabłotny <dominz wp.pl> (polish) 
-Jonh Wendell <wendell bani.com.br> (Brazilian)
-Marc E. <m4rccd yahoo.com> (Spanish)
+Jonh Wendell <wendell bani.com.br> (brazilian)
+Marc E. <m4rccd yahoo.com> (spanish)
 """)
 
 # Names of columns in the file list
@@ -435,7 +436,7 @@ class BackgroundTask:
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
-		#self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_LOW)
+		#self.id = gobject.timeout_add(1, self.do_work, priority=gobject.PRIORITY_LOW)
 		self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
 	
 	def do_work(self):
@@ -541,7 +542,6 @@ class TaskQueue(BackgroundTask):
 
 	def finish(self):
 		self.running = False
-
 		print "Queue done in %ds" % (time.time() - self.start_time)
 		
 
@@ -592,8 +592,6 @@ class Pipeline(BackgroundTask):
 		self.eos = False
 		
 	def setup(self):
-		print "pipeline.setup", self.sound_file.get_filename()
-		
 		self.play()
 		
 	def work(self):
@@ -632,11 +630,12 @@ class Pipeline(BackgroundTask):
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			print "error:", err, debug
+			self.eos = True
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
 			self.found_tag(self, "", message.parse_tag())	
-			#self.eos = True
+			self.eos = True
 		return True
 
 	def play(self):
@@ -762,6 +761,7 @@ class TagReader(Decoder):
 		# the first callback containing just the stream serial number.
 		# The second callback contains the tags we're interested in.
 		if "serial" in taglist.keys():
+			print "Error, serial tag in ogg/vorbis, tags will be lost"
 			return
 
 		try:
@@ -1006,12 +1006,12 @@ class FileList:
 		self.append_file(sound_file)
 		self.window.set_sensitive()
 
-		#tagreader = TagReader(sound_file)
-		#tagreader.set_found_tag_hook(self.append_file_tags)
+		tagreader = TagReader(sound_file)
+		tagreader.set_found_tag_hook(self.append_file_tags)
 
-		#self.tagreaders.add(tagreader)
-		#if not self.tagreaders.is_running():
-		#	self.tagreaders.run()
+		self.tagreaders.add(tagreader)
+		if not self.tagreaders.is_running():
+			self.tagreaders.run()
 	
 	def add_files(self, sound_files):
 
