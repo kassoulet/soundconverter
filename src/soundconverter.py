@@ -177,7 +177,9 @@ def vfs_encode_filename(filename):
 	return filename
 
 def file_encode_filename(filename):
-	return gnomevfs.get_local_path_from_uri(filename)
+	filename = gnomevfs.get_local_path_from_uri(filename)
+	filename = filename.replace(" ", "\ ");
+	return filename
 	
 use_gnomevfs = False
 
@@ -249,15 +251,17 @@ class SoundFile:
 
 	"""Meta data information about a sound file (uri, tags)."""
 
-	def __init__(self, base_path, filename=None):
-		if filename:
+	#def __init__(self, base_path, filename=None):
+	def __init__(self, uri, base_path=None):
+
+		self.uri = uri
+		if base_path:
 			self.base_path = base_path
-			self.filename = filename
-			self.uri = os.path.join(base_path, filename)
+			self.filename = uri[len(base_path):]
 		else:
-			self.uri = base_path 
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
+		self.filename_for_display = gnomevfs.unescape_string_for_display(self.filename)
 	
 		self.tags = {
 			"track-number": 0,
@@ -277,6 +281,9 @@ class SoundFile:
 		
 	def get_filename(self):
 		return self.filename
+		
+	def get_filename_for_display(self):
+		return self.filename_for_display
 		
 	def add_tags(self, taglist):
 		for key in taglist.keys():
@@ -425,6 +432,9 @@ class BackgroundTask:
 	Call the stop method if you want to stop the task before it finishes
 	normally."""
 
+	def __init__(self):
+		self.paused = False
+
 	def run(self):
 		"""Start running the task. Call setup()."""
 		try:
@@ -438,11 +448,13 @@ class BackgroundTask:
 		self.paused_time = 0
 		#self.id = gobject.timeout_add(1, self.do_work, priority=gobject.PRIORITY_LOW)
 		self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
+		#self.id = gobject.idle_add(self.do_work)
 	
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		#print "do_work"
 		try:
+			#time.sleep(0)
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
@@ -500,6 +512,7 @@ class TaskQueue(BackgroundTask):
 	tasks in order and start the next one when the previous finishes."""
 
 	def __init__(self):
+		BackgroundTask.__init__(self)
 		self.tasks = []
 		self.running = False
 		self.tasks_number=0
@@ -584,6 +597,7 @@ class Pipeline(BackgroundTask):
 	"""A background task for running a GstPipeline."""
 
 	def __init__(self):
+		BackgroundTask.__init__(self)
 		self.pipeline = None #gst.Pipeline()
 		self.command = ""
 		self.parsed = False
@@ -746,7 +760,7 @@ class TagReader(Decoder):
 		Decoder.__init__(self, sound_file)
 		self.found_tag_hook = None
 		self.found_tags = False
-		self.run_start_time = time.time()
+		self.run_start_time = 0 
 		self.add_command("fakesink")
 
 	def set_found_tag_hook(self, found_tag_hook):
@@ -773,7 +787,11 @@ class TagReader(Decoder):
 		self.sound_file.have_tags = True
 
 	def work(self):
-		#print "TagReader.work"  	
+		#print "TagReader.work"
+
+		if not self.run_start_time:
+			self.run_start_time = time.time()
+
 		if time.time()-self.run_start_time > 5:
 			# stop looking for tags after 5s 
 			return False
@@ -986,7 +1004,8 @@ class FileList:
 						file_list.append(uri)
 			context.finish(True, False, time)
 			base = os.path.commonprefix(file_list)
-			[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
+			#[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
+			[self.add_file(SoundFile(uri, base)) for uri in file_list]
 
 	def get_files(self):
 		files = []
@@ -1001,7 +1020,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		print "found_type", sound_file.get_filename()
+		#print "found_type", sound_file.get_filename()
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
@@ -1013,7 +1032,7 @@ class FileList:
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
 	
-	def add_files(self, sound_files):
+	def _add_files(self, sound_files):
 
 		print "*** adding %s files" % len(sound_files)
 		for sound_file in sound_files:
@@ -1040,17 +1059,57 @@ class FileList:
 		#if not self.tagreaders.is_running():
 		#	self.tagreaders.run()
 		
-	def add_file(self, sound_file):
+	def _add_file(self, uri, base=None):
 		self.add_files((sound_file,))
 
-	def add_folder(self, folder):
+	def _add_folder(self, folder, base=None):
 
-		base = folder
+		if not base:
+			base = folder 
 		filelist = vfs_walk(gnomevfs.URI(folder))
 		for f in filelist:
 			f = f[len(base)+1:]
 			self.add_file(SoundFile(base+"/", f))
+	
+	def add_uris(self, uris, base=None):
+
+		files = []
+
+		for uri in uris:
+			try:
+				info = gnomevfs.get_file_info(gnomevfs.URI(uri))
+			except gnomevfs.NotFoundError:
+				continue
+			except gnomevfs.InvalidURIError:
+				continue
+
+			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+				filelist = vfs_walk(gnomevfs.URI(uri))
 				
+				for f in filelist:
+					#f = f[len(base)+1:]
+					files.append(f)
+			else:
+				files.append(uri)
+				
+		base,notused = os.path.split(os.path.commonprefix(files))
+		base += "/"
+
+		for f in files:
+			sound_file = SoundFile(f, base)
+			if sound_file.get_uri() in self.filelist:
+				log(_("file already present: '%s'") % sound_file.get_uri())
+				continue 
+			print "adding: '%s'" % sound_file.get_filename_for_display()
+			self.filelist[sound_file.get_uri()] = True
+			typefinder = TypeFinder(sound_file)
+			typefinder.set_found_type_hook(self.found_type)
+			self.typefinders.add(typefinder)
+
+		if not self.typefinders.is_running():
+			self.typefinders.run()
+
+
 	def format_cell(self, sound_file):
 		
 		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
@@ -1060,7 +1119,7 @@ class FileList:
 							% _("no tags")
 
 		params = {}
-		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename()))
+		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename_for_display()))
 		for item in ("title", "artist", "album"):
 			params[item] = markup_escape(sound_file.get_tag(item))
 	
@@ -1100,7 +1159,7 @@ class FileList:
 		for key in ALL_COLUMNS:
 			fields[key] = _("unknown")
 		fields["META"] = sound_file
-		fields["filename"] = urllib.unquote(sound_file.get_filename())
+		fields["filename"] = sound_file.get_filename_for_display()
 
 		self.model.set(sound_file.model, 0, self.format_cell(sound_file))
 		self.window.set_sensitive()
@@ -1691,7 +1750,7 @@ class ConverterQueue(TaskQueue):
 		t = self.get_current_task()
 		f = ""
 		if t:
-			f = urllib.unquote(t.sound_file.get_filename())
+			f = t.sound_file.get_filename_for_display()
 			
 		self.window.set_progress(self.duration_processed + task.get_position(),
 							 self.total_duration, f)
@@ -1886,9 +1945,10 @@ class SoundConverterWindow:
 		self.addchooser.hide()
 		if ret == gtk.RESPONSE_OK:
 			files = []
-			for uri in self.addchooser.get_uris():
-				files.append(SoundFile(uri))
-			self.filelist.add_files(files)
+			#for uri in self.addchooser.get_uris():
+			#	files.append(SoundFile(uri))
+			#self.filelist.add_files(files)
+			self.filelist.add_uris(self.addchooser.get_uris())
 		self.set_sensitive()
 
 
@@ -1898,15 +1958,17 @@ class SoundConverterWindow:
 		if ret == gtk.RESPONSE_OK:
 			folders = self.addfolderchooser.get_uris()
 			
-			base,notused = os.path.split(os.path.commonprefix(folders))
-			filelist = []
-			files = []
-			for folder in folders:
-				filelist.extend(vfs_walk(gnomevfs.URI(folder)))
-			for f in filelist:
-				f = f[len(base)+1:]
-				files.append(SoundFile(base+"/", f))
-			self.filelist.add_files(files)
+			self.filelist.add_uris(folders)
+
+			#base,notused = os.path.split(os.path.commonprefix(folders))
+			#filelist = []
+			#files = []
+			#for folder in folders:
+			#	filelist.extend(vfs_walk(gnomevfs.URI(folder)))
+			#for f in filelist:
+			#	f = f[len(base)+1:]
+			#	files.append(SoundFile(base+"/", f))
+			#self.filelist.add_files(files)
 		self.set_sensitive()
 
 	def on_remove_activate(self, *args):
@@ -2061,7 +2123,7 @@ def gui_main(input_files):
 	win = SoundConverterWindow(glade)
 	global error
 	error = ErrorDialog(glade)
-	gobject.idle_add(win.filelist.add_files, input_files)
+	gobject.idle_add(win.filelist.add_uris, input_files)
 	win.set_sensitive()
 	gtk.main()
 
@@ -2104,8 +2166,8 @@ def cli_convert_main(input_files):
 	global error
 	error = ErrorPrinter()
 
-	output_type = get("cli-output-type")
-	output_suffix = get("cli-output-suffix")
+	output_type = get_option("cli-output-type")
+	output_suffix = get_option("cli-output-suffix")
 	
 	generator = TargetNameGenerator()
 	generator.set_target_suffix(output_suffix)
@@ -2120,10 +2182,10 @@ def cli_convert_main(input_files):
 	queue.setup()
 	while queue.do_work():
 		t = queue.get_current_task()
-		if not get("quiet"):
-			progress.show("%s: %.1f %%" % (t.get_input_uri()[-65:], 
+		if not get_option("quiet"):
+			progress.show("%s: %.1f %%" % (t.get_filename_for_display()[-65:], 
 										   t.get_progress()))
-	if not get("quiet"):
+	if not get_option("quiet"):
 		progress.clear()
 
 
@@ -2203,7 +2265,7 @@ def main():
 	
 
 	args = map(filename_to_uri, args)
-	args = map(SoundFile, args)
+	#args = map(SoundFile, args)
 
 	if get_option("mode") == "gui":
 		gui_main(args)

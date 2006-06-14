@@ -23,3 +23,10 @@ bugs:
  -ok- use a raw quality setting
  -ok- display aprox. bitrate
  -ok- choose dir, add recursively input files that need to be converted
+
+-------------------------------------------------------------------------------
+
+ - change TaskQueue, for a better, multithreaded one.
+ - change BackgroundTask not to use timeout(), but an event-based system.
+ - simplify the file/folder adding.
+
