@@ -1,3 +1,12 @@
+2006-06-13  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Batch mode fixes merged from 0.8.
+
+2006-06-12  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: The TagReader timeout starts now when the task really
+	  starts.
+
 2006-06-06  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Finally progress is working with GStreamer 0.10!
