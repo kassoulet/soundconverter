@@ -46,6 +46,7 @@ import gnome
 import gnome.ui
 import gconf
 import gobject
+gobject.threads_init()
 
 try:
 	# gnome.vfs is deprecated
@@ -205,14 +206,18 @@ else:
 	gstreamer_source = "filesrc"
 	gstreamer_sink = "filesink"
 	encode_filename = file_encode_filename
-	print "  NOT using gnomevfssrc, look for any gnomevfs gstreamer package."
+	print "  NOT using gnomevfssrc, look for a gnomevfs gstreamer package."
 
 
+# logging & debugging  
 
-
-def log(message):
+def log(*args):
 	if get_option("quiet") == False:
-		print message
+		print " ".join([str(msg) for msg in args])
+
+def debug(*args):
+	if get_option("debug") == True:
+		print " ".join([str(msg) for msg in args])
 
 def sleep(duration):
 	start = time.time()
@@ -434,6 +439,22 @@ class BackgroundTask:
 
 	def __init__(self):
 		self.paused = False
+		#self.setup_hooks = []
+		#self.finish_hooks = []
+
+
+	def thread_(self):
+		while self and self._run:
+			#print "plop", self
+			#gtk.threads_enter()
+			self.do_work()
+			#gtk.threads_leave()
+			#time.sleep(0.01)
+			sleep(0.1)
+			#while gtk.events_pending():
+			#	gtk.main_iteration()
+			#time.sleep(1)
+		#print "END plop", self
 
 	def run(self):
 		"""Start running the task. Call setup()."""
@@ -446,15 +467,20 @@ class BackgroundTask:
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
-		#self.id = gobject.timeout_add(1, self.do_work, priority=gobject.PRIORITY_LOW)
-		self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
+		#self.id = gobject.timeout_add(100, self.do_work, priority=gobject.PRIORITY_LOW)
+		#self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
 		#self.id = gobject.idle_add(self.do_work)
-	
+
+		self._run = True 
+
+		thread.start_new_thread(self.thread_, ())
+
+
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		#print "do_work"
 		try:
-			#time.sleep(0)
+			#time.sleep(0.10)
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
@@ -469,9 +495,11 @@ class BackgroundTask:
 			else:
 				self.run_finish_time = time.time()
 				self.finish()
+				self._run = False
 				self = None
 				return False
 		except SoundConverterException, e:
+			self._run = False
 			error.show_exception(e)
 			return False
 
@@ -555,7 +583,7 @@ class TaskQueue(BackgroundTask):
 
 	def finish(self):
 		self.running = False
-		print "Queue done in %ds" % (time.time() - self.start_time)
+		log("Queue done in %ds" % (time.time() - self.start_time))
 		
 
 	def stop(self):
@@ -610,7 +638,7 @@ class Pipeline(BackgroundTask):
 		
 	def work(self):
 		if self.pipeline.get_state() == gst.STATE_NULL:
-			print "error: pipeline.state == null"
+			log("error: pipeline.state == null")
 			#return False
 		#print "work:", self
 		#time.sleep(0.01)
@@ -643,24 +671,21 @@ class Pipeline(BackgroundTask):
 		t = message.type
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
-			print "error:", err, debug
+			log("error:", err, debug)
 			self.eos = True
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
 			self.found_tag(self, "", message.parse_tag())	
-			self.eos = True
 		return True
 
 	def play(self):
 		if not self.parsed:
-			print "launching: '%s'" % self.command
+			#print "launching: '%s'" % self.command
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
 			self.parsed = True
-		else:
-			print "ERROR: ALREADY PARSED!!!"
 	
 		bus = self.pipeline.get_bus()
 		bus.add_signal_watch()
@@ -671,7 +696,7 @@ class Pipeline(BackgroundTask):
 
 	def stop_pipeline(self):
 		if not self.pipeline:
-			print "pipeline already stopped!"
+			log("pipeline already stopped!")
 			return
 		bus = self.pipeline.get_bus()
 		bus.disconnect(self.watch_id)
@@ -699,6 +724,7 @@ class TypeFinder(Pipeline):
 	
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
+		debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
 		self.found_type = None
 		for t in mime_whitelist:
 			if t in mime_type:
@@ -769,22 +795,30 @@ class TagReader(Decoder):
 
 	def found_tag(self, decoder, something, taglist):
 
+		debug("found_tags:", self.sound_file.get_filename_for_display())
+		for k in taglist.keys():
+			debug("\t%s=%s" % (k, taglist[k]))
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
 		# the first callback containing just the stream serial number.
 		# The second callback contains the tags we're interested in.
-		if "serial" in taglist.keys():
-			print "Error, serial tag in ogg/vorbis, tags will be lost"
+		#if "serial" in taglist.keys():
+		#	print "Error, serial tag in ogg/vorbis, tags will be lost"
+		#	return
+		
+		# we want something useful in tags
+		if "title" not in taglist.keys():
 			return
+
+		self.found_tags = True
+		self.sound_file.have_tags = True
 
 		try:
 			#TODO
 			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
 		except:
 			pass
-		self.found_tags = True
-		self.sound_file.have_tags = True
 
 	def work(self):
 		#print "TagReader.work"
@@ -792,7 +826,8 @@ class TagReader(Decoder):
 		if not self.run_start_time:
 			self.run_start_time = time.time()
 
-		if time.time()-self.run_start_time > 5:
+		if time.time()-self.run_start_time > 1:
+			log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
 		return Decoder.work(self) and not self.found_tags
@@ -1112,7 +1147,7 @@ class FileList:
 
 	def format_cell(self, sound_file):
 		
-		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
+		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s <i>(%(audio-codec)s</i>%(bitrate)s)</small>"
 		template_loading = "<i>%s</i>\n<small>%%(filename)s</small>" \
 							% _("loading tags...")
 		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
@@ -1120,17 +1155,23 @@ class FileList:
 
 		params = {}
 		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename_for_display()))
-		for item in ("title", "artist", "album"):
+		for item in ("title", "artist", "album", "audio-codec"):
 			params[item] = markup_escape(sound_file.get_tag(item))
-	
+		if sound_file["bitrate"]:
+			params["bitrate"] = ", %s kbps" % (sound_file["bitrate"] / 1000)
+		else:
+			params["bitrate"] = ""
+
 		try:	
 			if sound_file.have_tags:
-				s = template_tags % params
+				template = template_tags
 			else:
 				if sound_file.tags_read:
-					s = template_notags % params
+					template = template_notags
 				else:
-					s = template_loading % params
+					template = template_loading
+
+			s = template % params
 		except UnicodeDecodeError:
 			str = ""
 			for c in markup_escape(urllib.unquote(sound_file.get_uri())):
@@ -1146,6 +1187,7 @@ class FileList:
 
 	def append_file(self, sound_file):
 
+		print "+", sound_file.get_filename_for_display()
 		iter = self.model.append()
 		sound_file.model = iter
 		self.model.set(iter, 0, self.format_cell(sound_file))
@@ -2016,6 +2058,7 @@ class SoundConverterWindow:
 			self.convertion_waiting = True
 			self.set_status(_("Waiting for tags..."))
 		
+			#thread.start_thread(self.do_convert, ())
 			self.do_convert()
 			#gobject.timeout_add(100, self.wait_tags_and_convert)
 		else:
@@ -2123,9 +2166,12 @@ def gui_main(input_files):
 	win = SoundConverterWindow(glade)
 	global error
 	error = ErrorDialog(glade)
-	gobject.idle_add(win.filelist.add_uris, input_files)
+	#TODO
+	#gobject.idle_add(win.filelist.add_uris, input_files)
 	win.set_sensitive()
+	gtk.threads_enter()
 	gtk.main()
+	gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
@@ -2192,6 +2238,7 @@ def cli_convert_main(input_files):
 settings = {
 	"mode": "gui",
 	"quiet": False,
+	"debug": False,
 	"cli-output-type": "audio/x-vorbis",
 	"cli-output-suffix": ".ogg",
 }
@@ -2233,6 +2280,9 @@ options = [
 	 
 	("q", "quiet", lambda optarg: set_option("quiet", True),
 	 _("Be quiet. Don't write normal output, only errors.")),
+
+	("d", "debug", lambda optarg: set_option("debug", True),
+	 _("Print additionnal debug information")),
 
 	("s:", "suffix=", lambda optarg: set_option("cli-output-suffix", optarg),
 	 _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get_option("cli-output-suffix")),
