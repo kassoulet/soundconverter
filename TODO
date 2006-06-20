@@ -28,5 +28,8 @@ bugs:
 
  - change TaskQueue, for a better, multithreaded one.
  - change BackgroundTask not to use timeout(), but an event-based system.
- - simplify the file/folder adding.
+ + simplify the file/folder adding.
+ - write test scripts
+ 
+when using threads with BackgroundTask, we have problems updating the UI...
 
