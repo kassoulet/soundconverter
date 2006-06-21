@@ -427,6 +427,10 @@ class ErrorPrinter:
 
 error = None
 
+_thread_sleep = 0.1
+_thread_method = "thread"
+#_thread_method = "idle"
+#_thread_method = "timer"
 
 class BackgroundTask:
 
@@ -443,19 +447,6 @@ class BackgroundTask:
 		#self.finish_hooks = []
 
 
-	def thread_(self):
-		while self and self._run:
-			#print "plop", self
-			#gtk.threads_enter()
-			self.do_work()
-			#gtk.threads_leave()
-			#time.sleep(0.01)
-			sleep(0.1)
-			#while gtk.events_pending():
-			#	gtk.main_iteration()
-			#time.sleep(1)
-		#print "END plop", self
-
 	def run(self):
 		"""Start running the task. Call setup()."""
 		try:
@@ -467,20 +458,31 @@ class BackgroundTask:
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
-		#self.id = gobject.timeout_add(100, self.do_work, priority=gobject.PRIORITY_LOW)
-		#self.id = gobject.timeout_add(10, self.do_work, priority=gobject.PRIORITY_HIGH)
-		#self.id = gobject.idle_add(self.do_work)
 
-		self._run = True 
+		if _thread_method == "timeout":
+			self.id = gobject.timeout_add(_thread_sleep*1000, self.do_work, priority=gobject.PRIORITY_HIGH)
+		if _thread_method == "idle":
+			self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_HIGH)
+		else:
+			thread.start_new_thread(self.thread_work, ())
 
-		thread.start_new_thread(self.thread_, ())
+	def thread_work(self):
+		working = True
+		while self and working:
+			#gtk.threads_enter()
+			working = self.do_work()
+			#gtk.threads_leave()
+			sleep(_thread_sleep)
+			#while gtk.events_pending():
+			#	gtk.main_iteration()
 
 
 	def do_work(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		#print "do_work"
 		try:
-			#time.sleep(0.10)
+			if _thread_method == "idle":
+				time.sleep(_thread_sleep)
 			if self.paused:
 				if not self.current_paused_time:
 					self.current_paused_time = time.time()
