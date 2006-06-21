@@ -1,3 +1,8 @@
+2006-06-21  Gautier Portet <kassoulet gmail com>
+
+	*soundconverter.py: Added and option to select the threading model of
+	 BackgroundTask.
+
 2006-06-13  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Batch mode fixes merged from 0.8.
