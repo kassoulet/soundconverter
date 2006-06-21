@@ -636,6 +636,7 @@ class Pipeline(BackgroundTask):
 		self.eos = False
 		
 	def setup(self):
+		print "Pipeline.setup()"
 		self.play()
 		
 	def work(self):
@@ -650,6 +651,7 @@ class Pipeline(BackgroundTask):
 		#return self.pipeline.iterate()
 
 	def finish(self):
+		print "Pipeline.finish()"
 		self.stop_pipeline()
 
 	def add_command(self, command):
@@ -716,8 +718,8 @@ class TypeFinder(Pipeline):
 		self.sound_file = sound_file
 		self.found_type = ""
 	
-		command = 'gnomevfssrc location="%s" ! typefind name=typefinder ! fakesink' % \
-			self.sound_file.get_uri()
+		command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
+			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal("typefinder", "have-type", self.have_type)
 
@@ -751,8 +753,8 @@ class Decoder(Pipeline):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 		
-		command = 'gnomevfssrc location="%s" name=src ! decodebin name=decoder' % \
-			self.sound_file.get_uri()
+		command = '%s location="%s" name=src ! decodebin name=decoder' % \
+			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal("decoder", "new-decoded-pad", self.new_decoded_pad)
 		
