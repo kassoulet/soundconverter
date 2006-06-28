@@ -30,6 +30,9 @@ bugs:
  - change BackgroundTask not to use timeout(), but an event-based system.
  + simplify the file/folder adding.
  - write test scripts
- 
-when using threads with BackgroundTask, we have problems updating the UI...
+
+Only call gui stuff from main thread, but create threads to start Pipelines.
+
+When using threads with BackgroundTask, we have problems updating the UI...
+Maybe we should use dogtail from some more tests.
 
