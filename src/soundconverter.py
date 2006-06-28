@@ -23,7 +23,11 @@ NAME = "SoundConverter"
 VERSION = "@version@"
 GLADE = "@datadir@/soundconverter.glade"
 
+if "@datadir@" in GLADE:
+	GLADE = GLADE.replace("@datadir@","./data")
+
 print "%s %s" % (NAME, VERSION)
+print "! DEVELOPMENT VERSION, DO *NOT* DISTRIBUTE !"
 
 # Python standard stuff.
 import sys
@@ -428,9 +432,9 @@ class ErrorPrinter:
 error = None
 
 _thread_sleep = 0.1
-_thread_method = "thread"
+#_thread_method = "thread"
 #_thread_method = "idle"
-#_thread_method = "timer"
+_thread_method = "timer"
 
 class BackgroundTask:
 
@@ -469,15 +473,22 @@ class BackgroundTask:
 	def thread_work(self):
 		working = True
 		while self and working:
-			#gtk.threads_enter()
-			working = self.do_work()
-			#gtk.threads_leave()
+			gtk.threads_enter()
+			working = self.do_work_()
+			gtk.threads_leave()
 			sleep(_thread_sleep)
-			#while gtk.events_pending():
-			#	gtk.main_iteration()
+			while gtk.events_pending():
+				gtk.main_iteration()
 
 
 	def do_work(self):
+		gtk.threads_enter()
+		working = self.do_work_()
+		gtk.threads_leave()
+		return working
+
+
+	def do_work_(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		#print "do_work"
 		try:
@@ -1139,7 +1150,7 @@ class FileList:
 			if sound_file.get_uri() in self.filelist:
 				log(_("file already present: '%s'") % sound_file.get_uri())
 				continue 
-			print "adding: '%s'" % sound_file.get_filename_for_display()
+			#print "adding: '%s'" % sound_file.get_filename_for_display()
 			self.filelist[sound_file.get_uri()] = True
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
@@ -1196,7 +1207,8 @@ class FileList:
 		sound_file.model = iter
 		self.model.set(iter, 0, self.format_cell(sound_file))
 		self.model.set(iter, 1, sound_file)
-	
+		self.window.progressbar.pulse()
+			
 	
 	def append_file_tags(self, tagreader):
 		sound_file = tagreader.get_sound_file()
@@ -1209,6 +1221,7 @@ class FileList:
 
 		self.model.set(sound_file.model, 0, self.format_cell(sound_file))
 		self.window.set_sensitive()
+		self.window.progressbar.pulse()
 
 	def remove(self, iter):
 		uri = self.model.get(iter, 1)[0].get_uri()
@@ -1793,13 +1806,18 @@ class ConverterQueue(TaskQueue):
 		self.total_duration += c.get_duration()
 
 	def work_hook(self, task):
+			
+		gobject.idle_add(self.set_progress, (task))
+
+	def set_progress(self, task):
 		t = self.get_current_task()
 		f = ""
 		if t:
 			f = t.sound_file.get_filename_for_display()
-			
+
 		self.window.set_progress(self.duration_processed + task.get_position(),
 							 self.total_duration, f)
+		return False
 
 	def finish_hook(self, task):
 		print "finished: %d+=%d" % (self.duration_processed, task.get_duration())
@@ -1844,6 +1862,7 @@ class CustomFileChooser:
 		Constructor
 		Load glade object, create a combobox
 		"""
+		print GLADE
 		xml = gtk.glade.XML(GLADE,"custom_file_chooser")
 		self.dlg = xml.get_widget("custom_file_chooser")
 		self.dlg.set_title(_("Open a file"))
@@ -1930,9 +1949,9 @@ class SoundConverterWindow:
 		self.about = glade.get_widget("about")
 		self.prefs = PreferencesDialog(glade)
 
-		self.progressdialog = glade.get_widget("progressdialog")
+		self.progressdialog = glade.get_widget("progress_frame")
 		self.progressfile = glade.get_widget("label_currentfile")
-		self.progresstitle = glade.get_widget("label_title")
+		#self.progresstitle = glade.get_widget("label_title")
 
 		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
@@ -2053,11 +2072,11 @@ class SoundConverterWindow:
 			return
 
 		if not self.converter.is_running():
-			self.progresstitle.set_text(_("Waiting for tags"))
+			#self.progresstitle.set_text(_("Waiting for tags"))
 			self.progressdialog.show()
-			self.progressdialog.set_transient_for(self.widget)
+			#self.progressdialog.set_transient_for(self.widget)
 			self.progress_time = time.time()
-			self.widget.set_sensitive(False)
+			#self.widget.set_sensitive(False)
 		
 			self.convertion_waiting = True
 			self.set_status(_("Waiting for tags..."))
@@ -2136,7 +2155,7 @@ class SoundConverterWindow:
 			self.progressbar.set_fraction(0.0)
 			self.progressbar.pulse()
 			return
-		self.progresstitle.set_text(_("Converting"))
+		#self.progresstitle.set_text(_("Converting"))
 		
 		if time.time() < self.progress_time + 0.10:
 			# ten updates per second should be enough
@@ -2148,13 +2167,13 @@ class SoundConverterWindow:
 		self.progressbar.set_fraction(fraction)
 		t = time.time() - self.converter.run_start_time - self.converter.paused_time
 		
-		#if (t<5):
+		if (t<5):
 			# wait a bit not to display crap
-		#	self.progressbar.pulse()
-		#	return
+			self.progressbar.pulse()
+			return
 			
 		r = (t / fraction - t)
-		return
+		#return
 		s = r%60
 		m = r/60
 		remaining = _("%d:%02d left") % (m,s)
