@@ -1,3 +1,7 @@
+2006-08-01  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: finally got gstreamer0.10 to work ?
+
 2006-06-21  Gautier Portet <kassoulet gmail com>
 
 	*soundconverter.py: Added and option to select the threading model of
