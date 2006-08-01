@@ -452,6 +452,9 @@ class BackgroundTask:
 
 
 	def run(self):
+	
+		print "run", self
+
 		"""Start running the task. Call setup()."""
 		try:
 			self.setup()
@@ -490,7 +493,7 @@ class BackgroundTask:
 
 	def do_work_(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
-		#print "do_work"
+		#print "do_work", self
 		try:
 			if _thread_method == "idle":
 				time.sleep(_thread_sleep)
@@ -647,22 +650,23 @@ class Pipeline(BackgroundTask):
 		self.eos = False
 		
 	def setup(self):
-		print "Pipeline.setup()"
+		#print "Pipeline.setup()"
 		self.play()
-		
+	
 	def work(self):
-		if self.pipeline.get_state() == gst.STATE_NULL:
-			log("error: pipeline.state == null")
+		#if self.pipeline.get_state() == gst.STATE_NULL:
+		#	log("error: pipeline.state == null")
 			#return False
 		#print "work:", self
 		#time.sleep(0.01)
 		if self.eos:
+			print "  got eos:", self.sound_file.get_filename_for_display()
 			return False
 		return True
 		#return self.pipeline.iterate()
 
 	def finish(self):
-		print "Pipeline.finish()"
+		#print "Pipeline.finish()"
 		self.stop_pipeline()
 
 	def add_command(self, command):
@@ -686,9 +690,16 @@ class Pipeline(BackgroundTask):
 		t = message.type
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
-			log("error:", err, debug)
 			self.eos = True
+			log("error:", err, debug)
+		#elif t == gst.MESSAGE_STATE_CHANGED:
+		#	if message.src == self.pipeline:
+		#		prev, new, pending = message.parse_state_changed()
+		#		if prev == gst.STATE_READY and new == gst.STATE_PAUSED:
+		#			print "TODO  pipeline has gone to PAUSED, now pushing to PLAYING"
+		#			#self.pipeline.set_state(gst.STATE_PLAYING)
 		elif t == gst.MESSAGE_EOS:
+			#print "  eos message"
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
 			self.found_tag(self, "", message.parse_tag())	
@@ -696,7 +707,7 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			#print "launching: '%s'" % self.command
+			print "launching: '%s'" % self.command
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
@@ -753,7 +764,8 @@ class TypeFinder(Pipeline):
 	def finish(self):
 		Pipeline.finish(self)
 		if self.found_type_hook and self.found_type:
-			self.found_type_hook(self.sound_file, self.found_type)
+			gobject.idle_add(self.found_type_hook, self.sound_file, self.found_type)
+			#self.found_type_hook(self.sound_file, self.found_type)
 
 
 class Decoder(Pipeline):
@@ -811,8 +823,9 @@ class TagReader(Decoder):
 	def found_tag(self, decoder, something, taglist):
 
 		debug("found_tags:", self.sound_file.get_filename_for_display())
-		for k in taglist.keys():
-			debug("\t%s=%s" % (k, taglist[k]))
+		#debug("\ttitle=%s" % (taglist["title"]))
+		#for k in taglist.keys():
+		#	debug("\t%s=%s" % (k, taglist[k]))
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
@@ -841,7 +854,7 @@ class TagReader(Decoder):
 		if not self.run_start_time:
 			self.run_start_time = time.time()
 
-		if time.time()-self.run_start_time > 1:
+		if time.time()-self.run_start_time > 5:
 			log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
@@ -851,7 +864,8 @@ class TagReader(Decoder):
 		Decoder.finish(self)
 		self.sound_file.tags_read = True
 		if self.found_tag_hook:
-			self.found_tag_hook(self)
+			gobject.idle_add(self.found_tag_hook, self)
+			#self.found_tag_hook(self)
 
 
 class ConversionTargetExists(SoundConverterException):
@@ -1070,7 +1084,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		#print "found_type", sound_file.get_filename()
+		print "found_type", sound_file.get_filename()
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
@@ -1082,7 +1096,7 @@ class FileList:
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
 	
-	def _add_files(self, sound_files):
+	def __add_files(self, sound_files):
 
 		print "*** adding %s files" % len(sound_files)
 		for sound_file in sound_files:
@@ -1109,10 +1123,10 @@ class FileList:
 		#if not self.tagreaders.is_running():
 		#	self.tagreaders.run()
 		
-	def _add_file(self, uri, base=None):
+	def __add_file(self, uri, base=None):
 		self.add_files((sound_file,))
 
-	def _add_folder(self, folder, base=None):
+	def __add_folder(self, folder, base=None):
 
 		if not base:
 			base = folder 
@@ -1152,6 +1166,9 @@ class FileList:
 				continue 
 			#print "adding: '%s'" % sound_file.get_filename_for_display()
 			self.filelist[sound_file.get_uri()] = True
+			# directly add
+			#self.append_file(sound_file)
+
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add(typefinder)
