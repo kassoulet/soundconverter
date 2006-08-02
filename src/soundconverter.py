@@ -447,14 +447,8 @@ class BackgroundTask:
 
 	def __init__(self):
 		self.paused = False
-		#self.setup_hooks = []
-		#self.finish_hooks = []
-
 
 	def run(self):
-	
-		print "run", self
-
 		"""Start running the task. Call setup()."""
 		try:
 			self.setup()
@@ -466,11 +460,14 @@ class BackgroundTask:
 		self.current_paused_time = 0
 		self.paused_time = 0
 
-		if _thread_method == "timeout":
+		if _thread_method == "timer":
 			self.id = gobject.timeout_add(_thread_sleep*1000, self.do_work, priority=gobject.PRIORITY_HIGH)
-		if _thread_method == "idle":
+			print "timer"
+		elif _thread_method == "idle":
 			self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_HIGH)
+			print "idle"
 		else:
+			print "thread"
 			thread.start_new_thread(self.thread_work, ())
 
 	def thread_work(self):
@@ -663,7 +660,6 @@ class Pipeline(BackgroundTask):
 			print "  got eos:", self.sound_file.get_filename_for_display()
 			return False
 		return True
-		#return self.pipeline.iterate()
 
 	def finish(self):
 		#print "Pipeline.finish()"
@@ -691,15 +687,8 @@ class Pipeline(BackgroundTask):
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			self.eos = True
-			log("error:", err, debug)
-		#elif t == gst.MESSAGE_STATE_CHANGED:
-		#	if message.src == self.pipeline:
-		#		prev, new, pending = message.parse_state_changed()
-		#		if prev == gst.STATE_READY and new == gst.STATE_PAUSED:
-		#			print "TODO  pipeline has gone to PAUSED, now pushing to PLAYING"
-		#			#self.pipeline.set_state(gst.STATE_PLAYING)
+			log("error:%s (%s)" % (err, self.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
-			#print "  eos message"
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
 			self.found_tag(self, "", message.parse_tag())	
@@ -765,7 +754,6 @@ class TypeFinder(Pipeline):
 		Pipeline.finish(self)
 		if self.found_type_hook and self.found_type:
 			gobject.idle_add(self.found_type_hook, self.sound_file, self.found_type)
-			#self.found_type_hook(self.sound_file, self.found_type)
 
 
 class Decoder(Pipeline):
@@ -824,8 +812,8 @@ class TagReader(Decoder):
 
 		debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
-		#for k in taglist.keys():
-		#	debug("\t%s=%s" % (k, taglist[k]))
+		for k in taglist.keys():
+			debug("\t%s=%s" % (k, taglist[k]))
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
@@ -849,8 +837,6 @@ class TagReader(Decoder):
 			pass
 
 	def work(self):
-		#print "TagReader.work"
-
 		if not self.run_start_time:
 			self.run_start_time = time.time()
 
@@ -865,7 +851,6 @@ class TagReader(Decoder):
 		self.sound_file.tags_read = True
 		if self.found_tag_hook:
 			gobject.idle_add(self.found_tag_hook, self)
-			#self.found_tag_hook(self)
 
 
 class ConversionTargetExists(SoundConverterException):
@@ -945,7 +930,7 @@ class Converter(Decoder):
 
 
 	def _src_cb(self, pad, buffer):
-
+		"""buffer probe callback used to get real time since the beginning of the stream"""
 		if time.time() > self.time + 0.1:
 			self.time = time.time()
 			self.position = buffer.timestamp / gst.SECOND
@@ -1166,8 +1151,6 @@ class FileList:
 				continue 
 			#print "adding: '%s'" % sound_file.get_filename_for_display()
 			self.filelist[sound_file.get_uri()] = True
-			# directly add
-			#self.append_file(sound_file)
 
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
@@ -1967,8 +1950,8 @@ class SoundConverterWindow:
 		self.prefs = PreferencesDialog(glade)
 
 		self.progressdialog = glade.get_widget("progress_frame")
-		self.progressfile = glade.get_widget("label_currentfile")
-		#self.progresstitle = glade.get_widget("label_title")
+		self.progressfile = glade.get_widget("progressfile")
+		self.progressfile = self.status
 
 		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
@@ -2089,9 +2072,8 @@ class SoundConverterWindow:
 			return
 
 		if not self.converter.is_running():
-			#self.progresstitle.set_text(_("Waiting for tags"))
+			self.status.set_text(_("Waiting for tags"))
 			self.progressdialog.show()
-			#self.progressdialog.set_transient_for(self.widget)
 			self.progress_time = time.time()
 			#self.widget.set_sensitive(False)
 		
@@ -2172,7 +2154,7 @@ class SoundConverterWindow:
 			self.progressbar.set_fraction(0.0)
 			self.progressbar.pulse()
 			return
-		#self.progresstitle.set_text(_("Converting"))
+		self.status.set_text(_("Converting"))
 		
 		if time.time() < self.progress_time + 0.10:
 			# ten updates per second should be enough
@@ -2184,7 +2166,7 @@ class SoundConverterWindow:
 		self.progressbar.set_fraction(fraction)
 		t = time.time() - self.converter.run_start_time - self.converter.paused_time
 		
-		if (t<5):
+		if (t<1):
 			# wait a bit not to display crap
 			self.progressbar.pulse()
 			return
