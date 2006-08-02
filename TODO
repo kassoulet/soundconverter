@@ -39,50 +39,10 @@ Maybe we should use dogtail from some more tests.
 
 ------------------------------------------------------------------------------
 
-Cahier des charges
-==================
-
-Pipeline n'herite plus de BackgroundTask, mais d'un nouveau a part.
-Possibilité de lancer des commandes gst pour le début.
-
-Encodeurs en plugins
-
-Pipeline est dans un thread.
-PipelineQueue dans un thread aussi
-
-Il faut:
-	* identifier les fichiers supportés, le plus vite possible (typefind+decodebin ?)
-	* ajouter a la liste
-	* lire les tags
-	* convertir la liste
-
-gestion de la progression.
-  tant qu'il y'a des fichiers en attente dans typequeue ou tagqueue : pulse
-
-Points d'entrées:
-  Ajout d'un fichier (typequeue) -> typefind  (tagqueue)-> tagread (encodequeue)
-  Convertion de encodequeue
 
   Et ne pas oublier la conversion en batch.
   -> objet queue global ?
 
-Objects
-=======
-
-Gestion de l'ajout des fichiers dans la liste -> plus tard !
-
-Pipeline
-*pas* dans un thread
-derive de gst.Pipeline
-	play(gst-launch)
-	stop()
-	on_error(), on_setup(), on_finish()
-	lenght
-
-Task
-	ready
-	work()
-	
 
 ThreadedQueue
 	size, expected_size, processed_size, thread_method, thread_numbers 	
@@ -95,20 +55,6 @@ ThreadedQueue
 Une queue pour chaque tache ? (typefind/tagread/converter)
 Une queue global qui gère les 3 autres ?
 
-
-Migration
-=========
-
-Faire un client  séparé avec juste backgroundtask + gst-launch ?
-
-Refaire  une version sans validation des fichiers a l'ajout.
-puis changer le backgroundtask pour lancer une commande gst-launch.
-
-
-Commencer par la version batch ?
-
-Nouvelle version:
-* 
 
 
 Progression

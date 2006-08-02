@@ -1,3 +1,7 @@
+2006-08-02  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: progressbar work. some code cleanup.
+
 2006-08-01  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: finally got gstreamer0.10 to work ?
