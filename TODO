@@ -28,7 +28,7 @@ bugs:
 
  - change TaskQueue, for a better, multithreaded one.
  - change BackgroundTask not to use timeout(), but an event-based system.
- + simplify the file/folder adding.
+ -ok- simplify the file/folder adding.
  - write test scripts
 
 Only call gui stuff from main thread, but create threads to start Pipelines.
@@ -55,12 +55,21 @@ ThreadedQueue
 Une queue pour chaque tache ? (typefind/tagread/converter)
 Une queue global qui gère les 3 autres ?
 
+La convertion doit pouvoir se lancer meme si les 2 queues précedentes n'ont pas fini, 
+ConverterQueue doit attendre les autres.
+
 
 
 Progression
 ===========
 Apparement ça fonctionne avec juste le Converter
 Testé avec 150+ fichiers divers vers ogg vorbis.
+
+- progressbar
+- statusbar
+
+
+
 
 
 
