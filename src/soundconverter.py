@@ -27,7 +27,7 @@ if "@datadir@" in GLADE:
 	GLADE = GLADE.replace("@datadir@","./data")
 
 print "%s %s" % (NAME, VERSION)
-print "! DEVELOPMENT VERSION, DO *NOT* DISTRIBUTE !"
+print "! ALPHA VERSION, DO *NOT* DISTRIBUTE !"
 
 # Python standard stuff.
 import sys
@@ -50,7 +50,7 @@ import gnome
 import gnome.ui
 import gconf
 import gobject
-gobject.threads_init()
+#gobject.threads_init()
 
 try:
 	# gnome.vfs is deprecated
@@ -431,7 +431,7 @@ class ErrorPrinter:
 
 error = None
 
-_thread_sleep = 0.1
+_thread_sleep = 0.01
 #_thread_method = "thread"
 #_thread_method = "idle"
 _thread_method = "timer"
@@ -473,18 +473,18 @@ class BackgroundTask:
 	def thread_work(self):
 		working = True
 		while self and working:
-			gtk.threads_enter()
+			#gtk.threads_enter()
 			working = self.do_work_()
-			gtk.threads_leave()
+			#gtk.threads_leave()
 			sleep(_thread_sleep)
-			while gtk.events_pending():
-				gtk.main_iteration()
+			#while gtk.events_pending():
+			gtk.main_iteration()
 
 
 	def do_work(self):
-		gtk.threads_enter()
+		#gtk.threads_enter()
 		working = self.do_work_()
-		gtk.threads_leave()
+		#gtk.threads_leave()
 		return working
 
 
@@ -573,15 +573,17 @@ class TaskQueue(BackgroundTask):
 			return None
 
 	def setup(self):
+		""" BackgroundTask setup callback """
 		self.running = True
+		self.start_time = time.time()
+
 		if self.tasks:
 			self.tasks[0].setup()
 			self.setup_hook(self.tasks[0])
 
-		self.start_time = time.time()
-
 			
 	def work(self):
+		""" BackgroundTask work callback """
 		if self.tasks:
 			ret = self.tasks[0].work()
 			self.work_hook(self.tasks[0])
@@ -595,9 +597,10 @@ class TaskQueue(BackgroundTask):
 		return len(self.tasks) > 0
 
 	def finish(self):
+		""" BackgroundTask finish callback """
 		self.running = False
 		log("Queue done in %ds" % (time.time() - self.start_time))
-		
+		self.queue_ended()
 
 	def stop(self):
 		if self.tasks:
@@ -617,6 +620,10 @@ class TaskQueue(BackgroundTask):
 		pass
 		
 	def finish_hook(self, task):
+		pass
+
+	# The following is called when the Queue is finished
+	def queue_ended(self):
 		pass
 
 
@@ -657,7 +664,7 @@ class Pipeline(BackgroundTask):
 		#print "work:", self
 		#time.sleep(0.01)
 		if self.eos:
-			print "  got eos:", self.sound_file.get_filename_for_display()
+			#print "  got eos:", self.sound_file.get_filename_for_display()
 			return False
 		return True
 
@@ -687,7 +694,7 @@ class Pipeline(BackgroundTask):
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			self.eos = True
-			log("error:%s (%s)" % (err, self.get_filename_for_display()))
+			log("error:%s (%s)" % (err, self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
@@ -696,7 +703,7 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			print "launching: '%s'" % self.command
+			#print "launching: '%s'" % self.command
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
@@ -810,10 +817,10 @@ class TagReader(Decoder):
 
 	def found_tag(self, decoder, something, taglist):
 
-		debug("found_tags:", self.sound_file.get_filename_for_display())
+		#debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
-		for k in taglist.keys():
-			debug("\t%s=%s" % (k, taglist[k]))
+		#for k in taglist.keys():
+		#	debug("\t%s=%s" % (k, taglist[k]))
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
@@ -1081,45 +1088,6 @@ class FileList:
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
 	
-	def __add_files(self, sound_files):
-
-		print "*** adding %s files" % len(sound_files)
-		for sound_file in sound_files:
-			if sound_file.get_uri() in self.filelist:
-				log(_("file already present: '%s'") % sound_file.get_uri())
-				return 
-
-			self.filelist[sound_file.get_uri()] = True
-
-			typefinder = TypeFinder(sound_file)
-			typefinder.set_found_type_hook(self.found_type)
-			self.typefinders.add(typefinder)
-
-		if not self.typefinders.is_running():
-			self.typefinders.run()
-
-		#	self.append_file(sound_file)
-		#	self.window.set_sensitive()
-
-		#	tagreader = TagReader(sound_file)
-		#	tagreader.set_found_tag_hook(self.append_file_tags)
-
-		#	self.tagreaders.add(tagreader)
-		#if not self.tagreaders.is_running():
-		#	self.tagreaders.run()
-		
-	def __add_file(self, uri, base=None):
-		self.add_files((sound_file,))
-
-	def __add_folder(self, folder, base=None):
-
-		if not base:
-			base = folder 
-		filelist = vfs_walk(gnomevfs.URI(folder))
-		for f in filelist:
-			f = f[len(base)+1:]
-			self.add_file(SoundFile(base+"/", f))
-	
 	def add_uris(self, uris, base=None):
 
 		files = []
@@ -1202,7 +1170,7 @@ class FileList:
 
 	def append_file(self, sound_file):
 
-		print "+", sound_file.get_filename_for_display()
+		#print "+", sound_file.get_filename_for_display()
 		iter = self.model.append()
 		sound_file.model = iter
 		self.model.set(iter, 0, self.format_cell(sound_file))
@@ -1951,7 +1919,7 @@ class SoundConverterWindow:
 
 		self.progressdialog = glade.get_widget("progress_frame")
 		self.progressfile = glade.get_widget("progressfile")
-		self.progressfile = self.status
+		#self.progressfile = self.status
 
 		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
@@ -1982,6 +1950,8 @@ class SoundConverterWindow:
 			self.sensitive_widgets[name] = glade.get_widget(name)
 
 		self.set_sensitive()
+
+		self.set_status()
 
 	# This bit of code constructs a list of methods for binding to Gtk+
 	# signals. This way, we don't have to maintain a list manually,
@@ -2072,7 +2042,7 @@ class SoundConverterWindow:
 			return
 
 		if not self.converter.is_running():
-			self.status.set_text(_("Waiting for tags"))
+			self.set_status(_("Waiting for tags"))
 			self.progressdialog.show()
 			self.progress_time = time.time()
 			#self.widget.set_sensitive(False)
@@ -2154,7 +2124,7 @@ class SoundConverterWindow:
 			self.progressbar.set_fraction(0.0)
 			self.progressbar.pulse()
 			return
-		self.status.set_text(_("Converting"))
+		self.set_status(_("Converting"))
 		
 		if time.time() < self.progress_time + 0.10:
 			# ten updates per second should be enough
@@ -2178,8 +2148,10 @@ class SoundConverterWindow:
 		remaining = _("%d:%02d left") % (m,s)
 		self.display_progress(remaining)
 
-	def set_status(self, text):
-		self.status.set_text(text)
+	def set_status(self, text=None):
+		if not text:
+			text = _("Ready")
+		self.status.set_markup(text)
 
 
 def gui_main(input_files):
@@ -2191,9 +2163,9 @@ def gui_main(input_files):
 	#TODO
 	#gobject.idle_add(win.filelist.add_uris, input_files)
 	win.set_sensitive()
-	gtk.threads_enter()
+	#gtk.threads_enter()
 	gtk.main()
-	gtk.threads_leave()
+	#gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
