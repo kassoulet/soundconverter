@@ -21,10 +21,10 @@
 
 NAME = "SoundConverter"
 VERSION = "@version@"
-GLADE = "@datadir@/soundconverter.glade"
+GLADE = "@datadir@/soundconverter/soundconverter.glade"
 
-if "@datadir@" in GLADE:
-	GLADE = GLADE.replace("@datadir@","./data")
+if "datadir" in GLADE:
+	GLADE = "./data"
 
 print "%s %s" % (NAME, VERSION)
 print "! ALPHA VERSION, DO *NOT* DISTRIBUTE !"
@@ -50,7 +50,7 @@ import gnome
 import gnome.ui
 import gconf
 import gobject
-#gobject.threads_init()
+gobject.threads_init()
 
 try:
 	# gnome.vfs is deprecated
@@ -80,12 +80,12 @@ FORMAT_PERCENT_SCALE = 10000
 import locale
 import gettext
 PACKAGE = "soundconverter"
-gettext.bindtextdomain(PACKAGE,'/usr/share/locale')
-locale.setlocale(locale.LC_ALL,'')
+gettext.bindtextdomain(PACKAGE,"@datadir@/locale")
+locale.setlocale(locale.LC_ALL,"")
 gettext.textdomain(PACKAGE)
 gettext.install(PACKAGE,localedir=None,unicode=1)
 
-gtk.glade.bindtextdomain(PACKAGE,'/usr/share/locale')
+gtk.glade.bindtextdomain(PACKAGE,"@datadir@/locale")
 gtk.glade.textdomain(PACKAGE)
 
 TRANSLATORS = _("""
@@ -461,13 +461,10 @@ class BackgroundTask:
 		self.paused_time = 0
 
 		if _thread_method == "timer":
-			self.id = gobject.timeout_add(_thread_sleep*1000, self.do_work, priority=gobject.PRIORITY_HIGH)
-			print "timer"
+			self.id = gobject.timeout_add(_thread_sleep*1000, self.do_work) 
 		elif _thread_method == "idle":
-			self.id = gobject.idle_add(self.do_work, priority=gobject.PRIORITY_HIGH)
-			print "idle"
+			self.id = gobject.idle_add(self.do_work)
 		else:
-			print "thread"
 			thread.start_new_thread(self.thread_work, ())
 
 	def thread_work(self):
@@ -477,8 +474,8 @@ class BackgroundTask:
 			working = self.do_work_()
 			#gtk.threads_leave()
 			sleep(_thread_sleep)
-			#while gtk.events_pending():
-			gtk.main_iteration()
+			while gtk.events_pending():
+				gtk.main_iteration()
 
 
 	def do_work(self):
@@ -490,7 +487,6 @@ class BackgroundTask:
 
 	def do_work_(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
-		#print "do_work", self
 		try:
 			if _thread_method == "idle":
 				time.sleep(_thread_sleep)
