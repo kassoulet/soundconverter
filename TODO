@@ -32,17 +32,15 @@ bugs:
  - write test scripts
 
 Only call gui stuff from main thread, but create threads to start Pipelines.
+Call gui with gobject.idle_add()
 
 When using threads with BackgroundTask, we have problems updating the UI...
-Maybe we should use dogtail from some more tests.
-
 
 ------------------------------------------------------------------------------
 
 
   Et ne pas oublier la conversion en batch.
   -> objet queue global ?
-
 
 ThreadedQueue
 	size, expected_size, processed_size, thread_method, thread_numbers 	
@@ -59,7 +57,6 @@ La convertion doit pouvoir se lancer meme si les 2 queues précedentes n'ont pas
 ConverterQueue doit attendre les autres.
 
 
-
 Progression
 ===========
 Apparement ça fonctionne avec juste le Converter
@@ -67,7 +64,7 @@ Testé avec 150+ fichiers divers vers ogg vorbis.
 
 - progressbar
 - statusbar
-
+  better status handling, use it also when  reading types and tags.
 
 
 

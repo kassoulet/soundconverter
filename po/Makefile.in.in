@@ -58,7 +58,7 @@ PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LI
 
 POFILES=$(shell if test -n "$(PO_LINGUAS)"; then LINGUAS="$(PO_LINGUAS)"; else LINGUAS="$(ALL_LINGUAS)"; fi; for lang in $$LINGUAS; do printf "$$lang.po "; done)
 
-DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(POFILES)
+DISTFILES = Makefile.in.in POTFILES.in $(POFILES)
 EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
 POTFILES = \
