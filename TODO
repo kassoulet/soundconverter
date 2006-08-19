@@ -1,6 +1,11 @@
  
 bugs:
 
+ ? "cannot set permission" ??!?!
+ ? spaces in filenames ?
+ - progress for one file
+
+
  * better progress, in the statusbar
  * encoders as plugins 
  * optional "advanced" encoder settings
@@ -10,6 +15,9 @@ bugs:
    GNOME profiles are "recording oriented", so maybe we need
    our own profile system. "lossless, voice, etc..."
  * bug: the program's options aren't printed with --help
+
+problem with wav decoding / flac encoding
+solved in gst0.10...
 
 
  -ok- autotools, l12n
@@ -25,6 +33,8 @@ bugs:
  -ok- choose dir, add recursively input files that need to be converted
 
 -------------------------------------------------------------------------------
+
+Version 2
 
  - change TaskQueue, for a better, multithreaded one.
  - change BackgroundTask not to use timeout(), but an event-based system.
@@ -55,6 +65,8 @@ Une queue global qui gère les 3 autres ?
 
 La convertion doit pouvoir se lancer meme si les 2 queues précedentes n'ont pas fini, 
 ConverterQueue doit attendre les autres.
+
+---------------------------------------------------------------------------
 
 
 Progression
