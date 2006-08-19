@@ -223,7 +223,7 @@ def debug(*args):
 	if get_option("debug") == True:
 		print " ".join([str(msg) for msg in args])
 
-def sleep(duration):
+def gtk_sleep(duration):
 	start = time.time()
 	while time.time() < start + duration:
 		while gtk.events_pending():
@@ -447,6 +447,7 @@ class BackgroundTask:
 
 	def __init__(self):
 		self.paused = False
+		self.current_paused_time = 0
 
 	def run(self):
 		"""Start running the task. Call setup()."""
@@ -764,24 +765,45 @@ class Decoder(Pipeline):
 	"""A GstPipeline background task that decodes data and finds tags."""
 
 	def __init__(self, sound_file):
+		print "Decoder()"
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
+		self.time = 0
+		self.position = 0
 		
 		command = '%s location="%s" name=src ! decodebin name=decoder' % \
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal("decoder", "new-decoded-pad", self.new_decoded_pad)
-		
+
 		# TODO add error management
 
 	def have_type(self, typefind, probability, caps):
 		pass
 
 	def found_tag(self, decoder, something, taglist):
-		pass
+		try:
+			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
+		except gst.QueryError:
+			pass
 
+
+	def _src_cb(self, pad, buffer):
+		"""buffer probe callback used to get real time since the beginning of the stream"""
+		if time.time() > self.time + 0.1:
+			self.time = time.time()
+			self.position = float(buffer.timestamp) / gst.SECOND
+			#print "  probe:", self.position
+			if buffer.timestamp == gst.CLOCK_TIME_NONE:
+				pad.remove_buffer_probe(self.probe_id)
+		return True
+	
 	def new_decoded_pad(self, decoder, pad, is_last):
-		pass
+		""" called when a decoded pad is created """
+		pad.add_buffer_probe(self._src_cb)
+		self.processing = True
+		#self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
+		#print "new_decoded_pad duration:", self.sound_file.duration
 
 	def get_sound_file(self):
 		return self.sound_file
@@ -790,11 +812,12 @@ class Decoder(Pipeline):
 		return self.sound_file.get_uri()
 
 	def get_duration(self):
-		# gst.QUERY_SIZE doesn't work reliably until we have ran the
-		# pipeline for a while. Thus we look at the size in a different
-		# way.
+		""" return the total duration of the sound file """
 		return self.sound_file.duration
-
+	
+	def get_position(self):
+		""" return the current pipeline position in the stream """
+		return self.position
 
 class TagReader(Decoder):
 
@@ -813,7 +836,7 @@ class TagReader(Decoder):
 
 	def found_tag(self, decoder, something, taglist):
 
-		#debug("found_tags:", self.sound_file.get_filename_for_display())
+		debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
 		#for k in taglist.keys():
 		#	debug("\t%s=%s" % (k, taglist[k]))
@@ -834,9 +857,8 @@ class TagReader(Decoder):
 		self.sound_file.have_tags = True
 
 		try:
-			#TODO
 			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
-		except:
+		except gst.QueryError:
 			pass
 
 	def work(self):
@@ -868,6 +890,7 @@ class Converter(Decoder):
 	"""A background task for converting files to another format."""
 
 	def __init__(self, sound_file, output_filename, output_type):
+		print "Converter()"
 		Decoder.__init__(self, sound_file)
 
 		self.converting = True
@@ -878,11 +901,13 @@ class Converter(Decoder):
 		self.mp3_bitrate = None
 		self.mp3_mode = None
 		self.mp3_quality = None
-		self.added_pad_already = False
-		self.time = 0
-		self.position = 0
+
+	#def setup(self):
+	#	self.init()
+	#	self.play()
 
 	def init(self):
+		print "Converter.init()"
 		self.encoders = {
 			"audio/x-vorbis": self.add_oggvorbis_encoder,
 			"audio/x-flac": self.add_flac_encoder,
@@ -930,29 +955,6 @@ class Converter(Decoder):
 			gnomevfs.set_file_info(self.output_filename, info, gnomevfs.SET_FILE_INFO_PERMISSIONS)
 		except:
 			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
-
-
-	def _src_cb(self, pad, buffer):
-		"""buffer probe callback used to get real time since the beginning of the stream"""
-		if time.time() > self.time + 0.1:
-			self.time = time.time()
-			self.position = buffer.timestamp / gst.SECOND
-			if buffer.timestamp == gst.CLOCK_TIME_NONE:
-				pad.remove_buffer_probe(self.probe_id)
-		return True
-	
-	def new_decoded_pad(self, decoder, pad, is_last):
-		if self.added_pad_already:
-			return
-		if not pad.get_caps():
-			return
-		if "audio" not in pad.get_caps()[0].get_name():
-			return
-
-		pad.add_buffer_probe(self._src_cb)
-		
-		self.added_pad_already = True
-		self.processing = True
 
 	def get_position(self):
 		return self.position
@@ -1773,6 +1775,9 @@ class ConverterQueue(TaskQueue):
 			
 		gobject.idle_add(self.set_progress, (task))
 
+	def get_progress(self, task):
+		return (self.duration_processed + task.get_position()) / self.total_duration
+
 	def set_progress(self, task):
 		t = self.get_current_task()
 		f = ""
@@ -2120,12 +2125,12 @@ class SoundConverterWindow:
 			self.progressbar.set_fraction(0.0)
 			self.progressbar.pulse()
 			return
-		self.set_status(_("Converting"))
-		
 		if time.time() < self.progress_time + 0.10:
 			# ten updates per second should be enough
 			return
 		self.progress_time = time.time()
+		
+		self.set_status(_("Converting"))
 		
 		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 		fraction = float(done_so_far) / total
@@ -2157,7 +2162,7 @@ def gui_main(input_files):
 	global error
 	error = ErrorDialog(glade)
 	#TODO
-	#gobject.idle_add(win.filelist.add_uris, input_files)
+	gobject.idle_add(win.filelist.add_uris, input_files)
 	win.set_sensitive()
 	#gtk.threads_enter()
 	gtk.main()
@@ -2167,14 +2172,14 @@ def cli_tags_main(input_files):
 	global error
 	error = ErrorPrinter()
 	for input_file in input_files:
-		if not get("quiet"):
+		if not get_option("quiet"):
 			print input_file.get_uri()
 		t = TagReader(input_file)
 		t.setup()
 		while t.do_work():
 			pass
 		t.finish()
-		if not get("quiet"):
+		if not get_option("quiet"):
 			keys = input_file.keys()
 			keys.sort()
 			for key in keys:
@@ -2212,15 +2217,27 @@ def cli_convert_main(input_files):
 	
 	queue = TaskQueue()
 	for input_file in input_files:
+		input_file = SoundFile(input_file)
 		output_name = generator.get_target_name(input_file)
-		queue.add(Converter(input_file, output_name, output_type))
+		c = Converter(input_file, output_name, output_type)
+		c.init()
+		queue.add(c)
 	
-	queue.setup()
-	while queue.do_work():
+	#queue.setup()
+	#while queue.do_work():
+
+	queue.run()
+	while queue.is_running():
 		t = queue.get_current_task()
 		if not get_option("quiet"):
-			progress.show("%s: %.1f %%" % (t.get_filename_for_display()[-65:], 
-										   t.get_progress()))
+			percent = 0
+			if t.get_duration():
+				percent = "%.1f %%" % ( 100.0* (t.get_position() / t.get_duration() ))
+			else:
+				percent = "/-\|" [int(time.time()) % 4]
+			progress.show("%s: %s" % (t.sound_file.get_filename_for_display()[-65:], percent ))
+		gtk_sleep(1)
+
 	if not get_option("quiet"):
 		progress.clear()
 
@@ -2303,9 +2320,7 @@ def main():
 			print key, settings[key]
 		return
 	
-
 	args = map(filename_to_uri, args)
-	#args = map(SoundFile, args)
 
 	if get_option("mode") == "gui":
 		gui_main(args)
