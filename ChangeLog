@@ -1,3 +1,7 @@
+2006-08-21  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: batch mode will now overwrite files.
+
 2006-08-02  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: progressbar work. some code cleanup.

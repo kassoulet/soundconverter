@@ -176,6 +176,12 @@ def vfs_makedirs(path_to_create):
 			return False
 	return True	
 
+def vfs_unlink(filename):
+	gnomevfs.unlink(gnomevfs.URI(filename))
+
+def vfs_exists(filename):
+	return gnomevfs.exists(filename)
+
 # GStreamer gnomevfssrc helpers
 
 def vfs_encode_filename(filename):
@@ -332,7 +338,10 @@ class TargetNameGenerator:
 		self.suffix = None
 		self.replace_messy_chars = False
 		self.max_tries = 2
-		self.exists = gnomevfs.exists
+		if use_gnomevfs:
+			self.exists = gnomevfs.exists
+		else:
+			self.exists = os.path.exists
 
 	# This is useful for unit testing.		  
 	def set_exists(self, exists):
@@ -397,6 +406,7 @@ class TargetNameGenerator:
 		u2 = urlparse.urlunsplit(tuple)
 		#TODO:
 		#if self.exists(u2):
+		#	vfs_unlink(u2)
 		#	raise TargetNameCreationFailure(u2)
 		return u2
 
@@ -462,7 +472,7 @@ class BackgroundTask:
 		self.paused_time = 0
 
 		if _thread_method == "timer":
-			self.id = gobject.timeout_add(_thread_sleep*1000, self.do_work) 
+			self.id = gobject.timeout_add( int(_thread_sleep*1000), self.do_work) 
 		elif _thread_method == "idle":
 			self.id = gobject.idle_add(self.do_work)
 		else:
@@ -700,7 +710,7 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			#print "launching: '%s'" % self.command
+			debug("launching: '%s'" % self.command)
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
@@ -765,7 +775,7 @@ class Decoder(Pipeline):
 	"""A GstPipeline background task that decodes data and finds tags."""
 
 	def __init__(self, sound_file):
-		print "Decoder()"
+		#print "Decoder()"
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 		self.time = 0
@@ -890,7 +900,7 @@ class Converter(Decoder):
 	"""A background task for converting files to another format."""
 
 	def __init__(self, sound_file, output_filename, output_type):
-		print "Converter()"
+		#print "Converter()"
 		Decoder.__init__(self, sound_file)
 
 		self.converting = True
@@ -902,12 +912,14 @@ class Converter(Decoder):
 		self.mp3_mode = None
 		self.mp3_quality = None
 
+		self.overwrite = False
+
 	#def setup(self):
 	#	self.init()
 	#	self.play()
 
 	def init(self):
-		print "Converter.init()"
+		#print "Converter.init()"
 		self.encoders = {
 			"audio/x-vorbis": self.add_oggvorbis_encoder,
 			"audio/x-flac": self.add_flac_encoder,
@@ -944,7 +956,10 @@ class Converter(Decoder):
 				return
 	
 		self.add_command('gnomevfssink location=%s' % uri)
-		log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
+		if self.overwrite and vfs_exists(self.output_filename):
+			log("overwriting '%s'" % self.output_filename)
+			vfs_unlink(self.output_filename)
+		#log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
 
 	def finish(self):
 		Pipeline.finish(self)
@@ -1074,7 +1089,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		print "found_type", sound_file.get_filename()
+		debug("found_type", sound_file.get_filename())
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
@@ -1710,7 +1725,7 @@ class ConverterQueue(TaskQueue):
 		except gnomevfs.NotFoundError:
 			exists = False
 		except gnomevfs.InvalidURIError:
-			print "Invalid URI: '%s'" % output_filename
+			log("Invalid URI: '%s'" % output_filename)
 			return
 				
 		if exists:
@@ -1744,7 +1759,7 @@ class ConverterQueue(TaskQueue):
 			if result == 1: 
 				# overwrite
 				try:
-					gnomevfs.unlink(gnomevfs.URI(output_filename))
+					vfs_unlink(output_filename)
 				except gnomevfs.NotFoundError:
 					pass
 			elif result == 0: 
@@ -1789,7 +1804,7 @@ class ConverterQueue(TaskQueue):
 		return False
 
 	def finish_hook(self, task):
-		print "finished: %d+=%d" % (self.duration_processed, task.get_duration())
+		#print "finished: %d+=%d" % (self.duration_processed, task.get_duration())
 		self.duration_processed += task.get_duration()
 
 	def finish(self):
@@ -1831,7 +1846,6 @@ class CustomFileChooser:
 		Constructor
 		Load glade object, create a combobox
 		"""
-		print GLADE
 		xml = gtk.glade.XML(GLADE,"custom_file_chooser")
 		self.dlg = xml.get_widget("custom_file_chooser")
 		self.dlg.set_title(_("Open a file"))
@@ -2020,7 +2034,7 @@ class SoundConverterWindow:
 			for sound_file in self.filelist.get_files():
 				self.converter.add(sound_file)
 		except ConverterQueueCanceled:
-			print _("canceling conversion.")
+			log(_("canceling conversion."))
 		else:
 			self.set_status("")
 			self.converter.run()
@@ -2220,23 +2234,27 @@ def cli_convert_main(input_files):
 		input_file = SoundFile(input_file)
 		output_name = generator.get_target_name(input_file)
 		c = Converter(input_file, output_name, output_type)
+		c.overwrite = True
 		c.init()
 		queue.add(c)
-	
-	#queue.setup()
-	#while queue.do_work():
 
+	previous_filename = None
 	queue.run()
 	while queue.is_running():
 		t = queue.get_current_task()
 		if not get_option("quiet"):
+			if previous_filename != t.sound_file.get_filename_for_display():
+				if previous_filename:
+					print _("%s: OK") % previous_filename
+				previous_filename = t.sound_file.get_filename_for_display()
+
 			percent = 0
 			if t.get_duration():
 				percent = "%.1f %%" % ( 100.0* (t.get_position() / t.get_duration() ))
 			else:
 				percent = "/-\|" [int(time.time()) % 4]
 			progress.show("%s: %s" % (t.sound_file.get_filename_for_display()[-65:], percent ))
-		gtk_sleep(1)
+		gtk_sleep(0.1)
 
 	if not get_option("quiet"):
 		progress.clear()

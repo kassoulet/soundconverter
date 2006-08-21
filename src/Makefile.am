@@ -9,4 +9,4 @@ soundconverter: soundconverter.py
 	sed -e s!\@datadir\@!$(datadir)! -e s!\@version\@!$(VERSION)! < $< > $@
 	chmod +x $@
 
-EXTRA_DIST = soundconverterTests.py
+EXTRA_DIST = soundconverterTests.py soundconverter.py
