@@ -1,3 +1,8 @@
+
+2006-08-15  Gautier Portet <kassoulet gmail com>
+
+	* po/pl.po: Updated polish translation.
+
 2006-08-21  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: batch mode will now overwrite files.
