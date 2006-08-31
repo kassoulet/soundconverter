@@ -441,7 +441,7 @@ class ErrorPrinter:
 
 error = None
 
-_thread_sleep = 0.01
+_thread_sleep = 0.1
 #_thread_method = "thread"
 #_thread_method = "idle"
 _thread_method = "timer"
@@ -710,7 +710,7 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			debug("launching: '%s'" % self.command)
+			#debug("launching: '%s'" % self.command)
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
@@ -753,7 +753,7 @@ class TypeFinder(Pipeline):
 	
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
-		debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
+		#debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
 		self.found_type = None
 		for t in mime_whitelist:
 			if t in mime_type:
@@ -791,27 +791,33 @@ class Decoder(Pipeline):
 	def have_type(self, typefind, probability, caps):
 		pass
 
-	def found_tag(self, decoder, something, taglist):
+	def query_duration(self):
 		try:
-			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
+			if not self.sound_file.duration:
+				self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
+				debug("got file duration:", self.sound_file.duration)
 		except gst.QueryError:
 			pass
 
+	def found_tag(self, decoder, something, taglist):
+		pass
 
-	def _src_cb(self, pad, buffer):
+	def _buffer_probe(self, pad, buffer):
 		"""buffer probe callback used to get real time since the beginning of the stream"""
 		if time.time() > self.time + 0.1:
 			self.time = time.time()
 			self.position = float(buffer.timestamp) / gst.SECOND
-			#print "  probe:", self.position
-			if buffer.timestamp == gst.CLOCK_TIME_NONE:
-				pad.remove_buffer_probe(self.probe_id)
+
+		if buffer.timestamp == gst.CLOCK_TIME_NONE:
+			debug("removing probe")
+			pad.remove_buffer_probe(self.probe_id)
 		return True
 	
 	def new_decoded_pad(self, decoder, pad, is_last):
 		""" called when a decoded pad is created """
-		pad.add_buffer_probe(self._src_cb)
+		self.probe_id = pad.add_buffer_probe(self._buffer_probe)
 		self.processing = True
+		self.query_duration()
 		#self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
 		#print "new_decoded_pad duration:", self.sound_file.duration
 
@@ -823,6 +829,7 @@ class Decoder(Pipeline):
 
 	def get_duration(self):
 		""" return the total duration of the sound file """
+		self.query_duration()
 		return self.sound_file.duration
 	
 	def get_position(self):
@@ -846,7 +853,7 @@ class TagReader(Decoder):
 
 	def found_tag(self, decoder, something, taglist):
 
-		debug("found_tags:", self.sound_file.get_filename_for_display())
+		#debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
 		#for k in taglist.keys():
 		#	debug("\t%s=%s" % (k, taglist[k]))
@@ -1029,7 +1036,8 @@ class FileList:
 		self.window = window
 		self.tagreaders  = TaskQueue()
 		self.typefinders = TaskQueue()
-		
+		# handle the current task for status
+
 		self.filelist={}
 		
 		args = []
@@ -1089,7 +1097,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		debug("found_type", sound_file.get_filename())
+		#debug("found_type", sound_file.get_filename())
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
@@ -1138,12 +1146,15 @@ class FileList:
 			self.typefinders.add(typefinder)
 
 		if not self.typefinders.is_running():
+			self.typefinders.queue_ended = self.typefinder_queue_ended
 			self.typefinders.run()
 
+	def typefinder_queue_ended(self):
+		print "typefinder_queue_ended"
 
 	def format_cell(self, sound_file):
 		
-		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s <i>(%(audio-codec)s</i>%(bitrate)s)</small>"
+		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
 		template_loading = "<i>%s</i>\n<small>%%(filename)s</small>" \
 							% _("loading tags...")
 		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
@@ -1151,7 +1162,7 @@ class FileList:
 
 		params = {}
 		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename_for_display()))
-		for item in ("title", "artist", "album", "audio-codec"):
+		for item in ("title", "artist", "album"):
 			params[item] = markup_escape(sound_file.get_tag(item))
 		if sound_file["bitrate"]:
 			params["bitrate"] = ", %s kbps" % (sound_file["bitrate"] / 1000)
@@ -1787,7 +1798,6 @@ class ConverterQueue(TaskQueue):
 		self.total_duration += c.get_duration()
 
 	def work_hook(self, task):
-			
 		gobject.idle_add(self.set_progress, (task))
 
 	def get_progress(self, task):
@@ -1852,7 +1862,7 @@ class CustomFileChooser:
 		
 		# setup
 		self.fcw = xml.get_widget("filechooserwidget")
-		self.fcw.set_local_only(False)
+		self.fcw.set_local_only(not use_gnomevfs)
 		self.fcw.set_select_multiple(True)
 		
 		self.pattern = []
@@ -1932,9 +1942,9 @@ class SoundConverterWindow:
 		self.about = glade.get_widget("about")
 		self.prefs = PreferencesDialog(glade)
 
-		self.progressdialog = glade.get_widget("progress_frame")
+		self.progressframe = glade.get_widget("progress_frame")
+		self.statusframe = glade.get_widget("status_frame")
 		self.progressfile = glade.get_widget("progressfile")
-		#self.progressfile = self.status
 
 		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
@@ -2058,7 +2068,8 @@ class SoundConverterWindow:
 
 		if not self.converter.is_running():
 			self.set_status(_("Waiting for tags"))
-			self.progressdialog.show()
+			self.progressframe.show()
+			self.statusframe.hide()
 			self.progress_time = time.time()
 			#self.widget.set_sensitive(False)
 		
@@ -2077,7 +2088,12 @@ class SoundConverterWindow:
 		self.set_sensitive()
 
 	def on_button_pause_clicked(self, *args):
-		self.converter.paused = not self.converter.paused
+		task = self.converter.get_current_task()
+		if task:
+			self.converter.paused = not self.converter.paused
+			task.toggle_pause(self.converter.paused)
+		else:
+			return
 		if self.converter.paused:
 			self.display_progress(_("Paused"))
 
@@ -2109,7 +2125,8 @@ class SoundConverterWindow:
 		self.set_sensitive()
 
 	def conversion_ended(self):
-		self.progressdialog.hide()
+		self.progressframe.hide()
+		self.statusframe.show()
 		self.widget.set_sensitive(True)
 
 	def set_widget_sensitive(self, name, sensitivity):
@@ -2148,7 +2165,8 @@ class SoundConverterWindow:
 		
 		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 		fraction = float(done_so_far) / total
-		self.progressbar.set_fraction(fraction)
+		
+		self.progressbar.set_fraction( min(fraction, 1.0) )
 		t = time.time() - self.converter.run_start_time - self.converter.paused_time
 		
 		if (t<1):

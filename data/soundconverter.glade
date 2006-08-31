@@ -370,7 +370,7 @@
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <widget class="GtkHBox" id="hbox1">
+	    <widget class="GtkHBox" id="status_frame">
 	      <property name="border_width">6</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
@@ -497,6 +497,7 @@
 
 	      <child>
 		<widget class="GtkLabel" id="progressfile">
+		  <property name="visible">True</property>
 		  <property name="label">current file being processed</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
