@@ -4,7 +4,10 @@ bugs:
  ? "cannot set permission" ??!?!
  ? spaces in filenames ?
  - progress for one file
-
+ - "clear" not working
+   in fact it works, but it only clear the selection
+   maybe we need another function to remove all files from list
+ - current filename not displayed
 
  * better progress, in the statusbar
  * encoders as plugins 
@@ -16,9 +19,14 @@ bugs:
    our own profile system. "lossless, voice, etc..."
  * bug: the program's options aren't printed with --help
 
-problem with wav decoding / flac encoding
-solved in gst0.10...
+* problem with wav decoding / flac encoding
+-> solved in gst0.10...
 
+* problem with m4a decoding ?
+
+* problem when no decoder present
+-> we need a plugin based plugin system, with dependencies against gstreamer plugins
+-> an report a error when we cannot decode a stream
 
  -ok- autotools, l12n
  -ok- give time estimates for progress bar
@@ -34,8 +42,15 @@ solved in gst0.10...
 
 -------------------------------------------------------------------------------
 
+Version 1
+ - test and release 0.9.0
+ - stabilize current code
+ - (better) error handling
+
 Version 2
 
+ - plugin based encoders
+ - encoding profile
  - change TaskQueue, for a better, multithreaded one.
  - change BackgroundTask not to use timeout(), but an event-based system.
  -ok- simplify the file/folder adding.
