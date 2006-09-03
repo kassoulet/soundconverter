@@ -6,9 +6,16 @@ dist_glade_DATA = soundconverter-logo.png soundconverter.glade
 #pixmapsdir = $(datadir)/pixmaps
 #pixmaps_DATA = soundconverter-icon.png
 
-EXTRA_DIST = soundconverter.gladep
+desktop_in_files=	soundconverter.desktop.in
 
-## @INTLTOOL_DESKTOP_RULE@
+desktop_files=$(desktop_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
-desktopdir = $(datadir)/applications
-dist_desktop_DATA = soundconverter.desktop
+Applicationsdir = $(datadir)/applications
+Applications_DATA = $(desktop_files)
+
+EXTRA_DIST = soundconverter.gladep \
+        $(desktop_in_files)     \
+        $(desktop_files)
+
+DISTCLEANFILES = $(desktop_files)
