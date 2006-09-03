@@ -9,4 +9,4 @@ Exec=soundconverter %f
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=GNOME;GTK;Application;Utility;Multimedia
+Categories=GNOME;GTK;Application;AudioVideo

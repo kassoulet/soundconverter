@@ -88,11 +88,11 @@ gettext.install(PACKAGE,localedir=None,unicode=1)
 gtk.glade.bindtextdomain(PACKAGE,"@datadir@/locale")
 gtk.glade.textdomain(PACKAGE)
 
-TRANSLATORS = _("""
-Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)
-Dominik Zabłotny <dominz wp.pl> (polish) 
-Jonh Wendell <wendell bani.com.br> (brazilian)
-Marc E. <m4rccd yahoo.com> (spanish)
+TRANSLATORS = ("""
+Guillaume Bedot <guillaume.bedot wanadoo.fr> (French)
+Dominik Zabłotny <dominz wp.pl> (Polish) 
+Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
+Marc E. <m4rccd yahoo.com> (Spanish)
 """)
 
 # Names of columns in the file list
@@ -372,7 +372,7 @@ class TargetNameGenerator:
 			host = u.host_name
 
 		root = urlparse.urlsplit(sound_file.get_base_path())[2]
-		basename, ext = os.path.splitext(sound_file.get_filename())
+		basename, ext = os.path.splitext(urllib.unquote(sound_file.get_filename()))
 		
 		dict = {
 			".inputname": basename,
@@ -385,7 +385,7 @@ class TargetNameGenerator:
 			dict[key] = sound_file[key]
 		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
-		result = pattern % dict
+		result = urllib.quote(pattern % dict)
 		if self.replace_messy_chars:
 			s = ""
 			result = urllib.unquote(result)
@@ -1493,11 +1493,11 @@ class PreferencesDialog:
 		generator.set_basename_pattern(self.get_basename_pattern())
 		if for_display:
 			generator.set_replace_messy_chars(False)
+			return urllib.unquote(generator.get_target_name(sound_file))
 		else:
 			generator.set_replace_messy_chars(
 				self.get_int("replace-messy-chars"))
-
-		return generator.get_target_name(sound_file)
+			return generator.get_target_name(sound_file)
 	
 	def process_custom_pattern(self, pattern):
 			pattern = pattern.replace("{Artist}", "%(artist)s")

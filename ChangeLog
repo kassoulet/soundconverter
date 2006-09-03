@@ -1,3 +1,6 @@
+2006-09-03  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fix quoting of tags when generating filenames.
 
 2006-08-15  Gautier Portet <kassoulet gmail com>
 
