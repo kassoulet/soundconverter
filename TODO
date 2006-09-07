@@ -9,7 +9,6 @@ bugs:
    maybe we need another function to remove all files from list
  - current filename not displayed
 
- * better progress, in the statusbar
  * encoders as plugins 
  * optional "advanced" encoder settings
  * HIG compliant interface
@@ -28,6 +27,8 @@ bugs:
 -> we need a plugin based plugin system, with dependencies against gstreamer plugins
 -> an report a error when we cannot decode a stream
 
+ -ok- simplify the file/folder adding.
+ -ok- better progress, in the statusbar
  -ok- autotools, l12n
  -ok- give time estimates for progress bar
  -ok- progress dialog
@@ -42,6 +43,12 @@ bugs:
 
 -------------------------------------------------------------------------------
 
+roadmap:
+
+0.9 -> bugfixes
+1.0 -> stable (current) code - fall 2006
+2.0 -> plugin based encoders, multithread conversion, profiles.
+
 Version 1
  - test and release 0.9.0
  - stabilize current code
@@ -50,10 +57,9 @@ Version 1
 Version 2
 
  - plugin based encoders
- - encoding profile
  - change TaskQueue, for a better, multithreaded one.
  - change BackgroundTask not to use timeout(), but an event-based system.
- -ok- simplify the file/folder adding.
+ - encoding profile
  - write test scripts
 
 Only call gui stuff from main thread, but create threads to start Pipelines.
@@ -63,6 +69,16 @@ When using threads with BackgroundTask, we have problems updating the UI...
 
 ------------------------------------------------------------------------------
 
+Tests:
+batch conversion.
+
+take all in test/ and convert them.
+
+
+use something like dogtail to test conversions and the different modes.
+look at trm/musicbrainz/tunepimp
+
+------------------------------------------------------------------------------
 
   Et ne pas oublier la conversion en batch.
   -> objet queue global ?
@@ -82,19 +98,4 @@ La convertion doit pouvoir se lancer meme si les 2 queues précedentes n'ont pas
 ConverterQueue doit attendre les autres.
 
 ---------------------------------------------------------------------------
-
-
-Progression
-===========
-Apparement ça fonctionne avec juste le Converter
-Testé avec 150+ fichiers divers vers ogg vorbis.
-
-- progressbar
-- statusbar
-  better status handling, use it also when  reading types and tags.
-
-
-
-
-
 

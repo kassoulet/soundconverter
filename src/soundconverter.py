@@ -112,6 +112,13 @@ mime_whitelist = (
 	"application/x-shockwave-flash",
 )
 
+# add here the formats not containing tags 
+# not to bother searching in them
+tag_blacklist = (
+	"audio/x-wav",
+)
+
+
 # Name and pattern for CustomFileChooser
 filepattern = (
 	("All files","*.*"),
@@ -287,6 +294,7 @@ class SoundFile:
 		self.have_tags = False
 		self.tags_read = False
 		self.duration = 0	
+		self.mime_type = None 
 	  
 	def get_uri(self):
 		return self.uri
@@ -741,7 +749,6 @@ class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
-		self.found_type = ""
 	
 		command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
@@ -754,20 +761,20 @@ class TypeFinder(Pipeline):
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
 		#debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
-		self.found_type = None
+		self.sound_file.mime_type = None
 		for t in mime_whitelist:
 			if t in mime_type:
-				self.found_type = mime_type
-		if not self.found_type:
+				self.sound_file.mime_type = mime_type
+		if not self.sound_file.mime_type:
 			log("Mime type skipped: %s (mail us if this is an error)" % mime_type)
 	
 	def work(self):
-		return Pipeline.work(self) and not self.found_type
+		return Pipeline.work(self) and not self.sound_file.mime_type
 
 	def finish(self):
 		Pipeline.finish(self)
-		if self.found_type_hook and self.found_type:
-			gobject.idle_add(self.found_type_hook, self.sound_file, self.found_type)
+		if self.found_type_hook and self.sound_file.mime_type:
+			gobject.idle_add(self.found_type_hook, self.sound_file, self.sound_file.mime_type)
 
 
 class Decoder(Pipeline):
@@ -881,6 +888,9 @@ class TagReader(Decoder):
 	def work(self):
 		if not self.run_start_time:
 			self.run_start_time = time.time()
+			if self.sound_file.mime_type in tag_blacklist:
+				log("%s: type is %s, tag reading blacklisted" % (self.sound_file.get_filename_for_display(), self.sound_file.mime_type))
+				return False
 
 		if time.time()-self.run_start_time > 5:
 			log("TagReader timeout:", self.sound_file.get_filename_for_display())
@@ -1000,6 +1010,7 @@ class Converter(Decoder):
 		cmd = "vorbisenc"
 		if self.vorbis_quality is not None:
 			cmd += " quality=%s" % self.vorbis_quality
+		cmd += " ! oggmux"
 		return cmd
 
 	def add_mp3_encoder(self):
