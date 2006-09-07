@@ -1,3 +1,7 @@
+2006-09-06  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fix vorbis encoder.
+
 2006-09-05  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Add a blacklist of mime type known not to have tags,
