@@ -27,7 +27,6 @@ if "datadir" in GLADE:
 	GLADE = "./data"
 
 print "%s %s" % (NAME, VERSION)
-print "! ALPHA VERSION, DO *NOT* DISTRIBUTE !"
 
 # Python standard stuff.
 import sys
@@ -718,7 +717,7 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			#debug("launching: '%s'" % self.command)
+			debug("launching: '%s'" % self.command)
 			self.pipeline = gst.parse_launch(self.command)
 			for name, signal, callback in self.signals:
 				self.pipeline.get_by_name(name).connect(signal,callback)
@@ -836,6 +835,9 @@ class Decoder(Pipeline):
 
 	def get_duration(self):
 		""" return the total duration of the sound file """
+		if not self.pipeline:
+			print "no pipeline"
+			return 0
 		self.query_duration()
 		return self.sound_file.duration
 	
@@ -1010,7 +1012,7 @@ class Converter(Decoder):
 		cmd = "vorbisenc"
 		if self.vorbis_quality is not None:
 			cmd += " quality=%s" % self.vorbis_quality
-		cmd += " ! oggmux"
+		cmd += " ! oggmux "
 		return cmd
 
 	def add_mp3_encoder(self):
@@ -1093,7 +1095,8 @@ class FileList:
 			context.finish(True, False, time)
 			base = os.path.commonprefix(file_list)
 			#[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
-			[self.add_file(SoundFile(uri, base)) for uri in file_list]
+			#[self.add_file(SoundFile(uri, base)) for uri in file_list]
+			self.add_uris(file_list)
 
 	def get_files(self):
 		files = []
