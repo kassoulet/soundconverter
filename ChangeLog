@@ -1,3 +1,11 @@
+2006-09-12  Gautier Portet <kassoulet gmail com>
+
+	* po/sv_SE.po: new swedish translation.
+
+2006-09-07  Gautier Portet <kassoulet gmail com>
+
+	* release 0.9.1
+
 2006-09-06  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Fix vorbis encoder.
