@@ -1,0 +1,25 @@
+Maintener:
+	Gautier Portet <kassoulet gmail.com>
+
+Previous maintainer:
+	Lars Wirzenius  <liw iki.fi>
+
+Translators:
+	Guillaume Bedot <guillaume.bedot wanadoo.fr> (French)
+	Dominik Zabłotny <dominz wp.pl> (Polish) 
+	Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
+	Marc E. <m4rccd yahoo.com> (Spanish)
+	Daniel Nylander <po danielnylander se> (Swedish)
+
+Debian package:
+	Lars Wirzenius  <liw iki.fi>
+
+Gentoo ebuild:
+	Hanno Böck <mail hboeck.de>
+
+Better FileAddChooser:
+	Regis FLORET <r.floret laposte.net> 
+
+Custom filename patterns:
+	Adolfo González Blázquez <agblazquez@telefonica.net>
+
