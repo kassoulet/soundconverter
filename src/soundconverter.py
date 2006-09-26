@@ -68,6 +68,11 @@ except ImportError:
 	# 0.8
 	import gst
 	pygst = None
+
+if gst.gst_version < (0,10,0):
+	print "%s needs GStreamer 0.10, you have version: %s" % (NAME, ".".join([str(s) for s in gst.gst_version]))
+	sys.exit(1)
+
 print "  using Gstreamer version: %s, Python binding version: %s" % (
 		".".join([str(s) for s in gst.gst_version]), 
 		".".join([str(s) for s in gst.pygst_version]) )
@@ -92,6 +97,7 @@ Guillaume Bedot <guillaume.bedot wanadoo.fr> (French)
 Dominik Zabłotny <dominz wp.pl> (Polish) 
 Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 Marc E. <m4rccd yahoo.com> (Spanish)
+Daniel Nylander <po danielnylander se> (Swedish)
 """)
 
 # Names of columns in the file list
@@ -918,7 +924,7 @@ class Converter(Decoder):
 
 	"""A background task for converting files to another format."""
 
-	def __init__(self, sound_file, output_filename, output_type):
+	def __init__(self, sound_file, output_filename, output_type, delete_original=False):
 		#print "Converter()"
 		Decoder.__init__(self, sound_file)
 
@@ -932,6 +938,7 @@ class Converter(Decoder):
 		self.mp3_quality = None
 
 		self.overwrite = False
+		self.delete_original = delete_original
 
 	#def setup(self):
 	#	self.init()
@@ -989,6 +996,10 @@ class Converter(Decoder):
 			gnomevfs.set_file_info(self.output_filename, info, gnomevfs.SET_FILE_INFO_PERMISSIONS)
 		except:
 			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
+
+		if self.delete_original:
+			log("deleting: '%s'" % self.sound_file.get_uri())
+			gnomevfs.unlink(self.sound_file.get_uri())
 
 	def get_position(self):
 		return self.position
@@ -1274,6 +1285,7 @@ class PreferencesDialog:
 		"mp3-cbr-quality": 192,
 		"mp3-abr-quality": 192,
 		"mp3-vbr-quality": 3,
+		"delete-original": 0,
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -1291,6 +1303,7 @@ class PreferencesDialog:
 		self.example = glade.get_widget("example_filename")
 		self.aprox_bitrate = glade.get_widget("aprox_bitrate")
 		self.quality_tabs = glade.get_widget("quality_tabs")
+		self.delete_original = glade.get_widget("delete_original")
 
 		self.target_bitrate = None
 		self.convert_setting_from_old_version()
@@ -1306,42 +1319,12 @@ class PreferencesDialog:
 	def convert_setting_from_old_version(self):
 		""" try to convert previous settings"""
 		
-		# TODO: why not just reseting the settings if we cannot load them ?
-			
-		# vorbis quality was stored as an int enum
+		# vorbis quality was once stored as an int enum
 		try:
 			self.get_float("vorbis-quality")
 		except gobject.GError:
-			log("converting old vorbis setting...")
-			old_quality = self.get_int("vorbis-quality")
-			self.gconf.unset(self.path("vorbis-quality"))
-			quality_setting = (0,0.2,0.3,0.6,0.8)
-			self.set_float("vorbis-quality", quality_setting[old_quality])
-			
-		# mp3 quality was stored as an int enum
-		cbr = self.get_int("mp3-cbr-quality")
-		if cbr <= 4:
-			log("converting old mp3 quality setting... (%d)" % cbr)
-
-			abr = self.get_int("mp3-abr-quality")
-			vbr = self.get_int("mp3-vbr-quality")
-
-			cbr_quality = (64, 96, 128, 192, 256)
-			vbr_quality = (9, 7, 5, 3, 1)
-
-			self.set_int("mp3-cbr-quality", cbr_quality[cbr])
-			self.set_int("mp3-abr-quality", cbr_quality[abr])
-			self.set_int("mp3-vbr-quality", vbr_quality[vbr])
-
-		# mp3 mode was stored as an int enum
-		try:
-			self.get_string("mp3-mode")
-		except gobject.GError:
-			log("converting old mp3 mode setting...")
-			old_mode = self.get_int("mp3-mode")
-			self.gconf.unset(self.path("mp3-mode"))
-			modes = ("cbr","abr","vbr")
-			self.set_string("mp3-mode", modes[old_mode])
+			log("deleting old settings...")
+			[self.gconf.unset(self.path(k)) for k in self.defaults.keys()]
 
 		self.gconf.clear_cache()
 
@@ -1569,6 +1552,12 @@ class PreferencesDialog:
 		self.dialog.run()
 		self.dialog.hide()
 
+	def on_delete_original_toggled(self, button):
+		if button.get_active():
+			self.set_int("delete-original", 1)
+		else:
+			self.set_int("delete-original", 0)
+			
 	def on_same_folder_as_input_toggled(self, button):
 		if button.get_active():
 			self.set_int("same-folder-as-input", 1)
@@ -1796,7 +1785,8 @@ class ConverterQueue(TaskQueue):
 				raise ConverterQueueCanceled()
 			
 		c = Converter(sound_file, output_filename, 
-					  self.window.prefs.get_string("output-mime-type"))
+					  self.window.prefs.get_string("output-mime-type"),
+					  self.window.prefs.get_int("delete-original"))
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
 		
 		quality = {
@@ -2218,6 +2208,7 @@ def cli_tags_main(input_files):
 	global error
 	error = ErrorPrinter()
 	for input_file in input_files:
+		input_file = SoundFile(input_file)
 		if not get_option("quiet"):
 			print input_file.get_uri()
 		t = TagReader(input_file)
