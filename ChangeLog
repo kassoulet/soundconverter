@@ -1,6 +1,7 @@
 2006-09-26  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Added an option to delete original files.
+	 (thanks James)
 
 2006-09-19  Gautier Portet <kassoulet gmail com>
 
