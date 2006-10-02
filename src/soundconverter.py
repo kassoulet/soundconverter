@@ -842,7 +842,6 @@ class Decoder(Pipeline):
 	def get_duration(self):
 		""" return the total duration of the sound file """
 		if not self.pipeline:
-			print "no pipeline"
 			return 0
 		self.query_duration()
 		return self.sound_file.duration
@@ -999,7 +998,7 @@ class Converter(Decoder):
 
 		if self.delete_original:
 			log("deleting: '%s'" % self.sound_file.get_uri())
-			gnomevfs.unlink(self.sound_file.get_uri())
+			#gnomevfs.unlink(self.sound_file.get_uri())
 
 	def get_position(self):
 		return self.position
@@ -1175,7 +1174,7 @@ class FileList:
 			self.typefinders.run()
 
 	def typefinder_queue_ended(self):
-		print "typefinder_queue_ended"
+		pass
 
 	def format_cell(self, sound_file):
 		
@@ -1195,6 +1194,7 @@ class FileList:
 			params["bitrate"] = ""
 
 		try:	
+
 			if sound_file.have_tags:
 				template = template_tags
 			else:
@@ -1212,7 +1212,7 @@ class FileList:
 				else:
 					str += '<span foreground="yellow" background="red"><b>!</b></span>'
 
-			error.show(_("Invalid character in filename!"), str)
+			error.show(_("Invalid character in filename:\n'%s'") % str)
 			sys.exit(1)
 				
 		return s
