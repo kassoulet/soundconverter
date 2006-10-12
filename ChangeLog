@@ -1,6 +1,13 @@
+2006-10-12  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fixed (?) loading of badly encoded filenames.
+	  now files encoded in latin-1 should be loadable instead of
+	  triggering an UnicodeDecodeError.
+	  (thanks Christopher)
+
 2006-09-26  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Added an option to delete original files.
+	* soundconverter.py: Added an option to delete original files.
 	 (thanks James)
 
 2006-09-19  Gautier Portet <kassoulet gmail com>

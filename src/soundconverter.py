@@ -204,6 +204,19 @@ def file_encode_filename(filename):
 	filename = filename.replace(" ", "\ ");
 	return filename
 	
+
+def unquote_filename(filename):
+
+	f= urllib.unquote(filename)
+	try:
+		# files are normaly in utf-8 ?
+		f = unicode(f, "utf-8")
+	except UnicodeDecodeError:
+		# but sometimes they are badly encoded, this is a failback
+		f = unicode(f, "latin1", "replace")
+	return f
+
+
 use_gnomevfs = False
 
 def markup_escape(str):
@@ -401,7 +414,7 @@ class TargetNameGenerator:
 		result = urllib.quote(pattern % dict)
 		if self.replace_messy_chars:
 			s = ""
-			result = urllib.unquote(result)
+			result = unquote_filename(result)
 			for c in result:
 				if c not in self.nice_chars:
 					s += "_"
@@ -1185,7 +1198,7 @@ class FileList:
 							% _("no tags")
 
 		params = {}
-		params["filename"] = markup_escape(urllib.unquote(sound_file.get_filename_for_display()))
+		params["filename"] = markup_escape(unquote_filename(sound_file.get_filename()))
 		for item in ("title", "artist", "album"):
 			params[item] = markup_escape(sound_file.get_tag(item))
 		if sound_file["bitrate"]:
@@ -1193,28 +1206,17 @@ class FileList:
 		else:
 			params["bitrate"] = ""
 
-		try:	
 
-			if sound_file.have_tags:
-				template = template_tags
+		if sound_file.have_tags:
+			template = template_tags
+		else:
+			if sound_file.tags_read:
+				template = template_notags
 			else:
-				if sound_file.tags_read:
-					template = template_notags
-				else:
-					template = template_loading
+				template = template_loading
 
-			s = template % params
-		except UnicodeDecodeError:
-			str = ""
-			for c in markup_escape(urllib.unquote(sound_file.get_uri())):
-				if ord(c) < 127:
-					str += c
-				else:
-					str += '<span foreground="yellow" background="red"><b>!</b></span>'
-
-			error.show(_("Invalid character in filename:\n'%s'") % str)
-			sys.exit(1)
-				
+		s = template % params
+			
 		return s
 
 	def append_file(self, sound_file):
@@ -1490,7 +1492,7 @@ class PreferencesDialog:
 		generator.set_basename_pattern(self.get_basename_pattern())
 		if for_display:
 			generator.set_replace_messy_chars(False)
-			return urllib.unquote(generator.get_target_name(sound_file))
+			return unquote_filename(generator.get_target_name(sound_file))
 		else:
 			generator.set_replace_messy_chars(
 				self.get_int("replace-messy-chars"))
@@ -1731,7 +1733,7 @@ class ConverterQueue(TaskQueue):
 	
 		output_filename = self.window.prefs.generate_filename(sound_file)
 		path = urlparse.urlparse(output_filename) [2]
-		path = urllib.unquote(path)
+		path = unquote_filename(path)
 	
 		exists = True
 		try:
