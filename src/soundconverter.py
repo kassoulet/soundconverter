@@ -685,6 +685,7 @@ class Pipeline(BackgroundTask):
 		self.signals = []
 		self.processing = False
 		self.eos = False
+		self.error = None
 		
 	def setup(self):
 		#print "Pipeline.setup()"
@@ -727,6 +728,7 @@ class Pipeline(BackgroundTask):
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			self.eos = True
+			self.error = err
 			log("error:%s (%s)" % (err, self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
@@ -1009,9 +1011,9 @@ class Converter(Decoder):
 		except:
 			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
 
-		if self.delete_original:
+		if self.delete_original and self.processing and not self.error:
 			log("deleting: '%s'" % self.sound_file.get_uri())
-			#gnomevfs.unlink(self.sound_file.get_uri())
+			gnomevfs.unlink(self.sound_file.get_uri())
 
 	def get_position(self):
 		return self.position
@@ -1358,6 +1360,9 @@ class PreferencesDialog:
 		if self.get_int("replace-messy-chars"):
 			w = glade.get_widget("replace_messy_chars")
 			w.set_active(True)
+
+		if self.get_int("delete-original"):
+			self.delete_original.set_active(True)
 
 		mime_type = self.get_string("output-mime-type")
 

@@ -1,3 +1,9 @@
+2006-10-15  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Only remove files when conversion was
+	  sucessfull.
+	* release 0.9.2
+
 2006-10-12  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Fixed (?) loading of badly encoded filenames.
