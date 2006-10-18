@@ -306,7 +306,7 @@ class SoundFile:
 		else:
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
-		self.filename_for_display = gnomevfs.unescape_string_for_display(self.filename)
+		self.filename_for_display = unquote_filename(self.filename)
 	
 		self.tags = {
 			"track-number": 0,
@@ -590,13 +590,15 @@ class TaskQueue(BackgroundTask):
 		BackgroundTask.__init__(self)
 		self.tasks = []
 		self.running = False
-		self.tasks_current=0
+		self.tasks_current = 0
+		self.tasks_number = 0
 
 	def is_running(self):
 		return self.running
 
 	def add(self, task):
 		self.tasks.append(task)
+		self.tasks_number += 1
 		
 	def get_current_task(self):
 		if self.tasks:
@@ -633,6 +635,7 @@ class TaskQueue(BackgroundTask):
 		self.running = False
 		log("Queue done in %ds" % (time.time() - self.start_time))
 		self.queue_ended()
+		self.tasks_number = 0
 
 	def stop(self):
 		if self.tasks:
@@ -640,6 +643,7 @@ class TaskQueue(BackgroundTask):
 		BackgroundTask.stop(self)
 		self.running = False
 		self.tasks = []
+		self.tasks_number = 0
 
 	# The following hooks are called after each sub-task has been set up,
 	# after its work method has been called, and after it has finished.
@@ -1820,18 +1824,20 @@ class ConverterQueue(TaskQueue):
 		if t:
 			f = t.sound_file.get_filename_for_display()
 
-		if not t.got_duration:
-			duration = t.get_duration()
-			if duration: 
-				self.total_duration += duration
-				t.got_duration = True
+		for t in self.tasks:
+			if not t.got_duration:
+				duration = t.sound_file.duration
+				if duration: 
+					self.total_duration += duration
+					t.got_duration = True
 
+		print "%d + %d / %d" % ( self.duration_processed , task.get_position(), self.total_duration )
 		self.window.set_progress(self.duration_processed + task.get_position(),
 							 self.total_duration, f)
 		return False
 
 	def finish_hook(self, task):
-		self.duration_processed += task.get_duration()
+		self.duration_processed += task.sound_file.duration
 
 	def finish(self):
 		TaskQueue.finish(self)
@@ -2165,7 +2171,7 @@ class SoundConverterWindow:
 		self._lock_convert_button = False
 	
 	def display_progress(self, remaining):
-		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, len(self.converter.tasks), remaining ))
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
 	
 	def set_progress(self, done_so_far, total, current_file=""):
 		if (total==0) or (done_so_far==0):
