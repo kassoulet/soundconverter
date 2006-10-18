@@ -219,17 +219,22 @@ def unquote_filename(filename):
 
 use_gnomevfs = False
 
-def markup_escape(str):
-    str = "&amp;".join(str.split("&"))
-    str = "&lt;".join(str.split("<"))
-    str = "&gt;".join(str.split(">"))
-    return str
+def markup_escape(message):
+	if not isinstance(message, basestring):
+		print "markup error: '%s'" % message
+		import pdb
+		pdb.set_trace()
+
+	message = "&amp;".join(message.split("&"))
+	message = "&lt;".join(message.split("<"))
+    	message = "&gt;".join(message.split(">"))
+    	return message
 
 def filename_escape(str):
-    str = str.replace("'","\'")
-    str = str.replace("\"","\\\"")
-    str = str.replace("!","\!")
-    return str
+	str = str.replace("'","\'")
+	str = str.replace("\"","\\\"")
+	str = str.replace("!","\!")
+	return str
 
 if gst.element_factory_find("gnomevfssrc"):
 	gstreamer_source = "gnomevfssrc"
@@ -507,18 +512,14 @@ class BackgroundTask:
 	def thread_work(self):
 		working = True
 		while self and working:
-			#gtk.threads_enter()
 			working = self.do_work_()
-			#gtk.threads_leave()
 			sleep(_thread_sleep)
 			while gtk.events_pending():
 				gtk.main_iteration()
 
 
 	def do_work(self):
-		#gtk.threads_enter()
 		working = self.do_work_()
-		#gtk.threads_leave()
 		return working
 
 
@@ -589,7 +590,6 @@ class TaskQueue(BackgroundTask):
 		BackgroundTask.__init__(self)
 		self.tasks = []
 		self.running = False
-		self.tasks_number=0
 		self.tasks_current=0
 
 	def is_running(self):
@@ -597,7 +597,6 @@ class TaskQueue(BackgroundTask):
 
 	def add(self, task):
 		self.tasks.append(task)
-		self.tasks_number += 1
 		
 	def get_current_task(self):
 		if self.tasks:
@@ -729,7 +728,7 @@ class Pipeline(BackgroundTask):
 			err, debug = message.parse_error()
 			self.eos = True
 			self.error = err
-			log("error:%s (%s)" % (err, self.sound_file.get_filename_for_display()))
+			log("error: %s (%s)" % (err, self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		if message.type.value_nicks[1] == "tag":
@@ -786,7 +785,7 @@ class TypeFinder(Pipeline):
 			if t in mime_type:
 				self.sound_file.mime_type = mime_type
 		if not self.sound_file.mime_type:
-			log("Mime type skipped: %s (mail us if this is an error)" % mime_type)
+			log("Mime type skipped: %s" % mime_type)
 	
 	def work(self):
 		return Pipeline.work(self) and not self.sound_file.mime_type
@@ -1062,7 +1061,7 @@ class Converter(Decoder):
 			
 			cmd += "%s=%s " % (properties[self.mp3_mode][1], self.mp3_quality)
 	
-		return cmd
+		return cmd + " ! id3v2mux "
 
 class FileList:
 	"""List of files added by the user."""
@@ -1806,7 +1805,8 @@ class ConverterQueue(TaskQueue):
 		c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
 		c.init()
 		TaskQueue.add(self, c)
-		self.total_duration += c.get_duration()
+		c.got_duration = False
+		#self.total_duration += c.get_duration()
 
 	def work_hook(self, task):
 		gobject.idle_add(self.set_progress, (task))
@@ -1820,12 +1820,17 @@ class ConverterQueue(TaskQueue):
 		if t:
 			f = t.sound_file.get_filename_for_display()
 
+		if not t.got_duration:
+			duration = t.get_duration()
+			if duration: 
+				self.total_duration += duration
+				t.got_duration = True
+
 		self.window.set_progress(self.duration_processed + task.get_position(),
 							 self.total_duration, f)
 		return False
 
 	def finish_hook(self, task):
-		#print "finished: %d+=%d" % (self.duration_processed, task.get_duration())
 		self.duration_processed += task.get_duration()
 
 	def finish(self):
@@ -1857,6 +1862,7 @@ class ConverterQueue(TaskQueue):
 		TaskQueue.stop(self)
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
+		self.reset_counters()
 
 class CustomFileChooser:
 	"""
@@ -2159,7 +2165,7 @@ class SoundConverterWindow:
 		self._lock_convert_button = False
 	
 	def display_progress(self, remaining):
-		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, len(self.converter.tasks), remaining ))
 	
 	def set_progress(self, done_so_far, total, current_file=""):
 		if (total==0) or (done_so_far==0):
@@ -2176,7 +2182,7 @@ class SoundConverterWindow:
 		
 		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
 		fraction = float(done_so_far) / total
-		
+	
 		self.progressbar.set_fraction( min(fraction, 1.0) )
 		t = time.time() - self.converter.run_start_time - self.converter.paused_time
 		
