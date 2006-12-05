@@ -1,7 +1,7 @@
 # Portuguese/Brazil translation of soundconverter.
 # Copyright (C) 2005 THE soundconverter'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the soundconverter package.
-# Jonh Wendell <wendell@bani.com.br>, 2005.
+# Jonh Wendell <wendell@bani.com.br>, 2006.
 # , fuzzy
 # 
 # 
@@ -10,12 +10,12 @@ msgstr ""
 "Project-Id-Version: soundconverter 0.8\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-09-01 22:54+0200\n"
-"PO-Revision-Date: 2006-08-29 17:10-0300\n"
+"PO-Revision-Date: 2006-12-05 09:24-0300\n"
 "Last-Translator: Jonh Wendell <wendell@bani.com.br>\n"
 "Language-Team: Portuguese/Brazil <gnome-l10n-br@listas.cipsga.org.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: ../src/soundconverter.py:325
 msgid "File exists."
@@ -49,7 +49,7 @@ msgid ""
 " Please report this as a bug."
 msgstr ""
 "NÃ£o pude linkar ao GStreamer.\n"
-"Por favor, reporte isso como bug."
+"Por favor, reporte isso como um bug."
 
 #: ../src/soundconverter.py:646
 #, python-format
@@ -125,11 +125,11 @@ msgstr "Mesmo que o original, com nova extensÃ£o"
 
 #: ../src/soundconverter.py:1226
 msgid "Track number - title"
-msgstr "NÃºmero da faixa - tÃ­tulo"
+msgstr "NÃºmero da faixa - tÃ­Â­tulo"
 
 #: ../src/soundconverter.py:1227
 msgid "Track title"
-msgstr "TÃ­tulo da faixa"
+msgstr "TÃ­Â­tulo da faixa"
 
 #: ../src/soundconverter.py:1228
 msgid "Artist - title"
@@ -175,7 +175,7 @@ msgstr ""
 #: ../src/soundconverter.py:1817
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "ConversÃ£o terminada, em %s"
+msgstr "ConversÃ£o terminada em %s"
 
 #: ../src/soundconverter.py:1851
 msgid "Open a file"
@@ -226,7 +226,7 @@ msgstr "Pronto"
 #: ../src/soundconverter.py:2248
 #, python-format
 msgid "%s: OK"
-msgstr ""
+msgstr "%s: OK"
 
 #: ../src/soundconverter.py:2283
 #, python-format
@@ -252,13 +252,13 @@ msgid ""
 " %s . Note that you probably want to set\n"
 " the output suffix as well."
 msgstr ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
+"ConfiguraÂ·oÂ·tipo MIMEÂ·deÂ·saÃ­daÂ·paraÂ·modoÂ·emÂ·lote.Â·OÂ·padrÃ£o\n"
+"Ã©Â·%s.Â·Talvez vocÃª queira tambÃ©m configurar\n"
+"a extensÃ£o do arquivo de saÃ­da tambÃ©m."
 
 #: ../src/soundconverter.py:2307
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Fique quieto. NÃ£o escreve saÃ­das normais, somente erros"
+msgstr "Fique quieto. NÃ£o escreve saÃ­Â­das normais, somente erros."
 
 #: ../src/soundconverter.py:2310
 msgid "Print additionnal debug information"
@@ -271,7 +271,7 @@ msgid ""
 " %s . Note that the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Configura o nome do arquivo de saÃ­da, para modo em lote. O padrÃ£o\n"
+"Configura o nome do arquivo de saÃ­da para modo em lote. O padrÃ£o\n"
 "Ã© %s. Perceba que a extensÃ£o nÃ£o afeta o tipo MIME."
 
 #: ../src/soundconverter.py:2316
@@ -279,8 +279,8 @@ msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
+"Mostra as tags dos arquivos de entrada ao invÃ©s de convertÃª-los. Isto indica\n"
+"o modo de linha de comando (lote) e desabilita a interface grÃ¡fica."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -304,7 +304,7 @@ msgstr "<i>Exemplo:</i>"
 
 #: ../data/soundconverter.glade.h:7
 msgid "Add _Folder"
-msgstr "Adicionar _pasta"
+msgstr "Adicionar _Pasta"
 
 #: ../data/soundconverter.glade.h:8
 msgid "Bitrate mode:"
@@ -366,7 +366,7 @@ msgstr "Conversor de Som para o GNOME"
 
 #: ../data/soundconverter.glade.h:23
 msgid "Into a specified folder"
-msgstr "Em uma pasta especÃ­fica"
+msgstr "Em uma pasta especÃƒÂ­fica"
 
 #: ../data/soundconverter.glade.h:24
 msgid "MP3"
@@ -406,7 +406,7 @@ msgstr "Qualidade:"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Remove todos os caracteres, exceto letras, dÃ­gitos e ./_-"
+msgstr "Remove todos os caracteres, exceto letras, dÃ­Â­gitos e ./_-"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Replace all messy characters"
@@ -444,7 +444,7 @@ msgstr "Onde colocar o resultado?"
 
 #: ../data/soundconverter.glade.h:45
 msgid "_Add File"
-msgstr "_Adicionar arquivo(s)"
+msgstr "_Adicionar Arquivo(s)"
 
 #: ../data/soundconverter.glade.h:46
 msgid "_Apply to entire queue"
@@ -495,8 +495,8 @@ msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
-"track_number - track_title\n"
-"track_title\n"
+"nÃºmero_faixa - tÃ­tulo_faixa\n"
+"tÃ­tulo_faixa\n"
 
 #: ../data/soundconverter.glade.h:60
 msgid "wav"
@@ -516,7 +516,7 @@ msgid ""
 msgstr ""
 "{Artist}: Nome do artista\n"
 "{Album}: Nome do Ã¡lbum\n"
-"{Title}: TÃ­tulo da mÃºsica\n"
+"{Title}: TÃ­Â­tulo da mÃºsica\n"
 "{Track}: NÃºmero da faixa\n"
 "{Total}: Quantidade de faixas no Ã¡lbum"
 
@@ -524,13 +524,13 @@ msgstr ""
 #~ msgid ""
 #~ "\n"
 #~ "Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)\n"
-#~ "Dominik ZabÅotny <dominz wp.pl> (polish) \n"
+#~ "Dominik ZabÃ…Â‚otny <dominz wp.pl> (polish) \n"
 #~ "Jonh Wendell <wendell bani.com.br> (brazilian)\n"
 #~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
 #~ msgstr ""
 #~ "\n"
 #~ "Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)\n"
-#~ "Dominik ZabÃ…Â‚otny <dominz wp.pl> (polish) \n"
+#~ "Dominik ZabÃƒâ€¦Ã‚â€šotny <dominz wp.pl> (polish) \n"
 #~ "Jonh Wendell <wendell bani.com.br> (Brazilian Portuguese)\n"
 #~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
 
@@ -559,20 +559,20 @@ msgstr ""
 #~ msgstr "Artista"
 
 #~ msgid "Album"
-#~ msgstr "Ãlbum"
+#~ msgstr "ÃƒÂlbum"
 
 #~ msgid "Title"
-#~ msgstr "TÃ­tulo"
+#~ msgstr "TÃƒÂ­tulo"
 
 #~ msgid "_Add"
 #~ msgstr "_Adicionar"
 
 #~ msgid ""
-#~ "Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "Copyright Ã‚Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "Copyright Ã‚Â© 2005 Gautier Portet <kassoulet@gmail.com>"
 #~ msgstr ""
-#~ "Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "Copyright Ã‚Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "Copyright Ã‚Â© 2005 Gautier Portet <kassoulet@gmail.com>"
 
 #~ msgid "Convert sound files."
 #~ msgstr "Converte arquivos de som"
