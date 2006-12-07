@@ -24,7 +24,7 @@ msgstr "Arquivo existe."
 #: ../src/soundconverter.py:326
 #, python-format
 msgid "The file %s exists already"
-msgstr "O arquivo %s jÃ¡ existe"
+msgstr "O arquivo %s já existe"
 
 #: ../src/soundconverter.py:435
 #, python-format
@@ -48,7 +48,7 @@ msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
-"NÃ£o pude linkar ao GStreamer.\n"
+"Não pude linkar ao GStreamer.\n"
 "Por favor, reporte isso como um bug."
 
 #: ../src/soundconverter.py:646
@@ -64,10 +64,10 @@ msgid ""
 " for files of this type if it is important\n"
 " to you."
 msgstr ""
-"O arquivo %s Ã© de um tipo desconhecido.\n"
+"O arquivo %s é de um tipo desconhecido.\n"
 "Pergunte aos desenvolvedores sobre um futuro\n"
 "suporte a esse tipo de arquivo, se ele for\n"
-"importante para vocÃª."
+"importante para você."
 
 #: ../src/soundconverter.py:894
 msgid "Target exists."
@@ -76,7 +76,7 @@ msgstr "Destino existe."
 #: ../src/soundconverter.py:895
 #, python-format
 msgid "The output file %s already exists."
-msgstr "O arquivo de saÃ­da %s jÃ¡ existe."
+msgstr "O arquivo de saída %s já existe."
 
 #: ../src/soundconverter.py:937
 #, python-format
@@ -96,12 +96,12 @@ msgstr "Problema ao criar a pasta '%s'."
 #: ../src/soundconverter.py:972
 #, python-format
 msgid "Cannot set permission on '%s'"
-msgstr "Erro ao configurar permissÃ£o em '%s'"
+msgstr "Erro ao configurar permissão em '%s'"
 
 #: ../src/soundconverter.py:1131
 #, python-format
 msgid "file already present: '%s'"
-msgstr "arquivo jÃ¡ presente: '%s'"
+msgstr "arquivo já presente: '%s'"
 
 #: ../src/soundconverter.py:1148
 msgid "loading tags..."
@@ -113,7 +113,7 @@ msgstr "nenhuma tag"
 
 #: ../src/soundconverter.py:1179
 msgid "Invalid character in filename!"
-msgstr "Caracter invÃ¡lido no nome do arquivo!"
+msgstr "Caracter inválido no nome do arquivo!"
 
 #: ../src/soundconverter.py:1199
 msgid "unknown"
@@ -121,31 +121,31 @@ msgstr "desconhecido"
 
 #: ../src/soundconverter.py:1225
 msgid "Same as input, but with new suffix"
-msgstr "Mesmo que o original, com nova extensÃ£o"
+msgstr "Mesmo que o original, com nova extensão"
 
 #: ../src/soundconverter.py:1226
 msgid "Track number - title"
-msgstr "NÃºmero da faixa - tÃ­Â­tulo"
+msgstr "Número da faixa - tí­tulo"
 
 #: ../src/soundconverter.py:1227
 msgid "Track title"
-msgstr "TÃ­Â­tulo da faixa"
+msgstr "Tí­tulo da faixa"
 
 #: ../src/soundconverter.py:1228
 msgid "Artist - title"
-msgstr "Artista - tÃ­tulo"
+msgstr "Artista - título"
 
 #: ../src/soundconverter.py:1229
 msgid "Custom filename pattern"
-msgstr "PadrÃ£o de nome de arquivo personalizado"
+msgstr "Padrão de nome de arquivo personalizado"
 
 #: ../src/soundconverter.py:1233
 msgid "artist/album"
-msgstr "artista/Ã¡lbum"
+msgstr "artista/álbum"
 
 #: ../src/soundconverter.py:1234
 msgid "artist-album"
-msgstr "artista-Ã¡lbum"
+msgstr "artista-álbum"
 
 #: ../src/soundconverter.py:1404
 #, python-format
@@ -159,7 +159,7 @@ msgstr "<small>Taxa alvo: %s</small>"
 
 #: ../src/soundconverter.py:1698
 msgid "Convertion Canceled"
-msgstr "ConversÃ£o Cancelada"
+msgstr "Conversão Cancelada"
 
 #: ../src/soundconverter.py:1741
 #, python-format
@@ -168,14 +168,14 @@ msgid ""
 " exists already.\n"
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
-"O arquivo de saÃ­da <i>%s</i>\n"
-"jÃ¡ existe.\n"
-"VocÃª quer pular, sobrescrever ou cancelar a conversÃ£o?\n"
+"O arquivo de saída <i>%s</i>\n"
+"já existe.\n"
+"Você quer pular, sobrescrever ou cancelar a conversão?\n"
 
 #: ../src/soundconverter.py:1817
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "ConversÃ£o terminada em %s"
+msgstr "Conversão terminada em %s"
 
 #: ../src/soundconverter.py:1851
 msgid "Open a file"
@@ -187,7 +187,7 @@ msgstr "Adicionar pasta..."
 
 #: ../src/soundconverter.py:2037
 msgid "canceling conversion."
-msgstr "cancelando conversÃ£o"
+msgstr "cancelando conversão"
 
 #: ../src/soundconverter.py:2060
 msgid "Waiting for tags"
@@ -195,7 +195,7 @@ msgstr "Esperando pelas tags"
 
 #: ../src/soundconverter.py:2066
 msgid "Waiting for tags..."
-msgstr "EsperandoÂ·pelasÂ·tags..."
+msgstr "Esperando·pelas·tags..."
 
 #: ../src/soundconverter.py:2074 ../src/soundconverter.py:2082
 msgid "Paused"
@@ -231,11 +231,11 @@ msgstr "%s: OK"
 #: ../src/soundconverter.py:2283
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
-msgstr "Uso: %s [opÃ§Ãµes] [arquivos de som]"
+msgstr "Uso: %s [opções] [arquivos de som]"
 
 #: ../src/soundconverter.py:2298
 msgid "Print out a usage summary."
-msgstr "Imprime um sumÃ¡rio de uso"
+msgstr "Imprime um sumário de uso"
 
 #: ../src/soundconverter.py:2301
 msgid ""
@@ -243,7 +243,7 @@ msgid ""
 " interface. You can use this from, say, shell scripts."
 msgstr ""
 "Converte em modo de lotes, a partir da linha de comando, sem interface\n"
-"grÃ¡fica. VocÃª pode usar isso em shell scripts."
+"gráfica. Você pode usar isso em shell scripts."
 
 #: ../src/soundconverter.py:2304
 #, python-format
@@ -252,17 +252,17 @@ msgid ""
 " %s . Note that you probably want to set\n"
 " the output suffix as well."
 msgstr ""
-"ConfiguraÂ·oÂ·tipo MIMEÂ·deÂ·saÃ­daÂ·paraÂ·modoÂ·emÂ·lote.Â·OÂ·padrÃ£o\n"
-"Ã©Â·%s.Â·Talvez vocÃª queira tambÃ©m configurar\n"
-"a extensÃ£o do arquivo de saÃ­da tambÃ©m."
+"Configura·o·tipo MIME·de·saída·para·modo·em·lote.·O·padrão\n"
+"é·%s.·Talvez você queira também configurar\n"
+"a extensão do arquivo de saída também."
 
 #: ../src/soundconverter.py:2307
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Fique quieto. NÃ£o escreve saÃ­Â­das normais, somente erros."
+msgstr "Fique quieto. Não escreve saí­das normais, somente erros."
 
 #: ../src/soundconverter.py:2310
 msgid "Print additionnal debug information"
-msgstr "Mostra informaÃ§Ãµes de depuraÃ§Ã£o"
+msgstr "Mostra informações de depuração"
 
 #: ../src/soundconverter.py:2313
 #, python-format
@@ -271,16 +271,16 @@ msgid ""
 " %s . Note that the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Configura o nome do arquivo de saÃ­da para modo em lote. O padrÃ£o\n"
-"Ã© %s. Perceba que a extensÃ£o nÃ£o afeta o tipo MIME."
+"Configura o nome do arquivo de saída para modo em lote. O padrão\n"
+"é %s. Perceba que a extensão não afeta o tipo MIME."
 
 #: ../src/soundconverter.py:2316
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Mostra as tags dos arquivos de entrada ao invÃ©s de convertÃª-los. Isto indica\n"
-"o modo de linha de comando (lote) e desabilita a interface grÃ¡fica."
+"Mostra as tags dos arquivos de entrada ao invés de convertê-los. Isto indica\n"
+"o modo de linha de comando (lote) e desabilita a interface gráfica."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -296,7 +296,7 @@ msgstr "<b>Onde colocar o resultado?</b>"
 
 #: ../data/soundconverter.glade.h:4
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Arquivo jÃ¡ existe</b></big>\n"
+msgstr "<big><b>Arquivo já existe</b></big>\n"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<i>Example filename:</i>"
@@ -321,8 +321,8 @@ msgid ""
 "Variable (VBR) - Best quality"
 msgstr ""
 "Constante (CBR)\n"
-"MÃ©dio (ABR)\n"
-"VariÃ¡vel (VBR) - Melhor qualidade"
+"Médio (ABR)\n"
+"Variável (VBR) - Melhor qualidade"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
@@ -338,11 +338,11 @@ msgstr "FLAC"
 
 #: ../data/soundconverter.glade.h:16
 msgid "File exists already"
-msgstr "Arquivo jÃ¡ existe"
+msgstr "Arquivo já existe"
 
 #: ../data/soundconverter.glade.h:17
 msgid "Filename pattern: "
-msgstr "PadrÃ£o para nome de arquivo: "
+msgstr "Padrão para nome de arquivo: "
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filter "
@@ -354,11 +354,11 @@ msgstr "Formato: "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Free Lossless compression"
-msgstr "CompressÃ£o sem perdas"
+msgstr "Compressão sem perdas"
 
 #: ../data/soundconverter.glade.h:21
 msgid "Free Lossy Compression"
-msgstr "CompressÃ£o sem perdas"
+msgstr "Compressão sem perdas"
 
 #: ../data/soundconverter.glade.h:22
 msgid "GNOME Sound Conversion"
@@ -366,7 +366,7 @@ msgstr "Conversor de Som para o GNOME"
 
 #: ../data/soundconverter.glade.h:23
 msgid "Into a specified folder"
-msgstr "Em uma pasta especÃƒÂ­fica"
+msgstr "Em uma pasta especí­fica"
 
 #: ../data/soundconverter.glade.h:24
 msgid "MP3"
@@ -374,11 +374,11 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:25
 msgid "No Compression"
-msgstr "Sem compressÃ£o"
+msgstr "Sem compressão"
 
 #: ../data/soundconverter.glade.h:26
 msgid "Non-Free Lossy Compression"
-msgstr "CompressÃ£o sem perdas (nÃ£o livre)"
+msgstr "Compressão sem perdas (não livre)"
 
 #: ../data/soundconverter.glade.h:27
 msgid "Ogg Vorbis"
@@ -398,7 +398,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "Preferences"
-msgstr "PreferÃªncias"
+msgstr "Preferências"
 
 #: ../data/soundconverter.glade.h:33
 msgid "Quality:"
@@ -406,7 +406,7 @@ msgstr "Qualidade:"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Remove todos os caracteres, exceto letras, dÃ­Â­gitos e ./_-"
+msgstr "Remove todos os caracteres, exceto letras, dí­gitos e ./_-"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Replace all messy characters"
@@ -432,7 +432,7 @@ msgstr ""
 "Baixa\n"
 "Normal\n"
 "Alta\n"
-"AltÃ­ssima"
+"Altíssima"
 
 #: ../data/soundconverter.glade.h:43
 msgid "WAV"
@@ -467,8 +467,8 @@ msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
-"artista/Ã¡lbum\n"
-"artista - Ã¡lbum"
+"artista/álbum\n"
+"artista - álbum"
 
 #: ../data/soundconverter.glade.h:52
 msgid "asdf"
@@ -495,8 +495,8 @@ msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
-"nÃºmero_faixa - tÃ­tulo_faixa\n"
-"tÃ­tulo_faixa\n"
+"número_faixa - título_faixa\n"
+"título_faixa\n"
 
 #: ../data/soundconverter.glade.h:60
 msgid "wav"
@@ -515,22 +515,22 @@ msgid ""
 "{Total}: Total number of tracks in album"
 msgstr ""
 "{Artist}: Nome do artista\n"
-"{Album}: Nome do Ã¡lbum\n"
-"{Title}: TÃ­Â­tulo da mÃºsica\n"
-"{Track}: NÃºmero da faixa\n"
-"{Total}: Quantidade de faixas no Ã¡lbum"
+"{Album}: Nome do álbum\n"
+"{Title}: Tí­tulo da música\n"
+"{Track}: Número da faixa\n"
+"{Total}: Quantidade de faixas no álbum"
 
 #, fuzzy
 #~ msgid ""
 #~ "\n"
 #~ "Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)\n"
-#~ "Dominik ZabÃ…Â‚otny <dominz wp.pl> (polish) \n"
+#~ "Dominik ZabÅotny <dominz wp.pl> (polish) \n"
 #~ "Jonh Wendell <wendell bani.com.br> (brazilian)\n"
 #~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
 #~ msgstr ""
 #~ "\n"
 #~ "Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)\n"
-#~ "Dominik ZabÃƒâ€¦Ã‚â€šotny <dominz wp.pl> (polish) \n"
+#~ "Dominik ZabÃ…Â‚otny <dominz wp.pl> (polish) \n"
 #~ "Jonh Wendell <wendell bani.com.br> (Brazilian Portuguese)\n"
 #~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
 
@@ -559,20 +559,20 @@ msgstr ""
 #~ msgstr "Artista"
 
 #~ msgid "Album"
-#~ msgstr "ÃƒÂlbum"
+#~ msgstr "Ãlbum"
 
 #~ msgid "Title"
-#~ msgstr "TÃƒÂ­tulo"
+#~ msgstr "TÃ­tulo"
 
 #~ msgid "_Add"
 #~ msgstr "_Adicionar"
 
 #~ msgid ""
-#~ "Copyright Ã‚Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright Ã‚Â© 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
 #~ msgstr ""
-#~ "Copyright Ã‚Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright Ã‚Â© 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
 
 #~ msgid "Convert sound files."
 #~ msgstr "Converte arquivos de som"
