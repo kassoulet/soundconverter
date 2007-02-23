@@ -248,6 +248,10 @@ else:
 	encode_filename = file_encode_filename
 	print "  NOT using gnomevfssrc, look for a gnomevfs gstreamer package."
 
+have_id3v2mux = True
+if not gst.element_factory_find("id3v2mux"):
+	have_id3v2mux = False
+	print "  id3v2mux element not found, we cannot write tags in MP3s!\n    do you have gstreamer0.10-plugins-good installed ?"
 
 # logging & debugging  
 
@@ -366,6 +370,7 @@ class TargetNameGenerator:
 		self.folder = None
 		self.subfolders = ""
 		self.basename= "%(.inputname)s"
+		self.ext = "%(.ext)s"
 		self.suffix = None
 		self.replace_messy_chars = False
 		self.max_tries = 2
@@ -407,6 +412,7 @@ class TargetNameGenerator:
 		
 		dict = {
 			".inputname": basename,
+			".ext": ext,
 			"album": "",
 			"artist": "",
 			"title": "",
@@ -416,22 +422,21 @@ class TargetNameGenerator:
 			dict[key] = sound_file[key]
 		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
-		result = urllib.quote(pattern % dict)
+		result = pattern % dict
 		if self.replace_messy_chars:
 			s = ""
-			result = unquote_filename(result)
 			for c in result:
 				if c not in self.nice_chars:
 					s += "_"
 				else:
 					s += c
-			result = urllib.quote(s)
+			result = s
 
 		if self.folder is None:
 			folder = root
 		else:
 			folder = self.folder
-		result = os.path.join(folder, result)
+		result = urllib.quote(os.path.join(folder, result))
 
 		tuple = (u.scheme, host, result, "", u.fragment_identifier)
 		u2 = urlparse.urlunsplit(tuple)
@@ -622,8 +627,8 @@ class TaskQueue(BackgroundTask):
 			ret = self.tasks[0].work()
 			self.work_hook(self.tasks[0])
 			if not ret:
-				self.tasks[0].finish()
 				self.finish_hook(self.tasks[0])
+				self.tasks[0].finish()
 				self.tasks = self.tasks[1:]
 				if self.tasks:
 					self.tasks_current += 1
@@ -732,10 +737,13 @@ class Pipeline(BackgroundTask):
 			err, debug = message.parse_error()
 			self.eos = True
 			self.error = err
-			log("error: %s (%s)" % (err, self.sound_file.get_filename_for_display()))
+			log("error: %s (%s)" % (err,
+				self.sound_file.get_filename_for_display()))
+			error.show("GStreamer Error", "%s\nfile: '%s'" % (err, 
+				self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
-		if message.type.value_nicks[1] == "tag":
+		elif t == gst.MESSAGE_TAG:
 			self.found_tag(self, "", message.parse_tag())	
 		return True
 
@@ -859,8 +867,8 @@ class Decoder(Pipeline):
 
 	def get_duration(self):
 		""" return the total duration of the sound file """
-		if not self.pipeline:
-			return 0
+		#if not self.pipeline:
+		#	return 0
 		self.query_duration()
 		return self.sound_file.duration
 	
@@ -885,10 +893,10 @@ class TagReader(Decoder):
 
 	def found_tag(self, decoder, something, taglist):
 
-		#debug("found_tags:", self.sound_file.get_filename_for_display())
+		debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
-		#for k in taglist.keys():
-		#	debug("\t%s=%s" % (k, taglist[k]))
+		for k in taglist.keys():
+			debug("\t%s=%s" % (k, taglist[k]))
 		self.sound_file.add_tags(taglist)
 
 		# tags from ogg vorbis files comes with two callbacks,
@@ -899,10 +907,10 @@ class TagReader(Decoder):
 		#	return
 		
 		# we want something useful in tags
-		if "title" not in taglist.keys():
-			return
+		#if "title" not in taglist.keys():
+		#	return
 
-		self.found_tags = True
+		#self.found_tags = True
 		self.sound_file.have_tags = True
 
 		try:
@@ -918,7 +926,7 @@ class TagReader(Decoder):
 				return False
 
 		if time.time()-self.run_start_time > 5:
-			log("TagReader timeout:", self.sound_file.get_filename_for_display())
+			#log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
 		return Decoder.work(self) and not self.found_tags
@@ -1005,6 +1013,7 @@ class Converter(Decoder):
 		#log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
 
 	def finish(self):
+		self.converting = False
 		Pipeline.finish(self)
 		
 		# Copy file permissions
@@ -1061,11 +1070,15 @@ class Converter(Decoder):
 			if self.mp3_quality == 9:
 				# GStreamer set max bitrate to 320 but lame uses
 				# mpeg2 with vbr-quality==9, so max bitrate is 160
-				cmd += "vbr-max-bitrate=160 "
+				# - update: now set to 128 since lame don't accept 160 anymore.
+				cmd += "vbr-max-bitrate=128 "
 			
 			cmd += "%s=%s " % (properties[self.mp3_mode][1], self.mp3_quality)
 	
-		return cmd + " ! id3v2mux "
+		if have_id3v2mux:
+			cmd += " ! id3v2mux "
+		
+		return cmd
 
 class FileList:
 	"""List of files added by the user."""
@@ -1265,7 +1278,8 @@ class PreferencesDialog:
 	root = "/apps/SoundConverter"
 	
 	basename_patterns = [
-		("%(.inputname)s", _("Same as input, but with new suffix")),
+		("%(.inputname)s", _("Same as input, but replacing the suffix")),
+		("%(.inputname)s%(.ext)s", _("Same as input, but with an additional suffix")),
 		("%(track-number)02d-%(title)s", _("Track number - title")),
 		("%(title)s", _("Track title")),
 		("%(artist)s-%(title)s", _("Artist - title")),
@@ -1820,6 +1834,7 @@ class ConverterQueue(TaskQueue):
 
 	def set_progress(self, task):
 		t = self.get_current_task()
+		t = task 
 		f = ""
 		if t:
 			f = t.sound_file.get_filename_for_display()
@@ -1827,17 +1842,23 @@ class ConverterQueue(TaskQueue):
 		for t in self.tasks:
 			if not t.got_duration:
 				duration = t.sound_file.duration
+				#duration = t.get_duration()
 				if duration: 
 					self.total_duration += duration
 					t.got_duration = True
 
-		print "%d + %d / %d" % ( self.duration_processed , task.get_position(), self.total_duration )
-		self.window.set_progress(self.duration_processed + task.get_position(),
+		if task.converting :
+			position = task.get_position()
+		else:
+			position = 0
+		print "%d + %d / %d %s" % ( self.duration_processed , position, self.total_duration, f )
+		self.window.set_progress(self.duration_processed + position,
 							 self.total_duration, f)
 		return False
 
 	def finish_hook(self, task):
-		self.duration_processed += task.sound_file.duration
+		print "%d += %d %s" % (self.duration_processed, task.get_duration(), task.sound_file.get_filename_for_display())
+		self.duration_processed += task.get_duration()
 
 	def finish(self):
 		TaskQueue.finish(self)
