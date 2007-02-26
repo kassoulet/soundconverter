@@ -1,3 +1,8 @@
+2007-02-26  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Replaced xingheader by xingmux, fixing corruption
+	  of VBR MP3 (Thanks to James Lee and Pedro Alejandro López-Valencia).
+
 2007-02-22  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Correct escaping of destination. We will not crash
