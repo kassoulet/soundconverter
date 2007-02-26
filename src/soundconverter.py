@@ -253,6 +253,11 @@ if not gst.element_factory_find("id3v2mux"):
 	have_id3v2mux = False
 	print "  id3v2mux element not found, we cannot write tags in MP3s!\n    do you have gstreamer0.10-plugins-good installed ?"
 
+have_xingmux = True
+if not gst.element_factory_find("xingmux"):
+	have_xingmux = False
+	print "  xingmux element not found."
+
 # logging & debugging  
 
 def log(*args):
@@ -1063,9 +1068,6 @@ class Converter(Decoder):
 				"vbr" : (4,"vbr-quality")
 			}
 
-			if properties[self.mp3_mode][0]:
-				cmd += "xingheader=true "
-			
 			cmd += "vbr=%s " % properties[self.mp3_mode][0]
 			if self.mp3_quality == 9:
 				# GStreamer set max bitrate to 320 but lame uses
@@ -1075,6 +1077,10 @@ class Converter(Decoder):
 			
 			cmd += "%s=%s " % (properties[self.mp3_mode][1], self.mp3_quality)
 	
+			if have_xingmux and properties[self.mp3_mode][0]:
+				# add xing header when creating VBR mp3
+				cmd += " ! xingmux "
+			
 		if have_id3v2mux:
 			cmd += " ! id3v2mux "
 		
