@@ -1,4 +1,4 @@
-Maintener:
+Maintainer:
 	Gautier Portet <kassoulet gmail.com>
 
 Previous maintainer:
@@ -10,6 +10,7 @@ Translators:
 	Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 	Marc E. <m4rccd yahoo.com> (Spanish)
 	Daniel Nylander <po danielnylander se> (Swedish)
+	Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian) 
 
 Debian package:
 	Lars Wirzenius  <liw iki.fi>
@@ -21,5 +22,7 @@ Better FileAddChooser:
 	Regis FLORET <r.floret laposte.net> 
 
 Custom filename patterns:
-	Adolfo González Blázquez <agblazquez@telefonica.net>
+	Adolfo González Blázquez <agblazquez telefonica.net>
 
+Icons + Logo:
+	Julien Gascard <neoara gmail.com> + Tango Project
