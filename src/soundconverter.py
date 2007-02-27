@@ -98,6 +98,7 @@ Dominik Zabłotny <dominz wp.pl> (Polish)
 Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 Marc E. <m4rccd yahoo.com> (Spanish)
 Daniel Nylander <po danielnylander se> (Swedish)
+Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian) 
 """)
 
 # Names of columns in the file list
@@ -251,12 +252,18 @@ else:
 have_id3v2mux = True
 if not gst.element_factory_find("id3v2mux"):
 	have_id3v2mux = False
-	print "  id3v2mux element not found, we cannot write tags in MP3s!\n    do you have gstreamer0.10-plugins-good installed ?"
+	print "  id3v2mux element not found?"
 
 have_xingmux = True
 if not gst.element_factory_find("xingmux"):
 	have_xingmux = False
 	print "  xingmux element not found."
+
+have_lame = True
+if not gst.element_factory_find("lame"):
+	have_lame = False
+	print "  GStreamer MP3 Encoder not found, MP3 output disabled."
+
 
 # logging & debugging  
 
@@ -1079,10 +1086,11 @@ class Converter(Decoder):
 	
 			if have_xingmux and properties[self.mp3_mode][0]:
 				# add xing header when creating VBR mp3
-				cmd += " ! xingmux "
+				cmd += "! xingmux "
 			
 		if have_id3v2mux:
-			cmd += " ! id3v2mux "
+			# add tags
+			cmd += "! id3v2mux "
 		
 		return cmd
 
@@ -1390,11 +1398,13 @@ class PreferencesDialog:
 		mime_type = self.get_string("output-mime-type")
 
 		# desactivate mp3 output if encoder plugin is not present
-		if not gst.element_factory_find("lame"):
-			log("LAME GStreamer plugin not found, desactivating MP3 output.")
+		if not have_lame:
 			w = glade.get_widget("output_mime_type_mp3")
 			w.set_sensitive(False)
-			mime_type = self.defaults["output-mime-type"]
+			if mime_type == "audio/mpeg":
+				mime_type = self.defaults["output-mime-type"]
+			w = glade.get_widget("lame_absent")
+			w.show()
 			
 		
 		widget_name = {
@@ -1857,13 +1867,11 @@ class ConverterQueue(TaskQueue):
 			position = task.get_position()
 		else:
 			position = 0
-		print "%d + %d / %d %s" % ( self.duration_processed , position, self.total_duration, f )
 		self.window.set_progress(self.duration_processed + position,
 							 self.total_duration, f)
 		return False
 
 	def finish_hook(self, task):
-		print "%d += %d %s" % (self.duration_processed, task.get_duration(), task.sound_file.get_filename_for_display())
 		self.duration_processed += task.get_duration()
 
 	def finish(self):

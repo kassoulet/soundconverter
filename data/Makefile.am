@@ -3,10 +3,13 @@
 gladedir = $(datadir)/soundconverter
 dist_glade_DATA = soundconverter-logo.png soundconverter.glade 
 
-#pixmapsdir = $(datadir)/pixmaps
-#pixmaps_DATA = soundconverter-icon.png
+pixmapsdir = $(datadir)/pixmaps
+pixmaps_DATA = soundconverter-icon.png
 
-desktop_in_files=	soundconverter.desktop.in
+icondir = $(datadir)/soundconverter
+icon_DATA = soundconverter-icon.png
+
+desktop_in_files= soundconverter.desktop.in
 
 desktop_files=$(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@

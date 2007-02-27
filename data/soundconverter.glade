@@ -540,6 +540,8 @@
 <widget class="GnomeAbout" id="about">
   <property name="border_width">5</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">soundconverter-icon.png</property>
+  <property name="icon_name"></property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -548,33 +550,38 @@
   <property name="focus_on_map">True</property>
   <property name="logo">soundconverter-logo.png</property>
   <property name="copyright">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-Copyright © 2005-2006 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
+Copyright © 2005-2007 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="comments" translatable="yes">GNOME Sound Conversion</property>
   <property name="authors">Lars Wirzenius
 Gautier Portet
 
 Thanks to:
-        Guillaume Bedot
-        Dominik Zabłotny
-        Noa Resare
-        Nil Gradisnik
-        Elias Autio
-        Thom Pischke
-        Qball Cow
-        Janis Blechert
-        Brendan Martens
-        Jason Martens
-        Wouter Stomp
-        Joe Wrigley
-        Jonh Wendell
-        Regis Floret
-        Toni Fiz
-        Seketeli Apelete
- 	Cristiano Canguçu
+	Guillaume Bedot
+	Dominik Zabłotny
+	Noa Resare
+	Nil Gradisnik
+	Elias Autio
+	Thom Pischke
+	Qball Cow
+	Janis Blechert
+	Brendan Martens
+	Jason Martens
+	Wouter Stomp
+	Joe Wrigley
+	Jonh Wendell
+	Regis Floret
+	Toni Fiz
+	Seketeli Apelete
+	Cristiano Canguçu
 	Adolfo González Blázquez
 	Marc E.
 	Tobias Kral
 	Hanno Böck
+	Pedro Alejandro López-Valencia
+	James Lee
+	Christopher Barrington-Leigh
+	Thomas Schwing
+	Remi Grolleau
 </property>
   <property name="documenters">No documentation written.</property>
   <property name="translator_credits"></property>
@@ -2095,6 +2102,112 @@ Very High</property>
 	      <property name="padding">0</property>
 	      <property name="expand">False</property>
 	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkVBox" id="lame_absent">
+	      <property name="homogeneous">False</property>
+	      <property name="spacing">4</property>
+
+	      <child>
+		<widget class="GtkHSeparator" id="hseparator1">
+		  <property name="visible">True</property>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkHBox" id="hbox26">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkHBox" id="lame_absent_">
+		      <property name="visible">True</property>
+		      <property name="homogeneous">False</property>
+		      <property name="spacing">12</property>
+
+		      <child>
+			<widget class="GtkImage" id="image23">
+			  <property name="visible">True</property>
+			  <property name="icon_size">4</property>
+			  <property name="icon_name">gtk-dialog-info</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkLabel" id="label35">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">MP3 Encoder is not present.</property>
+			  <property name="use_underline">False</property>
+			  <property name="use_markup">False</property>
+			  <property name="justify">GTK_JUSTIFY_LEFT</property>
+			  <property name="wrap">False</property>
+			  <property name="selectable">False</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+			  <property name="width_chars">-1</property>
+			  <property name="single_line_mode">False</property>
+			  <property name="angle">0</property>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GnomeHRef" id="href1">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="url">http://soundconverter.berlios.de/gstreamer-mp3-encoding-howto/</property>
+			  <property name="text" translatable="yes">Read how to install</property>
+			  <property name="focus_on_click">True</property>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">True</property>
+	      <property name="fill">True</property>
 	    </packing>
 	  </child>
 	</widget>
