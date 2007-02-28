@@ -1,13 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
 gladedir = $(datadir)/soundconverter
-dist_glade_DATA = soundconverter-logo.png soundconverter.glade 
+dist_glade_DATA = soundconverter-icon.png soundconverter-logo.png soundconverter.glade 
 
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA = soundconverter-icon.png
-
-icondir = $(datadir)/soundconverter
-icon_DATA = soundconverter-icon.png
 
 desktop_in_files= soundconverter.desktop.in
 
