@@ -2,11 +2,16 @@
 Version=1.0
 Encoding=UTF-8
 Name=SoundConverter
-Comment=Audio files convertion
+GenericName=Audio Format Converter
+Comment=Convert audio files into other formats
+Icon=soundconverter-icon
 MimeType=
-Icon=
 Exec=soundconverter %f
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=GNOME;GTK;Application;AudioVideo
+Categories=GNOME;GTK;Application;AudioVideo;
+
+
+
+
