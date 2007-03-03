@@ -1,3 +1,8 @@
+2007-03-03  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.Desktop: Applied HIG Complience patch from Ubuntu
+	  maintainer (Thanks William)
+
 2007-02-27  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter: Added a link to the website when mp3 encoding is 
