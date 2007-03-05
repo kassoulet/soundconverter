@@ -22,6 +22,7 @@
 NAME = "SoundConverter"
 VERSION = "@version@"
 GLADE = "@datadir@/soundconverter/soundconverter.glade"
+ICON = "@datadir@/pixmaps/soundconverter-icon.png"
 
 if "datadir" in GLADE:
 	GLADE = "./data"
@@ -1987,7 +1988,10 @@ class SoundConverterWindow:
 
 	def __init__(self, glade):
 	
+		gtk.window_set_default_icon_from_file(ICON)
 		self.widget = glade.get_widget("window")
+		self.widget.set_icon_from_file(ICON)
+
 		self.filelist = FileList(self, glade)
 		self.filelist_selection = self.filelist.widget.get_selection()
 		self.filelist_selection.connect("changed", self.selection_changed)
