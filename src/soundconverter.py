@@ -94,7 +94,7 @@ gtk.glade.bindtextdomain(PACKAGE,"@datadir@/locale")
 gtk.glade.textdomain(PACKAGE)
 
 TRANSLATORS = ("""
-Guillaume Bedot <guillaume.bedot wanadoo.fr> (French)
+Guillaume Bedot <littletux zarb.org> (French)
 Dominik Zabłotny <dominz wp.pl> (Polish) 
 Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 Marc E. <m4rccd yahoo.com> (Spanish)
@@ -939,7 +939,7 @@ class TagReader(Decoder):
 				return False
 
 		if time.time()-self.run_start_time > 5:
-			#log("TagReader timeout:", self.sound_file.get_filename_for_display())
+			log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
 		return Decoder.work(self) and not self.found_tags
