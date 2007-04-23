@@ -30,23 +30,12 @@ magically convert to any format we might want.
         MP3                 yes 
         
 
-        Localization
-        ------------
-
-These simple steps allow the translation of soundconverter:
-
- * make sure you have gettext installed.
- * run 'make lang' to update languages files.
- * edit your .po file in po/ folder.
- * repeat step 2.
- * run 'make install' and it should work.
-
 
         Copyright and acknowledgements
         ------------------------------
 
 Copyright 2004 Lars Wirzenius
-Copyright 2005-2006 Gautier Portet
+Copyright 2005-2007 Gautier Portet
 
 thanks to:
 	Guillaume Bedot
