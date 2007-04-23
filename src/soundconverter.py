@@ -3,7 +3,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats. 
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005-2006 Gautier Portet
+# Copyright 2005-2007 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,10 +22,7 @@
 NAME = "SoundConverter"
 VERSION = "@version@"
 GLADE = "@datadir@/soundconverter/soundconverter.glade"
-ICON = "@datadir@/pixmaps/soundconverter-icon.png"
-
-if "datadir" in GLADE:
-	GLADE = "./data"
+ICON = "soundconverter"
 
 print "%s %s" % (NAME, VERSION)
 
@@ -52,12 +49,7 @@ import gconf
 import gobject
 gobject.threads_init()
 
-try:
-	# gnome.vfs is deprecated
-	import gnomevfs
-except ImportError:
-	import gnome.vfs
-	gnomevfs = gnome.vfs
+import gnomevfs
 
 # GStreamer
 try:
@@ -84,7 +76,7 @@ FORMAT_PERCENT_SCALE = 10000
 #localization
 import locale
 import gettext
-PACKAGE = "soundconverter"
+PACKAGE = NAME.lower()
 gettext.bindtextdomain(PACKAGE,"@datadir@/locale")
 locale.setlocale(locale.LC_ALL,"")
 gettext.textdomain(PACKAGE)
@@ -449,7 +441,7 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
-		result = urllib.quote(os.path.join(folder, result))
+		result = os.path.join(folder, urllib.quote(result))
 
 		tuple = (u.scheme, host, result, "", u.fragment_identifier)
 		u2 = urlparse.urlunsplit(tuple)
@@ -1988,9 +1980,10 @@ class SoundConverterWindow:
 
 	def __init__(self, glade):
 	
-		gtk.window_set_default_icon_from_file(ICON)
+		#gtk.window_set_default_icon_from_file(ICON)
 		self.widget = glade.get_widget("window")
-		self.widget.set_icon_from_file(ICON)
+		#self.widget.set_icon_from_file(ICON)
+		#self.widget.set_icon_name(ICON)
 
 		self.filelist = FileList(self, glade)
 		self.filelist_selection = self.filelist.widget.get_selection()

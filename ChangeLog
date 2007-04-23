@@ -1,3 +1,28 @@
+2007-04-23  Gautier Portet <kassoulet gmail com>
+
+	* data/: GNOME/FreeDesktop compliant icon handling. 
+
+2007-04-16  Gautier Portet <kassoulet gmail com>
+
+	* po/ data/soundconverter.desktop: Desktop file translation enabled.
+
+2007-04-15  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fixed quoting problem with destination folder
+	  (#10884).
+	* soundconverter.glade: Removed underline handling for destination folder.
+	  (#10807)
+	* data/: Minor fixes in icons/desktop handling. 
+	    (#10808)
+	  - Changed name to "Sound Converter"
+	  - Removed Application from categories.
+
+
+2007-04-08  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.glade: Set into_selected_folder use_underline to false
+	  so underscores in folder will not be interpreted by GTK.
+
 2007-04-03  Gautier Portet <kassoulet gmail com>
 
 	* po/hu.po: Added hungarian translation.
@@ -18,7 +43,7 @@
 
 2007-02-27  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter: Added a link to the website when mp3 encoding is 
+	* soundconverter: Added a link to the website when mp3 encoding is :
 	  unavailable, so hopefully it will dramatically reduce the number 
 	  of emails I receive.
 	  Logo/Icon updated.
