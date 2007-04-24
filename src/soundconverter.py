@@ -22,7 +22,6 @@
 NAME = "SoundConverter"
 VERSION = "@version@"
 GLADE = "@datadir@/soundconverter/soundconverter.glade"
-ICON = "soundconverter"
 
 print "%s %s" % (NAME, VERSION)
 
@@ -39,17 +38,20 @@ import urllib
 import time
 
 # GNOME and related stuff.
-import pygtk
-pygtk.require("2.0")
-import gtk
-import gtk.glade
-import gnome
-import gnome.ui
-import gconf
-import gobject
-gobject.threads_init()
-
-import gnomevfs
+try:
+	import pygtk
+	pygtk.require("2.0")
+	import gtk
+	import gtk.glade
+	import gnome
+	import gnome.ui
+	import gconf
+	import gobject
+	gobject.threads_init()
+	import gnomevfs
+except ImportError:
+	print "%s needs gnome-python 2.10!" % NAME
+	sys.exit(1)
 
 # GStreamer
 try:
@@ -58,13 +60,7 @@ try:
 	pygst.require('0.10')
 	import gst
 except ImportError:
-	# 0.8
-	import gst
-	pygst = None
-
-if gst.gst_version < (0,10,0):
-	print "%s needs GStreamer 0.10, you have version: %s" % (NAME, ".".join([str(s) for s in gst.gst_version]))
-	sys.exit(1)
+	print "%s needs python-gstreamer 0.10!" % NAME
 
 print "  using Gstreamer version: %s, Python binding version: %s" % (
 		".".join([str(s) for s in gst.gst_version]), 
@@ -931,7 +927,7 @@ class TagReader(Decoder):
 				return False
 
 		if time.time()-self.run_start_time > 5:
-			log("TagReader timeout:", self.sound_file.get_filename_for_display())
+			#log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
 		return Decoder.work(self) and not self.found_tags
@@ -1980,11 +1976,7 @@ class SoundConverterWindow:
 
 	def __init__(self, glade):
 	
-		#gtk.window_set_default_icon_from_file(ICON)
 		self.widget = glade.get_widget("window")
-		#self.widget.set_icon_from_file(ICON)
-		#self.widget.set_icon_name(ICON)
-
 		self.filelist = FileList(self, glade)
 		self.filelist_selection = self.filelist.widget.get_selection()
 		self.filelist_selection.connect("changed", self.selection_changed)
