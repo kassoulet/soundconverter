@@ -226,6 +226,12 @@ def filename_escape(str):
 	str = str.replace("!","\!")
 	return str
 
+required_elements = ("decodebin", "fakesink", "audioconvert", "typefind")
+for element in required_elements:
+	if not gst.element_factory_find(element):
+		print "required gstreamer element '%s' not found." % element
+		sys.exit(1)
+
 if gst.element_factory_find("gnomevfssrc"):
 	gstreamer_source = "gnomevfssrc"
 	gstreamer_sink = "gnomevfssink"

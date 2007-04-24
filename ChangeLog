@@ -1,3 +1,8 @@
+2007-04-24  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Added a check for some required gstreamer
+	  elements.
+
 2007-04-23  Gautier Portet <kassoulet gmail com>
 
 	* data/: GNOME/FreeDesktop compliant icon handling. 
