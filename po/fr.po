@@ -385,7 +385,7 @@ msgstr "Compression avec perte (libre)"
 
 #: ../data/soundconverter.glade.h:23
 msgid "GNOME Sound Conversion"
-msgstr "Conversion de Sons pour GNOME"
+msgstr "Conversion de fichiers audio pour GNOME"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"

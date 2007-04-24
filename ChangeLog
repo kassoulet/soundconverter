@@ -1,7 +1,9 @@
 2007-04-24  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter.py: Added a check for some required gstreamer
-	  elements.
+	* soundconverter.py: Better checking of gstreamer elements.
+	  Now we stop when required elements are missing, and we disable
+	  encoders not present.
+	  
 
 2007-04-23  Gautier Portet <kassoulet gmail com>
 
