@@ -593,6 +593,7 @@ Thanks to:
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon_name">soundconverter</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -850,17 +851,18 @@ Thanks to:
 <widget class="GtkDialog" id="error_dialog">
   <property name="title" translatable="yes">Error</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
-  <property name="modal">False</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
+  <property name="modal">True</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon_name">soundconverter</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
-  <property name="urgency_hint">False</property>
+  <property name="urgency_hint">True</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -927,7 +929,7 @@ Thanks to:
 	      <child>
 		<widget class="GtkLabel" id="primary_error_label">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">asdf</property>
+		  <property name="label">asdf</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -952,7 +954,7 @@ Thanks to:
 	      <child>
 		<widget class="GtkLabel" id="secondary_error_label">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">zxcv</property>
+		  <property name="label">zxcv</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -998,6 +1000,7 @@ Thanks to:
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon_name">soundconverter</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -2229,6 +2232,7 @@ Very High</property>
   <property name="default_height">400</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon_name">soundconverter</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
