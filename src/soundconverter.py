@@ -244,21 +244,26 @@ else:
 	encode_filename = file_encode_filename
 	print "  NOT using gnomevfssrc, look for a gnomevfs gstreamer package."
 
-have_id3v2mux = True
-if not gst.element_factory_find("id3v2mux"):
-	have_id3v2mux = False
-	print "  id3v2mux element not found?"
 
-have_xingmux = True
-if not gst.element_factory_find("xingmux"):
-	have_xingmux = False
-	print "  xingmux element not found."
+encoders = ( 
+	("flacenc",   "FLAC"), 
+	("wavenc",    "WAV"),
+	("vorbisenc", "Ogg Vorbis"),
+	("oggmux",    "Ogg Vorbis"),
+	("id3v2mux",  "MP3 Tags"),
+	("xingmux",   ""),
+	("lame",      "MP3"))
 
-have_lame = True
-if not gst.element_factory_find("lame"):
-	have_lame = False
-	print "  GStreamer MP3 Encoder not found, MP3 output disabled."
+for encoder, name in encoders:
+	have_it = True
+	if not gst.element_factory_find(encoder):
+		have_it = False
+		if name:
+			print "  '%s' element not found, disabling %s." % (encoder, name)
+	exec("have_%s = %s" % (encoder, have_it))
 
+if not have_oggmux:
+	have_vorbis = False
 
 # logging & debugging  
 
@@ -1392,22 +1397,28 @@ class PreferencesDialog:
 
 		mime_type = self.get_string("output-mime-type")
 
-		# desactivate mp3 output if encoder plugin is not present
+		widgets = {		"audio/x-vorbis": (have_vorbisenc, "output_mime_type_ogg_vorbis"),
+						"audio/x-flac"  : (have_flacenc, "output_mime_type_flac"),
+						"audio/x-wav"   : (have_wavenc, "output_mime_type_wav"),
+						"audio/mpeg"    : (have_lame, "output_mime_type_mp3"),
+					}
+
+		# desactivate output if encoder plugin is not present
+		for mime, d in widgets.iteritems():
+			encoder, widget = d
+			if not encoder:
+				w = glade.get_widget(widget)
+				w.set_sensitive(False)
+				if mime_type == mime:
+					mime_type = self.defaults["output-mime-type"]
+
+		# display information about mp3 encoding
 		if not have_lame:
-			w = glade.get_widget("output_mime_type_mp3")
-			w.set_sensitive(False)
-			if mime_type == "audio/mpeg":
-				mime_type = self.defaults["output-mime-type"]
 			w = glade.get_widget("lame_absent")
 			w.show()
-			
 		
-		widget_name = {
-						"audio/x-vorbis": "output_mime_type_ogg_vorbis",
-						"audio/x-flac": "output_mime_type_flac",
-						"audio/x-wav": "output_mime_type_wav",
-						"audio/mpeg": "output_mime_type_mp3",
-					}.get(mime_type, None)
+		widget_name = widgets.get(mime_type, None)[1]
+		print widget_name
 		if widget_name:
 			w = glade.get_widget(widget_name)
 			w.set_active(True)
