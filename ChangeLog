@@ -1,6 +1,7 @@
 2007-04-23  Gautier Portet <kassoulet gmail com>
 
 	* data/: GNOME/FreeDesktop compliant icon handling. 
+	  Refresh icon cache at (un)install.
 
 2007-04-16  Gautier Portet <kassoulet gmail com>
 
@@ -34,7 +35,7 @@
 
 2007-03-05  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter: Window icon now use the new one.
+	* soundconverter: Use the new window icon.
 
 2007-03-03  Gautier Portet <kassoulet gmail com>
 

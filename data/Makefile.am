@@ -10,7 +10,7 @@ svgicondir = $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps
 dist_svgicon_DATA = soundconverter.svg
 
 
-gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
+gtk_update_icon_cache = gtk-update-icon-cache -f -t $(DESTDIR)$(datadir)/icons/hicolor
 
 install-data-hook: update-icon-cache
 uninstall-hook: update-icon-cache
@@ -22,10 +22,6 @@ update-icon-cache:
 		echo "*** Icon cache not updated.  After (un)install, run this:"; \
 		echo "***   $(gtk_update_icon_cache)"; \
 	fi
-
-
-#pixmapsdir = $(DESTDIR)$(datadir)/pixmaps
-#pixmaps_DATA = soundconverter.png
 
 desktop_in_files= soundconverter.desktop.in
 
