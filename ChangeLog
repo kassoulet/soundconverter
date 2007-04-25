@@ -2,6 +2,7 @@
 
 	* soundconverter.py: Fixed error message when python-gstreamer is 
 	  absent.
+	* Release 0.9.5
 
 2007-04-24  Gautier Portet <kassoulet gmail com>
 
