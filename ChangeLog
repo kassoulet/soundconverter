@@ -1,3 +1,8 @@
+2007-04-25  Gautier Portet <kassoulet gmail com>
+
+	* soundconverter.py: Fixed error message when python-gstreamer is 
+	  absent.
+
 2007-04-24  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: Better checking of gstreamer elements.
