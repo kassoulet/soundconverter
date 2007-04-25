@@ -61,6 +61,7 @@ try:
 	import gst
 except ImportError:
 	print "%s needs python-gstreamer 0.10!" % NAME
+	sys.exit(1)
 
 print "  using Gstreamer version: %s, Python binding version: %s" % (
 		".".join([str(s) for s in gst.gst_version]), 
