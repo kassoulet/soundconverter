@@ -1,6 +1,10 @@
+2007-06-20  Gautier Portet <kassoulet gmail com>
+
+	* data/soundconverter.desktop: Added common audio mimetypes.
+
 2007-04-27  Gautier Portet <kassoulet gmail com>
 
-	* data/Makefile.am: Removed evil DESTDIR, thanks William!
+	* data/Makefile.am: Removed evil DESTDIR, thanks William!q
 	* Release 0.9.6
 
 2007-04-25  Gautier Portet <kassoulet gmail com>
