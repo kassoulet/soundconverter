@@ -1,3 +1,7 @@
+2007-06-23  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: fixed track-count in custom filenames patterns.
+	
 2007-06-20  Gautier Portet <kassoulet gmail com>
 
 	* data/soundconverter.desktop: Added common audio mimetypes.
