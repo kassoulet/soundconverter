@@ -430,6 +430,7 @@ class TargetNameGenerator:
 			"artist": "",
 			"title": "",
 			"track-number": 0,
+			"track-count": 0,
 		}
 		for key in sound_file.keys():
 			dict[key] = sound_file[key]
@@ -1503,7 +1504,7 @@ class PreferencesDialog:
 			"title": "<b>{Title}</b>", 
 			"album": "<b>{Album}</b>",
 			"track-number": 1L,
-			"track-count": 11L,
+			"track-count": 99L,
 		})
 		self.example.set_markup(self.generate_filename(sound_file, for_display=True))
 		
@@ -1548,7 +1549,7 @@ class PreferencesDialog:
 			pattern = pattern.replace("{Album}", "%(album)s")
 			pattern = pattern.replace("{Title}", "%(title)s")
 			pattern = pattern.replace("{Track}", "%(track-number)02d")
-			pattern = pattern.replace("{Total}", "%(track-total)02d")
+			pattern = pattern.replace("{Total}", "%(track-count)02d")
 			return pattern
 
 	def set_sensitive(self):
