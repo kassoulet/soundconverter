@@ -1,0 +1,530 @@
+# translation of ru.po to Russian
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: ru\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-10-25 20:48+0400\n"
+"PO-Revision-Date: 2006-10-26 05:27+0400\n"
+"Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
+"Language-Team: Russian <gnome-cyr@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../src/soundconverter.py:155
+#, python-format
+msgid "skipping: '%s'"
+msgstr "пропускается: '%s'"
+
+#: ../src/soundconverter.py:356
+msgid "File exists."
+msgstr "Файл с таким именем уже есть."
+
+#: ../src/soundconverter.py:357
+#, python-format
+msgid "The file %s exists already"
+msgstr "Файл %s уже существует"
+
+#: ../src/soundconverter.py:466
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"Ошибка: %s\n"
+"%s\n"
+
+#: ../src/soundconverter.py:669
+msgid "Internal error"
+msgstr "Внутренняя ошибка"
+
+#: ../src/soundconverter.py:670
+msgid ""
+"Couldn't link GStreamer elements.\n"
+" Please report this as a bug."
+msgstr ""
+"Не удалось связать элементы GStreamer.\n"
+"(Couldn't link GStreamer elements.).\n"
+"Сообщите разработчикам об этой ошибке."
+
+#: ../src/soundconverter.py:675
+#, python-format
+msgid "Unknown type %s"
+msgstr "Неизвестный тип %s"
+
+#: ../src/soundconverter.py:676
+#, python-format
+msgid ""
+"The file %s is of an unknown type.\n"
+" Please ask the developers to add support\n"
+" for files of this type if it is important\n"
+" to you."
+msgstr ""
+"Имя файла %s неизвестен программе.\n"
+"Попросите разработчиков добавить поддержку\n"
+"файлов этого формата, если они для вас важны."
+
+#: ../src/soundconverter.py:936
+msgid "Target exists."
+msgstr "Конечный файл уже существует"
+
+#: ../src/soundconverter.py:937
+#, python-format
+msgid "The output file %s already exists."
+msgstr "Выводимый файл %s уже существует."
+
+#: ../src/soundconverter.py:980
+#, python-format
+msgid "Cannot create a decoder for '%s' format."
+msgstr "Невозможно создать декодировщик для формата '%s'."
+
+#: ../src/soundconverter.py:991
+#, python-format
+msgid "Creating folder: '%s'"
+msgstr "Создаётся папка: '%s'"
+
+#: ../src/soundconverter.py:995
+#, python-format
+msgid "Cannot create '%s' folder."
+msgstr "Невозможно создать папку '%s'"
+
+#: ../src/soundconverter.py:1015
+#, python-format
+msgid "Cannot set permission on '%s'"
+msgstr "Невозможно установить права для '%s'"
+
+#: ../src/soundconverter.py:1181
+#, python-format
+msgid "file already present: '%s'"
+msgstr "файл уже существует: '%s'"
+
+#: ../src/soundconverter.py:1201
+msgid "loading tags..."
+msgstr "загружаются тэги"
+
+#: ../src/soundconverter.py:1203
+msgid "no tags"
+msgstr "Нет тэгов"
+
+#: ../src/soundconverter.py:1242
+msgid "unknown"
+msgstr "неизвестно"
+
+#: ../src/soundconverter.py:1268
+msgid "Same as input, but with new suffix"
+msgstr "То же, что в исходнике, но с новым суффиксом"
+
+#: ../src/soundconverter.py:1269
+msgid "Track number - title"
+msgstr "Номер дорожки - название"
+
+#: ../src/soundconverter.py:1270
+msgid "Track title"
+msgstr "Название дорожки"
+
+#: ../src/soundconverter.py:1271
+msgid "Artist - title"
+msgstr "Исполнитель - название"
+
+#: ../src/soundconverter.py:1272
+msgid "Custom filename pattern"
+msgstr "Собственный шаблон имени"
+
+#: ../src/soundconverter.py:1276
+msgid "artist/album"
+msgstr "исполнитель/альбом"
+
+#: ../src/soundconverter.py:1277
+msgid "artist-album"
+msgstr "исполнитель-альбом"
+
+#: ../src/soundconverter.py:1422
+#, python-format
+msgid "Into folder %s"
+msgstr "В папку %s"
+
+#: ../src/soundconverter.py:1473
+#, python-format
+msgid "<small>Target bitrate: %s</small>"
+msgstr "<small>Конечная скорость потока: %s</small>"
+
+#: ../src/soundconverter.py:1722
+msgid "Convertion Canceled"
+msgstr "Преобразование отменено"
+
+#: ../src/soundconverter.py:1765
+#, python-format
+msgid ""
+"The output file <i>%s</i>\n"
+" exists already.\n"
+" Do you want to skip the file, overwrite it or cancel the conversion?\n"
+msgstr ""
+"Конечный файл  <i>%s</i>\n"
+"уже существует.\n"
+"Вы хотите пропустить его, перезаписать его "
+"'n\nили отменить это преобразование?\n"
+
+#: ../src/soundconverter.py:1849
+#, python-format
+msgid "Conversion done, in %s"
+msgstr "Преобразование завершено, потребовалось n %s"
+
+#: ../src/soundconverter.py:1884
+msgid "Open a file"
+msgstr "Открыть файл"
+
+#: ../src/soundconverter.py:1973
+msgid "Add Folder..."
+msgstr "Добавить папку"
+
+#: ../src/soundconverter.py:2070
+msgid "canceling conversion."
+msgstr "преобразование отменяется"
+
+#: ../src/soundconverter.py:2093
+msgid "Waiting for tags"
+msgstr "Ожидаются тэги"
+
+#: ../src/soundconverter.py:2100
+msgid "Waiting for tags..."
+msgstr "Ожидаются тэги..."
+
+#: ../src/soundconverter.py:2108 ../src/soundconverter.py:2121
+msgid "Paused"
+msgstr "Приостановлено"
+
+#: ../src/soundconverter.py:2125
+msgid "Canceled"
+msgstr "Отменено"
+
+#: ../src/soundconverter.py:2174
+#, python-format
+msgid "Converting file %d of %d  (%s)"
+msgstr "Преобразовывается файл %d из %d  (%s)"
+
+#: ../src/soundconverter.py:2187
+msgid "Converting"
+msgstr "Преобразование"
+
+#: ../src/soundconverter.py:2204
+#, python-format
+msgid "%d:%02d left"
+msgstr "Осталось %d:%02d"
+
+#: ../src/soundconverter.py:2209
+msgid "Ready"
+msgstr "Готово"
+
+#: ../src/soundconverter.py:2290
+#, python-format
+msgid "%s: OK"
+msgstr "%s: OK"
+
+#: ../src/soundconverter.py:2325
+#, python-format
+msgid "Usage: %s [options] [soundfile ...]"
+msgstr "Использование: %s [ключи] [звуковой файл ...]"
+
+#: ../src/soundconverter.py:2340
+msgid "Print out a usage summary."
+msgstr "Вывести справку по использованию"
+
+#: ../src/soundconverter.py:2343
+msgid ""
+"Convert in batch mode, from command line, without a graphical user\n"
+" interface. You can use this from, say, shell scripts."
+msgstr ""
+"Преобразовывать в пакетном режиме, из командной строки,\n"
+"без графического пользовательского интерфейса.\n"
+"Этим можно пользоваться, скажем, в сценариях."
+
+#: ../src/soundconverter.py:2346
+#, python-format
+msgid ""
+"Set the output MIME type for batch mode. The default is\n"
+" %s . Note that you probably want to set\n"
+" the output suffix as well."
+msgstr ""
+"Установить MIME-тип выводимых файлов для пакетного режима.\n"
+"По умолчанию используется %s . Обратите внимание: возможно,\n"
+"вам также нужно указать суффикс выводимых файлов."
+
+#: ../src/soundconverter.py:2349
+msgid "Be quiet. Don't write normal output, only errors."
+msgstr "Вести себя тихо. Сообщать только об ошибках."
+
+#: ../src/soundconverter.py:2352
+msgid "Print additionnal debug information"
+msgstr "Выводить дополнительную отладочную информацию"
+
+#: ../src/soundconverter.py:2355
+#, python-format
+msgid ""
+"Set the output filename suffix for batch mode. The default is \n"
+" %s . Note that the suffix does not affect\n"
+" the output MIME type."
+msgstr ""
+"Установить суффикс имён файлов для пакетного режима.\n"
+"По умолчанию используется %s . Обратите внимание: \n"
+"суффикс не влияет на MIME-тип выводимых файлов."
+
+#: ../src/soundconverter.py:2358
+msgid ""
+"Show tags for input files instead of converting them. This indicates \n"
+" command line batch mode and disables the graphical user interface."
+msgstr ""
+"Показывать тэги исходных файлов вместо преобразования этих файлов.\n"
+"Это нужно для отключения графического режима и перехода в пакетный режим."
+
+#: ../data/soundconverter.glade.h:1
+msgid "<b>How to name files?</b>"
+msgstr "<b>Как назвать файлы</b>"
+
+#: ../data/soundconverter.glade.h:2
+msgid "<b>Type of result?</b>"
+msgstr "<b>Формат конечных файлов</b>"
+
+#: ../data/soundconverter.glade.h:3
+msgid "<b>Where to place results?</b>"
+msgstr "<b>Куда поместить результат</b>"
+
+#: ../data/soundconverter.glade.h:4
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>Файл с таким именем уже существует</b></big>\n"
+
+#: ../data/soundconverter.glade.h:6
+msgid "<i>Example filename:</i>"
+msgstr "<i>Пример имени файла:</i>"
+
+#: ../data/soundconverter.glade.h:7
+msgid "Add _Folder"
+msgstr "_Добавить папку"
+
+#: ../data/soundconverter.glade.h:8
+msgid "Bitrate mode:"
+msgstr "Тип скорости потока:"
+
+#: ../data/soundconverter.glade.h:9
+msgid "Choose..."
+msgstr "Выбрать..."
+
+#: ../data/soundconverter.glade.h:10
+msgid ""
+"Constant (CBR)\n"
+"Average (ABR)\n"
+"Variable (VBR) - Best quality"
+msgstr ""
+"Постоянная (CBR)\n"
+"Усреднённая (ABR)\n"
+"Переменная (VBR) - Наилучшее качество"
+
+#: ../data/soundconverter.glade.h:13
+msgid "Create subfolders: "
+msgstr "Создать вложенные папки"
+
+#: ../data/soundconverter.glade.h:14
+msgid "Delete original file"
+msgstr "Удалить исходный файл"
+
+#: ../data/soundconverter.glade.h:15
+msgid "Error"
+msgstr "Ошибка"
+
+#: ../data/soundconverter.glade.h:16
+msgid "FLAC"
+msgstr "FLAC"
+
+#: ../data/soundconverter.glade.h:17
+msgid "File exists already"
+msgstr "Файл с таким именем уже существует"
+
+#: ../data/soundconverter.glade.h:18
+msgid "Filename pattern: "
+msgstr "Шаблон имени файла:"
+
+#: ../data/soundconverter.glade.h:19
+msgid "Filter "
+msgstr "Фильтр"
+
+#: ../data/soundconverter.glade.h:20
+msgid "Format: "
+msgstr "Формат:"
+
+#: ../data/soundconverter.glade.h:21
+msgid "Free Lossless compression"
+msgstr "Свободное сжатие без потерь"
+
+#: ../data/soundconverter.glade.h:22
+msgid "Free Lossy Compression"
+msgstr "Свободное сжатие с потерями"
+
+#: ../data/soundconverter.glade.h:23
+msgid "GNOME Sound Conversion"
+msgstr "Преобразование звуковых файлов в GNOME"
+
+#: ../data/soundconverter.glade.h:24
+msgid "Into a specified folder"
+msgstr "В указанную папку"
+
+#: ../data/soundconverter.glade.h:25
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:26
+msgid "No Compression"
+msgstr "Без сжатия"
+
+#: ../data/soundconverter.glade.h:27
+msgid "Non-Free Lossy Compression"
+msgstr "Несвободное сжатие с потерями"
+
+#: ../data/soundconverter.glade.h:28
+msgid "Ogg Vorbis"
+msgstr "Ogg Vorbis"
+
+#: ../data/soundconverter.glade.h:29
+msgid ""
+"Ogg Vorbis (.ogg)\n"
+"MP3  (.mp3)\n"
+"FLAC Lossless (.flac)\n"
+"MS Wave (.wav)"
+msgstr ""
+"Ogg Vorbis (.ogg)\n"
+"MP3  (.mp3)\n"
+"FLAC Lossless (.flac)\n"
+"MS Wave (.wav)"
+
+#: ../data/soundconverter.glade.h:33
+msgid "Preferences"
+msgstr "Параметры"
+
+#: ../data/soundconverter.glade.h:34
+msgid "Quality:"
+msgstr "Качество:"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "Удалить все символы кроме букв, цифр и ./_-"
+
+#: ../data/soundconverter.glade.h:36
+msgid "Replace all messy characters"
+msgstr "Заменить все некорректные символы"
+
+#: ../data/soundconverter.glade.h:37
+msgid "Same folder as the input file"
+msgstr "В ту же папку, где находится исходный файл"
+
+#: ../data/soundconverter.glade.h:38
+msgid "SoundConverter"
+msgstr "SoundConverter"
+
+#: ../data/soundconverter.glade.h:39
+msgid ""
+"Very Low\n"
+"Low\n"
+"Normal\n"
+"High\n"
+"Very High"
+msgstr ""
+"Очень низкое\n"
+"Низкое\n"
+"Нормальное\n"
+"Высокое\n"
+"Очень высокое"
+
+#: ../data/soundconverter.glade.h:44
+msgid "WAV"
+msgstr "WAV"
+
+#: ../data/soundconverter.glade.h:45
+msgid "Where to place results?"
+msgstr "Куда поместить результаты"
+
+#: ../data/soundconverter.glade.h:46
+msgid "_Add File"
+msgstr "Доб_авить файл"
+
+#: ../data/soundconverter.glade.h:47
+msgid "_Apply to entire queue"
+msgstr "_Применить ко всей очереди"
+
+#: ../data/soundconverter.glade.h:48
+msgid "_Overwrite"
+msgstr "П_ерезаписать"
+
+#: ../data/soundconverter.glade.h:49
+msgid "_Remove"
+msgstr "_Удалить"
+
+#: ../data/soundconverter.glade.h:50
+msgid "_Skip"
+msgstr "Пр_опустить"
+
+#: ../data/soundconverter.glade.h:51
+msgid ""
+"artist/album\n"
+"artist - album"
+msgstr ""
+"исполнитель/альбом\n"
+"исполнитель - альбом"
+
+#: ../data/soundconverter.glade.h:53
+msgid "asdf"
+msgstr "asdf"
+
+#: ../data/soundconverter.glade.h:54
+msgid "dialog1"
+msgstr "dialog1"
+
+#: ../data/soundconverter.glade.h:55
+msgid "flac"
+msgstr "flac"
+
+#: ../data/soundconverter.glade.h:56
+msgid "mp3"
+msgstr "mp3"
+
+#: ../data/soundconverter.glade.h:57
+msgid "ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:58
+msgid ""
+"track_number - track_title\n"
+"track_title\n"
+msgstr ""
+"номер_дорожки - название_дорожки\n"
+"название_дорожки\n"
+
+#: ../data/soundconverter.glade.h:61
+msgid "wav"
+msgstr "wav"
+
+#: ../data/soundconverter.glade.h:62
+msgid "zxcv"
+msgstr "zxcv"
+
+#: ../data/soundconverter.glade.h:63
+msgid ""
+"{Artist}: Artist name\n"
+"{Album}: Album name\n"
+"{Title}: Song title\n"
+"{Track}: Track number\n"
+"{Total}: Total number of tracks in album"
+msgstr ""
+"{Artist}: Имя исполнителя\n"
+"{Album}: Название альбома\n"
+"{Title}: Название песни\n"
+"{Track}: Номер дорожки\n"
+"{Total}: Общее число дорожек в альбоме"
+

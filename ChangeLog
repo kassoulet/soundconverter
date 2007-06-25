@@ -1,7 +1,12 @@
+2007-06-25  Gautier Portet <kassoulet gmail com>
+	* po/ru.po: added russian translation.
+	 (thanks Alexandre)
+
 2007-06-23  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: fixed track-count in custom filenames patterns.
-	
+	  (thanks Jonas)
+
 2007-06-20  Gautier Portet <kassoulet gmail com>
 
 	* data/soundconverter.desktop: Added common audio mimetypes.
