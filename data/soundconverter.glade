@@ -780,6 +780,7 @@ Thanks to:
 </widget>
 
 <widget class="GtkFileChooserDialog" id="target_folder_chooser">
+  <property name="border_width">5</property>
   <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
   <property name="local_only">True</property>
   <property name="select_multiple">False</property>
@@ -1735,7 +1736,6 @@ MS Wave (.wav)</property>
 
 			      <child>
 				<widget class="GtkLabel" id="label29">
-				  <property name="width_request">100</property>
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">Quality:</property>
 				  <property name="use_underline">False</property>
@@ -1823,7 +1823,6 @@ Very High</property>
 
 			      <child>
 				<widget class="GtkLabel" id="label30">
-				  <property name="width_request">100</property>
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">Bitrate mode:</property>
 				  <property name="use_underline">False</property>
