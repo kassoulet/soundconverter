@@ -4,8 +4,8 @@
 # GNOME PL Team <translators@gnomepl.org>, 2005.
 # , fuzzy
 # GNOME PL Team <translators@gnomepl.org>, 2005.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -17,6 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Rosetta-Export-Date: 2007-07-09 14:18:16+0000\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 #, fuzzy
@@ -372,7 +373,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
-msgstr "Filtr"
+msgstr "Filtr "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Format: "
@@ -561,9 +562,10 @@ msgstr ""
 #~ "Jonh Wendell <wendell bani.com.br> (brazilian)\n"
 #~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
 #~ msgstr ""
+#~ "\n"
 #~ "Guillaume·Bedot·<guillaume.bedot·wanadoo.fr>·(French)\n"
-#~ "Dominik·Zabłotny·<dominz·wp.pl> & Tomasz Dominikowski <dominikowski gmail."
-#~ "com>·(Polish)·\n"
+#~ "Dominik·Zabłotny·<dominz·wp.pl> & Tomasz Dominikowski <dominikowski "
+#~ "gmail.com>·(Polish)·\n"
 #~ "Jonh·Wendell·<wendell·bani.com.br>·(Brazilian)\n"
 
 #~ msgid "Writing to: '%s'"

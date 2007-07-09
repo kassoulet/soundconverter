@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=1; plural=0;\n"
+"X-Rosetta-Export-Date: 2007-07-09 14:18:16+0000\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 #, fuzzy
@@ -121,7 +121,7 @@ msgstr "Nem lehet jogokat állítani ezen: '%s'"
 #: ../src/soundconverter.py:1209
 #, python-format
 msgid "file already present: '%s'"
-msgstr "a fájl '%s' már jelen van. "
+msgstr "a fájl '%s' már jelen van."
 
 #: ../src/soundconverter.py:1229
 msgid "loading tags..."
@@ -238,7 +238,7 @@ msgid "Converting"
 msgstr "Konvertálás"
 
 #: ../src/soundconverter.py:2243
-#, fuzzy, python-format
+#, fuzzy
 msgid "%d:%02d left"
 msgstr "%d:%02d hátra"
 
@@ -351,7 +351,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
-msgstr "Alkönyvtárak létrehozása:"
+msgstr "Alkönyvtárak létrehozása: "
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
@@ -371,15 +371,15 @@ msgstr "A fájl már létezik"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
-msgstr "Fájlnév minta: ·"
+msgstr "Fájlnév minta: · "
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
-msgstr "Szűrő"
+msgstr "Szűrő "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Format: "
-msgstr "Formátum:"
+msgstr "Formátum: "
 
 #: ../data/soundconverter.glade.h:21
 msgid "Free Lossless compression"
