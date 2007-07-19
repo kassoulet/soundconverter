@@ -1,5 +1,9 @@
+2007-07-19  Gautier Portet <kassoulet gmail com>
+
+	* po/it.po: Added Italian tranlation.
+
 2007-07-09  Gautier Portet <kassoulet gmail com>
-	* src/es.po: Added spanish translation.
+	* po/es.po: Added spanish translation.
 	  (thanks Gary)
 
 2007-07-04  Gautier Portet <kassoulet gmail com>
