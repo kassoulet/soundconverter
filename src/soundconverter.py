@@ -36,6 +36,7 @@ import string
 import thread
 import urllib
 import time
+import unicodedata
 
 # GNOME and related stuff.
 try:
@@ -127,6 +128,11 @@ filepattern = (
 	("Audio Codec 3","*.ac3")
 )
 
+def beautify_uri(uri):
+	if uri.startswith("file://"):
+		return uri[7:]
+	return uri
+
 def vfs_walk(uri):
 	"""similar to os.path.walk, but with gnomevfs.
 	
@@ -210,16 +216,24 @@ def unquote_filename(filename):
 
 use_gnomevfs = False
 
+
+def format_tag(tag):
+	if isinstance(tag, list):
+		if len(tag) > 1:
+			tag = ", ".join(tag[:-1]) + " & " + tag[-1]
+		else:
+			tag = tag[0]
+			
+	return tag
+
 def markup_escape(message):
 	if not isinstance(message, basestring):
 		print "markup error: '%s'" % message
-		import pdb
-		pdb.set_trace()
 
 	message = "&amp;".join(message.split("&"))
 	message = "&lt;".join(message.split("<"))
-    	message = "&gt;".join(message.split(">"))
-    	return message
+	message = "&gt;".join(message.split(">"))
+	return message
 
 def filename_escape(str):
 	str = str.replace("'","\'")
@@ -306,7 +320,10 @@ class SoundConverterException(Exception):
 		
 
 def filename_to_uri(filename):
-	return "file://" + urllib.quote(os.path.abspath(filename))
+	if vfs_exists(filename):
+		return filename
+	else:
+		return "file://" + urllib.quote(os.path.abspath(filename))
 
 
 class SoundFile:
@@ -350,7 +367,7 @@ class SoundFile:
 		
 	def add_tags(self, taglist):
 		for key in taglist.keys():
-			self.tags[key] = taglist[key]
+			self.tags[key] = format_tag(taglist[key])
 			
 	def get_tag_names(self):
 		return self.tags.key()
@@ -364,14 +381,6 @@ class SoundFile:
 	def keys(self):
 		return self.tags.keys()
 
-
-class TargetNameCreationFailure(SoundConverterException):
-
-	"""Exception thrown when TargetNameGenerator can't create name."""
-
-	def __init__(self, name):
-		SoundConverterException.__init__(self, _("File exists."),
-										 _("The file %s exists already"))
 
 class TargetNameGenerator:
 
@@ -411,7 +420,14 @@ class TargetNameGenerator:
 	def set_replace_messy_chars(self, yes_or_no):
 		self.replace_messy_chars = yes_or_no
 		
+	def _unicode_to_ascii(self, unicode_string):
+		# thanks to http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
+		return unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore')
+	
 	def get_target_name(self, sound_file):
+
+		#if "ssh" in sound_file.uri:
+		#	import pdb; pdb.set_trace()
 
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
@@ -419,8 +435,8 @@ class TargetNameGenerator:
 			host = "%s:%s" % (u.host_name, u.host_port)
 		else:
 			host = u.host_name
-
-		root = urlparse.urlsplit(sound_file.get_base_path())[2]
+			
+		root = sound_file.get_base_path()
 		basename, ext = os.path.splitext(urllib.unquote(sound_file.get_filename()))
 		
 		dict = {
@@ -438,6 +454,7 @@ class TargetNameGenerator:
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
 		if self.replace_messy_chars:
+			result = self._unicode_to_ascii(unicode(result))
 			s = ""
 			for c in result:
 				if c not in self.nice_chars:
@@ -452,13 +469,7 @@ class TargetNameGenerator:
 			folder = self.folder
 		result = os.path.join(folder, urllib.quote(result))
 
-		tuple = (u.scheme, host, result, "", u.fragment_identifier)
-		u2 = urlparse.urlunsplit(tuple)
-		#TODO:
-		#if self.exists(u2):
-		#	vfs_unlink(u2)
-		#	raise TargetNameCreationFailure(u2)
-		return u2
+		return result
 
 
 class ErrorDialog:
@@ -906,23 +917,12 @@ class TagReader(Decoder):
 
 
 	def found_tag(self, decoder, something, taglist):
-
 		debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
 		for k in taglist.keys():
 			debug("\t%s=%s" % (k, taglist[k]))
+			
 		self.sound_file.add_tags(taglist)
-
-		# tags from ogg vorbis files comes with two callbacks,
-		# the first callback containing just the stream serial number.
-		# The second callback contains the tags we're interested in.
-		#if "serial" in taglist.keys():
-		#	print "Error, serial tag in ogg/vorbis, tags will be lost"
-		#	return
-		
-		# we want something useful in tags
-		#if "title" not in taglist.keys():
-		#	return
 
 		#self.found_tags = True
 		self.sound_file.have_tags = True
@@ -934,13 +934,11 @@ class TagReader(Decoder):
 
 	def work(self):
 		if not self.run_start_time:
-			self.run_start_time = time.time()
 			if self.sound_file.mime_type in tag_blacklist:
 				log("%s: type is %s, tag reading blacklisted" % (self.sound_file.get_filename_for_display(), self.sound_file.mime_type))
 				return False
-
+			self.run_start_time = time.time()
 		if time.time()-self.run_start_time > 5:
-			#log("TagReader timeout:", self.sound_file.get_filename_for_display())
 			# stop looking for tags after 5s 
 			return False
 		return Decoder.work(self) and not self.found_tags
@@ -1305,6 +1303,7 @@ class PreferencesDialog:
 	subfolder_patterns = [
 		("%(artist)s/%(album)s", _("artist/album")),
 		("%(artist)s-%(album)s", _("artist-album")),
+		("%(artist)s - %(album)s", _("artist - album")),
 	]
 	
 	defaults = {
@@ -1458,7 +1457,7 @@ class PreferencesDialog:
 
 	def update_selected_folder(self):
 		self.into_selected_folder.set_label(_("Into folder %s") % 
-										self.get_string("selected-folder"))
+			beautify_uri(self.get_string("selected-folder")))
 
 
 	def get_bitrate_from_settings(self):
@@ -1522,16 +1521,10 @@ class PreferencesDialog:
 					}.get(output_type, None)
 
 		generator = TargetNameGenerator()
+
 		generator.set_target_suffix(output_suffix)
-		if self.get_int("same-folder-as-input"):
-			tuple = urlparse.urlparse(sound_file.get_uri())
-			path = tuple[2]
-			generator.set_folder(os.path.dirname(path))
-		else:
-			path, filename = os.path.split(sound_file.get_filename())
-			path = ""
-		
-			generator.set_folder(os.path.join(self.get_string("selected-folder"), path))
+		if not self.get_int("same-folder-as-input"):
+			generator.set_folder(self.get_string("selected-folder"))
 			if self.get_int("create-subfolders"):
 				generator.set_subfolder_pattern(
 					self.get_subfolder_pattern())
@@ -1622,7 +1615,7 @@ class PreferencesDialog:
 		ret = self.target_folder_chooser.run()
 		self.target_folder_chooser.hide()
 		if ret == gtk.RESPONSE_OK:
-			folder = self.target_folder_chooser.get_filename()
+			folder = self.target_folder_chooser.get_uri()
 			if folder:
 				self.set_string("selected-folder", folder)
 				self.update_selected_folder()
@@ -2422,9 +2415,9 @@ def main():
 		for key in settings:
 			print key, settings[key]
 		return
-	
-	args = map(filename_to_uri, args)
 
+	args = map(filename_to_uri, args)
+	
 	if get_option("mode") == "gui":
 		gui_main(args)
 	elif get_option("mode") == "tags":
