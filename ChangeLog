@@ -10,6 +10,8 @@
 	  Fixed crashing when tags contained a list (ie. multiples authors).
 	  (thanks Ken)
 	  Better replace-messy-chars, with unicode->ascii to remove diacritics.
+	* src/soundconverter.py: Added Genre and Year in custom filename patterns.
+	  (thanks Jon)
 
 2007-07-19  Gautier Portet <kassoulet gmail com>
 
