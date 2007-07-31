@@ -447,6 +447,9 @@ class TargetNameGenerator:
 			"title": "",
 			"track-number": 0,
 			"track-count": 0,
+			"genre": "",
+			"year": "",
+			"date": "",
 		}
 		for key in sound_file.keys():
 			dict[key] = sound_file[key]
@@ -921,6 +924,9 @@ class TagReader(Decoder):
 		#debug("\ttitle=%s" % (taglist["title"]))
 		for k in taglist.keys():
 			debug("\t%s=%s" % (k, taglist[k]))
+			if isinstance(taglist[k], gst.Date):
+				taglist["year"] = taglist[k].year
+			
 			
 		self.sound_file.add_tags(taglist)
 
@@ -1499,6 +1505,8 @@ class PreferencesDialog:
 	def update_example(self):
 		sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
 		sound_file.add_tags({
+			"year": "<b>{Year}</b>", 
+			"genre": "<b>{Genre}</b>", 
 			"artist": "<b>{Artist}</b>", 
 			"title": "<b>{Title}</b>", 
 			"album": "<b>{Album}</b>",
@@ -1538,12 +1546,20 @@ class PreferencesDialog:
 			return generator.get_target_name(sound_file)
 	
 	def process_custom_pattern(self, pattern):
-			pattern = pattern.replace("{Artist}", "%(artist)s")
-			pattern = pattern.replace("{Album}", "%(album)s")
-			pattern = pattern.replace("{Title}", "%(title)s")
-			pattern = pattern.replace("{Track}", "%(track-number)02d")
-			pattern = pattern.replace("{Total}", "%(track-count)02d")
-			return pattern
+		patterns = {
+			"{Artist}": "%(artist)s",
+			"{Album}": "%(album)s",
+			"{Title}": "%(title)s",
+			"{Track}": "%(track-number)02d",
+			"{Total}": "%(track-count)02d",
+			"{Genre}": "%(genre)s",
+			#"{date}": "%(date)s",
+			"{Year}": "%(year)s",
+		}
+		
+		for k in patterns:
+			pattern = pattern.replace(k, patterns[k])
+		return pattern
 
 	def set_sensitive(self):
 	
