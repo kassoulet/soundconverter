@@ -90,6 +90,9 @@ Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 Marc E. <m4rccd yahoo.com> (Spanish)
 Daniel Nylander <po danielnylander se> (Swedish)
 Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian) 
+Kamil Páral <ripper42 gmail.com > (Czech)
+Stefano Luciani <luciani.fa tiscali.it > (Italian)
+Martin Seifert <<martinseifert fastmail.fm>> (German)
 """)
 
 # Names of columns in the file list
@@ -1517,7 +1520,8 @@ class PreferencesDialog:
 		})
 		self.example.set_markup(self.generate_filename(sound_file, for_display=True))
 		
-		markup = _("<small>Target bitrate: %s</small>") % self.get_bitrate_from_settings()
+		markup = "<small>%s</small>" % (_("Target bitrate: %s") % 
+					self.get_bitrate_from_settings())
 		self.aprox_bitrate.set_markup( markup )
 
 	def generate_filename(self, sound_file, for_display=False):
