@@ -10,8 +10,10 @@
 	  Fixed crashing when tags contained a list (ie. multiples authors).
 	  (thanks Ken)
 	  Better replace-messy-chars, with unicode->ascii to remove diacritics.
-	* src/soundconverter.py: Added Genre and Year in custom filename patterns.
+	* src/soundconverter.py: Added {Genre}, {Date} and {Year} in custom filename patterns.
 	  (thanks Jon)
+	* po/de.po: Added German translation.
+	  (thanks Martin)
 
 2007-07-19  Gautier Portet <kassoulet gmail com>
 
