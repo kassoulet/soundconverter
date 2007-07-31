@@ -926,7 +926,8 @@ class TagReader(Decoder):
 			debug("\t%s=%s" % (k, taglist[k]))
 			if isinstance(taglist[k], gst.Date):
 				taglist["year"] = taglist[k].year
-			
+				taglist["date"] = "%04d-%02d-%02d" % (taglist[k].year,
+									taglist[k].month, taglist[k].day)
 			
 		self.sound_file.add_tags(taglist)
 
@@ -1505,6 +1506,7 @@ class PreferencesDialog:
 	def update_example(self):
 		sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
 		sound_file.add_tags({
+			"date": "<b>{Date}</b>", 
 			"year": "<b>{Year}</b>", 
 			"genre": "<b>{Genre}</b>", 
 			"artist": "<b>{Artist}</b>", 
@@ -1553,7 +1555,7 @@ class PreferencesDialog:
 			"{Track}": "%(track-number)02d",
 			"{Total}": "%(track-count)02d",
 			"{Genre}": "%(genre)s",
-			#"{date}": "%(date)s",
+			"{Date}": "%(date)s",
 			"{Year}": "%(year)s",
 		}
 		
