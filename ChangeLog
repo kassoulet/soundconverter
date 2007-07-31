@@ -1,15 +1,29 @@
+2007-07-31  Gautier Portet <kassoulet gmail com>
+
+	* po/cs.po: Added Czech translation.
+	  (thanks Kamil)
+	* src/soundconverter.py, data/soundconverter.glade: Add Folder(s) now work
+	  on non-local files aswell.
+	* src/soundconverter.py: Added "artist - album" in folder patterns.
+	  (thanks Claudio)
+	  Fixed char escaping problem in same-folder-as-input mode.
+	  Fixed crashing when tags contained a list (ie. multiples authors).
+	  (thanks Ken)
+	  Better replace-messy-chars, with unicode->ascii to remove diacritics.
+
 2007-07-19  Gautier Portet <kassoulet gmail com>
 
-	* po/it.po: Added Italian tranlation.
+	* po/it.po: Added Italian translation.
+	  (thanks Stefano)
 
 2007-07-09  Gautier Portet <kassoulet gmail com>
 	* po/es.po: Added spanish translation.
 	  (thanks Gary)
 
 2007-07-04  Gautier Portet <kassoulet gmail com>
-	* src/soundconverter.py: Changed the desktop file so we accept list of
-	  URIs instead of just one local file, so opening multiples files from nautilus
-	  will work.
+	* data/soundconverter.desktop, src/soundconverter.py: Changed the desktop
+	  file so we accept list of URIs instead of just one local file, so opening
+	  multiples files from nautilus will work.
 
 2007-06-25  Gautier Portet <kassoulet gmail com>
 	* po/ru.po: added russian translation.
@@ -26,7 +40,7 @@
 
 2007-04-27  Gautier Portet <kassoulet gmail com>
 
-	* data/Makefile.am: Removed evil DESTDIR, thanks William!q
+	* data/Makefile.am: Removed evil DESTDIR, thanks William!
 	* Release 0.9.6
 
 2007-04-25  Gautier Portet <kassoulet gmail com>
