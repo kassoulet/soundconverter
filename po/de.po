@@ -2,19 +2,19 @@
 # Copyright (C) 2007 THE soundconverter'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the soundconverter package.
 # Martin Seifert <martinseifert@fastmail.fm>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 0.9.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-31 22:59+0200\n"
-"PO-Revision-Date: 2007-07-31 23:06+0200\n"
+"POT-Creation-Date: 2007-08-01 02:44+0200\n"
+"PO-Revision-Date: 2007-08-01 00:32+0100\n"
 "Last-Translator: Martin Seifert <martinseifert@fastmail.fm>\n"
-"Language-Team: German\n"
+"Language-Team: German <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -155,8 +155,9 @@ msgid "artist-album"
 msgstr "Künstler-Album"
 
 #: ../src/soundconverter.py:1316
+#, fuzzy
 msgid "artist - album"
-msgstr "Künstler -  Album"
+msgstr "Künstler - Album"
 
 #: ../src/soundconverter.py:1469
 #, python-format
@@ -164,7 +165,7 @@ msgid "Into folder %s"
 msgstr "In Ordner %s"
 
 #: ../src/soundconverter.py:1523
-#, python-format
+#, fuzzy, python-format
 msgid "Target bitrate: %s"
 msgstr "Bitrate der Zieldatei: %s"
 
@@ -186,7 +187,7 @@ msgstr ""
 #: ../src/soundconverter.py:1907
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "Konvertierung in %s abgeschlossen."
+msgstr "Konvertierung nach %s abgeschlossen."
 
 #: ../src/soundconverter.py:1942
 msgid "Open a file"
@@ -219,7 +220,7 @@ msgstr "Abgebrochen"
 #: ../src/soundconverter.py:2232
 #, python-format
 msgid "Converting file %d of %d  (%s)"
-msgstr "Datei %d von %d  (%s) wird konvertiert"
+msgstr "Datei %d von %d  wird konvertiert (%s)"
 
 #: ../src/soundconverter.py:2245
 msgid "Converting"
@@ -313,7 +314,7 @@ msgstr "<big><b>Datei ist bereits vorhanden.</b></big>\n"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<i>Example filename:</i>"
-msgstr "<i>Namensbeispiel:</i>"
+msgstr "<i>Namensvorschau:</i>"
 
 #: ../data/soundconverter.glade.h:7
 msgid "Add _Folder"
@@ -423,7 +424,7 @@ msgstr "Einstellungen"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Quality:"
-msgstr "Qualität"
+msgstr "Qualität:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
