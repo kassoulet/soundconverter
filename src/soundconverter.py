@@ -78,7 +78,7 @@ PACKAGE = NAME.lower()
 gettext.bindtextdomain(PACKAGE,"@datadir@/locale")
 locale.setlocale(locale.LC_ALL,"")
 gettext.textdomain(PACKAGE)
-gettext.install(PACKAGE,localedir=None,unicode=1)
+gettext.install(PACKAGE,localedir="@datadir@/locale",unicode=1)
 
 gtk.glade.bindtextdomain(PACKAGE,"@datadir@/locale")
 gtk.glade.textdomain(PACKAGE)
@@ -92,7 +92,7 @@ Daniel Nylander <po danielnylander se> (Swedish)
 Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian) 
 Kamil Páral <ripper42 gmail.com > (Czech)
 Stefano Luciani <luciani.fa tiscali.it > (Italian)
-Martin Seifert <<martinseifert fastmail.fm>> (German)
+Martin Seifert <martinseifert fastmail.fm> (German)
 """)
 
 # Names of columns in the file list
