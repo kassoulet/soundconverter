@@ -1,3 +1,10 @@
+2007-08-02  Gautier Portet <kassoulet gmail com>
+
+	* po/nl.po: Added Dutch translation.
+
+2007-08-01  Gautier Portet <kassoulet gmail com>
+	* release 0.9.7
+
 2007-07-31  Gautier Portet <kassoulet gmail com>
 
 	* po/soundconverter.pot: Updated pot file, since it was somewhat outdated. 
