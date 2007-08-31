@@ -1382,11 +1382,14 @@ track_title
 			  <child>
 			    <widget class="GtkEntry" id="custom_filename">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">{Artist}: Artist name
+			      <property name="tooltip" translatable="yes" comments="Do not translate the strings between { }">{Artist}: Artist name
 {Album}: Album name
+{Date}: Date (yyyy-mm-dd)
+{Genre}: Musical Genre
 {Title}: Song title
 {Track}: Track number
-{Total}: Total number of tracks in album</property>
+{Total}: Total number of tracks in album
+{Year}: Year</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>

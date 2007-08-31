@@ -146,7 +146,7 @@ def vfs_walk(uri):
 	if str(uri)[-1] != '/':
 		uri = uri.append_string("/")
 
-	filelist = []	
+	filelist = []  
 
 	try:
 		dirlist = gnomevfs.open_directory(uri)
@@ -186,7 +186,7 @@ def vfs_makedirs(path_to_create):
 			pass
 		except :
 			return False
-	return True	
+	return True  
 
 def vfs_unlink(filename):
 	gnomevfs.unlink(gnomevfs.URI(filename))
@@ -264,13 +264,13 @@ else:
 
 
 encoders = ( 
-	("flacenc",   "FLAC"), 
-	("wavenc",    "WAV"),
+	("flacenc",		"FLAC"), 
+	("wavenc",		"WAV"),
 	("vorbisenc", "Ogg Vorbis"),
-	("oggmux",    "Ogg Vorbis"),
-	("id3v2mux",  "MP3 Tags"),
-	("xingmux",   ""),
-	("lame",      "MP3"))
+	("oggmux",		"Ogg Vorbis"),
+	("id3v2mux",	"MP3 Tags"),
+	("xingmux",		""),
+	("lame",			"MP3"))
 
 for encoder, name in encoders:
 	have_it = True
@@ -347,15 +347,15 @@ class SoundFile:
 	
 		self.tags = {
 			"track-number": 0,
-			"title":  "Unknown Title",
+			"title":	"Unknown Title",
 			"artist": "Unknown Artist",
-			"album":  "Unknown Album",
+			"album":	"Unknown Album",
 		}
 		self.have_tags = False
 		self.tags_read = False
-		self.duration = 0	
+		self.duration = 0  
 		self.mime_type = None 
-	  
+		
 	def get_uri(self):
 		return self.uri
 		
@@ -404,7 +404,7 @@ class TargetNameGenerator:
 		else:
 			self.exists = os.path.exists
 
-	# This is useful for unit testing.		  
+	# This is useful for unit testing.			
 	def set_exists(self, exists):
 		self.exists = exists
 
@@ -430,7 +430,7 @@ class TargetNameGenerator:
 	def get_target_name(self, sound_file):
 
 		#if "ssh" in sound_file.uri:
-		#	import pdb; pdb.set_trace()
+		#  import pdb; pdb.set_trace()
 
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
@@ -493,7 +493,7 @@ class ErrorDialog:
 
 	def show_exception(self, exception):
 		self.show("<b>%s</b>" % markup_escape(exception.primary),
-				  exception.secondary)
+					exception.secondary)
 
 
 class ErrorPrinter:
@@ -732,12 +732,12 @@ class Pipeline(BackgroundTask):
 	
 	def work(self):
 		#if self.pipeline.get_state() == gst.STATE_NULL:
-		#	log("error: pipeline.state == null")
+		#  log("error: pipeline.state == null")
 			#return False
 		#print "work:", self
 		#time.sleep(0.01)
 		if self.eos:
-			#print "  got eos:", self.sound_file.get_filename_for_display()
+			#print "	got eos:", self.sound_file.get_filename_for_display()
 			return False
 		return True
 
@@ -775,7 +775,7 @@ class Pipeline(BackgroundTask):
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		elif t == gst.MESSAGE_TAG:
-			self.found_tag(self, "", message.parse_tag())	
+			self.found_tag(self, "", message.parse_tag())  
 		return True
 
 	def play(self):
@@ -899,7 +899,7 @@ class Decoder(Pipeline):
 	def get_duration(self):
 		""" return the total duration of the sound file """
 		#if not self.pipeline:
-		#	return 0
+		#  return 0
 		self.query_duration()
 		return self.sound_file.duration
 	
@@ -923,14 +923,14 @@ class TagReader(Decoder):
 
 
 	def found_tag(self, decoder, something, taglist):
-		debug("found_tags:", self.sound_file.get_filename_for_display())
+		#debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
-		for k in taglist.keys():
+		"""for k in taglist.keys():
 			debug("\t%s=%s" % (k, taglist[k]))
 			if isinstance(taglist[k], gst.Date):
 				taglist["year"] = taglist[k].year
 				taglist["date"] = "%04d-%02d-%02d" % (taglist[k].year,
-									taglist[k].month, taglist[k].day)
+									taglist[k].month, taglist[k].day)"""
 			
 		self.sound_file.add_tags(taglist)
 
@@ -988,8 +988,8 @@ class Converter(Decoder):
 		self.delete_original = delete_original
 
 	#def setup(self):
-	#	self.init()
-	#	self.play()
+	#  self.init()
+	#  self.play()
 
 	def init(self):
 		#print "Converter.init()"
@@ -1145,7 +1145,7 @@ class FileList:
 			self.widget.append_column(column)
 	
 	def drag_data_received(self, widget, context, x, y, selection, 
-						   mime_id, time):
+							 mime_id, time):
 
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			file_list = []
@@ -1188,7 +1188,7 @@ class FileList:
 		if not self.tagreaders.is_running():
 			self.tagreaders.run()
 	
-	def add_uris(self, uris, base=None):
+	def add_uris(self, uris, base=None, filter=None):
 
 		files = []
 
@@ -1202,9 +1202,10 @@ class FileList:
 
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 				filelist = vfs_walk(gnomevfs.URI(uri))
+				if filter:
+					filelist = [f for f in filelist if f.lower().endswith(filter)]
 				
 				for f in filelist:
-					#f = f[len(base)+1:]
 					files.append(f)
 			else:
 				files.append(uri)
@@ -1217,7 +1218,6 @@ class FileList:
 			if sound_file.get_uri() in self.filelist:
 				log(_("file already present: '%s'") % sound_file.get_uri())
 				continue 
-			#print "adding: '%s'" % sound_file.get_filename_for_display()
 			self.filelist[sound_file.get_uri()] = True
 
 			typefinder = TypeFinder(sound_file)
@@ -1233,7 +1233,7 @@ class FileList:
 
 	def format_cell(self, sound_file):
 		
-		template_tags    = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
+		template_tags		 = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
 		template_loading = "<i>%s</i>\n<small>%%(filename)s</small>" \
 							% _("loading tags...")
 		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
@@ -1335,7 +1335,7 @@ class PreferencesDialog:
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
-					   "subfolder_pattern"]
+						 "subfolder_pattern"]
 
 	def __init__(self, glade):
 		self.gconf = gconf.client_get_default()
@@ -1408,10 +1408,10 @@ class PreferencesDialog:
 
 		mime_type = self.get_string("output-mime-type")
 
-		widgets = {		"audio/x-vorbis": (have_vorbisenc, "output_mime_type_ogg_vorbis"),
-						"audio/x-flac"  : (have_flacenc, "output_mime_type_flac"),
-						"audio/x-wav"   : (have_wavenc, "output_mime_type_wav"),
-						"audio/mpeg"    : (have_lame, "output_mime_type_mp3"),
+		widgets = {		 "audio/x-vorbis": (have_vorbisenc, "output_mime_type_ogg_vorbis"),
+						"audio/x-flac"	: (have_flacenc, "output_mime_type_flac"),
+						"audio/x-wav"		: (have_wavenc, "output_mime_type_wav"),
+						"audio/mpeg"		: (have_lame, "output_mime_type_mp3"),
 					}
 
 		# desactivate output if encoder plugin is not present
@@ -1737,7 +1737,7 @@ class PreferencesDialog:
 		quality_to_preset = {
 			"cbr": {64:0, 96:1, 128:2, 192:3, 256:4},
 			"abr": {64:0, 96:1, 128:2, 192:3, 256:4},
-			"vbr": {9:0,   7:1,	  5:2,	 3:3,	1:4}, # inverted !
+			"vbr": {9:0,	 7:1,		 5:2,		3:3,	1:4}, # inverted !
 		}
 			
 		if quality in quality_to_preset[mode]:
@@ -1848,8 +1848,8 @@ class ConverterQueue(TaskQueue):
 				raise ConverterQueueCanceled()
 			
 		c = Converter(sound_file, output_filename, 
-					  self.window.prefs.get_string("output-mime-type"),
-					  self.window.prefs.get_int("delete-original"))
+						self.window.prefs.get_string("output-mime-type"),
+						self.window.prefs.get_int("delete-original"))
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
 		
 		quality = {
@@ -1905,7 +1905,7 @@ class ConverterQueue(TaskQueue):
 		self.window.conversion_ended()
 		total_time = self.run_finish_time - self.run_start_time
 		self.window.set_status(_("Conversion done, in %s") % 
-							   self.format_time(total_time))
+								 self.format_time(total_time))
 
 	def format_time(self, seconds):
 		units = [(86400, "d"),
@@ -2038,6 +2038,22 @@ class SoundConverterWindow:
 		self.addfolderchooser.set_select_multiple(True)
 		self.addfolderchooser.set_local_only(not use_gnomevfs)
 
+
+		self.combo = gtk.ComboBox()
+		#self.combo.connect("changed",self.on_combo_changed)
+		self.store = gtk.ListStore(str)
+		self.combo.set_model(self.store)
+		combo_rend = gtk.CellRendererText()
+		self.combo.pack_start(combo_rend, True)
+		self.combo.add_attribute(combo_rend, 'text', 0)
+	
+		# get all (gstreamer) knew files Todo
+		for files in filepattern:
+			self.store.append(["%s (%s)" %(files[0],files[1])])
+
+		self.combo.set_active(0)
+		self.addfolderchooser.set_extra_widget(self.combo)
+
 		self.connect(glade, [self.prefs])
 		
 		self.about.set_property("name", NAME)
@@ -2087,7 +2103,7 @@ class SoundConverterWindow:
 		if ret == gtk.RESPONSE_OK:
 			files = []
 			#for uri in self.addchooser.get_uris():
-			#	files.append(SoundFile(uri))
+			#  files.append(SoundFile(uri))
 			#self.filelist.add_files(files)
 			self.filelist.add_uris(self.addchooser.get_uris())
 		self.set_sensitive()
@@ -2097,18 +2113,25 @@ class SoundConverterWindow:
 		ret = self.addfolderchooser.run()
 		self.addfolderchooser.hide()
 		if ret == gtk.RESPONSE_OK:
+			
 			folders = self.addfolderchooser.get_uris()
 			
-			self.filelist.add_uris(folders)
+			filter = None
+			if self.combo.get_active():
+				filter = os.path.splitext(filepattern[self.combo.get_active()] 
+						[1]) [1]
+
+			
+			self.filelist.add_uris(folders, filter = filter)
 
 			#base,notused = os.path.split(os.path.commonprefix(folders))
 			#filelist = []
 			#files = []
 			#for folder in folders:
-			#	filelist.extend(vfs_walk(gnomevfs.URI(folder)))
+			#  filelist.extend(vfs_walk(gnomevfs.URI(folder)))
 			#for f in filelist:
-			#	f = f[len(base)+1:]
-			#	files.append(SoundFile(base+"/", f))
+			#  f = f[len(base)+1:]
+			#  files.append(SoundFile(base+"/", f))
 			#self.filelist.add_files(files)
 		self.set_sensitive()
 
@@ -2221,7 +2244,7 @@ class SoundConverterWindow:
 		self.set_widget_sensitive("remove", 
 			self.filelist_selection.count_selected_rows() > 0)
 		self.set_widget_sensitive("convert_button", 
-								  self.filelist.is_nonempty())
+									self.filelist.is_nonempty())
 
 		self._lock_convert_button = True
 		self.sensitive_widgets["convert_button"].set_active(
@@ -2297,7 +2320,7 @@ def cli_tags_main(input_files):
 			keys = input_file.keys()
 			keys.sort()
 			for key in keys:
-				print "	 %s: %s" % (key, input_file[key])
+				print "		%s: %s" % (key, input_file[key])
 
 
 class CliProgress:
@@ -2384,11 +2407,11 @@ def print_help(*args):
 	for short_arg, long_arg, func, doc in options:
 		print
 		if short_arg[-1] == ":":
-			print "	 -%s arg, --%sarg" % (short_arg[:1], long_arg)
+			print "		-%s arg, --%sarg" % (short_arg[:1], long_arg)
 		else:
-			print "	 -%s, --%s" % (short_arg[:1], long_arg)
+			print "		-%s, --%s" % (short_arg[:1], long_arg)
 		for line in textwrap.wrap(doc):
-			print "	   %s" % line
+			print "			%s" % line
 	sys.exit(0)
 
 
