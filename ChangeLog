@@ -1,3 +1,12 @@
+2007-08-31  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Added a file extension filter in AddFolder.
+
+2007-08-30  Gautier Portet <kassoulet gmail com>
+
+	* data/soundconverter.glade: Added Date, Genre and Year in the 
+	  custom format hint.
+
 2007-08-02  Gautier Portet <kassoulet gmail com>
 
 	* po/nl.po: Added Dutch translation.
