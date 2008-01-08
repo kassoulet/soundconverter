@@ -1,3 +1,24 @@
+2008-01-08  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Custom filename patterns can now be 
+	  translated.
+
+2007-12-26  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fixed horrible bug #12782 causing deletion
+	  of source file when it's the same as destination.
+
+2007-11-14  Gautier Portet <kassoulet gmail com>
+
+	* po/ar,eu,he,sk,zh_CN.po: Added arabic, basque, hebrew, slovak and 
+	  simplified chinese translations.
+	  (thanks Nizar, amenudo, rainofchaos, Pavol, Moshe)
+
+2007-09-11  Gautier Portet <kassoulet gmail com>
+
+	* po/sr.po: Added Serbian translation.
+	  (thanks Miloš)
+
 2007-08-31  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Added a file extension filter in AddFolder.

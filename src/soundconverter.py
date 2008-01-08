@@ -93,6 +93,11 @@ Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian)
 Kamil Páral <ripper42 gmail.com > (Czech)
 Stefano Luciani <luciani.fa tiscali.it > (Italian)
 Martin Seifert <martinseifert fastmail.fm> (German)
+Nizar Kerkeni <nizar.kerkeni gmail.com>(Arabic)
+amenudo (Basque)
+rainofchaos (Simplified Chinese)
+Pavol Klačanský (Slovak)
+Moshe Basanchig <moshe.basanchig gmail.com> (Hebrew)
 """)
 
 # Names of columns in the file list
@@ -111,6 +116,34 @@ mime_whitelist = (
 	"application/vnd.rn-realmedia",
 	"application/x-shockwave-flash",
 )
+
+# custom filename patterns
+english_patterns = "Artist Album Title Track Total Genre Date Year"
+
+# traductors: only if it does make sense.
+locale_patterns = _("Artist Album Title Track Total Genre Date Year")
+
+patterns_formats = (
+	"%(artist)s",
+	"%(album)s",
+	"%(title)s",
+	"%(track-number)02d",
+	"%(track-count)02d",
+	"%(genre)s",
+	"%(date)s",
+	"%(year)s",
+)
+
+# add english and locale
+custom_patterns = english_patterns + " " + locale_patterns
+# convert to list
+custom_patterns = [ "{%s}" % p for p in custom_patterns.split()]
+# and finally to dict, thus removing doubles 
+custom_patterns = dict(zip(custom_patterns, patterns_formats*2))
+
+locale_patterns_dict = dict(zip(
+	[ p.lower() for p in english_patterns.split()],
+	[ "{%s}" % p for p in locale_patterns.split()] ))
 
 # add here the formats not containing tags 
 # not to bother searching in them
@@ -132,6 +165,7 @@ filepattern = (
 )
 
 def beautify_uri(uri):
+	uri = unquote_filename(uri)
 	if uri.startswith("file://"):
 		return uri[7:]
 	return uri
@@ -429,9 +463,6 @@ class TargetNameGenerator:
 	
 	def get_target_name(self, sound_file):
 
-		#if "ssh" in sound_file.uri:
-		#  import pdb; pdb.set_trace()
-
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
 		if u.host_port:
@@ -473,7 +504,7 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
-		result = os.path.join(folder, urllib.quote(result))
+		result = os.path.join(folder, urllib.quote(result.encode('utf-8')))
 
 		return result
 
@@ -1361,6 +1392,12 @@ class PreferencesDialog:
 		self.set_widget_initial_values(glade)
 		self.set_sensitive()
 
+		tips = gtk.Tooltips()
+		tip = _("Available patterns:")
+		for k in locale_patterns_dict.values():
+			tip += "\n" + k
+		tips.set_tip(self.custom_filename, tip)
+
 
 	def convert_setting_from_old_version(self):
 		""" try to convert previous settings"""
@@ -1509,16 +1546,38 @@ class PreferencesDialog:
 	def update_example(self):
 		sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
 		sound_file.add_tags({
-			"date": "<b>{Date}</b>", 
-			"year": "<b>{Year}</b>", 
-			"genre": "<b>{Genre}</b>", 
-			"artist": "<b>{Artist}</b>", 
-			"title": "<b>{Title}</b>", 
-			"album": "<b>{Album}</b>",
 			"track-number": 1L,
 			"track-count": 99L,
 		})
-		self.example.set_markup(self.generate_filename(sound_file, for_display=True))
+		sound_file.add_tags(locale_patterns_dict)
+
+		s = markup_escape(self.generate_filename(sound_file, for_display=True))
+		p = 0
+		replaces = []
+
+		while 1:
+			b = s.find('{', p)
+			if b == -1:
+				break
+			e = s.find('}',b)
+			
+			tag = s[b:e+1]
+			if tag.lower() in [v.lower() for v in locale_patterns_dict.values()]:
+				k = tag
+				l = k.replace("{","<b>{")
+				l = l.replace("}","}</b>")
+				replaces.append([k,l])
+			else:
+				k = tag
+				l = k.replace("{","<span foreground=\"red\"><i>{")
+				l = l.replace("}","}</i></span>")
+				replaces.append([k,l])
+			p = b+1
+			
+		for k,l in replaces:
+			s = s.replace(k, l)
+
+		self.example.set_markup(s)
 		
 		markup = "<small>%s</small>" % (_("Target bitrate: %s") % 
 					self.get_bitrate_from_settings())
@@ -1552,19 +1611,9 @@ class PreferencesDialog:
 			return generator.get_target_name(sound_file)
 	
 	def process_custom_pattern(self, pattern):
-		patterns = {
-			"{Artist}": "%(artist)s",
-			"{Album}": "%(album)s",
-			"{Title}": "%(title)s",
-			"{Track}": "%(track-number)02d",
-			"{Total}": "%(track-count)02d",
-			"{Genre}": "%(genre)s",
-			"{Date}": "%(date)s",
-			"{Year}": "%(year)s",
-		}
 		
-		for k in patterns:
-			pattern = pattern.replace(k, patterns[k])
+		for k in custom_patterns:
+			pattern = pattern.replace(k, custom_patterns[k])
 		return pattern
 
 	def set_sensitive(self):
@@ -1804,7 +1853,12 @@ class ConverterQueue(TaskQueue):
 		except gnomevfs.InvalidURIError:
 			log("Invalid URI: '%s'" % output_filename)
 			return
-				
+		
+		# do not overwrite source file !!
+		if output_filename == sound_file.get_uri():
+			error.show(_("Cannot overwrite source file(s)!"), "")
+			raise ConverterQueueCanceled()
+		
 		if exists:
 			if self.overwrite_action != None:
 				result = self.overwrite_action
@@ -2149,6 +2203,8 @@ class SoundConverterWindow:
 				self.converter.add(sound_file)
 		except ConverterQueueCanceled:
 			log(_("canceling conversion."))
+			self.conversion_ended()
+			self.set_status(_("Conversion canceled"))
 		else:
 			self.set_status("")
 			self.converter.run()
