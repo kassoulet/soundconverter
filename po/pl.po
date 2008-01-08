@@ -4,39 +4,45 @@
 # GNOME PL Team <translators@gnomepl.org>, 2005.
 # , fuzzy
 # GNOME PL Team <translators@gnomepl.org>, 2005.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-01 02:44+0200\n"
-"PO-Revision-Date: 2007-07-31 23:15+0200\n"
+"POT-Creation-Date: 2007-11-14 21:44+0100\n"
+"PO-Revision-Date: 2007-09-06 15:08+0000\n"
 "Last-Translator: Dominik Zabłotny <dominz@wp.pl>\n"
 "Language-Team: Polish <translators@gnomepl.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-11-12 19:56+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr "SoundConverter"
+msgstr "Konwerter Formatów Audio"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr ""
+msgstr "Konwertuj pliki audion do innych formatów"
 
 #: ../data/soundconverter.desktop.in.in.h:3
-#, fuzzy
 msgid "Sound Converter"
-msgstr "SoundConverter"
+msgstr "Konwerter Dźwięku"
 
-#: ../src/soundconverter.py:155
+#. traductors: only if it does make sense.
+#: ../src/soundconverter.py:124
+msgid "Artist Album Title Track Total Genre Date Year"
+msgstr ""
+
+#: ../src/soundconverter.py:190
 #, python-format
 msgid "skipping: '%s'"
 msgstr "pomijanie: \"%s\""
 
-#: ../src/soundconverter.py:502
+#: ../src/soundconverter.py:537
 #, python-format
 msgid ""
 "\n"
@@ -49,11 +55,11 @@ msgstr ""
 "błąd: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:705
+#: ../src/soundconverter.py:740
 msgid "Internal error"
 msgstr "Błąd wewnętrzny"
 
-#: ../src/soundconverter.py:706
+#: ../src/soundconverter.py:741
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -61,12 +67,12 @@ msgstr ""
 "Nie można połączyć z elementami GStreamer.\n"
 "Proszę zgłosić to jako błąd."
 
-#: ../src/soundconverter.py:711
+#: ../src/soundconverter.py:746
 #, python-format
 msgid "Unknown type %s"
 msgstr "Nieznany typ %s"
 
-#: ../src/soundconverter.py:712
+#: ../src/soundconverter.py:747
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -78,105 +84,109 @@ msgstr ""
 " Poproś programistów o dodanie jego obsługi\n"
 " jeśli jest to dla ciebie ważne."
 
-#: ../src/soundconverter.py:966
+#: ../src/soundconverter.py:1001
 msgid "Target exists."
 msgstr "Plik docelowy istnieje."
 
-#: ../src/soundconverter.py:967
+#: ../src/soundconverter.py:1002
 #, python-format
 msgid "The output file %s already exists."
 msgstr "Plik docelowy %s już istnieje."
 
-#: ../src/soundconverter.py:1010
+#: ../src/soundconverter.py:1045
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Nie można utworzyć dekodera dla formatu \"%s\"."
 
-#: ../src/soundconverter.py:1021
+#: ../src/soundconverter.py:1056
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Tworzenie katalogu \"%s\""
 
-#: ../src/soundconverter.py:1025
+#: ../src/soundconverter.py:1060
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nie można utworzyć katalogu \"%s\"."
 
-#: ../src/soundconverter.py:1046
+#: ../src/soundconverter.py:1081
 #, python-format
 msgid "Cannot set permission on '%s'"
-msgstr ""
+msgstr "Nie można ustawić zezwoleń dla '%s'"
 
-#: ../src/soundconverter.py:1218
+#: ../src/soundconverter.py:1254
 #, python-format
 msgid "file already present: '%s'"
-msgstr ""
+msgstr "plik już istnieje: '%s'"
 
-#: ../src/soundconverter.py:1238
+#: ../src/soundconverter.py:1273
 msgid "loading tags..."
 msgstr "wczytwanie tagów..."
 
-#: ../src/soundconverter.py:1240
+#: ../src/soundconverter.py:1275
 msgid "no tags"
 msgstr "brak tagów"
 
-#: ../src/soundconverter.py:1279
+#: ../src/soundconverter.py:1314
 msgid "unknown"
 msgstr "nieznany"
 
-#: ../src/soundconverter.py:1305
-#, fuzzy
+#: ../src/soundconverter.py:1340
 msgid "Same as input, but replacing the suffix"
-msgstr "Tak jak źródłowe, ale z nowym rozszerzeniem"
+msgstr "Tak jak źródłowy, ale z nowym rozszerzeniem"
 
-#: ../src/soundconverter.py:1306
-#, fuzzy
+#: ../src/soundconverter.py:1341
 msgid "Same as input, but with an additional suffix"
-msgstr "Tak jak źródłowe, ale z nowym rozszerzeniem"
+msgstr "Tak jak źródłowy, ale z dodatkowym rozszerzeniem"
 
-#: ../src/soundconverter.py:1307
+#: ../src/soundconverter.py:1342
 msgid "Track number - title"
 msgstr "Numer ścieżki - tytuł"
 
-#: ../src/soundconverter.py:1308
+#: ../src/soundconverter.py:1343
 msgid "Track title"
 msgstr "Tytuł ścieżki"
 
-#: ../src/soundconverter.py:1309
+#: ../src/soundconverter.py:1344
 msgid "Artist - title"
 msgstr "Wykonawca - tytuł"
 
-#: ../src/soundconverter.py:1310
+#: ../src/soundconverter.py:1345
 msgid "Custom filename pattern"
-msgstr ""
+msgstr "Własny wzór nazwy pliku"
 
-#: ../src/soundconverter.py:1314
+#: ../src/soundconverter.py:1349
 msgid "artist/album"
 msgstr "wykonawca/album"
 
-#: ../src/soundconverter.py:1315
+#: ../src/soundconverter.py:1350
 msgid "artist-album"
 msgstr "wykonawca-album"
 
-#: ../src/soundconverter.py:1316
+#: ../src/soundconverter.py:1351
+#, fuzzy
 msgid "artist - album"
-msgstr "wykonawca - album"
+msgstr "wykonawca-album"
 
-#: ../src/soundconverter.py:1469
+#: ../src/soundconverter.py:1400
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Wzór nazwy pliku: "
+
+#: ../src/soundconverter.py:1510
 #, python-format
 msgid "Into folder %s"
 msgstr "Do katalogu %s"
 
-#: ../src/soundconverter.py:1523
-#, python-format
+#: ../src/soundconverter.py:1568
+#, fuzzy, python-format
 msgid "Target bitrate: %s"
-msgstr "Docelowa gęstość bitowa: %s"
+msgstr "<small>Docelowa gęstość bitowa: %s</small>"
 
-#: ../src/soundconverter.py:1775
+#: ../src/soundconverter.py:1810
 msgid "Convertion Canceled"
 msgstr "Anulowano konwersję"
 
-#: ../src/soundconverter.py:1818
+#: ../src/soundconverter.py:1853
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -187,72 +197,72 @@ msgstr ""
 " już istnieje.\n"
 " Czy chcesz pominąć plik, nadpisać go czy anulować konwersję?\n"
 
-#: ../src/soundconverter.py:1907
+#: ../src/soundconverter.py:1942
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Konwersja wykonana w %s"
 
-#: ../src/soundconverter.py:1942
+#: ../src/soundconverter.py:1977
 msgid "Open a file"
 msgstr "Otwórz plik"
 
-#: ../src/soundconverter.py:2031
+#: ../src/soundconverter.py:2066
 msgid "Add Folder..."
 msgstr "Dodaj folder..."
 
-#: ../src/soundconverter.py:2128
+#: ../src/soundconverter.py:2186
 msgid "canceling conversion."
 msgstr "anulowanie konwersji."
 
-#: ../src/soundconverter.py:2151
+#: ../src/soundconverter.py:2209
 msgid "Waiting for tags"
 msgstr "Oczekiwanie na tagi"
 
-#: ../src/soundconverter.py:2158
+#: ../src/soundconverter.py:2216
 msgid "Waiting for tags..."
 msgstr "Oczekiwanie na tagi..."
 
-#: ../src/soundconverter.py:2166 ../src/soundconverter.py:2179
+#: ../src/soundconverter.py:2224 ../src/soundconverter.py:2237
 msgid "Paused"
 msgstr "Zatrzymano"
 
-#: ../src/soundconverter.py:2183
+#: ../src/soundconverter.py:2241
 msgid "Canceled"
 msgstr "Anulowano"
 
-#: ../src/soundconverter.py:2232
+#: ../src/soundconverter.py:2290
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Konwertowanie pliku %d z %d  (%s)"
 
-#: ../src/soundconverter.py:2245
+#: ../src/soundconverter.py:2303
 msgid "Converting"
 msgstr "Konwertowanie"
 
-#: ../src/soundconverter.py:2262
+#: ../src/soundconverter.py:2320
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d pozostało"
 
-#: ../src/soundconverter.py:2267
+#: ../src/soundconverter.py:2325
 msgid "Ready"
-msgstr ""
+msgstr "Gotowe"
 
-#: ../src/soundconverter.py:2348
+#: ../src/soundconverter.py:2406
 #, python-format
 msgid "%s: OK"
-msgstr ""
+msgstr "%s: OK"
 
-#: ../src/soundconverter.py:2383
+#: ../src/soundconverter.py:2441
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Sposób użycia: %s [opcje] [plik dźwiękowy ...]"
 
-#: ../src/soundconverter.py:2398
+#: ../src/soundconverter.py:2456
 msgid "Print out a usage summary."
 msgstr "Wyświetla informację o sposobie użycia."
 
-#: ../src/soundconverter.py:2401
+#: ../src/soundconverter.py:2459
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -260,7 +270,7 @@ msgstr ""
 "Konwersja w trybie wsadowym, z wiersza poleceń, bez interfejsu graficznego\n"
 " Przydatne np. w skryptach powłoki."
 
-#: ../src/soundconverter.py:2404
+#: ../src/soundconverter.py:2462
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -271,15 +281,15 @@ msgstr ""
 " %s . Zauważ, że zwykle należy ustawić także odpowiednie\n"
 "rozszerzenie nazwy pliku."
 
-#: ../src/soundconverter.py:2407
+#: ../src/soundconverter.py:2465
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Tryb cichy. Nie wyświetla niczego oprócz komunikatów o błędach."
 
-#: ../src/soundconverter.py:2410
+#: ../src/soundconverter.py:2468
 msgid "Print additionnal debug information"
-msgstr ""
+msgstr "Wyświetl dodatkowe informacje dla debugowania"
 
-#: ../src/soundconverter.py:2413
+#: ../src/soundconverter.py:2471
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -290,7 +300,7 @@ msgstr ""
 " %s . Zauważ, że samo ustawienie rozszerzenia nie ma\n"
 " wpływu na typ MIME pliku docelowego."
 
-#: ../src/soundconverter.py:2416
+#: ../src/soundconverter.py:2474
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -346,7 +356,7 @@ msgstr "Utwórz podkatalogi: "
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr ""
+msgstr "Usuń oryginalny plik"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
@@ -362,7 +372,7 @@ msgstr "Plik już istnieje"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
-msgstr ""
+msgstr "Wzór nazwy pliku: "
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
@@ -394,7 +404,7 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
-msgstr ""
+msgstr "Brak enkodera MP3"
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
@@ -430,7 +440,7 @@ msgstr "Jakość:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
-msgstr ""
+msgstr "Przeczytaj jak zainstalować"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
@@ -445,7 +455,6 @@ msgid "Same folder as the input file"
 msgstr "W tym samym katalogu co pliki źródłowe"
 
 #: ../data/soundconverter.glade.h:40
-#, fuzzy
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
@@ -527,15 +536,6 @@ msgstr ""
 msgid "wav"
 msgstr "wav"
 
-#: ../data/soundconverter.glade.h:63
-msgid ""
-"{Artist}: Artist name\n"
-"{Album}: Album name\n"
-"{Title}: Song title\n"
-"{Track}: Track number\n"
-"{Total}: Total number of tracks in album"
-msgstr ""
-
 #~ msgid "File exists."
 #~ msgstr "Plik już istnieje."
 
@@ -547,6 +547,19 @@ msgstr ""
 
 #~ msgid "zxcv"
 #~ msgstr "zxcv"
+
+#~ msgid ""
+#~ "{Artist}: Artist name\n"
+#~ "{Album}: Album name\n"
+#~ "{Title}: Song title\n"
+#~ "{Track}: Track number\n"
+#~ "{Total}: Total number of tracks in album"
+#~ msgstr ""
+#~ "{Artist}: Imię autora\n"
+#~ "{Album}: Nazwa albumu\n"
+#~ "{Title}: Tytuł utworu\n"
+#~ "{Track}: Numer ścieżki\n"
+#~ "{Total}: Ogólna liczba ścieżek w albumie"
 
 #~ msgid "Invalid character in filename!"
 #~ msgstr "Niepoprawny znak w nazwie pliku!"

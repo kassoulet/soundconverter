@@ -9,25 +9,131 @@ msgstr ""
 "Project-Id-Version: soundconverter 0.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-04-16 11:07+0200\n"
-"PO-Revision-Date: 2006-09-12 16:20+0100\n"
+"PO-Revision-Date: 2007-10-27 13:51+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Rosetta-Export-Date: 2007-07-09 14:18:15+0000\n"
+"X-Launchpad-Export-Date: 2007-11-12 19:56+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#~ msgid "Invalid character in filename!"
+#~ msgstr "Ogiltigt tecken i filnamnet!"
+
+#~ msgid "Writing to: '%s'"
+#~ msgstr "Destination: '%s'"
+
+#~ msgid "using encoder: %s (%s)"
+#~ msgstr "Encodeur utilisé : %s (%s)"
+
+#~ msgid "Add files..."
+#~ msgstr "Ajouter des fichiers..."
+
+#~ msgid "Add File"
+#~ msgstr "Ajouter Fichiers"
+
+#~ msgid "Add Folder"
+#~ msgstr "Ajouter Répertoire"
+
+#~ msgid "label27"
+#~ msgstr "label27"
+
+#~ msgid "_Add"
+#~ msgstr "_Ajouter"
+
+#~ msgid "translator name <email>"
+#~ msgstr "Guillaume Bedot <littletux@zarb.org>"
+
+#~ msgid "Artist"
+#~ msgstr "Artiste"
+
+#~ msgid "Album"
+#~ msgstr "Album"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#~ msgid "setting mime:"
+#~ msgstr "Définit le type mime à :"
+
+#~ msgid ""
+#~ "\n"
+#~ "change mp3 mode"
+#~ msgstr ""
+#~ "\n"
+#~ "change le mode mp3"
+
+#~ msgid "quality: %f"
+#~ msgstr "qualité : %f"
+
+#~ msgid "I choose #%s = %s"
+#~ msgstr "Je choisis #%s = %s"
+
+#~ msgid "Convert sound files."
+#~ msgstr "Convertisseur de fichiers son"
+
+#~ msgid "setting vorbis quality: %f"
+#~ msgstr "Définit la qualité vorbis à : %f"
+
+#~ msgid " "
+#~ msgstr "Guillaume Bedot <littletux@zarb.org> "
+
+#~ msgid "Couldn't link GStreamer elements.\n"
+#~ msgstr "N'a pas pu lier des éléments·GStreamer.\n"
+
+#~ msgid "Please report this as a bug."
+#~ msgstr "Veuillez reporter ce bug svp."
+
+#~ msgid "The file %s is of an unknown type.\n"
+#~ msgstr "Le fichier %s est d'un type inconnu.\n"
+
+#~ msgid "Please ask the developers to add support\n"
+#~ msgstr "Veuillez demander aux développeurs d'ajouter le support\n"
+
+#~ msgid "for files of this type if it is important\n"
+#~ msgstr "de ce type de fichiers si cela est important\n"
+
+#~ msgid "to you."
+#~ msgstr "pour vous."
+
+#~ msgid "exists."
+#~ msgstr "déjà."
+
+#~ msgid "interface. You can use this from, say, shell scripts."
+#~ msgstr "graphique. Vous pouvez utiliser cette option dans des scripts."
+
+#~ msgid "%s . Note that you probably want to set\n"
+#~ msgstr "défaut est %s . Notez que vous pouvez également\n"
+
+#~ msgid "the output suffix as well."
+#~ msgstr "définir le suffixe du fichier converti."
+
+#~ msgid "%s . Note that the suffix does not affect\n"
+#~ msgstr "La valeur par défaut est %s . Le suffixe n'affecte pas\n"
+
+#~ msgid "the output MIME type."
+#~ msgstr "le type MIME des fichiers convertis."
+
+#~ msgid "command line batch mode and disables the graphical user interface."
+#~ msgstr "Cette option active le mode batch, sans interface graphique."
+
+#~ msgid ""
+#~ "The output file %s already\n"
+#~ "                                         exists."
+#~ msgstr ""
+#~ "Le fichier destination·%s\n"
+#~ "existe déjà."
 
 #: ../data/soundconverter.desktop.in.in.h:1
-#, fuzzy
 msgid "Audio Format Converter"
-msgstr "Ljudkonverterare"
+msgstr "Ljudformatskonverterare"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr ""
+msgstr "Konvertera ljudfiler till andra format"
 
 #: ../data/soundconverter.desktop.in.in.h:3
-#, fuzzy
 msgid "Sound Converter"
 msgstr "Ljudkonverterare"
 
@@ -135,14 +241,12 @@ msgid "unknown"
 msgstr "okänt"
 
 #: ../src/soundconverter.py:1296
-#, fuzzy
 msgid "Same as input, but replacing the suffix"
-msgstr "Samma som inmatning, men med ny filändelse"
+msgstr "Samma som inmatning, men ersätter filändelsen"
 
 #: ../src/soundconverter.py:1297
-#, fuzzy
 msgid "Same as input, but with an additional suffix"
-msgstr "Samma som inmatning, men med ny filändelse"
+msgstr "Samma som inmatning, men med en filändelse till"
 
 #: ../src/soundconverter.py:1298
 msgid "Track number - title"
@@ -352,7 +456,7 @@ msgstr "Skapa undermappar: "
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr ""
+msgstr "Ta bort originalfilen"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
@@ -400,7 +504,7 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
-msgstr ""
+msgstr "MP3-kodare finns inte installerad."
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
@@ -436,7 +540,7 @@ msgstr "Kvalitet:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
-msgstr ""
+msgstr "Läs hur man installerar"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
@@ -451,7 +555,6 @@ msgid "Same folder as the input file"
 msgstr "Samma mapp som inmatningsfilen"
 
 #: ../data/soundconverter.glade.h:40
-#, fuzzy
 msgid "SoundConverter"
 msgstr "Ljudkonverterare"
 
@@ -554,110 +657,3 @@ msgstr ""
 "{Title}: Låttitel\n"
 "{Track}: Spårnummer\n"
 "{Total}: Totalt antal spår på albumet"
-
-#~ msgid "Invalid character in filename!"
-#~ msgstr "Ogiltigt tecken i filnamnet!"
-
-#~ msgid "Writing to: '%s'"
-#~ msgstr "Destination: '%s'"
-
-#~ msgid "using encoder: %s (%s)"
-#~ msgstr "Encodeur utilisé : %s (%s)"
-
-#~ msgid "Add files..."
-#~ msgstr "Ajouter des fichiers..."
-
-#~ msgid "Add File"
-#~ msgstr "Ajouter Fichiers"
-
-#~ msgid "Add Folder"
-#~ msgstr "Ajouter Répertoire"
-
-#~ msgid "label27"
-#~ msgstr "label27"
-
-#~ msgid "_Add"
-#~ msgstr "_Ajouter"
-
-#~ msgid "translator name <email>"
-#~ msgstr "Guillaume Bedot <littletux@zarb.org>"
-
-#~ msgid "Artist"
-#~ msgstr "Artiste"
-
-#~ msgid "Album"
-#~ msgstr "Album"
-
-#~ msgid "Title"
-#~ msgstr "Titre"
-
-#~ msgid "setting mime:"
-#~ msgstr "Définit le type mime à :"
-
-#~ msgid ""
-#~ "\n"
-#~ "change mp3 mode"
-#~ msgstr ""
-#~ "\n"
-#~ "change le mode mp3"
-
-#~ msgid "quality: %f"
-#~ msgstr "qualité : %f"
-
-#~ msgid "I choose #%s = %s"
-#~ msgstr "Je choisis #%s = %s"
-
-#~ msgid "Convert sound files."
-#~ msgstr "Convertisseur de fichiers son"
-
-#~ msgid "setting vorbis quality: %f"
-#~ msgstr "Définit la qualité vorbis à : %f"
-
-#~ msgid " "
-#~ msgstr "Guillaume Bedot <littletux@zarb.org> "
-
-#~ msgid "Couldn't link GStreamer elements.\n"
-#~ msgstr "N'a pas pu lier des éléments·GStreamer.\n"
-
-#~ msgid "Please report this as a bug."
-#~ msgstr "Veuillez reporter ce bug svp."
-
-#~ msgid "The file %s is of an unknown type.\n"
-#~ msgstr "Le fichier %s est d'un type inconnu.\n"
-
-#~ msgid "Please ask the developers to add support\n"
-#~ msgstr "Veuillez demander aux développeurs d'ajouter le support\n"
-
-#~ msgid "for files of this type if it is important\n"
-#~ msgstr "de ce type de fichiers si cela est important\n"
-
-#~ msgid "to you."
-#~ msgstr "pour vous."
-
-#~ msgid "exists."
-#~ msgstr "déjà."
-
-#~ msgid "interface. You can use this from, say, shell scripts."
-#~ msgstr "graphique. Vous pouvez utiliser cette option dans des scripts."
-
-#~ msgid "%s . Note that you probably want to set\n"
-#~ msgstr "défaut est %s . Notez que vous pouvez également\n"
-
-#~ msgid "the output suffix as well."
-#~ msgstr "définir le suffixe du fichier converti."
-
-#~ msgid "%s . Note that the suffix does not affect\n"
-#~ msgstr "La valeur par défaut est %s . Le suffixe n'affecte pas\n"
-
-#~ msgid "the output MIME type."
-#~ msgstr "le type MIME des fichiers convertis."
-
-#~ msgid "command line batch mode and disables the graphical user interface."
-#~ msgstr "Cette option active le mode batch, sans interface graphique."
-
-#~ msgid ""
-#~ "The output file %s already\n"
-#~ "                                         exists."
-#~ msgstr ""
-#~ "Le fichier destination·%s\n"
-#~ "existe déjà."

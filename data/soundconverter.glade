@@ -433,7 +433,7 @@
 			  <property name="orientation">GTK_PROGRESS_LEFT_TO_RIGHT</property>
 			  <property name="fraction">0.20000000298</property>
 			  <property name="pulse_step">0.10000000149</property>
-			  <property name="text">file xxxx of yyyy (333 minutes remaining)</property>
+			  <property name="text"></property>
 			  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
 			</widget>
 			<packing>
@@ -1382,14 +1382,6 @@ track_title
 			  <child>
 			    <widget class="GtkEntry" id="custom_filename">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes" comments="Do not translate the strings between { }">{Artist}: Artist name
-{Album}: Album name
-{Date}: Date (yyyy-mm-dd)
-{Genre}: Musical Genre
-{Title}: Song title
-{Track}: Track number
-{Total}: Total number of tracks in album
-{Year}: Year</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1468,7 +1460,6 @@ track_title
 
 			  <child>
 			    <widget class="GtkLabel" id="example_filename">
-			      <property name="width_request">320</property>
 			      <property name="visible">True</property>
 			      <property name="label" translatable="yes">label27</property>
 			      <property name="use_underline">False</property>
@@ -1487,8 +1478,8 @@ track_title
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
+			      <property name="expand">True</property>
+			      <property name="fill">True</property>
 			    </packing>
 			  </child>
 

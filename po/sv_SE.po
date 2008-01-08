@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 0.9.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-01 02:44+0200\n"
+"POT-Creation-Date: 2007-11-14 21:44+0100\n"
 "PO-Revision-Date: 2007-07-31 23:16+0200\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -30,12 +30,17 @@ msgstr ""
 msgid "Sound Converter"
 msgstr "Ljudkonverterare"
 
-#: ../src/soundconverter.py:155
+#. traductors: only if it does make sense.
+#: ../src/soundconverter.py:124
+msgid "Artist Album Title Track Total Genre Date Year"
+msgstr ""
+
+#: ../src/soundconverter.py:190
 #, python-format
 msgid "skipping: '%s'"
 msgstr "Passe: '%s'"
 
-#: ../src/soundconverter.py:502
+#: ../src/soundconverter.py:537
 #, python-format
 msgid ""
 "\n"
@@ -48,11 +53,11 @@ msgstr ""
 "Fel: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:705
+#: ../src/soundconverter.py:740
 msgid "Internal error"
 msgstr "Internt fel"
 
-#: ../src/soundconverter.py:706
+#: ../src/soundconverter.py:741
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -60,12 +65,12 @@ msgstr ""
 "Kunde inte länka GStreamer-element.\n"
 " Rapportera detta som ett fel."
 
-#: ../src/soundconverter.py:711
+#: ../src/soundconverter.py:746
 #, python-format
 msgid "Unknown type %s"
 msgstr "Typen %s är okänd"
 
-#: ../src/soundconverter.py:712
+#: ../src/soundconverter.py:747
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -78,105 +83,110 @@ msgstr ""
 " för filer av denna typ om det är viktigt\n"
 " för dig."
 
-#: ../src/soundconverter.py:966
+#: ../src/soundconverter.py:1001
 msgid "Target exists."
 msgstr "Målet finns redan."
 
-#: ../src/soundconverter.py:967
+#: ../src/soundconverter.py:1002
 #, python-format
 msgid "The output file %s already exists."
 msgstr "Utmatningsfilen %s finns redan."
 
-#: ../src/soundconverter.py:1010
+#: ../src/soundconverter.py:1045
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Kan inte skapa en avkodare för formatet \"%s\"."
 
-#: ../src/soundconverter.py:1021
+#: ../src/soundconverter.py:1056
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Skapar mapp: \"%s\""
 
-#: ../src/soundconverter.py:1025
+#: ../src/soundconverter.py:1060
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Kan inte skapa mappen \"%s\"."
 
-#: ../src/soundconverter.py:1046
+#: ../src/soundconverter.py:1081
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "Kan inte ställa in rättigheter på \"%s\""
 
-#: ../src/soundconverter.py:1218
+#: ../src/soundconverter.py:1254
 #, python-format
 msgid "file already present: '%s'"
 msgstr "filen finns redan: \"%s\""
 
-#: ../src/soundconverter.py:1238
+#: ../src/soundconverter.py:1273
 msgid "loading tags..."
 msgstr "läser in taggar..."
 
-#: ../src/soundconverter.py:1240
+#: ../src/soundconverter.py:1275
 msgid "no tags"
 msgstr "inga taggar"
 
-#: ../src/soundconverter.py:1279
+#: ../src/soundconverter.py:1314
 msgid "unknown"
 msgstr "okänt"
 
-#: ../src/soundconverter.py:1305
+#: ../src/soundconverter.py:1340
 #, fuzzy
 msgid "Same as input, but replacing the suffix"
 msgstr "Samma som inmatning, men med ny filändelse"
 
-#: ../src/soundconverter.py:1306
+#: ../src/soundconverter.py:1341
 #, fuzzy
 msgid "Same as input, but with an additional suffix"
 msgstr "Samma som inmatning, men med ny filändelse"
 
-#: ../src/soundconverter.py:1307
+#: ../src/soundconverter.py:1342
 msgid "Track number - title"
 msgstr "Spårnummer - titel"
 
-#: ../src/soundconverter.py:1308
+#: ../src/soundconverter.py:1343
 msgid "Track title"
 msgstr "Spårtitel"
 
-#: ../src/soundconverter.py:1309
+#: ../src/soundconverter.py:1344
 msgid "Artist - title"
 msgstr "Artist - titel"
 
-#: ../src/soundconverter.py:1310
+#: ../src/soundconverter.py:1345
 msgid "Custom filename pattern"
 msgstr "Anpassat filnamnsmönster"
 
-#: ../src/soundconverter.py:1314
+#: ../src/soundconverter.py:1349
 msgid "artist/album"
 msgstr "artist/album"
 
-#: ../src/soundconverter.py:1315
+#: ../src/soundconverter.py:1350
 msgid "artist-album"
 msgstr "artist-album"
 
-#: ../src/soundconverter.py:1316
+#: ../src/soundconverter.py:1351
 msgid "artist - album"
 msgstr "artist - album"
 
-#: ../src/soundconverter.py:1469
+#: ../src/soundconverter.py:1400
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Filnamnsmönster: "
+
+#: ../src/soundconverter.py:1510
 #, python-format
 msgid "Into folder %s"
 msgstr "I mappen %s"
 
-#: ../src/soundconverter.py:1523
-#, python-format
+#: ../src/soundconverter.py:1568
+#, fuzzy, python-format
 msgid "Target bitrate: %s"
 msgstr "Bithastighet för målfilen: %s"
 
-#: ../src/soundconverter.py:1775
+#: ../src/soundconverter.py:1810
 msgid "Convertion Canceled"
 msgstr "Konvertering avbruten"
 
-#: ../src/soundconverter.py:1818
+#: ../src/soundconverter.py:1853
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -187,72 +197,72 @@ msgstr ""
 " finns redan.\n"
 " Vill du hoppa över filen, skriva över den eller avbryta konverteringen?\n"
 
-#: ../src/soundconverter.py:1907
+#: ../src/soundconverter.py:1942
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Konverteringen klar, på %s"
 
-#: ../src/soundconverter.py:1942
+#: ../src/soundconverter.py:1977
 msgid "Open a file"
 msgstr "Öppna en fil"
 
-#: ../src/soundconverter.py:2031
+#: ../src/soundconverter.py:2066
 msgid "Add Folder..."
 msgstr "Lägg till mapp..."
 
-#: ../src/soundconverter.py:2128
+#: ../src/soundconverter.py:2186
 msgid "canceling conversion."
 msgstr "avbryter konvertering."
 
-#: ../src/soundconverter.py:2151
+#: ../src/soundconverter.py:2209
 msgid "Waiting for tags"
 msgstr "Väntar på taggar"
 
-#: ../src/soundconverter.py:2158
+#: ../src/soundconverter.py:2216
 msgid "Waiting for tags..."
 msgstr "Väntar på taggar..."
 
-#: ../src/soundconverter.py:2166 ../src/soundconverter.py:2179
+#: ../src/soundconverter.py:2224 ../src/soundconverter.py:2237
 msgid "Paused"
 msgstr "Pausad"
 
-#: ../src/soundconverter.py:2183
+#: ../src/soundconverter.py:2241
 msgid "Canceled"
 msgstr "Avbruten"
 
-#: ../src/soundconverter.py:2232
+#: ../src/soundconverter.py:2290
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Konverterar fil %d av %d  (%s)"
 
-#: ../src/soundconverter.py:2245
+#: ../src/soundconverter.py:2303
 msgid "Converting"
 msgstr "Konverterar"
 
-#: ../src/soundconverter.py:2262
+#: ../src/soundconverter.py:2320
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d kvar"
 
-#: ../src/soundconverter.py:2267
+#: ../src/soundconverter.py:2325
 msgid "Ready"
 msgstr "Redo"
 
-#: ../src/soundconverter.py:2348
+#: ../src/soundconverter.py:2406
 #, python-format
 msgid "%s: OK"
 msgstr "%s: OK"
 
-#: ../src/soundconverter.py:2383
+#: ../src/soundconverter.py:2441
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Användning: %s [flaggor] [ljudfil ...]"
 
-#: ../src/soundconverter.py:2398
+#: ../src/soundconverter.py:2456
 msgid "Print out a usage summary."
 msgstr "Skriv ut ett sammandrag om användning."
 
-#: ../src/soundconverter.py:2401
+#: ../src/soundconverter.py:2459
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -260,7 +270,7 @@ msgstr ""
 "Konvertera i satsläge, från kommandorad, utan ett grafiskt gränssnitt.\n"
 " Du kan använda detta, till exempel från skalskript."
 
-#: ../src/soundconverter.py:2404
+#: ../src/soundconverter.py:2462
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -271,15 +281,15 @@ msgstr ""
 " %s . Notera att du antagligen vill ställa in\n"
 " filändelsen för utmatningsfilen också."
 
-#: ../src/soundconverter.py:2407
+#: ../src/soundconverter.py:2465
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Var tyst. Skriv endast ut fel. "
 
-#: ../src/soundconverter.py:2410
+#: ../src/soundconverter.py:2468
 msgid "Print additionnal debug information"
 msgstr "Skriv ut ytterligare felsökningsinformation"
 
-#: ../src/soundconverter.py:2413
+#: ../src/soundconverter.py:2471
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -290,7 +300,7 @@ msgstr ""
 " %s . Notera att filändelsen inte påverkar\n"
 " mime-typen för utmatningsfilen."
 
-#: ../src/soundconverter.py:2416
+#: ../src/soundconverter.py:2474
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -527,20 +537,6 @@ msgstr ""
 msgid "wav"
 msgstr "wav"
 
-#: ../data/soundconverter.glade.h:63
-msgid ""
-"{Artist}: Artist name\n"
-"{Album}: Album name\n"
-"{Title}: Song title\n"
-"{Track}: Track number\n"
-"{Total}: Total number of tracks in album"
-msgstr ""
-"{Artist}: Artistnamn\n"
-"{Album}: Albumnamn\n"
-"{Title}: Låttitel\n"
-"{Track}: Spårnummer\n"
-"{Total}: Totalt antal spår på albumet"
-
 #~ msgid "File exists."
 #~ msgstr "Filen finns redan."
 
@@ -552,6 +548,37 @@ msgstr ""
 
 #~ msgid "zxcv"
 #~ msgstr "zxcv"
+
+#, fuzzy
+#~ msgid ""
+#~ "{Artist}: Artist name\n"
+#~ "{Album}: Album name\n"
+#~ "{Title}: Song title\n"
+#~ "{Track}: Track number\n"
+#~ "{Total}: Total number of tracks in album"
+#~ msgstr ""
+#~ "{Artist}: Artistnamn\n"
+#~ "{Album}: Albumnamn\n"
+#~ "{Title}: Låttitel\n"
+#~ "{Track}: Spårnummer\n"
+#~ "{Total}: Totalt antal spår på albumet"
+
+#~ msgid "Artist"
+#~ msgstr "Artiste"
+
+#~ msgid "Album"
+#~ msgstr "Album"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#, fuzzy
+#~ msgid "Track"
+#~ msgstr "Spårtitel"
+
+#, fuzzy
+#~ msgid "Total"
+#~ msgstr "Titre"
 
 #~ msgid "Invalid character in filename!"
 #~ msgstr "Ogiltigt tecken i filnamnet!"
@@ -579,15 +606,6 @@ msgstr ""
 
 #~ msgid "translator name <email>"
 #~ msgstr "Guillaume Bedot <littletux@zarb.org>"
-
-#~ msgid "Artist"
-#~ msgstr "Artiste"
-
-#~ msgid "Album"
-#~ msgstr "Album"
-
-#~ msgid "Title"
-#~ msgstr "Titre"
 
 #~ msgid "setting mime:"
 #~ msgstr "Définit le type mime à :"
