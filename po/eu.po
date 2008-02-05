@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-14 21:44+0100\n"
-"PO-Revision-Date: 2007-10-08 18:57+0000\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
+"PO-Revision-Date: 2007-11-14 21:34+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-12 19:56+0000\n"
+"X-Launchpad-Export-Date: 2008-02-05 11:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -30,16 +30,16 @@ msgid "Sound Converter"
 msgstr ""
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:124
+#: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr ""
 
-#: ../src/soundconverter.py:190
+#: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
 msgstr ""
 
-#: ../src/soundconverter.py:537
+#: ../src/soundconverter.py:531
 #, python-format
 msgid ""
 "\n"
@@ -48,22 +48,22 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: ../src/soundconverter.py:740
+#: ../src/soundconverter.py:734
 msgid "Internal error"
 msgstr ""
 
-#: ../src/soundconverter.py:741
+#: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
 
-#: ../src/soundconverter.py:746
+#: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
 msgstr ""
 
-#: ../src/soundconverter.py:747
+#: ../src/soundconverter.py:741
 #, fuzzy, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -72,117 +72,113 @@ msgid ""
 " to you."
 msgstr "%s fitxategia ez da mota ezagunekoa."
 
-#: ../src/soundconverter.py:1001
+#: ../src/soundconverter.py:995
 #, fuzzy
 msgid "Target exists."
 msgstr "Helburua lehendik ere badago"
 
-#: ../src/soundconverter.py:1002
+#: ../src/soundconverter.py:996
 #, fuzzy, python-format
 msgid "The output file %s already exists."
 msgstr "%s irteera fitxategia lehendik ere badago."
 
-#: ../src/soundconverter.py:1045
+#: ../src/soundconverter.py:1039
 #, fuzzy, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Ezin da sortu '%s' formaturako dekoderrik"
 
-#: ../src/soundconverter.py:1056
+#: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr ""
 
-#: ../src/soundconverter.py:1060
+#: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr ""
 
-#: ../src/soundconverter.py:1081
+#: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr ""
 
-#: ../src/soundconverter.py:1254
+#: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
 msgstr ""
 
-#: ../src/soundconverter.py:1273
+#: ../src/soundconverter.py:1267
 msgid "loading tags..."
 msgstr ""
 
-#: ../src/soundconverter.py:1275
+#: ../src/soundconverter.py:1269
 msgid "no tags"
 msgstr ""
 
-#: ../src/soundconverter.py:1314
+#: ../src/soundconverter.py:1308
 msgid "unknown"
 msgstr "ezezaguna"
 
-#: ../src/soundconverter.py:1340
+#: ../src/soundconverter.py:1334
 #, fuzzy
 msgid "Same as input, but replacing the suffix"
 msgstr "Sarrerakoa bezala, sufijoa ordezkatuz"
 
-#: ../src/soundconverter.py:1341
+#: ../src/soundconverter.py:1335
 #, fuzzy
 msgid "Same as input, but with an additional suffix"
 msgstr "Sarrerakoa bezala, sufijoa gehituz"
 
-#: ../src/soundconverter.py:1342
+#: ../src/soundconverter.py:1336
 #, fuzzy
 msgid "Track number - title"
 msgstr "Pista zenbakia - Izenburua"
 
-#: ../src/soundconverter.py:1343
+#: ../src/soundconverter.py:1337
 #, fuzzy
 msgid "Track title"
 msgstr "Pistaren izenburua"
 
-#: ../src/soundconverter.py:1344
+#: ../src/soundconverter.py:1338
 #, fuzzy
 msgid "Artist - title"
 msgstr "Artista - izenburua"
 
-#: ../src/soundconverter.py:1345
+#: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
 msgstr ""
 
-#: ../src/soundconverter.py:1349
+#: ../src/soundconverter.py:1343
 #, fuzzy
 msgid "artist/album"
 msgstr "artista/albuma"
 
-#: ../src/soundconverter.py:1350
+#: ../src/soundconverter.py:1344
 #, fuzzy
 msgid "artist-album"
 msgstr "artista-albuma"
 
-#: ../src/soundconverter.py:1351
+#: ../src/soundconverter.py:1345
 #, fuzzy
 msgid "artist - album"
 msgstr "artista-albuma"
 
-#: ../src/soundconverter.py:1400
-msgid "Available patterns:"
-msgstr ""
-
-#: ../src/soundconverter.py:1510
+#: ../src/soundconverter.py:1501
 #, fuzzy, python-format
 msgid "Into folder %s"
 msgstr "%s karpetan"
 
-#: ../src/soundconverter.py:1568
+#: ../src/soundconverter.py:1551
 #, fuzzy, python-format
 msgid "Target bitrate: %s"
 msgstr "Helburua lehendik ere badago"
 
-#: ../src/soundconverter.py:1810
+#: ../src/soundconverter.py:1793
 #, fuzzy
 msgid "Convertion Canceled"
 msgstr "Bihurketa etenda"
 
-#: ../src/soundconverter.py:1853
+#: ../src/soundconverter.py:1836
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -190,83 +186,83 @@ msgid ""
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
 
-#: ../src/soundconverter.py:1942
+#: ../src/soundconverter.py:1925
 #, fuzzy, python-format
 msgid "Conversion done, in %s"
 msgstr "Bihurketa egina, %sean"
 
-#: ../src/soundconverter.py:1977
+#: ../src/soundconverter.py:1960
 #, fuzzy
 msgid "Open a file"
 msgstr "Ireki fitxategia"
 
-#: ../src/soundconverter.py:2066
+#: ../src/soundconverter.py:2049
 #, fuzzy
 msgid "Add Folder..."
 msgstr "Gehitu karpeta"
 
-#: ../src/soundconverter.py:2186
+#: ../src/soundconverter.py:2169
 #, fuzzy
 msgid "canceling conversion."
 msgstr "bihurketa eteten"
 
-#: ../src/soundconverter.py:2209
+#: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
 msgstr ""
 
-#: ../src/soundconverter.py:2216
+#: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
 msgstr ""
 
-#: ../src/soundconverter.py:2224 ../src/soundconverter.py:2237
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
 msgstr "Pausatuta"
 
-#: ../src/soundconverter.py:2241
+#: ../src/soundconverter.py:2224
 msgid "Canceled"
 msgstr "Etenda"
 
-#: ../src/soundconverter.py:2290
+#: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr ""
 
-#: ../src/soundconverter.py:2303
+#: ../src/soundconverter.py:2286
 #, fuzzy
 msgid "Converting"
 msgstr "Bihurtzen"
 
-#: ../src/soundconverter.py:2320
+#: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
 msgstr ""
 
-#: ../src/soundconverter.py:2325
+#: ../src/soundconverter.py:2308
 #, fuzzy
 msgid "Ready"
 msgstr "Prest"
 
-#: ../src/soundconverter.py:2406
+#: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
 msgstr ""
 
-#: ../src/soundconverter.py:2441
+#: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr ""
 
-#: ../src/soundconverter.py:2456
+#: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
 msgstr ""
 
-#: ../src/soundconverter.py:2459
+#: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
 
-#: ../src/soundconverter.py:2462
+#: ../src/soundconverter.py:2445
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -274,15 +270,15 @@ msgid ""
 " the output suffix as well."
 msgstr ""
 
-#: ../src/soundconverter.py:2465
+#: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr ""
 
-#: ../src/soundconverter.py:2468
+#: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
 msgstr ""
 
-#: ../src/soundconverter.py:2471
+#: ../src/soundconverter.py:2454
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -290,7 +286,7 @@ msgid ""
 " the output MIME type."
 msgstr ""
 
-#: ../src/soundconverter.py:2474
+#: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."

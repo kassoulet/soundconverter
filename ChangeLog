@@ -1,3 +1,9 @@
+2008-02-05  Gautier Portet <kassoulet gmail com>
+
+	* po/: Added Catalan, English (United Kingdom), Malay Translations.
+	Updated Czech, German, Spanish, Italian, Deutch, Russian, Serbian, Chinese
+	Traductions
+
 2008-01-08  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Custom filename patterns can now be 
