@@ -2,6 +2,7 @@
 
 	* src/soundconverter.py: Custom filename patterns can now be 
 	  translated.
+	* release 0.9.8
 
 2007-12-26  Gautier Portet <kassoulet gmail com>
 
