@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-14 21:44+0100\n"
-"PO-Revision-Date: 2007-08-16 13:30+0000\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
+"PO-Revision-Date: 2007-11-14 21:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-12 19:56+0000\n"
+"X-Launchpad-Export-Date: 2008-02-05 11:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -30,16 +30,16 @@ msgid "Sound Converter"
 msgstr "Zvukový konvertor"
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:124
+#: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr ""
 
-#: ../src/soundconverter.py:190
+#: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
 msgstr "preskakujem: '%s'"
 
-#: ../src/soundconverter.py:537
+#: ../src/soundconverter.py:531
 #, python-format
 msgid ""
 "\n"
@@ -52,22 +52,22 @@ msgstr ""
 "Chyba: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:740
+#: ../src/soundconverter.py:734
 msgid "Internal error"
 msgstr "Vnútorná chyba"
 
-#: ../src/soundconverter.py:741
+#: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
 
-#: ../src/soundconverter.py:746
+#: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
 msgstr "Neznámy typ %s"
 
-#: ../src/soundconverter.py:747
+#: ../src/soundconverter.py:741
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -80,108 +80,104 @@ msgstr ""
 " opýtajte sa vývojárov ako pridať podporu\n"
 " pre súbory takého typu."
 
-#: ../src/soundconverter.py:1001
+#: ../src/soundconverter.py:995
 msgid "Target exists."
 msgstr ""
 
-#: ../src/soundconverter.py:1002
+#: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
 msgstr "Výstupný súbor %s už existuje."
 
-#: ../src/soundconverter.py:1045
+#: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr ""
 
-#: ../src/soundconverter.py:1056
+#: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Vytváram priečinok: '%s'"
 
-#: ../src/soundconverter.py:1060
+#: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nemôžem vytvoriť priečinok '%s'."
 
-#: ../src/soundconverter.py:1081
+#: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "Nemôžem nastaviť oprávnenie na'%s'"
 
-#: ../src/soundconverter.py:1254
+#: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
 msgstr "tento súbor je už prítomný: '%s'"
 
-#: ../src/soundconverter.py:1273
+#: ../src/soundconverter.py:1267
 msgid "loading tags..."
 msgstr "nahrávam  značky..."
 
-#: ../src/soundconverter.py:1275
+#: ../src/soundconverter.py:1269
 msgid "no tags"
 msgstr "žiadne značky"
 
-#: ../src/soundconverter.py:1314
+#: ../src/soundconverter.py:1308
 msgid "unknown"
 msgstr "neznámy"
 
-#: ../src/soundconverter.py:1340
+#: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
 msgstr ""
 
-#: ../src/soundconverter.py:1341
+#: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
 msgstr ""
 
-#: ../src/soundconverter.py:1342
+#: ../src/soundconverter.py:1336
 msgid "Track number - title"
 msgstr "Číslo stopy - názov"
 
-#: ../src/soundconverter.py:1343
+#: ../src/soundconverter.py:1337
 msgid "Track title"
 msgstr "Názov stopy"
 
-#: ../src/soundconverter.py:1344
+#: ../src/soundconverter.py:1338
 msgid "Artist - title"
 msgstr "Umelec - názov"
 
-#: ../src/soundconverter.py:1345
+#: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
 msgstr "Vlastný názov súboru"
 
-#: ../src/soundconverter.py:1349
+#: ../src/soundconverter.py:1343
 msgid "artist/album"
 msgstr "umelec/album"
 
-#: ../src/soundconverter.py:1350
+#: ../src/soundconverter.py:1344
 msgid "artist-album"
 msgstr "umelec-album"
 
-#: ../src/soundconverter.py:1351
+#: ../src/soundconverter.py:1345
 #, fuzzy
 msgid "artist - album"
 msgstr "umelec-album"
 
-#: ../src/soundconverter.py:1400
-msgid "Available patterns:"
-msgstr ""
-
-#: ../src/soundconverter.py:1510
+#: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
 msgstr "Do priečinka %s"
 
-#: ../src/soundconverter.py:1568
+#: ../src/soundconverter.py:1551
 #, python-format
 msgid "Target bitrate: %s"
 msgstr ""
 
-#: ../src/soundconverter.py:1810
+#: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
 msgstr "Konvertovanie zrušené"
 
-#: ../src/soundconverter.py:1853
+#: ../src/soundconverter.py:1836
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -192,78 +188,78 @@ msgstr ""
 " už existuje.\n"
 " Chcete ho preskočiť, nahradiť alebo zrušiť konvertovanie?\n"
 
-#: ../src/soundconverter.py:1942
+#: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Konvertovanie dokončené za %s"
 
-#: ../src/soundconverter.py:1977
+#: ../src/soundconverter.py:1960
 msgid "Open a file"
 msgstr "Otvoriť­ súbor"
 
-#: ../src/soundconverter.py:2066
+#: ../src/soundconverter.py:2049
 msgid "Add Folder..."
 msgstr "Pridať priečinok..."
 
-#: ../src/soundconverter.py:2186
+#: ../src/soundconverter.py:2169
 msgid "canceling conversion."
 msgstr "zrušenie konvertácie."
 
-#: ../src/soundconverter.py:2209
+#: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
 msgstr "Čakám na značky"
 
-#: ../src/soundconverter.py:2216
+#: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
 msgstr "Čakám na značky..."
 
-#: ../src/soundconverter.py:2224 ../src/soundconverter.py:2237
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
 msgstr "Pozastavené"
 
-#: ../src/soundconverter.py:2241
+#: ../src/soundconverter.py:2224
 msgid "Canceled"
 msgstr "Zrušené"
 
-#: ../src/soundconverter.py:2290
+#: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr ""
 
-#: ../src/soundconverter.py:2303
+#: ../src/soundconverter.py:2286
 msgid "Converting"
 msgstr "Konvertujem"
 
-#: ../src/soundconverter.py:2320
+#: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
 msgstr ""
 
-#: ../src/soundconverter.py:2325
+#: ../src/soundconverter.py:2308
 msgid "Ready"
 msgstr "Pripravený"
 
-#: ../src/soundconverter.py:2406
+#: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
 msgstr "%s: OK"
 
-#: ../src/soundconverter.py:2441
+#: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Používajte: %s [voľby] [názov piesne...]"
 
-#: ../src/soundconverter.py:2456
+#: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
 msgstr ""
 
-#: ../src/soundconverter.py:2459
+#: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
 
-#: ../src/soundconverter.py:2462
+#: ../src/soundconverter.py:2445
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -271,15 +267,15 @@ msgid ""
 " the output suffix as well."
 msgstr ""
 
-#: ../src/soundconverter.py:2465
+#: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr ""
 
-#: ../src/soundconverter.py:2468
+#: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
 msgstr ""
 
-#: ../src/soundconverter.py:2471
+#: ../src/soundconverter.py:2454
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -287,7 +283,7 @@ msgid ""
 " the output MIME type."
 msgstr ""
 
-#: ../src/soundconverter.py:2474
+#: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -504,9 +500,3 @@ msgstr ""
 #: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr ""
-
-#~ msgid "File exists."
-#~ msgstr "Súbor existuje."
-
-#~ msgid "The file %s exists already"
-#~ msgstr "Súbor %s už existuje"
