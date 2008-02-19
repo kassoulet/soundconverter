@@ -1294,7 +1294,7 @@ class FileList:
 
 	def append_file(self, sound_file):
 
-		iter = self.model.append(self.format_cell(sound_file), sound_file)
+		iter = self.model.append([self.format_cell(sound_file), sound_file])
 		self.window.progressbar.pulse()
 			
 	
