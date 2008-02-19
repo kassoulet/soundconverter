@@ -1249,8 +1249,6 @@ class FileList:
 			else:
 				files.append(uri)
 				
-		#files = [unquote_filename(f) for f in files]
-		
 		base,notused = os.path.split(os.path.commonprefix(files))
 		base += "/"
 
