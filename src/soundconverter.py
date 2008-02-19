@@ -3,7 +3,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats. 
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005-2007 Gautier Portet
+# Copyright 2005-2008 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -155,13 +155,13 @@ tag_blacklist = (
 # Name and pattern for CustomFileChooser
 filepattern = (
 	("All files","*.*"),
-	("MPEG 1 Layer 3 files","*.mp3"),
-	("Ogg Vorbis files","*.ogg"),
-	("iTunes AAC files","*.m4a"),
-	("WAVEform audio format","*.wav"),
-	("Advanced Audio Coding","*.aac"),
-	("Free Lossless Audio Codec","*.flac"),
-	("Audio Codec 3","*.ac3")
+	("MP3","*.mp3"),
+	("Ogg Vorbis","*.ogg"),
+	("iTunes AAC ","*.m4a"),
+	("Windows WAV","*.wav"),
+	("AAC","*.aac"),
+	("FLAC","*.flac"),
+	("AC3","*.ac3")
 )
 
 def beautify_uri(uri):
@@ -242,12 +242,13 @@ def file_encode_filename(filename):
 def unquote_filename(filename):
 
 	f= urllib.unquote(filename)
-	try:
+	'''try:
 		# files are normaly in utf-8 ?
 		f = unicode(f, "utf-8")
 	except UnicodeDecodeError:
 		# but sometimes they are badly encoded, this is a failback
 		f = unicode(f, "latin1", "replace")
+	'''
 	return f
 
 
@@ -272,7 +273,7 @@ def markup_escape(message):
 	message = "&gt;".join(message.split(">"))
 	return message
 
-def filename_escape(str):
+def __filename_escape(str):
 	str = str.replace("'","\'")
 	str = str.replace("\"","\\\"")
 	str = str.replace("!","\!")
@@ -371,13 +372,15 @@ class SoundFile:
 	def __init__(self, uri, base_path=None):
 
 		self.uri = uri
+
 		if base_path:
 			self.base_path = base_path
 			self.filename = uri[len(base_path):]
 		else:
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
-		self.filename_for_display = unquote_filename(self.filename)
+		self.filename_for_display = unquote_filename(
+						gobject.filename_display_name(self.filename))
 	
 		self.tags = {
 			"track-number": 0,
@@ -504,7 +507,8 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
-		result = os.path.join(folder, urllib.quote(result.encode('utf-8')))
+		#result = os.path.join(folder, urllib.quote(result.encode('utf-8')))
+		result = os.path.join(folder, urllib.quote(result))
 
 		return result
 
@@ -1227,8 +1231,10 @@ class FileList:
 			try:
 				info = gnomevfs.get_file_info(gnomevfs.URI(uri))
 			except gnomevfs.NotFoundError:
+				log('uri not found: \'%s\'' % uri)
 				continue
 			except gnomevfs.InvalidURIError:
+				log('unvalid uri: \'%s\'' % uri)
 				continue
 
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
@@ -2321,7 +2327,7 @@ class SoundConverterWindow:
 		
 		self.set_status(_("Converting"))
 		
-		self.progressfile.set_markup("<i><small>%s</small></i>" % current_file)
+		self.progressfile.set_markup("<i><small>%s</small></i>" % markup_escape(current_file))
 		fraction = float(done_so_far) / total
 	
 		self.progressbar.set_fraction( min(fraction, 1.0) )
