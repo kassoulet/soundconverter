@@ -462,9 +462,18 @@ class TargetNameGenerator:
 		
 	def _unicode_to_ascii(self, unicode_string):
 		# thanks to http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
-		return unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore')
+		try:
+			unicode_string = unicode(unicode_string, "utf-8")
+			return unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore')
+		except UnicodeDecodeError:
+			unicode_string = unicode(unicode_string, "iso-8859-1")
+			return unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'replace')
+			
 	
 	def get_target_name(self, sound_file):
+
+		assert self.suffix, "you just forgot to call set_target_suffix()"
+		#import pdb; pdb.set_trace()
 
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
@@ -494,7 +503,7 @@ class TargetNameGenerator:
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
 		if self.replace_messy_chars:
-			result = self._unicode_to_ascii(unicode(result))
+			result = self._unicode_to_ascii(result)
 			s = ""
 			for c in result:
 				if c not in self.nice_chars:
