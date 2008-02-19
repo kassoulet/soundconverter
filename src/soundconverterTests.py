@@ -34,7 +34,19 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.set_target_suffix(".ogg")
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "/path/to/file.ogg")
-
+                             
+    def testNoSuffix(self):
+    	try:
+    		self.g.get_target_name(self.s)
+    	except AssertionError:
+    		return # ok
+    	assert False
+                             
+    def testNoExtension(self):
+        self.g.set_target_suffix(".ogg")
+        self.s = SoundFile("/path/to/file")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/path/to/file.ogg")
     def testBasename(self):
         self.g.set_target_suffix(".ogg")
         self.g.set_basename_pattern("%(track-number)02d-%(title)s")
@@ -145,6 +157,38 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.s = SoundFile("ssh:user@server:port///path/to/\xaa.flac")
         self.failUnlessEqual(self.s.get_filename_for_display(),
                              u"\ufffd.flac")
+
+    def test8bits(self):
+        self.g.set_replace_messy_chars(False)
+        self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
+        self.g.set_target_suffix(".ogg")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             quote("/path/to/file\xa0\xb0\xc0\xd0.ogg"))
+
+    """def test8bits_messy(self):
+        self.g.set_replace_messy_chars(True)
+        self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
+        self.g.set_target_suffix(".ogg")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/path/to/file____.ogg")
+    """
+                             
+    def test8bits_tags(self):
+        self.g.set_replace_messy_chars(False)
+        self.s = SoundFile("/path/to/fileyop.flac")
+        self.s.add_tags({
+            "artist": "\xa0\xb0\xc0\xd0", 
+            "title": "\xa1\xb1\xc1\xd1", 
+            "album": "\xa2\xb2\xc2\xd2",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.g.set_target_suffix(".ogg")
+        self.g.set_folder("/music")
+        self.g.set_subfolder_pattern("%(artist)s/%(album)s")
+        self.g.set_basename_pattern("%(title)s")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"))
                               
 if __name__ == "__main__":
     unittest.main()
