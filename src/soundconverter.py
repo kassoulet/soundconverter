@@ -265,13 +265,7 @@ def format_tag(tag):
 	return tag
 
 def markup_escape(message):
-	if not isinstance(message, basestring):
-		print "markup error: '%s'" % message
-
-	message = "&amp;".join(message.split("&"))
-	message = "&lt;".join(message.split("<"))
-	message = "&gt;".join(message.split(">"))
-	return message
+	return gobject.markup_escape_text(message)
 
 def __filename_escape(str):
 	str = str.replace("'","\'")
@@ -379,8 +373,8 @@ class SoundFile:
 		else:
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += "/"
-		self.filename_for_display = unquote_filename(
-						gobject.filename_display_name(self.filename))
+		self.filename_for_display = gobject.filename_display_name(
+				unquote_filename(self.filename))
 	
 		self.tags = {
 			"track-number": 0,
@@ -516,7 +510,6 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
-		#result = os.path.join(folder, urllib.quote(result.encode('utf-8')))
 		result = os.path.join(folder, urllib.quote(result))
 
 		return result
@@ -1256,6 +1249,8 @@ class FileList:
 			else:
 				files.append(uri)
 				
+		#files = [unquote_filename(f) for f in files]
+		
 		base,notused = os.path.split(os.path.commonprefix(files))
 		base += "/"
 
