@@ -1294,11 +1294,7 @@ class FileList:
 
 	def append_file(self, sound_file):
 
-		#print "+", sound_file.get_filename_for_display()
-		iter = self.model.append()
-		sound_file.model = iter
-		self.model.set(iter, 0, self.format_cell(sound_file))
-		self.model.set(iter, 1, sound_file)
+		iter = self.model.append(self.format_cell(sound_file), sound_file)
 		self.window.progressbar.pulse()
 			
 	
@@ -1311,21 +1307,16 @@ class FileList:
 		fields["META"] = sound_file
 		fields["filename"] = sound_file.get_filename_for_display()
 
-		# impossible to access a deleted iter !
-		print sound_file.get_filename_for_display()
-		print '  model:', sound_file.model
-		print '  path:', self.model.get_path( sound_file.model )
-		print '  value:', self.model.get_value( sound_file.model, 0 )
-		print '  valid:', self.model.iter_is_valid(sound_file.model)
-		self.model.set(sound_file.model, 0, self.format_cell(sound_file))
+		for i in self.model:
+			if i[1] == sound_file:
+				i[0] = self.format_cell(sound_file)
 		self.window.set_sensitive()
 		self.window.progressbar.pulse()
 
 	def remove(self, iter):
 		uri = self.model.get(iter, 1)[0].get_uri()
 		del self.filelist[uri]
-		# remove seems to only move iters
-		print 'remove:', self.model.remove(iter)
+		self.model.remove(iter)
 		
 	def is_nonempty(self):
 		try:
