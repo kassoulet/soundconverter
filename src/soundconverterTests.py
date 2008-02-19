@@ -131,7 +131,20 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ftp:user2@dest-server:another-port:/" + quote("mûsîc") + "/file_with_strange_chars.ogg")
                               
-
+    def testDisplay(self):
+        self.g.set_exists(self.always_exists)
+        self.g.set_target_suffix(".ogg")
+        #self.g.set_folder("/")
+        
+        self.s = SoundFile("ssh:user@server:port///path/to/file.flac")
+        self.failUnlessEqual(self.s.get_filename_for_display(),
+                             "file.flac")
+        self.s = SoundFile("ssh:user@server:port///path/to/fîlé.flac")
+        self.failUnlessEqual(self.s.get_filename_for_display(),
+                             "fîlé.flac")
+        self.s = SoundFile("ssh:user@server:port///path/to/\xaa.flac")
+        self.failUnlessEqual(self.s.get_filename_for_display(),
+                             u"\ufffd.flac")
                               
 if __name__ == "__main__":
     unittest.main()
