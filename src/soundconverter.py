@@ -467,7 +467,6 @@ class TargetNameGenerator:
 	def get_target_name(self, sound_file):
 
 		assert self.suffix, "you just forgot to call set_target_suffix()"
-		#import pdb; pdb.set_trace()
 
 		u = gnomevfs.URI(sound_file.get_uri())
 		root, ext = os.path.splitext(u.path)
@@ -1472,7 +1471,7 @@ class PreferencesDialog:
 			w.show()
 		
 		widget_name = widgets.get(mime_type, None)[1]
-		print widget_name
+
 		if widget_name:
 			w = glade.get_widget(widget_name)
 			w.set_active(True)
