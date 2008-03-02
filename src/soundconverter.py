@@ -1426,7 +1426,7 @@ class PreferencesDialog:
 			w = glade.get_widget("into_selected_folder")
 		w.set_active(True)
 		
-		self.target_folder_chooser.set_filename(
+		self.target_folder_chooser.set_uri(
 			self.get_string("selected-folder"))
 		self.update_selected_folder()
 	
@@ -2160,10 +2160,6 @@ class SoundConverterWindow:
 		ret = self.addchooser.run()
 		self.addchooser.hide()
 		if ret == gtk.RESPONSE_OK:
-			files = []
-			#for uri in self.addchooser.get_uris():
-			#  files.append(SoundFile(uri))
-			#self.filelist.add_files(files)
 			self.filelist.add_uris(self.addchooser.get_uris())
 		self.set_sensitive()
 
