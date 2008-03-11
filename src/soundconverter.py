@@ -2064,8 +2064,8 @@ class SoundConverterWindow:
 
 	"""Main application class."""
 
-	sensitive_names = [ "remove", "convert_button" ]
-	unsensitive_when_converting = [ "remove", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "filelist", "menubar" ]
+	sensitive_names = [ "remove", "clear", "toolbutton_clearlist", "convert_button" ]
+	unsensitive_when_converting = [ "remove", "clear", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "toolbutton_clearlist", "filelist", "menubar" ]
 
 	def __init__(self, glade):
 	
@@ -2191,6 +2191,15 @@ class SoundConverterWindow:
 		self.set_sensitive()
 
 	def on_remove_activate(self, *args):
+		model, paths = self.filelist_selection.get_selected_rows()
+		while paths:
+			i = self.filelist.model.get_iter(paths[0])
+			self.filelist.remove(i)
+			model, paths = self.filelist_selection.get_selected_rows()
+		self.set_sensitive()
+		
+	def on_clearlist_activate(self, *args):
+		self.filelist_selection.select_all();
 		model, paths = self.filelist_selection.get_selected_rows()
 		while paths:
 			i = self.filelist.model.get_iter(paths[0])
