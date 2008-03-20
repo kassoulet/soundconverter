@@ -115,6 +115,7 @@ mime_whitelist = (
 	"application/x-ape",
 	"application/vnd.rn-realmedia",
 	"application/x-shockwave-flash",
+	"application/x-3gp",
 )
 
 # custom filename patterns
@@ -804,10 +805,10 @@ class Pipeline(BackgroundTask):
 			err, debug = message.parse_error()
 			self.eos = True
 			self.error = err
-			log("error: %s (%s)" % (err,
-				self.sound_file.get_filename_for_display()))
-			error.show("GStreamer Error", "%s\nfile: '%s'" % (err, 
-				self.sound_file.get_filename_for_display()))
+			#log("error: %s (%s)" % (err,
+			#	self.sound_file.get_filename_for_display()))
+			#error.show("GStreamer Error", "%s\nfile: '%s'" % (err, 
+			#	self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
 		elif t == gst.MESSAGE_TAG:
@@ -860,6 +861,7 @@ class TypeFinder(Pipeline):
 		mime_type = caps.to_string()
 		#debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
 		self.sound_file.mime_type = None
+		#self.sound_file.mime_type = mime_type
 		for t in mime_whitelist:
 			if t in mime_type:
 				self.sound_file.mime_type = mime_type
