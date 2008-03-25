@@ -127,7 +127,7 @@
                         <property name="label" translatable="yes">gtk-clear</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="activate" handler="on_clear_activate"/>
+                        <signal name="activate" handler="on_clearlist_activate"/>
                       </widget>
                     </child>
                     <child>
@@ -410,6 +410,7 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="pack_type">GTK_PACK_END</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
@@ -460,8 +461,10 @@ Thanks to:
 	Thomas Schwing
 	Remi Grolleau
 
+
 </property>
     <property name="documenters">No documentation written.
+
 </property>
     <property name="logo">soundconverter-logo.svg</property>
   </widget>
@@ -767,39 +770,51 @@ Thanks to:
                           <placeholder/>
                         </child>
                         <child>
-                          <widget class="GtkCheckButton" id="delete_original">
+                          <widget class="GtkComboBox" id="subfolder_pattern">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes">artist/album
+artist - album</property>
+                            <signal name="changed" handler="on_subfolder_pattern_changed"/>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_FILL</property>
+                            <property name="y_options">GTK_FILL</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkRadioButton" id="same_folder_as_input">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Delete original file</property>
+                            <property name="label" translatable="yes">Same folder as the input file</property>
                             <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_delete_original_toggled"/>
+                            <signal name="toggled" handler="on_same_folder_as_input_toggled"/>
                           </widget>
                           <packing>
-                            <property name="top_attach">3</property>
-                            <property name="bottom_attach">4</property>
-                            <property name="x_options">GTK_FILL</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkRadioButton" id="into_selected_folder">
-                            <property name="width_request">320</property>
+                          <widget class="GtkCheckButton" id="create_subfolders">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Into a specified folder</property>
+                            <property name="label" translatable="yes">Create subfolders: </property>
                             <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
-                            <property name="group">same_folder_as_input</property>
-                            <signal name="toggled" handler="on_into_selected_folder_toggled"/>
+                            <signal name="toggled" handler="on_create_subfolders_toggled"/>
                           </widget>
                           <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_FILL</property>
                             <property name="y_options"></property>
+                            <property name="x_padding">12</property>
                           </packing>
                         </child>
                         <child>
@@ -854,51 +869,39 @@ Thanks to:
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkCheckButton" id="create_subfolders">
+                          <widget class="GtkRadioButton" id="into_selected_folder">
+                            <property name="width_request">320</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Create subfolders: </property>
+                            <property name="label" translatable="yes">Into a specified folder</property>
                             <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_create_subfolders_toggled"/>
+                            <property name="group">same_folder_as_input</property>
+                            <signal name="toggled" handler="on_into_selected_folder_toggled"/>
                           </widget>
                           <packing>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"></property>
-                            <property name="x_padding">12</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkRadioButton" id="same_folder_as_input">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Same folder as the input file</property>
-                            <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_same_folder_as_input_toggled"/>
-                          </widget>
-                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK | GTK_FILL</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkComboBox" id="subfolder_pattern">
+                          <widget class="GtkCheckButton" id="delete_original">
                             <property name="visible">True</property>
-                            <property name="items" translatable="yes">artist/album
-artist - album</property>
-                            <signal name="changed" handler="on_subfolder_pattern_changed"/>
+                            <property name="can_focus">True</property>
+                            <property name="label" translatable="yes">Delete original file</property>
+                            <property name="use_underline">True</property>
+                            <property name="response_id">0</property>
+                            <property name="draw_indicator">True</property>
+                            <signal name="toggled" handler="on_delete_original_toggled"/>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
                             <property name="x_options">GTK_FILL</property>
-                            <property name="y_options">GTK_FILL</property>
+                            <property name="y_options"></property>
                           </packing>
                         </child>
                       </widget>
@@ -1191,6 +1194,17 @@ MS Wave (.wav)</property>
                                 <property name="column_spacing">4</property>
                                 <property name="row_spacing">4</property>
                                 <child>
+                                  <widget class="GtkLabel" id="label29">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Quality:</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options"></property>
+                                  </packing>
+                                </child>
+                                <child>
                                   <widget class="GtkComboBox" id="vorbis_quality">
                                     <property name="visible">True</property>
                                     <property name="items" translatable="yes">Very Low
@@ -1204,17 +1218,6 @@ Very High</property>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
                                     <property name="y_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label29">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Quality:</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
                                   </packing>
                                 </child>
                               </widget>
@@ -1246,32 +1249,12 @@ Very High</property>
                                   <placeholder/>
                                 </child>
                                 <child>
-                                  <widget class="GtkComboBox" id="mp3_quality">
-                                    <property name="visible">True</property>
-                                    <property name="items" translatable="yes">Very Low
-Low
-Normal
-High
-Very High</property>
-                                    <signal name="changed" handler="on_mp3_quality_changed"/>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label31">
+                                  <widget class="GtkLabel" id="label30">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Quality:</property>
+                                    <property name="label" translatable="yes">Bitrate mode:</property>
                                   </widget>
                                   <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
                                     <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"></property>
                                   </packing>
@@ -1291,14 +1274,34 @@ Variable (VBR) - Best quality</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkLabel" id="label30">
+                                  <widget class="GtkLabel" id="label31">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Bitrate mode:</property>
+                                    <property name="label" translatable="yes">Quality:</property>
                                   </widget>
                                   <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
                                     <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"></property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkComboBox" id="mp3_quality">
+                                    <property name="visible">True</property>
+                                    <property name="items" translatable="yes">Very Low
+Low
+Normal
+High
+Very High</property>
+                                    <signal name="changed" handler="on_mp3_quality_changed"/>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                               </widget>
@@ -1399,6 +1402,9 @@ Variable (VBR) - Best quality</property>
                   <widget class="GtkHSeparator" id="hseparator1">
                     <property name="visible">True</property>
                   </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkHBox" id="hbox26">
@@ -1499,8 +1505,8 @@ Variable (VBR) - Best quality</property>
           <widget class="GtkFileChooserWidget" id="filechooserwidget">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
           </widget>
           <packing>
             <property name="position">2</property>
