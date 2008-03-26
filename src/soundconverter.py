@@ -353,8 +353,11 @@ class SoundConverterException(Exception):
 		
 
 def filename_to_uri(filename):
+	"""Convert a filename to a valid uri.
+	Filename can be a relative or absolute path, or an uri.
+	"""
 	if vfs_exists(filename):
-		return filename
+		return str(gnomevfs.URI(filename))
 	else:
 		return "file://" + urllib.quote(os.path.abspath(filename))
 
@@ -1428,8 +1431,8 @@ class PreferencesDialog:
 			w = glade.get_widget("into_selected_folder")
 		w.set_active(True)
 		
-		self.target_folder_chooser.set_uri(
-			self.get_string("selected-folder"))
+		uri = filename_to_uri(self.get_string("selected-folder"))
+		self.target_folder_chooser.set_uri(uri)
 		self.update_selected_folder()
 	
 		w = glade.get_widget("create_subfolders")
