@@ -1,3 +1,23 @@
+
+2008-03-27  Gautier Portet <kassoulet gmail com>
+	* Fix typo which disabled clear list menu item
+	* Fix filename_to_uri so it will play nice with
+	  relative and absolute paths, thus removing annoying
+	  gvfs error message at startup when output folder is
+	  not set.
+	* CustomFileChooser now have case-insensitive filters.
+
+2008-03-20  Gautier Portet <kassoulet gmail com>
+	* Add 3gp to the mime whitelist.
+
+2008-03-11  Gautier Portet <kassoulet gmail com>
+	* Add a clear list button on toolbar.
+	(thanks mrennecke)
+
+2008-03-02  Gautier Portet <kassoulet gmail com>
+	* Add ca, en_GB, ms to the locales.
+	* release 0.9.9
+
 2008-03-02  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix crash and progress problems after removing
