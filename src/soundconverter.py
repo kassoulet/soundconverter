@@ -2022,8 +2022,8 @@ class CustomFileChooser:
 		self.combo.add_attribute(combo_rend, 'text', 0)
 	
 		# get all (gstreamer) knew files Todo
-		for files in filepattern:
-			self.add_pattern(files[0],files[1])
+		for name, pattern in filepattern:
+			self.add_pattern(name,pattern)
 		self.combo.set_active(0)
 		
 	def add_pattern(self,name,pat):
@@ -2037,13 +2037,22 @@ class CustomFileChooser:
 		self.pattern.append(pat)
 		self.store.append(["%s (%s)" %(name,pat)])
 		
+
+	def filter_cb(self, info, pattern):
+		filename = info[2]
+		return filename.lower().endswith(pattern[1:])
+
 	def on_combo_changed(self,w):
 		"""
 		Callback for combobox "changed" signal\n
 		Set a new filter for the filechooserwidget
 		"""
 		filter = gtk.FileFilter()
-		filter.add_pattern(self.pattern[self.combo.get_active()])
+		active = self.combo.get_active()
+		if active:
+			filter.add_custom(gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb, self.pattern[self.combo.get_active()])
+		else:
+			filter.add_pattern('*.*')
 		self.fcw.set_filter(filter)
 		
 	def run(self):
