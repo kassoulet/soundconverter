@@ -405,7 +405,7 @@ class SoundFile:
 		
 	def add_tags(self, taglist):
 		for key in taglist.keys():
-			self.tags[key] = format_tag(taglist[key])
+			self.tags[key] = taglist[key]
 			
 	def get_tag_names(self):
 		return self.tags.key()
@@ -1285,7 +1285,7 @@ class FileList:
 		params = {}
 		params["filename"] = markup_escape(unquote_filename(sound_file.get_filename()))
 		for item in ("title", "artist", "album"):
-			params[item] = markup_escape(sound_file.get_tag(item))
+			params[item] = markup_escape(format_tag(sound_file.get_tag(item)))
 		if sound_file["bitrate"]:
 			params["bitrate"] = ", %s kbps" % (sound_file["bitrate"] / 1000)
 		else:
