@@ -1,3 +1,9 @@
+2008-03-30  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Only format tags (list) when displaying, So we 
+	  don't mess with tags we don't understand.
+	  (launchpad #179886 thanks Shawn, Matthaeus, Brian)
+	  Release 1.0-rc1
 
 2008-03-27  Gautier Portet <kassoulet gmail com>
 	* Fix typo which disabled clear list menu item
