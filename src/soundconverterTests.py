@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from urllib import quote, unquote
+from urllib import unquote
+import urllib
 from soundconverter import *
+
+def quote(ss):
+	if isinstance(ss, unicode):
+		ss = ss.encode('utf-8')
+	return urllib.quote(ss)
 
 class TargetNameGeneratorTestCases(unittest.TestCase):
 
@@ -116,7 +122,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.set_folder("ftp:user2@dest-server:another-port:" + quote("/mûsîc/"))
         self.g.set_replace_messy_chars(False)
         
-        self.s = SoundFile("ssh:user@server:port" + quote("///path/to/file with strângë chàrs.flac"))
+        self.s = SoundFile("ssh:user@server:port" + quote(u"///path/to/file with \u041d chars.flac"))
         self.s.add_tags({
             "artist": "Foo Bar", 
             "title": "Hi Ho", 
@@ -125,7 +131,24 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11L,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
-                             "ftp:user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs.ogg"))
+                             "ftp:user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg")
+
+    def testURIUnicode_utf8(self):
+        self.g.set_exists(self.always_exists)
+        self.g.set_target_suffix(".ogg")
+        self.g.set_folder("ftp:user2@dest-server:another-port:" + quote("/mûsîc/"))
+        self.g.set_replace_messy_chars(False)
+        
+        self.s = SoundFile("ssh:user@server:port" + quote("///path/to/file with strângë chàrs фズ.flac"))
+        self.s.add_tags({
+            "artist": "Foo Bar", 
+            "title": "Hi Ho", 
+            "album": "IS: TOO",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "ftp:user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs фズ.ogg"))
 
     def testURIUnicodeMessy(self):
         self.g.set_exists(self.always_exists)

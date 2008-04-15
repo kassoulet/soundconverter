@@ -227,7 +227,10 @@ def vfs_unlink(filename):
 	gnomevfs.unlink(gnomevfs.URI(filename))
 
 def vfs_exists(filename):
-	return gnomevfs.exists(filename)
+	try:
+		return gnomevfs.exists(filename)
+	except:
+		return False
 
 # GStreamer gnomevfssrc helpers
 
@@ -513,6 +516,8 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
+		if isinstance(result, unicode):
+			result = result.encode('utf-8')
 		result = os.path.join(folder, urllib.quote(result))
 
 		return result
