@@ -1,6 +1,12 @@
+2008-04-15  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix problem with unicode filenames that keep
+	  trying to crash the universe.
+	  (launchpad #212730)
+
 2008-04-05  Gautier Portet <kassoulet gmail com>
 
-	* Release 1.0
+	* Release 1.0.0
 
 2008-03-30  Gautier Portet <kassoulet gmail com>
 
