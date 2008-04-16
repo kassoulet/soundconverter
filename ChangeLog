@@ -1,3 +1,9 @@
+2008-04-16  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix just another unicode problem, this time when
+	  trying to remove messy chars. Please, think of the kitten, and give me ascii back!
+	  (launchpad #216119)
+
 2008-04-15  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix problem with unicode filenames that keep
