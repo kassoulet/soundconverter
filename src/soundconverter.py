@@ -502,6 +502,8 @@ class TargetNameGenerator:
 		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
+		if isinstance(result, unicode):
+			result = result.encode('utf-8')
 		if self.replace_messy_chars:
 			result = self._unicode_to_ascii(result)
 			s = ""
@@ -516,8 +518,6 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
-		if isinstance(result, unicode):
-			result = result.encode('utf-8')
 		result = os.path.join(folder, urllib.quote(result))
 
 		return result
