@@ -1247,6 +1247,9 @@ class FileList:
 			except gnomevfs.InvalidURIError:
 				log('unvalid uri: \'%s\'' % uri)
 				continue
+			except TypeError, e:
+				log('error: %s (%s)' % (e, uri))
+				continue
 
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 				filelist = vfs_walk(gnomevfs.URI(uri))
