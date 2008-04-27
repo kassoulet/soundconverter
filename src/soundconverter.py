@@ -60,6 +60,8 @@ try:
 	import pygst
 	pygst.require('0.10')
 	import gst
+	
+	
 except ImportError:
 	print "%s needs python-gstreamer 0.10!" % NAME
 	sys.exit(1)
@@ -288,7 +290,6 @@ if gst.element_factory_find("gnomevfssrc"):
 	gstreamer_sink = "gnomevfssink"
 	encode_filename = vfs_encode_filename
 	use_gnomevfs = True
-	print "  using gnomevfssrc"
 else:
 	gstreamer_source = "filesrc"
 	gstreamer_sink = "filesink"
@@ -806,15 +807,44 @@ class Pipeline(BackgroundTask):
 
 	def found_tag(self, decoder, something, taglist):
 		pass
+		
+	def install_plugin_cb(self, result):
+		if result == gst.pbutils.INSTALL_PLUGINS_SUCCESS:
+			gst.update_registry()
+			self.parsed = False
+			self.play()
+			return
+		self.finish()
+		if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
+			dialog = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_MODAL, 
+				type=gtk.MESSAGE_INFO, 
+				buttons=gtk.BUTTONS_OK, 
+				message_format="Plugin installation aborted.")
+			dialog.run()
+			dialog.hide()
+			return
 
+		error.show("Error", "failed to install plugins: %s" % markup_escape(str(result)))
+		
 	def on_message(self, bus, message):
 		t = message.type
+		import gst
 		if t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
 			self.eos = True
 			self.error = err
-			#log("error: %s (%s)" % (err,
-			#	self.sound_file.get_filename_for_display()))
+			log("error: %s (%s)" % (err,
+				self.sound_file.get_filename_for_display()))
+				
+		elif t == gst.MESSAGE_ELEMENT:
+			st = message.structure
+			if st and st.get_name().startswith('missing-'):
+				self.pipeline.set_state(gst.STATE_NULL)
+				if gst.pygst_version >= (0, 10, 10):
+					import gst.pbutils
+					detail = gst.pbutils.missing_plugin_message_get_installer_detail(message)
+					ctx = gst.pbutils.InstallPluginsContext()
+					gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
 			#error.show("GStreamer Error", "%s\nfile: '%s'" % (err, 
 			#	self.sound_file.get_filename_for_display()))
 		elif t == gst.MESSAGE_EOS:
@@ -989,11 +1019,19 @@ class TagReader(Decoder):
 			pass
 
 	def work(self):
+		if not self.pipeline:
+			return False
+		
 		if not self.run_start_time:
 			if self.sound_file.mime_type in tag_blacklist:
 				log("%s: type is %s, tag reading blacklisted" % (self.sound_file.get_filename_for_display(), self.sound_file.mime_type))
 				return False
 			self.run_start_time = time.time()
+			
+		if self.pipeline.get_state() != gst.STATE_PLAYING:
+			self.run_start_time = time.time()
+
+		print time.time()-self.run_start_time
 		if time.time()-self.run_start_time > 5:
 			# stop looking for tags after 5s 
 			return False
