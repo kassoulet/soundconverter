@@ -1,3 +1,8 @@
+2008-04-28  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix unhandled exception when parsing pipeline
+	  command.
+
 2008-04-27  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Add support for codeina/codecbuddy.
