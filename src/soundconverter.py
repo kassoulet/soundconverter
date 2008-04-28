@@ -856,11 +856,15 @@ class Pipeline(BackgroundTask):
 	def play(self):
 		if not self.parsed:
 			debug("launching: '%s'" % self.command)
-			self.pipeline = gst.parse_launch(self.command)
-			for name, signal, callback in self.signals:
-				self.pipeline.get_by_name(name).connect(signal,callback)
-			self.parsed = True
-	
+			try:
+				self.pipeline = gst.parse_launch(self.command)
+				for name, signal, callback in self.signals:
+					self.pipeline.get_by_name(name).connect(signal,callback)
+				self.parsed = True
+			except gobject.GError, e:
+				error.show("GStreamer error when creating pipeline", str(e))
+				self.eos = True # TODO
+				return
 		bus = self.pipeline.get_bus()
 		bus.add_signal_watch()
 		watch_id = bus.connect('message', self.on_message)
@@ -1031,7 +1035,6 @@ class TagReader(Decoder):
 		if self.pipeline.get_state() != gst.STATE_PLAYING:
 			self.run_start_time = time.time()
 
-		print time.time()-self.run_start_time
 		if time.time()-self.run_start_time > 5:
 			# stop looking for tags after 5s 
 			return False
