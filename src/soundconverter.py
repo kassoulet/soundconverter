@@ -719,6 +719,7 @@ class TaskQueue(BackgroundTask):
 		self.queue_ended()
 		self.tasks_number = 0
 
+
 	def stop(self):
 		if self.tasks:
 			self.tasks[0].stop()
@@ -1316,7 +1317,7 @@ class FileList:
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add(typefinder)
 
-		if not self.typefinders.is_running():
+		if files and not self.typefinders.is_running():
 			self.typefinders.queue_ended = self.typefinder_queue_ended
 			self.typefinders.run()
 
