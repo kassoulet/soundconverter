@@ -1,3 +1,8 @@
+2008-04-29  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Faster startup time, by not running a useless
+	  thread when starting.
+
 2008-04-28  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix unhandled exception when parsing pipeline
