@@ -1237,19 +1237,8 @@ class FileList:
 
 		if mime_id >= 0 and mime_id < len(self.drop_mime_types):
 			file_list = []
-			for uri in selection.data.split("\n"):
-				uri = uri.strip()
-				if uri:
-					info = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_DEFAULT)
-					if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-						file_list.extend(vfs_walk(gnomevfs.URI(uri)))
-					else:
-						file_list.append(uri)
+			self.add_uris([uri.strip() for uri in selection.data.split("\n")])
 			context.finish(True, False, time)
-			base = os.path.commonprefix(file_list)
-			#[self.add_file(SoundFile(base, uri[len(base):])) for uri in file_list]
-			#[self.add_file(SoundFile(uri, base)) for uri in file_list]
-			self.add_uris(file_list)
 
 	def get_files(self):
 		files = []
@@ -1279,8 +1268,13 @@ class FileList:
 	def add_uris(self, uris, base=None, filter=None):
 
 		files = []
-
+		
 		for uri in uris:
+			print uri
+			if uri.startswith('cdda:'):
+				error.show("Cannot read from Audio CD.",
+					"Use SoundJuicer Audio CD Extractor instead.")
+				return
 			try:
 				info = gnomevfs.get_file_info(gnomevfs.URI(uri))
 			except gnomevfs.NotFoundError:
