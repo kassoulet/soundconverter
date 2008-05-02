@@ -1,3 +1,9 @@
+2008-05-02  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Simplified drag_data_received() so it don't 
+	  duplicate code in add_uris.
+	  Display a message when trying to read cdda: uris.
+
 2008-04-29  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Faster startup time, by not running a useless
