@@ -10,13 +10,13 @@ msgstr ""
 "Project-Id-Version: soundconverter 0.9.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-11-14 21:35+0000\n"
-"Last-Translator: Guillaume Bedot <littletux@zarb.org>\n"
+"PO-Revision-Date: 2008-04-01 14:25+0000\n"
+"Last-Translator: Nizar K <nizar.kerkeni@gmail.com>\n"
 "Language-Team: French <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 11:00+0000\n"
+"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "File exists."
@@ -171,7 +171,7 @@ msgstr "Convertisseur Audio SoundConverter"
 #. traductors: only if it does make sense.
 #: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
-msgstr ""
+msgstr "Artiste Album Titre Piste Total Genre Date Année"
 
 #: ../src/soundconverter.py:184
 #, python-format
@@ -300,9 +300,8 @@ msgid "artist-album"
 msgstr "artiste-album"
 
 #: ../src/soundconverter.py:1345
-#, fuzzy
 msgid "artist - album"
-msgstr "artiste-album"
+msgstr "artiste - album"
 
 #: ../src/soundconverter.py:1501
 #, python-format
@@ -310,9 +309,9 @@ msgid "Into folder %s"
 msgstr "Dans le dossier %s"
 
 #: ../src/soundconverter.py:1551
-#, fuzzy, python-format
+#, python-format
 msgid "Target bitrate: %s"
-msgstr "<small>Débit binaire de la destination :·%s</small>"
+msgstr "Débit binaire de la destination : %s"
 
 #: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
