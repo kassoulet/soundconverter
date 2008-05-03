@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 18:40+0100\n"
+"POT-Creation-Date: 2008-05-03 21:35+0200\n"
 "PO-Revision-Date: 2007-11-14 21:36+0000\n"
 "Last-Translator: PasiC <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -18,39 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#~ msgid "File exists."
-#~ msgstr "Létező fájl!"
-
-#, python-format
-#~ msgid "The file %s exists already"
-#~ msgstr "A·%s fájl már létezik."
-
-#, python-format
-#~ msgid "<small>Target bitrate: %s</small>"
-#~ msgstr "<small>Cél bitráta:·%s</small>"
-
-#~ msgid "asdf"
-#~ msgstr "asdf"
-
-#~ msgid "zxcv"
-#~ msgstr "zxcv"
-
-#~ msgid ""
-#~ "{Artist}: Artist name\n"
-#~ "{Album}: Album name\n"
-#~ "{Title}: Song title\n"
-#~ "{Track}: Track number\n"
-#~ "{Total}: Total number of tracks in album"
-#~ msgstr ""
-#~ "{Artist} :·Előadó neve\n"
-#~ "{Album} :·Album neve\n"
-#~ "{Title} :·Szám címe\n"
-#~ "{Track} :·Track száma\n"
-#~ "{Total} :·Az album track-jeinek száma"
-
-#~ msgid "Invalid character in filename!"
-#~ msgstr "Érvénytelen karakter a fájlnévben!"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 #, fuzzy
@@ -67,16 +34,16 @@ msgid "Sound Converter"
 msgstr "SoundConverter"
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:119
+#: ../src/soundconverter.py:127
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr ""
 
-#: ../src/soundconverter.py:184
+#: ../src/soundconverter.py:192
 #, python-format
 msgid "skipping: '%s'"
 msgstr ""
 
-#: ../src/soundconverter.py:531
+#: ../src/soundconverter.py:548
 #, python-format
 msgid ""
 "\n"
@@ -89,11 +56,11 @@ msgstr ""
 "Hiba:·%s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:734
+#: ../src/soundconverter.py:752
 msgid "Internal error"
 msgstr "Belső hiba"
 
-#: ../src/soundconverter.py:735
+#: ../src/soundconverter.py:753
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -101,12 +68,12 @@ msgstr ""
 "Nem tudom kapcsolni a GStreamer elemeket.\n"
 "Jelentse hibaként az üzenetet."
 
-#: ../src/soundconverter.py:740
+#: ../src/soundconverter.py:758
 #, python-format
 msgid "Unknown type %s"
 msgstr "%s ismeretlen típus."
 
-#: ../src/soundconverter.py:741
+#: ../src/soundconverter.py:759
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -118,106 +85,115 @@ msgstr ""
 " Kérem jelezze a fejlesztőknek, amennyiben az\n"
 "adott fájlformátum szükséges önnek."
 
-#: ../src/soundconverter.py:995
+#: ../src/soundconverter.py:1054
 msgid "Target exists."
 msgstr "A cél már létezik."
 
-#: ../src/soundconverter.py:996
+#: ../src/soundconverter.py:1055
 #, python-format
 msgid "The output file %s already exists."
 msgstr "A kimeneti fájl %s már létezik."
 
-#: ../src/soundconverter.py:1039
+#: ../src/soundconverter.py:1098
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Nem lehet dekódert találni a '%s' kimenetű fomátumhoz."
 
-#: ../src/soundconverter.py:1050
+#: ../src/soundconverter.py:1109
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Könyvtár létrehozása: '%s'"
 
-#: ../src/soundconverter.py:1054
+#: ../src/soundconverter.py:1113
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nem lehet létrehozni a '%s' könyvtárt."
 
-#: ../src/soundconverter.py:1075
+#: ../src/soundconverter.py:1134
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "Nem lehet jogokat állítani ezen: '%s'"
 
-#: ../src/soundconverter.py:1248
+#: ../src/soundconverter.py:1306
 #, python-format
 msgid "file already present: '%s'"
 msgstr "a fájl '%s' már jelen van."
 
-#: ../src/soundconverter.py:1267
+#: ../src/soundconverter.py:1325
 msgid "loading tags..."
 msgstr "tag-ek betöltése ..."
 
-#: ../src/soundconverter.py:1269
+#: ../src/soundconverter.py:1327
 msgid "no tags"
 msgstr "nincsenek tag-ek"
 
-#: ../src/soundconverter.py:1308
+#: ../src/soundconverter.py:1362
 msgid "unknown"
 msgstr "ismeretlen"
 
-#: ../src/soundconverter.py:1334
+#: ../src/soundconverter.py:1390
 #, fuzzy
 msgid "Same as input, but replacing the suffix"
 msgstr "Mint a bemenet, de új utótagokkal."
 
-#: ../src/soundconverter.py:1335
+#: ../src/soundconverter.py:1391
 #, fuzzy
 msgid "Same as input, but with an additional suffix"
 msgstr "Mint a bemenet, de új utótagokkal."
 
-#: ../src/soundconverter.py:1336
+#: ../src/soundconverter.py:1392
 msgid "Track number - title"
 msgstr "Track száma - cím"
 
-#: ../src/soundconverter.py:1337
+#: ../src/soundconverter.py:1393
 msgid "Track title"
 msgstr "Track címe"
 
-#: ../src/soundconverter.py:1338
+#: ../src/soundconverter.py:1394
 msgid "Artist - title"
 msgstr "Szerző - cím"
 
-#: ../src/soundconverter.py:1339
+#: ../src/soundconverter.py:1395
 msgid "Custom filename pattern"
 msgstr "Egyedi fájlnév minta"
 
-#: ../src/soundconverter.py:1343
+#: ../src/soundconverter.py:1399
 msgid "artist/album"
 msgstr "szerző / album"
 
-#: ../src/soundconverter.py:1344
+#: ../src/soundconverter.py:1400
 msgid "artist-album"
 msgstr "szerző-album"
 
-#: ../src/soundconverter.py:1345
+#: ../src/soundconverter.py:1401
 #, fuzzy
 msgid "artist - album"
 msgstr "szerző-album"
 
-#: ../src/soundconverter.py:1501
+#: ../src/soundconverter.py:1450
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Fájlnév minta: · "
+
+#: ../src/soundconverter.py:1560
 #, python-format
 msgid "Into folder %s"
 msgstr "A %s könyvtárba"
 
-#: ../src/soundconverter.py:1551
+#: ../src/soundconverter.py:1636
 #, fuzzy, python-format
 msgid "Target bitrate: %s"
 msgstr "<small>Cél bitráta:·%s</small>"
 
-#: ../src/soundconverter.py:1793
+#: ../src/soundconverter.py:1878
 msgid "Convertion Canceled"
 msgstr "Könvertálás megszakítva"
 
-#: ../src/soundconverter.py:1836
+#: ../src/soundconverter.py:1913
+msgid "Cannot overwrite source file(s)!"
+msgstr ""
+
+#: ../src/soundconverter.py:1926
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -229,73 +205,78 @@ msgstr ""
 "már létezikKi akarod hagyni a fájlt, felülírni vagy\n"
 " megszakítani a konverziót?\n"
 
-#: ../src/soundconverter.py:1925
+#: ../src/soundconverter.py:2015
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Konvertálás befejezve: %s"
 
-#: ../src/soundconverter.py:1960
+#: ../src/soundconverter.py:2050
 msgid "Open a file"
 msgstr "Fájl megnyitása"
 
-#: ../src/soundconverter.py:2049
+#: ../src/soundconverter.py:2148
 msgid "Add Folder..."
 msgstr "Könyvtár hozzáadása ..."
 
-#: ../src/soundconverter.py:2169
+#: ../src/soundconverter.py:2273
 msgid "canceling conversion."
 msgstr "convertálás megszakítása."
 
-#: ../src/soundconverter.py:2192
+#: ../src/soundconverter.py:2275
+#, fuzzy
+msgid "Conversion canceled"
+msgstr "Könvertálás megszakítva"
+
+#: ../src/soundconverter.py:2298
 msgid "Waiting for tags"
 msgstr "Tag-ra várok ..."
 
-#: ../src/soundconverter.py:2199
+#: ../src/soundconverter.py:2305
 msgid "Waiting for tags..."
 msgstr "Tag-ra várok ..."
 
-#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
+#: ../src/soundconverter.py:2313 ../src/soundconverter.py:2326
 msgid "Paused"
 msgstr "Szüneteltetve"
 
-#: ../src/soundconverter.py:2224
+#: ../src/soundconverter.py:2330
 msgid "Canceled"
 msgstr "Megszakítva"
 
-#: ../src/soundconverter.py:2273
+#: ../src/soundconverter.py:2379
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Fájl konvertálása %d, %d  (%s)"
 
-#: ../src/soundconverter.py:2286
+#: ../src/soundconverter.py:2392
 msgid "Converting"
 msgstr "Konvertálás"
 
-#: ../src/soundconverter.py:2303
+#: ../src/soundconverter.py:2409
 #, fuzzy, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d hátra"
 
-#: ../src/soundconverter.py:2308
+#: ../src/soundconverter.py:2414
 msgid "Ready"
 msgstr "Kész"
 
-#: ../src/soundconverter.py:2389
+#: ../src/soundconverter.py:2495
 #, python-format
 msgid "%s: OK"
 msgstr "%s :·OK"
 
-#: ../src/soundconverter.py:2424
+#: ../src/soundconverter.py:2530
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Használat: %s [opciók]·[hangfájl·...]"
 
-#: ../src/soundconverter.py:2439
+#: ../src/soundconverter.py:2545
 #, fuzzy
 msgid "Print out a usage summary."
 msgstr "Használat összefoglalásának nyomtatása."
 
-#: ../src/soundconverter.py:2442
+#: ../src/soundconverter.py:2548
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -303,7 +284,7 @@ msgstr ""
 "Konvertálás kötegelt módban, parancssorból, grafikus felület nélkül.\n"
 "Ez a mód scriptekből jól használható"
 
-#: ../src/soundconverter.py:2445
+#: ../src/soundconverter.py:2551
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -313,15 +294,15 @@ msgstr ""
 "Állítsa be a kimeneti MIME típust a kötegelt módhoz. Az alapértelmezés\n"
 " %s. Lehet, hogy szüksége van az utótag állítására is!"
 
-#: ../src/soundconverter.py:2448
+#: ../src/soundconverter.py:2554
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Csendes üzemmód, nem használ kimenetet, csak hibákat ír."
 
-#: ../src/soundconverter.py:2451
+#: ../src/soundconverter.py:2557
 msgid "Print additionnal debug information"
 msgstr "Több nyomkövető infromációt ír"
 
-#: ../src/soundconverter.py:2454
+#: ../src/soundconverter.py:2560
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -332,7 +313,7 @@ msgstr ""
 "Az alapértelmezés %s . Figyeljen oda, hogy a MIME típus is\n"
 "helyesen legyen megadva!"
 
-#: ../src/soundconverter.py:2457
+#: ../src/soundconverter.py:2563
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -473,20 +454,20 @@ msgid "Quality:"
 msgstr "Minőség:"
 
 #: ../data/soundconverter.glade.h:36
-msgid "Read how to install"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Minden karakter törlése, kivéve betűk, számok és ./_-"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:37
 msgid "Replace all messy characters"
 msgstr "Minden speciális karakter cseréje"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:38
 msgid "Same folder as the input file"
 msgstr "Ugyanabba a könyvtárba, ahol a bemeneti fájlok találhatók"
+
+#: ../data/soundconverter.glade.h:39
+msgid "Select _All"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 #, fuzzy
@@ -525,18 +506,35 @@ msgid "_Apply to entire queue"
 msgstr "_Az egész sorra alkalmazza"
 
 #: ../data/soundconverter.glade.h:50
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:51
+msgid "_Edit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:52
+#, fuzzy
+msgid "_File"
+msgstr "Fájl _hozzáadása"
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Help"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:54
 msgid "_Overwrite"
 msgstr "_Felülírás"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:55
 msgid "_Remove"
 msgstr "_Törlés"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:56
 msgid "_Skip"
 msgstr "_Kihagyás"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:57
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -544,23 +542,40 @@ msgstr ""
 "Előadó/album\n"
 "előadó - album"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:59
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:60
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:61
+msgid "gtk-about"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
+msgid "gtk-clear"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:63
+#, fuzzy
+msgid "gtk-preferences"
+msgstr "Beállítások"
+
+#: ../data/soundconverter.glade.h:64
+msgid "gtk-quit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:65
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:66
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:67
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -568,6 +583,37 @@ msgstr ""
 "track_száma - track_címe\n"
 "track_címe\n"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:70
 msgid "wav"
 msgstr "wav"
+
+#~ msgid "File exists."
+#~ msgstr "Létező fájl!"
+
+#~ msgid "The file %s exists already"
+#~ msgstr "A·%s fájl már létezik."
+
+#~ msgid "<small>Target bitrate: %s</small>"
+#~ msgstr "<small>Cél bitráta:·%s</small>"
+
+#~ msgid "asdf"
+#~ msgstr "asdf"
+
+#~ msgid "zxcv"
+#~ msgstr "zxcv"
+
+#~ msgid ""
+#~ "{Artist}: Artist name\n"
+#~ "{Album}: Album name\n"
+#~ "{Title}: Song title\n"
+#~ "{Track}: Track number\n"
+#~ "{Total}: Total number of tracks in album"
+#~ msgstr ""
+#~ "{Artist} :·Előadó neve\n"
+#~ "{Album} :·Album neve\n"
+#~ "{Title} :·Szám címe\n"
+#~ "{Track} :·Track száma\n"
+#~ "{Total} :·Az album track-jeinek száma"
+
+#~ msgid "Invalid character in filename!"
+#~ msgstr "Érvénytelen karakter a fájlnévben!"
