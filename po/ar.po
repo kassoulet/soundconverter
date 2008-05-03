@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-11-14 21:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-03-09 06:45+0000\n"
+"Last-Translator: Alaa <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 11:00+0000\n"
+"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -192,7 +192,7 @@ msgstr "فتح ملفّ"
 
 #: ../src/soundconverter.py:2049
 msgid "Add Folder..."
-msgstr ""
+msgstr "إضافة مجلد..."
 
 #: ../src/soundconverter.py:2169
 msgid "canceling conversion."
@@ -327,7 +327,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr ""
+msgstr "إحذف الملف الأصلي"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
@@ -379,7 +379,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
-msgstr ""
+msgstr "بدون ضغط"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Non-Free Lossy Compression"
@@ -467,6 +467,8 @@ msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
+"الفنان/الألبوم\n"
+"الفنان - الألبوم"
 
 #: ../data/soundconverter.glade.h:55
 msgid "dialog1"

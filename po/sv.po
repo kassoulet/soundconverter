@@ -1,19 +1,17 @@
-# Polish translation of PACKAGE.
-# Copyright (C) 2005 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# GNOME PL Team <translators@gnomepl.org>, 2005.
-# , fuzzy
-# GNOME PL Team <translators@gnomepl.org>, 2005.
+# Swedish translation of soundconverter.
+# Copyright (C) 2006 THE soundconverter'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the soundconverter package.
+# Daniel Nylander <po@danielnylander.se>, 2006.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: soundconverter 0.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-11-14 21:39+0000\n"
-"Last-Translator: Dominik Zabłotny <Unknown>\n"
-"Language-Team: Polish <translators@gnomepl.org>\n"
+"PO-Revision-Date: 2007-10-27 13:51+0000\n"
+"Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,15 +19,15 @@ msgstr ""
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "File exists."
-#~ msgstr "Plik już istnieje."
+#~ msgstr "Filen finns redan."
 
 #, python-format
 #~ msgid "The file %s exists already"
-#~ msgstr "Plik %s już istnieje"
+#~ msgstr "Filen %s finns redan"
 
 #, python-format
 #~ msgid "<small>Target bitrate: %s</small>"
-#~ msgstr "<small>Docelowa gęstość bitowa: %s</small>"
+#~ msgstr "<small>Bithastighet för målfilen: %s</small>"
 
 #~ msgid "asdf"
 #~ msgstr "asdf"
@@ -37,91 +35,137 @@ msgstr ""
 #~ msgid "zxcv"
 #~ msgstr "zxcv"
 
-#~ msgid "Invalid character in filename!"
-#~ msgstr "Niepoprawny znak w nazwie pliku!"
-
-#, fuzzy
 #~ msgid ""
-#~ "\n"
-#~ "Guillaume Bedot <guillaume.bedot wanadoo.fr> (french)\n"
-#~ "Dominik ZabÅotny <dominz wp.pl> (polish) \n"
-#~ "Jonh Wendell <wendell bani.com.br> (brazilian)\n"
-#~ "Marc E. <m4rccd yahoo.com> (spanish)\n"
+#~ "{Artist}: Artist name\n"
+#~ "{Album}: Album name\n"
+#~ "{Title}: Song title\n"
+#~ "{Track}: Track number\n"
+#~ "{Total}: Total number of tracks in album"
 #~ msgstr ""
-#~ "\n"
-#~ "Guillaume·Bedot·<guillaume.bedot·wanadoo.fr>·(French)\n"
-#~ "Dominik·Zabłotny·<dominz·wp.pl> & Tomasz Dominikowski <dominikowski "
-#~ "gmail.com>·(Polish)·\n"
-#~ "Jonh·Wendell·<wendell·bani.com.br>·(Brazilian)\n"
+#~ "{Artist}: Artistnamn\n"
+#~ "{Album}: Albumnamn\n"
+#~ "{Title}: Låttitel\n"
+#~ "{Track}: Spårnummer\n"
+#~ "{Total}: Totalt antal spår på albumet"
+
+#~ msgid "Invalid character in filename!"
+#~ msgstr "Ogiltigt tecken i filnamnet!"
 
 #~ msgid "Writing to: '%s'"
-#~ msgstr "Zapisywanie do: \"%s\""
+#~ msgstr "Destination: '%s'"
 
 #~ msgid "Add files..."
-#~ msgstr "Dodaj pliki..."
+#~ msgstr "Ajouter des fichiers..."
 
-#, fuzzy
 #~ msgid "Add File"
-#~ msgstr "Dodaj pliki..."
+#~ msgstr "Ajouter Fichiers"
+
+#~ msgid "Add Folder"
+#~ msgstr "Ajouter Répertoire"
 
 #~ msgid "label27"
 #~ msgstr "label27"
 
 #~ msgid "Artist"
-#~ msgstr "Wykonawca"
+#~ msgstr "Artiste"
 
 #~ msgid "Album"
 #~ msgstr "Album"
 
 #~ msgid "Title"
-#~ msgstr "Tytuł"
+#~ msgstr "Titre"
 
 #~ msgid "_Add"
-#~ msgstr "_Dodaj"
+#~ msgstr "_Ajouter"
 
 #~ msgid "Convert sound files."
-#~ msgstr "Konwertuj pliki dźwiękowe."
-
-#~ msgid "<b>Converting to</b>"
-#~ msgstr "<b>Konwertowanie do</b>"
+#~ msgstr "Convertisseur de fichiers son"
 
 #~ msgid "translator name <email>"
-#~ msgstr "Dominik Zabłotny <dominz@wp.pl>"
+#~ msgstr "Guillaume Bedot <littletux@zarb.org>"
 
 #~ msgid "setting mime:"
-#~ msgstr "ustawianie mime:"
+#~ msgstr "Définit le type mime à :"
 
 #~ msgid ""
 #~ "\n"
 #~ "change mp3 mode"
 #~ msgstr ""
 #~ "\n"
-#~ "zmień tryb mp3"
+#~ "change le mode mp3"
 
 #~ msgid "quality: %f"
-#~ msgstr "jakość: %f"
+#~ msgstr "qualité : %f"
 
 #~ msgid "I choose #%s = %s"
-#~ msgstr "I wybierz #%s = %s"
+#~ msgstr "Je choisis #%s = %s"
+
+#~ msgid "using encoder: %s (%s)"
+#~ msgstr "Encodeur utilisé : %s (%s)"
+
+#~ msgid "setting vorbis quality: %f"
+#~ msgstr "Définit la qualité vorbis à : %f"
+
+#~ msgid " "
+#~ msgstr "Guillaume Bedot <littletux@zarb.org> "
+
+#~ msgid "Couldn't link GStreamer elements.\n"
+#~ msgstr "N'a pas pu lier des éléments·GStreamer.\n"
+
+#~ msgid "Please report this as a bug."
+#~ msgstr "Veuillez reporter ce bug svp."
+
+#~ msgid "The file %s is of an unknown type.\n"
+#~ msgstr "Le fichier %s est d'un type inconnu.\n"
+
+#~ msgid "Please ask the developers to add support\n"
+#~ msgstr "Veuillez demander aux développeurs d'ajouter le support\n"
+
+#~ msgid "for files of this type if it is important\n"
+#~ msgstr "de ce type de fichiers si cela est important\n"
+
+#~ msgid "to you."
+#~ msgstr "pour vous."
+
+#~ msgid "exists."
+#~ msgstr "déjà."
+
+#~ msgid "interface. You can use this from, say, shell scripts."
+#~ msgstr "graphique. Vous pouvez utiliser cette option dans des scripts."
+
+#~ msgid "%s . Note that you probably want to set\n"
+#~ msgstr "défaut est %s . Notez que vous pouvez également\n"
+
+#~ msgid "the output suffix as well."
+#~ msgstr "définir le suffixe du fichier converti."
+
+#~ msgid "%s . Note that the suffix does not affect\n"
+#~ msgstr "La valeur par défaut est %s . Le suffixe n'affecte pas\n"
+
+#~ msgid "the output MIME type."
+#~ msgstr "le type MIME des fichiers convertis."
+
+#~ msgid "command line batch mode and disables the graphical user interface."
+#~ msgstr "Cette option active le mode batch, sans interface graphique."
 
 #~ msgid ""
-#~ "Copyright © 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright © 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "The output file %s already\n"
+#~ "                                         exists."
 #~ msgstr ""
-#~ "Copyright © 2004 Lars Wirzenius <liw@iki.fi>\n"
-#~ "Copyright © 2005 Gautier Portet <kassoulet@gmail.com>"
+#~ "Le fichier destination·%s\n"
+#~ "existe déjà."
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr "Konwerter Formatów Audio"
+msgstr "Ljudformatskonverterare"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr "Konwertuj pliki audion do innych formatów"
+msgstr "Konvertera ljudfiler till andra format"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr "Konwerter Dźwięku"
+msgstr "Ljudkonverterare"
 
 #. traductors: only if it does make sense.
 #: ../src/soundconverter.py:119
@@ -131,7 +175,7 @@ msgstr ""
 #: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
-msgstr "pomijanie: \"%s\""
+msgstr "Passe: '%s'"
 
 #: ../src/soundconverter.py:531
 #, python-format
@@ -143,25 +187,25 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"błąd: %s\n"
+"Fel: %s\n"
 "%s\n"
 
 #: ../src/soundconverter.py:734
 msgid "Internal error"
-msgstr "Błąd wewnętrzny"
+msgstr "Internt fel"
 
 #: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
-"Nie można połączyć z elementami GStreamer.\n"
-"Proszę zgłosić to jako błąd."
+"Kunde inte länka GStreamer-element.\n"
+" Rapportera detta som ett fel."
 
 #: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
-msgstr "Nieznany typ %s"
+msgstr "Typen %s är okänd"
 
 #: ../src/soundconverter.py:741
 #, python-format
@@ -171,106 +215,106 @@ msgid ""
 " for files of this type if it is important\n"
 " to you."
 msgstr ""
-"Plik %s jest nieznanego typu.\n"
-" Poproś programistów o dodanie jego obsługi\n"
-" jeśli jest to dla ciebie ważne."
+"Filen %s är inte av en känd typ.\n"
+" Fråga utvecklarna om att lägga till stöd\n"
+" för filer av denna typ om det är viktigt\n"
+" för dig."
 
 #: ../src/soundconverter.py:995
 msgid "Target exists."
-msgstr "Plik docelowy istnieje."
+msgstr "Målet finns redan."
 
 #: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
-msgstr "Plik docelowy %s już istnieje."
+msgstr "Utmatningsfilen %s finns redan."
 
 #: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
-msgstr "Nie można utworzyć dekodera dla formatu \"%s\"."
+msgstr "Kan inte skapa en avkodare för formatet \"%s\"."
 
 #: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
-msgstr "Tworzenie katalogu \"%s\""
+msgstr "Skapar mapp: \"%s\""
 
 #: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "Nie można utworzyć katalogu \"%s\"."
+msgstr "Kan inte skapa mappen \"%s\"."
 
 #: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
-msgstr "Nie można ustawić zezwoleń dla '%s'"
+msgstr "Kan inte ställa in rättigheter på \"%s\""
 
 #: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
-msgstr "plik już istnieje: '%s'"
+msgstr "filen finns redan: \"%s\""
 
 #: ../src/soundconverter.py:1267
 msgid "loading tags..."
-msgstr "wczytwanie tagów..."
+msgstr "läser in taggar..."
 
 #: ../src/soundconverter.py:1269
 msgid "no tags"
-msgstr "brak tagów"
+msgstr "inga taggar"
 
 #: ../src/soundconverter.py:1308
 msgid "unknown"
-msgstr "nieznany"
+msgstr "okänt"
 
 #: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
-msgstr "Tak jak źródłowy, ale z nowym rozszerzeniem"
+msgstr "Samma som inmatning, men ersätter filändelsen"
 
 #: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
-msgstr "Tak jak źródłowy, ale z dodatkowym rozszerzeniem"
+msgstr "Samma som inmatning, men med en filändelse till"
 
 #: ../src/soundconverter.py:1336
 msgid "Track number - title"
-msgstr "Numer ścieżki - tytuł"
+msgstr "Spårnummer - titel"
 
 #: ../src/soundconverter.py:1337
 msgid "Track title"
-msgstr "Tytuł ścieżki"
+msgstr "Spårtitel"
 
 #: ../src/soundconverter.py:1338
 msgid "Artist - title"
-msgstr "Wykonawca - tytuł"
+msgstr "Artist - titel"
 
 #: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
-msgstr "Własny wzór nazwy pliku"
+msgstr "Anpassat filnamnsmönster"
 
 #: ../src/soundconverter.py:1343
 msgid "artist/album"
-msgstr "wykonawca/album"
+msgstr "artist/album"
 
 #: ../src/soundconverter.py:1344
 msgid "artist-album"
-msgstr "wykonawca-album"
+msgstr "artist-album"
 
 #: ../src/soundconverter.py:1345
-#, fuzzy
 msgid "artist - album"
-msgstr "wykonawca-album"
+msgstr ""
 
 #: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
-msgstr "Do katalogu %s"
+msgstr "I mappen %s"
 
 #: ../src/soundconverter.py:1551
-#, fuzzy, python-format
+#, python-format
 msgid "Target bitrate: %s"
-msgstr "<small>Docelowa gęstość bitowa: %s</small>"
+msgstr ""
 
 #: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
-msgstr "Anulowano konwersję"
+msgstr "Konvertering avbruten"
 
 #: ../src/soundconverter.py:1836
 #, python-format
@@ -279,60 +323,60 @@ msgid ""
 " exists already.\n"
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
-"Plik docelowy <i>%s</i>\n"
-" już istnieje.\n"
-" Czy chcesz pominąć plik, nadpisać go czy anulować konwersję?\n"
+"Utmatningsfilen <i>%s</i>\n"
+" finns redan.\n"
+" Vill du hoppa över filen, skriva över den eller avbryta konverteringen?\n"
 
 #: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "Konwersja wykonana w %s"
+msgstr "Konverteringen klar, på %s"
 
 #: ../src/soundconverter.py:1960
 msgid "Open a file"
-msgstr "Otwórz plik"
+msgstr "Öppna en fil"
 
 #: ../src/soundconverter.py:2049
 msgid "Add Folder..."
-msgstr "Dodaj folder..."
+msgstr "Lägg till mapp..."
 
 #: ../src/soundconverter.py:2169
 msgid "canceling conversion."
-msgstr "anulowanie konwersji."
+msgstr "avbryter konvertering."
 
 #: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
-msgstr "Oczekiwanie na tagi"
+msgstr "Väntar på taggar"
 
 #: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
-msgstr "Oczekiwanie na tagi..."
+msgstr "Väntar på taggar..."
 
 #: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
-msgstr "Zatrzymano"
+msgstr "Pausad"
 
 #: ../src/soundconverter.py:2224
 msgid "Canceled"
-msgstr "Anulowano"
+msgstr "Avbruten"
 
 #: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
-msgstr "Konwertowanie pliku %d z %d  (%s)"
+msgstr "Konverterar fil %d av %d  (%s)"
 
 #: ../src/soundconverter.py:2286
 msgid "Converting"
-msgstr "Konwertowanie"
+msgstr "Konverterar"
 
 #: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
-msgstr "%d:%02d pozostało"
+msgstr "%d:%02d kvar"
 
 #: ../src/soundconverter.py:2308
 msgid "Ready"
-msgstr "Gotowe"
+msgstr "Redo"
 
 #: ../src/soundconverter.py:2389
 #, python-format
@@ -342,19 +386,19 @@ msgstr "%s: OK"
 #: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
-msgstr "Sposób użycia: %s [opcje] [plik dźwiękowy ...]"
+msgstr "Användning: %s [flaggor] [ljudfil ...]"
 
 #: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
-msgstr "Wyświetla informację o sposobie użycia."
+msgstr "Skriv ut ett sammandrag om användning."
 
 #: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Konwersja w trybie wsadowym, z wiersza poleceń, bez interfejsu graficznego\n"
-" Przydatne np. w skryptach powłoki."
+"Konvertera i satsläge, från kommandorad, utan ett grafiskt gränssnitt.\n"
+" Du kan använda detta, till exempel från skalskript."
 
 #: ../src/soundconverter.py:2445
 #, python-format
@@ -363,17 +407,17 @@ msgid ""
 " %s . Note that you probably want to set\n"
 " the output suffix as well."
 msgstr ""
-"Ustawia docelowy typ MIME w trybie wsadowym. Domyślnie jest to\n"
-" %s . Zauważ, że zwykle należy ustawić także odpowiednie\n"
-"rozszerzenie nazwy pliku."
+"Ställ in mime-typ för utmatning i satsläge. Standard är\n"
+" %s . Notera att du antagligen vill ställa in\n"
+" filändelsen för utmatningsfilen också."
 
 #: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Tryb cichy. Nie wyświetla niczego oprócz komunikatów o błędach."
+msgstr "Var tyst. Skriv endast ut fel."
 
 #: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
-msgstr "Wyświetl dodatkowe informacje dla debugowania"
+msgstr "Skriv ut ytterligare felsökningsinformation"
 
 #: ../src/soundconverter.py:2454
 #, python-format
@@ -382,49 +426,49 @@ msgid ""
 " %s . Note that the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Ustawia rozszerzenie nazwy pliku w trybie wsadowym. Domyślnie jest to \n"
-" %s . Zauważ, że samo ustawienie rozszerzenia nie ma\n"
-" wpływu na typ MIME pliku docelowego."
+"Ställ in filändelsen för utmatningsfiler i satsläge. Standard är\n"
+" %s . Notera att filändelsen inte påverkar\n"
+" mime-typen för utmatningsfilen."
 
 #: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Wyświetla znaczniki plików źródłowych zamiast konwersji. Powoduje też \n"
-" włączenie trybu wsadowego bez graficznego interfejsu."
+"Visa taggar för inmatningsfiler istället för att konvertera dem. Detta\n"
+" indikerar satsläge för kommandorad och inaktiverar grafiskt gränssnitt."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
-msgstr "<b>Jak nazwać pliki?</b>"
+msgstr "<b>Hur ska filer namnges?</b>"
 
 #: ../data/soundconverter.glade.h:2
 msgid "<b>Type of result?</b>"
-msgstr "<b>Rodzaj plików wynikowych?</b>"
+msgstr "<b>Typ av resultat?</b>"
 
 #: ../data/soundconverter.glade.h:3
 msgid "<b>Where to place results?</b>"
-msgstr "<b>Gdzie umieścić pliki wynikowe?</b>"
+msgstr "<b>Var ska resultaten placeras?</b>"
 
 #: ../data/soundconverter.glade.h:4
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Plik już istnieje</b></big>\n"
+msgstr "<big><b>Filen finns redan</b></big>\n"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<i>Example filename:</i>"
-msgstr "<i>Przykładowa nazwa pliku:</i>"
+msgstr "<i>Exempel filnamn:</i>"
 
 #: ../data/soundconverter.glade.h:7
 msgid "Add _Folder"
-msgstr "Dodaj _folder"
+msgstr "Lägg till _mapp"
 
 #: ../data/soundconverter.glade.h:8
 msgid "Bitrate mode:"
-msgstr "Tryb gęstości bitowej:"
+msgstr "Bithastighetsläge:"
 
 #: ../data/soundconverter.glade.h:9
 msgid "Choose..."
-msgstr "Wybierz..."
+msgstr "Välj..."
 
 #: ../data/soundconverter.glade.h:10
 msgid ""
@@ -432,21 +476,21 @@ msgid ""
 "Average (ABR)\n"
 "Variable (VBR) - Best quality"
 msgstr ""
-"Stały (CBR)\n"
-"Uśredniony (ABR)\n"
-"Zmienny (VBR) - najlepsza jakość"
+"Konstant (CBR)\n"
+"Medel (ABR)\n"
+"Variabel (VBR) - Bäst kvalitet"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
-msgstr "Utwórz podkatalogi: "
+msgstr "Skapa undermappar: "
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr "Usuń oryginalny plik"
+msgstr "Ta bort originalfilen"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
-msgstr "Błąd"
+msgstr "Fel"
 
 #: ../data/soundconverter.glade.h:16
 msgid "FLAC"
@@ -454,15 +498,15 @@ msgstr "FLAC"
 
 #: ../data/soundconverter.glade.h:17
 msgid "File exists already"
-msgstr "Plik już istnieje"
+msgstr "Filen finns redan"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
-msgstr "Wzór nazwy pliku: "
+msgstr "Filnamnsmönster: "
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
-msgstr "Filtr "
+msgstr "Filter "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Format: "
@@ -470,19 +514,19 @@ msgstr "Format: "
 
 #: ../data/soundconverter.glade.h:21
 msgid "Free Lossless compression"
-msgstr "Otwarty format kompresji bezstratnej"
+msgstr "Fri ickeförstörande komprimering"
 
 #: ../data/soundconverter.glade.h:22
 msgid "Free Lossy Compression"
-msgstr "Otwarty format kompresji stratnej"
+msgstr "Fri förstörande komprimering"
 
 #: ../data/soundconverter.glade.h:23
 msgid "GNOME Sound Conversion"
-msgstr "Konwertowanie dźwięku w GNOME"
+msgstr "Ljudkonverterare för GNOME"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
-msgstr "W określonym katalokgu"
+msgstr "I en angiven mapp"
 
 #: ../data/soundconverter.glade.h:25
 msgid "MP3"
@@ -490,15 +534,15 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
-msgstr "Brak enkodera MP3"
+msgstr "MP3-kodare finns inte installerad."
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
-msgstr "Bez kompresji"
+msgstr "Ingen komprimering"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Non-Free Lossy Compression"
-msgstr "Zamknięty format kompresji stratnej"
+msgstr "Ickefri förstörande komprimering"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis"
@@ -513,36 +557,36 @@ msgid ""
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
-"FLAC bezstratny (.flac)\n"
+"FLAC Lossless (.flac)\n"
 "MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Preferences"
-msgstr "Preferencje"
+msgstr "Inställningar"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Quality:"
-msgstr "Jakość:"
+msgstr "Kvalitet:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
-msgstr "Przeczytaj jak zainstalować"
+msgstr "Läs hur man installerar"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Usuwa wszystkie znaki oprócz liter, cyfr oraz ./_-"
+msgstr "Ta bort alla tecken förutom bokstäver, siffror och ./_-"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
-msgstr "Zastąp wszystkie nietypowe znaki"
+msgstr "Ersätt felaktiga tecken"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "W tym samym katalogu co pliki źródłowe"
+msgstr "Samma mapp som inmatningsfilen"
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
-msgstr "SoundConverter"
+msgstr "Ljudkonverterare"
 
 #: ../data/soundconverter.glade.h:41
 msgid ""
@@ -552,11 +596,11 @@ msgid ""
 "High\n"
 "Very High"
 msgstr ""
-"Bardzo niska\n"
-"Niska\n"
-"Średnia\n"
-"Wysoka\n"
-"Bardzo wysoka"
+"Mycket låg\n"
+"Låg\n"
+"Normal\n"
+"Hög\n"
+"Mycket hög"
 
 #: ../data/soundconverter.glade.h:46
 msgid "WAV"
@@ -564,35 +608,35 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Where to place results?"
-msgstr "Gdzie umieścić wynik?"
+msgstr "Var ska resultaten placeras?"
 
 #: ../data/soundconverter.glade.h:48
 msgid "_Add File"
-msgstr "Dod_aj plik"
+msgstr "_Lägg till fil"
 
 #: ../data/soundconverter.glade.h:49
 msgid "_Apply to entire queue"
-msgstr "Z_astosuj na całej kolejce"
+msgstr "_Verkställ för hela kön"
 
 #: ../data/soundconverter.glade.h:50
 msgid "_Overwrite"
-msgstr "Na_dpisz"
+msgstr "_Skriv över"
 
 #: ../data/soundconverter.glade.h:51
 msgid "_Remove"
-msgstr "_Usuń"
+msgstr "_Ta bort"
 
 #: ../data/soundconverter.glade.h:52
 msgid "_Skip"
-msgstr "_Pomiń"
+msgstr "_Hoppa över"
 
 #: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
-"wykonawca/album\n"
-"wykonawca - album"
+"artist/album\n"
+"artist - album"
 
 #: ../data/soundconverter.glade.h:55
 msgid "dialog1"
@@ -615,8 +659,8 @@ msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
-"numer_ścieżki - tytuł_ścieżki\n"
-"tytuł_ścieżki\n"
+"spårnummer - spårtitel\n"
+"spårtitel\n"
 
 #: ../data/soundconverter.glade.h:62
 msgid "wav"

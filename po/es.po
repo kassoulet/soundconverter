@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2008-02-04 22:06+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-03-26 16:37+0000\n"
+"Last-Translator: Mariano Agüero <nero1000000@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 11:00+0000\n"
+"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -37,7 +37,7 @@ msgstr "Artista Album Título Pista Total Género Fecha Año"
 #: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
-msgstr "Saltando: '%s'"
+msgstr "saltando: '%s'"
 
 #: ../src/soundconverter.py:531
 #, python-format
@@ -114,11 +114,11 @@ msgstr "No se puede establecer permiso en '%s'"
 #: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
-msgstr "El archivo ya esta presente: '%s'"
+msgstr "el archivo ya esta presente: '%s'"
 
 #: ../src/soundconverter.py:1267
 msgid "loading tags..."
-msgstr "Cargando etiquetas"
+msgstr "cargando etiquetas..."
 
 #: ../src/soundconverter.py:1269
 msgid "no tags"
@@ -126,7 +126,7 @@ msgstr "sin etiquetas"
 
 #: ../src/soundconverter.py:1308
 msgid "unknown"
-msgstr "Desconocido"
+msgstr "desconocido"
 
 #: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
@@ -154,16 +154,16 @@ msgstr "Patron de nombre de fichero personalizado"
 
 #: ../src/soundconverter.py:1343
 msgid "artist/album"
-msgstr "Artista/álbum"
+msgstr "artista/álbum"
 
 #: ../src/soundconverter.py:1344
 msgid "artist-album"
-msgstr "Artista-álbum"
+msgstr "artista - álbum"
 
 #: ../src/soundconverter.py:1345
 #, fuzzy
 msgid "artist - album"
-msgstr "Artista-álbum"
+msgstr "artista - álbum"
 
 #: ../src/soundconverter.py:1501
 #, python-format
@@ -173,7 +173,7 @@ msgstr "En el directorio %s"
 #: ../src/soundconverter.py:1551
 #, python-format
 msgid "Target bitrate: %s"
-msgstr "<small>Tasa de bits objetivo: %s</small>"
+msgstr "Tasa de bits objetivo: %s"
 
 #: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
@@ -235,7 +235,7 @@ msgstr "Convirtiendo"
 #: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
-msgstr "%d:%02d izquierdo"
+msgstr "%d:%02d restantes"
 
 #: ../src/soundconverter.py:2308
 msgid "Ready"
@@ -244,7 +244,7 @@ msgstr "Preparado"
 #: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
-msgstr "%s:OK"
+msgstr "%s: OK"
 
 #: ../src/soundconverter.py:2424
 #, python-format
@@ -306,7 +306,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
-msgstr "¿Cómo nombrar los archivos?"
+msgstr "<b>¿Cómo nombrar los archivos?</b>"
 
 #: ../data/soundconverter.glade.h:2
 msgid "<b>Type of result?</b>"
@@ -331,7 +331,7 @@ msgstr "Añadir _carpeta"
 #: ../data/soundconverter.glade.h:8
 #, fuzzy
 msgid "Bitrate mode:"
-msgstr "Modalidad de tasa de bits"
+msgstr "Modalidad de tasa de bits;"
 
 #: ../data/soundconverter.glade.h:9
 msgid "Choose..."
@@ -491,7 +491,7 @@ msgstr "_Sobreescribir"
 
 #: ../data/soundconverter.glade.h:51
 msgid "_Remove"
-msgstr "_borrar"
+msgstr "_Borrar"
 
 #: ../data/soundconverter.glade.h:52
 msgid "_Skip"
@@ -502,8 +502,8 @@ msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
-"Artista/álbum\n"
-"Artista - álbum"
+"artista/álbum\n"
+"artista - álbum"
 
 #: ../data/soundconverter.glade.h:55
 msgid "dialog1"
