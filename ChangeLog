@@ -1,8 +1,13 @@
+2008-05-03  Gautier Portet <kassoulet gmail com>
+
+	* po/: Updated Arabic Catalan Czech Spanish French Slovak translations.
+
 2008-05-02  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Simplified drag_data_received() so it don't 
 	  duplicate code in add_uris.
 	  Display a message when trying to read cdda: uris.
+	  Release 1.1.0
 
 2008-04-29  Gautier Portet <kassoulet gmail com>
 
