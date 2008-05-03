@@ -12,7 +12,7 @@ m4_define(required_pygnome_version, [2.10])
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-ALL_LINGUAS="fr pl pt_BR sv_SE hu ru es it cs de nl sr sr@Latn ar eu he sk zh_CN ca en_GB ms"
+ALL_LINGUAS="ar ca cs de en_GB eo es eu fa fr he hu it ms nl pl pt_BR ru sk sr sr@Latn sv sv_SE zh_CN"
 GETTEXT_PACKAGE=soundconverter
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
