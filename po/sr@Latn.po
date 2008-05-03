@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Prekoder zvuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-14 21:44+0100\n"
+"POT-Creation-Date: 2008-05-03 21:35+0200\n"
 "PO-Revision-Date: 2007-09-10 21:41+0100\n"
 "Last-Translator: Miloš Popović <gpopac@gmail.com>\n"
 "Language-Team: Serbian (sr) <gnom@prevod.org>\n"
@@ -32,16 +32,16 @@ msgid "Sound Converter"
 msgstr "Prekoder zvuka"
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:124
+#: ../src/soundconverter.py:127
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr ""
 
-#: ../src/soundconverter.py:190
+#: ../src/soundconverter.py:192
 #, python-format
 msgid "skipping: '%s'"
 msgstr "preskačem: „%s“"
 
-#: ../src/soundconverter.py:537
+#: ../src/soundconverter.py:548
 #, python-format
 msgid ""
 "\n"
@@ -54,11 +54,11 @@ msgstr ""
 "Greška: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:740
+#: ../src/soundconverter.py:752
 msgid "Internal error"
 msgstr "Unutarnja greška"
 
-#: ../src/soundconverter.py:741
+#: ../src/soundconverter.py:753
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -66,12 +66,12 @@ msgstr ""
 "Ne mogu da povežem delove GStrimera.\n"
 " Molimo Vas, ne prijavljujte ovo kao grešku."
 
-#: ../src/soundconverter.py:746
+#: ../src/soundconverter.py:758
 #, python-format
 msgid "Unknown type %s"
 msgstr "Nepoznat tip %s"
 
-#: ../src/soundconverter.py:747
+#: ../src/soundconverter.py:759
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -84,108 +84,112 @@ msgstr ""
 " ovaj tip datoteka ukoliko Vam je\n"
 " to važno."
 
-#: ../src/soundconverter.py:1001
+#: ../src/soundconverter.py:1054
 msgid "Target exists."
 msgstr "Cilj već postoji."
 
-#: ../src/soundconverter.py:1002
+#: ../src/soundconverter.py:1055
 #, python-format
 msgid "The output file %s already exists."
 msgstr "Izlazna datoteka %s već postoji."
 
-#: ../src/soundconverter.py:1045
+#: ../src/soundconverter.py:1098
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Ne mogu da napravim dekoder za „%s“ format"
 
-#: ../src/soundconverter.py:1056
+#: ../src/soundconverter.py:1109
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Pravim fasciklu: „%s“"
 
-#: ../src/soundconverter.py:1060
+#: ../src/soundconverter.py:1113
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Ne mogu da napravim fasciklu „%s“."
 
-#: ../src/soundconverter.py:1081
+#: ../src/soundconverter.py:1134
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "Ne mogu da postavim ovlašćenja nad „%s“"
 
-#: ../src/soundconverter.py:1254
+#: ../src/soundconverter.py:1306
 #, python-format
 msgid "file already present: '%s'"
 msgstr "datoteka već postoji: „%s“"
 
-#: ../src/soundconverter.py:1273
+#: ../src/soundconverter.py:1325
 msgid "loading tags..."
 msgstr "učitavam oznake..."
 
-#: ../src/soundconverter.py:1275
+#: ../src/soundconverter.py:1327
 msgid "no tags"
 msgstr "nema oznaka"
 
-#: ../src/soundconverter.py:1314
+#: ../src/soundconverter.py:1362
 msgid "unknown"
 msgstr "nepoznato"
 
-#: ../src/soundconverter.py:1340
+#: ../src/soundconverter.py:1390
 msgid "Same as input, but replacing the suffix"
 msgstr "Isto kao i na ulazu, ali zameni sufiks"
 
-#: ../src/soundconverter.py:1341
+#: ../src/soundconverter.py:1391
 msgid "Same as input, but with an additional suffix"
 msgstr "Isto kao i na ulazu, ali sa dodatnim sifuksom"
 
-#: ../src/soundconverter.py:1342
+#: ../src/soundconverter.py:1392
 msgid "Track number - title"
 msgstr "Broj numere — naslov"
 
-#: ../src/soundconverter.py:1343
+#: ../src/soundconverter.py:1393
 msgid "Track title"
 msgstr "Naslov numere"
 
-#: ../src/soundconverter.py:1344
+#: ../src/soundconverter.py:1394
 msgid "Artist - title"
 msgstr "Izvođač — naslov"
 
-#: ../src/soundconverter.py:1345
+#: ../src/soundconverter.py:1395
 msgid "Custom filename pattern"
 msgstr "Proizvoljan šablon imena datoteke"
 
-#: ../src/soundconverter.py:1349
+#: ../src/soundconverter.py:1399
 msgid "artist/album"
 msgstr "izvođač/album"
 
-#: ../src/soundconverter.py:1350
+#: ../src/soundconverter.py:1400
 msgid "artist-album"
 msgstr "izvođač-album"
 
-#: ../src/soundconverter.py:1351
+#: ../src/soundconverter.py:1401
 msgid "artist - album"
 msgstr "izvođač — album"
 
-#: ../src/soundconverter.py:1400
+#: ../src/soundconverter.py:1450
 #, fuzzy
 msgid "Available patterns:"
 msgstr "Šablon imena: "
 
-#: ../src/soundconverter.py:1510
+#: ../src/soundconverter.py:1560
 #, python-format
 msgid "Into folder %s"
 msgstr "U fasciklu %s"
 
-#: ../src/soundconverter.py:1568
+#: ../src/soundconverter.py:1636
 #, fuzzy, python-format
 msgid "Target bitrate: %s"
 msgstr "Izlazni bitski protok: %s"
 
-#: ../src/soundconverter.py:1810
+#: ../src/soundconverter.py:1878
 msgid "Convertion Canceled"
 msgstr "Kodiranje obustavljeno"
 
-#: ../src/soundconverter.py:1853
+#: ../src/soundconverter.py:1913
+msgid "Cannot overwrite source file(s)!"
+msgstr ""
+
+#: ../src/soundconverter.py:1926
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -196,72 +200,77 @@ msgstr ""
 " već postoji.\n"
 " Želite li da je preskočite, prepišete ili da obustavite kodiranje?\n"
 
-#: ../src/soundconverter.py:1942
+#: ../src/soundconverter.py:2015
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Kodiranje završeno za %s"
 
-#: ../src/soundconverter.py:1977
+#: ../src/soundconverter.py:2050
 msgid "Open a file"
 msgstr "Otvori datoteku"
 
-#: ../src/soundconverter.py:2066
+#: ../src/soundconverter.py:2148
 msgid "Add Folder..."
 msgstr "Dodaj fasciklu..."
 
-#: ../src/soundconverter.py:2186
+#: ../src/soundconverter.py:2273
 msgid "canceling conversion."
 msgstr "prekini kodiranje"
 
-#: ../src/soundconverter.py:2209
+#: ../src/soundconverter.py:2275
+#, fuzzy
+msgid "Conversion canceled"
+msgstr "Kodiranje obustavljeno"
+
+#: ../src/soundconverter.py:2298
 msgid "Waiting for tags"
 msgstr "Čekam na označavanje"
 
-#: ../src/soundconverter.py:2216
+#: ../src/soundconverter.py:2305
 msgid "Waiting for tags..."
 msgstr "Čekam na označavanje..."
 
-#: ../src/soundconverter.py:2224 ../src/soundconverter.py:2237
+#: ../src/soundconverter.py:2313 ../src/soundconverter.py:2326
 msgid "Paused"
 msgstr "Pauzirano"
 
-#: ../src/soundconverter.py:2241
+#: ../src/soundconverter.py:2330
 msgid "Canceled"
 msgstr "Prekinuto"
 
-#: ../src/soundconverter.py:2290
+#: ../src/soundconverter.py:2379
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Prekodiram datoteku %d iz %d (%s)"
 
-#: ../src/soundconverter.py:2303
+#: ../src/soundconverter.py:2392
 msgid "Converting"
 msgstr "Prekovidam"
 
-#: ../src/soundconverter.py:2320
+#: ../src/soundconverter.py:2409
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d preostalo"
 
-#: ../src/soundconverter.py:2325
+#: ../src/soundconverter.py:2414
 msgid "Ready"
 msgstr "Spremno"
 
-#: ../src/soundconverter.py:2406
+#: ../src/soundconverter.py:2495
 #, python-format
 msgid "%s: OK"
 msgstr "%s: U redu"
 
-#: ../src/soundconverter.py:2441
+#: ../src/soundconverter.py:2530
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Korišćenje: %s [OPCIJE] [zvučna_datoteka...]"
 
-#: ../src/soundconverter.py:2456
+#: ../src/soundconverter.py:2545
 msgid "Print out a usage summary."
 msgstr "Ispiši ukratko kako se koristi."
 
-#: ../src/soundconverter.py:2459
+#: ../src/soundconverter.py:2548
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -269,7 +278,7 @@ msgstr ""
 "Prekodiraj u konzolnom modu, iz komandne linije, bez grafičkog okruženja\n"
 " Možete na primer koristiti ova mod za pisanje skripta."
 
-#: ../src/soundconverter.py:2462
+#: ../src/soundconverter.py:2551
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -280,15 +289,15 @@ msgstr ""
 " %s . Takođe, verovatno bi hteli da postavite\n"
 " izlazni sufiks."
 
-#: ../src/soundconverter.py:2465
+#: ../src/soundconverter.py:2554
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Radi tiho. Ne ispisuj normalni izlaz već samo greške."
 
-#: ../src/soundconverter.py:2468
+#: ../src/soundconverter.py:2557
 msgid "Print additionnal debug information"
 msgstr "Ispiši dodatne informacije za otklanjanje grešaka"
 
-#: ../src/soundconverter.py:2471
+#: ../src/soundconverter.py:2560
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -299,7 +308,7 @@ msgstr ""
 " Podrazumevano je %s . Sufiks neće uticati\n"
 " na izlazni MIME tip."
 
-#: ../src/soundconverter.py:2474
+#: ../src/soundconverter.py:2563
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -438,20 +447,20 @@ msgid "Quality:"
 msgstr "Kvalitet:"
 
 #: ../data/soundconverter.glade.h:36
-msgid "Read how to install"
-msgstr "Pročitaj kako da instaliram"
-
-#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Ukloni sve karaktere osim slova, brojeva i „./_-“"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:37
 msgid "Replace all messy characters"
 msgstr "Zameni sve loše karaktere"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:38
 msgid "Same folder as the input file"
 msgstr "Ista fascikla u kojoj je ulazna datoteka"
+
+#: ../data/soundconverter.glade.h:39
+msgid "Select _All"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
@@ -488,18 +497,35 @@ msgid "_Apply to entire queue"
 msgstr "_Primeni na ceo unos"
 
 #: ../data/soundconverter.glade.h:50
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:51
+msgid "_Edit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:52
+#, fuzzy
+msgid "_File"
+msgstr "_Dodaj datoteku"
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Help"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:54
 msgid "_Overwrite"
 msgstr "P_repiši"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:55
 msgid "_Remove"
 msgstr "_Ukloni"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:56
 msgid "_Skip"
 msgstr "Pr_eskoči"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:57
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -507,23 +533,40 @@ msgstr ""
 "izvođač/album\n"
 "izvođač — album"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:59
 msgid "dialog1"
 msgstr "dijalog1"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:60
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:61
+msgid "gtk-about"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
+msgid "gtk-clear"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:63
+#, fuzzy
+msgid "gtk-preferences"
+msgstr "Postavke"
+
+#: ../data/soundconverter.glade.h:64
+msgid "gtk-quit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:65
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:66
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:67
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -531,9 +574,12 @@ msgstr ""
 "broj_numere — naslov_numere\n"
 "broj_numere\n"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:70
 msgid "wav"
 msgstr "wav"
+
+#~ msgid "Read how to install"
+#~ msgstr "Pročitaj kako da instaliram"
 
 #, fuzzy
 #~ msgid "File exists."
