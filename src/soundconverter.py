@@ -692,6 +692,7 @@ class TaskQueue(BackgroundTask):
 		""" BackgroundTask setup callback """
 		self.running = True
 		self.start_time = time.time()
+		self.tasks_current = 0
 
 		if self.tasks:
 			self.tasks[0].setup()
