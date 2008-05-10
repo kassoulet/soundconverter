@@ -854,14 +854,18 @@ class Pipeline(BackgroundTask):
 			debug("launching: '%s'" % self.command)
 			try:
 				self.pipeline = gst.parse_launch(self.command)
+				bus = self.pipeline.get_bus()
 				for name, signal, callback in self.signals:
-					self.pipeline.get_by_name(name).connect(signal,callback)
+					if name:
+						self.pipeline.get_by_name(name).connect(signal,callback)
+					else:
+						bus.connect(signal,callback)
 				self.parsed = True
 			except gobject.GError, e:
 				error.show("GStreamer error when creating pipeline", str(e))
 				self.eos = True # TODO
 				return
-		bus = self.pipeline.get_bus()
+
 		bus.add_signal_watch()
 		watch_id = bus.connect('message', self.on_message)
 		self.watch_id = watch_id
@@ -870,7 +874,7 @@ class Pipeline(BackgroundTask):
 
 	def stop_pipeline(self):
 		if not self.pipeline:
-			log("pipeline already stopped!")
+			debug("pipeline already stopped!")
 			return
 		bus = self.pipeline.get_bus()
 		bus.disconnect(self.watch_id)
@@ -993,22 +997,16 @@ class TagReader(Decoder):
 		self.found_tags = False
 		self.run_start_time = 0 
 		self.add_command("fakesink")
+		self.add_signal(None, "message::state-changed", self.on_state_changed)
 
 	def set_found_tag_hook(self, found_tag_hook):
 		self.found_tag_hook = found_tag_hook
-
-	def setup(self):
-		Pipeline.setup(self)
-		
-		bus = self.pipeline.get_bus()
-		bus.connect('message::state-changed', self.on_state_changed)
 
 	def on_state_changed(self, bus, message):
 		prev, new, pending = message.parse_state_changed()
 		if new == gst.STATE_PLAYING:
 			debug("TagReading done...")
 			self.finish()
-
 
 	def found_tag(self, decoder, something, taglist):
 		#debug("found_tags:", self.sound_file.get_filename_for_display())
@@ -1371,6 +1369,7 @@ class FileList:
 		fields["META"] = sound_file
 		fields["filename"] = sound_file.get_filename_for_display()
 
+		# TODO: SLOW!
 		for i in self.model:
 			if i[1] == sound_file:
 				i[0] = self.format_cell(sound_file)
