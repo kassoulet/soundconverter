@@ -1,3 +1,10 @@
+2008-05-11  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py:  TagReader will not decode whole file anymore, It
+	will even not decode them at all !
+	TagReader perform *much* faster (500s -> 20s on 260 files)
+	Release 1.2.0
+
 2008-05-05  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Got rid of the progress indicator not beeing 
