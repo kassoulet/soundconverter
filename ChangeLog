@@ -1,3 +1,8 @@
+2008-05-05  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Got rid of the progress indicator not beeing 
+	  reset after a conversion. 
+
 2008-05-03  Gautier Portet <kassoulet gmail com>
 
 	* po/: Updated Arabic Catalan Czech Spanish French Slovak translations.
