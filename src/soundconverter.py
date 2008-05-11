@@ -779,13 +779,7 @@ class Pipeline(BackgroundTask):
 		self.play()
 	
 	def work(self):
-		#if self.pipeline.get_state() == gst.STATE_NULL:
-		#  log("error: pipeline.state == null")
-			#return False
-		#print "work:", self
-		#time.sleep(0.01)
 		if self.eos:
-			#print "	got eos:", self.sound_file.get_filename_for_display()
 			return False
 		return True
 
