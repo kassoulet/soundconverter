@@ -997,6 +997,18 @@ class TagReader(Decoder):
 	def set_found_tag_hook(self, found_tag_hook):
 		self.found_tag_hook = found_tag_hook
 
+	def setup(self):
+		Pipeline.setup(self)
+		
+		bus = self.pipeline.get_bus()
+		bus.connect('message::state-changed', self.on_state_changed)
+
+	def on_state_changed(self, bus, message):
+		prev, new, pending = message.parse_state_changed()
+		if new == gst.STATE_PLAYING:
+			debug("TagReading done...")
+			self.finish()
+
 
 	def found_tag(self, decoder, something, taglist):
 		#debug("found_tags:", self.sound_file.get_filename_for_display())
@@ -1037,7 +1049,7 @@ class TagReader(Decoder):
 		return Decoder.work(self) and not self.found_tags
 
 	def finish(self):
-		Decoder.finish(self)
+		Pipeline.finish(self)
 		self.sound_file.tags_read = True
 		if self.found_tag_hook:
 			gobject.idle_add(self.found_tag_hook, self)
@@ -1302,6 +1314,7 @@ class FileList:
 				continue 
 			self.filelist[sound_file.get_uri()] = True
 
+			#self.found_type(sound_file, "test")
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add(typefinder)
