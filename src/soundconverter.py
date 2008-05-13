@@ -123,7 +123,7 @@ mime_whitelist = (
 # custom filename patterns
 english_patterns = "Artist Album Title Track Total Genre Date Year"
 
-# traductors: only if it does make sense.
+# traductors: These are the custom filename patterns. Only if it does make sense.
 locale_patterns = _("Artist Album Title Track Total Genre Date Year")
 
 patterns_formats = (

@@ -1,8 +1,13 @@
+2008-05-12  Gautier Portet <kassoulet gmail com>
+
+	* po/pl.po: updated Polish translation.
+
 2008-05-11  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py:  TagReader will not decode whole file anymore, It
 	will even not decode them at all !
 	TagReader perform *much* faster (500s -> 20s on 260 files)
+	(thanks thaytan on #gstreamer)
 	Release 1.2.0
 
 2008-05-05  Gautier Portet <kassoulet gmail com>
