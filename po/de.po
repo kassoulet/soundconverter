@@ -6,11 +6,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: soundconverter 0.9.6\n"
+"Project-Id-Version: soundconverter 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-03 21:35+0200\n"
-"PO-Revision-Date: 2007-12-31 13:37+0000\n"
-"Last-Translator: vinz <Unknown>\n"
+"PO-Revision-Date: 2008-05-28 11:46+0100\n"
+"Last-Translator: Martin Seifert <martinseifert@fastmail.fm>\n"
 "Language-Team: German <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +186,7 @@ msgstr "Konvertierung abgebrochen."
 
 #: ../src/soundconverter.py:1913
 msgid "Cannot overwrite source file(s)!"
-msgstr ""
+msgstr "Quelldateien können nicht überschrieben werden!"
 
 #: ../src/soundconverter.py:1926
 #, python-format
@@ -229,7 +229,8 @@ msgstr "Warten auf Metainformationen"
 msgid "Waiting for tags..."
 msgstr "Warten auf Metainformationen..."
 
-#: ../src/soundconverter.py:2313 ../src/soundconverter.py:2326
+#: ../src/soundconverter.py:2313
+#: ../src/soundconverter.py:2326
 msgid "Paused"
 msgstr "Pausiert"
 
@@ -274,8 +275,7 @@ msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Konvertierung im Batchmodus, von der Kommandozeile ausgehend, ohne grafische "
-"Benutzeroberfläche\n"
+"Konvertierung im Batchmodus, von der Kommandozeile ausgehend, ohne grafische Benutzeroberfläche\n"
 " Sinnvoll insbesondere für  shell scripts."
 
 #: ../src/soundconverter.py:2551
@@ -460,7 +460,7 @@ msgstr "Selber Ordner wie Quelldatei"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Select _All"
-msgstr ""
+msgstr "Alles _markieren"
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
@@ -498,20 +498,19 @@ msgstr "Auf gesamte Warteschlange anwenden"
 
 #: ../data/soundconverter.glade.h:50
 msgid "_Clear List"
-msgstr ""
+msgstr "Liste leeren"
 
 #: ../data/soundconverter.glade.h:51
 msgid "_Edit"
-msgstr ""
+msgstr "_Bearbeiten"
 
 #: ../data/soundconverter.glade.h:52
-#, fuzzy
 msgid "_File"
-msgstr "Datei hinzufügen"
+msgstr "_Datei"
 
 #: ../data/soundconverter.glade.h:53
 msgid "_Help"
-msgstr ""
+msgstr "_Hilfe"
 
 #: ../data/soundconverter.glade.h:54
 msgid "_Overwrite"
@@ -580,13 +579,10 @@ msgstr "wav"
 
 #~ msgid "File exists."
 #~ msgstr "Datei vorhanden."
-
 #~ msgid "The file %s exists already"
 #~ msgstr "Die Datei %s ist bereits vorhanden."
-
 #~ msgid "<small>Target bitrate: %s</small>"
 #~ msgstr "<small>Bitrate der Zieldatei: %s</small>"
-
 #~ msgid ""
 #~ "{Artist}: Artist name\n"
 #~ "{Album}: Album name\n"
@@ -599,6 +595,6 @@ msgstr "wav"
 #~ "{Title}: Titel\n"
 #~ "{Track}: Nummer\n"
 #~ "{Total}: Anzahl der Titel eines Albums"
-
 #~ msgid "Read how to install"
 #~ msgstr "Installationshinweise"
+
