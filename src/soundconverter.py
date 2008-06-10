@@ -61,7 +61,6 @@ try:
 	pygst.require('0.10')
 	import gst
 	
-	
 except ImportError:
 	print "%s needs python-gstreamer 0.10!" % NAME
 	sys.exit(1)
@@ -188,20 +187,24 @@ def vfs_walk(uri):
 	try:
 		dirlist = gnomevfs.open_directory(uri)
 	except:
-		pass
 		log(_("skipping: '%s'") % uri)
 		return filelist
 		
 	for file_info in dirlist:
-		if file_info.name[0] == ".":
-			continue
+		try:
+			if file_info.name[0] == ".":
+				continue
 
-		if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-			filelist.extend(
-				vfs_walk(uri.append_path(file_info.name)) )
+			if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+				filelist.extend(
+					vfs_walk(uri.append_path(file_info.name)) )
 
-		if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
-			filelist.append( str(uri.append_file_name(file_info.name)) )
+			if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
+				filelist.append( str(uri.append_file_name(file_info.name)) )
+		except ValueError:
+			# this can happen when you do not have sufficent
+			# permissions to read file info.
+			log(_("skipping: '%s'") % uri)
 	return filelist
 
 def vfs_makedirs(path_to_create):
@@ -796,6 +799,10 @@ class Pipeline(BackgroundTask):
 		self.signals.append( (name, signal, callback,) )
 
 	def toggle_pause(self, paused):
+		if not self.pipeline:
+			debug("toggle_pause(): pipeline is None !")
+			return
+
 		if paused:
 			self.pipeline.set_state(gst.STATE_PAUSED)
 		else:
@@ -1288,8 +1295,14 @@ class FileList:
 			except gnomevfs.InvalidURIError:
 				log('unvalid uri: \'%s\'' % uri)
 				continue
+			except gnomevfs.AccessDeniedError:
+				log('access denied: \'%s\'' % uri)
+				continue
 			except TypeError, e:
 				log('error: %s (%s)' % (e, uri))
+				continue
+			except :
+				log('error in get_file_info: %s' % (uri))
 				continue
 
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
@@ -1911,7 +1924,7 @@ class ConverterQueue(TaskQueue):
 			gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
 		except gnomevfs.NotFoundError:
 			exists = False
-		except gnomevfs.InvalidURIError:
+		except :
 			log("Invalid URI: '%s'" % output_filename)
 			return
 		
