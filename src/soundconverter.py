@@ -54,6 +54,13 @@ except ImportError:
 	print "%s needs gnome-python 2.10!" % NAME
 	sys.exit(1)
 
+# HACK #########################
+if 'filename_display_name' not in dir(gobject):
+	def __fake_display_name(name):
+		return name
+	gobject.filename_display_name = __fake_display_name
+# HACK #########################
+
 # GStreamer
 try:
 	# 0.10
@@ -554,7 +561,7 @@ class ErrorPrinter:
 
 error = None
 
-_thread_sleep = 0.1
+_thread_sleep = 1.1
 #_thread_method = "thread"
 #_thread_method = "idle"
 _thread_method = "timer"
@@ -651,6 +658,8 @@ class BackgroundTask:
 		pass
 
 
+THREADS = 10
+
 class TaskQueue(BackgroundTask):
 
 	"""A queue of tasks.
@@ -671,61 +680,84 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.tasks = []
-		self.running = False
+		self.running = None
 		self.tasks_current = 0
 		self.tasks_number = 0
 
 	def is_running(self):
-		return self.running
+		if self.running:
+			return True
+		return False
 
 	def add(self, task):
+		print 'adding task:', task
 		self.tasks.append(task)
 		self.tasks_number += 1
 		
 	def get_current_task(self):
-		if self.tasks:
-			return self.tasks[0]
+		if self.running:
+			return self.running[0]
 		else:
 			return None
 
+	def start_next_task(self):
+		print 'start next tasks:'
+		#self.running = []
+		to_start = THREADS - len(self.running)
+		print 'trying to start:', to_start
+		for i in range(to_start):
+			try:
+				task = self.tasks.pop()
+			except IndexError:
+				return
+			print '  + ', task
+			self.running.append(task)
+			task.setup()
+			self.tasks_current += 1
+			print task, self.running, self.tasks
+		#self.tasks = []
+
 	def setup(self):
 		""" BackgroundTask setup callback """
-		self.running = True
+		print 'start TaskQueue'
+		self.running = []
 		self.start_time = time.time()
 		self.tasks_current = 0
 
-		if self.tasks:
-			self.tasks[0].setup()
-			self.setup_hook(self.tasks[0])
+		self.start_next_task()
+		if self.running:
+			[self.setup_hook(task) for task in self.running]
 
 			
 	def work(self):
 		""" BackgroundTask work callback """
-		if self.tasks:
-			ret = self.tasks[0].work()
-			self.work_hook(self.tasks[0])
-			if not ret:
-				self.finish_hook(self.tasks[0])
-				self.tasks[0].finish()
-				self.tasks = self.tasks[1:]
-				if self.tasks:
-					self.tasks_current += 1
-					self.tasks[0].setup()
-		return len(self.tasks) > 0
+		print 'BackgroundTask ', self.running, self.tasks
+		if self.running:
+			for task in self.running:
+				ret = task.work()
+				self.work_hook(task)
+				if not ret:
+					self.finish_hook(task)
+					task.finish()
+					self.running.remove(task)
+					self.start_next_task()
+			return True
+		print '  Done!!'
+		return False
 
 	def finish(self):
 		""" BackgroundTask finish callback """
-		self.running = False
+		self.running = None 
 		log("Queue done in %ds" % (time.time() - self.start_time))
 		self.queue_ended()
 		self.tasks_number = 0
 
 
 	def stop(self):
-		if self.tasks:
-			self.tasks[0].stop()
+		if self.running:
+			[task.stop() for task in self.running]
 		BackgroundTask.stop(self)
-		self.running = False
+		self.running = None
 		self.tasks = []
 		self.tasks_number = 0
 
@@ -779,6 +811,7 @@ class Pipeline(BackgroundTask):
 		self.play()
 	
 	def work(self):
+		print '  ping', self
 		if self.eos:
 			return False
 		return True
@@ -1258,7 +1291,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		#debug("found_type", sound_file.get_filename())
+		debug("found_type", sound_file.get_filename())
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
