@@ -760,9 +760,9 @@ class TaskQueue(BackgroundTask):
 		""" BackgroundTask work callback """
 		print 'BackgroundTask ', self.running, self.tasks
 		if self.running:
+			self.work_hook(self.running)
 			for task in self.running:
 				ret = task.work()
-				self.work_hook(task)
 				if not ret:
 					self.finish_hook(task)
 					task.finish()
@@ -1017,13 +1017,15 @@ class Decoder(Pipeline):
 
 	def _buffer_probe(self, pad, buffer):
 		"""buffer probe callback used to get real time since the beginning of the stream"""
-		if time.time() > self.time + 0.1:
-			self.time = time.time()
-			self.position = float(buffer.timestamp) / gst.SECOND
-
 		if buffer.timestamp == gst.CLOCK_TIME_NONE:
-			debug("removing probe")
+			debug("removing buffer probe")
 			pad.remove_buffer_probe(self.probe_id)
+			return False
+
+		#if time.time() > self.time + 0.1:
+		#	self.time = time.time()
+		self.position = float(buffer.timestamp) / gst.SECOND
+
 		return True
 	
 	def new_decoded_pad(self, decoder, pad, is_last):
@@ -1031,8 +1033,6 @@ class Decoder(Pipeline):
 		self.probe_id = pad.add_buffer_probe(self._buffer_probe)
 		self.processing = True
 		self.query_duration()
-		#self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
-		#print "new_decoded_pad duration:", self.sound_file.duration
 
 	def get_sound_file(self):
 		return self.sound_file
@@ -2050,33 +2050,34 @@ class ConverterQueue(TaskQueue):
 		c.got_duration = False
 		#self.total_duration += c.get_duration()
 
-	def work_hook(self, task):
-		gobject.idle_add(self.set_progress, (task))
+	def work_hook(self, tasks):
+		gobject.idle_add(self.set_progress, (tasks))
 
 	def get_progress(self, task):
 		return (self.duration_processed + task.get_position()) / self.total_duration
 
-	def set_progress(self, task):
-		t = self.get_current_task()
-		t = task 
-		f = ""
-		if t:
-			f = t.sound_file.get_filename_for_display()
+	def set_progress(self, tasks):
+		filename = ""
+		if tasks and tasks[0]:
+			filename = tasks[0].sound_file.get_filename_for_display()
 
-		for t in self.tasks:
-			if not t.got_duration:
-				duration = t.sound_file.duration
-				#duration = t.get_duration()
+		# try to get all tasks durations
+		total_duration = self.total_duration
+		for task in self.tasks:
+			if not task.got_duration:
+				duration = task.sound_file.duration
 				if duration: 
 					self.total_duration += duration
-					t.got_duration = True
+					task.got_duration = True
+				else:
+					total_duration = 0 
 
-		if task.converting :
-			position = task.get_position()
-		else:
-			position = 0
+		position = 0
+		for task in tasks:
+			if task.converting :
+				position += task.get_position()
 		self.window.set_progress(self.duration_processed + position,
-							 self.total_duration, f)
+							 total_duration, filename)
 		return False
 
 	def finish_hook(self, task):
@@ -2453,7 +2454,7 @@ class SoundConverterWindow:
 		self._lock_convert_button = False
 	
 	def display_progress(self, remaining):
-		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current, self.converter.tasks_number, remaining ))
 	
 	def set_progress(self, done_so_far, total, current_file=""):
 		if (total==0) or (done_so_far==0):
