@@ -683,10 +683,11 @@ def cpuCount():
 	if num >= 1:
 		return num
 	else:
-		raise NotImplementedError, 'cannot determine number of cpus'
+		return 1
+		#raise NotImplementedError, 'cannot determine number of cpus'
 
 THREADS = cpuCount()
-print 'using %d threads' % THREADS
+print '  using %d thread(s)' % THREADS
 
 class TaskQueue(BackgroundTask):
 
