@@ -660,6 +660,7 @@ class BackgroundTask:
 		"""Clean up the task after all work has been done."""
 		pass
 
+# from pyprocessing
 def cpuCount():
 	'''
 	Returns the number of CPUs in the system
@@ -707,6 +708,7 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.tasks = []
+		self.all_tasks = []
 		self.running = None
 		self.tasks_current = 0
 		self.tasks_number = 0
@@ -719,6 +721,7 @@ class TaskQueue(BackgroundTask):
 	def add(self, task):
 		print 'adding task:', task
 		self.tasks.append(task)
+		self.all_tasks.append(task)
 		self.tasks_number += 1
 		
 	def get_current_task(self):
@@ -758,7 +761,7 @@ class TaskQueue(BackgroundTask):
 			
 	def work(self):
 		""" BackgroundTask work callback """
-		print 'BackgroundTask ', self.running, self.tasks
+		#print 'BackgroundTask ', self.running, self.tasks
 		if self.running:
 			self.work_hook(self.running)
 			for task in self.running:
@@ -838,7 +841,7 @@ class Pipeline(BackgroundTask):
 		self.play()
 	
 	def work(self):
-		print '  ping', self
+		#print '  ping', self
 		if self.eos:
 			return False
 		return True
@@ -2063,10 +2066,10 @@ class ConverterQueue(TaskQueue):
 
 		# try to get all tasks durations
 		total_duration = self.total_duration
-		for task in self.tasks:
+		for task in self.all_tasks:
 			if not task.got_duration:
-				duration = task.sound_file.duration
-				if duration: 
+				duration = task.get_duration()
+				if duration:
 					self.total_duration += duration
 					task.got_duration = True
 				else:
@@ -2076,6 +2079,7 @@ class ConverterQueue(TaskQueue):
 		for task in tasks:
 			if task.converting :
 				position += task.get_position()
+		#print self.duration_processed, position, total_duration
 		self.window.set_progress(self.duration_processed + position,
 							 total_duration, filename)
 		return False
