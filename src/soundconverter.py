@@ -660,34 +660,6 @@ class BackgroundTask:
 		"""Clean up the task after all work has been done."""
 		pass
 
-# from pyprocessing
-def cpuCount():
-	'''
-	Returns the number of CPUs in the system
-	'''
-	if sys.platform == 'win32':
-		try:
-			num = int(os.environ['NUMBER_OF_PROCESSORS'])
-		except (ValueError, KeyError):
-			num = 0
-	elif sys.platform == 'darwin':
-		try:
-			num = int(os.popen('sysctl -n hw.ncpu').read())
-		except ValueError:
-			num = 0
-	else:
-		try:
-			num = os.sysconf('SC_NPROCESSORS_ONLN')
-		except (ValueError, OSError, AttributeError):
-			num = 0
-	if num >= 1:
-		return num
-	else:
-		return 1
-		#raise NotImplementedError, 'cannot determine number of cpus'
-
-THREADS = cpuCount()
-print '  using %d thread(s)' % THREADS
 
 class TaskQueue(BackgroundTask):
 
@@ -709,9 +681,8 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.tasks = []
-		self.all_tasks = []
 		self.running = None
-		self.tasks_current = 0
+		self.tasks_done = 0
 		self.tasks_number = 0
 
 	def is_running(self):
@@ -720,9 +691,8 @@ class TaskQueue(BackgroundTask):
 		return False
 
 	def add(self, task):
-		print 'adding task:', task
+		#print 'adding task:', task
 		self.tasks.append(task)
-		self.all_tasks.append(task)
 		self.tasks_number += 1
 		
 	def get_current_task(self):
@@ -732,28 +702,23 @@ class TaskQueue(BackgroundTask):
 			return None
 
 	def start_next_task(self):
-		print 'start next tasks:'
+		#print 'start next tasks:'
 		#self.running = []
-		to_start = THREADS - len(self.running)
-		print 'trying to start:', to_start
+		to_start = get_option('jobs') - len(self.running)
+		#print 'trying to start:', to_start
 		for i in range(to_start):
 			try:
 				task = self.tasks.pop()
 			except IndexError:
 				return
-			print '  + ', task
 			self.running.append(task)
 			task.setup()
-			self.tasks_current += 1
-			print task, self.running, self.tasks
-		#self.tasks = []
 
 	def setup(self):
 		""" BackgroundTask setup callback """
-		print 'start TaskQueue'
 		self.running = []
 		self.start_time = time.time()
-		self.tasks_current = 0
+		self.tasks_done = 0
 
 		self.start_next_task()
 		if self.running:
@@ -762,18 +727,17 @@ class TaskQueue(BackgroundTask):
 			
 	def work(self):
 		""" BackgroundTask work callback """
-		#print 'BackgroundTask ', self.running, self.tasks
 		if self.running:
 			self.work_hook(self.running)
 			for task in self.running:
 				ret = task.work()
 				if not ret:
+					self.tasks_done += 1
 					self.finish_hook(task)
 					task.finish()
 					self.running.remove(task)
 					self.start_next_task()
 			return True
-		print '  Done!!'
 		return False
 
 	def finish(self):
@@ -842,7 +806,6 @@ class Pipeline(BackgroundTask):
 		self.play()
 	
 	def work(self):
-		#print '  ping', self
 		if self.eos:
 			return False
 		return True
@@ -1343,7 +1306,6 @@ class FileList:
 		files = []
 		
 		for uri in uris:
-			print uri
 			if uri.startswith('cdda:'):
 				error.show("Cannot read from Audio CD.",
 					"Use SoundJuicer Audio CD Extractor instead.")
@@ -2067,10 +2029,10 @@ class ConverterQueue(TaskQueue):
 
 		# try to get all tasks durations
 		total_duration = self.total_duration
-		for task in self.all_tasks:
+		for task in self.tasks:
 			if not task.got_duration:
-				duration = task.get_duration()
-				if duration:
+				duration = task.sound_file.duration
+				if duration: 
 					self.total_duration += duration
 					task.got_duration = True
 				else:
@@ -2080,7 +2042,7 @@ class ConverterQueue(TaskQueue):
 		for task in tasks:
 			if task.converting :
 				position += task.get_position()
-		#print self.duration_processed, position, total_duration
+
 		self.window.set_progress(self.duration_processed + position,
 							 total_duration, filename)
 		return False
@@ -2589,6 +2551,31 @@ def cli_convert_main(input_files):
 	if not get_option("quiet"):
 		progress.clear()
 
+def cpuCount():
+	'''
+	Returns the number of CPUs in the system.
+	(from pyprocessing)
+	'''
+	if sys.platform == 'win32':
+		try:
+			num = int(os.environ['NUMBER_OF_PROCESSORS'])
+		except (ValueError, KeyError):
+			num = 0
+	elif sys.platform == 'darwin':
+		try:
+			num = int(os.popen('sysctl -n hw.ncpu').read())
+		except ValueError:
+			num = 0
+	else:
+		try:
+			num = os.sysconf('SC_NPROCESSORS_ONLN')
+		except (ValueError, OSError, AttributeError):
+			num = 0
+	if num >= 1:
+		return num
+	else:
+		return 1
+		#raise NotImplementedError, 'cannot determine number of cpus'
 
 settings = {
 	"mode": "gui",
@@ -2596,6 +2583,7 @@ settings = {
 	"debug": False,
 	"cli-output-type": "audio/x-vorbis",
 	"cli-output-suffix": ".ogg",
+	"jobs": cpuCount(),
 }
 
 
@@ -2637,13 +2625,16 @@ options = [
 	 _("Be quiet. Don't write normal output, only errors.")),
 
 	("d", "debug", lambda optarg: set_option("debug", True),
-	 _("Print additionnal debug information")),
+	 _("Print additional debug information")),
 
 	("s:", "suffix=", lambda optarg: set_option("cli-output-suffix", optarg),
 	 _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get_option("cli-output-suffix")),
 
 	("t", "tags", lambda optarg: set_option("mode", "tags"),
 	 _("Show tags for input files instead of converting them. This indicates \n command line batch mode and disables the graphical user interface.")),
+
+	("j", "jobs=", lambda optarg: set_option("jobs", optarg),
+	 _("Force number of concurrent conversions.")),
 
 	]
 
@@ -2652,7 +2643,12 @@ def main():
 	shortopts = "".join(map(lambda opt: opt[0], options))
 	longopts = map(lambda opt: opt[1], options)
 	
-	opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+	except getopt.GetoptError, error:
+		print 'Error: ', error
+		sys.exit(1)
+
 	for opt, optarg in opts:
 		for tuple in options:
 			short = "-" + tuple[0][:1]
@@ -2662,13 +2658,12 @@ def main():
 			if opt in [short, long]:
 				tuple[2](optarg)
 				break
-	if 0:
-		print
-		for key in settings:
-			print key, settings[key]
-		return
 
 	args = map(filename_to_uri, args)
+
+	jobs = int(get_option('jobs'))
+	set_option('jobs', jobs)
+	print '  using %d thread(s)' % get_option('jobs')
 	
 	if get_option("mode") == "gui":
 		gui_main(args)
