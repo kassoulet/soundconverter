@@ -54,12 +54,11 @@ except ImportError:
 	print "%s needs gnome-python 2.10!" % NAME
 	sys.exit(1)
 
-# HACK #########################
+# only so I can test SC in my older boxes
 if 'filename_display_name' not in dir(gobject):
 	def __fake_display_name(name):
 		return name
 	gobject.filename_display_name = __fake_display_name
-# HACK #########################
 
 # GStreamer
 try:
