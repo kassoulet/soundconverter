@@ -54,13 +54,18 @@ except ImportError:
 	print "%s needs gnome-python 2.10!" % NAME
 	sys.exit(1)
 
+# only so I can test SC in my older boxes
+if 'filename_display_name' not in dir(gobject):
+	def __fake_display_name(name):
+		return name
+	gobject.filename_display_name = __fake_display_name
+
 # GStreamer
 try:
 	# 0.10
 	import pygst
 	pygst.require('0.10')
 	import gst
-	
 	
 except ImportError:
 	print "%s needs python-gstreamer 0.10!" % NAME
@@ -188,20 +193,24 @@ def vfs_walk(uri):
 	try:
 		dirlist = gnomevfs.open_directory(uri)
 	except:
-		pass
 		log(_("skipping: '%s'") % uri)
 		return filelist
 		
 	for file_info in dirlist:
-		if file_info.name[0] == ".":
-			continue
+		try:
+			if file_info.name[0] == ".":
+				continue
 
-		if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-			filelist.extend(
-				vfs_walk(uri.append_path(file_info.name)) )
+			if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+				filelist.extend(
+					vfs_walk(uri.append_path(file_info.name)) )
 
-		if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
-			filelist.append( str(uri.append_file_name(file_info.name)) )
+			if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
+				filelist.append( str(uri.append_file_name(file_info.name)) )
+		except ValueError:
+			# this can happen when you do not have sufficent
+			# permissions to read file info.
+			log(_("skipping: '%s'") % uri)
 	return filelist
 
 def vfs_makedirs(path_to_create):
@@ -671,61 +680,80 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.tasks = []
-		self.running = False
-		self.tasks_current = 0
+		self.all_tasks = []
+		self.running = None
+		self.tasks_done = 0
 		self.tasks_number = 0
 
 	def is_running(self):
-		return self.running
+		if self.running:
+			return True
+		return False
 
 	def add(self, task):
+		#print 'adding task:', task
 		self.tasks.append(task)
+		self.all_tasks.append(task)
 		self.tasks_number += 1
 		
 	def get_current_task(self):
-		if self.tasks:
-			return self.tasks[0]
+		if self.running:
+			return self.running[0]
 		else:
 			return None
 
+	def start_next_task(self):
+		#print 'start next tasks:'
+		#self.running = []
+		to_start = get_option('jobs') - len(self.running)
+		#print 'trying to start:', to_start
+		for i in range(to_start):
+			try:
+				task = self.tasks.pop()
+			except IndexError:
+				return
+			self.running.append(task)
+			task.setup()
+
 	def setup(self):
 		""" BackgroundTask setup callback """
-		self.running = True
+		self.running = []
 		self.start_time = time.time()
-		self.tasks_current = 0
+		self.tasks_done = 0
 
-		if self.tasks:
-			self.tasks[0].setup()
-			self.setup_hook(self.tasks[0])
+		self.start_next_task()
+		if self.running:
+			[self.setup_hook(task) for task in self.running]
 
 			
 	def work(self):
 		""" BackgroundTask work callback """
-		if self.tasks:
-			ret = self.tasks[0].work()
-			self.work_hook(self.tasks[0])
-			if not ret:
-				self.finish_hook(self.tasks[0])
-				self.tasks[0].finish()
-				self.tasks = self.tasks[1:]
-				if self.tasks:
-					self.tasks_current += 1
-					self.tasks[0].setup()
-		return len(self.tasks) > 0
+		if self.running:
+			self.work_hook(self.running)
+			for task in self.running:
+				ret = task.work()
+				if not ret:
+					self.tasks_done += 1
+					self.finish_hook(task)
+					task.finish()
+					self.running.remove(task)
+					self.start_next_task()
+			return True
+		return False
 
 	def finish(self):
 		""" BackgroundTask finish callback """
-		self.running = False
+		self.running = None 
 		log("Queue done in %ds" % (time.time() - self.start_time))
 		self.queue_ended()
 		self.tasks_number = 0
 
 
 	def stop(self):
-		if self.tasks:
-			self.tasks[0].stop()
+		if self.running:
+			[task.stop() for task in self.running]
 		BackgroundTask.stop(self)
-		self.running = False
+		self.running = None
 		self.tasks = []
 		self.tasks_number = 0
 
@@ -796,6 +824,10 @@ class Pipeline(BackgroundTask):
 		self.signals.append( (name, signal, callback,) )
 
 	def toggle_pause(self, paused):
+		if not self.pipeline:
+			debug("toggle_pause(): pipeline is None !")
+			return
+
 		if paused:
 			self.pipeline.set_state(gst.STATE_PAUSED)
 		else:
@@ -953,13 +985,15 @@ class Decoder(Pipeline):
 
 	def _buffer_probe(self, pad, buffer):
 		"""buffer probe callback used to get real time since the beginning of the stream"""
-		if time.time() > self.time + 0.1:
-			self.time = time.time()
-			self.position = float(buffer.timestamp) / gst.SECOND
-
 		if buffer.timestamp == gst.CLOCK_TIME_NONE:
-			debug("removing probe")
+			debug("removing buffer probe")
 			pad.remove_buffer_probe(self.probe_id)
+			return False
+
+		#if time.time() > self.time + 0.1:
+		#	self.time = time.time()
+		self.position = float(buffer.timestamp) / gst.SECOND
+
 		return True
 	
 	def new_decoded_pad(self, decoder, pad, is_last):
@@ -967,8 +1001,6 @@ class Decoder(Pipeline):
 		self.probe_id = pad.add_buffer_probe(self._buffer_probe)
 		self.processing = True
 		self.query_duration()
-		#self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
-		#print "new_decoded_pad duration:", self.sound_file.duration
 
 	def get_sound_file(self):
 		return self.sound_file
@@ -1258,7 +1290,7 @@ class FileList:
 		return files
 	
 	def found_type(self, sound_file, mime):
-		#debug("found_type", sound_file.get_filename())
+		debug("found_type", sound_file.get_filename())
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
@@ -1275,7 +1307,6 @@ class FileList:
 		files = []
 		
 		for uri in uris:
-			print uri
 			if uri.startswith('cdda:'):
 				error.show("Cannot read from Audio CD.",
 					"Use SoundJuicer Audio CD Extractor instead.")
@@ -1288,8 +1319,14 @@ class FileList:
 			except gnomevfs.InvalidURIError:
 				log('unvalid uri: \'%s\'' % uri)
 				continue
+			except gnomevfs.AccessDeniedError:
+				log('access denied: \'%s\'' % uri)
+				continue
 			except TypeError, e:
 				log('error: %s (%s)' % (e, uri))
+				continue
+			except :
+				log('error in get_file_info: %s' % (uri))
 				continue
 
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
@@ -1911,7 +1948,7 @@ class ConverterQueue(TaskQueue):
 			gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
 		except gnomevfs.NotFoundError:
 			exists = False
-		except gnomevfs.InvalidURIError:
+		except :
 			log("Invalid URI: '%s'" % output_filename)
 			return
 		
@@ -1980,33 +2017,36 @@ class ConverterQueue(TaskQueue):
 		c.got_duration = False
 		#self.total_duration += c.get_duration()
 
-	def work_hook(self, task):
-		gobject.idle_add(self.set_progress, (task))
+	def work_hook(self, tasks):
+		gobject.idle_add(self.set_progress, (tasks))
 
 	def get_progress(self, task):
 		return (self.duration_processed + task.get_position()) / self.total_duration
 
-	def set_progress(self, task):
-		t = self.get_current_task()
-		t = task 
-		f = ""
-		if t:
-			f = t.sound_file.get_filename_for_display()
+	def set_progress(self, tasks):
+		filename = ""
+		if tasks and tasks[0]:
+			filename = tasks[0].sound_file.get_filename_for_display()
 
-		for t in self.tasks:
-			if not t.got_duration:
-				duration = t.sound_file.duration
-				#duration = t.get_duration()
+		# try to get all tasks durations
+		total_duration = self.total_duration
+		for task in self.all_tasks:
+			if not task.got_duration:
+				duration = task.sound_file.duration
 				if duration: 
 					self.total_duration += duration
-					t.got_duration = True
+					task.got_duration = True
+				else:
+					total_duration = 0 
 
-		if task.converting :
-			position = task.get_position()
-		else:
-			position = 0
+		position = 0
+		for task in tasks:
+			if task.converting :
+				position += task.get_position()
+
+		#print self.duration_processed, position, total_duration
 		self.window.set_progress(self.duration_processed + position,
-							 self.total_duration, f)
+							 total_duration, filename)
 		return False
 
 	def finish_hook(self, task):
@@ -2383,7 +2423,7 @@ class SoundConverterWindow:
 		self._lock_convert_button = False
 	
 	def display_progress(self, remaining):
-		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_current+1, self.converter.tasks_number, remaining ))
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_done+1, self.converter.tasks_number, remaining ))
 	
 	def set_progress(self, done_so_far, total, current_file=""):
 		if (total==0) or (done_so_far==0):
@@ -2513,6 +2553,31 @@ def cli_convert_main(input_files):
 	if not get_option("quiet"):
 		progress.clear()
 
+def cpuCount():
+	'''
+	Returns the number of CPUs in the system.
+	(from pyprocessing)
+	'''
+	if sys.platform == 'win32':
+		try:
+			num = int(os.environ['NUMBER_OF_PROCESSORS'])
+		except (ValueError, KeyError):
+			num = 0
+	elif sys.platform == 'darwin':
+		try:
+			num = int(os.popen('sysctl -n hw.ncpu').read())
+		except ValueError:
+			num = 0
+	else:
+		try:
+			num = os.sysconf('SC_NPROCESSORS_ONLN')
+		except (ValueError, OSError, AttributeError):
+			num = 0
+	if num >= 1:
+		return num
+	else:
+		return 1
+		#raise NotImplementedError, 'cannot determine number of cpus'
 
 settings = {
 	"mode": "gui",
@@ -2520,6 +2585,7 @@ settings = {
 	"debug": False,
 	"cli-output-type": "audio/x-vorbis",
 	"cli-output-suffix": ".ogg",
+	"jobs": cpuCount(),
 }
 
 
@@ -2561,13 +2627,16 @@ options = [
 	 _("Be quiet. Don't write normal output, only errors.")),
 
 	("d", "debug", lambda optarg: set_option("debug", True),
-	 _("Print additionnal debug information")),
+	 _("Print additional debug information")),
 
 	("s:", "suffix=", lambda optarg: set_option("cli-output-suffix", optarg),
 	 _("Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.") % get_option("cli-output-suffix")),
 
 	("t", "tags", lambda optarg: set_option("mode", "tags"),
 	 _("Show tags for input files instead of converting them. This indicates \n command line batch mode and disables the graphical user interface.")),
+
+	("j", "jobs=", lambda optarg: set_option("jobs", optarg),
+	 _("Force number of concurrent conversions.")),
 
 	]
 
@@ -2576,7 +2645,12 @@ def main():
 	shortopts = "".join(map(lambda opt: opt[0], options))
 	longopts = map(lambda opt: opt[1], options)
 	
-	opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
+	except getopt.GetoptError, error:
+		print 'Error: ', error
+		sys.exit(1)
+
 	for opt, optarg in opts:
 		for tuple in options:
 			short = "-" + tuple[0][:1]
@@ -2586,13 +2660,12 @@ def main():
 			if opt in [short, long]:
 				tuple[2](optarg)
 				break
-	if 0:
-		print
-		for key in settings:
-			print key, settings[key]
-		return
 
 	args = map(filename_to_uri, args)
+
+	jobs = int(get_option('jobs'))
+	set_option('jobs', jobs)
+	print '  using %d thread(s)' % get_option('jobs')
 	
 	if get_option("mode") == "gui":
 		gui_main(args)

@@ -1,3 +1,27 @@
+2008-06-23  Gautier Portet  <kassoulet gmail com>
+	* src/soundconverter.py: Fixed progress related problems in 1.3.0
+	  Release 1.3.1
+
+2008-06-23  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Finally we can process multiple conversions
+	  at the same time, yeah!
+	  Add --jobs option to force the number of threads, default is number
+	  of CPUs.
+	  (fix #13735, LP: #226176)
+	  Release 1.3.0
+
+2008-06-10  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Fixes various crashers reported by
+	  Ubunteros.
+	  (thanks Michael, Øyvind Stegard, Matthieu)
+	  (fix LP: #222031  LP: #226685  LP: #230463)
+
+2008-05-29  Gautier Portet <kassoulet gmail com>
+
+	* po/de.po: Update de tranlation.
+
 2008-05-13  Gautier Portet <kassoulet gmail com>
 
 	* po/sr*: Update and fix Serbian translation.

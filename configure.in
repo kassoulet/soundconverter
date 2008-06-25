@@ -2,12 +2,12 @@ dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
 AC_INIT(src/soundconverter.py)
-AM_INIT_AUTOMAKE([soundconverter], [1.2.0])
+AM_INIT_AUTOMAKE([soundconverter], [1.3.1])
 
 m4_define(required_python_abi, [2.4])
 m4_define(required_python_version, [2.4])
-m4_define(required_pygtk_version, [2.10])
-m4_define(required_pygnome_version, [2.10])
+m4_define(required_pygtk_version, [2.8])
+m4_define(required_pygnome_version, [2.8])
 
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
