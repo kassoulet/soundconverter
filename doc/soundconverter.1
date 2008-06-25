@@ -1,4 +1,4 @@
-.TH SOUNDCONVERTER 1 2004-12-31 "GNOME" "GNOME User's Manual"
+.TH SOUNDCONVERTER 1 2008-06-23 "GNOME" "GNOME User's Manual"
 .SH NAME
 soundconverter \- convert sound files to other formats
 .SH SYNOPSIS
@@ -30,6 +30,10 @@ Don't write normal output, only errors.
 Set the output filename suffix for batch mode. 
 The default is .ogg.
 Note that the suffix does not affect the output MIME type.
+.TP
+.BR \-j ", "\-\-jobs " \fIarg\fR"
+Force number of concurent conversions.
+Default is one per present CPU.
 .TP
 .BR \-t ", "\-\-tags
 Show tags for input files instead of converting them. 
