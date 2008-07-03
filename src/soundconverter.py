@@ -2536,7 +2536,7 @@ def cli_convert_main(input_files):
 	queue.run()
 	while queue.is_running():
 		t = queue.get_current_task()
-		if not get_option("quiet"):
+		if t and not get_option("quiet"):
 			if previous_filename != t.sound_file.get_filename_for_display():
 				if previous_filename:
 					print _("%s: OK") % previous_filename
