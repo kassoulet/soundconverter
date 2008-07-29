@@ -267,9 +267,6 @@ def unquote_filename(filename):
 	return f
 
 
-use_gnomevfs = False
-
-
 def format_tag(tag):
 	if isinstance(tag, list):
 		if len(tag) > 1:
@@ -294,16 +291,25 @@ for element in required_elements:
 		print "required gstreamer element '%s' not found." % element
 		sys.exit(1)
 
-if gst.element_factory_find("gnomevfssrc"):
+use_gnomevfs = False
+
+if gst.element_factory_find("giosrc"):
+	gstreamer_source = "giosrc"
+	gstreamer_sink = "giosink"
+	encode_filename = vfs_encode_filename
+	use_gnomevfs = True
+	print "  using gio"
+elif gst.element_factory_find("gnomevfssrc"):
 	gstreamer_source = "gnomevfssrc"
 	gstreamer_sink = "gnomevfssink"
 	encode_filename = vfs_encode_filename
 	use_gnomevfs = True
+	print "  using deprecated gnomevfssrc"
 else:
 	gstreamer_source = "filesrc"
 	gstreamer_sink = "filesink"
 	encode_filename = file_encode_filename
-	print "  NOT using gnomevfssrc, look for a gnomevfs gstreamer package."
+	print "  not using gnomevfssrc, look for a gnomevfs gstreamer package."
 
 
 encoders = ( 
