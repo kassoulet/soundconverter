@@ -1,6 +1,8 @@
 2008-07-29  Gautier Portet  <kassoulet gmail com>
 
-	* src/soundconverter.py: use giosrc when available. 
+	* src/soundconverter.py: use giosrc when available.
+	* src/soundconverter.py: fix crash when gnomevfssink not present.
+	  (fix #14184)
 
 2008-07-26  Gautier Portet  <kassoulet gmail com>
 	* po/pl/po: Updated Polish tranlation.

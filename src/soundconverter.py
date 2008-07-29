@@ -257,13 +257,6 @@ def file_encode_filename(filename):
 def unquote_filename(filename):
 
 	f= urllib.unquote(filename)
-	'''try:
-		# files are normaly in utf-8 ?
-		f = unicode(f, "utf-8")
-	except UnicodeDecodeError:
-		# but sometimes they are badly encoded, this is a failback
-		f = unicode(f, "latin1", "replace")
-	'''
 	return f
 
 
@@ -1159,7 +1152,7 @@ class Converter(Decoder):
 				dialog.hide()
 				return
 	
-		self.add_command('gnomevfssink location=%s' % uri)
+		self.add_command('%s location=%s' % (gstreamer_sink, uri))
 		if self.overwrite and vfs_exists(self.output_filename):
 			log("overwriting '%s'" % self.output_filename)
 			vfs_unlink(self.output_filename)
