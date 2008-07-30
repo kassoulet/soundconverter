@@ -1091,7 +1091,8 @@ track_title
                                 <property name="items" translatable="yes">Ogg Vorbis (.ogg)
 MP3  (.mp3)
 FLAC Lossless (.flac)
-MS Wave (.wav)</property>
+MS Wave (.wav)
+AAC (.m4a)</property>
                                 <signal name="changed" handler="on_output_mime_type_changed"/>
                               </widget>
                               <packing>
@@ -1174,6 +1175,25 @@ MS Wave (.wav)</property>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">3</property>
+                              </packing>
+                            </child>
+
+                            <child>
+                              <widget class="GtkRadioButton" id="output_mime_type_aac">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip" translatable="yes">Non-Free Lossy Compression</property>
+                                <property name="label" translatable="yes">AAC</property>
+                                <property name="use_underline">True</property>
+                                <property name="response_id">0</property>
+                                <property name="draw_indicator">True</property>
+                                <property name="group">output_mime_type_ogg_vorbis</property>
+                                <signal name="toggled" handler="on_output_mime_type_aac_toggled"/>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                           </widget>

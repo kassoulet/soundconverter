@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -tt
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats. 
@@ -308,11 +308,12 @@ else:
 encoders = ( 
 	("flacenc",		"FLAC"), 
 	("wavenc",		"WAV"),
-	("vorbisenc", "Ogg Vorbis"),
+	("vorbisenc",   "Ogg Vorbis"),
 	("oggmux",		"Ogg Vorbis"),
 	("id3v2mux",	"MP3 Tags"),
 	("xingmux",		""),
-	("lame",			"MP3"))
+	("lame",		"MP3"),
+	("faac",        "AAC"))
 
 for encoder, name in encoders:
 	have_it = True
@@ -1122,6 +1123,7 @@ class Converter(Decoder):
 			"audio/x-flac": self.add_flac_encoder,
 			"audio/x-wav": self.add_wav_encoder,
 			"audio/mpeg": self.add_mp3_encoder,
+			"audio/x-m4a": self.add_aac_encoder,
 		}
 
 		self.add_command("audioconvert")
@@ -1227,6 +1229,9 @@ class Converter(Decoder):
 			cmd += "! id3v2mux "
 		
 		return cmd
+
+	def add_aac_encoder(self):
+		return "faac profile=2 ! ffmux_mp4"
 
 class FileList:
 	"""List of files added by the user."""
@@ -1546,6 +1551,7 @@ class PreferencesDialog:
 						"audio/x-flac"	: (have_flacenc, "output_mime_type_flac"),
 						"audio/x-wav"		: (have_wavenc, "output_mime_type_wav"),
 						"audio/mpeg"		: (have_lame, "output_mime_type_mp3"),
+						"audio/x-m4a"       : (have_faac, "output_mime_type_aac"),
 					}
 
 		# desactivate output if encoder plugin is not present
@@ -1688,6 +1694,7 @@ class PreferencesDialog:
 						"audio/x-flac": ".flac",
 						"audio/x-wav": ".wav",
 						"audio/mpeg": ".mp3",
+                        "audio/x-m4a": ".m4a",
 					}.get(output_type, None)
 
 		generator = TargetNameGenerator()
@@ -1843,6 +1850,7 @@ class PreferencesDialog:
 						"audio/mpeg": 1,
 						"audio/x-flac": 2,
 						"audio/x-wav": 3,
+						"audio/x-m4a": 3,
 		}
 		self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -1861,6 +1869,10 @@ class PreferencesDialog:
 	def on_output_mime_type_mp3_toggled(self, button):
 		if button.get_active():
 			self.change_mime_type("audio/mpeg")
+
+	def on_output_mime_type_aac_toggled(self, button):
+		if button.get_active():
+			self.change_mime_type("audio/x-m4a")
 
 	def on_vorbis_quality_changed(self, combobox):
 		quality = (0,0.2,0.4,0.6,0.8)
