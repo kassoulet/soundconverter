@@ -225,7 +225,8 @@ def vfs_makedirs(path_to_create):
 	for folder in path.split("/"):
 		if not folder:
 			continue
-		uri = uri.append_string(folder)
+		print folder
+		uri = uri.append_string(folder.replace("%2f", "/"))
 		try:
 			gnomevfs.make_directory(uri, 0777)
 		except gnomevfs.FileExistsError:
@@ -246,11 +247,13 @@ def vfs_exists(filename):
 # GStreamer gnomevfssrc helpers
 
 def vfs_encode_filename(filename):
+	filename = filename.replace("%252f", "/")
 	return filename
 
 def file_encode_filename(filename):
 	filename = gnomevfs.get_local_path_from_uri(filename)
 	filename = filename.replace(" ", "\ ");
+	filename = filename.replace("%2f", "/");
 	return filename
 	
 
@@ -509,6 +512,8 @@ class TargetNameGenerator:
 		}
 		for key in sound_file.keys():
 			dict[key] = sound_file[key]
+			if isinstance(dict[key], basestring):
+				dict[key] = dict[key].replace("/", "-")
 		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
@@ -1154,7 +1159,8 @@ class Converter(Decoder):
 				dialog.hide()
 				return
 	
-		self.add_command('%s location=%s' % (gstreamer_sink, uri))
+		self.add_command('%s location=%s' % (
+			gstreamer_sink, encode_filename(self.output_filename)))
 		if self.overwrite and vfs_exists(self.output_filename):
 			log("overwriting '%s'" % self.output_filename)
 			vfs_unlink(self.output_filename)
