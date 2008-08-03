@@ -1,3 +1,8 @@
+2008-08-03  Gautier Portet  <kassoulet gmail com>
+	* src/soundconverter.py: Create-folders is also actived when using
+	  same-as-input-folder.
+	(fix #13915)
+
 2008-08-01  Gautier Portet  <kassoulet gmail com>
 	* src/soundconverter.py: Fix slash in tag. No more creating unwanted
 	folders. This is just a fast hack, slash is just replaced by dash.

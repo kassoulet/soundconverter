@@ -1708,9 +1708,9 @@ class PreferencesDialog:
 		generator.set_target_suffix(output_suffix)
 		if not self.get_int("same-folder-as-input"):
 			generator.set_folder(self.get_string("selected-folder"))
-			if self.get_int("create-subfolders"):
-				generator.set_subfolder_pattern(
-					self.get_subfolder_pattern())
+		if self.get_int("create-subfolders"):
+			generator.set_subfolder_pattern(
+				self.get_subfolder_pattern())
 		generator.set_basename_pattern(self.get_basename_pattern())
 		if for_display:
 			generator.set_replace_messy_chars(False)
