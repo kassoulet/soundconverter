@@ -1,7 +1,14 @@
 2008-08-03  Gautier Portet  <kassoulet gmail com>
+	* data/soundconverter.glade: Removed the 'translatable' field on stock
+	  items.
+	* po/pl/po: Updated Polish translation. (thanks Tomasz)
+
+
+2008-08-03  Gautier Portet  <kassoulet gmail com>
 	* src/soundconverter.py: Create-folders is also actived when using
 	  same-as-input-folder.
 	(fix #13915)
+	Release 1.3.2
 
 2008-08-01  Gautier Portet  <kassoulet gmail com>
 	* src/soundconverter.py: Fix slash in tag. No more creating unwanted
