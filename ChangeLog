@@ -1,3 +1,8 @@
+2008-08-31  Gautier Portet  <kassoulet gmail com
+
+	* data/soundconverter.glade, src/soundconverter.py:
+	  Applied patch adding optionnal resampling from Francis.
+
 2008-08-03  Gautier Portet  <kassoulet gmail com>
 	* data/soundconverter.glade: Removed the 'translatable' field on stock
 	  items.

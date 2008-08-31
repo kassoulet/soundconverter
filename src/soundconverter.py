@@ -1101,7 +1101,7 @@ class Converter(Decoder):
 
 	"""A background task for converting files to another format."""
 
-	def __init__(self, sound_file, output_filename, output_type, delete_original=False):
+	def __init__(self, sound_file, output_filename, output_type, delete_original=False, output_resample=False, resample_rate=48000):
 		#print "Converter()"
 		Decoder.__init__(self, sound_file)
 
@@ -1113,6 +1113,9 @@ class Converter(Decoder):
 		self.mp3_bitrate = None
 		self.mp3_mode = None
 		self.mp3_quality = None
+
+		self.output_resample = output_resample
+		self.resample_rate = resample_rate
 
 		self.overwrite = False
 		self.delete_original = delete_original
@@ -1133,6 +1136,13 @@ class Converter(Decoder):
 
 		self.add_command("audioconvert")
 		#TODO self.add_command("audioscale")
+
+		#Hacked in audio resampling support
+		if self.output_resample:
+			#print "Resampling to %dHz" % (self.resample_rate)
+			self.add_command("audioresample ! audio/x-raw-float,rate=%d" % 
+					 (self.resample_rate))
+			self.add_command("audioconvert")
 		
 		encoder = self.encoders[self.output_type]()
 		if not encoder:
@@ -1471,6 +1481,8 @@ class PreferencesDialog:
 		"mp3-abr-quality": 192,
 		"mp3-vbr-quality": 3,
 		"delete-original": 0,
+		"output-resample": 0,
+		"resample-rate": 48000,
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -1489,6 +1501,8 @@ class PreferencesDialog:
 		self.aprox_bitrate = glade.get_widget("aprox_bitrate")
 		self.quality_tabs = glade.get_widget("quality_tabs")
 		self.delete_original = glade.get_widget("delete_original")
+		self.resample_toggle = glade.get_widget("resample_toggle")
+		self.resample_rate = glade.get_widget("resample_rate")
 
 		self.target_bitrate = None
 		self.convert_setting_from_old_version()
@@ -1608,7 +1622,13 @@ class PreferencesDialog:
 			self.custom_filename_box.set_sensitive(True)
 		else:
 			self.custom_filename_box.set_sensitive(False)
-			
+
+		if self.get_int("output-resample"):
+			self.resample_toggle.set_active(self.get_int("output-resample"))
+			self.resample_rate.set_sensitive(1)
+			rr_entry = glade.get_widget("resample_rate-entry")
+			rr_entry.set_text("%d" % (self.get_int("resample-rate")))
+
 		self.update_example()
 
 	def update_selected_folder(self):
@@ -1930,6 +1950,15 @@ class PreferencesDialog:
 
 		self.update_example()
 
+	def on_resample_rate_changed(self, combobox):
+		changeto = combobox.get_active_text()
+		if int(changeto) >= 2:
+			self.set_int("resample-rate", int(changeto))
+
+	def on_resample_toggle(self, rstoggle):
+		self.set_int("output-resample", rstoggle.get_active())
+		self.resample_rate.set_sensitive(rstoggle.get_active())
+
 
 class ConverterQueueCanceled(SoundConverterException):
 
@@ -2017,8 +2046,10 @@ class ConverterQueue(TaskQueue):
 				raise ConverterQueueCanceled()
 			
 		c = Converter(sound_file, output_filename, 
-						self.window.prefs.get_string("output-mime-type"),
-						self.window.prefs.get_int("delete-original"))
+			                        self.window.prefs.get_string("output-mime-type"),
+			                        self.window.prefs.get_int("delete-original"),
+			                        self.window.prefs.get_int("output-resample"),
+			                        self.window.prefs.get_int("resample-rate"))
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
 		
 		quality = {
