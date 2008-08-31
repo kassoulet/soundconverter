@@ -2,6 +2,9 @@
 
 	* data/soundconverter.glade, src/soundconverter.py:
 	  Applied patch adding optionnal resampling from Francis.
+	  Added flac experimental quality setting.
+	   - flac quality do not seems to work with gstreamer ???
+           - flac files created by gstreamer are huge...
 
 2008-08-03  Gautier Portet  <kassoulet gmail com>
 	* data/soundconverter.glade: Removed the 'translatable' field on stock

@@ -1113,6 +1113,7 @@ class Converter(Decoder):
 		self.mp3_bitrate = None
 		self.mp3_mode = None
 		self.mp3_quality = None
+		self.flac_speed = None
 
 		self.output_resample = output_resample
 		self.resample_rate = resample_rate
@@ -1203,8 +1204,14 @@ class Converter(Decoder):
 	def set_mp3_quality(self, quality):
 		self.mp3_quality = quality
 
+	def set_flac_speed(self, speed):
+		self.flac_speed = speed
+
 	def add_flac_encoder(self):
-		return "flacenc"
+		s = "flacenc"
+		if self.flac_speed == 1:
+			s += " quality=9"
+		return s
 
 	def add_wav_encoder(self):
 		return "wavenc"
@@ -1483,6 +1490,7 @@ class PreferencesDialog:
 		"delete-original": 0,
 		"output-resample": 0,
 		"resample-rate": 48000,
+		"flac-speed": 0,
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -1601,6 +1609,10 @@ class PreferencesDialog:
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
 				w.set_active(v)
+
+		w = glade.get_widget("flac_speed")
+		speed = self.get_int("flac-speed")
+		w.set_active(speed)
 			
 		self.mp3_quality = glade.get_widget("mp3_quality")
 		self.mp3_mode = glade.get_widget("mp3_mode")
@@ -1906,6 +1918,10 @@ class PreferencesDialog:
 		
 		self.update_example()
 
+	def on_flac_speed_changed(self, combobox):
+		self.set_int("flac-speed", combobox.get_active())
+		self.update_example()
+
 	def change_mp3_mode(self, mode):
 	
 		keys = { "cbr": 0, "abr": 1, "vbr": 2 }
@@ -2051,6 +2067,7 @@ class ConverterQueue(TaskQueue):
 			                        self.window.prefs.get_int("output-resample"),
 			                        self.window.prefs.get_int("resample-rate"))
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
+		c.set_flac_speed(self.window.prefs.get_int("flac-speed"))
 		
 		quality = {
 			"cbr": "mp3-cbr-quality",
