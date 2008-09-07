@@ -1599,7 +1599,7 @@ class PreferencesDialog:
 			
 		w = glade.get_widget("vorbis_quality")
 		quality = self.get_float("vorbis-quality")
-		quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4}
+		quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4, 1.0:5}
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
 				w.set_active(v)
@@ -1903,7 +1903,7 @@ class PreferencesDialog:
 			self.change_mime_type("audio/x-m4a")
 
 	def on_vorbis_quality_changed(self, combobox):
-		quality = (0,0.2,0.4,0.6,0.8)
+		quality = (0,0.2,0.4,0.6,0.8,1.0)
 		self.set_float("vorbis-quality", quality[combobox.get_active()])
 		
 		self.update_example()
@@ -1923,9 +1923,9 @@ class PreferencesDialog:
 		quality_to_preset = {
 			"cbr": {64:0, 96:1, 128:2, 192:3, 256:4},
 			"abr": {64:0, 96:1, 128:2, 192:3, 256:4},
-			"vbr": {9:0,	 7:1,		 5:2,		3:3,	1:4}, # inverted !
+			"vbr": {9:0,   7:1,   5:2,   3:3,   1:4}, # inverted !
 		}
-			
+		
 		if quality in quality_to_preset[mode]:
 			self.mp3_quality.set_active(quality_to_preset[mode][quality])
 		

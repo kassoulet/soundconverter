@@ -1,3 +1,8 @@
+2008-09-07  Gautier Portet  <kassoulet gmail com>
+	* data/soundconverter.glade, src/soundconverter.py:
+	  Added quality 10 to vorbis settings.
+	  (thanks Juan Martin)
+
 2008-09-03  Gautier Portet  <kassoulet gmail com>
 
 	* data/soundconverter.glade, src/soundconverter.py:
