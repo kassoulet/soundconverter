@@ -1569,33 +1569,34 @@ class PreferencesDialog:
 
 		mime_type = self.get_string("output-mime-type")
 
-		widgets = {		 "audio/x-vorbis": (have_vorbisenc, "output_mime_type_ogg_vorbis"),
-						"audio/x-flac"	: (have_flacenc, "output_mime_type_flac"),
-						"audio/x-wav"		: (have_wavenc, "output_mime_type_wav"),
-						"audio/mpeg"		: (have_lame, "output_mime_type_mp3"),
-						"audio/x-m4a"       : (have_faac, "output_mime_type_aac"),
-					}
+		widgets = (	("audio/x-vorbis", have_vorbisenc),
+					("audio/mpeg"    , have_lame),
+					("audio/x-flac"  , have_flacenc),
+					("audio/x-wav"   , have_wavenc),
+					("audio/x-m4a"   , have_faac),
+					)
 
 		# desactivate output if encoder plugin is not present
-		for mime, d in widgets.iteritems():
-			encoder, widget = d
-			if not encoder:
-				w = glade.get_widget(widget)
-				w.set_sensitive(False)
+		widget = glade.get_widget('output_mime_type')
+		model = widget.get_model()
+		self.present_mime_types = []
+		for i, b in enumerate(widgets):
+			mime, encoder_present = b
+			if not encoder_present:
+				del model[i]
 				if mime_type == mime:
 					mime_type = self.defaults["output-mime-type"]
-
+			else:
+				self.present_mime_types.append(mime)
+		for i, mime in enumerate(self.present_mime_types):
+			if mime_type == mime:
+				widget.set_active(i)
+		self.change_mime_type(mime_type)
+		
 		# display information about mp3 encoding
 		if not have_lame:
 			w = glade.get_widget("lame_absent")
 			w.show()
-		
-		widget_name = widgets.get(mime_type, None)[1]
-
-		if widget_name:
-			w = glade.get_widget(widget_name)
-			w.set_active(True)
-			self.change_mime_type(mime_type)
 			
 		w = glade.get_widget("vorbis_quality")
 		quality = self.get_float("vorbis-quality")
@@ -1617,7 +1618,6 @@ class PreferencesDialog:
 			iter = model.append()
 			model.set(iter, 0, desc)
 		w.set_active(self.get_int("name-pattern-index"))
-
 		
 		self.custom_filename.set_text(self.get_string("custom-filename-pattern"))
 		if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
@@ -1882,6 +1882,11 @@ class PreferencesDialog:
 		}
 		self.quality_tabs.set_current_page(tabs[mime_type])
 
+	def on_output_mime_type_changed(self, combo):
+		self.change_mime_type(
+			self.present_mime_types[combo.get_active()]
+		)
+
 	def on_output_mime_type_ogg_vorbis_toggled(self, button):
 		if button.get_active():
 			self.change_mime_type("audio/x-vorbis")
@@ -1921,9 +1926,9 @@ class PreferencesDialog:
 		quality = self.get_int(keys[mode])
 		
 		quality_to_preset = {
-			"cbr": {64:0, 96:1, 128:2, 192:3, 256:4},
-			"abr": {64:0, 96:1, 128:2, 192:3, 256:4},
-			"vbr": {9:0,   7:1,   5:2,   3:3,   1:4}, # inverted !
+			"cbr": {64:0, 96:1, 128:2, 192:3, 256:4, 320:5},
+			"abr": {64:0, 96:1, 128:2, 192:3, 256:4, 320:5},
+			"vbr": {9:0,   7:1,   5:2,   3:3,   1:4,   0:5}, # inverted !
 		}
 		
 		if quality in quality_to_preset[mode]:
@@ -1943,9 +1948,9 @@ class PreferencesDialog:
 			"vbr": "mp3-vbr-quality"
 		}
 		quality = {
-			"cbr": (64, 96, 128, 192, 256),
-			"abr": (64, 96, 128, 192, 256),
-			"vbr": (9, 7, 5, 3, 1),
+			"cbr": (64, 96, 128, 192, 256, 320),
+			"abr": (64, 96, 128, 192, 256, 320),
+			"vbr": (9, 7, 5, 3, 1, 0),
 		}
 		mode = self.get_string("mp3-mode")
 		self.set_int(keys[mode], quality[mode][combobox.get_active()])
