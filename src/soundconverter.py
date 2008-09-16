@@ -126,10 +126,10 @@ mime_whitelist = (
 )
 
 # custom filename patterns
-english_patterns = "Artist Album Title Track Total Genre Date Year"
+english_patterns = "Artist Album Title Track Total Genre Date Year Timestamp"
 
 # traductors: These are the custom filename patterns. Only if it does make sense.
-locale_patterns = _("Artist Album Title Track Total Genre Date Year")
+locale_patterns = _("Artist Album Title Track Total Genre Date Year Timestamp")
 
 patterns_formats = (
 	"%(artist)s",
@@ -140,6 +140,7 @@ patterns_formats = (
 	"%(genre)s",
 	"%(date)s",
 	"%(year)s",
+	"%(timestamp)s",
 )
 
 # add english and locale
@@ -514,6 +515,11 @@ class TargetNameGenerator:
 			dict[key] = sound_file[key]
 			if isinstance(dict[key], basestring):
 				dict[key] = dict[key].replace("/", "-")
+		
+		# add timestamp to substitution dict -- this could be split into more
+		# entries for more fine-grained control over the string by the user...
+		timestamp_string = time.strftime("%Y%m%d_%H_%M_%S")
+		dict["timestamp"] = timestamp_string
 		
 		pattern = os.path.join(self.subfolders, self.basename + self.suffix)
 		result = pattern % dict
