@@ -1116,6 +1116,7 @@ class Converter(Decoder):
 		self.output_filename = output_filename
 		self.output_type = output_type
 		self.vorbis_quality = None
+		self.aac_quality = None
 		self.mp3_bitrate = None
 		self.mp3_mode = None
 		self.mp3_quality = None
@@ -1203,6 +1204,9 @@ class Converter(Decoder):
 	def set_vorbis_quality(self, quality):
 		self.vorbis_quality = quality
 
+	def set_aac_quality(self, quality):
+		self.aac_quality = quality
+
 	def set_mp3_mode(self, mode):
 		self.mp3_mode = mode
 
@@ -1254,7 +1258,8 @@ class Converter(Decoder):
 		return cmd
 
 	def add_aac_encoder(self):
-		return "faac profile=2 ! ffmux_mp4"
+		return "faac profile=2 bitrate=%s ! ffmux_mp4" % \
+			(self.aac_quality * 1000)
 
 class FileList:
 	"""List of files added by the user."""
@@ -1487,6 +1492,7 @@ class PreferencesDialog:
 		"mp3-cbr-quality": 192,
 		"mp3-abr-quality": 192,
 		"mp3-vbr-quality": 3,
+		"aac-quality": 192,
 		"delete-original": 0,
 		"output-resample": 0,
 		"resample-rate": 48000,
@@ -1607,8 +1613,16 @@ class PreferencesDialog:
 		w = glade.get_widget("vorbis_quality")
 		quality = self.get_float("vorbis-quality")
 		quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4, 1.0:5}
+		w.set_active(5)
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
+				w.set_active(v)
+			
+		w = glade.get_widget("aac_quality")
+		quality = self.get_int("aac-quality")
+		quality_setting = {64:0, 96:1, 128:2, 192:3, 256:4, 320:5}
+		for k, v in quality_setting.iteritems():
+			if quality == k:
 				w.set_active(v)
 			
 		self.mp3_quality = glade.get_widget("mp3_quality")
@@ -1656,7 +1670,10 @@ class PreferencesDialog:
 			quality = int(quality)
 			bitrates = (64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500)
 			bitrate = bitrates[quality]
-			
+		
+		elif mime_type == "audio/x-m4a":
+			bitrate = self.get_int("aac-quality")
+
 		elif mime_type == "audio/mpeg":
 			quality = {
 				"cbr": "mp3-cbr-quality",
@@ -1884,7 +1901,7 @@ class PreferencesDialog:
 						"audio/mpeg": 1,
 						"audio/x-flac": 2,
 						"audio/x-wav": 3,
-						"audio/x-m4a": 3,
+						"audio/x-m4a": 4,
 		}
 		self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -1916,7 +1933,11 @@ class PreferencesDialog:
 	def on_vorbis_quality_changed(self, combobox):
 		quality = (0,0.2,0.4,0.6,0.8,1.0)
 		self.set_float("vorbis-quality", quality[combobox.get_active()])
-		
+		self.update_example()
+
+	def on_aac_quality_changed(self, combobox):
+		quality = (64, 96, 128, 192, 256, 320)
+		self.set_int("aac-quality", quality[combobox.get_active()])
 		self.update_example()
 
 	def change_mp3_mode(self, mode):
@@ -1939,7 +1960,6 @@ class PreferencesDialog:
 		
 		if quality in quality_to_preset[mode]:
 			self.mp3_quality.set_active(quality_to_preset[mode][quality])
-		
 		self.update_example()
 
 	def on_mp3_mode_changed(self, combobox):
@@ -1960,7 +1980,6 @@ class PreferencesDialog:
 		}
 		mode = self.get_string("mp3-mode")
 		self.set_int(keys[mode], quality[mode][combobox.get_active()])
-
 		self.update_example()
 
 	def on_resample_rate_changed(self, combobox):
@@ -2064,6 +2083,7 @@ class ConverterQueue(TaskQueue):
 			                        self.window.prefs.get_int("output-resample"),
 			                        self.window.prefs.get_int("resample-rate"))
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
+		c.set_aac_quality(self.window.prefs.get_int("aac-quality"))
 		
 		quality = {
 			"cbr": "mp3-cbr-quality",

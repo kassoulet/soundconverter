@@ -1,8 +1,14 @@
+2008-09-16  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Add AAC quality setting.
+
 2008-09-10  Gautier Portet  <kassoulet gmail com>
+
 	* src/soundconverter.py: Add {Timestamp} filename template.
 	  (thanks Mark)
 	
 2008-09-07  Gautier Portet  <kassoulet gmail com>
+
 	* data/soundconverter.glade, src/soundconverter.py:
 	  Added quality 10 to vorbis settings.
 	  (thanks Juan Martin)
@@ -25,18 +31,21 @@
            - flac files created by gstreamer are huge...
 
 2008-08-03  Gautier Portet  <kassoulet gmail com>
+
 	* data/soundconverter.glade: Removed the 'translatable' field on stock
 	  items.
 	* po/pl/po: Updated Polish translation. (thanks Tomasz)
 
 
 2008-08-03  Gautier Portet  <kassoulet gmail com>
+
 	* src/soundconverter.py: Create-folders is also actived when using
 	  same-as-input-folder.
 	(fix #13915)
 	Release 1.3.2
 
 2008-08-01  Gautier Portet  <kassoulet gmail com>
+
 	* src/soundconverter.py: Fix slash in tag. No more creating unwanted
 	folders. This is just a fast hack, slash is just replaced by dash.
 	(fix #14286)
@@ -55,6 +64,7 @@
 	  (fix #14184)
 
 2008-07-26  Gautier Portet  <kassoulet gmail com>
+
 	* po/pl/po: Updated Polish tranlation.
 	  (thanks Piotr)
 
@@ -64,6 +74,7 @@
 	  (fix LP: #243831)
 
 2008-06-23  Gautier Portet  <kassoulet gmail com>
+
 	* src/soundconverter.py: Fix progress related problems in 1.3.0
 	  Release 1.3.1
 
