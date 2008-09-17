@@ -374,6 +374,10 @@ def filename_to_uri(filename):
 	Filename can be a relative or absolute path, or an uri.
 	"""
 	if vfs_exists(filename):
+		url = urlparse.urlparse(filename)
+		if not url.scheme:
+			filename = urllib.pathname2url(filename)
+
 		return str(gnomevfs.URI(filename))
 	else:
 		return "file://" + urllib.quote(os.path.abspath(filename))
@@ -539,6 +543,7 @@ class TargetNameGenerator:
 			folder = root
 		else:
 			folder = self.folder
+			
 		result = os.path.join(folder, urllib.quote(result))
 
 		return result

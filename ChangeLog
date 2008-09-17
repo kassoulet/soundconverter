@@ -1,7 +1,13 @@
+2008-09-17  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix old problem with unquoted filenames.
+	When you passed filename in arguments, URI where not quoted when
+	encoding to same folder, pffff...
+	Release 1.4.0
+
 2008-09-16  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Add AAC quality setting.
-	Release 1.4.0
 
 2008-09-10  Gautier Portet  <kassoulet gmail com>
 
