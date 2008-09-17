@@ -1,16 +1,23 @@
 2008-09-16  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Add AAC quality setting.
+	Release 1.4.0
 
 2008-09-10  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Add {Timestamp} filename template.
 	  (thanks Mark)
 	
+2008-09-09  Gautier Portet  <kassoulet gmail com>
+
+	* data/soundconverter.glade, src/soundconverter.py:
+	  Added 320kbps to mp3 quality settings.
+	  (thanks Michael)
+
 2008-09-07  Gautier Portet  <kassoulet gmail com>
 
 	* data/soundconverter.glade, src/soundconverter.py:
-	  Added quality 10 to vorbis settings.
+	  Added quality 10 to vorbis quality settings.
 	  (thanks Juan Martin)
 
 2008-09-03  Gautier Portet  <kassoulet gmail com>
