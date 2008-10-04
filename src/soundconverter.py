@@ -1659,6 +1659,7 @@ class PreferencesDialog:
 		self.update_example()
 
 	def update_selected_folder(self):
+		self.into_selected_folder.set_use_underline(False)
 		self.into_selected_folder.set_label(_("Into folder %s") % 
 			beautify_uri(self.get_string("selected-folder")))
 
