@@ -1591,13 +1591,14 @@ class PreferencesDialog:
 					("audio/x-flac"  , have_flacenc),
 					("audio/x-wav"   , have_wavenc),
 					("audio/x-m4a"   , have_faac),
-					)
+					) # must be in same order in output_mime_type
 
 		# desactivate output if encoder plugin is not present
 		widget = glade.get_widget('output_mime_type')
 		model = widget.get_model()
 		self.present_mime_types = []
-		for i, b in enumerate(widgets):
+		i = 0
+		for b in widgets:
 			mime, encoder_present = b
 			if not encoder_present:
 				del model[i]
@@ -1605,6 +1606,7 @@ class PreferencesDialog:
 					mime_type = self.defaults["output-mime-type"]
 			else:
 				self.present_mime_types.append(mime)
+				i += 1
 		for i, mime in enumerate(self.present_mime_types):
 			if mime_type == mime:
 				widget.set_active(i)
