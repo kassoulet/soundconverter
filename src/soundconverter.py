@@ -2747,6 +2747,8 @@ def main():
 				tuple[2](optarg)
 				break
 
+	if args and not args[0]:
+		args = []
 	args = map(filename_to_uri, args)
 
 	jobs = int(get_option('jobs'))
