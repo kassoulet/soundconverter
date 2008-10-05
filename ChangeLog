@@ -2,6 +2,7 @@
 
 	* src/soundconverter.py: Fix crash at startup when more than one
 	  encoding format is missing. (thanks Denis)
+	  Release 1.4.1
 
 2008-09-22  Gautier Portet  <kassoulet gmail com>
 
