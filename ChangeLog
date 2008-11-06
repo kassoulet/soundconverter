@@ -1,3 +1,8 @@
+2008-10-14  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Change status text when adding files, so
+	  the user gets a clue of what is happening.
+	  
 2008-10-04  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix crash at startup when more than one

@@ -1342,6 +1342,7 @@ class FileList:
 	def add_uris(self, uris, base=None, filter=None):
 
 		files = []
+		self.window.set_status(_('Adding files...'))
 		
 		for uri in uris:
 			if uri.startswith('cdda:'):
@@ -1396,7 +1397,7 @@ class FileList:
 			self.typefinders.run()
 
 	def typefinder_queue_ended(self):
-		pass
+		self.window.set_status()
 
 	def format_cell(self, sound_file):
 		
