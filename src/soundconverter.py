@@ -1425,6 +1425,16 @@ class FileList:
 			else:
 				template = template_loading
 
+		for tag, unicode_string in params.items():
+			try:
+				if not isinstance(unicode_string, unicode):
+					# try to convert from utf-8 
+					unicode_string = unicode(unicode_string, "utf-8")
+			except UnicodeDecodeError:
+				# well, let's fool python and use some 8bit codec...
+				unicode_string = unicode(unicode_string, "iso-8859-1")
+			params[tag] = unicode_string
+
 		s = template % params
 			
 		return s

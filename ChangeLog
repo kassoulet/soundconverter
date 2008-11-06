@@ -1,3 +1,8 @@
+2008-11-06  Gautier Portet  <kassoulet gmail com>
+
+	* src/soundconverter.py: Fixed (?) raising of UnicodeDecodeError
+	  when tags contained non-utf-8 strings. (fix LP: #223371) 
+	
 2008-10-14  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Change status text when adding files, so
