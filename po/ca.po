@@ -6,42 +6,40 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-03 21:35+0200\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
 "PO-Revision-Date: 2008-04-25 08:04+0000\n"
 "Last-Translator: Ed.pathfinder <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
+"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
-#, fuzzy
 msgid "Audio Format Converter"
-msgstr "Conversor del format d'audio"
+msgstr ""
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
 msgstr "Convertir arxius d'audio a d'altres formats"
 
 #: ../data/soundconverter.desktop.in.in.h:3
-#, fuzzy
 msgid "Sound Converter"
-msgstr "Conversor de So"
+msgstr ""
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:127
+#: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr "Artista Àlbum Títol Pista Total Gènere Data Any"
 
-#: ../src/soundconverter.py:192
-#, fuzzy, python-format
+#: ../src/soundconverter.py:184
+#, python-format
 msgid "skipping: '%s'"
-msgstr "exceptuant: '%s'"
+msgstr ""
 
-#: ../src/soundconverter.py:548
+#: ../src/soundconverter.py:531
 #, python-format
 msgid ""
 "\n"
@@ -54,11 +52,11 @@ msgstr ""
 "Error: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:752
+#: ../src/soundconverter.py:734
 msgid "Internal error"
 msgstr "Error intern"
 
-#: ../src/soundconverter.py:753
+#: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -66,12 +64,12 @@ msgstr ""
 "No es poden enllaçar els elements GStreamer.\n"
 " Si us plau avisa d'aquest bug."
 
-#: ../src/soundconverter.py:758
+#: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
 msgstr "Format desconegut %s"
 
-#: ../src/soundconverter.py:759
+#: ../src/soundconverter.py:741
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -84,209 +82,182 @@ msgstr ""
 " sobre arxius d'aquest format si és important\n"
 " per tu."
 
-#: ../src/soundconverter.py:1054
-#, fuzzy
+#: ../src/soundconverter.py:995
 msgid "Target exists."
-msgstr "L'objectiu ja existeix."
+msgstr ""
 
-#: ../src/soundconverter.py:1055
+#: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
 msgstr "L'arxiu resultant %s ja existeix."
 
-#: ../src/soundconverter.py:1098
+#: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "No es pot crear un format decodificat per '%s'."
 
-#: ../src/soundconverter.py:1109
+#: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Creant carpeta: '%s'"
 
-#: ../src/soundconverter.py:1113
+#: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "No es pot crear la carpeta '%s'."
 
-#: ../src/soundconverter.py:1134
+#: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "No es poden donar permisos a '%s'"
 
-#: ../src/soundconverter.py:1306
-#, fuzzy, python-format
+#: ../src/soundconverter.py:1248
+#, python-format
 msgid "file already present: '%s'"
-msgstr "Arxiu ja existent: '%s'"
+msgstr ""
 
-#: ../src/soundconverter.py:1325
+#: ../src/soundconverter.py:1267
 msgid "loading tags..."
 msgstr "Carregant tags..."
 
-#: ../src/soundconverter.py:1327
+#: ../src/soundconverter.py:1269
 msgid "no tags"
 msgstr "no hi ha tags"
 
-#: ../src/soundconverter.py:1362
+#: ../src/soundconverter.py:1308
 msgid "unknown"
 msgstr "desconegut"
 
-#: ../src/soundconverter.py:1390
-#, fuzzy
+#: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
-msgstr "El mateix que l'arxiu original, però canviant el sufix."
+msgstr ""
 
-#: ../src/soundconverter.py:1391
-#, fuzzy
+#: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
-msgstr "El mateix que l'arxiu original, però canviant amb un sufix adicional."
+msgstr ""
 
-#: ../src/soundconverter.py:1392
+#: ../src/soundconverter.py:1336
 msgid "Track number - title"
 msgstr "Numero de la pista - títol"
 
-#: ../src/soundconverter.py:1393
+#: ../src/soundconverter.py:1337
 msgid "Track title"
 msgstr "Títol de la pista"
 
-#: ../src/soundconverter.py:1394
+#: ../src/soundconverter.py:1338
 msgid "Artist - title"
 msgstr "Artista - títol"
 
-#: ../src/soundconverter.py:1395
-#, fuzzy
+#: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
-msgstr "Patró del nom de fitxer personalitzat"
+msgstr ""
 
-#: ../src/soundconverter.py:1399
+#: ../src/soundconverter.py:1343
 msgid "artist/album"
 msgstr "artista/àlbum"
 
-#: ../src/soundconverter.py:1400
+#: ../src/soundconverter.py:1344
 msgid "artist-album"
 msgstr "artista-àlbum"
 
-#: ../src/soundconverter.py:1401
+#: ../src/soundconverter.py:1345
 msgid "artist - album"
 msgstr "artista - àlbum"
 
-#: ../src/soundconverter.py:1450
-#, fuzzy
-msgid "Available patterns:"
-msgstr "Patró del nom de fitxer "
-
-#: ../src/soundconverter.py:1560
+#: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
 msgstr "a la carpeta %s"
 
-#: ../src/soundconverter.py:1636
-#, fuzzy, python-format
+#: ../src/soundconverter.py:1551
+#, python-format
 msgid "Target bitrate: %s"
-msgstr "Taxa de bits objectiu: %s"
+msgstr ""
 
-#: ../src/soundconverter.py:1878
+#: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
 msgstr "Conversió cancelada"
 
-#: ../src/soundconverter.py:1913
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:1926
-#, fuzzy, python-format
+#: ../src/soundconverter.py:1836
+#, python-format
 msgid ""
 "The output file <i>%s</i>\n"
 " exists already.\n"
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
-"L'arxiu resultant <i>%s</i>\n"
-" ja existeix.\n"
-" Vols deixar estar l'arxiu, sobreescriure'l o cancel·lar la conversió?\n"
 
-#: ../src/soundconverter.py:2015
+#: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Conversió feta, en %s"
 
-#: ../src/soundconverter.py:2050
+#: ../src/soundconverter.py:1960
 msgid "Open a file"
 msgstr "Obre un fitxer"
 
-#: ../src/soundconverter.py:2148
+#: ../src/soundconverter.py:2049
 msgid "Add Folder..."
 msgstr "Afegeix carpeta..."
 
-#: ../src/soundconverter.py:2273
+#: ../src/soundconverter.py:2169
 msgid "canceling conversion."
 msgstr "cancelant conversió."
 
-#: ../src/soundconverter.py:2275
-#, fuzzy
-msgid "Conversion canceled"
-msgstr "Conversió cancelada"
-
-#: ../src/soundconverter.py:2298
-#, fuzzy
+#: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
-msgstr "Esperant tags"
+msgstr ""
 
-#: ../src/soundconverter.py:2305
+#: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
 msgstr "Esperant tags..."
 
-#: ../src/soundconverter.py:2313 ../src/soundconverter.py:2326
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
 msgstr "Aturat"
 
-#: ../src/soundconverter.py:2330
+#: ../src/soundconverter.py:2224
 msgid "Canceled"
 msgstr "Cancel·lat"
 
-#: ../src/soundconverter.py:2379
+#: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Convertint arxiu %d de %d (%s)"
 
-#: ../src/soundconverter.py:2392
+#: ../src/soundconverter.py:2286
 msgid "Converting"
 msgstr "Convertint"
 
-#: ../src/soundconverter.py:2409
+#: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
 msgstr "falten %d:%02d"
 
-#: ../src/soundconverter.py:2414
+#: ../src/soundconverter.py:2308
 msgid "Ready"
 msgstr "Llest"
 
-#: ../src/soundconverter.py:2495
+#: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
 msgstr "%s: Bé"
 
-#: ../src/soundconverter.py:2530
+#: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Ús: %s [options] [soundfile ...]"
 
-#: ../src/soundconverter.py:2545
-#, fuzzy
+#: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
-msgstr "Registra un sumari de l'ús."
+msgstr ""
 
-#: ../src/soundconverter.py:2548
-#, fuzzy
+#: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Converteix al mode batch, des de la línia d'ordres, sense interfície "
-"d'usuari\n"
-" gràfica. Pots utilitzar això des de, per exemple, scripts de shell."
 
-#: ../src/soundconverter.py:2551
+#: ../src/soundconverter.py:2445
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -294,17 +265,15 @@ msgid ""
 " the output suffix as well."
 msgstr ""
 
-#: ../src/soundconverter.py:2554
-#, fuzzy
+#: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Sigues silenciós. No produeixis la sortida normal, només errors."
+msgstr ""
 
-#: ../src/soundconverter.py:2557
-#, fuzzy
+#: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
-msgstr "Escriu informació de depuració addicional"
+msgstr ""
 
-#: ../src/soundconverter.py:2560
+#: ../src/soundconverter.py:2454
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -312,7 +281,7 @@ msgid ""
 " the output MIME type."
 msgstr ""
 
-#: ../src/soundconverter.py:2563
+#: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -327,9 +296,8 @@ msgid "<b>Type of result?</b>"
 msgstr "<b>Tipus de resultatt?</b>"
 
 #: ../data/soundconverter.glade.h:3
-#, fuzzy
 msgid "<b>Where to place results?</b>"
-msgstr "<b>On situar els resultats?</b>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:4
 msgid "<big><b>File exists already</b></big>\n"
@@ -340,29 +308,23 @@ msgid "<i>Example filename:</i>"
 msgstr "<i>Exemple del nom de l'arxiu:</i>"
 
 #: ../data/soundconverter.glade.h:7
-#, fuzzy
 msgid "Add _Folder"
-msgstr "Afegir _Carpeta"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:8
-#, fuzzy
 msgid "Bitrate mode:"
-msgstr "Mode de taxa de bits"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:9
 msgid "Choose..."
 msgstr "Tria..."
 
 #: ../data/soundconverter.glade.h:10
-#, fuzzy
 msgid ""
 "Constant (CBR)\n"
 "Average (ABR)\n"
 "Variable (VBR) - Best quality"
 msgstr ""
-"Constant (CBR)\n"
-"Promig (ABR)\n"
-"Variable (VBR) - Millor qualitat"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
@@ -385,9 +347,8 @@ msgid "File exists already"
 msgstr "L'arxiu ja existeix"
 
 #: ../data/soundconverter.glade.h:18
-#, fuzzy
 msgid "Filename pattern: "
-msgstr "Patró del nom de fitxer "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
@@ -398,19 +359,16 @@ msgid "Format: "
 msgstr "Format: "
 
 #: ../data/soundconverter.glade.h:21
-#, fuzzy
 msgid "Free Lossless compression"
-msgstr "Compressió Sense Pèrdua Lliure"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:22
-#, fuzzy
 msgid "Free Lossy Compression"
-msgstr "Compressió Amb Pèrdua Lliure"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:23
-#, fuzzy
 msgid "GNOME Sound Conversion"
-msgstr "Conversió de So GNOME"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
@@ -421,35 +379,28 @@ msgid "MP3"
 msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
-#, fuzzy
 msgid "MP3 Encoder is not present."
-msgstr "No hi ha un Codificador MP3."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
 msgstr "Sense compressió"
 
 #: ../data/soundconverter.glade.h:28
-#, fuzzy
 msgid "Non-Free Lossy Compression"
-msgstr "Compressió Amb Pèrdua No Lliure"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis"
 msgstr "Ogg Vorbis"
 
 #: ../data/soundconverter.glade.h:30
-#, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
 "MS Wave (.wav)"
 msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Preferences"
@@ -460,27 +411,24 @@ msgid "Quality:"
 msgstr "Qualitat:"
 
 #: ../data/soundconverter.glade.h:36
+msgid "Read how to install"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Eliminar tots els caràcters a excepció de les lletres, dígits i ./_-"
 
-#: ../data/soundconverter.glade.h:37
-#, fuzzy
-msgid "Replace all messy characters"
-msgstr "Reemplaçar els caràcters bruts"
-
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
-msgid "Same folder as the input file"
-msgstr "A la mateixa carpeta que l'arxiu inicial"
+msgid "Replace all messy characters"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:39
-msgid "Select _All"
+msgid "Same folder as the input file"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:40
-#, fuzzy
 msgid "SoundConverter"
-msgstr "SoundConverter"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:41
 msgid ""
@@ -509,40 +457,22 @@ msgid "_Add File"
 msgstr "_Afegir Arxiu"
 
 #: ../data/soundconverter.glade.h:49
-#, fuzzy
 msgid "_Apply to entire queue"
-msgstr "_Aplicar a tota la cua"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:50
-msgid "_Clear List"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:51
-msgid "_Edit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:52
-#, fuzzy
-msgid "_File"
-msgstr "_Afegir Arxiu"
-
-#: ../data/soundconverter.glade.h:53
-msgid "_Help"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:54
 msgid "_Overwrite"
 msgstr "_Sobreescriu"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:51
 msgid "_Remove"
 msgstr "_Suprimeix"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:52
 msgid "_Skip"
 msgstr "_Omet"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -550,40 +480,23 @@ msgstr ""
 "artista/àlbum\n"
 "artista - àlbum"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:55
 msgid "dialog1"
 msgstr "diàleg1"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:56
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:61
-msgid "gtk-about"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:62
-msgid "gtk-clear"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:63
-#, fuzzy
-msgid "gtk-preferences"
-msgstr "Preferències"
-
-#: ../data/soundconverter.glade.h:64
-msgid "gtk-quit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:57
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:58
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:59
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -591,10 +504,6 @@ msgstr ""
 "número_pista - títol-pista\n"
 "títol_pista\n"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "wav"
-
-#, fuzzy
-#~ msgid "Read how to install"
-#~ msgstr "Llegeix com instal·lar"

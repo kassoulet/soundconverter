@@ -1,18 +1,16 @@
-# Serbian translation of Soundconverter.
-# Courtesy of Prevod.org team (http://prevod.org/) -- 2007.
-#
-# This file is distributed under the same license as the Soundconverter package.
-#
-# Miloš Popović <gpopac@gmail.com>, 2007.
+# Finnish translation for soundconverter
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the soundconverter package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Prekoder zvuka\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: soundconverter\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-11-14 21:40+0000\n"
-"Last-Translator: Miloš Popović <gpopac@gmail.com>\n"
-"Language-Team: Serbian (sr) <gnom@prevod.org>\n"
+"PO-Revision-Date: 2008-10-18 08:36+0000\n"
+"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
+"Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,25 +19,25 @@ msgstr ""
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr "Prekodiranje zvučnih formata"
+msgstr "Äänitiedostojen muunnin"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr "Prevedi jedan zvučni format u druge"
+msgstr "Muunna äänitiedostoja toisiin muotoihin"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr "Prekoder zvuka"
+msgstr "Äänitiedostojen muunnin"
 
 #. traductors: only if it does make sense.
 #: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
-msgstr ""
+msgstr "Esittäjä Albumi Nimi Raita Yhteensä Tyyli Pvm Vuosi"
 
 #: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
-msgstr "preskačem: „%s“"
+msgstr "ohitetaan: \"%s\""
 
 #: ../src/soundconverter.py:531
 #, python-format
@@ -51,25 +49,25 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Greška: %s\n"
+"Virhe: %s\n"
 "%s\n"
 
 #: ../src/soundconverter.py:734
 msgid "Internal error"
-msgstr "Unutarnja greška"
+msgstr "Sisäinen virhe"
 
 #: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
-"Ne mogu da povežem delove GStrimera.\n"
-" Molimo Vas, ne prijavljujte ovo kao grešku."
+"Gstreamer-elementtejä ei voitu linkittää.\n"
+" Ilmoita tämä ohjelmistovirheenä."
 
 #: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
-msgstr "Nepoznat tip %s"
+msgstr "Tuntematon tyyppi %s"
 
 #: ../src/soundconverter.py:741
 #, python-format
@@ -79,106 +77,105 @@ msgid ""
 " for files of this type if it is important\n"
 " to you."
 msgstr ""
-"Nije poznat tip datoteke %s.\n"
-" Pitajte autora da doda podršku za\n"
-" ovaj tip datoteka ukoliko Vam je\n"
-" to važno."
+"Tiedoston %s muoto on tuntematon.\n"
+" Voit kysyä kehittäjiltä, voisiko tähän\n"
+" ohjelmaan lisätä tuen tällaisille tiedostoille."
 
 #: ../src/soundconverter.py:995
 msgid "Target exists."
-msgstr "Cilj već postoji."
+msgstr "Kohda on olemassa."
 
 #: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
-msgstr "Izlazna datoteka %s već postoji."
+msgstr "Kohdetiedosto %s on jo olemassa."
 
 #: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
-msgstr "Ne mogu da napravim dekoder za „%s“ format"
+msgstr "Purkajaa muodolle \"%s\" ei voida luoda."
 
 #: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
-msgstr "Pravim fasciklu: „%s“"
+msgstr "Luodaan hakemisto: '\"%s\""
 
 #: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "Ne mogu da napravim fasciklu „%s“."
+msgstr "Hakemistoa \"%s\" ei voida luoda."
 
 #: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
-msgstr "Ne mogu da postavim ovlašćenja nad „%s“"
+msgstr "Oikeuksia kohteelle \"%s\" ei voida asettaa"
 
 #: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
-msgstr "datoteka već postoji: „%s“"
+msgstr "tiedosto on jo olemassa: \"%s\""
 
 #: ../src/soundconverter.py:1267
 msgid "loading tags..."
-msgstr "učitavam oznake..."
+msgstr "Ladataan tunnisteita..."
 
 #: ../src/soundconverter.py:1269
 msgid "no tags"
-msgstr "nema oznaka"
+msgstr "ei tunnisteita"
 
 #: ../src/soundconverter.py:1308
 msgid "unknown"
-msgstr "nepoznato"
+msgstr "tuntematon"
 
 #: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
-msgstr "Isto kao i na ulazu, ali zameni sufiks"
+msgstr "Sama kuin lähdetiedosto, mutta muuta pääte"
 
 #: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
-msgstr "Isto kao i na ulazu, ali sa dodatnim sifuksom"
+msgstr "Sama kuin lähdetiedosto, mutta lisää pääte"
 
 #: ../src/soundconverter.py:1336
 msgid "Track number - title"
-msgstr "Broj numere — naslov"
+msgstr "Raidan numero - kappale"
 
 #: ../src/soundconverter.py:1337
 msgid "Track title"
-msgstr "Naslov numere"
+msgstr "Kappale"
 
 #: ../src/soundconverter.py:1338
 msgid "Artist - title"
-msgstr "Izvođač — naslov"
+msgstr "Esittäjä - kappale"
 
 #: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
-msgstr "Proizvoljan šablon imena datoteke"
+msgstr "Oma muodostettu tiedostonimi"
 
 #: ../src/soundconverter.py:1343
 msgid "artist/album"
-msgstr "izvođač/album"
+msgstr "esittäjä/levy"
 
 #: ../src/soundconverter.py:1344
 msgid "artist-album"
-msgstr "izvođač-album"
+msgstr "esittäjä-levy"
 
 #: ../src/soundconverter.py:1345
 msgid "artist - album"
-msgstr "izvođač — album"
+msgstr "esittäjä - levy"
 
 #: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
-msgstr "U fasciklu %s"
+msgstr "Kansioon %s"
 
 #: ../src/soundconverter.py:1551
 #, python-format
 msgid "Target bitrate: %s"
-msgstr ""
+msgstr "Kohteen bittinopeus: %s"
 
 #: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
-msgstr "Kodiranje obustavljeno"
+msgstr "Muunnos peruutettu"
 
 #: ../src/soundconverter.py:1836
 #, python-format
@@ -187,82 +184,82 @@ msgid ""
 " exists already.\n"
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
-"Izlazna datoteka <i>%s</i>\n"
-" već postoji.\n"
-" Želite li da je preskočite, prepišete ili da obustavite kodiranje?\n"
+"Kohdetiedosto <i>%s</i>\n"
+" on jo olemassa.\n"
+" Ohitetaanko tiedosto, korvataanko se vai perutaanko muunnos?\n"
 
 #: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "Kodiranje završeno za %s"
+msgstr "Muunnos valmis, %s"
 
 #: ../src/soundconverter.py:1960
 msgid "Open a file"
-msgstr "Otvori datoteku"
+msgstr "Avaa tiedosto"
 
 #: ../src/soundconverter.py:2049
 msgid "Add Folder..."
-msgstr "Dodaj fasciklu..."
+msgstr "Lisää kansio..."
 
 #: ../src/soundconverter.py:2169
 msgid "canceling conversion."
-msgstr "prekini kodiranje"
+msgstr "perutaan muunnosta."
 
 #: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
-msgstr "Čekam na označavanje"
+msgstr "Odotetaan tunnisteita"
 
 #: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
-msgstr "Čekam na označavanje..."
+msgstr "Odotetaan tunnisteita..."
 
 #: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
-msgstr "Pauzirano"
+msgstr "Pysäytetty"
 
 #: ../src/soundconverter.py:2224
 msgid "Canceled"
-msgstr "Prekinuto"
+msgstr "Peruttu"
 
 #: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
-msgstr "Prekodiram datoteku %d iz %d (%s)"
+msgstr "Muunnetaan tiedostoa %d / %d (%s)"
 
 #: ../src/soundconverter.py:2286
 msgid "Converting"
-msgstr "Prekovidam"
+msgstr "Muunnetaan"
 
 #: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
-msgstr "%d:%02d preostalo"
+msgstr "%d:%02d jäljellä"
 
 #: ../src/soundconverter.py:2308
 msgid "Ready"
-msgstr "Spremno"
+msgstr "Valmis"
 
 #: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
-msgstr "%s: U redu"
+msgstr "%s: OK"
 
 #: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
-msgstr "Korišćenje: %s [OPCIJE] [zvučna_datoteka...]"
+msgstr "Käyttö: %s [valinnat] [äänitiedosto ...]"
 
 #: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
-msgstr "Ispiši ukratko kako se koristi."
+msgstr ""
 
 #: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Prekodiraj u konzolnom modu, iz komandne linije, bez grafičkog okruženja\n"
-" Možete na primer koristiti ova mod za pisanje skripta."
+"Muunna erätilassa, komentoriviltä ilman graafista käyttöliittymää.\n"
+" Voit käyttää tätä esim. skriptien kanssa."
 
 #: ../src/soundconverter.py:2445
 #, python-format
@@ -271,17 +268,17 @@ msgid ""
 " %s . Note that you probably want to set\n"
 " the output suffix as well."
 msgstr ""
-"Unesi izlazni MIME tip za konzolni mod. Podrazumevani je\n"
-" %s . Takođe, verovatno bi hteli da postavite\n"
-" izlazni sufiks."
+"Aseta kohteen MIME-tyyppi erätilassa. Oletus on\n"
+" %s. Huomaa, että haluat varmaankin muuttaa\n"
+" myös kohteen päätteen."
 
 #: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Radi tiho. Ne ispisuj normalni izlaz već samo greške."
+msgstr "Hiljainen tila. Ei kirjoita normaalia tulostetta, vain virheet."
 
 #: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
-msgstr "Ispiši dodatne informacije za otklanjanje grešaka"
+msgstr "Tulosta valinnaiset ohjelmistovirheiden jäljitystiedot"
 
 #: ../src/soundconverter.py:2454
 #, python-format
@@ -290,49 +287,47 @@ msgid ""
 " %s . Note that the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Unesi sufiks za izlazna imena datoteke u konzolnom modu.\n"
-" Podrazumevano je %s . Sufiks neće uticati\n"
-" na izlazni MIME tip."
+"Aseta kohteen pääte erätilassa. Oletus on \n"
+" %s. Huomaa, että pääte ei vaikuta\n"
+" kohteen MIME-tyyppiin."
 
 #: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Prikaži oznake za ulazne datoteke umesto što ih prevodiš. Ovo primorava \n"
-"mod u komandnoj liniji i isključuje grafičko sučelje."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
-msgstr "<b>Kako da krstim datoteke?</b>"
+msgstr "<b> Tiedostojen nimeäminen</b>"
 
 #: ../data/soundconverter.glade.h:2
 msgid "<b>Type of result?</b>"
-msgstr "<b>Tip izlaza?</b>"
+msgstr "<b>Kohdemuoto</b>"
 
 #: ../data/soundconverter.glade.h:3
 msgid "<b>Where to place results?</b>"
-msgstr "<b>Gde da smestim izlaz?</b>"
+msgstr "<b>Kohdekansio</b>"
 
 #: ../data/soundconverter.glade.h:4
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Datoteka već postoji</b></big>\n"
+msgstr "<big><b>Tiedosto on jo olemassa</b></big>\n"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<i>Example filename:</i>"
-msgstr "<i>Primer imena datoteke:</i>"
+msgstr "<i>Esimerkki tiedostonimestä:</i>"
 
 #: ../data/soundconverter.glade.h:7
 msgid "Add _Folder"
-msgstr "Dodaj _fasciklu"
+msgstr "Lisää _kansio"
 
 #: ../data/soundconverter.glade.h:8
 msgid "Bitrate mode:"
-msgstr "Bitski protok:"
+msgstr "Bittinopeuden tila:"
 
 #: ../data/soundconverter.glade.h:9
 msgid "Choose..."
-msgstr "Izaberi..."
+msgstr "Valitse..."
 
 #: ../data/soundconverter.glade.h:10
 msgid ""
@@ -340,21 +335,21 @@ msgid ""
 "Average (ABR)\n"
 "Variable (VBR) - Best quality"
 msgstr ""
-"Konstantni (KBR)\n"
-"Prosečni (ABR)\n"
-"Promenljivi (VBR) - Najbolji kvalitet"
+"Tasainen (CBR)\n"
+"Keskimääräinen (ABR)\n"
+"Muuttuva (VBR) - paras laatu"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
-msgstr "Napravi pod-direktorijume: "
+msgstr "Luo alihakemistot: "
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr "Ukloni originalne datoteke"
+msgstr "Poista alkuperäinen tiedosto"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
-msgstr "Greška"
+msgstr "Virhe"
 
 #: ../data/soundconverter.glade.h:16
 msgid "FLAC"
@@ -362,35 +357,35 @@ msgstr "FLAC"
 
 #: ../data/soundconverter.glade.h:17
 msgid "File exists already"
-msgstr "Datoteka već postoji"
+msgstr "Tiedosto on jo olemassa"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
-msgstr "Šablon imena: "
+msgstr "Tiedostonimen kaava: "
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
-msgstr "Filter "
+msgstr "Suodatin "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Format: "
-msgstr "Format "
+msgstr "Muoto: "
 
 #: ../data/soundconverter.glade.h:21
 msgid "Free Lossless compression"
-msgstr "Slobodni kvalitet bez gubitka"
+msgstr "Vapaa häviötön pakkaus"
 
 #: ../data/soundconverter.glade.h:22
 msgid "Free Lossy Compression"
-msgstr "Slobodni kvalitet sa gubitkom"
+msgstr "Vapaa häviöllinen pakkaus"
 
 #: ../data/soundconverter.glade.h:23
 msgid "GNOME Sound Conversion"
-msgstr "Gnomov prekoder zvuka"
+msgstr "Gnome-äänenmuunnin"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
-msgstr "U izabranu fasciklu"
+msgstr "Tiettyyn kansioon"
 
 #: ../data/soundconverter.glade.h:25
 msgid "MP3"
@@ -398,15 +393,15 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
-msgstr "MP3 koder nije dostupan."
+msgstr "MP3-pakkaajaa ei löydy."
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
-msgstr "Bez pakovanja"
+msgstr "Ei pakkausta"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Non-Free Lossy Compression"
-msgstr "Neslobodni kvalitet sa gubitkom"
+msgstr "Ei-vapaa häviöllinen pakkaus"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis"
@@ -421,36 +416,36 @@ msgid ""
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
-"FLAC bez gubitka (.flac)\n"
+"FLAC (häviötön) (.flac)\n"
 "MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Preferences"
-msgstr "Postavke"
+msgstr "Asetukset"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Quality:"
-msgstr "Kvalitet:"
+msgstr "Laatu:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
-msgstr "Pročitaj kako da instaliram"
+msgstr "Asennusohje"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Ukloni sve karaktere osim slova, brojeva i „./_-“"
+msgstr "Poista kaikki merkit, paitsi kirjaimet, numerot ja ./_-"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
-msgstr "Zameni sve loše karaktere"
+msgstr "Korvaa kaikki sekavat kirjaimet"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "Ista fascikla u kojoj je ulazna datoteka"
+msgstr "Samaan kansioon, missä lähdetiedosto"
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
-msgstr "Prekodiranje Zvuka"
+msgstr "Äänenmuunnin"
 
 #: ../data/soundconverter.glade.h:41
 msgid ""
@@ -460,11 +455,11 @@ msgid ""
 "High\n"
 "Very High"
 msgstr ""
-"Veoma nisko\n"
-"Nisko\n"
-"Normalno\n"
-"Visoko\n"
-"Veoma visoko"
+"Hyvin matala\n"
+"Matala\n"
+"Normaali\n"
+"Korkea\n"
+"Hyvin korkea"
 
 #: ../data/soundconverter.glade.h:46
 msgid "WAV"
@@ -472,39 +467,39 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Where to place results?"
-msgstr "Gde sa smestim izlaz?"
+msgstr "Kohdekansio"
 
 #: ../data/soundconverter.glade.h:48
 msgid "_Add File"
-msgstr "_Dodaj datoteku"
+msgstr "_Lisää tiedosto"
 
 #: ../data/soundconverter.glade.h:49
 msgid "_Apply to entire queue"
-msgstr "_Primeni na ceo unos"
+msgstr "_Toteuta koko jonoon"
 
 #: ../data/soundconverter.glade.h:50
 msgid "_Overwrite"
-msgstr "P_repiši"
+msgstr "_Korvaa"
 
 #: ../data/soundconverter.glade.h:51
 msgid "_Remove"
-msgstr "_Ukloni"
+msgstr "Poi_sta"
 
 #: ../data/soundconverter.glade.h:52
 msgid "_Skip"
-msgstr "Pr_eskoči"
+msgstr "O_hita"
 
 #: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
-"izvođač/album\n"
-"izvođač — album"
+"esittäjä/levy\n"
+"esittäjä - levy"
 
 #: ../data/soundconverter.glade.h:55
 msgid "dialog1"
-msgstr "dijalog1"
+msgstr "valintaikkuna1"
 
 #: ../data/soundconverter.glade.h:56
 msgid "flac"
@@ -523,8 +518,8 @@ msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
-"broj_numere — naslov_numere\n"
-"broj_numere\n"
+"raidan_numero - raidan_kappale\n"
+"raidan_kappale\n"
 
 #: ../data/soundconverter.glade.h:62
 msgid "wav"

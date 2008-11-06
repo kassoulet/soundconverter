@@ -6,15 +6,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-03 21:35+0200\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
 "PO-Revision-Date: 2007-12-02 09:09+0000\n"
-"Last-Translator: Projek.04 <nurhakimsamah@bluehyppo.com>\n"
+"Last-Translator: alHakim <nurhakimsamah@bluehyppo.com>\n"
 "Language-Team: Malay <ms@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
+"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -30,16 +30,16 @@ msgid "Sound Converter"
 msgstr "Penukar Audio"
 
 #. traductors: only if it does make sense.
-#: ../src/soundconverter.py:127
+#: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
 msgstr "Artis Album Tajuk Trek Jumlah Genre Tarikh Tahun"
 
-#: ../src/soundconverter.py:192
+#: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
 msgstr "melompat: '%s'"
 
-#: ../src/soundconverter.py:548
+#: ../src/soundconverter.py:531
 #, python-format
 msgid ""
 "\n"
@@ -52,11 +52,11 @@ msgstr ""
 "Ralat: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:752
+#: ../src/soundconverter.py:734
 msgid "Internal error"
 msgstr "Ralat dalaman"
 
-#: ../src/soundconverter.py:753
+#: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -64,12 +64,12 @@ msgstr ""
 "Tidak dapat merangkaikan elemen GStreamer.\n"
 " Sila laporkan pepijat ini."
 
-#: ../src/soundconverter.py:758
+#: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
 msgstr "Jenis tidak dikenali %s"
 
-#: ../src/soundconverter.py:759
+#: ../src/soundconverter.py:741
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -82,112 +82,103 @@ msgstr ""
 " untuk file ini sekiranya ia adalah penting\n"
 " kepada anda."
 
-#: ../src/soundconverter.py:1054
+#: ../src/soundconverter.py:995
 msgid "Target exists."
 msgstr "Sasaran wujud."
 
-#: ../src/soundconverter.py:1055
+#: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
 msgstr "File keluaran %s telah pun wujud."
 
-#: ../src/soundconverter.py:1098
+#: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Tidak dapat membina dekoder untuk format %s."
 
-#: ../src/soundconverter.py:1109
+#: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
 msgstr "Membina folder: '%s'"
 
-#: ../src/soundconverter.py:1113
+#: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Tidak dapat membuat folder '%s'"
 
-#: ../src/soundconverter.py:1134
+#: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
 msgstr "Tidak dapat menetapkan kebenaran pada '%s'"
 
-#: ../src/soundconverter.py:1306
+#: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
 msgstr "file telah muncul: '%s'"
 
-#: ../src/soundconverter.py:1325
+#: ../src/soundconverter.py:1267
 msgid "loading tags..."
 msgstr "memuatkan tanda..."
 
-#: ../src/soundconverter.py:1327
+#: ../src/soundconverter.py:1269
 msgid "no tags"
 msgstr "tiada tanda"
 
-#: ../src/soundconverter.py:1362
+#: ../src/soundconverter.py:1308
 msgid "unknown"
 msgstr "tidak diketahui"
 
-#: ../src/soundconverter.py:1390
+#: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
 msgstr "Sama seperti aliranmasuk, tetapi menggantikan kata awalan"
 
-#: ../src/soundconverter.py:1391
+#: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
 msgstr "Sama seperti aliranmasuk, tetapi menambah kata awalan"
 
-#: ../src/soundconverter.py:1392
+#: ../src/soundconverter.py:1336
 msgid "Track number - title"
 msgstr "Nombor trek - tajuk"
 
-#: ../src/soundconverter.py:1393
+#: ../src/soundconverter.py:1337
 msgid "Track title"
 msgstr "Tajuk trek"
 
-#: ../src/soundconverter.py:1394
+#: ../src/soundconverter.py:1338
 msgid "Artist - title"
 msgstr "Artis - tajuk"
 
-#: ../src/soundconverter.py:1395
+#: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
 msgstr "Paten nama file sendiri"
 
-#: ../src/soundconverter.py:1399
+#: ../src/soundconverter.py:1343
 msgid "artist/album"
 msgstr "artis/album"
 
-#: ../src/soundconverter.py:1400
+#: ../src/soundconverter.py:1344
 msgid "artist-album"
 msgstr "artis-album"
 
-#: ../src/soundconverter.py:1401
+#: ../src/soundconverter.py:1345
 msgid "artist - album"
 msgstr "artis - album"
 
-#: ../src/soundconverter.py:1450
-#, fuzzy
-msgid "Available patterns:"
-msgstr "Paten nama file: "
-
-#: ../src/soundconverter.py:1560
+#: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
 msgstr "Kedalam folder %s"
 
-#: ../src/soundconverter.py:1636
+#: ../src/soundconverter.py:1551
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Kadar bit sasaran: %s"
 
-#: ../src/soundconverter.py:1878
+#: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
 msgstr "Pertukaran dibatalkan"
 
-#: ../src/soundconverter.py:1913
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:1926
+#: ../src/soundconverter.py:1836
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -196,80 +187,75 @@ msgid ""
 msgstr ""
 "File aliran keluar <i>%s</i>\n"
 " tekah wujud.\n"
-" Adakah anda mahu melompat file ini, menindihnya atau membatalkan "
-"pertukaran ?\n"
+" Adakah anda mahu melompat file ini, menindihnya atau membatalkan pertukaran "
+"?\n"
 
-#: ../src/soundconverter.py:2015
+#: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Pertikaran selesai, dalam %s"
 
-#: ../src/soundconverter.py:2050
+#: ../src/soundconverter.py:1960
 msgid "Open a file"
 msgstr "Buka fail"
 
-#: ../src/soundconverter.py:2148
+#: ../src/soundconverter.py:2049
 msgid "Add Folder..."
 msgstr "Tambah Folder..."
 
-#: ../src/soundconverter.py:2273
+#: ../src/soundconverter.py:2169
 msgid "canceling conversion."
 msgstr "membatalkan pertukaran."
 
-#: ../src/soundconverter.py:2275
-#, fuzzy
-msgid "Conversion canceled"
-msgstr "Pertukaran dibatalkan"
-
-#: ../src/soundconverter.py:2298
+#: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
 msgstr "Menunggu untuk data"
 
-#: ../src/soundconverter.py:2305
+#: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
 msgstr "Menunggu untuk data"
 
-#: ../src/soundconverter.py:2313 ../src/soundconverter.py:2326
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
 msgstr "Rehat"
 
-#: ../src/soundconverter.py:2330
+#: ../src/soundconverter.py:2224
 msgid "Canceled"
 msgstr "Batal"
 
-#: ../src/soundconverter.py:2379
+#: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Menukar file %d daripada %d  (%s)"
 
-#: ../src/soundconverter.py:2392
+#: ../src/soundconverter.py:2286
 msgid "Converting"
 msgstr "Menukar"
 
-#: ../src/soundconverter.py:2409
+#: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d tinggal"
 
-#: ../src/soundconverter.py:2414
+#: ../src/soundconverter.py:2308
 msgid "Ready"
 msgstr "Sedia"
 
-#: ../src/soundconverter.py:2495
+#: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
 msgstr "%s: Baik"
 
-#: ../src/soundconverter.py:2530
+#: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Penggunaan: %s [pilihan] [file audio ...]"
 
-#: ../src/soundconverter.py:2545
+#: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
 msgstr "Cetak huraian penggunaan."
 
-#: ../src/soundconverter.py:2548
+#: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -277,7 +263,7 @@ msgstr ""
 "Tukar dalam mod pukal, dariapda baris arahan, tanpa antaramuka\n"
 " pengguna. Anda boleh mengguna ini daripada shell scripts."
 
-#: ../src/soundconverter.py:2551
+#: ../src/soundconverter.py:2445
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -288,15 +274,15 @@ msgstr ""
 " %s. Diingatkan anda mungkin hendak menetapkan\n"
 " kata akhiran pada aliran keluar."
 
-#: ../src/soundconverter.py:2554
+#: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Diam. Jangan menulis aliran keluar normal, hanya ralat."
 
-#: ../src/soundconverter.py:2557
+#: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
 msgstr "Cetak maklumat nyahpepijat tambahan"
 
-#: ../src/soundconverter.py:2560
+#: ../src/soundconverter.py:2454
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -307,7 +293,7 @@ msgstr ""
 " ialah %s . Diingatkan bahawa akhiran kata tidak memberi\n"
 " kesan kepada jenis aliran keluar."
 
-#: ../src/soundconverter.py:2563
+#: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -447,20 +433,20 @@ msgid "Quality:"
 msgstr "Kualiti:"
 
 #: ../data/soundconverter.glade.h:36
+msgid "Read how to install"
+msgstr "Baca bagaimana untuk memasang"
+
+#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Buang semua karakter selain huruf, angka dan ./_-"
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
 msgstr "Gantikan semua karakter yang berselerak"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
 msgstr "Folder yang sama dengan aliran masuk"
-
-#: ../data/soundconverter.glade.h:39
-msgid "Select _All"
-msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
@@ -497,35 +483,18 @@ msgid "_Apply to entire queue"
 msgstr "_Jalankan keseluruh baris"
 
 #: ../data/soundconverter.glade.h:50
-msgid "_Clear List"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:51
-msgid "_Edit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:52
-#, fuzzy
-msgid "_File"
-msgstr "_Tambah File"
-
-#: ../data/soundconverter.glade.h:53
-msgid "_Help"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:54
 msgid "_Overwrite"
 msgstr "_Tindih"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:51
 msgid "_Remove"
 msgstr "_Buang"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:52
 msgid "_Skip"
 msgstr "_Lompat"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -533,40 +502,23 @@ msgstr ""
 "artis/album\n"
 "artis - album"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:55
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:56
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:61
-msgid "gtk-about"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:62
-msgid "gtk-clear"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:63
-#, fuzzy
-msgid "gtk-preferences"
-msgstr "Tetapan"
-
-#: ../data/soundconverter.glade.h:64
-msgid "gtk-quit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:57
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:58
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:59
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -574,9 +526,6 @@ msgstr ""
 "trek_nombor - trek_tajuk\n"
 "trek_tajuk\n"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "wav"
-
-#~ msgid "Read how to install"
-#~ msgstr "Baca bagaimana untuk memasang"

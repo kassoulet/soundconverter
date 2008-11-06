@@ -2,6 +2,8 @@
 
 	* src/soundconverter.py: Fixed (?) raising of UnicodeDecodeError
 	  when tags contained non-utf-8 strings. (fix LP: #223371) 
+	* po/: Add Breton, Greek, Finnish, Hindi, Telugu and Turkish 
+	  translations.	
 	
 2008-10-14  Gautier Portet  <kassoulet gmail com>
 

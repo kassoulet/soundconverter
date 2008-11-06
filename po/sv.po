@@ -9,151 +9,14 @@ msgstr ""
 "Project-Id-Version: soundconverter 0.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-10-27 13:51+0000\n"
+"PO-Revision-Date: 2008-09-13 09:51+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-05-03 09:56+0000\n"
+"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#~ msgid "File exists."
-#~ msgstr "Filen finns redan."
-
-#, python-format
-#~ msgid "The file %s exists already"
-#~ msgstr "Filen %s finns redan"
-
-#, python-format
-#~ msgid "<small>Target bitrate: %s</small>"
-#~ msgstr "<small>Bithastighet för målfilen: %s</small>"
-
-#~ msgid "asdf"
-#~ msgstr "asdf"
-
-#~ msgid "zxcv"
-#~ msgstr "zxcv"
-
-#~ msgid ""
-#~ "{Artist}: Artist name\n"
-#~ "{Album}: Album name\n"
-#~ "{Title}: Song title\n"
-#~ "{Track}: Track number\n"
-#~ "{Total}: Total number of tracks in album"
-#~ msgstr ""
-#~ "{Artist}: Artistnamn\n"
-#~ "{Album}: Albumnamn\n"
-#~ "{Title}: Låttitel\n"
-#~ "{Track}: Spårnummer\n"
-#~ "{Total}: Totalt antal spår på albumet"
-
-#~ msgid "Invalid character in filename!"
-#~ msgstr "Ogiltigt tecken i filnamnet!"
-
-#~ msgid "Writing to: '%s'"
-#~ msgstr "Destination: '%s'"
-
-#~ msgid "Add files..."
-#~ msgstr "Ajouter des fichiers..."
-
-#~ msgid "Add File"
-#~ msgstr "Ajouter Fichiers"
-
-#~ msgid "Add Folder"
-#~ msgstr "Ajouter Répertoire"
-
-#~ msgid "label27"
-#~ msgstr "label27"
-
-#~ msgid "Artist"
-#~ msgstr "Artiste"
-
-#~ msgid "Album"
-#~ msgstr "Album"
-
-#~ msgid "Title"
-#~ msgstr "Titre"
-
-#~ msgid "_Add"
-#~ msgstr "_Ajouter"
-
-#~ msgid "Convert sound files."
-#~ msgstr "Convertisseur de fichiers son"
-
-#~ msgid "translator name <email>"
-#~ msgstr "Guillaume Bedot <littletux@zarb.org>"
-
-#~ msgid "setting mime:"
-#~ msgstr "Définit le type mime à :"
-
-#~ msgid ""
-#~ "\n"
-#~ "change mp3 mode"
-#~ msgstr ""
-#~ "\n"
-#~ "change le mode mp3"
-
-#~ msgid "quality: %f"
-#~ msgstr "qualité : %f"
-
-#~ msgid "I choose #%s = %s"
-#~ msgstr "Je choisis #%s = %s"
-
-#~ msgid "using encoder: %s (%s)"
-#~ msgstr "Encodeur utilisé : %s (%s)"
-
-#~ msgid "setting vorbis quality: %f"
-#~ msgstr "Définit la qualité vorbis à : %f"
-
-#~ msgid " "
-#~ msgstr "Guillaume Bedot <littletux@zarb.org> "
-
-#~ msgid "Couldn't link GStreamer elements.\n"
-#~ msgstr "N'a pas pu lier des éléments·GStreamer.\n"
-
-#~ msgid "Please report this as a bug."
-#~ msgstr "Veuillez reporter ce bug svp."
-
-#~ msgid "The file %s is of an unknown type.\n"
-#~ msgstr "Le fichier %s est d'un type inconnu.\n"
-
-#~ msgid "Please ask the developers to add support\n"
-#~ msgstr "Veuillez demander aux développeurs d'ajouter le support\n"
-
-#~ msgid "for files of this type if it is important\n"
-#~ msgstr "de ce type de fichiers si cela est important\n"
-
-#~ msgid "to you."
-#~ msgstr "pour vous."
-
-#~ msgid "exists."
-#~ msgstr "déjà."
-
-#~ msgid "interface. You can use this from, say, shell scripts."
-#~ msgstr "graphique. Vous pouvez utiliser cette option dans des scripts."
-
-#~ msgid "%s . Note that you probably want to set\n"
-#~ msgstr "défaut est %s . Notez que vous pouvez également\n"
-
-#~ msgid "the output suffix as well."
-#~ msgstr "définir le suffixe du fichier converti."
-
-#~ msgid "%s . Note that the suffix does not affect\n"
-#~ msgstr "La valeur par défaut est %s . Le suffixe n'affecte pas\n"
-
-#~ msgid "the output MIME type."
-#~ msgstr "le type MIME des fichiers convertis."
-
-#~ msgid "command line batch mode and disables the graphical user interface."
-#~ msgstr "Cette option active le mode batch, sans interface graphique."
-
-#~ msgid ""
-#~ "The output file %s already\n"
-#~ "                                         exists."
-#~ msgstr ""
-#~ "Le fichier destination·%s\n"
-#~ "existe déjà."
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -170,7 +33,7 @@ msgstr "Ljudkonverterare"
 #. traductors: only if it does make sense.
 #: ../src/soundconverter.py:119
 msgid "Artist Album Title Track Total Genre Date Year"
-msgstr ""
+msgstr "Artist Album Titel Spår Totalt Genre Datum År"
 
 #: ../src/soundconverter.py:184
 #, python-format
@@ -300,7 +163,7 @@ msgstr "artist-album"
 
 #: ../src/soundconverter.py:1345
 msgid "artist - album"
-msgstr ""
+msgstr "artist - album"
 
 #: ../src/soundconverter.py:1501
 #, python-format
@@ -310,7 +173,7 @@ msgstr "I mappen %s"
 #: ../src/soundconverter.py:1551
 #, python-format
 msgid "Target bitrate: %s"
-msgstr ""
+msgstr "Målets bitfrekvens: %s"
 
 #: ../src/soundconverter.py:1793
 msgid "Convertion Canceled"
@@ -665,3 +528,140 @@ msgstr ""
 #: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "wav"
+
+#~ msgid "File exists."
+#~ msgstr "Filen finns redan."
+
+#, python-format
+#~ msgid "The file %s exists already"
+#~ msgstr "Filen %s finns redan"
+
+#, python-format
+#~ msgid "<small>Target bitrate: %s</small>"
+#~ msgstr "<small>Bithastighet för målfilen: %s</small>"
+
+#~ msgid "asdf"
+#~ msgstr "asdf"
+
+#~ msgid "zxcv"
+#~ msgstr "zxcv"
+
+#~ msgid ""
+#~ "{Artist}: Artist name\n"
+#~ "{Album}: Album name\n"
+#~ "{Title}: Song title\n"
+#~ "{Track}: Track number\n"
+#~ "{Total}: Total number of tracks in album"
+#~ msgstr ""
+#~ "{Artist}: Artistnamn\n"
+#~ "{Album}: Albumnamn\n"
+#~ "{Title}: Låttitel\n"
+#~ "{Track}: Spårnummer\n"
+#~ "{Total}: Totalt antal spår på albumet"
+
+#~ msgid "Invalid character in filename!"
+#~ msgstr "Ogiltigt tecken i filnamnet!"
+
+#~ msgid "Writing to: '%s'"
+#~ msgstr "Destination: '%s'"
+
+#~ msgid "Add files..."
+#~ msgstr "Ajouter des fichiers..."
+
+#~ msgid "Add File"
+#~ msgstr "Ajouter Fichiers"
+
+#~ msgid "Add Folder"
+#~ msgstr "Ajouter Répertoire"
+
+#~ msgid "label27"
+#~ msgstr "label27"
+
+#~ msgid "Artist"
+#~ msgstr "Artiste"
+
+#~ msgid "Album"
+#~ msgstr "Album"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#~ msgid "_Add"
+#~ msgstr "_Ajouter"
+
+#~ msgid "Convert sound files."
+#~ msgstr "Convertisseur de fichiers son"
+
+#~ msgid "translator name <email>"
+#~ msgstr "Guillaume Bedot <littletux@zarb.org>"
+
+#~ msgid "setting mime:"
+#~ msgstr "Définit le type mime à :"
+
+#~ msgid ""
+#~ "\n"
+#~ "change mp3 mode"
+#~ msgstr ""
+#~ "\n"
+#~ "change le mode mp3"
+
+#~ msgid "quality: %f"
+#~ msgstr "qualité : %f"
+
+#~ msgid "I choose #%s = %s"
+#~ msgstr "Je choisis #%s = %s"
+
+#~ msgid "using encoder: %s (%s)"
+#~ msgstr "Encodeur utilisé : %s (%s)"
+
+#~ msgid "setting vorbis quality: %f"
+#~ msgstr "Définit la qualité vorbis à : %f"
+
+#~ msgid " "
+#~ msgstr "Guillaume Bedot <littletux@zarb.org> "
+
+#~ msgid "Couldn't link GStreamer elements.\n"
+#~ msgstr "N'a pas pu lier des éléments·GStreamer.\n"
+
+#~ msgid "Please report this as a bug."
+#~ msgstr "Veuillez reporter ce bug svp."
+
+#~ msgid "The file %s is of an unknown type.\n"
+#~ msgstr "Le fichier %s est d'un type inconnu.\n"
+
+#~ msgid "Please ask the developers to add support\n"
+#~ msgstr "Veuillez demander aux développeurs d'ajouter le support\n"
+
+#~ msgid "for files of this type if it is important\n"
+#~ msgstr "de ce type de fichiers si cela est important\n"
+
+#~ msgid "to you."
+#~ msgstr "pour vous."
+
+#~ msgid "exists."
+#~ msgstr "déjà."
+
+#~ msgid "interface. You can use this from, say, shell scripts."
+#~ msgstr "graphique. Vous pouvez utiliser cette option dans des scripts."
+
+#~ msgid "%s . Note that you probably want to set\n"
+#~ msgstr "défaut est %s . Notez que vous pouvez également\n"
+
+#~ msgid "the output suffix as well."
+#~ msgstr "définir le suffixe du fichier converti."
+
+#~ msgid "%s . Note that the suffix does not affect\n"
+#~ msgstr "La valeur par défaut est %s . Le suffixe n'affecte pas\n"
+
+#~ msgid "the output MIME type."
+#~ msgstr "le type MIME des fichiers convertis."
+
+#~ msgid "command line batch mode and disables the graphical user interface."
+#~ msgstr "Cette option active le mode batch, sans interface graphique."
+
+#~ msgid ""
+#~ "The output file %s already\n"
+#~ "                                         exists."
+#~ msgstr ""
+#~ "Le fichier destination·%s\n"
+#~ "existe déjà."
