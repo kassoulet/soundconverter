@@ -1,6 +1,8 @@
 2008-12-01  Gautier Portet  <kassoulet gmail com>
 	* po/sv.po: Updated swedish translation, removed useless sv_SE.po.
 		(thanks Daniel)
+	* src/soundconverter.py: add event flushing in BackgroundTask, 
+	  so GUI should not stall anymore.
 
 2008-11-06  Gautier Portet  <kassoulet gmail com>
 

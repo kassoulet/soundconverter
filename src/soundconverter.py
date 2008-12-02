@@ -627,6 +627,8 @@ class BackgroundTask:
 
 	def do_work(self):
 		working = self.do_work_()
+		while gtk.events_pending():
+			gtk.main_iteration()
 		return working
 
 
@@ -1387,7 +1389,6 @@ class FileList:
 				continue 
 			self.filelist[sound_file.get_uri()] = True
 
-			#self.found_type(sound_file, "test")
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add(typefinder)
