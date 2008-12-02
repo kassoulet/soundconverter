@@ -1,9 +1,13 @@
+2008-12-01  Gautier Portet  <kassoulet gmail com>
+	* po/sv.po: Updated swedish translation, removed useless sv_SE.po.
+		(thanks Daniel)
+
 2008-11-06  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Fixed (?) raising of UnicodeDecodeError
 	  when tags contained non-utf-8 strings. (fix LP: #223371) 
 	* po/: Add Breton, Greek, Finnish, Hindi, Telugu and Turkish 
-	  translations.	
+	  translations. Sync with Rosetta.
 	
 2008-10-14  Gautier Portet  <kassoulet gmail com>
 
