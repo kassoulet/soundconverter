@@ -1,3 +1,7 @@
+2008-12-19  Gautier Portet  <kassoulet gmail com>
+	* src/soundconverter.py: Oops, removed python 2.5 line, sorry :).
+	  (thanks Dag)
+
 2008-12-01  Gautier Portet  <kassoulet gmail com>
 	* po/sv.po: Updated swedish translation, removed useless sv_SE.po.
 		(thanks Daniel)

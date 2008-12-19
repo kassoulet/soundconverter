@@ -375,7 +375,7 @@ def filename_to_uri(filename):
 	"""
 	if vfs_exists(filename):
 		url = urlparse.urlparse(filename)
-		if not url.scheme:
+		if not url[0]:
 			filename = urllib.pathname2url(filename)
 
 		return str(gnomevfs.URI(filename))
