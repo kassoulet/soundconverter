@@ -165,7 +165,7 @@ tag_blacklist = (
 filepattern = (
 	("All files","*.*"),
 	("MP3","*.mp3"),
-	("Ogg Vorbis","*.ogg"),
+	("Ogg Vorbis","*.ogg;*.oga"),
 	("iTunes AAC ","*.m4a"),
 	("Windows WAV","*.wav"),
 	("AAC","*.aac"),
@@ -1505,6 +1505,7 @@ class PreferencesDialog:
 		"output-mime-type": "audio/x-vorbis",
 		"output-suffix": ".ogg",
 		"vorbis-quality": 0.6,
+		"vorbis-oga-extension": 0,
 		"mp3-mode": "vbr",			# 0: cbr, 1: abr, 2: vbr
 		"mp3-cbr-quality": 192,
 		"mp3-abr-quality": 192,
@@ -1534,6 +1535,7 @@ class PreferencesDialog:
 		self.delete_original = glade.get_widget("delete_original")
 		self.resample_toggle = glade.get_widget("resample_toggle")
 		self.resample_rate = glade.get_widget("resample_rate")
+		self.vorbis_oga_extension = glade.get_widget("vorbis_oga_extension")
 
 		self.target_bitrate = None
 		self.convert_setting_from_old_version()
@@ -1636,6 +1638,9 @@ class PreferencesDialog:
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
 				w.set_active(v)
+		if self.get_int("vorbis-oga-extension"):
+			self.vorbis_oga_extension.set_active(True)
+
 			
 		w = glade.get_widget("aac_quality")
 		quality = self.get_int("aac-quality")
@@ -1770,6 +1775,9 @@ class PreferencesDialog:
 
 		generator = TargetNameGenerator()
 
+		if output_suffix == ".ogg" and self.get_int("vorbis-oga-extension"):
+			output_suffix = ".oga"
+
 		generator.set_target_suffix(output_suffix)
 		if not self.get_int("same-folder-as-input"):
 			generator.set_folder(self.get_string("selected-folder"))
@@ -1808,7 +1816,7 @@ class PreferencesDialog:
 			self.get_string("output-mime-type") == "audio/x-vorbis")
 
 	def path(self, key):
-		assert self.defaults.has_key(key)
+		assert self.defaults.has_key(key), "missing gconf default:%s" % key
 		return "%s/%s" % (self.root, key)
 
 	def get_with_default(self, getter, key):
@@ -1953,6 +1961,10 @@ class PreferencesDialog:
 	def on_vorbis_quality_changed(self, combobox):
 		quality = (0,0.2,0.4,0.6,0.8,1.0)
 		self.set_float("vorbis-quality", quality[combobox.get_active()])
+		self.update_example()
+
+	def on_vorbis_oga_extension_toggled(self, toggle):
+		self.set_int("vorbis-oga-extension", toggle.get_active())
 		self.update_example()
 
 	def on_aac_quality_changed(self, combobox):

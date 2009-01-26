@@ -1,3 +1,8 @@
+2009-01-26  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py, data/soundconverter.glade:
+	  Add a checkbox to select .oga extension for vorbis files.
+
 2008-12-19  Gautier Portet  <kassoulet gmail com>
 	* src/soundconverter.py: Oops, removed python 2.5 line, sorry :).
 	  (thanks Dag)
