@@ -586,7 +586,7 @@
   <property name="focus_on_map">True</property>
   <property name="logo">soundconverter-logo.svg</property>
   <property name="copyright">Copyright © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-Copyright © 2005-2008 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
+Copyright © 2005-2009 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
   <property name="comments" translatable="yes">GNOME Sound Conversion</property>
   <property name="authors">Lars Wirzenius
 Gautier Portet
