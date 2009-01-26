@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2008-03-03 16:02+0000\n"
-"Last-Translator: Pavol Klačanský <pavolzetor@gmail.com>\n"
+"PO-Revision-Date: 2009-01-14 00:56+0000\n"
+"Last-Translator: Miroslav Ďurian <Unknown>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
+"X-Launchpad-Export-Date: 2009-01-26 20:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -61,6 +61,8 @@ msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
+"Nepodarilo sa prepojiť jednotlive prvky GStreameru.\n"
+" Prosím ohláste túto chybu."
 
 #: ../src/soundconverter.py:740
 #, python-format
@@ -82,7 +84,7 @@ msgstr ""
 
 #: ../src/soundconverter.py:995
 msgid "Target exists."
-msgstr ""
+msgstr "Cieľ existuje."
 
 #: ../src/soundconverter.py:996
 #, python-format
@@ -250,7 +252,7 @@ msgstr "Použitie: %s [voľby] [zvukový súbor...]"
 
 #: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
-msgstr ""
+msgstr "Vypísať súhrn používania."
 
 #: ../src/soundconverter.py:2442
 msgid ""
@@ -268,11 +270,11 @@ msgstr ""
 
 #: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr ""
+msgstr "Nevypisovať zvyčajný výstup, len chyby."
 
 #: ../src/soundconverter.py:2451
 msgid "Print additionnal debug information"
-msgstr ""
+msgstr "Vypisovať dodatočné informácie pre ladenie"
 
 #: ../src/soundconverter.py:2454
 #, python-format
@@ -376,7 +378,7 @@ msgstr "GNOME konverzia zvuku"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
-msgstr ""
+msgstr "Do určeného priečinka"
 
 #: ../data/soundconverter.glade.h:25
 msgid "MP3"
@@ -424,11 +426,11 @@ msgstr "Čítať ako nainštalovať"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr ""
+msgstr "Odstrániť všetky znaky okrem písmen, číslic a ./_-"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
-msgstr ""
+msgstr "Odstrániť všetky problémové znaky"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
@@ -458,7 +460,7 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Where to place results?"
-msgstr ""
+msgstr "Kam umiestniť výsledky?"
 
 #: ../data/soundconverter.glade.h:48
 msgid "_Add File"
