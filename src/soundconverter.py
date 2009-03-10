@@ -886,16 +886,18 @@ class Pipeline(BackgroundTask):
 			return
 
 		error.show("Error", "failed to install plugins: %s" % markup_escape(str(result)))
+
+	def on_error(self, error):
+		log("error: %s (%s)" % (error, 
+			self.sound_file.get_filename_for_display()))
 		
 	def on_message(self, bus, message):
 		t = message.type
 		import gst
 		if t == gst.MESSAGE_ERROR:
-			err, debug = message.parse_error()
+			error, debug = message.parse_error()
 			self.eos = True
-			self.error = err
-			log("error: %s (%s)" % (err,
-				self.sound_file.get_filename_for_display()))
+			self.on_error(error)
 				
 		elif t == gst.MESSAGE_ELEMENT:
 			st = message.structure
@@ -906,10 +908,10 @@ class Pipeline(BackgroundTask):
 					detail = gst.pbutils.missing_plugin_message_get_installer_detail(message)
 					ctx = gst.pbutils.InstallPluginsContext()
 					gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
-			#error.show("GStreamer Error", "%s\nfile: '%s'" % (err, 
-			#	self.sound_file.get_filename_for_display()))
+
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
+
 		elif t == gst.MESSAGE_TAG:
 			self.found_tag(self, "", message.parse_tag())  
 		return True
@@ -1219,6 +1221,11 @@ class Converter(Decoder):
 		if self.delete_original and self.processing and not self.error:
 			log("deleting: '%s'" % self.sound_file.get_uri())
 			gnomevfs.unlink(self.sound_file.get_uri())
+
+	def on_error(self, error):
+		error.show("<b>%s</b>" % _("GStreamer Error:"), "%s\n<i>(%s)</i>" % (err,
+			self.sound_file.get_filename_for_display()))
+
 
 	def get_position(self):
 		return self.position

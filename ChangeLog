@@ -1,3 +1,8 @@
+2009-03-10  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Display an error dialog
+	  when something bad happened while encoding.
+
 2009-02-22  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Add notification at the end of
