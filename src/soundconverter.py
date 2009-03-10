@@ -78,6 +78,21 @@ print "  using Gstreamer version: %s, Python binding version: %s" % (
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
 
+# notifications
+
+def notification(message):
+	pass
+
+try:
+	import pynotify
+	
+	if pynotify.init("Basics"):
+		def notification(message):
+		    n = pynotify.Notification(NAME, message)
+		    n.show()
+except ImportError:
+	pass
+
 #localization
 import locale
 import gettext
@@ -2172,8 +2187,10 @@ class ConverterQueue(TaskQueue):
 		self.window.set_sensitive()
 		self.window.conversion_ended()
 		total_time = self.run_finish_time - self.run_start_time
-		self.window.set_status(_("Conversion done, in %s") % 
-								 self.format_time(total_time))
+		
+		msg = _("Conversion done, in %s") % self.format_time(total_time)
+		notification(msg)
+		self.window.set_status(msg)
 
 	def format_time(self, seconds):
 		units = [(86400, "d"),
