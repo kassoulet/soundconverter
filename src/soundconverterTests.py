@@ -188,13 +188,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              quote("/path/to/file\xa0\xb0\xc0\xd0.ogg"))
 
-    """def test8bits_messy(self):
+    def test8bits_messy(self):
         self.g.set_replace_messy_chars(True)
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
         self.g.set_target_suffix(".ogg")
         self.failUnlessEqual(self.g.get_target_name(self.s),
-                             "/path/to/file____.ogg")
-    """
+                             "/path/to/file__A__.ogg")
+    
                              
     def test8bits_tags(self):
         self.g.set_replace_messy_chars(False)

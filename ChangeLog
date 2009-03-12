@@ -13,6 +13,7 @@
 	* src/soundconverter.py, data/soundconverter.glade:
 	  Add a checkbox to select .oga extension for vorbis files.
 	* po/*: Update British, Spanish, Russian and Slovak translations.
+	  Release 1.4.2
 
 2008-12-19  Gautier Portet  <kassoulet gmail com>
 	* src/soundconverter.py: Oops, removed python 2.5 line, sorry :).

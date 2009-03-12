@@ -561,6 +561,8 @@ class TargetNameGenerator:
 			
 		result = os.path.join(folder, urllib.quote(result))
 
+		assert result[0] != '/', result
+
 		return result
 
 
@@ -1745,14 +1747,14 @@ class PreferencesDialog:
 
 
 	def update_example(self):
-		sound_file = SoundFile(os.path.expanduser("~/foo/bar.flac"))
+		sound_file = SoundFile("foo/bar.flac")
 		sound_file.add_tags({
 			"track-number": 1L,
 			"track-count": 99L,
 		})
 		sound_file.add_tags(locale_patterns_dict)
 
-		s = markup_escape(self.generate_filename(sound_file, for_display=True))
+		s = markup_escape(beautify_uri(self.generate_filename(sound_file, for_display=True)))
 		p = 0
 		replaces = []
 
