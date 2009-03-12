@@ -1371,6 +1371,8 @@ class FileList:
 		self.window.set_status(_('Adding files...'))
 		
 		for uri in uris:
+			if not uri:
+				continue
 			if uri.startswith('cdda:'):
 				error.show("Cannot read from Audio CD.",
 					"Use SoundJuicer Audio CD Extractor instead.")
@@ -1387,7 +1389,7 @@ class FileList:
 				log('access denied: \'%s\'' % uri)
 				continue
 			except TypeError, e:
-				log('error: %s (%s)' % (e, uri))
+				log('add error: %s (\'%s\')' % (e, uri))
 				continue
 			except :
 				log('error in get_file_info: %s' % (uri))
@@ -1420,6 +1422,9 @@ class FileList:
 		if files and not self.typefinders.is_running():
 			self.typefinders.queue_ended = self.typefinder_queue_ended
 			self.typefinders.run()
+		else:
+			self.window.set_status()
+			
 
 	def typefinder_queue_ended(self):
 		self.window.set_status()
