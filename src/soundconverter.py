@@ -209,7 +209,7 @@ def vfs_walk(uri):
 	try:
 		dirlist = gnomevfs.open_directory(uri)
 	except:
-		log(_("skipping: '%s'") % uri)
+		log("skipping: '%s'" % uri)
 		return filelist
 		
 	for file_info in dirlist:
@@ -226,7 +226,7 @@ def vfs_walk(uri):
 		except ValueError:
 			# this can happen when you do not have sufficent
 			# permissions to read file info.
-			log(_("skipping: '%s'") % uri)
+			log("skipping: '%s'" % uri)
 	return filelist
 
 def vfs_makedirs(path_to_create):
@@ -402,7 +402,6 @@ class SoundFile:
 
 	"""Meta data information about a sound file (uri, tags)."""
 
-	#def __init__(self, base_path, filename=None):
 	def __init__(self, uri, base_path=None):
 
 		self.uri = uri
@@ -1192,7 +1191,7 @@ class Converter(Decoder):
 		uri = gnomevfs.URI(self.output_filename)
 		dirname = uri.parent
 		if dirname and not gnomevfs.exists(dirname):
-			log(_("Creating folder: '%s'") % dirname)
+			log("Creating folder: '%s'" % dirname)
 			if not vfs_makedirs(str(dirname)):
 				# TODO add error management
 				dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
@@ -1218,7 +1217,7 @@ class Converter(Decoder):
 			info = gnomevfs.get_file_info( self.sound_file.get_uri(),gnomevfs.FILE_INFO_FIELDS_PERMISSIONS)
 			gnomevfs.set_file_info(self.output_filename, info, gnomevfs.SET_FILE_INFO_PERMISSIONS)
 		except:
-			log(_("Cannot set permission on '%s'") % gnomevfs.format_uri_for_display(self.output_filename))
+			log("Cannot set permission on '%s'" % gnomevfs.format_uri_for_display(self.output_filename))
 
 		if self.delete_original and self.processing and not self.error:
 			log("deleting: '%s'" % self.sound_file.get_uri())
@@ -1411,7 +1410,7 @@ class FileList:
 		for f in files:
 			sound_file = SoundFile(f, base)
 			if sound_file.get_uri() in self.filelist:
-				log(_("file already present: '%s'") % sound_file.get_uri())
+				log("file already present: '%s'" % sound_file.get_uri())
 				continue 
 			self.filelist[sound_file.get_uri()] = True
 
@@ -2058,7 +2057,7 @@ class ConverterQueueCanceled(SoundConverterException):
 	"""Exception thrown when a ConverterQueue is canceled."""
 
 	def __init__(self):
-		SoundConverterException.__init__(self, _("Convertion Canceled"), "")
+		SoundConverterException.__init__(self, _("Conversion Canceled"), "")
 
 
 class ConverterQueue(TaskQueue):
@@ -2461,9 +2460,9 @@ class SoundConverterWindow:
 			for sound_file in self.filelist.get_files():
 				self.converter.add(sound_file)
 		except ConverterQueueCanceled:
-			log(_("canceling conversion."))
+			log("cancelling conversion.")
 			self.conversion_ended()
-			self.set_status(_("Conversion canceled"))
+			self.set_status(_("Conversion cancelled"))
 		else:
 			self.set_status("")
 			self.converter.run()

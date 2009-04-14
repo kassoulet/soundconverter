@@ -1,5 +1,11 @@
 2009-03-10  Gautier Portet <kassoulet gmail com>
 
+	* src/soundconverter.py: Fix spelling errors.
+	  Removed some translation of log() messages.
+	  (thanks Hew)
+
+2009-03-10  Gautier Portet <kassoulet gmail com>
+
 	* src/soundconverter.py: Display an error dialog
 	  when something bad happened while encoding.
 
