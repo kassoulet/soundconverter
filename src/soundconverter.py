@@ -1075,7 +1075,7 @@ class TagReader(Decoder):
 		if new == gst.STATE_PLAYING:
 			debug("TagReading done...")
 			self.finish()
-
+		
 	def found_tag(self, decoder, something, taglist):
 		#debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
@@ -1087,8 +1087,6 @@ class TagReader(Decoder):
 									taglist[k].month, taglist[k].day)"""
 			
 		self.sound_file.add_tags(taglist)
-
-		#self.found_tags = True
 		self.sound_file.have_tags = True
 
 		try:
@@ -1097,7 +1095,7 @@ class TagReader(Decoder):
 			pass
 
 	def work(self):
-		if not self.pipeline:
+		if not self.pipeline or self.eos:
 			return False
 		
 		if not self.run_start_time:
@@ -1223,10 +1221,9 @@ class Converter(Decoder):
 			log("deleting: '%s'" % self.sound_file.get_uri())
 			gnomevfs.unlink(self.sound_file.get_uri())
 
-	def on_error(self, error):
+	def on_error(self, err):
 		error.show("<b>%s</b>" % _("GStreamer Error:"), "%s\n<i>(%s)</i>" % (err,
 			self.sound_file.get_filename_for_display()))
-
 
 	def get_position(self):
 		return self.position
@@ -1430,7 +1427,7 @@ class FileList:
 
 	def format_cell(self, sound_file):
 		
-		template_tags		 = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
+		template_tags = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
 		template_loading = "<i>%s</i>\n<small>%%(filename)s</small>" \
 							% _("loading tags...")
 		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
