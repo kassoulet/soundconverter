@@ -1,8 +1,14 @@
+
 2009-04-14  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix TagReader freeze when adding
 	  m4p files. (lp:263889)
 	  release 1.4.3
+
+2009-03-11  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Sanitize URI handling.
+
 
 2009-03-10  Gautier Portet <kassoulet gmail com>
 
@@ -34,21 +40,21 @@
 2008-12-01  Gautier Portet  <kassoulet gmail com>
 	* po/sv.po: Updated swedish translation, removed useless sv_SE.po.
 		(thanks Daniel)
-	* src/soundconverter.py: add event flushing in BackgroundTask, 
+	* src/soundconverter.py: add event flushing in BackgroundTask,
 	  so GUI should not stall anymore.
 
 2008-11-06  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Fixed (?) raising of UnicodeDecodeError
-	  when tags contained non-utf-8 strings. (fix LP: #223371) 
-	* po/: Add Breton, Greek, Finnish, Hindi, Telugu and Turkish 
+	  when tags contained non-utf-8 strings. (fix LP: #223371)
+	* po/: Add Breton, Greek, Finnish, Hindi, Telugu and Turkish
 	  translations. Sync with Rosetta.
-	
+
 2008-10-14  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Change status text when adding files, so
 	  the user gets a clue of what is happening.
-	  
+
 2008-10-04  Gautier Portet  <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix crash at startup when more than one
@@ -77,7 +83,7 @@
 
 	* src/soundconverter.py: Add {Timestamp} filename template.
 	  (thanks Mark)
-	
+
 2008-09-09  Gautier Portet  <kassoulet gmail com>
 
 	* data/soundconverter.glade, src/soundconverter.py:
@@ -131,7 +137,7 @@
 
 	* src/soundconverter.py: Add AAC encoding support as it seems to be
 	  fixed in gstreamer.
-	  (thanks Ian) 
+	  (thanks Ian)
 	  (fix #001653)
 
 2008-07-29  Gautier Portet  <kassoulet gmail com>
@@ -193,8 +199,8 @@
 
 2008-05-05  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Got rid of the progress indicator not beeing 
-	  reset after a conversion. 
+	* src/soundconverter.py: Got rid of the progress indicator not beeing
+	  reset after a conversion.
 
 2008-05-03  Gautier Portet <kassoulet gmail com>
 
@@ -204,7 +210,7 @@
 
 2008-05-02  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Simplified drag_data_received() so it don't 
+	* src/soundconverter.py: Simplified drag_data_received() so it don't
 	  duplicate code in add_uris.
 	  Display a message when trying to read cdda: uris.
 	  Release 1.1.0
@@ -246,7 +252,7 @@
 
 2008-03-30  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Only format tags (list) when displaying, So we 
+	* src/soundconverter.py: Only format tags (list) when displaying, So we
 	  don't mess with tags we don't understand.
 	  (launchpad #179886 thanks Shawn, Matthaeus, Brian)
 	  Release 1.0-rc1
@@ -283,7 +289,7 @@
 
 2008-01-08  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Custom filename patterns can now be 
+	* src/soundconverter.py: Custom filename patterns can now be
 	  translated.
 	* release 0.9.8
 
@@ -294,7 +300,7 @@
 
 2007-11-14  Gautier Portet <kassoulet gmail com>
 
-	* po/ar,eu,he,sk,zh_CN.po: Added arabic, basque, hebrew, slovak and 
+	* po/ar,eu,he,sk,zh_CN.po: Added arabic, basque, hebrew, slovak and
 	  simplified chinese translations.
 	  (thanks Nizar, amenudo, rainofchaos, Pavol, Moshe)
 
@@ -309,7 +315,7 @@
 
 2007-08-30  Gautier Portet <kassoulet gmail com>
 
-	* data/soundconverter.glade: Added Date, Genre and Year in the 
+	* data/soundconverter.glade: Added Date, Genre and Year in the
 	  custom format hint.
 
 2007-08-02  Gautier Portet <kassoulet gmail com>
@@ -321,7 +327,7 @@
 
 2007-07-31  Gautier Portet <kassoulet gmail com>
 
-	* po/soundconverter.pot: Updated pot file, since it was somewhat outdated. 
+	* po/soundconverter.pot: Updated pot file, since it was somewhat outdated.
 	* po/de.po: Added German translation.
 	  (thanks Martin)
 	* po/cs.po: Added Czech translation.
@@ -371,7 +377,7 @@
 
 2007-04-25  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter.py: Fixed error message when python-gstreamer is 
+	* soundconverter.py: Fixed error message when python-gstreamer is
 	  absent.
 	* Release 0.9.5
 
@@ -380,11 +386,11 @@
 	* soundconverter.py: Better checking of gstreamer elements.
 	  Now we stop when required elements are missing, and we disable
 	  encoders not present.
-	  
+
 
 2007-04-23  Gautier Portet <kassoulet gmail com>
 
-	* data/: GNOME/FreeDesktop compliant icon handling. 
+	* data/: GNOME/FreeDesktop compliant icon handling.
 	  Refresh icon cache at (un)install.
 
 2007-04-16  Gautier Portet <kassoulet gmail com>
@@ -397,7 +403,7 @@
 	  (#10884).
 	* soundconverter.glade: Removed underline handling for destination folder.
 	  (#10807)
-	* data/: Minor fixes in icons/desktop handling. 
+	* data/: Minor fixes in icons/desktop handling.
 	    (#10808)
 	  - Changed name to "Sound Converter"
 	  - Removed Application from categories.
@@ -429,7 +435,7 @@
 2007-02-27  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter: Added a link to the website when mp3 encoding is :
-	  unavailable, so hopefully it will dramatically reduce the number 
+	  unavailable, so hopefully it will dramatically reduce the number
 	  of emails I receive.
 	  Logo/Icon updated.
 	* release 0.9.4
@@ -443,7 +449,7 @@
 
 	* soundconverter.py: Correct escaping of destination. We will not crash
 	  anymore when destination folder contains spaces or weirds chars.
-	  Fixed a problem with lame parameters when using VBR and lowest 
+	  Fixed a problem with lame parameters when using VBR and lowest
 	  quality.
 
 2006-12-15  Gautier Portet <kassoulet gmail com>
@@ -597,11 +603,11 @@
 2006-01-21  Gautier Portet <kassoulet gmail com>
 
 	Release 0.8.3
-	
+
 	Added Error handling when trying to load files with invalid
 	characters...
-	
-	
+
+
 	Release 0.8.2
 
 	make install-local #1154
@@ -636,7 +642,7 @@
 
 2006-01-19  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter.py: The progressbar should be more precise now. 
+	* soundconverter.py: The progressbar should be more precise now.
 
 2006-01-16  Gautier Portet <kassoulet gmail com>
 
@@ -648,11 +654,11 @@
 
 	* soundconverter.glade: Reverted to old UI to make a release soon.
 	* soundconverter.py: Changed the gst-lame problem at vbr-quality=9
-	  handling for a cleaner one. 
+	  handling for a cleaner one.
 
 2006-01-11  Gautier Portet <kassoulet gmail com>
 
-	* Makefile: Added install-local. 
+	* Makefile: Added install-local.
 	  #1154 (Thanks Régis & Janis)
 	* Added a makedirs() that use gnomevfs, so folders will really be
 	  created now, even on remote filesystems.
@@ -686,7 +692,7 @@
 	* Better type detection.
 	* Temporary solved the (non?) problem when trying to convert files which
 	  don't have tags filled yet.
-	
+
 
 2005-12-05  Gautier Portet  <kassoulet gmail com>
 
@@ -718,7 +724,7 @@
 	* add a temporary hack for abr/vbr mp3 with quality==9
 	  #5445
 	* release 0.8.1
-	
+
 
 2005-11-02 Gautier Portet <kassoulet gmail com>
 	* fixed tree structure being lost when importing folders.
@@ -744,7 +750,7 @@
 2005-09-20 ???  Gautier Portet <kassoulet gmail com>
 	* added a display of the approximate bitrate of the output
 	* fixed output format not always displayed updated
-	  #4736 (thanks Janis)	
+	  #4736 (thanks Janis)
 	* at least a correct handling of the absence of gstreamer-lame
 	* fixed a crash whith some output folders folders
 	  #3840 (thanks Jason)
@@ -755,7 +761,7 @@
 
 
 2005-06-13  Gautier Portet <kassoulet gmail com>
-	* added french tranlation. 
+	* added french tranlation.
 	  (thanks Guillaume Bedot <littletux@zarb.org>)
 	* fixed a bug causing ogg tags to be ignored.
 	  (thanks Noa Resare <noa@resare.com>)
@@ -775,7 +781,7 @@
 	* Fixed broken "replace messy chars" button
 	* Make use of urllib.unquote where appropriate (#3655)
 	  (makedirs, replace messy chars)
-	* Making release version 0.7.1 
+	* Making release version 0.7.1
 
 2005-03-24  Gautier Portet <kassoulet gmail com>
 
@@ -784,14 +790,14 @@
 2005-03-24  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.glade: added a logo on the about box.
-	
-	* soundconverter.py: fixed about dialog showing only once (we need an 
+
+	* soundconverter.py: fixed about dialog showing only once (we need an
 	optimal method for handling dialogs).
 
 2005-03-23  Gautier Portet <kassoulet gmail com>
 
 	* soundconverter.py: added a dialog asking what to do when a file
-	exists.  
+	exists.
 
 2005-03-22  Gautier Portet <kassoulet gmail com>
 
@@ -800,16 +806,16 @@
 
 2005-03-17  Gautier Portet <kassoulet gmail com>
 
-	* soundconverter.py: removed xing header generation when outputing mp3, 
+	* soundconverter.py: removed xing header generation when outputing mp3,
 	since it seems to break xmms mad decoder.
-	
+
 	* soundconverter.glade: changed the preference dialog, for a cleaner
 	one.
 
 2005-03-15  Gautier Portet <kassoulet gmail com>
 
 	* added the quality settings for vorbis and mp3
-	
+
 	* soundconverter.py: some code cleanup.
 
 2005-03-14  Gautier Portet <kassoulet gmail com>
@@ -827,7 +833,7 @@
 2004-12-31  Lars Wirzenius  <liw iki fi>
 
 	* COPYING: Added.
-	
+
 	* README: Added copyright and license information.
 
 2004-12-31  Lars Wirzenius  <liw iki fi>
@@ -895,7 +901,7 @@
 
 2004-12-24  Lars Wirzenius  <liw iki fi>
 
-	* soundconverter.py: I am no longer a klutz. Implemented the 
+	* soundconverter.py: I am no longer a klutz. Implemented the
 	creation of subfolders according to patterns.
 
 2004-12-24  Lars Wirzenius  <liw iki fi>
@@ -909,8 +915,8 @@
 2004-12-24  Lars Wirzenius  <liw iki fi>
 
 	* soundconverter.py, soundconverter.glade: User may now choose
-	whether output files are put into the same directory as the 
-	corresponding input files, or into a folder the user has 
+	whether output files are put into the same directory as the
+	corresponding input files, or into a folder the user has
 	specifically chosen.
 
 2004-12-24  Lars Wirzenius  <liw iki fi>
@@ -936,7 +942,7 @@
 
 	* soundconverter.py: Changed the TargetNameGenerator to support
 	keyword based patterns for location and basename.
-	
+
 	* soundconverterTests.py: Related changes.
 
 2004-12-23  Lars Wirzenius  <liw iki fi>
@@ -948,7 +954,7 @@
 
 	* soundconverter.py: Added support for audio/x-wav for file chooser
 	filter.
-	
+
         * soundconverter.py, soundconverter.glade: Reworked the
         Preferences dialog. Only selection of output format and Ogg
         Vorbis quality levels work for now. The rest will follow.
@@ -961,7 +967,7 @@
 
 	* soundconverter.py: Make the GUI report how much time was spent
 	for the conversions.
-	
+
 	* README: Add note about performance.
 
 2004-12-15  Lars Wirzenius  <liw iki fi>
@@ -981,10 +987,10 @@
 
 	* soundconverter.py: In Pipeline.work, don't do anything if the
 	pipeline is stopped.
-	
+
         * soundconverter.py: In TagReader.finish, call found_tag_hook
         unless it has been called already.
-        
+
         * soundconverter.py: Add -q/--quiet option.
 
 2004-12-05  Lars Wirzenius  <liw iki fi>
@@ -994,7 +1000,7 @@
 2004-12-05  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Added support for Wave files as output.
-        
+
 	* README: Updated.
 
 2004-12-05  Lars Wirzenius  <liw iki fi>
@@ -1005,20 +1011,20 @@
 2004-12-05  Lars Wirzenius  <liw iki fi>
 
 	* Makefile: Use snd/* for simple tag finding in "make check".
-	
+
 	* soundconverter.py: Minor refactoring.
 
 2004-12-05  Lars Wirzenius  <liw iki fi>
 
-	* soundconverter.py: Changed the output pipeline to use 
+	* soundconverter.py: Changed the output pipeline to use
 	gnomevfssink for output, rather than filesink. We now do all I/O
 	to the sound files via GNOME vfs.
 
 2004-12-05  Lars Wirzenius  <liw iki fi>
 
-	* soundconverter.py: Changed TargetNameGenerator to generate 
+	* soundconverter.py: Changed TargetNameGenerator to generate
 	uris instead of filenames.
-	
+
 	* soundconverterTests.py: Related changes.
 
 2004-12-05  Lars Wirzenius  <liw iki fi>
@@ -1043,25 +1049,25 @@
 
         * soundconverter.py: the about dialog now shows name and version
         number.
-        
+
         * soundconverter.glade: Added a bit of space around the label in
         the prefs dialog. This didn't make it less ugly, however.
 
 2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Re-added support for vorbis-quality.
-        
+
         * Makefile: Added "clean" target.
-        
+
         * README: Cleanups and updates.
 
 2004-11-28  Lars Wirzenius  <liw iki fi>
 
         * soundconverter.py: Rewrote task handling and tag reading and
         conversion stuff.
-        
+
         * README: Added.
-        
+
         * .cvsignore: Added.
 
 2004-11-08  Lars Wirzenius  <liw iki fi>
@@ -1070,15 +1076,15 @@
         (0.7.93-1) of python-gst. The change: can't create a
         gst.Element("foo"), need to call gst.element_factory_find("foo")
         instead.
-        
+
         * soundconverter.py: Wrote a class TargetNameGenerator to generate
         the names of output files, and modified the rest of the program
         to use it. This should eventually implement a language for
         describing the output name (user can set patterns like
         "%(artist)s-%(album)s-%(title)s.%(suffix)s").
-	
+
 	* soundconverterTests.py: Wrote tests for TargetNameGenerator.
-	
+
 	* Makefile: Added a "check" target.
 
 2004-10-29  Lars Wirzenius  <liw iki fi>

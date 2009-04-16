@@ -1086,9 +1086,10 @@ Thanks to:
 
       <child>
 	<widget class="GtkVBox" id="vbox12">
+	  <property name="border_width">12</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
-	  <property name="spacing">8</property>
+	  <property name="spacing">12</property>
 
 	  <child>
 	    <widget class="GtkFrame" id="frame1">
@@ -1654,124 +1655,7 @@ AAC (.m4a)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkVBox" id="vbox17">
-			  <property name="homogeneous">False</property>
-			  <property name="spacing">0</property>
-
-			  <child>
-			    <widget class="GtkRadioButton" id="output_mime_type_ogg_vorbis">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Free Lossy Compression</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Ogg Vorbis</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <signal name="toggled" handler="on_output_mime_type_ogg_vorbis_toggled"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkRadioButton" id="output_mime_type_mp3">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Non-Free Lossy Compression</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">MP3</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <property name="group">output_mime_type_ogg_vorbis</property>
-			      <signal name="toggled" handler="on_output_mime_type_mp3_toggled"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkRadioButton" id="output_mime_type_flac">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Free Lossless compression</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">FLAC</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <property name="group">output_mime_type_ogg_vorbis</property>
-			      <signal name="toggled" handler="on_output_mime_type_flac_toggled"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkRadioButton" id="output_mime_type_wav">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">No Compression</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">WAV</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <property name="group">output_mime_type_ogg_vorbis</property>
-			      <signal name="toggled" handler="on_output_mime_type_wav_toggled"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkRadioButton" id="output_mime_type_aac">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Non-Free Lossy Compression</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">AAC</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <property name="group">output_mime_type_ogg_vorbis</property>
-			      <signal name="toggled" handler="on_output_mime_type_aac_toggled"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">True</property>
-			  <property name="fill">True</property>
-			</packing>
+			<placeholder/>
 		      </child>
 
 		      <child>
@@ -1793,7 +1677,7 @@ AAC (.m4a)</property>
 			      <child>
 				<widget class="GtkTable" id="table3">
 				  <property name="visible">True</property>
-				  <property name="n_rows">1</property>
+				  <property name="n_rows">2</property>
 				  <property name="n_columns">2</property>
 				  <property name="homogeneous">False</property>
 				  <property name="row_spacing">4</property>
@@ -1849,26 +1733,29 @@ Insanely High</property>
 				      <property name="y_options"></property>
 				    </packing>
 				  </child>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">False</property>
-				</packing>
-			      </child>
 
-			      <child>
-				<widget class="GtkCheckButton" id="vorbis_oga_extension">
-				  <property name="visible">True</property>
-				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Use .oga extension</property>
-				  <property name="use_underline">True</property>
-				  <property name="relief">GTK_RELIEF_NORMAL</property>
-				  <property name="focus_on_click">True</property>
-				  <property name="active">False</property>
-				  <property name="inconsistent">False</property>
-				  <property name="draw_indicator">True</property>
-				  <signal name="toggled" handler="on_vorbis_oga_extension_toggled" last_modification_time="Mon, 26 Jan 2009 12:34:37 GMT"/>
+				  <child>
+				    <widget class="GtkCheckButton" id="vorbis_oga_extension">
+				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
+				      <property name="label" translatable="yes">Use .oga extension</property>
+				      <property name="use_underline">True</property>
+				      <property name="relief">GTK_RELIEF_NORMAL</property>
+				      <property name="focus_on_click">True</property>
+				      <property name="active">False</property>
+				      <property name="inconsistent">False</property>
+				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_vorbis_oga_extension_toggled" last_modification_time="Mon, 26 Jan 2009 12:34:37 GMT"/>
+				    </widget>
+				    <packing>
+				      <property name="left_attach">1</property>
+				      <property name="right_attach">2</property>
+				      <property name="top_attach">1</property>
+				      <property name="bottom_attach">2</property>
+				      <property name="x_options">fill</property>
+				      <property name="y_options"></property>
+				    </packing>
+				  </child>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -2309,7 +2196,7 @@ Very High</property>
 		  <signal name="toggled" handler="on_resample_toggle"/>
 		</widget>
 		<packing>
-		  <property name="padding">0</property>
+		  <property name="padding">12</property>
 		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
@@ -2376,6 +2263,31 @@ Very High</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="label112">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes"></property>
+	      <property name="use_underline">False</property>
+	      <property name="use_markup">False</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">False</property>
+	      <property name="selectable">False</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	      <property name="width_chars">-1</property>
+	      <property name="single_line_mode">False</property>
+	      <property name="angle">0</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
