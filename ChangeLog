@@ -1,3 +1,9 @@
+2009-04-14  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix TagReader freeze when adding
+	  m4p files. (lp:263889)
+
+
 2009-03-10  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix spelling errors.
