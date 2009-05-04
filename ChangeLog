@@ -1,6 +1,9 @@
 2009-05-04  Gautier Portet <kassoulet gmail com>
 
 	* po/fr.po: Update french translation. (thanks Olivier)
+	* src/soundconverter.py: Fix unhandled exception when 
+	  removing original files went bad.
+	  (fix lp:278782, thanks surreal)
 
 
 2009-04-22  Gautier Portet <kassoulet gmail com>

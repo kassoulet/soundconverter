@@ -1214,8 +1214,11 @@ class Converter(Decoder):
 
 		if self.delete_original and self.processing and not self.error:
 			log("deleting: '%s'" % self.sound_file.get_uri())
-			gnomevfs.unlink(self.sound_file.get_uri())
-
+			try:
+				gnomevfs.unlink(self.sound_file.get_uri())
+			except:
+				log("Cannot remove '%s'" % gnomevfs.format_uri_for_display(self.output_filename))
+				
 	def on_error(self, err):
 		error.show("<b>%s</b>" % _("GStreamer Error:"), "%s\n<i>(%s)</i>" % (err,
 			self.sound_file.get_filename_for_display()))
