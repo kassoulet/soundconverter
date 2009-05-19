@@ -20,7 +20,6 @@
 
 	* src/soundconverter.py: Sanitize URI handling.
 
-
 2009-03-10  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix spelling errors.
