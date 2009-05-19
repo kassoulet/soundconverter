@@ -2449,6 +2449,7 @@ class SoundConverterWindow:
 			self.filelist.remove(i)
 			model, paths = self.filelist_selection.get_selected_rows()
 		self.set_sensitive()
+		self.set_status()
 
 	def do_convert(self):
 		try:
