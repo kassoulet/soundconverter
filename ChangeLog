@@ -1,3 +1,10 @@
+2009-05-19  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Reset status after clearing file list.
+	  (Thanks Sean)
+	  Allow loading glade file from source folder.
+	  (Thanks Geoff)
+
 2009-05-04  Gautier Portet <kassoulet gmail com>
 
 	* po/fr.po: Update french translation. (thanks Olivier)

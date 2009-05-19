@@ -38,6 +38,12 @@ import urllib
 import time
 import unicodedata
 
+# we prefer to launch locally present glade file
+# so we can launch from source folder, without installing
+LOCAL_GLADE = "../data/soundconverter.glade"
+if os.path.exists(LOCAL_GLADE):
+	GLADE = LOCAL_GLADE
+
 # GNOME and related stuff.
 try:
 	import pygtk
