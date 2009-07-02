@@ -1274,7 +1274,8 @@ class Converter(Decoder):
 				# mpeg2 with vbr-quality==9, so max bitrate is 160
 				# - update: now set to 128 since lame don't accept 160 anymore.
 				cmd += "vbr-max-bitrate=128 "
-
+			elif properties[self.mp3_mode][0]:
+				cmd += "vbr-max-bitrate=320 "
 			cmd += "%s=%s " % (properties[self.mp3_mode][1], self.mp3_quality)
 
 			if have_xingmux and properties[self.mp3_mode][0]:
