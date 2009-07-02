@@ -561,8 +561,6 @@ class TargetNameGenerator:
 
 		result = os.path.join(folder, urllib.quote(result))
 
-		assert result[0] != '/', result
-
 		return result
 
 
@@ -1807,11 +1805,16 @@ class PreferencesDialog:
 			output_suffix = ".oga"
 
 		generator.set_target_suffix(output_suffix)
+		
 		if not self.get_int("same-folder-as-input"):
-			generator.set_folder(self.get_string("selected-folder"))
+			folder = self.get_string("selected-folder")
+			folder = filename_to_uri(folder)
+			generator.set_folder(folder)
+			
 		if self.get_int("create-subfolders"):
 			generator.set_subfolder_pattern(
 				self.get_subfolder_pattern())
+				
 		generator.set_basename_pattern(self.get_basename_pattern())
 		if for_display:
 			generator.set_replace_messy_chars(False)

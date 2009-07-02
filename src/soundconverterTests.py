@@ -10,6 +10,21 @@ def quote(ss):
 		ss = ss.encode('utf-8')
 	return urllib.quote(ss)
 
+class FilenameToUriTest(unittest.TestCase):
+
+    def test(self):
+        for i in (
+            'foo',
+            '/foo',
+            'foo/bar',
+            '/foo/bar',
+            'http://example.com/foo'
+        ):
+            got = filename_to_uri(i)
+            self.failUnless('://' in got)
+
+
+
 class TargetNameGeneratorTestCases(unittest.TestCase):
 
     def setUp(self):
