@@ -6,8 +6,8 @@ AM_INIT_AUTOMAKE([soundconverter], [1.4.3])
 
 m4_define(required_python_abi, [2.4])
 m4_define(required_python_version, [2.4])
-m4_define(required_pygtk_version, [2.8])
-m4_define(required_pygnome_version, [2.8])
+m4_define(required_pygtk_version, [2.12])
+m4_define(required_pygnome_version, [2.12])
 
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
