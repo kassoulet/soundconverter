@@ -1,3 +1,8 @@
+2009-06-15  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Activate GVfs authentication
+	  so we can log to remote shares.
+
 2009-06-10  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py, po/*: update-po !

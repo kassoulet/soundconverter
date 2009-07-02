@@ -52,6 +52,7 @@ try:
 	import gtk.glade
 	import gnome
 	import gnome.ui
+	gnome.ui.authentication_manager_init()
 	import gconf
 	import gobject
 	gobject.threads_init()
