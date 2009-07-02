@@ -1,18 +1,14 @@
-
-
         README for GNOME sound converter application
         ============================================
-        
+
 A simple sound converter application for the GNOME environment. It reads 
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and 
 Ogg Vorbis files.
-        
 
 This application is somewhat less fast than various command line tools.
 Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
-
 
         Supported audio formats
         -----------------------
@@ -23,13 +19,11 @@ more restricted, however, since there is no "encodebin" element to
 magically convert to any format we might want.
 
         Type                Supported?
-        
+
         Ogg Vorbis          yes
         FLAC                yes
         Wave                yes
         MP3                 yes 
-        
-
 
         Copyright and acknowledgements
         ------------------------------
@@ -72,8 +66,8 @@ thanks to:
 	Ken Harris
 	Jon Arnold
 	Major Kong
-	
-	
+	Uwe Bugla
+
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; version 3 of the License.

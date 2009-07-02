@@ -6,7 +6,7 @@ Previous maintainer:
 
 Translators:
 	Guillaume Bedot <littletux zarb.org> (French)
-	Dominik Zabłotny <dominz wp.pl>, Piotr Zaryk <pzaryk aviary.pl> (Polish) 
+	Dominik Zabłotny <dominz wp.pl>, Piotr Zaryk <pzaryk aviary.pl> (Polish)
 	Tomasz Sałaciński <tsalacinski gmail.com> (Polish)
 	Jonh Wendell <wendell bani.com.br> (Portuguese Brazilian)
 	Marc E. <m4rccd yahoo.com> (Spanish)
@@ -14,25 +14,26 @@ Translators:
 	Alexandre Prokoudine <alexandre.prokoudine gmail.com> (Russian)
 	Kamil Páral (Czech)
 	Stefano Luciani (Italian)
-	Martin Seifert (German)
+	Uwe Bugla <uwe.bugla@gmx.de> (German)
 	Miloš Popović <gpopac gmail.com> (Serbian)
 	Nizar Kerkeni <nizar.kerkeni gmail.com>(Arabic)
 	amenudo (Basque)
 	rainofchaos (Simplified Chinese)
 	Pavol Klačanský (Slovak)
 	Moshe Basanchig <moshe.basanchig gmail.com>
-	
+
 	https://translations.launchpad.net/soundconverter/trunk/+pots/soundconverter
 
 Debian package:
 	Lars Wirzenius <liw iki.fi>
 	William Grant <william.grant ubuntu.org.au>
+	Uwe Bugla <uwe.bugla gmx.de>
 
 Gentoo ebuild:
 	Hanno Böck <mail hboeck.de>
 
 Better FileAddChooser:
-	Regis FLORET <r.floret laposte.net> 
+	Regis FLORET <r.floret laposte.net>
 
 Custom filename patterns:
 	Adolfo González Blázquez <agblazquez telefonica.net>
