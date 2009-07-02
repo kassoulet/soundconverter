@@ -22,7 +22,6 @@
 	* src/soundconverter.py: Reset status after clearing file list.
 	  (Thanks Sean)
 
-
 2009-04-22  Gautier Portet <kassoulet gmail com>
 
 	* po/bg.po: Add Bulgarian translation. (thanks Nikola)
