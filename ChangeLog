@@ -12,7 +12,6 @@
 	  removing original files went bad.
 	  (fix lp:278782, thanks surreal)
 
-
 2009-04-22  Gautier Portet <kassoulet gmail com>
 
 	* po/bg.po: Add Bulgarian translation. (thanks Nikola)
@@ -22,9 +21,9 @@
 	* src/soundconverter.py: Reset status after clearing file list.
 	  (Thanks Sean)
 
-2009-04-22  Gautier Portet <kassoulet gmail com>
+2009-05-04  Gautier Portet <kassoulet gmail com>
 
-	* po/bg.po: Add Bulgarian translation. (thanks Nikola)
+	* po/fr.po: Update french translation. (thanks Olivier)
 
 2009-04-22  Gautier Portet <kassoulet gmail com>
 
