@@ -2,6 +2,7 @@
 
 	* src/soundconverter.py: Activate GVfs authentication
 	  so we can log to remote shares.
+	  (Thanks ikus060, fix lp:386849)
 
 2009-06-10  Gautier Portet <kassoulet gmail com>
 
