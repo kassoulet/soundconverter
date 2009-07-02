@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 09:46+0200\n"
+"POT-Creation-Date: 2009-06-10 16:28+0200\n"
 "PO-Revision-Date: 2008-05-14 10:04+0000\n"
 "Last-Translator: jarlaxl lamat <sztaasz@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -35,6 +35,10 @@ msgstr "Μετατροπέας Ηχου"
 #, fuzzy
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
 msgstr "Καλλιτέχνης Αλμπουμ Τίτλος Κομμάτι Σύνολο Είδος Ημερομηνία Ετος"
+
+#: ../src/soundconverter.py:187
+msgid "All files"
+msgstr ""
 
 #: ../src/soundconverter.py:590
 #, python-format

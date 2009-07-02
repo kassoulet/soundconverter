@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 0.9.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 09:46+0200\n"
+"POT-Creation-Date: 2009-06-10 16:28+0200\n"
 "PO-Revision-Date: 2009-05-01 16:04+0200\n"
 "Last-Translator: Olivier Laurantin <olivier.laurantin@gmail.com>\n"
 "Language-Team: French <en@li.org>\n"
@@ -34,6 +34,10 @@ msgstr "Convertisseur Audio SoundConverter"
 #, fuzzy
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
 msgstr "Artiste Album Titre Piste Total Genre Date Année"
+
+#: ../src/soundconverter.py:187
+msgid "All files"
+msgstr ""
 
 #: ../src/soundconverter.py:590
 #, python-format

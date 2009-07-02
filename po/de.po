@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 09:46+0200\n"
+"POT-Creation-Date: 2009-06-10 16:28+0200\n"
 "PO-Revision-Date: 2009-06-09 20:40+0200\n"
 "Last-Translator: Uwe Bugla <uwe.bugla@gmx.de>\n"
 "Language-Team: German <LL@li.org>\n"
@@ -34,6 +34,10 @@ msgstr "Audioformat Konverter"
 #, fuzzy
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
 msgstr "Interpret Album Titel Track Gesamt Genre Datum Jahr"
+
+#: ../src/soundconverter.py:187
+msgid "All files"
+msgstr "Alle Dateien"
 
 #: ../src/soundconverter.py:590
 #, python-format
@@ -604,9 +608,6 @@ msgstr ""
 # # line 2372
 #~ msgid "Read how to install"
 #~ msgstr "Installationshinweise"
-
-#~ msgid "All files"
-#~ msgstr "Alle Dateien"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "Überspringen: '%s'"

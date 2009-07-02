@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 09:46+0200\n"
+"POT-Creation-Date: 2009-06-10 16:28+0200\n"
 "PO-Revision-Date: 2008-10-18 08:36+0000\n"
 "Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -34,6 +34,10 @@ msgstr "Äänitiedostojen muunnin"
 #, fuzzy
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
 msgstr "Esittäjä Albumi Nimi Raita Yhteensä Tyyli Pvm Vuosi"
+
+#: ../src/soundconverter.py:187
+msgid "All files"
+msgstr ""
 
 #: ../src/soundconverter.py:590
 #, python-format

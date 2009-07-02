@@ -184,7 +184,7 @@ tag_blacklist = (
 
 # Name and pattern for CustomFileChooser
 filepattern = (
-	("All files","*.*"),
+	(_("All files"),"*.*"),
 	("MP3","*.mp3"),
 	("Ogg Vorbis","*.ogg;*.oga"),
 	("iTunes AAC ","*.m4a"),

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 09:46+0200\n"
+"POT-Creation-Date: 2009-06-10 16:28+0200\n"
 "PO-Revision-Date: 2007-11-14 21:36+0000\n"
 "Last-Translator: PasiC <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -34,6 +34,10 @@ msgstr ""
 #. traductors: These are the custom filename patterns. Only if it does make sense.
 #: ../src/soundconverter.py:153
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
+msgstr ""
+
+#: ../src/soundconverter.py:187
+msgid "All files"
 msgstr ""
 
 #: ../src/soundconverter.py:590
