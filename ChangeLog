@@ -3,6 +3,7 @@
 	* src/soundconverter.py: Force vbr-max-bitrate to 320 when using mp3+vbr, since
 	  gstreamer now defaults to 160 (stupid!).
 	  (thanks psychoman, fix #15950)
+	  release 1.4.4
 
 2009-06-24  Gautier Portet <kassoulet gmail com>
 
