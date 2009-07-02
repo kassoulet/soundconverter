@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 16:28+0200\n"
+"POT-Creation-Date: 2009-06-13 00:05+0200\n"
 "PO-Revision-Date: 2007-09-10 21:41+0100\n"
 "Last-Translator: Miloš Popović <gpopac@gmail.com>\n"
 "Language-Team: Serbian (sr) <gnom@prevod.org>\n"
@@ -30,6 +30,243 @@ msgstr "Prevodi jedan zvučni format u druge"
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "Prekoder zvuka"
+
+#: ../data/soundconverter.glade.h:1
+msgid "<b>How to name files?</b>"
+msgstr "<b>Kako da krstim datoteke?</b>"
+
+#: ../data/soundconverter.glade.h:2
+msgid "<b>Type of result?</b>"
+msgstr "<b>Vrsta izlaza?</b>"
+
+#: ../data/soundconverter.glade.h:3
+msgid "<b>Where to place results?</b>"
+msgstr "<b>Gde da smestim izlaz?</b>"
+
+#: ../data/soundconverter.glade.h:4
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>Datoteka već postoji</b></big>\n"
+
+#: ../data/soundconverter.glade.h:6
+msgid "<i>Example filename:</i>"
+msgstr "<i>Primer imena datoteke:</i>"
+
+#: ../data/soundconverter.glade.h:7
+msgid "Add _Folder"
+msgstr "Dodaj _fasciklu"
+
+#: ../data/soundconverter.glade.h:8
+msgid "Bitrate mode:"
+msgstr "Bitski protok:"
+
+#: ../data/soundconverter.glade.h:9
+msgid "Choose..."
+msgstr "Izaberi..."
+
+#: ../data/soundconverter.glade.h:10
+msgid ""
+"Constant (CBR)\n"
+"Average (ABR)\n"
+"Variable (VBR) - Best quality"
+msgstr ""
+"Konstantni (KBR)\n"
+"Prosečni (ABR)\n"
+"Promenljivi (VBR) - Najbolji kvalitet"
+
+#: ../data/soundconverter.glade.h:13
+msgid "Create subfolders: "
+msgstr "Napravi poddirektorijume: "
+
+#: ../data/soundconverter.glade.h:14
+msgid "Delete original file"
+msgstr "Ukloni originalne datoteke"
+
+#: ../data/soundconverter.glade.h:15
+msgid "Error"
+msgstr "Greška"
+
+#: ../data/soundconverter.glade.h:16
+msgid "File exists already"
+msgstr "Datoteka već postoji"
+
+#: ../data/soundconverter.glade.h:17
+msgid "Filename pattern: "
+msgstr "Šablon za naziv datoteke: "
+
+#: ../data/soundconverter.glade.h:18
+msgid "Filter "
+msgstr "Filter"
+
+#: ../data/soundconverter.glade.h:19
+msgid "Format: "
+msgstr "Format"
+
+#: ../data/soundconverter.glade.h:20
+msgid "GNOME Sound Conversion"
+msgstr "Gnomov prekoder zvuka"
+
+#: ../data/soundconverter.glade.h:21
+msgid "Into a specified folder"
+msgstr "U izabranu fasciklu"
+
+#: ../data/soundconverter.glade.h:22
+msgid "MP3 Encoder is not present."
+msgstr "MP3 koder nije dostupan."
+
+#: ../data/soundconverter.glade.h:23
+msgid "No documentation written."
+msgstr ""
+
+#: ../data/soundconverter.glade.h:24
+#, fuzzy
+msgid ""
+"Ogg Vorbis (.ogg)\n"
+"MP3 (.mp3)\n"
+"FLAC Lossless (.flac)\n"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
+msgstr ""
+"Ogg Vorbis (.ogg)\n"
+"MP3  (.mp3)\n"
+"FLAC bez gubitka (.flac)\n"
+"MS Wave (.wav)"
+
+#: ../data/soundconverter.glade.h:29
+msgid "Preferences"
+msgstr "Postavke"
+
+#: ../data/soundconverter.glade.h:30
+msgid "Quality:"
+msgstr "Kvalitet:"
+
+#: ../data/soundconverter.glade.h:31
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "Ukloni sve karaktere osim slova, brojeva i „./_-“"
+
+#: ../data/soundconverter.glade.h:32
+msgid "Replace all messy characters"
+msgstr "Zameni sve loše karaktere"
+
+#: ../data/soundconverter.glade.h:33
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:34
+msgid "Same folder as the input file"
+msgstr "Ista fascikla u kojoj je ulazna datoteka"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Select _All"
+msgstr "Izaberi _sve"
+
+#: ../data/soundconverter.glade.h:36
+msgid "SoundConverter"
+msgstr "Prekodiranje Zvuka"
+
+#: ../data/soundconverter.glade.h:37
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:38
+#, fuzzy
+msgid ""
+"Very Low\n"
+"Low\n"
+"Normal\n"
+"High\n"
+"Very High\n"
+"Insanely High"
+msgstr ""
+"Veoma nisko\n"
+"Nisko\n"
+"Normalno\n"
+"Visoko\n"
+"Veoma visoko"
+
+#: ../data/soundconverter.glade.h:44
+msgid "Where to place results?"
+msgstr "Gde sa smestim izlaz?"
+
+#: ../data/soundconverter.glade.h:45
+msgid "_Add File"
+msgstr "_Dodaj datoteku"
+
+#: ../data/soundconverter.glade.h:46
+msgid "_Apply to entire queue"
+msgstr "_Primeni na ceo unos"
+
+#: ../data/soundconverter.glade.h:47
+msgid "_Clear List"
+msgstr "O_čisti spisak"
+
+#: ../data/soundconverter.glade.h:48
+msgid "_Edit"
+msgstr "_Uredi"
+
+#: ../data/soundconverter.glade.h:49
+msgid "_File"
+msgstr "_Datoteka"
+
+#: ../data/soundconverter.glade.h:50
+msgid "_Help"
+msgstr "_Pomoć"
+
+#: ../data/soundconverter.glade.h:51
+msgid "_Overwrite"
+msgstr "P_repiši"
+
+#: ../data/soundconverter.glade.h:52
+msgid "_Remove"
+msgstr "_Ukloni"
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Skip"
+msgstr "Pr_eskoči"
+
+#: ../data/soundconverter.glade.h:54
+msgid "aac"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:55
+msgid ""
+"artist/album\n"
+"artist - album"
+msgstr ""
+"izvođač/album\n"
+"izvođač — album"
+
+#: ../data/soundconverter.glade.h:57
+msgid "dialog1"
+msgstr "dijalog1"
+
+#: ../data/soundconverter.glade.h:58
+msgid "flac"
+msgstr "flac"
+
+#: ../data/soundconverter.glade.h:59
+msgid "mp3"
+msgstr "mp3"
+
+#: ../data/soundconverter.glade.h:60
+msgid "ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:61
+msgid ""
+"track_number - track_title\n"
+"track_title\n"
+msgstr ""
+"broj_numere — naslov_numere\n"
+"broj_numere\n"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../data/soundconverter.glade.h:65
+msgid "translator_credits"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:66
+msgid "wav"
+msgstr "wav"
 
 #. traductors: These are the custom filename patterns. Only if it does make sense.
 #: ../src/soundconverter.py:153
@@ -310,256 +547,18 @@ msgstr ""
 msgid "Force number of concurrent conversions."
 msgstr ""
 
-#: ../data/soundconverter.glade.h:1
-msgid "<b>How to name files?</b>"
-msgstr "<b>Kako da krstim datoteke?</b>"
-
-#: ../data/soundconverter.glade.h:2
-msgid "<b>Type of result?</b>"
-msgstr "<b>Vrsta izlaza?</b>"
-
-#: ../data/soundconverter.glade.h:3
-msgid "<b>Where to place results?</b>"
-msgstr "<b>Gde da smestim izlaz?</b>"
-
-#: ../data/soundconverter.glade.h:4
-msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Datoteka već postoji</b></big>\n"
-
-#: ../data/soundconverter.glade.h:6
-msgid "<i>Example filename:</i>"
-msgstr "<i>Primer imena datoteke:</i>"
-
-#: ../data/soundconverter.glade.h:7
-msgid "Add _Folder"
-msgstr "Dodaj _fasciklu"
-
-#: ../data/soundconverter.glade.h:8
-msgid "Bitrate mode:"
-msgstr "Bitski protok:"
-
-#: ../data/soundconverter.glade.h:9
-msgid "Choose..."
-msgstr "Izaberi..."
-
-#: ../data/soundconverter.glade.h:10
-msgid ""
-"Constant (CBR)\n"
-"Average (ABR)\n"
-"Variable (VBR) - Best quality"
-msgstr ""
-"Konstantni (KBR)\n"
-"Prosečni (ABR)\n"
-"Promenljivi (VBR) - Najbolji kvalitet"
-
-#: ../data/soundconverter.glade.h:13
-msgid "Create subfolders: "
-msgstr "Napravi poddirektorijume: "
-
-#: ../data/soundconverter.glade.h:14
-msgid "Delete original file"
-msgstr "Ukloni originalne datoteke"
-
-#: ../data/soundconverter.glade.h:15
-msgid "Error"
-msgstr "Greška"
-
-#: ../data/soundconverter.glade.h:16
-msgid "File exists already"
-msgstr "Datoteka već postoji"
-
-#: ../data/soundconverter.glade.h:17
-msgid "Filename pattern: "
-msgstr "Šablon za naziv datoteke: "
-
-#: ../data/soundconverter.glade.h:18
-msgid "Filter "
-msgstr "Filter"
-
-#: ../data/soundconverter.glade.h:19
-msgid "Format: "
-msgstr "Format"
-
-#: ../data/soundconverter.glade.h:20
-msgid "GNOME Sound Conversion"
-msgstr "Gnomov prekoder zvuka"
-
-#: ../data/soundconverter.glade.h:21
-msgid "Into a specified folder"
-msgstr "U izabranu fasciklu"
-
-#: ../data/soundconverter.glade.h:22
-msgid "MP3 Encoder is not present."
-msgstr "MP3 koder nije dostupan."
-
-#: ../data/soundconverter.glade.h:23
-msgid "No documentation written."
-msgstr ""
-
-#: ../data/soundconverter.glade.h:24
-#, fuzzy
-msgid ""
-"Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
-msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
-"FLAC bez gubitka (.flac)\n"
-"MS Wave (.wav)"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Preferences"
-msgstr "Postavke"
-
-#: ../data/soundconverter.glade.h:30
-msgid "Quality:"
-msgstr "Kvalitet:"
-
-#: ../data/soundconverter.glade.h:31
-msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Ukloni sve karaktere osim slova, brojeva i „./_-“"
-
-#: ../data/soundconverter.glade.h:32
-msgid "Replace all messy characters"
-msgstr "Zameni sve loše karaktere"
-
-#: ../data/soundconverter.glade.h:33
-msgid "Resample"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:34
-msgid "Same folder as the input file"
-msgstr "Ista fascikla u kojoj je ulazna datoteka"
-
-#: ../data/soundconverter.glade.h:35
-msgid "Select _All"
-msgstr "Izaberi _sve"
-
-#: ../data/soundconverter.glade.h:36
-msgid "SoundConverter"
-msgstr "Prekodiranje Zvuka"
-
-#: ../data/soundconverter.glade.h:37
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:38
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High"
-msgstr ""
-"Veoma nisko\n"
-"Nisko\n"
-"Normalno\n"
-"Visoko\n"
-"Veoma visoko"
-
-#: ../data/soundconverter.glade.h:43
-#, fuzzy
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High\n"
-"Insanely High"
-msgstr ""
-"Veoma nisko\n"
-"Nisko\n"
-"Normalno\n"
-"Visoko\n"
-"Veoma visoko"
-
-#: ../data/soundconverter.glade.h:49
-msgid "Where to place results?"
-msgstr "Gde sa smestim izlaz?"
-
-#: ../data/soundconverter.glade.h:50
-msgid "_Add File"
-msgstr "_Dodaj datoteku"
-
-#: ../data/soundconverter.glade.h:51
-msgid "_Apply to entire queue"
-msgstr "_Primeni na ceo unos"
-
-#: ../data/soundconverter.glade.h:52
-msgid "_Clear List"
-msgstr "O_čisti spisak"
-
-#: ../data/soundconverter.glade.h:53
-msgid "_Edit"
-msgstr "_Uredi"
-
-#: ../data/soundconverter.glade.h:54
-msgid "_File"
-msgstr "_Datoteka"
-
-#: ../data/soundconverter.glade.h:55
-msgid "_Help"
-msgstr "_Pomoć"
-
-#: ../data/soundconverter.glade.h:56
-msgid "_Overwrite"
-msgstr "P_repiši"
-
-#: ../data/soundconverter.glade.h:57
-msgid "_Remove"
-msgstr "_Ukloni"
-
-#: ../data/soundconverter.glade.h:58
-msgid "_Skip"
-msgstr "Pr_eskoči"
-
-#: ../data/soundconverter.glade.h:59
-msgid "aac"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:60
-msgid ""
-"artist/album\n"
-"artist - album"
-msgstr ""
-"izvođač/album\n"
-"izvođač — album"
-
-#: ../data/soundconverter.glade.h:62
-msgid "dialog1"
-msgstr "dijalog1"
-
-#: ../data/soundconverter.glade.h:63
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:64
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:65
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:66
-msgid ""
-"track_number - track_title\n"
-"track_title\n"
-msgstr ""
-"broj_numere — naslov_numere\n"
-"broj_numere\n"
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:70
-msgid "translator_credits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:71
-msgid "wav"
-msgstr "wav"
+#~ msgid ""
+#~ "Very Low\n"
+#~ "Low\n"
+#~ "Normal\n"
+#~ "High\n"
+#~ "Very High"
+#~ msgstr ""
+#~ "Veoma nisko\n"
+#~ "Nisko\n"
+#~ "Normalno\n"
+#~ "Visoko\n"
+#~ "Veoma visoko"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "preskačem: „%s“"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 16:28+0200\n"
+"POT-Creation-Date: 2009-06-13 00:05+0200\n"
 "PO-Revision-Date: 2008-11-30 20:27+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -27,6 +27,248 @@ msgstr "Konvertera ljudfiler till andra format"
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "Ljudkonverterare"
+
+#: ../data/soundconverter.glade.h:1
+msgid "<b>How to name files?</b>"
+msgstr "<b>Hur ska filer namnges?</b>"
+
+#: ../data/soundconverter.glade.h:2
+msgid "<b>Type of result?</b>"
+msgstr "<b>Typ av resultat?</b>"
+
+#: ../data/soundconverter.glade.h:3
+msgid "<b>Where to place results?</b>"
+msgstr "<b>Var ska resultaten placeras?</b>"
+
+#: ../data/soundconverter.glade.h:4
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>Filen finns redan</b></big>\n"
+
+#: ../data/soundconverter.glade.h:6
+msgid "<i>Example filename:</i>"
+msgstr "<i>Exempel filnamn:</i>"
+
+#: ../data/soundconverter.glade.h:7
+msgid "Add _Folder"
+msgstr "Lägg till _mapp"
+
+#: ../data/soundconverter.glade.h:8
+msgid "Bitrate mode:"
+msgstr "Bithastighetsläge:"
+
+#: ../data/soundconverter.glade.h:9
+msgid "Choose..."
+msgstr "Välj..."
+
+#: ../data/soundconverter.glade.h:10
+msgid ""
+"Constant (CBR)\n"
+"Average (ABR)\n"
+"Variable (VBR) - Best quality"
+msgstr ""
+"Konstant (CBR)\n"
+"Medel (ABR)\n"
+"Variabel (VBR) - Bäst kvalitet"
+
+#: ../data/soundconverter.glade.h:13
+msgid "Create subfolders: "
+msgstr "Skapa undermappar: "
+
+#: ../data/soundconverter.glade.h:14
+msgid "Delete original file"
+msgstr "Ta bort originalfilen"
+
+#: ../data/soundconverter.glade.h:15
+msgid "Error"
+msgstr "Fel"
+
+#: ../data/soundconverter.glade.h:16
+msgid "File exists already"
+msgstr "Filen finns redan"
+
+#: ../data/soundconverter.glade.h:17
+msgid "Filename pattern: "
+msgstr "Filnamnsmönster: "
+
+#: ../data/soundconverter.glade.h:18
+msgid "Filter "
+msgstr "Filter "
+
+#: ../data/soundconverter.glade.h:19
+msgid "Format: "
+msgstr "Format: "
+
+#: ../data/soundconverter.glade.h:20
+msgid "GNOME Sound Conversion"
+msgstr "Ljudkonverterare för GNOME"
+
+#: ../data/soundconverter.glade.h:21
+msgid "Into a specified folder"
+msgstr "I en angiven mapp"
+
+#: ../data/soundconverter.glade.h:22
+msgid "MP3 Encoder is not present."
+msgstr "MP3-kodare finns inte installerad."
+
+#: ../data/soundconverter.glade.h:23
+msgid "No documentation written."
+msgstr ""
+
+#: ../data/soundconverter.glade.h:24
+#, fuzzy
+msgid ""
+"Ogg Vorbis (.ogg)\n"
+"MP3 (.mp3)\n"
+"FLAC Lossless (.flac)\n"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
+msgstr ""
+"Ogg Vorbis (.ogg)\n"
+"MP3  (.mp3)\n"
+"FLAC förlustfri (.flac)\n"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
+
+#: ../data/soundconverter.glade.h:29
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: ../data/soundconverter.glade.h:30
+msgid "Quality:"
+msgstr "Kvalitet:"
+
+#: ../data/soundconverter.glade.h:31
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "Ta bort alla tecken förutom bokstäver, siffror och ./_-"
+
+#: ../data/soundconverter.glade.h:32
+msgid "Replace all messy characters"
+msgstr "Ersätt felaktiga tecken"
+
+#: ../data/soundconverter.glade.h:33
+msgid "Resample"
+msgstr "Sampla om"
+
+#: ../data/soundconverter.glade.h:34
+msgid "Same folder as the input file"
+msgstr "Samma mapp som inmatningsfilen"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Select _All"
+msgstr "Markera _allt"
+
+#: ../data/soundconverter.glade.h:36
+msgid "SoundConverter"
+msgstr "Ljudkonverterare"
+
+#: ../data/soundconverter.glade.h:37
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:38
+msgid ""
+"Very Low\n"
+"Low\n"
+"Normal\n"
+"High\n"
+"Very High\n"
+"Insanely High"
+msgstr ""
+"Mycket låg\n"
+"Låg\n"
+"Normal\n"
+"Hög\n"
+"Mycket hög\n"
+"Vansinnigt hög"
+
+#: ../data/soundconverter.glade.h:44
+msgid "Where to place results?"
+msgstr "Var ska resultaten placeras?"
+
+#: ../data/soundconverter.glade.h:45
+msgid "_Add File"
+msgstr "_Lägg till fil"
+
+#: ../data/soundconverter.glade.h:46
+msgid "_Apply to entire queue"
+msgstr "_Verkställ för hela kön"
+
+#: ../data/soundconverter.glade.h:47
+msgid "_Clear List"
+msgstr "_Töm lista"
+
+#: ../data/soundconverter.glade.h:48
+msgid "_Edit"
+msgstr "R_edigera"
+
+#: ../data/soundconverter.glade.h:49
+msgid "_File"
+msgstr "_Arkiv"
+
+#: ../data/soundconverter.glade.h:50
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../data/soundconverter.glade.h:51
+msgid "_Overwrite"
+msgstr "_Skriv över"
+
+#: ../data/soundconverter.glade.h:52
+msgid "_Remove"
+msgstr "_Ta bort"
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Skip"
+msgstr "_Hoppa över"
+
+#: ../data/soundconverter.glade.h:54
+msgid "aac"
+msgstr "aac"
+
+#: ../data/soundconverter.glade.h:55
+msgid ""
+"artist/album\n"
+"artist - album"
+msgstr ""
+"artist/album\n"
+"artist - album"
+
+#: ../data/soundconverter.glade.h:57
+msgid "dialog1"
+msgstr "dialog1"
+
+#: ../data/soundconverter.glade.h:58
+msgid "flac"
+msgstr "flac"
+
+#: ../data/soundconverter.glade.h:59
+msgid "mp3"
+msgstr "mp3"
+
+#: ../data/soundconverter.glade.h:60
+msgid "ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:61
+msgid ""
+"track_number - track_title\n"
+"track_title\n"
+msgstr ""
+"spårnummer - spårtitel\n"
+"spårtitel\n"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../data/soundconverter.glade.h:65
+msgid "translator_credits"
+msgstr ""
+"Daniel Nylander <po@danielnylander.se>\n"
+"\n"
+"Skicka synpunkter på översättningen till\n"
+"tp-sv@listor.tp-sv.se"
+
+#: ../data/soundconverter.glade.h:66
+msgid "wav"
+msgstr "wav"
 
 #. traductors: These are the custom filename patterns. Only if it does make sense.
 #: ../src/soundconverter.py:153
@@ -305,260 +547,18 @@ msgstr ""
 msgid "Force number of concurrent conversions."
 msgstr "Tvinga antalet samtidiga konverteringar."
 
-#: ../data/soundconverter.glade.h:1
-msgid "<b>How to name files?</b>"
-msgstr "<b>Hur ska filer namnges?</b>"
-
-#: ../data/soundconverter.glade.h:2
-msgid "<b>Type of result?</b>"
-msgstr "<b>Typ av resultat?</b>"
-
-#: ../data/soundconverter.glade.h:3
-msgid "<b>Where to place results?</b>"
-msgstr "<b>Var ska resultaten placeras?</b>"
-
-#: ../data/soundconverter.glade.h:4
-msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Filen finns redan</b></big>\n"
-
-#: ../data/soundconverter.glade.h:6
-msgid "<i>Example filename:</i>"
-msgstr "<i>Exempel filnamn:</i>"
-
-#: ../data/soundconverter.glade.h:7
-msgid "Add _Folder"
-msgstr "Lägg till _mapp"
-
-#: ../data/soundconverter.glade.h:8
-msgid "Bitrate mode:"
-msgstr "Bithastighetsläge:"
-
-#: ../data/soundconverter.glade.h:9
-msgid "Choose..."
-msgstr "Välj..."
-
-#: ../data/soundconverter.glade.h:10
-msgid ""
-"Constant (CBR)\n"
-"Average (ABR)\n"
-"Variable (VBR) - Best quality"
-msgstr ""
-"Konstant (CBR)\n"
-"Medel (ABR)\n"
-"Variabel (VBR) - Bäst kvalitet"
-
-#: ../data/soundconverter.glade.h:13
-msgid "Create subfolders: "
-msgstr "Skapa undermappar: "
-
-#: ../data/soundconverter.glade.h:14
-msgid "Delete original file"
-msgstr "Ta bort originalfilen"
-
-#: ../data/soundconverter.glade.h:15
-msgid "Error"
-msgstr "Fel"
-
-#: ../data/soundconverter.glade.h:16
-msgid "File exists already"
-msgstr "Filen finns redan"
-
-#: ../data/soundconverter.glade.h:17
-msgid "Filename pattern: "
-msgstr "Filnamnsmönster: "
-
-#: ../data/soundconverter.glade.h:18
-msgid "Filter "
-msgstr "Filter "
-
-#: ../data/soundconverter.glade.h:19
-msgid "Format: "
-msgstr "Format: "
-
-#: ../data/soundconverter.glade.h:20
-msgid "GNOME Sound Conversion"
-msgstr "Ljudkonverterare för GNOME"
-
-#: ../data/soundconverter.glade.h:21
-msgid "Into a specified folder"
-msgstr "I en angiven mapp"
-
-#: ../data/soundconverter.glade.h:22
-msgid "MP3 Encoder is not present."
-msgstr "MP3-kodare finns inte installerad."
-
-#: ../data/soundconverter.glade.h:23
-msgid "No documentation written."
-msgstr ""
-
-#: ../data/soundconverter.glade.h:24
-msgid ""
-"Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
-msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
-"FLAC förlustfri (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Preferences"
-msgstr "Inställningar"
-
-#: ../data/soundconverter.glade.h:30
-msgid "Quality:"
-msgstr "Kvalitet:"
-
-#: ../data/soundconverter.glade.h:31
-msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Ta bort alla tecken förutom bokstäver, siffror och ./_-"
-
-#: ../data/soundconverter.glade.h:32
-msgid "Replace all messy characters"
-msgstr "Ersätt felaktiga tecken"
-
-#: ../data/soundconverter.glade.h:33
-msgid "Resample"
-msgstr "Sampla om"
-
-#: ../data/soundconverter.glade.h:34
-msgid "Same folder as the input file"
-msgstr "Samma mapp som inmatningsfilen"
-
-#: ../data/soundconverter.glade.h:35
-msgid "Select _All"
-msgstr "Markera _allt"
-
-#: ../data/soundconverter.glade.h:36
-msgid "SoundConverter"
-msgstr "Ljudkonverterare"
-
-#: ../data/soundconverter.glade.h:37
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:38
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High"
-msgstr ""
-"Mycket låg\n"
-"Låg\n"
-"Normal\n"
-"Hög\n"
-"Mycket hög"
-
-#: ../data/soundconverter.glade.h:43
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High\n"
-"Insanely High"
-msgstr ""
-"Mycket låg\n"
-"Låg\n"
-"Normal\n"
-"Hög\n"
-"Mycket hög\n"
-"Vansinnigt hög"
-
-#: ../data/soundconverter.glade.h:49
-msgid "Where to place results?"
-msgstr "Var ska resultaten placeras?"
-
-#: ../data/soundconverter.glade.h:50
-msgid "_Add File"
-msgstr "_Lägg till fil"
-
-#: ../data/soundconverter.glade.h:51
-msgid "_Apply to entire queue"
-msgstr "_Verkställ för hela kön"
-
-#: ../data/soundconverter.glade.h:52
-msgid "_Clear List"
-msgstr "_Töm lista"
-
-#: ../data/soundconverter.glade.h:53
-msgid "_Edit"
-msgstr "R_edigera"
-
-#: ../data/soundconverter.glade.h:54
-msgid "_File"
-msgstr "_Arkiv"
-
-#: ../data/soundconverter.glade.h:55
-msgid "_Help"
-msgstr "_Hjälp"
-
-#: ../data/soundconverter.glade.h:56
-msgid "_Overwrite"
-msgstr "_Skriv över"
-
-#: ../data/soundconverter.glade.h:57
-msgid "_Remove"
-msgstr "_Ta bort"
-
-#: ../data/soundconverter.glade.h:58
-msgid "_Skip"
-msgstr "_Hoppa över"
-
-#: ../data/soundconverter.glade.h:59
-msgid "aac"
-msgstr "aac"
-
-#: ../data/soundconverter.glade.h:60
-msgid ""
-"artist/album\n"
-"artist - album"
-msgstr ""
-"artist/album\n"
-"artist - album"
-
-#: ../data/soundconverter.glade.h:62
-msgid "dialog1"
-msgstr "dialog1"
-
-#: ../data/soundconverter.glade.h:63
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:64
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:65
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:66
-msgid ""
-"track_number - track_title\n"
-"track_title\n"
-msgstr ""
-"spårnummer - spårtitel\n"
-"spårtitel\n"
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:70
-msgid "translator_credits"
-msgstr ""
-"Daniel Nylander <po@danielnylander.se>\n"
-"\n"
-"Skicka synpunkter på översättningen till\n"
-"tp-sv@listor.tp-sv.se"
-
-#: ../data/soundconverter.glade.h:71
-msgid "wav"
-msgstr "wav"
+#~ msgid ""
+#~ "Very Low\n"
+#~ "Low\n"
+#~ "Normal\n"
+#~ "High\n"
+#~ "Very High"
+#~ msgstr ""
+#~ "Mycket låg\n"
+#~ "Låg\n"
+#~ "Normal\n"
+#~ "Hög\n"
+#~ "Mycket hög"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "Passe: '%s'"

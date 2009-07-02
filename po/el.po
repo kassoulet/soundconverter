@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-10 16:28+0200\n"
+"POT-Creation-Date: 2009-06-13 00:05+0200\n"
 "PO-Revision-Date: 2008-05-14 10:04+0000\n"
 "Last-Translator: jarlaxl lamat <sztaasz@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -29,6 +29,244 @@ msgstr ""
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "Μετατροπέας Ηχου"
+
+#: ../data/soundconverter.glade.h:1
+msgid "<b>How to name files?</b>"
+msgstr "<b>Πως να ονομάσω τα αρχεία;</b>"
+
+#: ../data/soundconverter.glade.h:2
+msgid "<b>Type of result?</b>"
+msgstr "<b>Είδος αρχείου εξόδου;</b>"
+
+#: ../data/soundconverter.glade.h:3
+msgid "<b>Where to place results?</b>"
+msgstr "<b>Πού να βάλω τα αρχεία; </b>"
+
+#: ../data/soundconverter.glade.h:4
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>Αρχείο ήδη υπάρχον</b></big>\n"
+
+#: ../data/soundconverter.glade.h:6
+msgid "<i>Example filename:</i>"
+msgstr "<i>Παράδειγμα αρχείου:</i>"
+
+#: ../data/soundconverter.glade.h:7
+msgid "Add _Folder"
+msgstr "Προσθήκη_Φακέλου"
+
+#: ../data/soundconverter.glade.h:8
+msgid "Bitrate mode:"
+msgstr "Είδος συμπίεσης"
+
+#: ../data/soundconverter.glade.h:9
+msgid "Choose..."
+msgstr "Επιλέξτε..."
+
+#: ../data/soundconverter.glade.h:10
+msgid ""
+"Constant (CBR)\n"
+"Average (ABR)\n"
+"Variable (VBR) - Best quality"
+msgstr ""
+"Σταθερή (CBR)\n"
+"Μέση (ABR)\n"
+"Μεταβλητή (VBR) - Καλλίτερη ποιότητα"
+
+#: ../data/soundconverter.glade.h:13
+msgid "Create subfolders: "
+msgstr "Δημιουργία υποφακέλων "
+
+#: ../data/soundconverter.glade.h:14
+msgid "Delete original file"
+msgstr "Διαγραφή του πρωτότυπου αρχείου"
+
+#: ../data/soundconverter.glade.h:15
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: ../data/soundconverter.glade.h:16
+msgid "File exists already"
+msgstr "Αρχείο ήδη υπάρχον"
+
+#: ../data/soundconverter.glade.h:17
+msgid "Filename pattern: "
+msgstr "Ονοματοδοσία αρχείου: "
+
+#: ../data/soundconverter.glade.h:18
+msgid "Filter "
+msgstr "Φίλτρο "
+
+#: ../data/soundconverter.glade.h:19
+msgid "Format: "
+msgstr "Τύπος αρχείου "
+
+#: ../data/soundconverter.glade.h:20
+msgid "GNOME Sound Conversion"
+msgstr "ΓΝΩΜΙΚΟ (GNOME), Μετατροπή Ηχου"
+
+#: ../data/soundconverter.glade.h:21
+msgid "Into a specified folder"
+msgstr "Σε προκαθορισμένο φάκελο"
+
+#: ../data/soundconverter.glade.h:22
+msgid "MP3 Encoder is not present."
+msgstr "Κωδικοποιητής ΜΡ3 δεν υπάρχει."
+
+#: ../data/soundconverter.glade.h:23
+msgid "No documentation written."
+msgstr ""
+
+#: ../data/soundconverter.glade.h:24
+#, fuzzy
+msgid ""
+"Ogg Vorbis (.ogg)\n"
+"MP3 (.mp3)\n"
+"FLAC Lossless (.flac)\n"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
+msgstr ""
+"Ogg Vorbis (.ogg)\n"
+"MP3 (.mp3)\n"
+"FLAC Χωρίς απώλειες (.flac)\n"
+"M$ Wave (.wav)"
+
+#: ../data/soundconverter.glade.h:29
+msgid "Preferences"
+msgstr "Προτιμήσεις"
+
+#: ../data/soundconverter.glade.h:30
+msgid "Quality:"
+msgstr "Ποιότητα:"
+
+#: ../data/soundconverter.glade.h:31
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "Διαγραφή όλων των χαρακτήρων εκτός γραμμάτων, ψηφίων και ./_-"
+
+#: ../data/soundconverter.glade.h:32
+msgid "Replace all messy characters"
+msgstr "Αντικατάσταση όλων των προβληματικών χαρακτήρων"
+
+#: ../data/soundconverter.glade.h:33
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:34
+msgid "Same folder as the input file"
+msgstr "Στον ίδιο φάκελο όπως το αρχείο εισόδου"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Select _All"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:36
+msgid "SoundConverter"
+msgstr "ΣάουντΚονβέρτερ"
+
+#: ../data/soundconverter.glade.h:37
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:38
+#, fuzzy
+msgid ""
+"Very Low\n"
+"Low\n"
+"Normal\n"
+"High\n"
+"Very High\n"
+"Insanely High"
+msgstr ""
+"Κατώτατη\n"
+"Χαμηλή\n"
+"Κανονική\n"
+"Υψηλή\n"
+"Υψιστη"
+
+#: ../data/soundconverter.glade.h:44
+msgid "Where to place results?"
+msgstr "Που να τοποθετήσω τα αρχεία εξόδου;"
+
+#: ../data/soundconverter.glade.h:45
+msgid "_Add File"
+msgstr "_Προσθήκη Αρχείου"
+
+#: ../data/soundconverter.glade.h:46
+msgid "_Apply to entire queue"
+msgstr "_Εφαρμογή σε ολόκληρη τη σειρά αναμονής"
+
+#: ../data/soundconverter.glade.h:47
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:48
+msgid "_Edit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:49
+#, fuzzy
+msgid "_File"
+msgstr "_Προσθήκη Αρχείου"
+
+#: ../data/soundconverter.glade.h:50
+msgid "_Help"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:51
+msgid "_Overwrite"
+msgstr "_Αντικατάσταση"
+
+#: ../data/soundconverter.glade.h:52
+msgid "_Remove"
+msgstr "_Διαγραφή"
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Skip"
+msgstr "Παράβλεψη"
+
+#: ../data/soundconverter.glade.h:54
+msgid "aac"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:55
+msgid ""
+"artist/album\n"
+"artist - album"
+msgstr ""
+"Καλλιτέχνις/άλμπουμ\n"
+"Καλλιτέχνις - άλμπουμ"
+
+#: ../data/soundconverter.glade.h:57
+msgid "dialog1"
+msgstr "διάλογος1"
+
+#: ../data/soundconverter.glade.h:58
+msgid "flac"
+msgstr "flac"
+
+#: ../data/soundconverter.glade.h:59
+msgid "mp3"
+msgstr "mp3"
+
+#: ../data/soundconverter.glade.h:60
+msgid "ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:61
+msgid ""
+"track_number - track_title\n"
+"track_title\n"
+msgstr ""
+"αριθμός_κομματιού - τίτλος_κομματιού\n"
+"τίτλος_κομματιού\n"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../data/soundconverter.glade.h:65
+msgid "translator_credits"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:66
+msgid "wav"
+msgstr "wav"
 
 #. traductors: These are the custom filename patterns. Only if it does make sense.
 #: ../src/soundconverter.py:153
@@ -313,257 +551,18 @@ msgstr ""
 msgid "Force number of concurrent conversions."
 msgstr ""
 
-#: ../data/soundconverter.glade.h:1
-msgid "<b>How to name files?</b>"
-msgstr "<b>Πως να ονομάσω τα αρχεία;</b>"
-
-#: ../data/soundconverter.glade.h:2
-msgid "<b>Type of result?</b>"
-msgstr "<b>Είδος αρχείου εξόδου;</b>"
-
-#: ../data/soundconverter.glade.h:3
-msgid "<b>Where to place results?</b>"
-msgstr "<b>Πού να βάλω τα αρχεία; </b>"
-
-#: ../data/soundconverter.glade.h:4
-msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Αρχείο ήδη υπάρχον</b></big>\n"
-
-#: ../data/soundconverter.glade.h:6
-msgid "<i>Example filename:</i>"
-msgstr "<i>Παράδειγμα αρχείου:</i>"
-
-#: ../data/soundconverter.glade.h:7
-msgid "Add _Folder"
-msgstr "Προσθήκη_Φακέλου"
-
-#: ../data/soundconverter.glade.h:8
-msgid "Bitrate mode:"
-msgstr "Είδος συμπίεσης"
-
-#: ../data/soundconverter.glade.h:9
-msgid "Choose..."
-msgstr "Επιλέξτε..."
-
-#: ../data/soundconverter.glade.h:10
-msgid ""
-"Constant (CBR)\n"
-"Average (ABR)\n"
-"Variable (VBR) - Best quality"
-msgstr ""
-"Σταθερή (CBR)\n"
-"Μέση (ABR)\n"
-"Μεταβλητή (VBR) - Καλλίτερη ποιότητα"
-
-#: ../data/soundconverter.glade.h:13
-msgid "Create subfolders: "
-msgstr "Δημιουργία υποφακέλων "
-
-#: ../data/soundconverter.glade.h:14
-msgid "Delete original file"
-msgstr "Διαγραφή του πρωτότυπου αρχείου"
-
-#: ../data/soundconverter.glade.h:15
-msgid "Error"
-msgstr "Σφάλμα"
-
-#: ../data/soundconverter.glade.h:16
-msgid "File exists already"
-msgstr "Αρχείο ήδη υπάρχον"
-
-#: ../data/soundconverter.glade.h:17
-msgid "Filename pattern: "
-msgstr "Ονοματοδοσία αρχείου: "
-
-#: ../data/soundconverter.glade.h:18
-msgid "Filter "
-msgstr "Φίλτρο "
-
-#: ../data/soundconverter.glade.h:19
-msgid "Format: "
-msgstr "Τύπος αρχείου "
-
-#: ../data/soundconverter.glade.h:20
-msgid "GNOME Sound Conversion"
-msgstr "ΓΝΩΜΙΚΟ (GNOME), Μετατροπή Ηχου"
-
-#: ../data/soundconverter.glade.h:21
-msgid "Into a specified folder"
-msgstr "Σε προκαθορισμένο φάκελο"
-
-#: ../data/soundconverter.glade.h:22
-msgid "MP3 Encoder is not present."
-msgstr "Κωδικοποιητής ΜΡ3 δεν υπάρχει."
-
-#: ../data/soundconverter.glade.h:23
-msgid "No documentation written."
-msgstr ""
-
-#: ../data/soundconverter.glade.h:24
-#, fuzzy
-msgid ""
-"Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
-msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Χωρίς απώλειες (.flac)\n"
-"M$ Wave (.wav)"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Preferences"
-msgstr "Προτιμήσεις"
-
-#: ../data/soundconverter.glade.h:30
-msgid "Quality:"
-msgstr "Ποιότητα:"
-
-#: ../data/soundconverter.glade.h:31
-msgid "Remove all chars except letters, digits and ./_-"
-msgstr "Διαγραφή όλων των χαρακτήρων εκτός γραμμάτων, ψηφίων και ./_-"
-
-#: ../data/soundconverter.glade.h:32
-msgid "Replace all messy characters"
-msgstr "Αντικατάσταση όλων των προβληματικών χαρακτήρων"
-
-#: ../data/soundconverter.glade.h:33
-msgid "Resample"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:34
-msgid "Same folder as the input file"
-msgstr "Στον ίδιο φάκελο όπως το αρχείο εισόδου"
-
-#: ../data/soundconverter.glade.h:35
-msgid "Select _All"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:36
-msgid "SoundConverter"
-msgstr "ΣάουντΚονβέρτερ"
-
-#: ../data/soundconverter.glade.h:37
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:38
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High"
-msgstr ""
-"Κατώτατη\n"
-"Χαμηλή\n"
-"Κανονική\n"
-"Υψηλή\n"
-"Υψιστη"
-
-#: ../data/soundconverter.glade.h:43
-#, fuzzy
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High\n"
-"Insanely High"
-msgstr ""
-"Κατώτατη\n"
-"Χαμηλή\n"
-"Κανονική\n"
-"Υψηλή\n"
-"Υψιστη"
-
-#: ../data/soundconverter.glade.h:49
-msgid "Where to place results?"
-msgstr "Που να τοποθετήσω τα αρχεία εξόδου;"
-
-#: ../data/soundconverter.glade.h:50
-msgid "_Add File"
-msgstr "_Προσθήκη Αρχείου"
-
-#: ../data/soundconverter.glade.h:51
-msgid "_Apply to entire queue"
-msgstr "_Εφαρμογή σε ολόκληρη τη σειρά αναμονής"
-
-#: ../data/soundconverter.glade.h:52
-msgid "_Clear List"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:53
-msgid "_Edit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:54
-#, fuzzy
-msgid "_File"
-msgstr "_Προσθήκη Αρχείου"
-
-#: ../data/soundconverter.glade.h:55
-msgid "_Help"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:56
-msgid "_Overwrite"
-msgstr "_Αντικατάσταση"
-
-#: ../data/soundconverter.glade.h:57
-msgid "_Remove"
-msgstr "_Διαγραφή"
-
-#: ../data/soundconverter.glade.h:58
-msgid "_Skip"
-msgstr "Παράβλεψη"
-
-#: ../data/soundconverter.glade.h:59
-msgid "aac"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:60
-msgid ""
-"artist/album\n"
-"artist - album"
-msgstr ""
-"Καλλιτέχνις/άλμπουμ\n"
-"Καλλιτέχνις - άλμπουμ"
-
-#: ../data/soundconverter.glade.h:62
-msgid "dialog1"
-msgstr "διάλογος1"
-
-#: ../data/soundconverter.glade.h:63
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:64
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:65
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:66
-msgid ""
-"track_number - track_title\n"
-"track_title\n"
-msgstr ""
-"αριθμός_κομματιού - τίτλος_κομματιού\n"
-"τίτλος_κομματιού\n"
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:70
-msgid "translator_credits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:71
-msgid "wav"
-msgstr "wav"
+#~ msgid ""
+#~ "Very Low\n"
+#~ "Low\n"
+#~ "Normal\n"
+#~ "High\n"
+#~ "Very High"
+#~ msgstr ""
+#~ "Κατώτατη\n"
+#~ "Χαμηλή\n"
+#~ "Κανονική\n"
+#~ "Υψηλή\n"
+#~ "Υψιστη"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "παραβλέπεται:'%s'"
