@@ -1,3 +1,10 @@
+2009-06-09  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py data/soundconverter.glade autogen.sh po/de.po:
+	  Update german tranlation.
+	  Plus some minor changes in autogen.
+	  (Thanks Uwe)
+
 2009-05-27  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Change deprecated Tooltip code.

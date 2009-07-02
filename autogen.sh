@@ -42,3 +42,7 @@ if test -z "$gnome_autogen" ; then
 fi
 
 GNOME_DATADIR="$gnome_datadir" USE_GNOME2_MACROS=1 . $gnome_autogen
+
+automake -a -f
+autoconf
+./configure

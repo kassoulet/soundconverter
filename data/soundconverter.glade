@@ -621,9 +621,7 @@ Thanks to:
 
 
 </property>
-  <property name="documenters">No documentation written.
-
-</property>
+  <property name="documenters" translatable="yes">No documentation written.</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator_credits</property>
 </widget>
 
