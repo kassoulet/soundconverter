@@ -1,4 +1,4 @@
-.TH SOUNDCONVERTER 1 2008-06-23 "GNOME" "GNOME User's Manual"
+.TH SOUNDCONVERTER 1 2009-06-10 "GNOME" "GNOME User's Manual"
 .SH NAME
 soundconverter \- convert sound files to other formats
 .SH SYNOPSIS
@@ -14,30 +14,35 @@ use in the GNOME environment.
 Print out a usage summary.
 .TP
 .BR \-b ", "\-\-batch
-Convert in batch mode, from command line, without a graphical user interface. 
+Convert in batch mode, from command line, without a graphical user interface.
 You can use this from, say, shell scripts.
 .TP
 .BR \-m ", "\-\-mime\-type " \fIarg\fR"
-Set the output MIME type for batch mode. 
-The default is audio/x-vorbis. 
+Set the output MIME type for batch mode.
+The default is audio/x-vorbis.
 Note that you probably want to set the output suffix as well.
 .TP
 .BR \-q ", "\-\-quiet
-Be quiet. 
+Be quiet.
 Don't write normal output, only errors.
 .TP
+.BR \-d ", "\-\-debug
+Print additional debug information.
+.TP
 .BR \-s ", "\-\-suffix " \fIarg\fR"
-Set the output filename suffix for batch mode. 
+Set the output filename suffix for batch mode.
 The default is .ogg.
 Note that the suffix does not affect the output MIME type.
-.TP
-.BR \-j ", "\-\-jobs " \fIarg\fR"
-Force number of concurent conversions.
-Default is one per present CPU.
 .TP
 .BR \-t ", "\-\-tags
 Show tags for input files instead of converting them. 
 This indicates command line batch mode and disables the 
 graphical user interface.
+.TP
+.BR \-j ", "\-\-jobs= "
+Force number of concurent conversions.
+Default is one per present CPU.
 .SH AUTHOR
 Lars Wirzenius (liw@iki.fi).
+Gautier Portet (kassoulet@gmail.com)
+Uwe Bugla (uwe.bugla@gmx.de).
