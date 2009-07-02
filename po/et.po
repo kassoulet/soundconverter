@@ -1,33 +1,33 @@
-# Hebrew translation for soundconverter
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Estonian translation for soundconverter
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the soundconverter package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 18:40+0100\n"
-"PO-Revision-Date: 2007-11-14 21:36+0000\n"
-"Last-Translator: Moshe Basanchig <moshe.basanchig@gmail.com>\n"
-"Language-Team: LANG <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-04-27 13:41+0000\n"
+"Last-Translator: lyyser <logard.1961@gmail.com>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
+"X-Launchpad-Export-Date: 2009-06-24 12:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr "ממיר פורמטים של אודיו"
+msgstr "Heli vormingu konverter"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr "ממיר קבצי אודיו לפורמטים שונים"
+msgstr "Heli failid e teise vormingusse konvertimine"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr "ממיר סאונד"
+msgstr "Heli konverter"
 
 #. traductors: only if it does make sense.
 #: ../src/soundconverter.py:119
@@ -37,7 +37,7 @@ msgstr ""
 #: ../src/soundconverter.py:184
 #, python-format
 msgid "skipping: '%s'"
-msgstr "מדלג: '%s'"
+msgstr "vahelejätt: '%s'"
 
 #: ../src/soundconverter.py:531
 #, python-format
@@ -49,25 +49,23 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"שגיאה: %s\n"
+"Tõrge: %s\n"
 "%s\n"
 
 #: ../src/soundconverter.py:734
 msgid "Internal error"
-msgstr "שגיאה פנימית"
+msgstr "Sisemine viga"
 
 #: ../src/soundconverter.py:735
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
 msgstr ""
-"לא מצליח לקשר רכיבי GStreamer.\n"
-"אנא דווח על שגיאה זו כבאג."
 
 #: ../src/soundconverter.py:740
 #, python-format
 msgid "Unknown type %s"
-msgstr "סוג לא מוכר %s"
+msgstr "Tundmatu tüüp %s"
 
 #: ../src/soundconverter.py:741
 #, python-format
@@ -77,88 +75,84 @@ msgid ""
 " for files of this type if it is important\n"
 " to you."
 msgstr ""
-"הקובץ %s הוא מסוג לא מוכר.\n"
-"אנא שלח בקשה למפתח להוסיף תמיכה \n"
-"בקבצים מסוג זה אם הדבר חשוב\n"
-"עבורך."
 
 #: ../src/soundconverter.py:995
 msgid "Target exists."
-msgstr "היעד קיים."
+msgstr "Tegum on juba olemas."
 
 #: ../src/soundconverter.py:996
 #, python-format
 msgid "The output file %s already exists."
-msgstr "קובץ הפלט %s כבר קיים."
+msgstr "Väljund fail %s On juba olemas."
 
 #: ../src/soundconverter.py:1039
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
-msgstr "לא יכול ליצור מפענח עבור פורמט '%s'."
+msgstr ""
 
 #: ../src/soundconverter.py:1050
 #, python-format
 msgid "Creating folder: '%s'"
-msgstr "יוצר תיקייה: '%s'"
+msgstr "Loon kasuta: '%s'"
 
 #: ../src/soundconverter.py:1054
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "לא יכול לייצר את התיקייה '%s'"
+msgstr "Ei suuda luua '%s' kausta."
 
 #: ../src/soundconverter.py:1075
 #, python-format
 msgid "Cannot set permission on '%s'"
-msgstr "לא יכול לקבוע הרשאות על '%s'"
+msgstr ""
 
 #: ../src/soundconverter.py:1248
 #, python-format
 msgid "file already present: '%s'"
-msgstr "הקובץ כבר קיים: '%s'"
+msgstr ""
 
 #: ../src/soundconverter.py:1267
 msgid "loading tags..."
-msgstr "טוען תוויות..."
+msgstr ""
 
 #: ../src/soundconverter.py:1269
 msgid "no tags"
-msgstr "אין תוויות"
+msgstr ""
 
 #: ../src/soundconverter.py:1308
 msgid "unknown"
-msgstr "לא מוכר"
+msgstr "Tundmatu"
 
 #: ../src/soundconverter.py:1334
 msgid "Same as input, but replacing the suffix"
-msgstr "כמו המקור, רק עם שינוי הסיומת"
+msgstr ""
 
 #: ../src/soundconverter.py:1335
 msgid "Same as input, but with an additional suffix"
-msgstr "כמו המקור, רק עם סיומת נוספת"
+msgstr ""
 
 #: ../src/soundconverter.py:1336
 msgid "Track number - title"
-msgstr "מספר הרצועה - כותרת"
+msgstr ""
 
 #: ../src/soundconverter.py:1337
 msgid "Track title"
-msgstr "כותרת הרצועה"
+msgstr ""
 
 #: ../src/soundconverter.py:1338
 msgid "Artist - title"
-msgstr "אומן - כותרת"
+msgstr ""
 
 #: ../src/soundconverter.py:1339
 msgid "Custom filename pattern"
-msgstr "תבנית שם קובץ מותאמת אישית"
+msgstr ""
 
 #: ../src/soundconverter.py:1343
 msgid "artist/album"
-msgstr "אומן/אלבום"
+msgstr ""
 
 #: ../src/soundconverter.py:1344
 msgid "artist-album"
-msgstr "אומן-אלבום"
+msgstr ""
 
 #: ../src/soundconverter.py:1345
 msgid "artist - album"
@@ -167,7 +161,7 @@ msgstr ""
 #: ../src/soundconverter.py:1501
 #, python-format
 msgid "Into folder %s"
-msgstr "לתוך תיקייה %s"
+msgstr ""
 
 #: ../src/soundconverter.py:1551
 #, python-format
@@ -175,9 +169,8 @@ msgid "Target bitrate: %s"
 msgstr ""
 
 #: ../src/soundconverter.py:1793
-#, fuzzy
 msgid "Convertion Canceled"
-msgstr "המרה בוטלה"
+msgstr "Konvertimine katkestatud"
 
 #: ../src/soundconverter.py:1836
 #, python-format
@@ -186,82 +179,77 @@ msgid ""
 " exists already.\n"
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
-"קובץ הפלט <i>%s</i>\n"
-"כבר קיים.\n"
-"האם ברצונך לדלג על הקובץ, לשכתב אותו או לבטל את ההמרה?\n"
 
 #: ../src/soundconverter.py:1925
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "ההמרה הסתיימה, ב %s"
+msgstr ""
 
 #: ../src/soundconverter.py:1960
 msgid "Open a file"
-msgstr "פתח קובץ"
+msgstr "Ava fail"
 
 #: ../src/soundconverter.py:2049
 msgid "Add Folder..."
-msgstr "הוסף תיקייה..."
+msgstr "Lisa kataloog..."
 
 #: ../src/soundconverter.py:2169
 msgid "canceling conversion."
-msgstr "מבטל המרה."
+msgstr ""
 
 #: ../src/soundconverter.py:2192
 msgid "Waiting for tags"
-msgstr "ממתין עבור תגיות"
+msgstr ""
 
 #: ../src/soundconverter.py:2199
 msgid "Waiting for tags..."
-msgstr "ממתין עבור תגיות..."
+msgstr ""
 
 #: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
 msgid "Paused"
-msgstr "מושהה"
+msgstr "Peatatud"
 
 #: ../src/soundconverter.py:2224
 msgid "Canceled"
-msgstr "בוטל"
+msgstr "Katkestatud"
 
 #: ../src/soundconverter.py:2273
 #, python-format
 msgid "Converting file %d of %d  (%s)"
-msgstr "ממיר קובץ %d מתוך %d (%s)"
+msgstr "Konverdin faili %d ist %d  (%s)"
 
 #: ../src/soundconverter.py:2286
 msgid "Converting"
-msgstr "ממיר"
+msgstr "Konverdin"
 
 #: ../src/soundconverter.py:2303
 #, python-format
 msgid "%d:%02d left"
-msgstr "%d:%02d נותרו"
+msgstr "%d:%02d jäänud"
 
 #: ../src/soundconverter.py:2308
 msgid "Ready"
-msgstr "מוכן"
+msgstr "Valmis"
 
 #: ../src/soundconverter.py:2389
 #, python-format
 msgid "%s: OK"
-msgstr "%s:OK"
+msgstr "%s: OK"
 
 #: ../src/soundconverter.py:2424
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
-msgstr "שימוש: %s [אפשרויות] [קבצי אודיו ....]"
+msgstr ""
 
 #: ../src/soundconverter.py:2439
 msgid "Print out a usage summary."
-msgstr "הדפס הוראות שימוש."
+msgstr ""
 
 #: ../src/soundconverter.py:2442
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"המר באצווה, משורת הפקודה, ללא ממשק משתמש\n"
-"טוב לשימוש, למשל, מסקריפט."
 
 #: ../src/soundconverter.py:2445
 #, python-format
@@ -270,18 +258,14 @@ msgid ""
 " %s . Note that you probably want to set\n"
 " the output suffix as well."
 msgstr ""
-"קבע את MIME הפלט במצב אצווה. ברירת המחדל היא\n"
-"%s . שים לב שייתכן ותרצה לקבוע\n"
-"גם את סיומת הפלט."
 
 #: ../src/soundconverter.py:2448
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "מצב שקט. אל תכתוב פלט רגיל, רק שגיאות."
+msgstr ""
 
 #: ../src/soundconverter.py:2451
-#, fuzzy
 msgid "Print additionnal debug information"
-msgstr "הדפס הודעות debug נוספות"
+msgstr ""
 
 #: ../src/soundconverter.py:2454
 #, python-format
@@ -290,49 +274,44 @@ msgid ""
 " %s . Note that the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"קבע את סיומת הקבצים במצב אצווה. ברירת המחדל היא\n"
-" %s. שים לב שהסיומת אינה משפיעה על \n"
-"סוג ה MIME של הקובץ."
 
 #: ../src/soundconverter.py:2457
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"הצג את התוויות של קבצי הקלט, במקום להמיר אותם. זה מפעיל\n"
-"את מצב אצווה ומבטל את ממשק המשתמש הגרפי"
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
-msgstr "<b>איך לקרוא לקבצים?</b>"
+msgstr "<b>Kuidas nimetada faili?</b>"
 
 #: ../data/soundconverter.glade.h:2
 msgid "<b>Type of result?</b>"
-msgstr "<b>סוג התוצאה?</b>"
+msgstr "<b>Vastuse tüüp?</b>"
 
 #: ../data/soundconverter.glade.h:3
 msgid "<b>Where to place results?</b>"
-msgstr "<b>היכן לשים את התוצאה?</b>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:4
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>קובץ כבר קיים</b></big>\n"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:6
 msgid "<i>Example filename:</i>"
-msgstr "<i>דוגמא לשם קובץ:</i>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:7
 msgid "Add _Folder"
-msgstr "הוסף _תיקייה"
+msgstr "Lisa _kaust"
 
 #: ../data/soundconverter.glade.h:8
 msgid "Bitrate mode:"
-msgstr "מצב דגימה(bitrate):"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:9
 msgid "Choose..."
-msgstr "בחר..."
+msgstr "Vali..."
 
 #: ../data/soundconverter.glade.h:10
 msgid ""
@@ -340,21 +319,18 @@ msgid ""
 "Average (ABR)\n"
 "Variable (VBR) - Best quality"
 msgstr ""
-"קבוע (CBR)\n"
-"ממוצע(ABR)\n"
-"משתנה(VBR) - האיכות הכי גבוהה"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Create subfolders: "
-msgstr "צור תת-תיקיות: "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:14
 msgid "Delete original file"
-msgstr "מחק את הקובץ המקורי"
+msgstr "Kustuta originaal fail"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Error"
-msgstr "שגיאה"
+msgstr "Viga"
 
 #: ../data/soundconverter.glade.h:16
 msgid "FLAC"
@@ -362,35 +338,35 @@ msgstr "FLAC"
 
 #: ../data/soundconverter.glade.h:17
 msgid "File exists already"
-msgstr "קובץ כבר קיים"
+msgstr "Fail on juba olemas"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
-msgstr "תבנית שם קובץ: "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:19
 msgid "Filter "
-msgstr "פילטר "
+msgstr "Filter "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Format: "
-msgstr "פורמט: "
+msgstr "Vorming: "
 
 #: ../data/soundconverter.glade.h:21
 msgid "Free Lossless compression"
-msgstr "דחיסה Lossless"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:22
 msgid "Free Lossy Compression"
-msgstr "דחיסה Lossy"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:23
 msgid "GNOME Sound Conversion"
-msgstr "ממיר סאונד של גנום"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
-msgstr "לתוך תיקייה מסוימת"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:25
 msgid "MP3"
@@ -398,22 +374,21 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
-msgstr "מקודד MP3 לא נמצא."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:27
 msgid "No Compression"
-msgstr "ללא דחיסה"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:28
 msgid "Non-Free Lossy Compression"
-msgstr "דחיסה Lossy לא חופשית"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis"
 msgstr "Ogg Vorbis"
 
 #: ../data/soundconverter.glade.h:30
-#, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
@@ -421,37 +396,37 @@ msgid ""
 "MS Wave (.wav)"
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
+"MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
 "MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Preferences"
-msgstr "העדפות"
+msgstr "Seaded"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Quality:"
-msgstr "איכות:"
+msgstr "Kvaliteet:"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Read how to install"
-msgstr "קרא כיצד להתקין"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr "הסר את כל התווים פרט לאותיות, ספרות ו ./_-"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
-msgstr "הסר את כל התווים הבעייתיים"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "באותה תיקייה כמו קובץ הקלט"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
-msgstr "ממיר סאונד"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:41
 msgid ""
@@ -461,11 +436,6 @@ msgid ""
 "High\n"
 "Very High"
 msgstr ""
-"נמוך מאוד\n"
-"נמוך\n"
-"רגיל\n"
-"גבוה\n"
-"גבוה מאוד"
 
 #: ../data/soundconverter.glade.h:46
 msgid "WAV"
@@ -473,43 +443,43 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Where to place results?"
-msgstr "היכן לשים את התוצאה"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:48
 msgid "_Add File"
-msgstr "_הוסף קובץ"
+msgstr "_Lisa fail"
 
 #: ../data/soundconverter.glade.h:49
 msgid "_Apply to entire queue"
-msgstr "_החל על כל התור"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:50
 msgid "_Overwrite"
-msgstr "_דרוס"
+msgstr "_Kirjuta üle"
 
 #: ../data/soundconverter.glade.h:51
 msgid "_Remove"
-msgstr "_הסר"
+msgstr "_Eemalda"
 
 #: ../data/soundconverter.glade.h:52
 msgid "_Skip"
-msgstr "_דלג"
+msgstr "_Jäta vahele"
 
 #: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
-"אומן/אלבום\n"
-"אומן - אלבום"
+"artist/album\n"
+"artist - album"
 
 #: ../data/soundconverter.glade.h:55
 msgid "dialog1"
-msgstr "דיאלוג1"
+msgstr "dialoog1"
 
 #: ../data/soundconverter.glade.h:56
 msgid "flac"
-msgstr "flac"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:57
 msgid "mp3"
@@ -524,40 +494,7 @@ msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
-"מספר_רצועה - כותרת_רצועה\n"
-"כותרת_רצועה\n"
 
 #: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "wav"
-
-#, fuzzy
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High\n"
-#~ "Insanely High"
-#~ msgstr ""
-#~ "נמוך מאוד\n"
-#~ "נמוך\n"
-#~ "רגיל\n"
-#~ "גבוה\n"
-#~ "גבוה מאוד"
-
-#, fuzzy
-#~ msgid "_File"
-#~ msgstr "_הוסף קובץ"
-
-#, fuzzy
-#~ msgid "Adding files..."
-#~ msgstr "הוסף תיקייה..."
-
-#, fuzzy
-#~ msgid "Available patterns:"
-#~ msgstr "תבנית שם קובץ: "
-
-#, fuzzy
-#~ msgid "Conversion cancelled"
-#~ msgstr "המרה בוטלה"

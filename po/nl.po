@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Soundconverter 0.9.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-13 00:05+0200\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
 "PO-Revision-Date: 2007-12-15 20:51+0000\n"
 "Last-Translator: YSH <Unknown>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -30,6 +30,290 @@ msgstr "Geluidsbestanden omzetten naar andere formats"
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "Sound Converter"
+
+#. traductors: only if it does make sense.
+#: ../src/soundconverter.py:119
+#, fuzzy
+msgid "Artist Album Title Track Total Genre Date Year"
+msgstr "Artiest Album Titel Nummer Totaal Genre Datum Jaar"
+
+#: ../src/soundconverter.py:184
+#, python-format
+msgid "skipping: '%s'"
+msgstr "overslaan: ‘%s’"
+
+#: ../src/soundconverter.py:531
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"Fout: %s\n"
+"%s\n"
+
+#: ../src/soundconverter.py:734
+msgid "Internal error"
+msgstr "Interne fout"
+
+#: ../src/soundconverter.py:735
+msgid ""
+"Couldn't link GStreamer elements.\n"
+" Please report this as a bug."
+msgstr ""
+"Kon GStreamer-elementen niet linken.\n"
+" Rapporteer dit als een fout."
+
+#: ../src/soundconverter.py:740
+#, python-format
+msgid "Unknown type %s"
+msgstr "Onbekend type %s"
+
+#: ../src/soundconverter.py:741
+#, python-format
+msgid ""
+"The file %s is of an unknown type.\n"
+" Please ask the developers to add support\n"
+" for files of this type if it is important\n"
+" to you."
+msgstr ""
+"Het bestand %s is van een onbekend type.\n"
+" Vraag de ontwikkelaars om dit soort\n"
+" bestanden te onderteunen als dit \n"
+" belangrijk voor u is."
+
+#: ../src/soundconverter.py:995
+msgid "Target exists."
+msgstr "Bestand bestaat al."
+
+#: ../src/soundconverter.py:996
+#, python-format
+msgid "The output file %s already exists."
+msgstr "Het doelbestand %s bestaat al."
+
+#: ../src/soundconverter.py:1039
+#, python-format
+msgid "Cannot create a decoder for '%s' format."
+msgstr "Kan geen decoder voor het ‘%s’-format aanmaken."
+
+#: ../src/soundconverter.py:1050
+#, python-format
+msgid "Creating folder: '%s'"
+msgstr "Map aanmaken: ‘%s’"
+
+#: ../src/soundconverter.py:1054
+#, python-format
+msgid "Cannot create '%s' folder."
+msgstr "Kan de map ‘%s’ niet aanmaken."
+
+#: ../src/soundconverter.py:1075
+#, python-format
+msgid "Cannot set permission on '%s'"
+msgstr "Kan toegangsrechten op ‘%s’ niet instellen"
+
+#: ../src/soundconverter.py:1248
+#, python-format
+msgid "file already present: '%s'"
+msgstr "bestand bestaat al: ‘%s’"
+
+#: ../src/soundconverter.py:1267
+msgid "loading tags..."
+msgstr "tags laden…"
+
+#: ../src/soundconverter.py:1269
+msgid "no tags"
+msgstr "geen tags"
+
+#: ../src/soundconverter.py:1308
+msgid "unknown"
+msgstr "onbekend"
+
+#: ../src/soundconverter.py:1334
+msgid "Same as input, but replacing the suffix"
+msgstr "Hetzelfde als het origineel, extensie vervangen"
+
+#: ../src/soundconverter.py:1335
+msgid "Same as input, but with an additional suffix"
+msgstr "Hetzelfde als het origineel, extensie toevoegen"
+
+# spoor/track
+#: ../src/soundconverter.py:1336
+msgid "Track number - title"
+msgstr "Spoornummer - titel"
+
+# spoortitel/titel
+#: ../src/soundconverter.py:1337
+msgid "Track title"
+msgstr "Titel"
+
+#: ../src/soundconverter.py:1338
+msgid "Artist - title"
+msgstr "Artiest - titel"
+
+# sjabloon/patroon
+#: ../src/soundconverter.py:1339
+msgid "Custom filename pattern"
+msgstr "Zelfgemaakt bestandsnaamsjabloon"
+
+#: ../src/soundconverter.py:1343
+msgid "artist/album"
+msgstr "artiest/album"
+
+#: ../src/soundconverter.py:1344
+msgid "artist-album"
+msgstr "artiest-album"
+
+#: ../src/soundconverter.py:1345
+msgid "artist - album"
+msgstr "artiest - album"
+
+# waar moeten de bestanden worden neergezet?
+#: ../src/soundconverter.py:1501
+#, python-format
+msgid "Into folder %s"
+msgstr "In de map ‘%s’"
+
+#: ../src/soundconverter.py:1551
+#, python-format
+msgid "Target bitrate: %s"
+msgstr "Beoogde bitrate: %s"
+
+#: ../src/soundconverter.py:1793
+#, fuzzy
+msgid "Convertion Canceled"
+msgstr "Omzetten geannuleerd"
+
+#: ../src/soundconverter.py:1836
+#, python-format
+msgid ""
+"The output file <i>%s</i>\n"
+" exists already.\n"
+" Do you want to skip the file, overwrite it or cancel the conversion?\n"
+msgstr ""
+"Het doelbestand <i>%s</i>\n"
+" bestaat al.\n"
+" Wilt u het bestand overslaan, overschrijven, of het omzetten annuleren?\n"
+
+#: ../src/soundconverter.py:1925
+#, python-format
+msgid "Conversion done, in %s"
+msgstr "Omzetten voltooid, in %s"
+
+#: ../src/soundconverter.py:1960
+msgid "Open a file"
+msgstr "Een bestand openen"
+
+#: ../src/soundconverter.py:2049
+msgid "Add Folder..."
+msgstr "Map toevoegen…"
+
+#: ../src/soundconverter.py:2169
+msgid "canceling conversion."
+msgstr "omzetten annuleren."
+
+#: ../src/soundconverter.py:2192
+msgid "Waiting for tags"
+msgstr "Wachten op tags"
+
+#: ../src/soundconverter.py:2199
+msgid "Waiting for tags..."
+msgstr "Wachten op tags…"
+
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
+msgid "Paused"
+msgstr "Gepauzeerd"
+
+#: ../src/soundconverter.py:2224
+msgid "Canceled"
+msgstr "Geannuleerd"
+
+#: ../src/soundconverter.py:2273
+#, python-format
+msgid "Converting file %d of %d  (%s)"
+msgstr "Omzetten van bestand %d uit %d  (%s)"
+
+#: ../src/soundconverter.py:2286
+msgid "Converting"
+msgstr "Omzetten"
+
+#: ../src/soundconverter.py:2303
+#, python-format
+msgid "%d:%02d left"
+msgstr "%d:%02d resterend"
+
+# statusbalkmelding
+# gereed/voltooid
+#: ../src/soundconverter.py:2308
+msgid "Ready"
+msgstr "Gereed"
+
+#: ../src/soundconverter.py:2389
+#, python-format
+msgid "%s: OK"
+msgstr "%s: Ok"
+
+#: ../src/soundconverter.py:2424
+#, python-format
+msgid "Usage: %s [options] [soundfile ...]"
+msgstr "Gebruik: %s [opties] [geluidsbestand ...]"
+
+# man soundconverter --help
+#: ../src/soundconverter.py:2439
+msgid "Print out a usage summary."
+msgstr "Gebruiksaanwijzing tonen."
+
+#: ../src/soundconverter.py:2442
+msgid ""
+"Convert in batch mode, from command line, without a graphical user\n"
+" interface. You can use this from, say, shell scripts."
+msgstr ""
+"Omzetten in batch-modus, vanaf de opdrachtregel, zonder grafische\n"
+"interface. U kunt dit bijvoorbeeld gebruiken in shell-scripts."
+
+# spatie na de %s omdat dat duidelijker is:
+# (standaard is dat .ogg .)
+#: ../src/soundconverter.py:2445
+#, python-format
+msgid ""
+"Set the output MIME type for batch mode. The default is\n"
+" %s . Note that you probably want to set\n"
+" the output suffix as well."
+msgstr ""
+"Stel het resultaaat-MIME-type in, voor batch-modus.\n"
+"Standaard is dit %s . Merk op dat u de extensie afzonderlijk\n"
+"moet instellen."
+
+#: ../src/soundconverter.py:2448
+msgid "Be quiet. Don't write normal output, only errors."
+msgstr "Stille modus. Niet de normale uitvoer tonen, alleen de fouten."
+
+#: ../src/soundconverter.py:2451
+#, fuzzy
+msgid "Print additionnal debug information"
+msgstr "Aanvullende debug-informatie tonen"
+
+#: ../src/soundconverter.py:2454
+#, python-format
+msgid ""
+"Set the output filename suffix for batch mode. The default is \n"
+" %s . Note that the suffix does not affect\n"
+" the output MIME type."
+msgstr ""
+"Stel de resultaaat-extensie in, voor batch-modus. Standaard\n"
+"is dit %s . Merk op dat de extensie geen invloed heeft op het\n"
+"MIME-type."
+
+#: ../src/soundconverter.py:2457
+msgid ""
+"Show tags for input files instead of converting them. This indicates \n"
+" command line batch mode and disables the graphical user interface."
+msgstr ""
+"Toon de tags voor de invoerbestanden in plaats van ze om te\n"
+"zetten. Dit wijst op opdrachtregel batchmodus en schakelt de \n"
+"grafische bediening uit."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -93,100 +377,113 @@ msgid "Error"
 msgstr "Fout"
 
 #: ../data/soundconverter.glade.h:16
+msgid "FLAC"
+msgstr "FLAC"
+
+#: ../data/soundconverter.glade.h:17
 msgid "File exists already"
 msgstr "Bestand bestaat al"
 
-#: ../data/soundconverter.glade.h:17
+#: ../data/soundconverter.glade.h:18
 msgid "Filename pattern: "
 msgstr "Bestandsnaampatroon: "
 
-#: ../data/soundconverter.glade.h:18
+#: ../data/soundconverter.glade.h:19
 msgid "Filter "
 msgstr "Filter "
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:20
 msgid "Format: "
 msgstr "Format: "
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:21
+msgid "Free Lossless compression"
+msgstr "Compressie zonder verlies (Vrije software)"
+
+#: ../data/soundconverter.glade.h:22
+msgid "Free Lossy Compression"
+msgstr "Compressie met verlies (Vrije software)"
+
+#: ../data/soundconverter.glade.h:23
 msgid "GNOME Sound Conversion"
 msgstr "Gnome geluidsformat omzetten"
 
-#: ../data/soundconverter.glade.h:21
+#: ../data/soundconverter.glade.h:24
 msgid "Into a specified folder"
 msgstr "Naar een specifieke map"
 
-#: ../data/soundconverter.glade.h:22
+#: ../data/soundconverter.glade.h:25
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:26
 msgid "MP3 Encoder is not present."
 msgstr "MP3-coderingsprogramma is niet aanwezig."
 
-#: ../data/soundconverter.glade.h:23
-msgid "No documentation written."
-msgstr ""
+#: ../data/soundconverter.glade.h:27
+msgid "No Compression"
+msgstr "Geen compressie"
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:28
+msgid "Non-Free Lossy Compression"
+msgstr "Compressie met verlies (Niet vrije software)"
+
+#: ../data/soundconverter.glade.h:29
+msgid "Ogg Vorbis"
+msgstr "Ogg Vorbis"
+
+#: ../data/soundconverter.glade.h:30
 #, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
+"MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
+"MS Wave (.wav)"
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
 "FLAC zonder verlies (.flac)\n"
 "MS Wave (.wav)"
 
-#: ../data/soundconverter.glade.h:29
+#: ../data/soundconverter.glade.h:34
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:35
 msgid "Quality:"
 msgstr "Kwaliteit:"
 
+#: ../data/soundconverter.glade.h:36
+msgid "Read how to install"
+msgstr "Lees hoe moet installeren"
+
 # tooltip, werkt beter als er spaties staan tussen de
 # ./_-tekens
-#: ../data/soundconverter.glade.h:31
+#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Alles weghalen wat geen letter, cijfer of . / _ - is."
 
 # Alle ongewone tekens weghalen/vervangen
-#: ../data/soundconverter.glade.h:32
+#: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
 msgstr "Alle ongewone tekens weghalen"
 
-#: ../data/soundconverter.glade.h:33
-msgid "Resample"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
 msgstr "In dezelfde map als het oorspronkelijke bestand"
 
-#: ../data/soundconverter.glade.h:35
-msgid "Select _All"
-msgstr ""
-
 # titel van het venster, mag hetzelfde blijven
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:37
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:38
-#, fuzzy
+#: ../data/soundconverter.glade.h:41
 msgid ""
 "Very Low\n"
 "Low\n"
 "Normal\n"
 "High\n"
-"Very High\n"
-"Insanely High"
+"Very High"
 msgstr ""
 "Zeer laag\n"
 "Laag\n"
@@ -194,52 +491,35 @@ msgstr ""
 "Hoog\n"
 "Zeer hoog"
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:46
+msgid "WAV"
+msgstr "WAV"
+
+#: ../data/soundconverter.glade.h:47
 msgid "Where to place results?"
 msgstr "Waar moeten de bestanden worden neergezet?"
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:48
 msgid "_Add File"
 msgstr "_Bestand toevoegen"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:49
 msgid "_Apply to entire queue"
 msgstr "O_p de hele wachtrij toepassen"
 
-#: ../data/soundconverter.glade.h:47
-msgid "_Clear List"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:48
-msgid "_Edit"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:49
-#, fuzzy
-msgid "_File"
-msgstr "_Bestand toevoegen"
-
 #: ../data/soundconverter.glade.h:50
-msgid "_Help"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:51
 msgid "_Overwrite"
 msgstr "_Overschrijven"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:51
 msgid "_Remove"
 msgstr "_Verwijderen"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:52
 msgid "_Skip"
 msgstr "Over_slaan"
 
-#: ../data/soundconverter.glade.h:54
-msgid "aac"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -247,23 +527,23 @@ msgstr ""
 "artiest/album\n"
 "artiest - album"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:55
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:56
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:57
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:58
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:59
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -271,312 +551,18 @@ msgstr ""
 "track_number - track_title\n"
 "track_title\n"
 
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:65
-msgid "translator_credits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "wav"
 
-#. traductors: These are the custom filename patterns. Only if it does make sense.
-#: ../src/soundconverter.py:153
 #, fuzzy
-msgid "Artist Album Title Track Total Genre Date Year Timestamp"
-msgstr "Artiest Album Titel Nummer Totaal Genre Datum Jaar"
-
-#: ../src/soundconverter.py:187
-msgid "All files"
-msgstr ""
-
-#: ../src/soundconverter.py:590
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Error: %s\n"
-"%s\n"
-msgstr ""
-"\n"
-"\n"
-"Fout: %s\n"
-"%s\n"
-
-#: ../src/soundconverter.py:816
-msgid "Internal error"
-msgstr "Interne fout"
-
-#: ../src/soundconverter.py:817
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Kon GStreamer-elementen niet linken.\n"
-" Rapporteer dit als een fout."
-
-#: ../src/soundconverter.py:822
-#, python-format
-msgid "Unknown type %s"
-msgstr "Onbekend type %s"
-
-#: ../src/soundconverter.py:823
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"Het bestand %s is van een onbekend type.\n"
-" Vraag de ontwikkelaars om dit soort\n"
-" bestanden te onderteunen als dit \n"
-" belangrijk voor u is."
-
-#: ../src/soundconverter.py:1126
-msgid "Target exists."
-msgstr "Bestand bestaat al."
-
-#: ../src/soundconverter.py:1127
-#, python-format
-msgid "The output file %s already exists."
-msgstr "Het doelbestand %s bestaat al."
-
-#: ../src/soundconverter.py:1182
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "Kan geen decoder voor het ‘%s’-format aanmaken."
-
-#: ../src/soundconverter.py:1197
-#, python-format
-msgid "Cannot create '%s' folder."
-msgstr "Kan de map ‘%s’ niet aanmaken."
-
-#: ../src/soundconverter.py:1229
-msgid "GStreamer Error:"
-msgstr ""
-
-#: ../src/soundconverter.py:1371
-#, fuzzy
-msgid "Adding files..."
-msgstr "Map toevoegen…"
-
-#: ../src/soundconverter.py:1436
-msgid "loading tags..."
-msgstr "tags laden…"
-
-#: ../src/soundconverter.py:1438
-msgid "no tags"
-msgstr "geen tags"
-
-#: ../src/soundconverter.py:1483
-msgid "unknown"
-msgstr "onbekend"
-
-#: ../src/soundconverter.py:1512
-msgid "Same as input, but replacing the suffix"
-msgstr "Hetzelfde als het origineel, extensie vervangen"
-
-#: ../src/soundconverter.py:1513
-msgid "Same as input, but with an additional suffix"
-msgstr "Hetzelfde als het origineel, extensie toevoegen"
-
-# spoor/track
-#: ../src/soundconverter.py:1514
-msgid "Track number - title"
-msgstr "Spoornummer - titel"
-
-# spoortitel/titel
-#: ../src/soundconverter.py:1515
-msgid "Track title"
-msgstr "Titel"
-
-#: ../src/soundconverter.py:1516
-msgid "Artist - title"
-msgstr "Artiest - titel"
-
-# sjabloon/patroon
-#: ../src/soundconverter.py:1517
-msgid "Custom filename pattern"
-msgstr "Zelfgemaakt bestandsnaamsjabloon"
-
-#: ../src/soundconverter.py:1521
-msgid "artist/album"
-msgstr "artiest/album"
-
-#: ../src/soundconverter.py:1522
-msgid "artist-album"
-msgstr "artiest-album"
-
-#: ../src/soundconverter.py:1523
-msgid "artist - album"
-msgstr "artiest - album"
-
-#: ../src/soundconverter.py:1579
-#, fuzzy
-msgid "Available patterns:"
-msgstr "Bestandsnaampatroon: "
-
-# waar moeten de bestanden worden neergezet?
-#: ../src/soundconverter.py:1710
-#, python-format
-msgid "Into folder %s"
-msgstr "In de map ‘%s’"
-
-#: ../src/soundconverter.py:1789
-#, python-format
-msgid "Target bitrate: %s"
-msgstr "Beoogde bitrate: %s"
-
-#: ../src/soundconverter.py:2060
-#, fuzzy
-msgid "Conversion Canceled"
-msgstr "Omzetten geannuleerd"
-
-#: ../src/soundconverter.py:2095
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:2108
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" exists already.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"Het doelbestand <i>%s</i>\n"
-" bestaat al.\n"
-" Wilt u het bestand overslaan, overschrijven, of het omzetten annuleren?\n"
-
-#: ../src/soundconverter.py:2204
-#, python-format
-msgid "Conversion done, in %s"
-msgstr "Omzetten voltooid, in %s"
-
-#: ../src/soundconverter.py:2240
-msgid "Open a file"
-msgstr "Een bestand openen"
-
-#: ../src/soundconverter.py:2338
-msgid "Add Folder..."
-msgstr "Map toevoegen…"
-
-#: ../src/soundconverter.py:2466
-#, fuzzy
-msgid "Conversion cancelled"
-msgstr "Omzetten geannuleerd"
-
-#: ../src/soundconverter.py:2489
-msgid "Waiting for tags"
-msgstr "Wachten op tags"
-
-#: ../src/soundconverter.py:2496
-msgid "Waiting for tags..."
-msgstr "Wachten op tags…"
-
-#: ../src/soundconverter.py:2504 ../src/soundconverter.py:2517
-msgid "Paused"
-msgstr "Gepauzeerd"
-
-#: ../src/soundconverter.py:2521
-msgid "Canceled"
-msgstr "Geannuleerd"
-
-#: ../src/soundconverter.py:2570
-#, python-format
-msgid "Converting file %d of %d  (%s)"
-msgstr "Omzetten van bestand %d uit %d  (%s)"
-
-#: ../src/soundconverter.py:2583
-msgid "Converting"
-msgstr "Omzetten"
-
-#: ../src/soundconverter.py:2600
-#, python-format
-msgid "%d:%02d left"
-msgstr "%d:%02d resterend"
-
-# statusbalkmelding
-# gereed/voltooid
-#: ../src/soundconverter.py:2605
-msgid "Ready"
-msgstr "Gereed"
-
-#: ../src/soundconverter.py:2686
-#, python-format
-msgid "%s: OK"
-msgstr "%s: Ok"
-
-#: ../src/soundconverter.py:2747
-#, python-format
-msgid "Usage: %s [options] [soundfile ...]"
-msgstr "Gebruik: %s [opties] [geluidsbestand ...]"
-
-# man soundconverter --help
-#: ../src/soundconverter.py:2762
-msgid "Print out a usage summary."
-msgstr "Gebruiksaanwijzing tonen."
-
-#: ../src/soundconverter.py:2765
-msgid ""
-"Convert in batch mode, from command line, without a graphical user\n"
-" interface. You can use this from, say, shell scripts."
-msgstr ""
-"Omzetten in batch-modus, vanaf de opdrachtregel, zonder grafische\n"
-"interface. U kunt dit bijvoorbeeld gebruiken in shell-scripts."
-
-# spatie na de %s omdat dat duidelijker is:
-# (standaard is dat .ogg .)
-#: ../src/soundconverter.py:2768
-#, python-format
-msgid ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
-msgstr ""
-"Stel het resultaaat-MIME-type in, voor batch-modus.\n"
-"Standaard is dit %s . Merk op dat u de extensie afzonderlijk\n"
-"moet instellen."
-
-#: ../src/soundconverter.py:2771
-msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Stille modus. Niet de normale uitvoer tonen, alleen de fouten."
-
-#: ../src/soundconverter.py:2774
-#, fuzzy
-msgid "Print additional debug information"
-msgstr "Aanvullende debug-informatie tonen"
-
-#: ../src/soundconverter.py:2777
-#, python-format
-msgid ""
-"Set the output filename suffix for batch mode. The default is \n"
-" %s . Note that the suffix does not affect\n"
-" the output MIME type."
-msgstr ""
-"Stel de resultaaat-extensie in, voor batch-modus. Standaard\n"
-"is dit %s . Merk op dat de extensie geen invloed heeft op het\n"
-"MIME-type."
-
-#: ../src/soundconverter.py:2780
-msgid ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
-msgstr ""
-"Toon de tags voor de invoerbestanden in plaats van ze om te\n"
-"zetten. Dit wijst op opdrachtregel batchmodus en schakelt de \n"
-"grafische bediening uit."
-
-#: ../src/soundconverter.py:2783
-msgid "Force number of concurrent conversions."
-msgstr ""
-
 #~ msgid ""
 #~ "Very Low\n"
 #~ "Low\n"
 #~ "Normal\n"
 #~ "High\n"
-#~ "Very High"
+#~ "Very High\n"
+#~ "Insanely High"
 #~ msgstr ""
 #~ "Zeer laag\n"
 #~ "Laag\n"
@@ -584,44 +570,18 @@ msgstr ""
 #~ "Hoog\n"
 #~ "Zeer hoog"
 
-#~ msgid "skipping: '%s'"
-#~ msgstr "overslaan: ‘%s’"
+#, fuzzy
+#~ msgid "_File"
+#~ msgstr "_Bestand toevoegen"
 
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "Map aanmaken: ‘%s’"
+#, fuzzy
+#~ msgid "Adding files..."
+#~ msgstr "Map toevoegen…"
 
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "Kan toegangsrechten op ‘%s’ niet instellen"
+#, fuzzy
+#~ msgid "Available patterns:"
+#~ msgstr "Bestandsnaampatroon: "
 
-#~ msgid "file already present: '%s'"
-#~ msgstr "bestand bestaat al: ‘%s’"
-
-#~ msgid "canceling conversion."
-#~ msgstr "omzetten annuleren."
-
-#~ msgid "FLAC"
-#~ msgstr "FLAC"
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "Compressie zonder verlies (Vrije software)"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "Compressie met verlies (Vrije software)"
-
-#~ msgid "MP3"
-#~ msgstr "MP3"
-
-#~ msgid "No Compression"
-#~ msgstr "Geen compressie"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "Compressie met verlies (Niet vrije software)"
-
-#~ msgid "Ogg Vorbis"
-#~ msgstr "Ogg Vorbis"
-
-#~ msgid "Read how to install"
-#~ msgstr "Lees hoe moet installeren"
-
-#~ msgid "WAV"
-#~ msgstr "WAV"
+#, fuzzy
+#~ msgid "Conversion cancelled"
+#~ msgstr "Omzetten geannuleerd"

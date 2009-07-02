@@ -1,3 +1,9 @@
+2009-06-24  Gautier Portet <kassoulet gmail com>
+
+	* po/: Rosetta sync. Update all translations.
+	  Add Danish, English (Australia), Estonian, Japanese and Vietnamese
+	  translations.
+
 2009-06-15  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Activate GVfs authentication

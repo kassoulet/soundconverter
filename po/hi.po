@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-13 00:05+0200\n"
+"POT-Creation-Date: 2007-11-13 18:40+0100\n"
 "PO-Revision-Date: 2008-10-12 12:07+0000\n"
 "Last-Translator: proton <Unknown>\n"
 "Language-Team: Hindi <hi@li.org>\n"
@@ -28,6 +28,259 @@ msgstr ""
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "दवानी बदलनेवला"
+
+#. traductors: only if it does make sense.
+#: ../src/soundconverter.py:119
+msgid "Artist Album Title Track Total Genre Date Year"
+msgstr ""
+
+#: ../src/soundconverter.py:184
+#, python-format
+msgid "skipping: '%s'"
+msgstr ""
+
+#: ../src/soundconverter.py:531
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"गलती :%s\n"
+"%s\n"
+
+#: ../src/soundconverter.py:734
+msgid "Internal error"
+msgstr "आंतरिक गलती"
+
+#: ../src/soundconverter.py:735
+msgid ""
+"Couldn't link GStreamer elements.\n"
+" Please report this as a bug."
+msgstr ""
+
+#: ../src/soundconverter.py:740
+#, python-format
+msgid "Unknown type %s"
+msgstr ""
+
+#: ../src/soundconverter.py:741
+#, python-format
+msgid ""
+"The file %s is of an unknown type.\n"
+" Please ask the developers to add support\n"
+" for files of this type if it is important\n"
+" to you."
+msgstr ""
+
+#: ../src/soundconverter.py:995
+msgid "Target exists."
+msgstr ""
+
+#: ../src/soundconverter.py:996
+#, python-format
+msgid "The output file %s already exists."
+msgstr ""
+
+#: ../src/soundconverter.py:1039
+#, python-format
+msgid "Cannot create a decoder for '%s' format."
+msgstr ""
+
+#: ../src/soundconverter.py:1050
+#, python-format
+msgid "Creating folder: '%s'"
+msgstr ""
+
+#: ../src/soundconverter.py:1054
+#, python-format
+msgid "Cannot create '%s' folder."
+msgstr "'%s' फोल्डर संबव नहीं हे"
+
+#: ../src/soundconverter.py:1075
+#, python-format
+msgid "Cannot set permission on '%s'"
+msgstr ""
+
+#: ../src/soundconverter.py:1248
+#, python-format
+msgid "file already present: '%s'"
+msgstr ""
+
+#: ../src/soundconverter.py:1267
+msgid "loading tags..."
+msgstr ""
+
+#: ../src/soundconverter.py:1269
+msgid "no tags"
+msgstr ""
+
+#: ../src/soundconverter.py:1308
+msgid "unknown"
+msgstr "अग्यात"
+
+#: ../src/soundconverter.py:1334
+msgid "Same as input, but replacing the suffix"
+msgstr ""
+
+#: ../src/soundconverter.py:1335
+msgid "Same as input, but with an additional suffix"
+msgstr ""
+
+#: ../src/soundconverter.py:1336
+msgid "Track number - title"
+msgstr ""
+
+#: ../src/soundconverter.py:1337
+msgid "Track title"
+msgstr ""
+
+#: ../src/soundconverter.py:1338
+msgid "Artist - title"
+msgstr ""
+
+#: ../src/soundconverter.py:1339
+msgid "Custom filename pattern"
+msgstr ""
+
+#: ../src/soundconverter.py:1343
+msgid "artist/album"
+msgstr ""
+
+#: ../src/soundconverter.py:1344
+msgid "artist-album"
+msgstr ""
+
+#: ../src/soundconverter.py:1345
+msgid "artist - album"
+msgstr ""
+
+#: ../src/soundconverter.py:1501
+#, python-format
+msgid "Into folder %s"
+msgstr ""
+
+#: ../src/soundconverter.py:1551
+#, python-format
+msgid "Target bitrate: %s"
+msgstr ""
+
+#: ../src/soundconverter.py:1793
+#, fuzzy
+msgid "Convertion Canceled"
+msgstr "बदलना रुक्दियागाया"
+
+#: ../src/soundconverter.py:1836
+#, python-format
+msgid ""
+"The output file <i>%s</i>\n"
+" exists already.\n"
+" Do you want to skip the file, overwrite it or cancel the conversion?\n"
+msgstr ""
+
+#: ../src/soundconverter.py:1925
+#, python-format
+msgid "Conversion done, in %s"
+msgstr ""
+
+#: ../src/soundconverter.py:1960
+msgid "Open a file"
+msgstr "एक फ़ाइल खोलें"
+
+#: ../src/soundconverter.py:2049
+msgid "Add Folder..."
+msgstr "फ़ोल्डर जोड़ें..."
+
+#: ../src/soundconverter.py:2169
+msgid "canceling conversion."
+msgstr "बदलना रोख्दिअजारा"
+
+#: ../src/soundconverter.py:2192
+msgid "Waiting for tags"
+msgstr ""
+
+#: ../src/soundconverter.py:2199
+msgid "Waiting for tags..."
+msgstr ""
+
+#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
+msgid "Paused"
+msgstr "ठहरा"
+
+#: ../src/soundconverter.py:2224
+msgid "Canceled"
+msgstr "रद्द किया"
+
+#: ../src/soundconverter.py:2273
+#, python-format
+msgid "Converting file %d of %d  (%s)"
+msgstr "%d of %d (%s) फिल्स बदल रहा हे"
+
+#: ../src/soundconverter.py:2286
+msgid "Converting"
+msgstr "रूपान्तरण"
+
+#: ../src/soundconverter.py:2303
+#, python-format
+msgid "%d:%02d left"
+msgstr "%d:%02d बाकि हे"
+
+#: ../src/soundconverter.py:2308
+msgid "Ready"
+msgstr "तैयार"
+
+#: ../src/soundconverter.py:2389
+#, python-format
+msgid "%s: OK"
+msgstr "%s: टीक हे"
+
+#: ../src/soundconverter.py:2424
+#, python-format
+msgid "Usage: %s [options] [soundfile ...]"
+msgstr ""
+
+#: ../src/soundconverter.py:2439
+msgid "Print out a usage summary."
+msgstr ""
+
+#: ../src/soundconverter.py:2442
+msgid ""
+"Convert in batch mode, from command line, without a graphical user\n"
+" interface. You can use this from, say, shell scripts."
+msgstr ""
+
+#: ../src/soundconverter.py:2445
+#, python-format
+msgid ""
+"Set the output MIME type for batch mode. The default is\n"
+" %s . Note that you probably want to set\n"
+" the output suffix as well."
+msgstr ""
+
+#: ../src/soundconverter.py:2448
+msgid "Be quiet. Don't write normal output, only errors."
+msgstr ""
+
+#: ../src/soundconverter.py:2451
+msgid "Print additionnal debug information"
+msgstr ""
+
+#: ../src/soundconverter.py:2454
+#, python-format
+msgid ""
+"Set the output filename suffix for batch mode. The default is \n"
+" %s . Note that the suffix does not affect\n"
+" the output MIME type."
+msgstr ""
+
+#: ../src/soundconverter.py:2457
+msgid ""
+"Show tags for input files instead of converting them. This indicates \n"
+" command line batch mode and disables the graphical user interface."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -81,442 +334,175 @@ msgid "Error"
 msgstr "त्रुटि"
 
 #: ../data/soundconverter.glade.h:16
-msgid "File exists already"
+msgid "FLAC"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:17
-msgid "Filename pattern: "
+msgid "File exists already"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:18
-msgid "Filter "
+msgid "Filename pattern: "
 msgstr ""
 
 #: ../data/soundconverter.glade.h:19
-msgid "Format: "
+msgid "Filter "
 msgstr ""
 
 #: ../data/soundconverter.glade.h:20
-msgid "GNOME Sound Conversion"
+msgid "Format: "
 msgstr ""
 
 #: ../data/soundconverter.glade.h:21
-msgid "Into a specified folder"
+msgid "Free Lossless compression"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:22
-msgid "MP3 Encoder is not present."
+msgid "Free Lossy Compression"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:23
-msgid "No documentation written."
+msgid "GNOME Sound Conversion"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:24
+msgid "Into a specified folder"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:25
+msgid "MP3"
+msgstr "मप३"
+
+#: ../data/soundconverter.glade.h:26
+msgid "MP3 Encoder is not present."
+msgstr ""
+
+#: ../data/soundconverter.glade.h:27
+msgid "No Compression"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:28
+msgid "Non-Free Lossy Compression"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:29
+msgid "Ogg Vorbis"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:30
 #, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
+"MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
+"MS Wave (.wav)"
 msgstr ""
 "ओग्ग वोर्बिस (.ओग्ग)\n"
 "म्प३ (.म्प३)\n"
 "फलक लोस्स्लेस (.फलक)\n"
 "मस वाव (.वाव)"
 
-#: ../data/soundconverter.glade.h:29
+#: ../data/soundconverter.glade.h:34
 msgid "Preferences"
 msgstr "प्राथमिकताएँ"
 
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:35
 msgid "Quality:"
 msgstr "विशेषताः"
 
-#: ../data/soundconverter.glade.h:31
+#: ../data/soundconverter.glade.h:36
+msgid "Read how to install"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:37
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:32
+#: ../data/soundconverter.glade.h:38
 msgid "Replace all messy characters"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:33
-msgid "Resample"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:35
-msgid "Select _All"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:40
 msgid "SoundConverter"
 msgstr "दवानी बदलनेवाला"
 
-#: ../data/soundconverter.glade.h:37
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:41
 msgid ""
 "Very Low\n"
 "Low\n"
 "Normal\n"
 "High\n"
-"Very High\n"
-"Insanely High"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:44
-msgid "Where to place results?"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:45
-msgid "_Add File"
+"Very High"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:46
-msgid "_Apply to entire queue"
-msgstr ""
+msgid "WAV"
+msgstr "वाव"
 
 #: ../data/soundconverter.glade.h:47
-msgid "_Clear List"
+msgid "Where to place results?"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:48
-msgid "_Edit"
+msgid "_Add File"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:49
-msgid "_File"
+msgid "_Apply to entire queue"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:50
-msgid "_Help"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:51
 msgid "_Overwrite"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:51
 msgid "_Remove"
 msgstr "मिटावो"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:52
 msgid "_Skip"
 msgstr "_छोड़ें"
 
-#: ../data/soundconverter.glade.h:54
-msgid "aac"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:53
 msgid ""
 "artist/album\n"
 "artist - album"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:55
 msgid "dialog1"
 msgstr "संवाद 1"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:56
 msgid "flac"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:57
 msgid "mp3"
 msgstr "यम् पि ३"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:58
 msgid "ogg"
 msgstr "ओग्ग"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:59
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
 msgstr ""
 
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:65
-msgid "translator_credits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:62
 msgid "wav"
 msgstr "वेव"
 
-#. traductors: These are the custom filename patterns. Only if it does make sense.
-#: ../src/soundconverter.py:153
-msgid "Artist Album Title Track Total Genre Date Year Timestamp"
-msgstr ""
-
-#: ../src/soundconverter.py:187
-msgid "All files"
-msgstr ""
-
-#: ../src/soundconverter.py:590
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Error: %s\n"
-"%s\n"
-msgstr ""
-"\n"
-"\n"
-"गलती :%s\n"
-"%s\n"
-
-#: ../src/soundconverter.py:816
-msgid "Internal error"
-msgstr "आंतरिक गलती"
-
-#: ../src/soundconverter.py:817
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-
-#: ../src/soundconverter.py:822
-#, python-format
-msgid "Unknown type %s"
-msgstr ""
-
-#: ../src/soundconverter.py:823
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-
-#: ../src/soundconverter.py:1126
-msgid "Target exists."
-msgstr ""
-
-#: ../src/soundconverter.py:1127
-#, python-format
-msgid "The output file %s already exists."
-msgstr ""
-
-#: ../src/soundconverter.py:1182
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr ""
-
-#: ../src/soundconverter.py:1197
-#, python-format
-msgid "Cannot create '%s' folder."
-msgstr "'%s' फोल्डर संबव नहीं हे"
-
-#: ../src/soundconverter.py:1229
-msgid "GStreamer Error:"
-msgstr ""
-
-#: ../src/soundconverter.py:1371
 #, fuzzy
-msgid "Adding files..."
-msgstr "फ़ोल्डर जोड़ें..."
+#~ msgid "Adding files..."
+#~ msgstr "फ़ोल्डर जोड़ें..."
 
-#: ../src/soundconverter.py:1436
-msgid "loading tags..."
-msgstr ""
-
-#: ../src/soundconverter.py:1438
-msgid "no tags"
-msgstr ""
-
-#: ../src/soundconverter.py:1483
-msgid "unknown"
-msgstr "अग्यात"
-
-#: ../src/soundconverter.py:1512
-msgid "Same as input, but replacing the suffix"
-msgstr ""
-
-#: ../src/soundconverter.py:1513
-msgid "Same as input, but with an additional suffix"
-msgstr ""
-
-#: ../src/soundconverter.py:1514
-msgid "Track number - title"
-msgstr ""
-
-#: ../src/soundconverter.py:1515
-msgid "Track title"
-msgstr ""
-
-#: ../src/soundconverter.py:1516
-msgid "Artist - title"
-msgstr ""
-
-#: ../src/soundconverter.py:1517
-msgid "Custom filename pattern"
-msgstr ""
-
-#: ../src/soundconverter.py:1521
-msgid "artist/album"
-msgstr ""
-
-#: ../src/soundconverter.py:1522
-msgid "artist-album"
-msgstr ""
-
-#: ../src/soundconverter.py:1523
-msgid "artist - album"
-msgstr ""
-
-#: ../src/soundconverter.py:1579
-msgid "Available patterns:"
-msgstr ""
-
-#: ../src/soundconverter.py:1710
-#, python-format
-msgid "Into folder %s"
-msgstr ""
-
-#: ../src/soundconverter.py:1789
-#, python-format
-msgid "Target bitrate: %s"
-msgstr ""
-
-#: ../src/soundconverter.py:2060
 #, fuzzy
-msgid "Conversion Canceled"
-msgstr "बदलना रुक्दियागाया"
-
-#: ../src/soundconverter.py:2095
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:2108
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" exists already.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-
-#: ../src/soundconverter.py:2204
-#, python-format
-msgid "Conversion done, in %s"
-msgstr ""
-
-#: ../src/soundconverter.py:2240
-msgid "Open a file"
-msgstr "एक फ़ाइल खोलें"
-
-#: ../src/soundconverter.py:2338
-msgid "Add Folder..."
-msgstr "फ़ोल्डर जोड़ें..."
-
-#: ../src/soundconverter.py:2466
-#, fuzzy
-msgid "Conversion cancelled"
-msgstr "बदलना रुक्दियागाया"
-
-#: ../src/soundconverter.py:2489
-msgid "Waiting for tags"
-msgstr ""
-
-#: ../src/soundconverter.py:2496
-msgid "Waiting for tags..."
-msgstr ""
-
-#: ../src/soundconverter.py:2504 ../src/soundconverter.py:2517
-msgid "Paused"
-msgstr "ठहरा"
-
-#: ../src/soundconverter.py:2521
-msgid "Canceled"
-msgstr "रद्द किया"
-
-#: ../src/soundconverter.py:2570
-#, python-format
-msgid "Converting file %d of %d  (%s)"
-msgstr "%d of %d (%s) फिल्स बदल रहा हे"
-
-#: ../src/soundconverter.py:2583
-msgid "Converting"
-msgstr "रूपान्तरण"
-
-#: ../src/soundconverter.py:2600
-#, python-format
-msgid "%d:%02d left"
-msgstr "%d:%02d बाकि हे"
-
-#: ../src/soundconverter.py:2605
-msgid "Ready"
-msgstr "तैयार"
-
-#: ../src/soundconverter.py:2686
-#, python-format
-msgid "%s: OK"
-msgstr "%s: टीक हे"
-
-#: ../src/soundconverter.py:2747
-#, python-format
-msgid "Usage: %s [options] [soundfile ...]"
-msgstr ""
-
-#: ../src/soundconverter.py:2762
-msgid "Print out a usage summary."
-msgstr ""
-
-#: ../src/soundconverter.py:2765
-msgid ""
-"Convert in batch mode, from command line, without a graphical user\n"
-" interface. You can use this from, say, shell scripts."
-msgstr ""
-
-#: ../src/soundconverter.py:2768
-#, python-format
-msgid ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
-msgstr ""
-
-#: ../src/soundconverter.py:2771
-msgid "Be quiet. Don't write normal output, only errors."
-msgstr ""
-
-#: ../src/soundconverter.py:2774
-msgid "Print additional debug information"
-msgstr ""
-
-#: ../src/soundconverter.py:2777
-#, python-format
-msgid ""
-"Set the output filename suffix for batch mode. The default is \n"
-" %s . Note that the suffix does not affect\n"
-" the output MIME type."
-msgstr ""
-
-#: ../src/soundconverter.py:2780
-msgid ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
-msgstr ""
-
-#: ../src/soundconverter.py:2783
-msgid "Force number of concurrent conversions."
-msgstr ""
-
-#~ msgid "canceling conversion."
-#~ msgstr "बदलना रोख्दिअजारा"
-
-#~ msgid "MP3"
-#~ msgstr "मप३"
-
-#~ msgid "WAV"
-#~ msgstr "वाव"
+#~ msgid "Conversion cancelled"
+#~ msgstr "बदलना रुक्दियागाया"
