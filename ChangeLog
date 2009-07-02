@@ -4,6 +4,8 @@
 	  Update german tranlation.
 	  Plus some minor changes in autogen.
 	  (Thanks Uwe)
+	* src/soundconverter.py: Fix crash in query_duration when pipeline is null.
+	  (fix lp:333024)
 
 2009-05-27  Gautier Portet <kassoulet gmail com>
 

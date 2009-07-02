@@ -1011,7 +1011,7 @@ class Decoder(Pipeline):
 
 	def query_duration(self):
 		try:
-			if not self.sound_file.duration:
+			if not self.sound_file.duration and self.pipeline:
 				self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
 				debug("got file duration:", self.sound_file.duration)
 		except gst.QueryError:
