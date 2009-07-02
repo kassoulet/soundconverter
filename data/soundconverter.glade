@@ -39,8 +39,7 @@
 	  <child>
 	    <widget class="GtkMenuItem" id="file2">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_File</property>
-	      <property name="use_underline">True</property>
+	      <property name="stock_item">GNOMEUIINFO_MENU_FILE_TREE</property>
 
 	      <child>
 		<widget class="GtkMenu" id="file2_menu">
@@ -54,7 +53,7 @@
 		      <accelerator key="O" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image27">
+			<widget class="GtkImage" id="image33">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -76,7 +75,7 @@
 		      <accelerator key="F" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image28">
+			<widget class="GtkImage" id="image34">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-directory</property>
 			  <property name="icon_size">1</property>
@@ -98,7 +97,7 @@
 		      <accelerator key="Delete" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image29">
+			<widget class="GtkImage" id="image35">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -120,7 +119,7 @@
 		      <accelerator key="C" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image30">
+			<widget class="GtkImage" id="image36">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-clear</property>
 			  <property name="icon_size">1</property>
@@ -154,8 +153,7 @@
 	  <child>
 	    <widget class="GtkMenuItem" id="edit2">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Edit</property>
-	      <property name="use_underline">True</property>
+	      <property name="stock_item">GNOMEUIINFO_MENU_EDIT_TREE</property>
 
 	      <child>
 		<widget class="GtkMenu" id="edit2_menu">
@@ -163,8 +161,7 @@
 		  <child>
 		    <widget class="GtkMenuItem" id="select_all">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Select _All</property>
-		      <property name="use_underline">True</property>
+		      <property name="stock_item">GNOMEUIINFO_MENU_SELECT_ALL_ITEM</property>
 		      <signal name="activate" handler="on_select_all_activate"/>
 		    </widget>
 		  </child>
@@ -198,8 +195,7 @@
 	  <child>
 	    <widget class="GtkMenuItem" id="help2">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Help</property>
-	      <property name="use_underline">True</property>
+	      <property name="stock_item">GNOMEUIINFO_MENU_HELP_TREE</property>
 
 	      <child>
 		<widget class="GtkMenu" id="help2_menu">
@@ -621,7 +617,7 @@ Thanks to:
 
 
 </property>
-  <property name="documenters" translatable="yes">No documentation written.</property>
+  <property name="documenters">No documentation written.</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator_credits</property>
 </widget>
 
