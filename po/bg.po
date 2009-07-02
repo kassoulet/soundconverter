@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-13 18:40+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-10 09:46+0200\n"
 "PO-Revision-Date: 2009-04-22 09:31+0200\n"
 "Last-Translator: Nikola Yanev <gericom@bginfo.net>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
@@ -37,17 +37,13 @@ msgstr "Конвертирай аудиофайлове в други форма
 msgid "Sound Converter"
 msgstr "Sound Converter"
 
-#. traductors: only if it does make sense.
-#: ../src/soundconverter.py:119
-msgid "Artist Album Title Track Total Genre Date Year"
+#. traductors: These are the custom filename patterns. Only if it does make sense.
+#: ../src/soundconverter.py:153
+#, fuzzy
+msgid "Artist Album Title Track Total Genre Date Year Timestamp"
 msgstr "Изпълнител Албум Заглавие Номер Общо Жанр Дата Година"
 
-#: ../src/soundconverter.py:184
-#, python-format
-msgid "skipping: '%s'"
-msgstr "Пропускане на : '%s'"
-
-#: ../src/soundconverter.py:531
+#: ../src/soundconverter.py:590
 #, python-format
 msgid ""
 "\n"
@@ -60,11 +56,11 @@ msgstr ""
 "Грешка: %s\n"
 "%s\n"
 
-#: ../src/soundconverter.py:734
+#: ../src/soundconverter.py:816
 msgid "Internal error"
 msgstr "Вътрешна грешка"
 
-#: ../src/soundconverter.py:735
+#: ../src/soundconverter.py:817
 msgid ""
 "Couldn't link GStreamer elements.\n"
 " Please report this as a bug."
@@ -72,12 +68,12 @@ msgstr ""
 "Не може да се направи връзка с елементи на GStreamer. \n"
 "Моля съобщете това за грешка."
 
-#: ../src/soundconverter.py:740
+#: ../src/soundconverter.py:822
 #, python-format
 msgid "Unknown type %s"
 msgstr "Непознат формат"
 
-#: ../src/soundconverter.py:741
+#: ../src/soundconverter.py:823
 #, python-format
 msgid ""
 "The file %s is of an unknown type.\n"
@@ -90,103 +86,107 @@ msgstr ""
 "  да му добави поддръжка\n"
 " ако формата е важен за вас."
 
-#: ../src/soundconverter.py:995
+#: ../src/soundconverter.py:1126
 msgid "Target exists."
 msgstr "Целта вече съществува"
 
-#: ../src/soundconverter.py:996
+#: ../src/soundconverter.py:1127
 #, python-format
 msgid "The output file %s already exists."
 msgstr "Изходният файл %s вече съшествува."
 
-#: ../src/soundconverter.py:1039
+#: ../src/soundconverter.py:1182
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Невъзможно създаването на декодер за формата '%s'"
 
-#: ../src/soundconverter.py:1050
-#, python-format
-msgid "Creating folder: '%s'"
-msgstr "Създаване на папка: '%s'"
-
-#: ../src/soundconverter.py:1054
+#: ../src/soundconverter.py:1197
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Невъзможно създаването на папка '%s'"
 
-#: ../src/soundconverter.py:1075
-#, python-format
-msgid "Cannot set permission on '%s'"
-msgstr "Не може да се променят правата на '%s'"
+#: ../src/soundconverter.py:1229
+msgid "GStreamer Error:"
+msgstr ""
 
-#: ../src/soundconverter.py:1248
-#, python-format
-msgid "file already present: '%s'"
-msgstr "файла вече съществува '%s'"
+#: ../src/soundconverter.py:1371
+#, fuzzy
+msgid "Adding files..."
+msgstr "Добави папка..."
 
-#: ../src/soundconverter.py:1267
+#: ../src/soundconverter.py:1436
 msgid "loading tags..."
 msgstr "зареждане на етикетите..."
 
-#: ../src/soundconverter.py:1269
+#: ../src/soundconverter.py:1438
 msgid "no tags"
 msgstr "няма етикети"
 
-#: ../src/soundconverter.py:1308
+#: ../src/soundconverter.py:1483
 msgid "unknown"
 msgstr "Непознат"
 
-#: ../src/soundconverter.py:1334
+#: ../src/soundconverter.py:1512
 msgid "Same as input, but replacing the suffix"
 msgstr "Като оригиналния файл, но замествайки разширението"
 
-#: ../src/soundconverter.py:1335
+#: ../src/soundconverter.py:1513
 msgid "Same as input, but with an additional suffix"
 msgstr "Като оригиналния файл, но добавяйки разширение"
 
-#: ../src/soundconverter.py:1336
+#: ../src/soundconverter.py:1514
 msgid "Track number - title"
 msgstr "Номер на песен - Заглавие"
 
-#: ../src/soundconverter.py:1337
+#: ../src/soundconverter.py:1515
 msgid "Track title"
 msgstr "Номер на песен Заглавие"
 
-#: ../src/soundconverter.py:1338
+#: ../src/soundconverter.py:1516
 msgid "Artist - title"
 msgstr "Изпълнител - Заглавие"
 
-#: ../src/soundconverter.py:1339
+#: ../src/soundconverter.py:1517
 msgid "Custom filename pattern"
 msgstr "Собствен шаблон за наименование на файла"
 
-#: ../src/soundconverter.py:1343
+#: ../src/soundconverter.py:1521
 msgid "artist/album"
 msgstr "изпълнител/албум"
 
-#: ../src/soundconverter.py:1344
+#: ../src/soundconverter.py:1522
 msgid "artist-album"
 msgstr "изпълнител-албум"
 
-#: ../src/soundconverter.py:1345
+#: ../src/soundconverter.py:1523
 msgid "artist - album"
 msgstr "изпълнител - албум"
 
-#: ../src/soundconverter.py:1501
+#: ../src/soundconverter.py:1579
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Шаблон за наименоване"
+
+#: ../src/soundconverter.py:1710
 #, python-format
 msgid "Into folder %s"
 msgstr "В папка %s"
 
-#: ../src/soundconverter.py:1551
+#: ../src/soundconverter.py:1789
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Изходна плътност kb/s: %s "
 
-#: ../src/soundconverter.py:1793
-msgid "Convertion Canceled"
+#: ../src/soundconverter.py:2060
+#, fuzzy
+msgid "Conversion Canceled"
 msgstr "Конвертирането е отменено"
 
-#: ../src/soundconverter.py:1836
+#: ../src/soundconverter.py:2095
+msgid "Cannot overwrite source file(s)!"
+msgstr ""
+
+#: ../src/soundconverter.py:2108
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -197,73 +197,73 @@ msgstr ""
 " вече съществува.\n"
 " Искате ли да го прескочим, да го презапишем или да отменим конвертирането?\n"
 
-#: ../src/soundconverter.py:1925
+#: ../src/soundconverter.py:2204
 #, python-format
 msgid "Conversion done, in %s"
 msgstr "Конвертирането е готово за %s "
 
-#: ../src/soundconverter.py:1960
+#: ../src/soundconverter.py:2240
 msgid "Open a file"
 msgstr "Отвори файл"
 
-#: ../src/soundconverter.py:2049
+#: ../src/soundconverter.py:2338
 msgid "Add Folder..."
 msgstr "Добави папка..."
 
-#: ../src/soundconverter.py:2169
-msgid "canceling conversion."
-msgstr "Отменяне на конвертирането"
+#: ../src/soundconverter.py:2466
+#, fuzzy
+msgid "Conversion cancelled"
+msgstr "Конвертирането е отменено"
 
-#: ../src/soundconverter.py:2192
+#: ../src/soundconverter.py:2489
 msgid "Waiting for tags"
 msgstr "Изчакване на етикети"
 
-#: ../src/soundconverter.py:2199
+#: ../src/soundconverter.py:2496
 msgid "Waiting for tags..."
 msgstr "Изчакване за етикетите..."
 
-#: ../src/soundconverter.py:2207
-#: ../src/soundconverter.py:2220
+#: ../src/soundconverter.py:2504 ../src/soundconverter.py:2517
 msgid "Paused"
 msgstr "Прекъснато"
 
-#: ../src/soundconverter.py:2224
+#: ../src/soundconverter.py:2521
 msgid "Canceled"
 msgstr "Отменено"
 
-#: ../src/soundconverter.py:2273
+#: ../src/soundconverter.py:2570
 #, python-format
 msgid "Converting file %d of %d  (%s)"
 msgstr "Конвертиране на файл %d of %d  (%s)"
 
-#: ../src/soundconverter.py:2286
+#: ../src/soundconverter.py:2583
 msgid "Converting"
 msgstr "Конвертиране"
 
-#: ../src/soundconverter.py:2303
+#: ../src/soundconverter.py:2600
 #, python-format
 msgid "%d:%02d left"
 msgstr "Остават %d:%02d"
 
-#: ../src/soundconverter.py:2308
+#: ../src/soundconverter.py:2605
 msgid "Ready"
 msgstr "Готово"
 
-#: ../src/soundconverter.py:2389
+#: ../src/soundconverter.py:2686
 #, python-format
 msgid "%s: OK"
 msgstr "%s: OK"
 
-#: ../src/soundconverter.py:2424
+#: ../src/soundconverter.py:2747
 #, python-format
 msgid "Usage: %s [options] [soundfile ...]"
 msgstr "Установка: %s [опции] [звуков файл ...]"
 
-#: ../src/soundconverter.py:2439
+#: ../src/soundconverter.py:2762
 msgid "Print out a usage summary."
 msgstr "Изведи кратка справка по установката"
 
-#: ../src/soundconverter.py:2442
+#: ../src/soundconverter.py:2765
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -271,7 +271,7 @@ msgstr ""
 "Конвертирай в пакетен режим, от командния ред, без графичен\n"
 " интерфейс. Това е използваемо, да кажем, чрез скриптове"
 
-#: ../src/soundconverter.py:2445
+#: ../src/soundconverter.py:2768
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is\n"
@@ -282,17 +282,18 @@ msgstr ""
 " По подразбиране е %s. Обърнете внимание, че вероятно\n"
 " ще трябва да зададете и разширение на файловете."
 
-#: ../src/soundconverter.py:2448
+#: ../src/soundconverter.py:2771
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Съобщавай само грешките."
 
-#: ../src/soundconverter.py:2451
-msgid "Print additionnal debug information"
+#: ../src/soundconverter.py:2774
+#, fuzzy
+msgid "Print additional debug information"
 msgstr ""
 "Показвай допълнителна информация\n"
 " за грешките в програмата."
 
-#: ../src/soundconverter.py:2454
+#: ../src/soundconverter.py:2777
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode. The default is \n"
@@ -303,7 +304,7 @@ msgstr ""
 " По подразбиране се използва %s . Обърнете внимание, че \n"
 " то не влияе на изходния MIME-формат."
 
-#: ../src/soundconverter.py:2457
+#: ../src/soundconverter.py:2780
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -311,6 +312,10 @@ msgstr ""
 "Покажи ми етикетите за входните файлове, вместо да ги конвертираш. \n"
 " Това дава знак на командния ред за конвертиране в пакетен режим и \n"
 " изключва графичния интерфейс."
+
+#: ../src/soundconverter.py:2783
+msgid "Force number of concurrent conversions."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -367,102 +372,88 @@ msgid "Error"
 msgstr "Грешка"
 
 #: ../data/soundconverter.glade.h:16
-msgid "FLAC"
-msgstr "FLAC"
-
-#: ../data/soundconverter.glade.h:17
 msgid "File exists already"
 msgstr "Файла вече съществува"
 
-#: ../data/soundconverter.glade.h:18
+#: ../data/soundconverter.glade.h:17
 msgid "Filename pattern: "
 msgstr "Шаблон за наименоване"
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:18
 msgid "Filter "
 msgstr "Филтър"
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:19
 msgid "Format: "
 msgstr "Формат:"
 
-#: ../data/soundconverter.glade.h:21
-msgid "Free Lossless compression"
-msgstr "Свободна компресия, без влошаване на качеството"
-
-#: ../data/soundconverter.glade.h:22
-msgid "Free Lossy Compression"
-msgstr "Свободна компресия, с леко влошаване на качеството"
-
-#: ../data/soundconverter.glade.h:23
+#: ../data/soundconverter.glade.h:20
 msgid "GNOME Sound Conversion"
 msgstr "Преобразуване на звукови файлове в GNOME"
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:21
 msgid "Into a specified folder"
 msgstr "В изрично упомената папка"
 
-#: ../data/soundconverter.glade.h:25
-msgid "MP3"
-msgstr "MP3"
-
-#: ../data/soundconverter.glade.h:26
+#: ../data/soundconverter.glade.h:22
 msgid "MP3 Encoder is not present."
 msgstr "Не е намерен кодек за MP3"
 
-#: ../data/soundconverter.glade.h:27
-msgid "No Compression"
-msgstr "Без Компресия"
+#: ../data/soundconverter.glade.h:23
+msgid "No documentation written."
+msgstr ""
 
-#: ../data/soundconverter.glade.h:28
-msgid "Non-Free Lossy Compression"
-msgstr "Не-свободна компресия с влошаване на качеството"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Ogg Vorbis"
-msgstr "Ogg Vorbis"
-
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:24
+#, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
 "MS Wave (.wav)"
 
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:29
 msgid "Preferences"
 msgstr "Настройки"
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:30
 msgid "Quality:"
 msgstr "Качество:"
 
-#: ../data/soundconverter.glade.h:36
-msgid "Read how to install"
-msgstr "Прочетете как се инсталира"
-
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:31
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Премахване на всички  символи, с изключение на букви, цифри и ./_-"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:32
 msgid "Replace all messy characters"
 msgstr "Заместване на всички неправилни символи"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:33
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:34
 msgid "Same folder as the input file"
 msgstr "В същата папка, в която се намира входящия файл"
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:35
+msgid "Select _All"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:36
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:37
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:38
 msgid ""
 "Very Low\n"
 "Low\n"
@@ -476,35 +467,68 @@ msgstr ""
 "Високо\n"
 "Много високо"
 
-#: ../data/soundconverter.glade.h:46
-msgid "WAV"
-msgstr "WAV"
+#: ../data/soundconverter.glade.h:43
+#, fuzzy
+msgid ""
+"Very Low\n"
+"Low\n"
+"Normal\n"
+"High\n"
+"Very High\n"
+"Insanely High"
+msgstr ""
+"Много ниско\n"
+"Ниско\n"
+"Нормално\n"
+"Високо\n"
+"Много високо"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:49
 msgid "Where to place results?"
 msgstr "Къде да поставим резултата?"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:50
 msgid "_Add File"
 msgstr "_Добави файл"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:51
 msgid "_Apply to entire queue"
 msgstr "_Приложи към цялата опашка"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:52
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:53
+msgid "_Edit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:54
+#, fuzzy
+msgid "_File"
+msgstr "_Добави файл"
+
+#: ../data/soundconverter.glade.h:55
+msgid "_Help"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:56
 msgid "_Overwrite"
 msgstr "_Презапиши"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:57
 msgid "_Remove"
 msgstr "_Премахни"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:58
 msgid "_Skip"
 msgstr "_Прескочи"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:59
+msgid "aac"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:60
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -512,23 +536,23 @@ msgstr ""
 "изпънител/албум\n"
 "изпънител - албум"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:62
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:63
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:64
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:65
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:66
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -536,11 +560,57 @@ msgstr ""
 "номер_песен - име_песен\n"
 "име_песен\n"
 
-#: ../data/soundconverter.glade.h:62
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../data/soundconverter.glade.h:70
+msgid "translator_credits"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:71
 msgid "wav"
 msgstr "wav"
 
-#, python-format
+#~ msgid "skipping: '%s'"
+#~ msgstr "Пропускане на : '%s'"
+
+#~ msgid "Creating folder: '%s'"
+#~ msgstr "Създаване на папка: '%s'"
+
+#~ msgid "Cannot set permission on '%s'"
+#~ msgstr "Не може да се променят правата на '%s'"
+
+#~ msgid "file already present: '%s'"
+#~ msgstr "файла вече съществува '%s'"
+
+#~ msgid "canceling conversion."
+#~ msgstr "Отменяне на конвертирането"
+
+#~ msgid "FLAC"
+#~ msgstr "FLAC"
+
+#~ msgid "Free Lossless compression"
+#~ msgstr "Свободна компресия, без влошаване на качеството"
+
+#~ msgid "Free Lossy Compression"
+#~ msgstr "Свободна компресия, с леко влошаване на качеството"
+
+#~ msgid "MP3"
+#~ msgstr "MP3"
+
+#~ msgid "No Compression"
+#~ msgstr "Без Компресия"
+
+#~ msgid "Non-Free Lossy Compression"
+#~ msgstr "Не-свободна компресия с влошаване на качеството"
+
+#~ msgid "Ogg Vorbis"
+#~ msgstr "Ogg Vorbis"
+
+#~ msgid "Read how to install"
+#~ msgstr "Прочетете как се инсталира"
+
+#~ msgid "WAV"
+#~ msgstr "WAV"
+
 #~ msgid "The file %s exists already"
 #~ msgstr "Файла %s вече съществъва"
 
