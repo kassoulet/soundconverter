@@ -959,7 +959,7 @@ class TypeFinder(Pipeline):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 
-		command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
+		command = '%s location="%s" ! typefind name=typefinder' % \
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal("typefinder", "have-type", self.have_type)

@@ -2,6 +2,7 @@
 
 	* src/soundconverter.py: Follow symbolic links. Wow, how can something this
 	  important can be missing for years ? :)
+	  Faster typefinder by removing the useless fakesink.
 	  
 2009-07-02  Gautier Portet <kassoulet gmail com>
 
