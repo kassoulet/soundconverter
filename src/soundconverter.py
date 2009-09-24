@@ -214,7 +214,7 @@ def vfs_walk(uri):
 	filelist = []
 
 	try:
-		dirlist = gnomevfs.open_directory(uri)
+		dirlist = gnomevfs.open_directory(uri, gnomevfs.FILE_INFO_FOLLOW_LINKS)
 	except:
 		log("skipping: '%s'" % uri)
 		return filelist
@@ -1378,7 +1378,7 @@ class FileList:
 					"Use SoundJuicer Audio CD Extractor instead.")
 				return
 			try:
-				info = gnomevfs.get_file_info(gnomevfs.URI(uri))
+				info = gnomevfs.get_file_info(gnomevfs.URI(uri), gnomevfs.FILE_INFO_FOLLOW_LINKS)
 			except gnomevfs.NotFoundError:
 				log('uri not found: \'%s\'' % uri)
 				continue
@@ -1394,7 +1394,7 @@ class FileList:
 			except :
 				log('error in get_file_info: %s' % (uri))
 				continue
-
+				
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
 				filelist = vfs_walk(gnomevfs.URI(uri))
 				if filter:
