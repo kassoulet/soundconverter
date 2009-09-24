@@ -1130,7 +1130,7 @@ class Converter(Decoder):
 
 	"""A background task for converting files to another format."""
 
-	def __init__(self, sound_file, output_filename, output_type, delete_original=False, output_resample=False, resample_rate=48000):
+	def __init__(self, sound_file, output_filename, output_type, delete_original=False, output_resample=False, resample_rate=48000, force_mono=False):
 		#print "Converter()"
 		Decoder.__init__(self, sound_file)
 
@@ -1146,6 +1146,7 @@ class Converter(Decoder):
 
 		self.output_resample = output_resample
 		self.resample_rate = resample_rate
+		self.force_mono = force_mono
 
 		self.overwrite = False
 		self.delete_original = delete_original
@@ -1172,6 +1173,10 @@ class Converter(Decoder):
 			#print "Resampling to %dHz" % (self.resample_rate)
 			self.add_command("audioresample ! audio/x-raw-float,rate=%d" %
 					 (self.resample_rate))
+			self.add_command("audioconvert")
+
+		if self.force_mono:
+			self.add_command("audioresample ! audio/x-raw-float,channels=1")
 			self.add_command("audioconvert")
 
 		encoder = self.encoders[self.output_type]()
@@ -1544,6 +1549,7 @@ class PreferencesDialog:
 		"output-resample": 0,
 		"resample-rate": 48000,
 		"flac-speed": 0,
+		"force-mono": 0,
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -1565,6 +1571,7 @@ class PreferencesDialog:
 		self.resample_toggle = glade.get_widget("resample_toggle")
 		self.resample_rate = glade.get_widget("resample_rate")
 		self.vorbis_oga_extension = glade.get_widget("vorbis_oga_extension")
+		self.force_mono = glade.get_widget("force-mono")
 
 		self.target_bitrate = None
 		self.convert_setting_from_old_version()
@@ -1702,6 +1709,8 @@ class PreferencesDialog:
 			self.resample_rate.set_sensitive(1)
 			rr_entry = glade.get_widget("resample_rate-entry")
 			rr_entry.set_text("%d" % (self.get_int("resample-rate")))
+
+		self.force_mono.set_active(self.get_int("force-mono"))
 
 		self.update_example()
 
@@ -2005,6 +2014,13 @@ class PreferencesDialog:
 		self.set_int("aac-quality", quality[combobox.get_active()])
 		self.update_example()
 
+	def on_force_mono_toggle(self, button):
+		if button.get_active():
+			self.set_int("force-mono", 1)
+		else:
+			self.set_int("force-mono", 0)
+		self.update_example()
+
 	def change_mp3_mode(self, mode):
 
 		keys = { "cbr": 0, "abr": 1, "vbr": 2 }
@@ -2146,7 +2162,9 @@ class ConverterQueue(TaskQueue):
 			                        self.window.prefs.get_string("output-mime-type"),
 			                        self.window.prefs.get_int("delete-original"),
 			                        self.window.prefs.get_int("output-resample"),
-			                        self.window.prefs.get_int("resample-rate"))
+			                        self.window.prefs.get_int("resample-rate"),
+			                        self.window.prefs.get_int("force-mono"),
+			                        )
 		c.set_vorbis_quality(self.window.prefs.get_float("vorbis-quality"))
 		c.set_aac_quality(self.window.prefs.get_int("aac-quality"))
 
