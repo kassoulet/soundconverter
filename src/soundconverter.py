@@ -519,6 +519,9 @@ class TargetNameGenerator:
 		root = sound_file.get_base_path()
 		basename, ext = os.path.splitext(urllib.unquote(sound_file.get_filename()))
 
+		# make sure basename constains only the filename
+		basefolder, basename = os.path.split(basename)
+
 		dict = {
 			".inputname": basename,
 			".ext": ext,
@@ -534,6 +537,7 @@ class TargetNameGenerator:
 		for key in sound_file.keys():
 			dict[key] = sound_file[key]
 			if isinstance(dict[key], basestring):
+				# take care of tags containing slashes
 				dict[key] = dict[key].replace("/", "-")
 
 		# add timestamp to substitution dict -- this could be split into more
@@ -545,6 +549,7 @@ class TargetNameGenerator:
 		result = pattern % dict
 		if isinstance(result, unicode):
 			result = result.encode('utf-8')
+			
 		if self.replace_messy_chars:
 			result = self._unicode_to_ascii(result)
 			s = ""
@@ -560,7 +565,7 @@ class TargetNameGenerator:
 		else:
 			folder = self.folder
 
-		result = os.path.join(folder, urllib.quote(result))
+		result = os.path.join(folder, basefolder, urllib.quote(result))
 
 		return result
 

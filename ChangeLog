@@ -1,8 +1,18 @@
+2009-09-30  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix wrong destination folder when using both 
+	  same-folder-as-source, base folder, and custom filename patterns.
+	  (thanks Tino, fix #016295)
+	  
+	* po/nl.po: Update dutch translation.
+	  (thanks Tino)
+
 2009-07-15  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Follow symbolic links. Wow, how can something this
 	  important can be missing for years ? :)
 	  Faster typefinder by removing the useless fakesink.
+	  (7m -> 20s on a 16GB folder)
 	  
 2009-07-02  Gautier Portet <kassoulet gmail com>
 

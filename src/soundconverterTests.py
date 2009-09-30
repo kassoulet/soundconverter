@@ -197,16 +197,16 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
                              u"\ufffd.flac")
 
     def test8bits(self):
-        self.g.set_replace_messy_chars(False)
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
         self.g.set_target_suffix(".ogg")
+        self.g.set_replace_messy_chars(False)
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              quote("/path/to/file\xa0\xb0\xc0\xd0.ogg"))
 
     def test8bits_messy(self):
-        self.g.set_replace_messy_chars(True)
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
         self.g.set_target_suffix(".ogg")
+        self.g.set_replace_messy_chars(True)
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "/path/to/file__A__.ogg")
 
@@ -227,6 +227,65 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.set_basename_pattern("%(title)s")
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"))
+                             
+                             
+    def testRoot(self):
+        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s.add_tags({
+            "artist": "Foo Bar",
+            "title": "Hi Ho",
+            "album": "IS: TOO",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.g.set_target_suffix(".ogg")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/path/to/file.ogg")
+
+
+    def testRootPath(self):
+        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s.add_tags({
+            "artist": "Foo Bar",
+            "title": "Hi Ho",
+            "album": "IS: TOO",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.g.set_target_suffix(".ogg")
+        self.g.set_folder("/music")
+        #self.g.set_basename_pattern("%(title)s")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/music/to/file.ogg")
+
+    def testRootCustomPattern(self):
+        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s.add_tags({
+            "artist": "Foo Bar",
+            "title": "Hi Ho",
+            "album": "IS: TOO",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.g.set_target_suffix(".ogg")
+        self.g.set_basename_pattern("%(title)s")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/path/to/Hi_Ho.ogg")
+
+    def testRootPathCustomPattern(self):
+        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s.add_tags({
+            "artist": "Foo Bar",
+            "title": "Hi Ho",
+            "album": "IS: TOO",
+            "track-number": 1L,
+            "track-count": 11L,
+        })
+        self.g.set_target_suffix(".ogg")
+        self.g.set_folder("/music")
+        self.g.set_basename_pattern("%(title)s")
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             "/music/to/Hi_Ho.ogg")
 
 if __name__ == "__main__":
     unittest.main()

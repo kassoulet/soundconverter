@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 18:40+0100\n"
+"POT-Creation-Date: 2009-07-27 15:11+0200\n"
 "PO-Revision-Date: 2008-05-14 10:04+0000\n"
 "Last-Translator: jarlaxl lamat <sztaasz@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -29,282 +29,6 @@ msgstr ""
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
 msgstr "Μετατροπέας Ηχου"
-
-#. traductors: only if it does make sense.
-#: ../src/soundconverter.py:119
-#, fuzzy
-msgid "Artist Album Title Track Total Genre Date Year"
-msgstr "Καλλιτέχνης Αλμπουμ Τίτλος Κομμάτι Σύνολο Είδος Ημερομηνία Ετος"
-
-#: ../src/soundconverter.py:184
-#, python-format
-msgid "skipping: '%s'"
-msgstr "παραβλέπεται:'%s'"
-
-#: ../src/soundconverter.py:531
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Error: %s\n"
-"%s\n"
-msgstr ""
-"\n"
-"\n"
-"Σφάλμα:%s\n"
-"%s\n"
-
-#: ../src/soundconverter.py:734
-msgid "Internal error"
-msgstr "Εσωτερικό Σφάλμα"
-
-#: ../src/soundconverter.py:735
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Δεν μπόρεσα να συνδέσω στοιχεία του GStreamer.\n"
-" Παρακαλώ, αναφέρτε το ως σφάλμα (bug)."
-
-#: ../src/soundconverter.py:740
-#, python-format
-msgid "Unknown type %s"
-msgstr "Αγνωστος τύπος %s"
-
-#: ../src/soundconverter.py:741
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"Το αρχείο %s είναι αγνώστου τύπου.\n"
-" Ζητήστε από τους υπεύθυνους για την ανάπτυξη \n"
-" του προγράμματος να υποστηρίξουν αρχεία αυτού\n"
-" του τύπου, εαν τα θεωρείτε σημαντικά."
-
-#: ../src/soundconverter.py:995
-msgid "Target exists."
-msgstr "Υπάρχει ήδη."
-
-#: ../src/soundconverter.py:996
-#, python-format
-msgid "The output file %s already exists."
-msgstr "Το αρχείο %s ήδη υπάρχει."
-
-#: ../src/soundconverter.py:1039
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "Δεν μπορώ να δημιουργήσω αποκωδικοποιητή για αρχεία του τύπου '%s'."
-
-#: ../src/soundconverter.py:1050
-#, python-format
-msgid "Creating folder: '%s'"
-msgstr "Δημιουργία φακέλου: '%s'"
-
-#: ../src/soundconverter.py:1054
-#, python-format
-msgid "Cannot create '%s' folder."
-msgstr "Δεν μπορώ να δημιουργήσω τον φάκελο '%s' ."
-
-#: ../src/soundconverter.py:1075
-#, python-format
-msgid "Cannot set permission on '%s'"
-msgstr "Δεν μπορώ να θέσω άδεια στο '%s'"
-
-#: ../src/soundconverter.py:1248
-#, python-format
-msgid "file already present: '%s'"
-msgstr "Αρχείο ήδη υπάρχον: '%s'"
-
-#: ../src/soundconverter.py:1267
-msgid "loading tags..."
-msgstr "Φορτώνονται οι ετικέτες (tags)..."
-
-#: ../src/soundconverter.py:1269
-msgid "no tags"
-msgstr "άνευ ετικέτας"
-
-#: ../src/soundconverter.py:1308
-msgid "unknown"
-msgstr "άγνωστο"
-
-#: ../src/soundconverter.py:1334
-msgid "Same as input, but replacing the suffix"
-msgstr "Το ίδιο όπως το αρχικό, αλλά με αντικατάσταση του επιθήματος"
-
-#: ../src/soundconverter.py:1335
-msgid "Same as input, but with an additional suffix"
-msgstr "Το ίδιο όπως το αρχικό, αλλά με πρόσθετο επίθημα."
-
-#: ../src/soundconverter.py:1336
-msgid "Track number - title"
-msgstr "Αριθμός κομματιού - τίτλος"
-
-#: ../src/soundconverter.py:1337
-msgid "Track title"
-msgstr "Τίτλος κομματιού"
-
-#: ../src/soundconverter.py:1338
-msgid "Artist - title"
-msgstr "Καλλιτέχνης - τίτλος"
-
-#: ../src/soundconverter.py:1339
-msgid "Custom filename pattern"
-msgstr "Προσαρμοσμένο όνομα αρχειου"
-
-#: ../src/soundconverter.py:1343
-msgid "artist/album"
-msgstr "καλλιτέχνης/άλμπουμ"
-
-#: ../src/soundconverter.py:1344
-msgid "artist-album"
-msgstr "καλλιτέχνις-άλμπουμ"
-
-#: ../src/soundconverter.py:1345
-msgid "artist - album"
-msgstr "καλλιτέχνης - άλμπουμ"
-
-#: ../src/soundconverter.py:1501
-#, python-format
-msgid "Into folder %s"
-msgstr "Στον φάκελο %s"
-
-#: ../src/soundconverter.py:1551
-#, python-format
-msgid "Target bitrate: %s"
-msgstr "Επιθυμητή συμπίεση: %s"
-
-#: ../src/soundconverter.py:1793
-#, fuzzy
-msgid "Convertion Canceled"
-msgstr "Μετατροπή Ακυρώθη"
-
-#: ../src/soundconverter.py:1836
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" exists already.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"Το αρχείο  <i>%s</i>\n"
-" υπάρχει ήδη.\n"
-" Θέλετε να παραβλέψετε την μετατροπή του, να γράψετε στο ήδη υπάρχον ή να "
-"ακυρώσετε την μετατροπή;\n"
-
-#: ../src/soundconverter.py:1925
-#, python-format
-msgid "Conversion done, in %s"
-msgstr "Μετατροπή εξετελέσθη, εις %s"
-
-#: ../src/soundconverter.py:1960
-msgid "Open a file"
-msgstr "Άνοιγμα ενός αρχείου"
-
-#: ../src/soundconverter.py:2049
-msgid "Add Folder..."
-msgstr "Προσθήκη φακέλου..."
-
-#: ../src/soundconverter.py:2169
-msgid "canceling conversion."
-msgstr "ακυρώνω την μετατροπή."
-
-#: ../src/soundconverter.py:2192
-msgid "Waiting for tags"
-msgstr "Αναμονή για ετικέτες..."
-
-#: ../src/soundconverter.py:2199
-msgid "Waiting for tags..."
-msgstr "Αναμονή για ετικέτες..."
-
-#: ../src/soundconverter.py:2207 ../src/soundconverter.py:2220
-msgid "Paused"
-msgstr "Σε παύση"
-
-#: ../src/soundconverter.py:2224
-msgid "Canceled"
-msgstr "Ακυρώθηκε"
-
-#: ../src/soundconverter.py:2273
-#, python-format
-msgid "Converting file %d of %d  (%s)"
-msgstr "Μετετρέπεται το %d αρχείο, από τα %d (%s)"
-
-#: ../src/soundconverter.py:2286
-msgid "Converting"
-msgstr "Μετατρέπω"
-
-#: ../src/soundconverter.py:2303
-#, python-format
-msgid "%d:%02d left"
-msgstr "%d:%02d απομένουν"
-
-#: ../src/soundconverter.py:2308
-msgid "Ready"
-msgstr "Έτοιμο"
-
-#: ../src/soundconverter.py:2389
-#, python-format
-msgid "%s: OK"
-msgstr "%s: Εντάξει"
-
-#: ../src/soundconverter.py:2424
-#, python-format
-msgid "Usage: %s [options] [soundfile ...]"
-msgstr "Χρήση: %s [options] [soundfile ...]"
-
-#: ../src/soundconverter.py:2439
-msgid "Print out a usage summary."
-msgstr "Εκτυπώστε οδηγίες χρήσης."
-
-#: ../src/soundconverter.py:2442
-msgid ""
-"Convert in batch mode, from command line, without a graphical user\n"
-" interface. You can use this from, say, shell scripts."
-msgstr ""
-"Μετατροπή από την γραμμή εντολών (κατάσταση  batch), χωρίς γραφικό "
-"περιβάλλον.\n"
-" Π.χ. για χρήση μέσω εντολών κελύφους."
-
-#: ../src/soundconverter.py:2445
-#, python-format
-msgid ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
-msgstr ""
-"Θέστε το \"MIME type\" εξόδου για την κατάσταση batch. \n"
-" Το προεπιλεγμένο είναι %s . Επίσης, μάλλον θα θέλετε να θέσετε\n"
-" και το επίθημα εξόδου."
-
-#: ../src/soundconverter.py:2448
-msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Ησυχία. Μη καταγράφεις το κανονικό αποτέλεσμα, μόνο λάθη."
-
-#: ../src/soundconverter.py:2451
-#, fuzzy
-msgid "Print additionnal debug information"
-msgstr "Εκτύπωση επιπρόσθετων πληροφοριών διόρθωσης λαθών"
-
-#: ../src/soundconverter.py:2454
-#, python-format
-msgid ""
-"Set the output filename suffix for batch mode. The default is \n"
-" %s . Note that the suffix does not affect\n"
-" the output MIME type."
-msgstr ""
-"Θεστε το επίθημα του αρχείου εξόδου για την κατάσταση batch. Το "
-"προεπιλεγμένο είναι \n"
-" %s. Το επίθημα δεν επηρρεάζει τον τύπο εξόδου ΜΙΜΕ ."
-
-#: ../src/soundconverter.py:2457
-msgid ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
-msgstr ""
-"Δείξε τις ετικέτες των αρχείων εισόδου αντί να τα μετατρέψεις. \n"
-" Σε γραμμή εντολών, χωρίς οθόνη γραφικών(GUI)."
 
 #: ../data/soundconverter.glade.h:1
 msgid "<b>How to name files?</b>"
@@ -361,109 +85,88 @@ msgid "Error"
 msgstr "Σφάλμα"
 
 #: ../data/soundconverter.glade.h:16
-msgid "FLAC"
-msgstr "FLAC"
-
-#: ../data/soundconverter.glade.h:17
 msgid "File exists already"
 msgstr "Αρχείο ήδη υπάρχον"
 
-#: ../data/soundconverter.glade.h:18
+#: ../data/soundconverter.glade.h:17
 msgid "Filename pattern: "
 msgstr "Ονοματοδοσία αρχείου: "
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:18
 msgid "Filter "
 msgstr "Φίλτρο "
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:19
 msgid "Format: "
 msgstr "Τύπος αρχείου "
 
-#: ../data/soundconverter.glade.h:21
-msgid "Free Lossless compression"
-msgstr "Ελεύθερη συμπίεση χωρίς απώλειες"
-
-#: ../data/soundconverter.glade.h:22
-msgid "Free Lossy Compression"
-msgstr "Ελεύθερη συμπίεση με απώλειες"
-
-#: ../data/soundconverter.glade.h:23
+#: ../data/soundconverter.glade.h:20
 msgid "GNOME Sound Conversion"
 msgstr "ΓΝΩΜΙΚΟ (GNOME), Μετατροπή Ηχου"
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:21
 msgid "Into a specified folder"
 msgstr "Σε προκαθορισμένο φάκελο"
 
-#: ../data/soundconverter.glade.h:25
-msgid "MP3"
-msgstr "MP3"
-
-#: ../data/soundconverter.glade.h:26
+#: ../data/soundconverter.glade.h:22
 msgid "MP3 Encoder is not present."
 msgstr "Κωδικοποιητής ΜΡ3 δεν υπάρχει."
 
-#: ../data/soundconverter.glade.h:27
-msgid "No Compression"
-msgstr "Μη συμπίεση"
-
-#: ../data/soundconverter.glade.h:28
-msgid "Non-Free Lossy Compression"
-msgstr "Μη-ελεύθερη συμπίεση με απώλειες"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Ogg Vorbis"
-msgstr "Ogg Vorbis"
-
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:23
 #, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
-"MP3  (.mp3)\n"
+"MP3 (.mp3)\n"
 "FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
 msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3 (.mp3)\n"
 "FLAC Χωρίς απώλειες (.flac)\n"
 "M$ Wave (.wav)"
 
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:28
 msgid "Preferences"
 msgstr "Προτιμήσεις"
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:29
 msgid "Quality:"
 msgstr "Ποιότητα:"
 
-#: ../data/soundconverter.glade.h:36
-msgid "Read how to install"
-msgstr "Διαβάστε πώς να το εγκαταστήσετε"
-
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:30
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Διαγραφή όλων των χαρακτήρων εκτός γραμμάτων, ψηφίων και ./_-"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:31
 msgid "Replace all messy characters"
 msgstr "Αντικατάσταση όλων των προβληματικών χαρακτήρων"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:32
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:33
 msgid "Same folder as the input file"
 msgstr "Στον ίδιο φάκελο όπως το αρχείο εισόδου"
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:34
 msgid "SoundConverter"
 msgstr "ΣάουντΚονβέρτερ"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:35
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:36
+#, fuzzy
 msgid ""
 "Very Low\n"
 "Low\n"
 "Normal\n"
 "High\n"
-"Very High"
+"Very High\n"
+"Insanely High"
 msgstr ""
 "Κατώτατη\n"
 "Χαμηλή\n"
@@ -471,35 +174,39 @@ msgstr ""
 "Υψηλή\n"
 "Υψιστη"
 
-#: ../data/soundconverter.glade.h:46
-msgid "WAV"
-msgstr "WAV"
-
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:42
 msgid "Where to place results?"
 msgstr "Που να τοποθετήσω τα αρχεία εξόδου;"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:43
 msgid "_Add File"
 msgstr "_Προσθήκη Αρχείου"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:44
 msgid "_Apply to entire queue"
 msgstr "_Εφαρμογή σε ολόκληρη τη σειρά αναμονής"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:45
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:46
 msgid "_Overwrite"
 msgstr "_Αντικατάσταση"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:47
 msgid "_Remove"
 msgstr "_Διαγραφή"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:48
 msgid "_Skip"
 msgstr "Παράβλεψη"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:49
+msgid "aac"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:50
 msgid ""
 "artist/album\n"
 "artist - album"
@@ -507,23 +214,23 @@ msgstr ""
 "Καλλιτέχνις/άλμπουμ\n"
 "Καλλιτέχνις - άλμπουμ"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:52
 msgid "dialog1"
 msgstr "διάλογος1"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:53
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:54
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:55
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:56
 msgid ""
 "track_number - track_title\n"
 "track_title\n"
@@ -531,18 +238,347 @@ msgstr ""
 "αριθμός_κομματιού - τίτλος_κομματιού\n"
 "τίτλος_κομματιού\n"
 
-#: ../data/soundconverter.glade.h:62
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../data/soundconverter.glade.h:60
+msgid "translator_credits"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:61
 msgid "wav"
 msgstr "wav"
 
+#. traductors: These are the custom filename patterns. Only if it does make sense.
+#: ../src/soundconverter.py:154
 #, fuzzy
+msgid "Artist Album Title Track Total Genre Date Year Timestamp"
+msgstr "Καλλιτέχνης Αλμπουμ Τίτλος Κομμάτι Σύνολο Είδος Ημερομηνία Ετος"
+
+#: ../src/soundconverter.py:188
+msgid "All files"
+msgstr ""
+
+#: ../src/soundconverter.py:589
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"Σφάλμα:%s\n"
+"%s\n"
+
+#: ../src/soundconverter.py:815
+msgid "Internal error"
+msgstr "Εσωτερικό Σφάλμα"
+
+#: ../src/soundconverter.py:816
+msgid ""
+"Couldn't link GStreamer elements.\n"
+" Please report this as a bug."
+msgstr ""
+"Δεν μπόρεσα να συνδέσω στοιχεία του GStreamer.\n"
+" Παρακαλώ, αναφέρτε το ως σφάλμα (bug)."
+
+#: ../src/soundconverter.py:821
+#, python-format
+msgid "Unknown type %s"
+msgstr "Αγνωστος τύπος %s"
+
+#: ../src/soundconverter.py:822
+#, python-format
+msgid ""
+"The file %s is of an unknown type.\n"
+" Please ask the developers to add support\n"
+" for files of this type if it is important\n"
+" to you."
+msgstr ""
+"Το αρχείο %s είναι αγνώστου τύπου.\n"
+" Ζητήστε από τους υπεύθυνους για την ανάπτυξη \n"
+" του προγράμματος να υποστηρίξουν αρχεία αυτού\n"
+" του τύπου, εαν τα θεωρείτε σημαντικά."
+
+#: ../src/soundconverter.py:1128
+msgid "Target exists."
+msgstr "Υπάρχει ήδη."
+
+#: ../src/soundconverter.py:1129
+#, python-format
+msgid "The output file %s already exists."
+msgstr "Το αρχείο %s ήδη υπάρχει."
+
+#: ../src/soundconverter.py:1184
+#, python-format
+msgid "Cannot create a decoder for '%s' format."
+msgstr "Δεν μπορώ να δημιουργήσω αποκωδικοποιητή για αρχεία του τύπου '%s'."
+
+#: ../src/soundconverter.py:1199
+#, python-format
+msgid "Cannot create '%s' folder."
+msgstr "Δεν μπορώ να δημιουργήσω τον φάκελο '%s' ."
+
+#: ../src/soundconverter.py:1231
+msgid "GStreamer Error:"
+msgstr ""
+
+#: ../src/soundconverter.py:1374
+#, fuzzy
+msgid "Adding files..."
+msgstr "Προσθήκη φακέλου..."
+
+#: ../src/soundconverter.py:1439
+msgid "loading tags..."
+msgstr "Φορτώνονται οι ετικέτες (tags)..."
+
+#: ../src/soundconverter.py:1441
+msgid "no tags"
+msgstr "άνευ ετικέτας"
+
+#: ../src/soundconverter.py:1486
+msgid "unknown"
+msgstr "άγνωστο"
+
+#: ../src/soundconverter.py:1515
+msgid "Same as input, but replacing the suffix"
+msgstr "Το ίδιο όπως το αρχικό, αλλά με αντικατάσταση του επιθήματος"
+
+#: ../src/soundconverter.py:1516
+msgid "Same as input, but with an additional suffix"
+msgstr "Το ίδιο όπως το αρχικό, αλλά με πρόσθετο επίθημα."
+
+#: ../src/soundconverter.py:1517
+msgid "Track number - title"
+msgstr "Αριθμός κομματιού - τίτλος"
+
+#: ../src/soundconverter.py:1518
+msgid "Track title"
+msgstr "Τίτλος κομματιού"
+
+#: ../src/soundconverter.py:1519
+msgid "Artist - title"
+msgstr "Καλλιτέχνης - τίτλος"
+
+#: ../src/soundconverter.py:1520
+msgid "Custom filename pattern"
+msgstr "Προσαρμοσμένο όνομα αρχειου"
+
+#: ../src/soundconverter.py:1524
+msgid "artist/album"
+msgstr "καλλιτέχνης/άλμπουμ"
+
+#: ../src/soundconverter.py:1525
+msgid "artist-album"
+msgstr "καλλιτέχνις-άλμπουμ"
+
+#: ../src/soundconverter.py:1526
+msgid "artist - album"
+msgstr "καλλιτέχνης - άλμπουμ"
+
+#: ../src/soundconverter.py:1582
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Ονοματοδοσία αρχείου: "
+
+#: ../src/soundconverter.py:1713
+#, python-format
+msgid "Into folder %s"
+msgstr "Στον φάκελο %s"
+
+#: ../src/soundconverter.py:1792
+#, python-format
+msgid "Target bitrate: %s"
+msgstr "Επιθυμητή συμπίεση: %s"
+
+#: ../src/soundconverter.py:2068
+#, fuzzy
+msgid "Conversion Canceled"
+msgstr "Μετατροπή Ακυρώθη"
+
+#: ../src/soundconverter.py:2103
+msgid "Cannot overwrite source file(s)!"
+msgstr ""
+
+#: ../src/soundconverter.py:2116
+#, python-format
+msgid ""
+"The output file <i>%s</i>\n"
+" exists already.\n"
+" Do you want to skip the file, overwrite it or cancel the conversion?\n"
+msgstr ""
+"Το αρχείο  <i>%s</i>\n"
+" υπάρχει ήδη.\n"
+" Θέλετε να παραβλέψετε την μετατροπή του, να γράψετε στο ήδη υπάρχον ή να "
+"ακυρώσετε την μετατροπή;\n"
+
+#: ../src/soundconverter.py:2212
+#, python-format
+msgid "Conversion done, in %s"
+msgstr "Μετατροπή εξετελέσθη, εις %s"
+
+#: ../src/soundconverter.py:2248
+msgid "Open a file"
+msgstr "Άνοιγμα ενός αρχείου"
+
+#: ../src/soundconverter.py:2346
+msgid "Add Folder..."
+msgstr "Προσθήκη φακέλου..."
+
+#: ../src/soundconverter.py:2474
+#, fuzzy
+msgid "Conversion cancelled"
+msgstr "Μετατροπή Ακυρώθη"
+
+#: ../src/soundconverter.py:2497
+msgid "Waiting for tags"
+msgstr "Αναμονή για ετικέτες..."
+
+#: ../src/soundconverter.py:2504
+msgid "Waiting for tags..."
+msgstr "Αναμονή για ετικέτες..."
+
+#: ../src/soundconverter.py:2512 ../src/soundconverter.py:2525
+msgid "Paused"
+msgstr "Σε παύση"
+
+#: ../src/soundconverter.py:2529
+msgid "Canceled"
+msgstr "Ακυρώθηκε"
+
+#: ../src/soundconverter.py:2578
+#, python-format
+msgid "Converting file %d of %d  (%s)"
+msgstr "Μετετρέπεται το %d αρχείο, από τα %d (%s)"
+
+#: ../src/soundconverter.py:2591
+msgid "Converting"
+msgstr "Μετατρέπω"
+
+#: ../src/soundconverter.py:2608
+#, python-format
+msgid "%d:%02d left"
+msgstr "%d:%02d απομένουν"
+
+#: ../src/soundconverter.py:2613
+msgid "Ready"
+msgstr "Έτοιμο"
+
+#: ../src/soundconverter.py:2694
+#, python-format
+msgid "%s: OK"
+msgstr "%s: Εντάξει"
+
+#: ../src/soundconverter.py:2755
+#, python-format
+msgid "Usage: %s [options] [soundfile ...]"
+msgstr "Χρήση: %s [options] [soundfile ...]"
+
+#: ../src/soundconverter.py:2770
+msgid "Print out a usage summary."
+msgstr "Εκτυπώστε οδηγίες χρήσης."
+
+#: ../src/soundconverter.py:2773
+msgid ""
+"Convert in batch mode, from command line, without a graphical user\n"
+" interface. You can use this from, say, shell scripts."
+msgstr ""
+"Μετατροπή από την γραμμή εντολών (κατάσταση  batch), χωρίς γραφικό "
+"περιβάλλον.\n"
+" Π.χ. για χρήση μέσω εντολών κελύφους."
+
+#: ../src/soundconverter.py:2776
+#, python-format
+msgid ""
+"Set the output MIME type for batch mode. The default is\n"
+" %s . Note that you probably want to set\n"
+" the output suffix as well."
+msgstr ""
+"Θέστε το \"MIME type\" εξόδου για την κατάσταση batch. \n"
+" Το προεπιλεγμένο είναι %s . Επίσης, μάλλον θα θέλετε να θέσετε\n"
+" και το επίθημα εξόδου."
+
+#: ../src/soundconverter.py:2779
+msgid "Be quiet. Don't write normal output, only errors."
+msgstr "Ησυχία. Μη καταγράφεις το κανονικό αποτέλεσμα, μόνο λάθη."
+
+#: ../src/soundconverter.py:2782
+#, fuzzy
+msgid "Print additional debug information"
+msgstr "Εκτύπωση επιπρόσθετων πληροφοριών διόρθωσης λαθών"
+
+#: ../src/soundconverter.py:2785
+#, python-format
+msgid ""
+"Set the output filename suffix for batch mode. The default is \n"
+" %s . Note that the suffix does not affect\n"
+" the output MIME type."
+msgstr ""
+"Θεστε το επίθημα του αρχείου εξόδου για την κατάσταση batch. Το "
+"προεπιλεγμένο είναι \n"
+" %s. Το επίθημα δεν επηρρεάζει τον τύπο εξόδου ΜΙΜΕ ."
+
+#: ../src/soundconverter.py:2788
+msgid ""
+"Show tags for input files instead of converting them. This indicates \n"
+" command line batch mode and disables the graphical user interface."
+msgstr ""
+"Δείξε τις ετικέτες των αρχείων εισόδου αντί να τα μετατρέψεις. \n"
+" Σε γραμμή εντολών, χωρίς οθόνη γραφικών(GUI)."
+
+#: ../src/soundconverter.py:2791
+msgid "Force number of concurrent conversions."
+msgstr ""
+
+#, fuzzy
+#~ msgid "_File"
+#~ msgstr "_Προσθήκη Αρχείου"
+
+#~ msgid "skipping: '%s'"
+#~ msgstr "παραβλέπεται:'%s'"
+
+#~ msgid "Creating folder: '%s'"
+#~ msgstr "Δημιουργία φακέλου: '%s'"
+
+#~ msgid "Cannot set permission on '%s'"
+#~ msgstr "Δεν μπορώ να θέσω άδεια στο '%s'"
+
+#~ msgid "file already present: '%s'"
+#~ msgstr "Αρχείο ήδη υπάρχον: '%s'"
+
+#~ msgid "canceling conversion."
+#~ msgstr "ακυρώνω την μετατροπή."
+
+#~ msgid "FLAC"
+#~ msgstr "FLAC"
+
+#~ msgid "Free Lossless compression"
+#~ msgstr "Ελεύθερη συμπίεση χωρίς απώλειες"
+
+#~ msgid "Free Lossy Compression"
+#~ msgstr "Ελεύθερη συμπίεση με απώλειες"
+
+#~ msgid "MP3"
+#~ msgstr "MP3"
+
+#~ msgid "No Compression"
+#~ msgstr "Μη συμπίεση"
+
+#~ msgid "Non-Free Lossy Compression"
+#~ msgstr "Μη-ελεύθερη συμπίεση με απώλειες"
+
+#~ msgid "Ogg Vorbis"
+#~ msgstr "Ogg Vorbis"
+
+#~ msgid "Read how to install"
+#~ msgstr "Διαβάστε πώς να το εγκαταστήσετε"
+
 #~ msgid ""
 #~ "Very Low\n"
 #~ "Low\n"
 #~ "Normal\n"
 #~ "High\n"
-#~ "Very High\n"
-#~ "Insanely High"
+#~ "Very High"
 #~ msgstr ""
 #~ "Κατώτατη\n"
 #~ "Χαμηλή\n"
@@ -550,18 +586,5 @@ msgstr "wav"
 #~ "Υψηλή\n"
 #~ "Υψιστη"
 
-#, fuzzy
-#~ msgid "_File"
-#~ msgstr "_Προσθήκη Αρχείου"
-
-#, fuzzy
-#~ msgid "Adding files..."
-#~ msgstr "Προσθήκη φακέλου..."
-
-#, fuzzy
-#~ msgid "Available patterns:"
-#~ msgstr "Ονοματοδοσία αρχείου: "
-
-#, fuzzy
-#~ msgid "Conversion cancelled"
-#~ msgstr "Μετατροπή Ακυρώθη"
+#~ msgid "WAV"
+#~ msgstr "WAV"

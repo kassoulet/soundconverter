@@ -1,7 +1,5 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
-Name=No name
 _Name=Sound Converter
 _GenericName=Audio Format Converter
 _Comment=Convert audio files into other formats
@@ -12,4 +10,4 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=GNOME;GTK;AudioVideo;
-GenericName[en_US]=
+
