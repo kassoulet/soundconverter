@@ -1555,6 +1555,7 @@ class PreferencesDialog:
 		"resample-rate": 48000,
 		"flac-speed": 0,
 		"force-mono": 0,
+		"last-used-folder": None,
 	}
 
 	sensitive_names = ["vorbis_quality", "choose_folder", "create_subfolders",
@@ -2299,7 +2300,6 @@ class CustomFileChooser:
 		self.pattern.append(pat)
 		self.store.append(["%s (%s)" %(name,pat)])
 
-
 	def filter_cb(self, info, pattern):
 		filename = info[2]
 		return filename.lower().endswith(pattern[1:])
@@ -2317,31 +2317,26 @@ class CustomFileChooser:
 			filter.add_pattern('*.*')
 		self.fcw.set_filter(filter)
 
-	def run(self):
+	def __getattr__(self, attr):
 		"""
-		Display the dialog
+		Redirect all missing attributes/methods 
+		to dialog.
 		"""
-		return self.dlg.run()
+		try:
+			# defaut to dialog attributes
+			return getattr(self.dlg, attr)
+		except AttributeError:
+			# fail back to inner file chooser widget
+			return getattr(self.fcw, attr)
 
-	def hide(self):
-		"""
-		Hide the dialog
-		"""
-		self.dlg.hide()
-
-	def get_uris(self):
-		"""
-		Return all the selected uris
-		"""
-		return self.fcw.get_uris()
 
 
 class SoundConverterWindow:
 
 	"""Main application class."""
 
-	sensitive_names = [ "remove", "clear", "toolbutton_clearlist", "convert_button" ]
-	unsensitive_when_converting = [ "remove", "clear", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "toolbutton_clearlist", "filelist", "menubar" ]
+	sensitive_names = [ "remove", "clearlist", "toolbutton_clearlist", "convert_button" ]
+	unsensitive_when_converting = [ "remove", "clearlist", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "toolbutton_clearlist", "filelist", "menubar" ]
 
 	def __init__(self, glade):
 
@@ -2433,14 +2428,23 @@ class SoundConverterWindow:
 	on_quit_button_clicked = close
 
 	def on_add_activate(self, *args):
+		last_folder = self.prefs.get_string('last-used-folder')
+		if last_folder:
+			self.addchooser.set_current_folder_uri(last_folder)
+		
 		ret = self.addchooser.run()
 		self.addchooser.hide()
 		if ret == gtk.RESPONSE_OK:
 			self.filelist.add_uris(self.addchooser.get_uris())
+			self.prefs.set_string('last-used-folder', self.addchooser.get_current_folder_uri())
 		self.set_sensitive()
 
 
 	def on_addfolder_activate(self, *args):
+		last_folder = self.prefs.get_string('last-used-folder')
+		if last_folder:
+			self.addfolderchooser.set_current_folder_uri(last_folder)
+
 		ret = self.addfolderchooser.run()
 		self.addfolderchooser.hide()
 		if ret == gtk.RESPONSE_OK:
@@ -2452,8 +2456,9 @@ class SoundConverterWindow:
 				filter = os.path.splitext(filepattern[self.combo.get_active()]
 						[1]) [1]
 
-
 			self.filelist.add_uris(folders, filter = filter)
+
+			self.prefs.set_string('last-used-folder', self.addfolderchooser.get_current_folder_uri())
 
 			#base,notused = os.path.split(os.path.commonprefix(folders))
 			#filelist = []

@@ -1,3 +1,9 @@
+2009-10-03  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Remember the last used folder when adding
+	  files/folders.
+	  (thanks szpak, add #4807)
+
 2009-09-30  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix wrong destination folder when using both 
