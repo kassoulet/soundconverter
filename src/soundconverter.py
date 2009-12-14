@@ -563,7 +563,7 @@ class TargetNameGenerator:
 		if self.folder is None:
 			folder = root
 		else:
-			folder = self.folder
+			folder = urllib.quote(self.folder)
 
 		result = os.path.join(folder, basefolder, urllib.quote(result))
 
@@ -894,6 +894,7 @@ class Pipeline(BackgroundTask):
 		error.show("Error", "failed to install plugins: %s" % markup_escape(str(result)))
 
 	def on_error(self, error):
+		self.error = error
 		log("error: %s (%s)" % (error,
 			self.sound_file.get_filename_for_display()))
 
@@ -974,7 +975,7 @@ class TypeFinder(Pipeline):
 
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
-		#debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
+		debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
 		self.sound_file.mime_type = None
 		#self.sound_file.mime_type = mime_type
 		for t in mime_whitelist:
@@ -988,6 +989,8 @@ class TypeFinder(Pipeline):
 
 	def finish(self):
 		Pipeline.finish(self)
+		if self.error:
+			return
 		if self.found_type_hook and self.sound_file.mime_type:
 			gobject.idle_add(self.found_type_hook, self.sound_file, self.sound_file.mime_type)
 

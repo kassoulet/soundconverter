@@ -1,3 +1,13 @@
+2009-12-14  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Add missing quoting when using destination
+	  folder.
+	  
+2009-11-09  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix hanging when trying to load DXR files.
+	  (thanks Nastrafireblaze, fix lp:479420)
+
 2009-10-03  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Remember the last used folder when adding
