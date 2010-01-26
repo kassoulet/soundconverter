@@ -635,6 +635,7 @@ class BackgroundTask:
 		print 'emit', self, signal
 		gobject.idle_add(getattr(self, signal))
 		if signal in self.listeners:
+			print self.listeners[signal]
 			for listener in self.listeners[signal]:
 				print 'add. listener:', listener, signal, self
 				gobject.idle_add(listener, self)
@@ -919,7 +920,7 @@ class Pipeline(BackgroundTask):
 		del self.watch_id
 
 	def get_position(self):
-		return 0
+		return NotImplementedError
 
 
 class TypeFinder(Pipeline):
@@ -1211,9 +1212,6 @@ class Converter(Decoder):
 		error.show("<b>%s</b>" % _("GStreamer Error:"), "%s\n<i>(%s)</i>" % (err,
 			self.sound_file.get_filename_for_display()))
 
-	def get_position(self):
-		return self.position
-
 	def set_vorbis_quality(self, quality):
 		self.vorbis_quality = quality
 
@@ -1275,6 +1273,7 @@ class Converter(Decoder):
 	def add_aac_encoder(self):
 		return "faac profile=2 bitrate=%s ! ffmux_mp4" % \
 			(self.aac_quality * 1000)
+
 
 class FileList:
 	"""List of files added by the user."""
@@ -1413,6 +1412,7 @@ class FileList:
 		base,notused = os.path.split(os.path.commonprefix(files))
 		base += "/"
 
+
 		for f in files:
 			sound_file = SoundFile(f, base)
 			if sound_file.get_uri() in self.filelist:
@@ -1425,6 +1425,12 @@ class FileList:
 			#typefinder.add_listener('finished', self.found_type)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add_task(typefinder)
+			
+		self.skiptags = len(files) > 100
+		if self.skiptags:
+			log(_('too much files, skipping tag reading.'))
+			for i in self.model:
+				i[0] = self.format_cell(i[1])
 
 		if files and not self.typefinders.running:
 			self.window.progressbarstatus.show()
@@ -1438,13 +1444,15 @@ class FileList:
 
 	def typefinder_queue_ended(self):
 		print 'typefinder_queue_ended'
-		#self.window.set_status()
-		#self.window.progressbarstatus.hide()
-		if not self.tagreaders.running:
-			self.window.set_status(_('Reading tags...'))
-			self.tagreaders.start()
-			gobject.timeout_add(100, self.update_progress, self.tagreaders)
-			self.tagreaders.queue_ended = self.tagreader_queue_ended
+		if self.skiptags:
+			self.window.set_status()
+			self.window.progressbarstatus.hide()
+		else:
+			if not self.tagreaders.running:
+				self.window.set_status(_('Reading tags...'))
+				self.tagreaders.start()
+				gobject.timeout_add(100, self.update_progress, self.tagreaders)
+				self.tagreaders.queue_ended = self.tagreader_queue_ended
 
 
 	def tagreader_queue_ended(self):
@@ -1463,6 +1471,7 @@ class FileList:
 							% _("loading tags...")
 		template_notags  = '<span foreground="red">%s</span>\n<small>%%(filename)s</small>' \
 							% _("no tags")
+		template_skiptags  = '%(filename)s'
 
 		params = {}
 		params["filename"] = markup_escape(unquote_filename(sound_file.get_filename()))
@@ -1473,11 +1482,12 @@ class FileList:
 		else:
 			params["bitrate"] = ""
 
-
 		if sound_file.have_tags:
 			template = template_tags
 		else:
-			if sound_file.tags_read:
+			if self.skiptags:
+				template = template_skiptags
+			elif sound_file.tags_read:
 				template = template_notags
 			else:
 				template = template_loading
@@ -2250,22 +2260,33 @@ class ConverterQueue(TaskQueue):
 		c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
 		c.init()
 		self.add_task(c)
+		c.add_listener('finished', self.on_task_finished)
 		c.got_duration = False
 		#self.total_duration += c.get_duration()
+		gobject.timeout_add(100, self.set_progress)
+		self.all_tasks = None
 
-	def work_hook(self, tasks):
+	def __work_hook(self, tasks):
 		gobject.idle_add(self.set_progress, (tasks))
 
 	def get_progress(self, task):
 		return (self.duration_processed + task.get_position()) / self.total_duration
 
-	def set_progress(self, tasks):
+	def set_progress(self, tasks=None):
+	
+		tasks = self.running_tasks
 		filename = ""
 		if tasks and tasks[0]:
 			filename = tasks[0].sound_file.get_filename_for_display()
 
 		# try to get all tasks durations
 		total_duration = self.total_duration
+		if not self.all_tasks:
+			self.all_tasks = []
+			self.all_tasks.extend(self.waiting_tasks)
+			self.all_tasks.extend(self.running_tasks)
+			self.all_tasks.extend(self.finished_tasks)
+			
 		for task in self.all_tasks:
 			if not task.got_duration:
 				duration = task.sound_file.duration
@@ -2283,9 +2304,9 @@ class ConverterQueue(TaskQueue):
 		#print self.duration_processed, position, total_duration
 		self.window.set_progress(self.duration_processed + position,
 							 total_duration, filename)
-		return False
+		return True
 
-	def finish_hook(self, task):
+	def on_task_finished(self, task):
 		self.duration_processed += task.get_duration()
 
 	def finish(self):
@@ -2416,7 +2437,7 @@ class SoundConverterWindow(GladeWindow):
 		self.existsdialog.apply_to_all = glade.get_widget("apply_to_all")
 		self.status = glade.get_widget("statustext")
 		self.prefs = PreferencesDialog(glade)
-		self.progressfile = glade.get_widget("progressfile")
+		#self.progressfile = glade.get_widget("progressfile")
 
 		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_("Add Folder..."),
@@ -2445,7 +2466,7 @@ class SoundConverterWindow(GladeWindow):
 		self.combo.set_active(0)
 		self.addfolderchooser.set_extra_widget(self.combo)
 
-		self.connect(glade, [self.prefs])
+		#self.connect(glade, [self.prefs])
 
 		self.about.set_property("name", NAME)
 		self.about.set_property("version", VERSION)
@@ -2466,12 +2487,14 @@ class SoundConverterWindow(GladeWindow):
 
 		self.set_status()
 
+		glade.signal_autoconnect(self)
+
 	# This bit of code constructs a list of methods for binding to Gtk+
 	# signals. This way, we don't have to maintain a list manually,
 	# saving editing effort. It's enough to add a method to the suitable
 	# class and give the same name in the .glade file.
 
-	def connect(self, glade, objects):
+	def __connect(self, glade, objects):
 		dicts = {}
 		for o in [self] + objects:
 			for name, member in inspect.getmembers(o):
@@ -2670,7 +2693,9 @@ class SoundConverterWindow(GladeWindow):
 		self._lock_convert_button = False
 
 	def display_progress(self, remaining):
-		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_done+1, self.converter.tasks_number, remaining ))
+		done = len(self.converter.finished_tasks)
+		total = done + len(self.converter.waiting_tasks) + len(self.converter.running_tasks)
+		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( done, total, remaining ))
 
 	def set_progress(self, done_so_far, total, current_file=None):
 		if (total==0) or (done_so_far==0):
