@@ -61,12 +61,6 @@ except ImportError:
 	print "%s needs gnome-python 2.10!" % NAME
 	sys.exit(1)
 
-# only so I can test SC in my older boxes
-if 'filename_display_name' not in dir(gobject):
-	def __fake_display_name(name):
-		return name
-	gobject.filename_display_name = __fake_display_name
-
 # GStreamer
 try:
 	# 0.10
@@ -86,7 +80,6 @@ print "  using Gstreamer version: %s, Python binding version: %s" % (
 FORMAT_PERCENT_SCALE = 10000
 
 # notifications
-
 def notification(message):
 	pass
 
@@ -563,7 +556,7 @@ class TargetNameGenerator:
 		if self.folder is None:
 			folder = root
 		else:
-			folder = urllib.quote(self.folder)
+			folder = urllib.quote(self.folder, '/:')
 
 		result = os.path.join(folder, basefolder, urllib.quote(result))
 
@@ -600,60 +593,53 @@ class ErrorPrinter:
 
 error = None
 
-_thread_sleep = 0.1
-#_thread_method = "thread"
-#_thread_method = "idle"
-_thread_method = "timer"
-
 class BackgroundTask:
 
 	"""A background task.
 
-	To use: derive a subclass and define the methods setup, work, and
-	finish. Then call the run method when you want to start the task.
-	Call the stop method if you want to stop the task before it finishes
+	To use: derive a subclass and define the methods started, and
+	finished. Then call the start() method when you want to start the task.
+	You must call done() when the processing is finished.
+	Call the abort() method if you want to stop the task before it finishes
 	normally."""
 
 	def __init__(self):
 		self.paused = False
+		self.running = False
 		self.current_paused_time = 0
+		self.listeners = {}
+		self.progress = None
 
-	def run(self):
-		"""Start running the task. Call setup()."""
+	def start(self):
+		"""Start running the task. Call started()."""
 		try:
-			self.setup()
+			self.emit('started')
 		except SoundConverterException, e:
 			error.show_exception(e)
 			return
+		self.running = True
 		self.paused = False
 		self.run_start_time = time.time()
 		self.current_paused_time = 0
 		self.paused_time = 0
 
-		if _thread_method == "timer":
-			self.id = gobject.timeout_add( int(_thread_sleep*1000), self.do_work)
-		elif _thread_method == "idle":
-			self.id = gobject.idle_add(self.do_work)
-		else:
-			thread.start_new_thread(self.thread_work, ())
+	def add_listener(self, signal, listener):
+		"""Add a custom listener to the given signal. Signals are 'started' and 'finished'"""
+		if signal not in self.listeners:
+			self.listeners[signal] = []
+		self.listeners[signal].append(listener)
+		
+	def emit(self, signal):
+		"""Call the signal handlers. 
+		Callbacks are called as gtk idle funcs to be sure they are in the main thread."""
+		print 'emit', self, signal
+		gobject.idle_add(getattr(self, signal))
+		if signal in self.listeners:
+			for listener in self.listeners[signal]:
+				print 'add. listener:', listener, signal, self
+				gobject.idle_add(listener, self)
 
-	def thread_work(self):
-		working = True
-		while self and working:
-			working = self.do_work_()
-			sleep(_thread_sleep)
-			while gtk.events_pending():
-				gtk.main_iteration()
-
-
-	def do_work(self):
-		working = self.do_work_()
-		while gtk.events_pending():
-			gtk.main_iteration()
-		return working
-
-
-	def do_work_(self):
+	def __do_work_(self):
 		"""Do some work by calling work(). Call finish() if work is done."""
 		try:
 			if _thread_method == "idle":
@@ -670,31 +656,29 @@ class BackgroundTask:
 			if self.work():
 				return True
 			else:
-				self.run_finish_time = time.time()
-				self.finish()
-				self._run = False
-				self = None
+				self.done()
 				return False
 		except SoundConverterException, e:
 			self._run = False
 			error.show_exception(e)
 			return False
 
-	def stop(self):
-		"""Stop task processing. Finish() is not called."""
-		if 'id' in dir(self) and self.id is not None:
-			gobject.source_remove(self.id)
-			self.id = None
+	def done(self):
+		"""Call to end normally the task."""
+		#self.run_finish_time = time.time()
+		if self.running:
+			self.running = False
+			self.emit('finished')
 
-	def setup(self):
-		"""Set up the task so it can start running."""
+	def abort(self):
+		"""Stop task processing. finished() is not called."""
 		pass
 
-	def work(self):
-		"""Do some work. Return False if done, True if more work to do."""
-		return False
+	def started(self):
+		"""called when the task starts."""
+		pass
 
-	def finish(self):
+	def finished(self):
 		"""Clean up the task after all work has been done."""
 		pass
 
@@ -708,34 +692,25 @@ class TaskQueue(BackgroundTask):
 	simple tasks to it:
 
 		q = TaskQueue()
-		q.add(A)
-		q.add(B)
-		q.add(C)
-		q.run()
+		q.add_task(A)
+		q.add_task(B)
+		q.add_task(C)
+		q.start()
 
 	The task queue behaves as a single task. It will execute the
 	tasks in order and start the next one when the previous finishes."""
 
 	def __init__(self):
 		BackgroundTask.__init__(self)
-		self.tasks = []
-		self.all_tasks = []
-		self.running = None
-		self.tasks_done = 0
-		self.tasks_number = 0
+		self.waiting_tasks = []
+		self.finished_tasks = []
+		self.running_tasks = []
 
-	def is_running(self):
-		if self.running:
-			return True
-		return False
+	def add_task(self, task):
+		"""Add a task to the queue."""
+		self.waiting_tasks.append(task)
 
-	def add(self, task):
-		#print 'adding task:', task
-		self.tasks.append(task)
-		self.all_tasks.append(task)
-		self.tasks_number += 1
-
-	def get_current_task(self):
+	def __get_current_task(self):
 		if self.running:
 			return self.running[0]
 		else:
@@ -743,74 +718,53 @@ class TaskQueue(BackgroundTask):
 
 	def start_next_task(self):
 		#print 'start next tasks:'
-		#self.running = []
-		to_start = get_option('jobs') - len(self.running)
-		#print 'trying to start:', to_start
+		to_start = get_option('jobs') - len(self.running_tasks)
 		for i in range(to_start):
 			try:
-				task = self.tasks.pop()
+				task = self.waiting_tasks.pop(0)
 			except IndexError:
+				if not self.running_tasks:
+					self.done()
 				return
-			self.running.append(task)
-			task.setup()
+			print 'starting:', task.sound_file.get_filename_for_display()
+			self.running_tasks.append(task)
+			task.add_listener('finished', self.task_finished)
+			task.start()
+		self.progress = float(len(self.finished_tasks)) / (
+			len(self.waiting_tasks) + len(self.running_tasks))
 
-	def setup(self):
+	def started(self):
 		""" BackgroundTask setup callback """
-		self.running = []
+		print 'Queue.started'
 		self.start_time = time.time()
-		self.tasks_done = 0
-
 		self.start_next_task()
-		if self.running:
-			[self.setup_hook(task) for task in self.running]
 
-
-	def work(self):
-		""" BackgroundTask work callback """
-		if self.running:
-			self.work_hook(self.running)
-			for task in self.running:
-				ret = task.work()
-				if not ret:
-					self.tasks_done += 1
-					self.finish_hook(task)
-					task.finish()
-					self.running.remove(task)
-					self.start_next_task()
-			return True
-		return False
-
-	def finish(self):
+	def finished(self):
 		""" BackgroundTask finish callback """
-		self.running = None
-		log("Queue done in %ds" % (time.time() - self.start_time))
+		log("Queue done in %.3fs" % (time.time() - self.start_time))
 		self.queue_ended()
-		self.tasks_number = 0
 
+	def task_finished(self, task=None):
+		print 'task finished', task.sound_file.get_filename_for_display()
+		if not self.running_tasks:
+			return
+		self.running_tasks.remove(task)
+		self.finished_tasks.append(task)
+		self.start_next_task()
 
-	def stop(self):
-		if self.running:
-			[task.stop() for task in self.running]
-		BackgroundTask.stop(self)
-		self.running = None
-		self.tasks = []
-		self.tasks_number = 0
-
-	# The following hooks are called after each sub-task has been set up,
-	# after its work method has been called, and after it has finished.
-	# Subclasses may override these to provide additional processing.
-
-	def setup_hook(self, task):
-		pass
-
-	def work_hook(self, task):
-		pass
-
-	def finish_hook(self, task):
-		pass
+	def abort(self):
+		for task in self.running_tasks:
+			task.abort()
+		BackgroundTask.abort(self)
+		self.running_tasks = []
+		self.waiting_tasks = []
 
 	# The following is called when the Queue is finished
 	def queue_ended(self):
+		pass
+
+	# The following when progress changed
+	def progress_hook(self, progress):
 		pass
 
 
@@ -834,30 +788,33 @@ class Pipeline(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.pipeline = None #gst.Pipeline()
-		self.command = ""
+		self.command = []
 		self.parsed = False
 		self.signals = []
 		self.processing = False
 		self.eos = False
 		self.error = None
 
-	def setup(self):
-		#print "Pipeline.setup()"
+	def started(self):
+		print "Pipeline.started()"
 		self.play()
 
-	def work(self):
+	def __work(self):
 		if self.eos:
 			return False
 		return True
 
-	def finish(self):
-		#print "Pipeline.finish()"
+	def finished(self):
+		print "Pipeline.finished()"
 		self.stop_pipeline()
 
+	def abort(self):
+		print "Pipeline.abort()"
+		self.stop_pipeline()
+		BackgroundTask.abort(self)
+
 	def add_command(self, command):
-		if self.command:
-			self.command += " ! "
-		self.command += command
+		self.command.append(command)
 
 	def add_signal(self, name, signal, callback):
 		self.signals.append( (name, signal, callback,) )
@@ -881,7 +838,7 @@ class Pipeline(BackgroundTask):
 			self.parsed = False
 			self.play()
 			return
-		self.finish()
+		self.done()
 		if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
 			dialog = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_MODAL,
 				type=gtk.MESSAGE_INFO,
@@ -905,6 +862,7 @@ class Pipeline(BackgroundTask):
 			error, debug = message.parse_error()
 			self.eos = True
 			self.on_error(error)
+			self.done()
 
 		elif t == gst.MESSAGE_ELEMENT:
 			st = message.structure
@@ -918,6 +876,7 @@ class Pipeline(BackgroundTask):
 
 		elif t == gst.MESSAGE_EOS:
 			self.eos = True
+			self.done()
 
 		elif t == gst.MESSAGE_TAG:
 			self.found_tag(self, "", message.parse_tag())
@@ -925,9 +884,10 @@ class Pipeline(BackgroundTask):
 
 	def play(self):
 		if not self.parsed:
-			debug("launching: '%s'" % self.command)
+			command = ' ! '.join(self.command)
+			debug("launching: '%s'" % command)
 			try:
-				self.pipeline = gst.parse_launch(self.command)
+				self.pipeline = gst.parse_launch(command)
 				bus = self.pipeline.get_bus()
 				for name, signal, callback in self.signals:
 					if name:
@@ -938,6 +898,7 @@ class Pipeline(BackgroundTask):
 			except gobject.GError, e:
 				error.show("GStreamer error when creating pipeline", str(e))
 				self.eos = True # TODO
+				self.done()
 				return
 
 		bus.add_signal_watch()
@@ -960,6 +921,7 @@ class Pipeline(BackgroundTask):
 	def get_position(self):
 		return 0
 
+
 class TypeFinder(Pipeline):
 	def __init__(self, sound_file):
 		Pipeline.__init__(self)
@@ -970,12 +932,18 @@ class TypeFinder(Pipeline):
 		self.add_command(command)
 		self.add_signal("typefinder", "have-type", self.have_type)
 
+	def on_error(self, error):
+		# Yes, we know this isn't *right*, but stop reporting errors...
+		# the fakesink was removed from the pipeline since it's about 10 times faster.
+		# but gstreamer ends pipelines with an error. We know. And we don't care.
+		pass # self.error = error
+
 	def set_found_type_hook(self, found_type_hook):
 		self.found_type_hook = found_type_hook
 
 	def have_type(self, typefind, probability, caps):
 		mime_type = caps.to_string()
-		debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
+		#debug("have_type:", mime_type, self.sound_file.get_filename_for_display())
 		self.sound_file.mime_type = None
 		#self.sound_file.mime_type = mime_type
 		for t in mime_whitelist:
@@ -983,13 +951,13 @@ class TypeFinder(Pipeline):
 				self.sound_file.mime_type = mime_type
 		if not self.sound_file.mime_type:
 			log("Mime type skipped: %s" % mime_type)
+		self.done()
 
-	def work(self):
-		return Pipeline.work(self) and not self.sound_file.mime_type
-
-	def finish(self):
-		Pipeline.finish(self)
+	def finished(self):
+		print 'typefinder.finished'
+		Pipeline.finished(self)
 		if self.error:
+			print 'error:', self.error
 			return
 		if self.found_type_hook and self.sound_file.mime_type:
 			gobject.idle_add(self.found_type_hook, self.sound_file, self.sound_file.mime_type)
@@ -1074,15 +1042,17 @@ class TagReader(Decoder):
 		self.run_start_time = 0
 		self.add_command("fakesink")
 		self.add_signal(None, "message::state-changed", self.on_state_changed)
+		self.tagread = False
 
 	def set_found_tag_hook(self, found_tag_hook):
 		self.found_tag_hook = found_tag_hook
 
 	def on_state_changed(self, bus, message):
 		prev, new, pending = message.parse_state_changed()
-		if new == gst.STATE_PLAYING:
+		if new == gst.STATE_PLAYING and not self.tagread:
+			self.tagread = True
 			debug("TagReading done...")
-			self.finish()
+			self.done()
 		
 	def found_tag(self, decoder, something, taglist):
 		#debug("found_tags:", self.sound_file.get_filename_for_display())
@@ -1102,7 +1072,7 @@ class TagReader(Decoder):
 		except gst.QueryError:
 			pass
 
-	def work(self):
+	def __work(self):
 		if not self.pipeline or self.eos:
 			return False
 
@@ -1120,8 +1090,8 @@ class TagReader(Decoder):
 			return False
 		return Decoder.work(self) and not self.found_tags
 
-	def finish(self):
-		Pipeline.finish(self)
+	def finished(self):
+		Pipeline.finished(self)
 		self.sound_file.tags_read = True
 		if self.found_tag_hook:
 			gobject.idle_add(self.found_tag_hook, self)
@@ -1314,8 +1284,10 @@ class FileList:
 
 	def __init__(self, window, glade):
 		self.window = window
-		self.tagreaders  = TaskQueue()
 		self.typefinders = TaskQueue()
+		self.tagreaders  = TaskQueue()
+		#self.typefinders.progress_hook = self.typefinder_progress
+		#self.tagreaders.progress_hook = self.tagreader_progress
 		# handle the current task for status
 
 		self.filelist={}
@@ -1366,21 +1338,40 @@ class FileList:
 			i = self.model.iter_next(i)
 		return files
 
+	def __typefinder_progress(self, done, total):
+		progress = float(done) / total
+		self.window.progressbarstatus.set_fraction(progress)
+		#self.window.progressbarstatus.set_text('%d / %d' % (done, total))
+
+	def __tagreader_progress(self, done, total):
+		progress = float(done) / total
+		self.window.progressbarstatus.set_fraction(progress)
+		#self.window.progressbarstatus.set_text('%d / %d' % (done, total))
+
+	def update_progress(self, queue):
+		if queue.running:
+			progress = queue.progress
+			self.window.progressbarstatus.set_fraction(progress if progress else 0)
+			return True
+		return False
+		
+
 	def found_type(self, sound_file, mime):
 		debug("found_type", sound_file.get_filename())
 
 		self.append_file(sound_file)
 		self.window.set_sensitive()
 
+		#self.window.progressbarstatus.set_fraction(self.typefinders.progress)
+
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file_tags)
 
-		self.tagreaders.add(tagreader)
-		if not self.tagreaders.is_running():
-			self.tagreaders.run()
+		self.tagreaders.add_task(tagreader)
+		#if not self.tagreaders.running:
+		#	self.tagreaders.run()
 
 	def add_uris(self, uris, base=None, filter=None):
-
 		files = []
 		self.window.set_status(_('Adding files...'))
 
@@ -1431,18 +1422,40 @@ class FileList:
 			self.filelist[sound_file.get_uri()] = True
 
 			typefinder = TypeFinder(sound_file)
+			#typefinder.add_listener('finished', self.found_type)
 			typefinder.set_found_type_hook(self.found_type)
-			self.typefinders.add(typefinder)
+			self.typefinders.add_task(typefinder)
 
-		if files and not self.typefinders.is_running():
+		if files and not self.typefinders.running:
+			self.window.progressbarstatus.show()
 			self.typefinders.queue_ended = self.typefinder_queue_ended
-			self.typefinders.run()
+			self.typefinders.start()
+			gobject.timeout_add(100, self.update_progress, self.typefinders)
+			self.tagreaders.queue_ended = self.tagreader_queue_ended
 		else:
 			self.window.set_status()
 
 
 	def typefinder_queue_ended(self):
+		print 'typefinder_queue_ended'
+		#self.window.set_status()
+		#self.window.progressbarstatus.hide()
+		if not self.tagreaders.running:
+			self.window.set_status(_('Reading tags...'))
+			self.tagreaders.start()
+			gobject.timeout_add(100, self.update_progress, self.tagreaders)
+			self.tagreaders.queue_ended = self.tagreader_queue_ended
+
+
+	def tagreader_queue_ended(self):
+		print 'tagreader_queue_ended'
+		self.window.progressbarstatus.hide()
 		self.window.set_status()
+
+	def abort(self):
+		self.typefinders.abort()
+		self.tagreaders.abort()
+
 
 	def format_cell(self, sound_file):
 		template_tags = "%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n<small>%(filename)s</small>"
@@ -1486,7 +1499,7 @@ class FileList:
 	def append_file(self, sound_file):
 
 		iter = self.model.append([self.format_cell(sound_file), sound_file])
-		self.window.progressbar.pulse()
+		#self.window.progressbar.pulse()
 
 
 	def append_file_tags(self, tagreader):
@@ -1503,7 +1516,7 @@ class FileList:
 			if i[1] == sound_file:
 				i[0] = self.format_cell(sound_file)
 		self.window.set_sensitive()
-		self.window.progressbar.pulse()
+		#self.window.progressbar.pulse()
 
 	def remove(self, iter):
 		uri = self.model.get(iter, 1)[0].get_uri()
@@ -1518,9 +1531,60 @@ class FileList:
 		return True
 
 
-class PreferencesDialog:
 
-	root = "/apps/SoundConverter"
+class GladeWindow(object):
+
+	def __init__(self, glade):
+		self.glade = glade
+	
+
+	def __getattr__(self, attribute):
+		'''Allow direct use of window widget.'''
+		widget = self.glade.get_widget(attribute)
+		if widget is None:
+			raise AttributeError("Widget '%s' not found" % attribute)
+		self.__dict__[attribute] = widget # cache result
+		return widget
+
+
+
+class GConfStore(object):
+
+	def __init__(self, root):
+		self.gconf = gconf.client_get_default()
+		self.gconf.add_dir(root, gconf.CLIENT_PRELOAD_ONELEVEL)
+		self.root = root
+
+	def get_with_default(self, getter, key):
+		if self.gconf.get(self.path(key)) is None:
+			return self.defaults[key]
+		else:
+			return getter(self.path(key))
+
+	def get_int(self, key):
+		return self.get_with_default(self.gconf.get_int, key)
+
+	def set_int(self, key, value):
+		self.gconf.set_int(self.path(key), value)
+
+	def get_float(self, key):
+		return self.get_with_default(self.gconf.get_float, key)
+
+	def set_float(self, key, value):
+		self.gconf.set_float(self.path(key), value)
+
+	def get_string(self, key):
+		return self.get_with_default(self.gconf.get_string, key)
+
+	def set_string(self, key, value):
+		self.gconf.set_string(self.path(key), value)
+
+	def path(self, key):
+		assert self.defaults.has_key(key), "missing gconf default:%s" % key
+		return "%s/%s" % (self.root, key)
+
+
+class PreferencesDialog(GladeWindow, GConfStore):
 
 	basename_patterns = [
 		("%(.inputname)s", _("Same as input, but replacing the suffix")),
@@ -1566,21 +1630,11 @@ class PreferencesDialog:
 						 "subfolder_pattern"]
 
 	def __init__(self, glade):
-		self.gconf = gconf.client_get_default()
-		self.gconf.add_dir(self.root, gconf.CLIENT_PRELOAD_ONELEVEL)
+		GladeWindow.__init__(self, glade)
+		GConfStore.__init__(self, "/apps/SoundConverter")
+		
 		self.dialog = glade.get_widget("prefsdialog")
-		self.into_selected_folder = glade.get_widget("into_selected_folder")
-		self.target_folder_chooser = glade.get_widget("target_folder_chooser")
-		self.basename_pattern = glade.get_widget("basename_pattern")
-		self.custom_filename_box = glade.get_widget("custom_filename_box")
-		self.custom_filename = glade.get_widget("custom_filename")
 		self.example = glade.get_widget("example_filename")
-		self.aprox_bitrate = glade.get_widget("aprox_bitrate")
-		self.quality_tabs = glade.get_widget("quality_tabs")
-		self.delete_original = glade.get_widget("delete_original")
-		self.resample_toggle = glade.get_widget("resample_toggle")
-		self.resample_rate = glade.get_widget("resample_rate")
-		self.vorbis_oga_extension = glade.get_widget("vorbis_oga_extension")
 		self.force_mono = glade.get_widget("force-mono")
 
 		self.target_bitrate = None
@@ -1655,6 +1709,9 @@ class PreferencesDialog:
 		# desactivate output if encoder plugin is not present
 		widget = glade.get_widget('output_mime_type')
 		model = widget.get_model()
+		
+		assert len(model) == len(widgets), 'model:%d widgets:%d' % (len(model), len(widgets))
+		
 		self.present_mime_types = []
 		i = 0
 		for b in widgets:
@@ -1676,13 +1733,13 @@ class PreferencesDialog:
 			w = glade.get_widget("lame_absent")
 			w.show()
 
-		w = glade.get_widget("vorbis_quality")
+		#w = glade.get_widget("vorbis_quality")
 		quality = self.get_float("vorbis-quality")
 		quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4, 1.0:5}
-		w.set_active(5)
+		#w.set_active(5)
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
-				w.set_active(v)
+				self.vorbis_quality.set_active(v)
 		if self.get_int("vorbis-oga-extension"):
 			self.vorbis_oga_extension.set_active(True)
 
@@ -1867,33 +1924,7 @@ class PreferencesDialog:
 		self.sensitive_widgets["vorbis_quality"].set_sensitive(
 			self.get_string("output-mime-type") == "audio/x-vorbis")
 
-	def path(self, key):
-		assert self.defaults.has_key(key), "missing gconf default:%s" % key
-		return "%s/%s" % (self.root, key)
 
-	def get_with_default(self, getter, key):
-		if self.gconf.get(self.path(key)) is None:
-			return self.defaults[key]
-		else:
-			return getter(self.path(key))
-
-	def get_int(self, key):
-		return self.get_with_default(self.gconf.get_int, key)
-
-	def set_int(self, key, value):
-		self.gconf.set_int(self.path(key), value)
-
-	def get_float(self, key):
-		return self.get_with_default(self.gconf.get_float, key)
-
-	def set_float(self, key, value):
-		self.gconf.set_float(self.path(key), value)
-
-	def get_string(self, key):
-		return self.get_with_default(self.gconf.get_string, key)
-
-	def set_string(self, key, value):
-		self.gconf.set_string(self.path(key), value)
 
 	def run(self):
 		self.dialog.run()
@@ -2012,7 +2043,15 @@ class PreferencesDialog:
 
 	def on_vorbis_quality_changed(self, combobox):
 		quality = (0,0.2,0.4,0.6,0.8,1.0)
-		self.set_float("vorbis-quality", quality[combobox.get_active()])
+		fquality = quality[combobox.get_active()]
+		self.hscale_vorbis_quality.set_value(fquality*10)
+		self.set_float("vorbis-quality", fquality)
+		self.update_example()
+
+	def on_hscale_vorbis_quality_value_changed(self, hscale):
+		fquality = hscale.get_value()
+		self.set_float("vorbis-quality", fquality/10.0)
+		self.vorbis_quality.set_active(-1)
 		self.update_example()
 
 	def on_vorbis_oga_extension_toggled(self, toggle):
@@ -2049,6 +2088,13 @@ class PreferencesDialog:
 			"vbr": {9:0,   7:1,   5:2,   3:3,   1:4,   0:5}, # inverted !
 		}
 
+		range_ = {
+			"cbr": 14,
+			"abr": 14,
+			"vbr": 10,
+		}
+		self.hscale_mp3.set_range(0,range_[mode])
+
 		if quality in quality_to_preset[mode]:
 			self.mp3_quality.set_active(quality_to_preset[mode][quality])
 		self.update_example()
@@ -2071,6 +2117,22 @@ class PreferencesDialog:
 		}
 		mode = self.get_string("mp3-mode")
 		self.set_int(keys[mode], quality[mode][combobox.get_active()])
+		self.update_example()
+
+	def on_hscale_mp3_value_changed(self, widget):
+		mode = self.get_string("mp3-mode")
+		keys = {
+			"cbr": "mp3-cbr-quality",
+			"abr": "mp3-abr-quality",
+			"vbr": "mp3-vbr-quality"
+		}
+		quality = {
+			"cbr": (32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320),
+			"abr": (32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320),
+			"vbr": (9, 8, 7, 6, 5, 4, 3, 2, 1, 0),
+		}
+		self.set_int(keys[mode], quality[mode][int(widget.get_value())])
+		self.mp3_quality.set_active(-1)
 		self.update_example()
 
 	def on_resample_rate_changed(self, combobox):
@@ -2187,7 +2249,7 @@ class ConverterQueue(TaskQueue):
 		c.set_mp3_mode(mode)
 		c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
 		c.init()
-		TaskQueue.add(self, c)
+		self.add_task(c)
 		c.got_duration = False
 		#self.total_duration += c.get_duration()
 
@@ -2253,8 +2315,8 @@ class ConverterQueue(TaskQueue):
 		assert seconds == 0
 		return " ".join(result)
 
-	def stop(self):
-		TaskQueue.stop(self)
+	def abort(self):
+		TaskQueue.abort(self)
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
 		self.reset_counters()
@@ -2335,7 +2397,7 @@ class CustomFileChooser:
 
 
 
-class SoundConverterWindow:
+class SoundConverterWindow(GladeWindow):
 
 	"""Main application class."""
 
@@ -2343,6 +2405,7 @@ class SoundConverterWindow:
 	unsensitive_when_converting = [ "remove", "clearlist", "prefs_button" ,"toolbutton_addfile", "toolbutton_addfolder", "toolbutton_clearlist", "filelist", "menubar" ]
 
 	def __init__(self, glade):
+		GladeWindow.__init__(self, glade)
 
 		self.widget = glade.get_widget("window")
 		self.filelist = FileList(self, glade)
@@ -2351,14 +2414,8 @@ class SoundConverterWindow:
 		self.existsdialog = glade.get_widget("existsdialog")
 		self.existsdialog.message = glade.get_widget("exists_message")
 		self.existsdialog.apply_to_all = glade.get_widget("apply_to_all")
-		self.existslabel = glade.get_widget("existslabel")
-		self.progressbar = glade.get_widget("progressbar")
 		self.status = glade.get_widget("statustext")
-		self.about = glade.get_widget("about")
 		self.prefs = PreferencesDialog(glade)
-
-		self.progressframe = glade.get_widget("progress_frame")
-		self.statusframe = glade.get_widget("status_frame")
 		self.progressfile = glade.get_widget("progressfile")
 
 		self.addchooser = CustomFileChooser()
@@ -2421,9 +2478,27 @@ class SoundConverterWindow:
 				dicts[name] = member
 		glade.signal_autoconnect(dicts)
 
+	def __getattr__(self, attribute):
+		'''Allow direct use of window widget.'''
+		widget = self.glade.get_widget(attribute)
+		if widget is None:
+			raise AttributeError("Widget '%s' not found" % attribute)
+		self.__dict__[attribute] = widget # cache result
+		return widget
+
 	def close(self, *args):
-		self.converter.stop()
+		debug('*** Closing ***')
+		self.filelist.abort()
+		self.converter.abort()
+		self.widget.hide_all()
 		self.widget.destroy()
+		# wait one second...
+		# yes, this suxx badly, but signals are still called by gstreamer so wait
+		# a bit for things to calm down, and quit.
+		for i in range(10):
+			time.sleep(0.1)
+			while gtk.events_pending():
+				gtk.main_iteration(False)
 		gtk.main_quit()
 		return True
 
@@ -2460,19 +2535,10 @@ class SoundConverterWindow:
 				filter = os.path.splitext(filepattern[self.combo.get_active()]
 						[1]) [1]
 
-			self.filelist.add_uris(folders, filter = filter)
+			self.filelist.add_uris(folders, filter=filter)
 
 			self.prefs.set_string('last-used-folder', self.addfolderchooser.get_current_folder_uri())
 
-			#base,notused = os.path.split(os.path.commonprefix(folders))
-			#filelist = []
-			#files = []
-			#for folder in folders:
-			#  filelist.extend(vfs_walk(gnomevfs.URI(folder)))
-			#for f in filelist:
-			#  f = f[len(base)+1:]
-			#  files.append(SoundFile(base+"/", f))
-			#self.filelist.add_files(files)
 		self.set_sensitive()
 
 	def on_remove_activate(self, *args):
@@ -2503,15 +2569,15 @@ class SoundConverterWindow:
 			self.set_status(_("Conversion cancelled"))
 		else:
 			self.set_status("")
-			self.converter.run()
+			self.converter.start()
 			self.convertion_waiting = False
 			self.set_sensitive()
 		return False
 
 	def wait_tags_and_convert(self):
 		not_ready = [s for s in self.filelist.get_files() if not s.tags_read]
-		if not_ready:
-			self.progressbar.pulse()
+		#if not_ready:
+		#	self.progressbar.pulse()
 		return True
 
 		self.do_convert()
@@ -2522,10 +2588,10 @@ class SoundConverterWindow:
 		if self._lock_convert_button:
 			return
 
-		if not self.converter.is_running():
+		if not self.converter.running:
 			self.set_status(_("Waiting for tags"))
-			self.progressframe.show()
-			self.statusframe.hide()
+			self.progress_frame.show()
+			self.status_frame.hide()
 			self.progress_time = time.time()
 			#self.widget.set_sensitive(False)
 
@@ -2554,7 +2620,7 @@ class SoundConverterWindow:
 			self.display_progress(_("Paused"))
 
 	def on_button_cancel_clicked(self, *args):
-		self.converter.stop()
+		self.converter.abort()
 		self.set_status(_("Canceled"))
 		self.set_sensitive()
 		self.conversion_ended()
@@ -2581,8 +2647,8 @@ class SoundConverterWindow:
 		self.set_sensitive()
 
 	def conversion_ended(self):
-		self.progressframe.hide()
-		self.statusframe.show()
+		self.progress_frame.hide()
+		self.status_frame.show()
 		self.widget.set_sensitive(True)
 
 	def set_widget_sensitive(self, name, sensitivity):
@@ -2590,7 +2656,7 @@ class SoundConverterWindow:
 
 	def set_sensitive(self):
 
-		[self.set_widget_sensitive(w, not self.converter.is_running())
+		[self.set_widget_sensitive(w, not self.converter.running)
 			for w in self.unsensitive_when_converting]
 
 		self.set_widget_sensitive("remove",
@@ -2600,13 +2666,13 @@ class SoundConverterWindow:
 
 		self._lock_convert_button = True
 		self.sensitive_widgets["convert_button"].set_active(
-			self.converter.is_running() and not self.converter.paused )
+			self.converter.running and not self.converter.paused )
 		self._lock_convert_button = False
 
 	def display_progress(self, remaining):
 		self.progressbar.set_text(_("Converting file %d of %d  (%s)") % ( self.converter.tasks_done+1, self.converter.tasks_number, remaining ))
 
-	def set_progress(self, done_so_far, total, current_file=""):
+	def set_progress(self, done_so_far, total, current_file=None):
 		if (total==0) or (done_so_far==0):
 			self.progressbar.set_text(" ")
 			self.progressbar.set_fraction(0.0)
@@ -2619,7 +2685,11 @@ class SoundConverterWindow:
 
 		self.set_status(_("Converting"))
 
-		self.progressfile.set_markup("<i><small>%s</small></i>" % markup_escape(current_file))
+		if current_file:
+			self.progressfile.set_markup("<i><small>%s</small></i>" % markup_escape(current_file))
+		else:
+			self.progressfile.set_markup("")
+			
 		fraction = float(done_so_far) / total
 
 		self.progressbar.set_fraction( min(fraction, 1.0) )
@@ -2715,7 +2785,7 @@ def cli_convert_main(input_files):
 
 	previous_filename = None
 	queue.run()
-	while queue.is_running():
+	while queue.running:
 		t = queue.get_current_task()
 		if t and not get_option("quiet"):
 			if previous_filename != t.sound_file.get_filename_for_display():
