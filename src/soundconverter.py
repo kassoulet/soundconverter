@@ -345,7 +345,7 @@ encoders = (
 	("vorbisenc",   "Ogg Vorbis"),
 	("oggmux",		"Ogg Vorbis"),
 	("id3v2mux",	"MP3 Tags"),
-	("xingmux",		""),
+	("xingmux",		"Xing Header"),
 	("lame",		"MP3"),
 	("faac",        "AAC"))
 
@@ -1261,7 +1261,8 @@ class Converter(Decoder):
 		return s
 
 	def add_wav_encoder(self):
-		return "wavenc"
+		# TODO: provide 16 / 32 choice
+		return "audio/x-raw-int,width=16 ! audioconvert ! wavenc"
 
 	def add_oggvorbis_encoder(self):
 		cmd = "vorbisenc"
