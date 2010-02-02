@@ -490,8 +490,10 @@ Thanks to:
 
 
 
+
 </property>
     <property name="documenters">No documentation written.
+
 
 
 
@@ -660,8 +662,8 @@ Thanks to:
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Where to place results?</property>
     <property name="type_hint">dialog</property>
-    <property name="action">select-folder</property>
     <property name="local_only">False</property>
+    <property name="action">select-folder</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
@@ -1830,8 +1832,8 @@ Insanely High</property>
           <widget class="GtkFileChooserWidget" id="filechooserwidget">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
           </widget>
           <packing>
             <property name="position">2</property>

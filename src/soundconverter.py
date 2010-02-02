@@ -1400,6 +1400,7 @@ class FileList:
 				continue
 				
 			if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+				log('walking: \'%s\'' % uri)
 				filelist = vfs_walk(gnomevfs.URI(uri))
 				if filter:
 					filelist = [f for f in filelist if f.lower().endswith(filter)]
@@ -1546,7 +1547,7 @@ class GladeWindow(object):
 
 	def __init__(self, glade):
 		self.glade = glade
-	
+		glade.signal_autoconnect(self)
 
 	def __getattr__(self, attribute):
 		'''Allow direct use of window widget.'''
