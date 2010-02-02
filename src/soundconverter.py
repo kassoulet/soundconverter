@@ -666,7 +666,7 @@ class BackgroundTask:
 
 	def done(self):
 		"""Call to end normally the task."""
-		#self.run_finish_time = time.time()
+		self.run_finish_time = time.time()
 		if self.running:
 			self.running = False
 			self.emit('finished')
@@ -706,10 +706,14 @@ class TaskQueue(BackgroundTask):
 		self.waiting_tasks = []
 		self.finished_tasks = []
 		self.running_tasks = []
+		self.start_time = None
 
 	def add_task(self, task):
 		"""Add a task to the queue."""
 		self.waiting_tasks.append(task)
+		if self.start_time and not self.running_tasks:
+			# add a task to a stalled taskqueue, shake it!
+			self.start_next_task()
 
 	def __get_current_task(self):
 		if self.running:
@@ -724,7 +728,7 @@ class TaskQueue(BackgroundTask):
 			try:
 				task = self.waiting_tasks.pop(0)
 			except IndexError:
-				if not self.running_tasks:
+				if not self.running_tasks and self.finished_tasks:
 					self.done()
 				return
 			print 'starting:', task.sound_file.get_filename_for_display()
@@ -994,7 +998,22 @@ class Decoder(Pipeline):
 			pass
 
 	def found_tag(self, decoder, something, taglist):
-		pass
+		#debug("found_tags:", self.sound_file.get_filename_for_display())
+		#debug("\ttitle=%s" % (taglist["title"]))
+		"""for k in taglist.keys():
+			debug("\t%s=%s" % (k, taglist[k]))
+			if isinstance(taglist[k], gst.Date):
+				taglist["year"] = taglist[k].year
+				taglist["date"] = "%04d-%02d-%02d" % (taglist[k].year,
+									taglist[k].month, taglist[k].day)"""
+
+		self.sound_file.add_tags(taglist)
+		self.sound_file.have_tags = True
+
+		try:
+			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
+		except gst.QueryError:
+			pass
 
 	def _buffer_probe(self, pad, buffer):
 		"""buffer probe callback used to get real time since the beginning of the stream"""
@@ -1055,7 +1074,7 @@ class TagReader(Decoder):
 			debug("TagReading done...")
 			self.done()
 		
-	def found_tag(self, decoder, something, taglist):
+	def __found_tag(self, decoder, something, taglist):
 		#debug("found_tags:", self.sound_file.get_filename_for_display())
 		#debug("\ttitle=%s" % (taglist["title"]))
 		"""for k in taglist.keys():
@@ -1130,6 +1149,7 @@ class Converter(Decoder):
 		self.overwrite = False
 		self.delete_original = delete_original
 
+
 	#def setup(self):
 	#  self.init()
 	#  self.play()
@@ -1190,9 +1210,10 @@ class Converter(Decoder):
 			vfs_unlink(self.output_filename)
 		#log( _("Writing to: '%s'") % urllib.unquote(self.output_filename) )
 
-	def finish(self):
+	def finished(self):
+		print 'Converter.finished'
 		self.converting = False
-		Pipeline.finish(self)
+		Pipeline.finished(self)
 
 		# Copy file permissions
 		try:
@@ -1361,14 +1382,10 @@ class FileList:
 		self.append_file(sound_file)
 		self.window.set_sensitive()
 
-		#self.window.progressbarstatus.set_fraction(self.typefinders.progress)
-
 		tagreader = TagReader(sound_file)
 		tagreader.set_found_tag_hook(self.append_file_tags)
 
 		self.tagreaders.add_task(tagreader)
-		#if not self.tagreaders.running:
-		#	self.tagreaders.run()
 
 	def add_uris(self, uris, base=None, filter=None):
 		files = []
@@ -1423,7 +1440,6 @@ class FileList:
 			self.filelist[sound_file.get_uri()] = True
 
 			typefinder = TypeFinder(sound_file)
-			#typefinder.add_listener('finished', self.found_type)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add_task(typefinder)
 			
@@ -2180,7 +2196,6 @@ class ConverterQueue(TaskQueue):
 		self.overwrite_action = None
 
 	def add(self, sound_file):
-
 		output_filename = self.window.prefs.generate_filename(sound_file)
 		path = urlparse.urlparse(output_filename) [2]
 		path = unquote_filename(path)
@@ -2310,14 +2325,14 @@ class ConverterQueue(TaskQueue):
 	def on_task_finished(self, task):
 		self.duration_processed += task.get_duration()
 
-	def finish(self):
-		TaskQueue.finish(self)
+	def finished(self):
+		print 'ConverterQueue.finished'
+		TaskQueue.finished(self)
 		self.reset_counters()
 		self.window.set_progress(0, 0)
 		self.window.set_sensitive()
 		self.window.conversion_ended()
 		total_time = self.run_finish_time - self.run_start_time
-
 		msg = _("Conversion done, in %s") % self.format_time(total_time)
 		notification(msg)
 		self.window.set_status(msg)
@@ -2583,10 +2598,24 @@ class SoundConverterWindow(GladeWindow):
 		self.set_sensitive()
 		self.set_status()
 
+	def read_tags(self, sound_file):
+		print 'reading tags'
+		tagreader = TagReader(sound_file)
+		tagreader.set_found_tag_hook(self.tags_read)
+		tagreader.start()
+
+	def tags_read(self, tagreader):
+		print 'tags read'
+		sound_file = tagreader.get_sound_file()
+		self.converter.add(sound_file)
+
 	def do_convert(self):
 		try:
 			for sound_file in self.filelist.get_files():
-				self.converter.add(sound_file)
+				if sound_file.tags_read:
+					self.converter.add(sound_file)
+				else:
+					self.read_tags(sound_file)
 		except ConverterQueueCanceled:
 			log("cancelling conversion.")
 			self.conversion_ended()
@@ -2671,6 +2700,7 @@ class SoundConverterWindow(GladeWindow):
 		self.set_sensitive()
 
 	def conversion_ended(self):
+		print 'conversion_ended'
 		self.progress_frame.hide()
 		self.status_frame.show()
 		self.widget.set_sensitive(True)
