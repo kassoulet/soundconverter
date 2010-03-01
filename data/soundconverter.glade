@@ -473,41 +473,8 @@ Thanks to:
 	Christopher Barrington-Leigh
 	Thomas Schwing
 	Remi Grolleau
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </property>
     <property name="documenters">No documentation written.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </property>
     <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator_credits</property>
     <property name="logo">soundconverter-logo.svg</property>
@@ -820,6 +787,7 @@ Thanks to:
   </widget>
   <widget class="GtkDialog" id="prefsdialog">
     <property name="title" translatable="yes">Preferences</property>
+    <property name="destroy_with_parent">True</property>
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
@@ -1270,9 +1238,8 @@ Insanely High</property>
                                     </child>
                                     <child>
                                       <widget class="GtkHScale" id="hscale_vorbis_quality">
-                                        <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="adjustment">10 0 10 1 0 0</property>
+                                        <property name="adjustment">6 0 10 1 0 0</property>
                                         <property name="restrict_to_fill_level">False</property>
                                         <property name="digits">0</property>
                                         <property name="value_pos">right</property>
@@ -1315,7 +1282,7 @@ Insanely High</property>
                                 <property name="visible">True</property>
                                 <property name="n_rows">4</property>
                                 <property name="n_columns">2</property>
-                                <property name="column_spacing">4</property>
+                                <property name="column_spacing">6</property>
                                 <property name="row_spacing">4</property>
                                 <child>
                                   <widget class="GtkComboBox" id="mp3_mode">
@@ -1377,7 +1344,6 @@ Insanely High</property>
                                 </child>
                                 <child>
                                   <widget class="GtkHScale" id="hscale_mp3">
-                                    <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">4 0 10 1 0 0</property>
                                     <property name="restrict_to_fill_level">False</property>
@@ -1393,7 +1359,31 @@ Insanely High</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <placeholder/>
+                                  <widget class="GtkHBox" id="hbox1">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkSpinButton" id="spinbutton1">
+                                        <property name="can_focus">True</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="adjustment">192 32 320 32 64 64</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">3</property>
+                                    <property name="bottom_attach">4</property>
+                                  </packing>
                                 </child>
                                 <child>
                                   <placeholder/>
@@ -1422,7 +1412,7 @@ Insanely High</property>
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
-                                <property name="column_spacing">4</property>
+                                <property name="column_spacing">6</property>
                                 <property name="row_spacing">4</property>
                                 <child>
                                   <widget class="GtkLabel" id="label1">
@@ -1439,9 +1429,10 @@ Insanely High</property>
                                 <child>
                                   <widget class="GtkComboBox" id="flac_compression">
                                     <property name="visible">True</property>
-                                    <property name="items" translatable="yes">Fast
-Medium
-Slow</property>
+                                    <property name="items" translatable="yes">Less (Faster)
+Default
+Better (Slower)</property>
+                                    <signal name="changed" handler="on_flac_compression_changed"/>
                                   </widget>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -1476,26 +1467,20 @@ Slow</property>
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
-                                <property name="column_spacing">4</property>
-                                <property name="row_spacing">4</property>
-                                <child>
-                                  <widget class="GtkLabel" id="label2">
-                                    <property name="width_request">100</property>
+                                <property name="column_spacing">6</property>
+                                  <widget class="GtkComboBox" id="wav_sample_width">
                                     <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Sample width:</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
+                                    <property name="items" translatable="yes">8 bits (very low quality)
+16 bits (default)
+32 bits</property>
+                                    <signal name="changed" handler="on_wav_sample_width_changed"/>
+=======
                                   <widget class="GtkComboBox" id="wav_quality">
                                     <property name="visible">True</property>
                                     <property name="items" translatable="yes">32 bits
 16 bits
 8 bits</property>
+>>>>>>> remotes/trunk:data/soundconverter.glade
                                   </widget>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -1530,8 +1515,8 @@ Slow</property>
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
-                                <property name="column_spacing">4</property>
-                                <property name="row_spacing">4</property>
+                                <property name="column_spacing">6</property>
+                                <property name="row_spacing">6</property>
                                 <child>
                                   <widget class="GtkLabel" id="label38">
                                     <property name="width_request">100</property>
@@ -1832,8 +1817,8 @@ Insanely High</property>
           <widget class="GtkFileChooserWidget" id="filechooserwidget">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="local_only">False</property>
             <property name="select_multiple">True</property>
+            <property name="local_only">False</property>
           </widget>
           <packing>
             <property name="position">2</property>
