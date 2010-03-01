@@ -960,7 +960,6 @@ class TypeFinder(Pipeline):
 		if not self.sound_file.mime_type:
 			log('Mime type skipped: %s' % mime_type)
 		self.done()
-		self.done()
 
 	def finished(self):
 		Pipeline.finished(self)
@@ -1064,7 +1063,6 @@ class TagReader(Decoder):
 		self.run_start_time = 0
 		self.add_command('fakesink')
 		self.add_signal(None, 'message::state-changed', self.on_state_changed)
-		self.tagread = False
 		self.tagread = False
 
 	def set_found_tag_hook(self, found_tag_hook):
@@ -1481,7 +1479,6 @@ class FileList:
 							% _('loading tags...')
 		template_notags  = '<span foreground=\'red\'>%s</span>\n<small>%%(filename)s</small>' \
 							% _('no tags')
-		template_skiptags  = '%(filename)s'
 		template_skiptags  = '%(filename)s'
 
 		params = {}
@@ -2533,14 +2530,6 @@ class SoundConverterWindow(GladeWindow):
 		widget = self.glade.get_widget(attribute)
 		if widget is None:
 			raise AttributeError('Widget \'%s\' not found' % attribute)
-		self.__dict__[attribute] = widget # cache result
-		return widget
-
-	def __getattr__(self, attribute):
-		'''Allow direct use of window widget.'''
-		widget = self.glade.get_widget(attribute)
-		if widget is None:
-			raise AttributeError("Widget '%s' not found" % attribute)
 		self.__dict__[attribute] = widget # cache result
 		return widget
 

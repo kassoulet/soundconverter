@@ -1,8 +1,13 @@
+2010-02-10  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Add realaudio to mime whitelist.
+	  Fixed tagreader stall when adding unrecognized files.
+
 2009-12-14  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Add missing quoting when using destination
 	  folder.
-	  
+
 2009-11-09  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Fix hanging when trying to load DXR files.
@@ -16,10 +21,10 @@
 
 2009-09-30  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Fix wrong destination folder when using both 
+	* src/soundconverter.py: Fix wrong destination folder when using both
 	  same-folder-as-source, base folder, and custom filename patterns.
 	  (thanks Tino, fix #016295)
-	  
+
 	* po/nl.po: Update dutch translation.
 	  (thanks Tino)
 
@@ -29,7 +34,7 @@
 	  important can be missing for years ? :)
 	  Faster typefinder by removing the useless fakesink.
 	  (7m -> 20s on a 16GB folder)
-	  
+
 2009-07-02  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Force vbr-max-bitrate to 320 when using mp3+vbr, since
@@ -80,7 +85,7 @@
 2009-05-04  Gautier Portet <kassoulet gmail com>
 
 	* po/fr.po: Update french translation. (thanks Olivier)
-	* src/soundconverter.py: Fix unhandled exception when 
+	* src/soundconverter.py: Fix unhandled exception when
 	  removing original files went bad.
 	  (fix lp:278782, thanks surreal)
 

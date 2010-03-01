@@ -4,8 +4,8 @@ AC_PREREQ(2.53)
 AC_INIT(src/soundconverter.py)
 AM_INIT_AUTOMAKE([soundconverter], [1.5.0-alpha1])
 
-m4_define(required_python_abi, [2.4])
-m4_define(required_python_version, [2.4])
+m4_define(required_python_abi, [2.5])
+m4_define(required_python_version, [2.5])
 m4_define(required_pygtk_version, [2.12])
 m4_define(required_pygnome_version, [2.12])
 
