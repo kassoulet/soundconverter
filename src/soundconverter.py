@@ -811,10 +811,6 @@ class Pipeline(BackgroundTask):
 		self.stop_pipeline()
 		BackgroundTask.abort(self)
 
-	def abort(self):
-		self.stop_pipeline()
-		BackgroundTask.abort(self)
-
 	def add_command(self, command):
 		self.command.append(command)
 
@@ -933,12 +929,6 @@ class TypeFinder(Pipeline):
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal('typefinder', 'have-type', self.have_type)
-
-	def on_error(self, error):
-		# Yes, we know this isn't *right*, but stop reporting errors...
-		# the fakesink was removed from the pipeline since it's about 10 times faster.
-		# but gstreamer ends pipelines with an error. We know. And we don't care.
-		pass # self.error = error
 
 	def on_error(self, error):
 		# Yes, we know this isn't *right*, but stop reporting errors...
@@ -1368,6 +1358,7 @@ class FileList:
 			return True
 		return False
 
+
 	def found_type(self, sound_file, mime):
 		debug('found_type', sound_file.get_filename())
 
@@ -1422,7 +1413,6 @@ class FileList:
 		base,notused = os.path.split(os.path.commonprefix(files))
 		base += '/'
 
-
 		for f in files:
 			sound_file = SoundFile(f, base)
 			if sound_file.get_uri() in self.filelist:
@@ -1434,7 +1424,7 @@ class FileList:
 			typefinder = TypeFinder(sound_file)
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add_task(typefinder)
-			
+
 		self.skiptags = len(files) > 100
 		if self.skiptags:
 			log(_('too much files, skipping tag reading.'))
@@ -1757,7 +1747,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 		w = self.vorbis_quality
 		quality = self.get_float('vorbis-quality')
 		quality_setting = {0:0 ,0.2:1 ,0.4:2 ,0.6:3 , 0.8:4, 1.0:5}
-		#w.set_active(5)
+		w.set_active(5)
 		for k, v in quality_setting.iteritems():
 			if abs(quality-k) < 0.01:
 				self.vorbis_quality.set_active(v)
@@ -1954,6 +1944,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 			self.get_string('output-mime-type') == 'audio/x-vorbis')
 
 
+
 	def run(self):
 		self.dialog.run()
 		self.dialog.hide()
@@ -2134,13 +2125,6 @@ class PreferencesDialog(GladeWindow, GConfStore):
 			'cbr': 14,
 			'abr': 14,
 			'vbr': 10,
-		}
-		self.hscale_mp3.set_range(0,range_[mode])
-
-		range_ = {
-			"cbr": 14,
-			"abr": 14,
-			"vbr": 10,
 		}
 		self.hscale_mp3.set_range(0,range_[mode])
 
@@ -2518,12 +2502,11 @@ class SoundConverterWindow(GladeWindow):
 		self.set_sensitive()
 		self.set_status()
 
-		glade.signal_autoconnect(self)
-
 	# This bit of code constructs a list of methods for binding to Gtk+
 	# signals. This way, we don't have to maintain a list manually,
 	# saving editing effort. It's enough to add a method to the suitable
 	# class and give the same name in the .glade file.
+
 
 	def __getattr__(self, attribute):
 		'''Allow direct use of window widget.'''
