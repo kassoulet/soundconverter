@@ -453,7 +453,7 @@ msgstr ""
 #: ../src/soundconverter.py:2281
 #, python-format
 msgid "Conversion done, in %s"
-msgstr "Převod dokončen, během %s"
+msgstr "Převod dokončen během %s"
 
 #: ../src/soundconverter.py:2317
 msgid "Open a file"

@@ -441,7 +441,7 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">dialog</property>
     <property name="copyright">Copyright &#xA9; 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-Copyright &#xA9; 2005-2009 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
+Copyright &#xA9; 2005-2010 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
     <property name="comments" translatable="yes">GNOME Sound Conversion</property>
     <property name="authors">Lars Wirzenius
 Gautier Portet

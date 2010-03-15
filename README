@@ -1,8 +1,8 @@
         README for GNOME sound converter application
         ============================================
 
-A simple sound converter application for the GNOME environment. It reads 
-anything the GStreamer library can read, and writes WAV, FLAC, MP3, and 
+A simple sound converter application for the GNOME environment. It reads
+anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
 Ogg Vorbis files.
 
 This application is somewhat less fast than various command line tools.
@@ -23,13 +23,13 @@ magically convert to any format we might want.
         Ogg Vorbis          yes
         FLAC                yes
         Wave                yes
-        MP3                 yes 
+        MP3                 yes
 
         Copyright and acknowledgements
         ------------------------------
 
 Copyright 2004 Lars Wirzenius
-Copyright 2005-2009 Gautier Portet
+Copyright 2005-2010 Gautier Portet
 
 thanks to:
 	Guillaume Bedot

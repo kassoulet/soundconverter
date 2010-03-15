@@ -3,7 +3,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005-2009 Gautier Portet
+# Copyright 2005-2010 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ print '%s %s' % (NAME, VERSION)
 import sys
 import os
 import inspect
-import getopt
 import textwrap
 import urlparse
 import string
@@ -37,6 +36,96 @@ import thread
 import urllib
 import time
 import unicodedata
+from optparse import OptionParser
+
+#localization
+import locale
+import gettext
+PACKAGE = NAME.lower()
+gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
+locale.setlocale(locale.LC_ALL,'')
+gettext.textdomain(PACKAGE)
+gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
+
+
+def cpuCount():
+	'''
+	Returns the number of CPUs in the system.
+	(from pyprocessing)
+	'''
+	if sys.platform == 'win32':
+		try:
+			num = int(os.environ['NUMBER_OF_PROCESSORS'])
+		except (ValueError, KeyError):
+			num = 0
+	elif sys.platform == 'darwin':
+		try:
+			num = int(os.popen('sysctl -n hw.ncpu').read())
+		except ValueError:
+			num = 0
+	else:
+		try:
+			num = os.sysconf('SC_NPROCESSORS_ONLN')
+		except (ValueError, OSError, AttributeError):
+			num = 0
+	if num >= 1:
+		return num
+	else:
+		return 1
+
+settings = {
+	'mode': 'gui',
+	'quiet': False,
+	'debug': False,
+	'cli-output-type': 'audio/x-vorbis',
+	'cli-output-suffix': '.ogg',
+	'jobs': cpuCount(),
+}
+
+
+def get_option(key):
+	assert key in settings
+	return settings[key]
+
+def mode_callback(option, opt, value, parser, **kwargs):
+    setattr(parser.values, option.dest, kwargs[option.dest])
+
+def parse_command_line():
+	parser = OptionParser()
+	parser.add_option('-b', '--batch', dest='mode', action='callback',
+		callback=mode_callback, callback_kwargs={'mode':'batch'},
+		help=_('Convert in batch mode, from command line, '
+			'without a graphical user\n interface. You '
+			'can use this from, say, shell scripts.'))
+	parser.add_option('-t', '--tags', dest="mode", action='callback',
+		callback=mode_callback,  callback_kwargs={'mode':'tags'},
+		help=_('Show tags for input files instead of converting'
+			'them. This indicates \n command line batch mode'
+			'and disables the graphical user interface.'))
+	parser.add_option('-m', '--mime-type', action="store_true", dest="batch_mime",
+		help=_('Set the output MIME type for batch mode. The default'
+			'is %s. Note that you probably want to set the output'
+			'suffix as well.') % settings['cli-output-type'])
+	parser.add_option('-q', '--quiet', action="store_true", dest="quiet",
+		help=_("Be quiet. Don't write normal output, only errors."))
+	parser.add_option('-d', '--debug', action="store_true", dest="debug",
+		help=_('Print additional debug information'))
+	parser.add_option('-s', '--suffix', dest="new_suffix",
+		help=_('Set the output filename suffix for batch mode.'
+			'The default is %s . Note that the suffix does not'
+			'affect\n the output MIME type.') % settings['cli-output-suffix'])
+	parser.add_option('-j', '--jobs', action='store', type='int', dest='jobs',
+		metavar='NUM', help=_('Force number of concurrent conversions.'))
+	return parser
+
+parser = parse_command_line()
+options, args = parser.parse_args()
+
+if options.mode:
+	settings['mode'] = options.mode
+if options.jobs:
+	settings['jobs'] = options.jobs
+
 
 # we prefer to launch locally present glade file
 # so we can launch from source folder, without installing
@@ -63,18 +152,15 @@ except ImportError:
 
 # GStreamer
 try:
-	# 0.10
 	import pygst
 	pygst.require('0.10')
 	import gst
-
 except ImportError:
 	print '%s needs python-gstreamer 0.10!' % NAME
 	sys.exit(1)
 
-print '  using Gstreamer version: %s, Python binding version: %s' % (
-		'.'.join([str(s) for s in gst.gst_version]),
-		'.'.join([str(s) for s in gst.pygst_version]) )
+print '  using Gstreamer version: %s' % (
+		'.'.join([str(s) for s in gst.gst_version]))
 
 # This is missing from gst, for some reason.
 FORMAT_PERCENT_SCALE = 10000
@@ -93,14 +179,6 @@ try:
 except ImportError:
 	pass
 
-#localization
-import locale
-import gettext
-PACKAGE = NAME.lower()
-gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
-locale.setlocale(locale.LC_ALL,'')
-gettext.textdomain(PACKAGE)
-gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
 
 gtk.glade.bindtextdomain(PACKAGE,'@datadir@/locale')
 gtk.glade.textdomain(PACKAGE)
@@ -190,10 +268,8 @@ filepattern = (
 )
 
 def beautify_uri(uri):
-	uri = unquote_filename(uri)
-	if uri.startswith('file://'):
-		return uri[7:]
-	return uri
+	return unquote_filename(uri).split('file://')[-1]
+
 
 def vfs_walk(uri):
 	"""similar to os.path.walk, but with gnomevfs.
@@ -273,19 +349,18 @@ def filename_to_uri(filename):
 # GStreamer gnomevfssrc helpers
 
 def vfs_encode_filename(filename):
-	filename = filename_to_uri(filename)
-	#filename = filename.replace('%252f', '/')
-	return filename
+	return filename_to_uri(filename)
+	#return filename.replace('%252f', '/')
+
 
 def file_encode_filename(filename):
-	filename = gnomevfs.get_local_path_from_uri(filename)
-	filename = filename.replace(' ', '\ ');
+	return gnomevfs.get_local_path_from_uri(filename).replace(' ', '\ ')
 	#filename = filename.replace('%2f', '/');
-	return filename
+
 
 def unquote_filename(filename):
-	f= urllib.unquote(filename)
-	return f
+	return urllib.unquote(filename)
+
 
 def format_tag(tag):
 	if isinstance(tag, list):
@@ -300,10 +375,8 @@ def markup_escape(message):
 	return gobject.markup_escape_text(message)
 
 def __filename_escape(str):
-	str = str.replace("'","\'")
-	str = str.replace("\"","\\\"")
-	str = str.replace('!','\\!')
-	return str
+	return str.replace("'","\'").replace("\"","\\\"").replace('!','\\!')
+
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind')
 for element in required_elements:
@@ -343,11 +416,10 @@ encoders = (
 	('faac',        'AAC'))
 
 for encoder, name in encoders:
-	have_it = True
-	if not gst.element_factory_find(encoder):
-		have_it = False
-		if name:
-			print "  \'%s\' gstreamer element not found, disabling %s." % (encoder, name)
+	have_it = bool(gst.element_factory_find(encoder))
+	if not have_it:
+		print ("\t'%s' gstreamer element not found"
+			", disabling %s." % (encoder, name))
 	exec('have_%s = %s' % (encoder, have_it))
 
 if not have_oggmux:
@@ -2509,7 +2581,7 @@ class SoundConverterWindow(GladeWindow):
 
 
 	def __getattr__(self, attribute):
-		'''Allow direct use of window widget.'''
+		"""Allow direct use of window widget."""
 		widget = self.glade.get_widget(attribute)
 		if widget is None:
 			raise AttributeError('Widget \'%s\' not found' % attribute)
@@ -2846,122 +2918,11 @@ def cli_convert_main(input_files):
 	if not get_option('quiet'):
 		progress.clear()
 
-def cpuCount():
-	'''
-	Returns the number of CPUs in the system.
-	(from pyprocessing)
-	'''
-	if sys.platform == 'win32':
-		try:
-			num = int(os.environ['NUMBER_OF_PROCESSORS'])
-		except (ValueError, KeyError):
-			num = 0
-	elif sys.platform == 'darwin':
-		try:
-			num = int(os.popen('sysctl -n hw.ncpu').read())
-		except ValueError:
-			num = 0
-	else:
-		try:
-			num = os.sysconf('SC_NPROCESSORS_ONLN')
-		except (ValueError, OSError, AttributeError):
-			num = 0
-	if num >= 1:
-		return num
-	else:
-		return 1
-		#raise NotImplementedError, 'cannot determine number of cpus'
-
-settings = {
-	'mode': 'gui',
-	'quiet': False,
-	'debug': False,
-	'cli-output-type': 'audio/x-vorbis',
-	'cli-output-suffix': '.ogg',
-	'jobs': cpuCount(),
-}
 
 
-def set_option(key, value):
-	assert key in settings
-	settings[key] = value
-
-
-def get_option(key):
-	assert key in settings
-	return settings[key]
-
-
-def print_help(*args):
-	print _('Usage: %s [options] [soundfile ...]') % sys.argv[0]
-	for short_arg, long_arg, func, doc in options:
-		print
-		if short_arg[-1] == ':':
-			print '		-%s arg, --%sarg' % (short_arg[:1], long_arg)
-		else:
-			print '		-%s, --%s' % (short_arg[:1], long_arg)
-		for line in textwrap.wrap(doc):
-			print '			%s' % line
-	sys.exit(0)
-
-
-options = [
-
-	('h', 'help', print_help,
-	 _('Print out a usage summary.')),
-
-	('b', 'batch', lambda optarg: set_option('mode', 'batch'),
-	 _('Convert in batch mode, from command line, without a graphical user\n interface. You can use this from, say, shell scripts.')),
-
-	('m:', 'mime-type=', lambda optarg: set_option('cli-output-type', optarg),
-	 _('Set the output MIME type for batch mode. The default is\n %s . Note that you probably want to set\n the output suffix as well.') % get_option('cli-output-type')),
-
-	('q', 'quiet', lambda optarg: set_option('quiet', True),
-	 _("Be quiet. Don't write normal output, only errors.")),
-
-	('d', 'debug', lambda optarg: set_option('debug', True),
-	 _('Print additional debug information')),
-
-	('s:', 'suffix=', lambda optarg: set_option('cli-output-suffix', optarg),
-	 _('Set the output filename suffix for batch mode. The default is \n %s . Note that the suffix does not affect\n the output MIME type.') % get_option('cli-output-suffix')),
-
-	('t', 'tags', lambda optarg: set_option('mode', 'tags'),
-	 _('Show tags for input files instead of converting them. This indicates \n command line batch mode and disables the graphical user interface.')),
-
-	('j', 'jobs=', lambda optarg: set_option('jobs', optarg),
-	 _('Force number of concurrent conversions.')),
-
-	]
-
-
-def main():
-	shortopts = ''.join(map(lambda opt: opt[0], options))
-	longopts = map(lambda opt: opt[1], options)
-
-	try:
-		opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
-	except getopt.GetoptError, error:
-		print 'Error: ', error
-		sys.exit(1)
-
-	for opt, optarg in opts:
-		for tuple in options:
-			short = '-' + tuple[0][:1]
-			long = '--' + tuple[1]
-			if long.endswith('='):
-				long = long[:-1]
-			if opt in [short, long]:
-				tuple[2](optarg)
-				break
-
-	if args and not args[0]:
-		args = []
+def main(args):
 	args = map(filename_to_uri, args)
-
-	jobs = int(get_option('jobs'))
-	set_option('jobs', jobs)
 	print '  using %d thread(s)' % get_option('jobs')
-
 	if get_option('mode') == 'gui':
 		gui_main(args)
 	elif get_option('mode') == 'tags':
@@ -2971,4 +2932,5 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	main(args)
+

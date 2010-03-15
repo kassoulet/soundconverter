@@ -1,3 +1,16 @@
+2010-03-11  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: New command line parser.
+	  (thanks Marco)
+
+2010-03-02  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: New Asynchronous core.
+	  Wav sample width setting.
+	  Flac compression setting.
+
+	  release 1.5.0-alpha1
+
 2010-02-10  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Add realaudio to mime whitelist.
