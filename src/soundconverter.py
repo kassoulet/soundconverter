@@ -88,7 +88,8 @@ def get_option(key):
 	return settings[key]
 
 def mode_callback(option, opt, value, parser, **kwargs):
-    setattr(parser.values, option.dest, kwargs[option.dest])
+	setattr(parser.values, option.dest, kwargs[option.dest])
+
 
 def parse_command_line():
 	parser = OptionParser()
@@ -116,10 +117,15 @@ def parse_command_line():
 			'affect\n the output MIME type.') % settings['cli-output-suffix'])
 	parser.add_option('-j', '--jobs', action='store', type='int', dest='jobs',
 		metavar='NUM', help=_('Force number of concurrent conversions.'))
+	parser.add_option('--help-gst', action="store_true", dest="_unused",
+		help=_('Show GStreamer Options'))
 	return parser
 
 parser = parse_command_line()
-options, args = parser.parse_args()
+# remove gstreamer arguments so only gstreamer see them.
+args = [a for a in sys.argv[1:] if '-gst' not in a] 
+
+options, args = parser.parse_args(args)
 
 if options.mode:
 	settings['mode'] = options.mode

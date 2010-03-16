@@ -1,3 +1,8 @@
+2010-03-17  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Improve command line parser so gstreamer options 
+	  are working.
+	  
 2010-03-11  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: New command line parser.
