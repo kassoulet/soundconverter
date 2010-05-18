@@ -123,7 +123,7 @@ def parse_command_line():
 
 parser = parse_command_line()
 # remove gstreamer arguments so only gstreamer see them.
-args = [a for a in sys.argv[1:] if '-gst' not in a] 
+args = [a for a in sys.argv[1:] if '-gst' not in a]
 
 options, args = parser.parse_args(args)
 
@@ -487,14 +487,12 @@ class SoundFile:
 		else:
 			self.base_path, self.filename = os.path.split(self.uri)
 			self.base_path += '/'
-		self.filename_for_display = gobject.filename_display_name(
-				unquote_filename(self.filename))
 
 		self.tags = {
 			'track-number': 0,
-			'title':	'Unknown Title',
+			'title':  'Unknown Title',
 			'artist': 'Unknown Artist',
-			'album':	'Unknown Album',
+			'album':  'Unknown Album',
 		}
 		self.have_tags = False
 		self.tags_read = False
@@ -511,7 +509,8 @@ class SoundFile:
 		return self.filename
 
 	def get_filename_for_display(self):
-		return self.filename_for_display
+		return gobject.filename_display_name(
+				unquote_filename(self.filename))
 
 	def add_tags(self, taglist):
 		for key in taglist.keys():
@@ -717,30 +716,6 @@ class BackgroundTask:
 			for listener in self.listeners[signal]:
 				gobject.idle_add(listener, self)
 
-	def __do_work_(self):
-		"""Do some work by calling work(). Call finish() if work is done."""
-		try:
-			if _thread_method == 'idle':
-				time.sleep(_thread_sleep)
-			if self.paused:
-				if not self.current_paused_time:
-					self.current_paused_time = time.time()
-				return True
-			else:
-				if self.current_paused_time:
-					self.paused_time += time.time() - self.current_paused_time
-					self.current_paused_time = 0
-
-			if self.work():
-				return True
-			else:
-				self.done()
-				return False
-		except SoundConverterException, e:
-			self._run = False
-			error.show_exception(e)
-			return False
-
 	def done(self):
 		"""Call to end normally the task."""
 		self.run_finish_time = time.time()
@@ -781,9 +756,10 @@ class TaskQueue(BackgroundTask):
 	def __init__(self):
 		BackgroundTask.__init__(self)
 		self.waiting_tasks = []
-		self.finished_tasks = []
 		self.running_tasks = []
+		self.finished_tasks = 0
 		self.start_time = None
+		self.count = 0
 
 	def add_task(self, task):
 		"""Add a task to the queue."""
@@ -792,12 +768,6 @@ class TaskQueue(BackgroundTask):
 		if self.start_time:
 			# add a task to a stalled taskqueue, shake it!
 			self.start_next_task()
-
-	def __get_current_task(self):
-		if self.running:
-			return self.running[0]
-		else:
-			return None
 
 	def start_next_task(self):
 		to_start = get_option('jobs') - len(self.running_tasks)
@@ -811,8 +781,9 @@ class TaskQueue(BackgroundTask):
 			self.running_tasks.append(task)
 			task.add_listener('finished', self.task_finished)
 			task.start()
-		self.progress = float(len(self.finished_tasks)) / (
-			len(self.waiting_tasks) + len(self.finished_tasks))
+			self.count += 1
+		self.progress = float(self.finished_tasks) / (
+			len(self.waiting_tasks) + self.finished_tasks)
 
 	def started(self):
 		""" BackgroundTask setup callback """
@@ -821,14 +792,14 @@ class TaskQueue(BackgroundTask):
 
 	def finished(self):
 		""" BackgroundTask finish callback """
-		log('Queue done in %.3fs' % (time.time() - self.start_time))
+		log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time, self.count))
 		self.queue_ended()
 
 	def task_finished(self, task=None):
 		if not self.running_tasks:
 			return
 		self.running_tasks.remove(task)
-		self.finished_tasks.append(task)
+		self.finished_tasks += 1
 		self.start_next_task()
 
 	def abort(self):
@@ -837,6 +808,7 @@ class TaskQueue(BackgroundTask):
 		BackgroundTask.abort(self)
 		self.running_tasks = []
 		self.waiting_tasks = []
+		self.running = False
 
 	# The following is called when the Queue is finished
 	def queue_ended(self):
@@ -866,28 +838,25 @@ class Pipeline(BackgroundTask):
 
 	def __init__(self):
 		BackgroundTask.__init__(self)
-		self.pipeline = None #gst.Pipeline()
+		self.pipeline = None
 		self.command = []
 		self.parsed = False
 		self.signals = []
 		self.processing = False
 		self.eos = False
 		self.error = None
+		self.connected_signals = []
 
 	def started(self):
 		self.play()
 
-	def __work(self):
-		if self.eos:
-			return False
-		return True
-
 	def finished(self):
+		for element, sid in self.connected_signals:
+			element.disconnect(sid)
 		self.stop_pipeline()
 
 	def abort(self):
-		self.stop_pipeline()
-		BackgroundTask.abort(self)
+		self.finished()
 
 	def add_command(self, command):
 		self.command.append(command)
@@ -965,12 +934,19 @@ class Pipeline(BackgroundTask):
 			try:
 				self.pipeline = gst.parse_launch(command)
 				bus = self.pipeline.get_bus()
+				assert not self.connected_signals
+				self.connected_signals = []
 				for name, signal, callback in self.signals:
 					if name:
-						self.pipeline.get_by_name(name).connect(signal,callback)
+						element = self.pipeline.get_by_name(name)
 					else:
-						bus.connect(signal,callback)
+						element = bus
+					sid = element.connect(signal,callback)
+					self.connected_signals.append((element, sid,))
+					
 				self.parsed = True
+				del self.command
+				del self.signals
 			except gobject.GError, e:
 				error.show('GStreamer error when creating pipeline', str(e))
 				self.eos = True # TODO
@@ -992,7 +968,6 @@ class Pipeline(BackgroundTask):
 		bus.remove_signal_watch()
 		self.pipeline.set_state(gst.STATE_NULL)
 		self.pipeline = None
-		del self.watch_id
 
 	def get_position(self):
 		return NotImplementedError
@@ -1003,16 +978,10 @@ class TypeFinder(Pipeline):
 		Pipeline.__init__(self)
 		self.sound_file = sound_file
 
-		command = '%s location="%s" ! typefind name=typefinder' % \
+		command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
 		self.add_command(command)
 		self.add_signal('typefinder', 'have-type', self.have_type)
-
-	def on_error(self, error):
-		# Yes, we know this isn't *right*, but stop reporting errors...
-		# the fakesink was removed from the pipeline since it's about 10 times faster.
-		# but gstreamer ends pipelines with an error. We know. And we don't care.
-		pass # self.error = error
 
 	def set_found_type_hook(self, found_type_hook):
 		self.found_type_hook = found_type_hook
@@ -1027,6 +996,7 @@ class TypeFinder(Pipeline):
 				self.sound_file.mime_type = mime_type
 		if not self.sound_file.mime_type:
 			log('Mime type skipped: %s' % mime_type)
+		self.pipeline.set_state(gst.STATE_NULL)
 		self.done()
 
 	def finished(self):
@@ -1036,6 +1006,7 @@ class TypeFinder(Pipeline):
 			return
 		if self.found_type_hook and self.sound_file.mime_type:
 			gobject.idle_add(self.found_type_hook, self.sound_file, self.sound_file.mime_type)
+			self.sound_file.mime_type = True # remove string
 
 
 class Decoder(Pipeline):
@@ -1047,6 +1018,7 @@ class Decoder(Pipeline):
 		self.sound_file = sound_file
 		self.time = 0
 		self.position = 0
+		self.probe_id = None
 
 		command = '%s location="%s" name=src ! decodebin name=decoder' % \
 			(gstreamer_source, encode_filename(self.sound_file.get_uri()))
@@ -1069,14 +1041,31 @@ class Decoder(Pipeline):
 	def found_tag(self, decoder, something, taglist):
 		#debug('found_tags:', self.sound_file.get_filename_for_display())
 		#debug('\ttitle=%s' % (taglist['title']))
-		"""for k in taglist.keys():
-			debug('\t%s=%s' % (k, taglist[k]))
+		for k in taglist.keys():
+			#debug('\t%s=%s' % (k, taglist[k]))
 			if isinstance(taglist[k], gst.Date):
 				taglist['year'] = taglist[k].year
 				taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
-									taglist[k].month, taglist[k].day)"""
+									taglist[k].month, taglist[k].day)
 
-		self.sound_file.add_tags(taglist)
+		tag_whitelist = (
+			'artist',
+			'album',
+			'title',
+			'track-number',
+			'track-count',
+			'genre',
+			'date',
+			'year',
+			'timestamp',
+		)
+		tags = {}
+		for k in taglist.keys():
+			if k in tag_whitelist:
+				tags[k] = taglist[k]
+	
+		#print tags
+		self.sound_file.add_tags(tags)
 		self.sound_file.have_tags = True
 
 		try:
@@ -1091,8 +1080,6 @@ class Decoder(Pipeline):
 			pad.remove_buffer_probe(self.probe_id)
 			return False
 
-		#if time.time() > self.time + 0.1:
-		#	self.time = time.time()
 		self.position = float(buffer.timestamp) / gst.SECOND
 
 		return True
@@ -1100,8 +1087,14 @@ class Decoder(Pipeline):
 	def new_decoded_pad(self, decoder, pad, is_last):
 		""" called when a decoded pad is created """
 		self.probe_id = pad.add_buffer_probe(self._buffer_probe)
+		self.probed_pad = pad
 		self.processing = True
 		self.query_duration()
+
+	def finished(self):
+		if self.probe_id:
+			self.probed_pad.remove_buffer_probe(self.probe_id)
+		Pipeline.finished(self)
 
 	def get_sound_file(self):
 		return self.sound_file
@@ -1111,14 +1104,13 @@ class Decoder(Pipeline):
 
 	def get_duration(self):
 		""" return the total duration of the sound file """
-		#if not self.pipeline:
-		#  return 0
 		self.query_duration()
 		return self.sound_file.duration
 
 	def get_position(self):
 		""" return the current pipeline position in the stream """
 		return self.position
+
 
 class TagReader(Decoder):
 
@@ -1142,42 +1134,6 @@ class TagReader(Decoder):
 			self.tagread = True
 			debug('TagReading done...')
 			self.done()
-
-	def __found_tag(self, decoder, something, taglist):
-		#debug('found_tags:', self.sound_file.get_filename_for_display())
-		#debug('\ttitle=%s' % (taglist['title']))
-		"""for k in taglist.keys():
-			debug('\t%s=%s' % (k, taglist[k]))
-			if isinstance(taglist[k], gst.Date):
-				taglist['year'] = taglist[k].year
-				taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
-									taglist[k].month, taglist[k].day)"""
-
-		self.sound_file.add_tags(taglist)
-		self.sound_file.have_tags = True
-
-		try:
-			self.sound_file.duration = self.pipeline.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
-		except gst.QueryError:
-			pass
-
-	def __work(self):
-		if not self.pipeline or self.eos:
-			return False
-
-		if not self.run_start_time:
-			if self.sound_file.mime_type in tag_blacklist:
-				log('%s: type is %s, tag reading blacklisted' % (self.sound_file.get_filename_for_display(), self.sound_file.mime_type))
-				return False
-			self.run_start_time = time.time()
-
-		if self.pipeline.get_state() != gst.STATE_PLAYING:
-			self.run_start_time = time.time()
-
-		if time.time()-self.run_start_time > 5:
-			# stop looking for tags after 5s
-			return False
-		return Decoder.work(self) and not self.found_tags
 
 	def finished(self):
 		Pipeline.finished(self)
@@ -1419,16 +1375,6 @@ class FileList:
 			i = self.model.iter_next(i)
 		return files
 
-	def __typefinder_progress(self, done, total):
-		progress = float(done) / total
-		self.window.progressbarstatus.set_fraction(progress)
-		#self.window.progressbarstatus.set_text('%d / %d' % (done, total))
-
-	def __tagreader_progress(self, done, total):
-		progress = float(done) / total
-		self.window.progressbarstatus.set_fraction(progress)
-		#self.window.progressbarstatus.set_text('%d / %d' % (done, total))
-
 	def update_progress(self, queue):
 		if queue.running:
 			progress = queue.progress
@@ -1483,8 +1429,7 @@ class FileList:
 				if filter:
 					filelist = [f for f in filelist if f.lower().endswith(filter)]
 
-				for f in filelist:
-					files.append(f)
+				files.extend(filelist)
 			else:
 				files.append(uri)
 
@@ -1503,7 +1448,7 @@ class FileList:
 			typefinder.set_found_type_hook(self.found_type)
 			self.typefinders.add_task(typefinder)
 
-		self.skiptags = len(files) > 100
+		self.skiptags = False #len(files) > 100
 		if self.skiptags:
 			log(_('too much files, skipping tag reading.'))
 			for i in self.model:
@@ -1583,9 +1528,7 @@ class FileList:
 		return s
 
 	def append_file(self, sound_file):
-
 		iter = self.model.append([self.format_cell(sound_file), sound_file])
-		#self.window.progressbar.pulse()
 
 
 	def append_file_tags(self, tagreader):
@@ -1602,7 +1545,6 @@ class FileList:
 			if i[1] == sound_file:
 				i[0] = self.format_cell(sound_file)
 		self.window.set_sensitive()
-		#self.window.progressbar.pulse()
 
 	def remove(self, iter):
 		uri = self.model.get(iter, 1)[0].get_uri()
@@ -1615,7 +1557,6 @@ class FileList:
 		except ValueError:
 			return False
 		return True
-
 
 
 class GladeWindow(object):
@@ -1631,7 +1572,6 @@ class GladeWindow(object):
 			raise AttributeError('Widget \'%s\' not found' % attribute)
 		self.__dict__[attribute] = widget # cache result
 		return widget
-
 
 
 class GConfStore(object):
@@ -2387,7 +2327,7 @@ class ConverterQueue(TaskQueue):
 			self.all_tasks = []
 			self.all_tasks.extend(self.waiting_tasks)
 			self.all_tasks.extend(self.running_tasks)
-			self.all_tasks.extend(self.finished_tasks)
+			#self.all_tasks.extend(self.finished_tasks)
 
 		for task in self.all_tasks:
 			if not task.got_duration:
@@ -2773,8 +2713,8 @@ class SoundConverterWindow(GladeWindow):
 
 	def set_sensitive(self):
 
-		[self.set_widget_sensitive(w, not self.converter.running)
-			for w in self.unsensitive_when_converting]
+		for w in self.unsensitive_when_converting:
+			self.set_widget_sensitive(w, not self.converter.running)
 
 		self.set_widget_sensitive('remove',
 			self.filelist_selection.count_selected_rows() > 0)
@@ -2787,7 +2727,7 @@ class SoundConverterWindow(GladeWindow):
 		self._lock_convert_button = False
 
 	def display_progress(self, remaining):
-		done = len(self.converter.finished_tasks)
+		done = self.converter.finished_tasks
 		total = done + len(self.converter.waiting_tasks) + len(self.converter.running_tasks)
 		self.progressbar.set_text(_('Converting file %d of %d  (%s)') % ( done, total, remaining ))
 

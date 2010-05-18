@@ -1,3 +1,11 @@
+2010-05-18  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Faster TypeFinder.
+	  Reduce memory usage.
+	  (61.9s -> 2.8s, 45.5MB -> 37.8MB to load 2918 files)
+	  Fix missing "year" tag. (closes #16425)
+	  Code cleaning.
+
 2010-03-17  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Improve command line parser so gstreamer options 
