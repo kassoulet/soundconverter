@@ -144,7 +144,7 @@ try:
 	import pygtk
 	pygtk.require('2.0')
 	import gtk
-	import gtk.glade
+	#import gtk.glade
 	import gnome
 	import gnome.ui
 	gnome.ui.authentication_manager_init()
@@ -186,8 +186,8 @@ except ImportError:
 	pass
 
 
-gtk.glade.bindtextdomain(PACKAGE,'@datadir@/locale')
-gtk.glade.textdomain(PACKAGE)
+#gtk.glade.bindtextdomain(PACKAGE,'@datadir@/locale')
+#gtk.glade.textdomain(PACKAGE)
 
 TRANSLATORS = ("""
 Guillaume Bedot <littletux zarb.org> (French)
@@ -644,10 +644,10 @@ class TargetNameGenerator:
 
 class ErrorDialog:
 
-	def __init__(self, glade):
-		self.dialog = glade.get_widget('error_dialog')
-		self.primary = glade.get_widget('primary_error_label')
-		self.secondary = glade.get_widget('secondary_error_label')
+	def __init__(self, builder):
+		self.dialog = builder.get_object('error_dialog')
+		self.primary = builder.get_object('primary_error_label')
+		self.secondary = builder.get_object('secondary_error_label')
 
 	def show(self, primary, secondary):
 		self.primary.set_markup(primary)
@@ -1322,7 +1322,7 @@ class FileList:
 	# List of MIME types which we accept for drops.
 	drop_mime_types = ['text/uri-list', 'text/plain', 'STRING']
 
-	def __init__(self, window, glade):
+	def __init__(self, window, builder):
 		self.window = window
 		self.typefinders = TaskQueue()
 		self.tagreaders  = TaskQueue()
@@ -1336,7 +1336,7 @@ class FileList:
 				args.append(gobject.TYPE_PYOBJECT)
 		self.model = apply(gtk.ListStore, args)
 
-		self.widget = glade.get_widget('filelist')
+		self.widget = builder.get_object('filelist')
 		self.widget.set_model(self.model)
 		self.widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
@@ -1561,17 +1561,26 @@ class FileList:
 
 class GladeWindow(object):
 
-	def __init__(self, glade):
-		self.glade = glade
-		glade.signal_autoconnect(self)
+	callbacks = {}
+	builder = None
+
+	def __init__(self, plop):
+		'''Init GladeWindow, stores the objects's potential callbacks for later.
+		You have to call connect_signals() when all descendants are ready.'''
+		GladeWindow.callbacks.update(dict([[x,getattr(self, x)] for x in dir(self)]))
 
 	def __getattr__(self, attribute):
 		'''Allow direct use of window widget.'''
-		widget = self.glade.get_widget(attribute)
+		widget = GladeWindow.builder.get_object(attribute)
 		if widget is None:
 			raise AttributeError('Widget \'%s\' not found' % attribute)
 		self.__dict__[attribute] = widget # cache result
 		return widget
+
+	@staticmethod
+	def connect_signals():
+		'''Connect all GladeWindow objects to theirs respective signals'''
+		GladeWindow.builder.connect_signals(GladeWindow.callbacks)
 
 
 class GConfStore(object):
@@ -1658,22 +1667,22 @@ class PreferencesDialog(GladeWindow, GConfStore):
 	sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
 						 'subfolder_pattern']
 
-	def __init__(self, glade):
-		GladeWindow.__init__(self, glade)
+	def __init__(self, builder):
+		GladeWindow.__init__(self, builder)
 		GConfStore.__init__(self, '/apps/SoundConverter', self.defaults)
 
-		self.dialog = glade.get_widget('prefsdialog')
-		self.example = glade.get_widget('example_filename')
-		self.force_mono = glade.get_widget('force-mono')
+		self.dialog = builder.get_object('prefsdialog')
+		self.example = builder.get_object('example_filename')
+		self.force_mono = builder.get_object('force-mono')
 
 		self.target_bitrate = None
 		self.convert_setting_from_old_version()
 
 		self.sensitive_widgets = {}
 		for name in self.sensitive_names:
-			self.sensitive_widgets[name] = glade.get_widget(name)
+			self.sensitive_widgets[name] = builder.get_object(name)
 			assert self.sensitive_widgets[name] != None
-		self.set_widget_initial_values(glade)
+		self.set_widget_initial_values(builder)
 		self.set_sensitive()
 
 		tip = [_('Available patterns:')]
@@ -1694,7 +1703,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
 		self.gconf.clear_cache()
 
-	def set_widget_initial_values(self, glade):
+	def set_widget_initial_values(self, builder):
 
 		self.quality_tabs.set_show_tabs(False)
 
@@ -2387,24 +2396,23 @@ class CustomFileChooser:
 	"""
 	Custom file chooser.\n
 	"""
-	def __init__(self):
+	def __init__(self, builder):
 		"""
 		Constructor
 		Load glade object, create a combobox
 		"""
-		xml = gtk.glade.XML(GLADE,'custom_file_chooser')
-		self.dlg = xml.get_widget('custom_file_chooser')
+		self.dlg = builder.get_object('custom_file_chooser')
 		self.dlg.set_title(_('Open a file'))
 
 		# setup
-		self.fcw = xml.get_widget('filechooserwidget')
+		self.fcw = builder.get_object('filechooserwidget')
 		self.fcw.set_local_only(not use_gnomevfs)
 		self.fcw.set_select_multiple(True)
 
 		self.pattern = []
 
 		# Create combobox model
-		self.combo = xml.get_widget('filtercombo')
+		self.combo = builder.get_object('filtercombo')
 		self.combo.connect('changed',self.on_combo_changed)
 		self.store = gtk.ListStore(str)
 		self.combo.set_model(self.store)
@@ -2466,21 +2474,24 @@ class SoundConverterWindow(GladeWindow):
 	sensitive_names = [ 'remove', 'clearlist', 'toolbutton_clearlist', 'convert_button' ]
 	unsensitive_when_converting = [ 'remove', 'clearlist', 'prefs_button' ,'toolbutton_addfile', 'toolbutton_addfolder', 'toolbutton_clearlist', 'filelist', 'menubar' ]
 
-	def __init__(self, glade):
-		GladeWindow.__init__(self, glade)
+	def __init__(self, builder):
+		GladeWindow.__init__(self, builder)
+		GladeWindow.builder = builder
+		self.prefs = PreferencesDialog(builder)
+		self.addchooser = CustomFileChooser(builder)
+		GladeWindow.connect_signals()
+		
 
-		self.widget = glade.get_widget('window')
-		self.filelist = FileList(self, glade)
+		self.widget = builder.get_object('window')
+		self.filelist = FileList(self, builder)
 		self.filelist_selection = self.filelist.widget.get_selection()
 		self.filelist_selection.connect('changed', self.selection_changed)
-		self.existsdialog = glade.get_widget('existsdialog')
-		self.existsdialog.message = glade.get_widget('exists_message')
-		self.existsdialog.apply_to_all = glade.get_widget('apply_to_all')
-		self.status = glade.get_widget('statustext')
-		self.prefs = PreferencesDialog(glade)
+		self.existsdialog = builder.get_object('existsdialog')
+		self.existsdialog.message = builder.get_object('exists_message')
+		self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
+		self.status = builder.get_object('statustext')
 		#self.progressfile = glade.get_widget('progressfile')
 
-		self.addchooser = CustomFileChooser()
 		self.addfolderchooser = gtk.FileChooserDialog(_('Add Folder...'),
 			self.widget, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
 			(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,	gtk.RESPONSE_OK))
@@ -2502,8 +2513,8 @@ class SoundConverterWindow(GladeWindow):
 		self.combo.set_active(0)
 		self.addfolderchooser.set_extra_widget(self.combo)
 
-		self.about.set_property('name', NAME)
-		self.about.set_property('version', VERSION)
+		self.aboutdialog.set_property('name', NAME)
+		self.aboutdialog.set_property('version', VERSION)
 
 		self.convertion_waiting = False
 
@@ -2513,9 +2524,9 @@ class SoundConverterWindow(GladeWindow):
 
 		self.sensitive_widgets = {}
 		for name in self.sensitive_names:
-			self.sensitive_widgets[name] = glade.get_widget(name)
+			self.sensitive_widgets[name] = builder.get_object(name)
 		for name in self.unsensitive_when_converting:
-			self.sensitive_widgets[name] = glade.get_widget(name)
+			self.sensitive_widgets[name] = builder.get_object(name)
 
 		self.set_sensitive()
 		self.set_status()
@@ -2528,7 +2539,7 @@ class SoundConverterWindow(GladeWindow):
 
 	def __getattr__(self, attribute):
 		"""Allow direct use of window widget."""
-		widget = self.glade.get_widget(attribute)
+		widget = self.builder.get_object(attribute)
 		if widget is None:
 			raise AttributeError('Widget \'%s\' not found' % attribute)
 		self.__dict__[attribute] = widget # cache result
@@ -2694,11 +2705,14 @@ class SoundConverterWindow(GladeWindow):
 	on_prefs_button_clicked = on_preferences_activate
 
 	def on_about_activate(self, *args):
-		about = gtk.glade.XML(GLADE, 'about').get_widget('about')
+		about = self.aboutdialog
 		about.set_property('name', NAME)
 		about.set_property('version', VERSION)
 		about.set_property('translator_credits', TRANSLATORS)
 		about.show()
+
+	def on_aboutdialog_response(self, dialog, response):
+		dialog.hide()
 
 	def selection_changed(self, *args):
 		self.set_sensitive()
@@ -2775,16 +2789,16 @@ class SoundConverterWindow(GladeWindow):
 
 def gui_main(input_files):
 	gnome.init(NAME, VERSION)
-	glade = gtk.glade.XML(GLADE)
-	win = SoundConverterWindow(glade)
+	
+	builder = gtk.Builder()
+	builder.add_from_file(GLADE)
+	
+	win = SoundConverterWindow(builder)
 	global error
-	error = ErrorDialog(glade)
-	#TODO
+	error = ErrorDialog(builder)
 	gobject.idle_add(win.filelist.add_uris, input_files)
 	win.set_sensitive()
-	#gtk.threads_enter()
 	gtk.main()
-	#gtk.threads_leave()
 
 def cli_tags_main(input_files):
 	global error
