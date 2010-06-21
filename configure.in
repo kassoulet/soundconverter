@@ -1,7 +1,7 @@
 dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
-AC_INIT(src/soundconverter.py)
+AC_INIT(bin/soundconverter.py)
 AM_INIT_AUTOMAKE([soundconverter], [1.5.1-wip])
 
 m4_define(required_python_abi, [2.5])
@@ -14,13 +14,14 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
 ALL_LINGUAS="ar br bg ca cs da de el en_AU en_GB eo es et eu fa fi fr he hi hu it ja ms nl pl pt_BR ru sk sr@latin sr sv te tr vi zh_CN"
 
-GETTEXT_PACKAGE=soundconverter
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+GETTEXT_PACKAGE="soundconverter"
+AC_SUBST([GETTEXT_PACKAGE])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL
 
 AM_PATH_PYTHON(required_python_version)
+
 
 dnl Check for correctly installed pygtk
 AC_MSG_CHECKING(for pygtk required_pygtk_version installed)
@@ -54,6 +55,7 @@ AC_OUTPUT(
         Makefile
         po/Makefile.in
         soundconverter/Makefile
+        bin/Makefile
         data/Makefile
         data/soundconverter.desktop.in
         doc/Makefile

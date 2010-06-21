@@ -479,7 +479,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="border_width">1000</property>
-                <property name="headers_visible">False</property>
                 <property name="rules_hint">True</property>
               </object>
             </child>
@@ -489,7 +488,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox20">
+          <object class="GtkVBox" id="vbox_status">
             <property name="visible">True</property>
             <child>
               <object class="GtkVBox" id="progress_frame">
@@ -781,8 +780,8 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Where to place results?</property>
     <property name="type_hint">dialog</property>
-    <property name="local_only">False</property>
     <property name="action">select-folder</property>
+    <property name="local_only">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
@@ -1981,8 +1980,8 @@
           <object class="GtkFileChooserWidget" id="filechooserwidget">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="local_only">False</property>
             <property name="select_multiple">True</property>
+            <property name="local_only">False</property>
           </object>
           <packing>
             <property name="position">2</property>

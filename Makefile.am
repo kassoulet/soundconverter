@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = dist-bzip2
 
-SUBDIRS = po soundconverter data doc
+SUBDIRS = po soundconverter bin data doc
 
 CLEANFILES=
 
