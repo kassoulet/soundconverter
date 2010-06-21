@@ -1,17 +1,26 @@
 ## Process this file with automake to produce Makefile.in
 
-appdir = $(bindir)
-app_SCRIPTS = soundconverter
+soundconverterdir = $(libdir)/soundconverter/python/soundconverter
 
-CLEANFILES = soundconverter
+soundconverter_PYTHON = \
+	__init__.py 	\
+	error.py	\
+	gstreamer.py	\
+	fileoperations.py	\
+	namegenerator.py	\
+	notify.py	\
+	queue.py	\
+	settings.py	\
+	soundfile.py	\
+	task.py	\
+	ui.py	\
+	utils.py	\
+	messagearea.py \
+	gconfstore.py
 
-soundconverter: soundconverter.py
-	sed -e s!\@datadir\@!$(datadir)! -e s!\@version\@!$(VERSION)! < $< > $@
-	chmod +x $@
 
-check:
-	python soundconverterTests.py
-	if [ -d snd ]; then python soundconverter.py -t snd/* > /dev/null; fi
+clean-local:
+	rm -rf *.pyc *.pyo
 
 
-EXTRA_DIST = soundconverterTests.py soundconverter.py
+
