@@ -3,12 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2006.
+# Eugene Babiy <eugene.babiy@gmail.com>, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-15 20:39+0100\n"
-"PO-Revision-Date: 2008-11-25 01:57+0000\n"
+"PO-Revision-Date: 2010-07-09 12:25+0400\n"
 "Last-Translator: Eugene Babiy <eugene.babiy@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +37,9 @@ msgid ""
 "16 bits\n"
 "8 bits"
 msgstr ""
+"32 бита\n"
+"16 бит\n"
+"8 бит"
 
 #: ../data/soundconverter.glade.h:4
 msgid "<b>How to name files?</b>"
@@ -69,9 +74,8 @@ msgid "Choose..."
 msgstr "Выбрать..."
 
 #: ../data/soundconverter.glade.h:13
-#, fuzzy
 msgid "Compression:"
-msgstr "Без сжатия"
+msgstr "Сжатие:"
 
 #: ../data/soundconverter.glade.h:14
 msgid ""
@@ -101,6 +105,9 @@ msgid ""
 "Medium\n"
 "Slow"
 msgstr ""
+"Быстро\n"
+"Средне\n"
+"Медленно"
 
 #: ../data/soundconverter.glade.h:23
 msgid "File exists already"
@@ -116,7 +123,7 @@ msgstr "Фильтр "
 
 #: ../data/soundconverter.glade.h:26
 msgid "Force mono output"
-msgstr ""
+msgstr "Принудительный вывод моно"
 
 #: ../data/soundconverter.glade.h:27
 msgid "Format: "
@@ -135,7 +142,6 @@ msgid "MP3 Encoder is not present."
 msgstr "MP3 кодек не найден"
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid ""
 "Ogg Vorbis (.ogg)\n"
 "MP3 (.mp3)\n"
@@ -146,7 +152,8 @@ msgstr ""
 "Ogg Vorbis (.ogg)\n"
 "MP3  (.mp3)\n"
 "FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
+"MS Wave (.wav)\n"
+"AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Preferences"
@@ -170,7 +177,7 @@ msgstr "Заменить все некорректные символы"
 
 #: ../data/soundconverter.glade.h:41
 msgid "Resample"
-msgstr ""
+msgstr "Ресемплинг"
 
 #: ../data/soundconverter.glade.h:42
 msgid "Same folder as the input file"
@@ -178,7 +185,7 @@ msgstr "В ту же папку, где находится исходный фа
 
 #: ../data/soundconverter.glade.h:43
 msgid "Sample width:"
-msgstr ""
+msgstr "Динамический диапазон:"
 
 #: ../data/soundconverter.glade.h:44
 msgid "SoundConverter"
@@ -186,10 +193,9 @@ msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:45
 msgid "Use .oga extension"
-msgstr ""
+msgstr "Использовать расширение .oga"
 
 #: ../data/soundconverter.glade.h:46
-#, fuzzy
 msgid ""
 "Very Low\n"
 "Low\n"
@@ -202,7 +208,8 @@ msgstr ""
 "Низкое\n"
 "Нормальное\n"
 "Высокое\n"
-"Очень высокое"
+"Очень высокое\n"
+"Безумно высокое"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Where to place results?"
@@ -218,16 +225,15 @@ msgstr "_Применить ко всей очереди"
 
 #: ../data/soundconverter.glade.h:55
 msgid "_Edit"
-msgstr ""
+msgstr "_Редактировать"
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "_File"
-msgstr "_Добавить файл"
+msgstr "_Файл"
 
 #: ../data/soundconverter.glade.h:57
 msgid "_Help"
-msgstr ""
+msgstr "_Помощь"
 
 #: ../data/soundconverter.glade.h:58
 msgid "_Overwrite"
@@ -239,7 +245,7 @@ msgstr "Пр_опустить"
 
 #: ../data/soundconverter.glade.h:60
 msgid "aac"
-msgstr ""
+msgstr "aac"
 
 #: ../data/soundconverter.glade.h:61
 msgid ""
@@ -276,7 +282,7 @@ msgstr ""
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../data/soundconverter.glade.h:71
 msgid "translator_credits"
-msgstr ""
+msgstr "Oleg Koptev <koptev.oleg@gmail.com>"
 
 #: ../data/soundconverter.glade.h:72
 msgid "wav"
@@ -284,17 +290,16 @@ msgstr "wav"
 
 #: ../data/soundconverter.glade.h:73
 msgid "~xxx kbps"
-msgstr ""
+msgstr "~xxx кбит/с"
 
 #. traductors: These are the custom filename patterns. Only if it does make sense.
 #: ../src/soundconverter.py:154
-#, fuzzy
 msgid "Artist Album Title Track Total Genre Date Year Timestamp"
-msgstr "Артист Альбом Название Трэк Всего Жанр Дата Год"
+msgstr "Артист Альбом Название Трэк Всего Жанр Дата Год Время"
 
 #: ../src/soundconverter.py:188
 msgid "All files"
-msgstr ""
+msgstr "Все файлы"
 
 #: ../src/soundconverter.py:594
 #, python-format
@@ -361,12 +366,11 @@ msgstr "Невозможно создать папку '%s'."
 
 #: ../src/soundconverter.py:1241
 msgid "GStreamer Error:"
-msgstr ""
+msgstr "Ошибка GStreamer:"
 
 #: ../src/soundconverter.py:1385
-#, fuzzy
 msgid "Adding files..."
-msgstr "Добавить папку..."
+msgstr "Добавляются файлы..."
 
 #: ../src/soundconverter.py:1450
 msgid "loading tags..."
@@ -417,9 +421,8 @@ msgid "artist - album"
 msgstr "Исполнитель - Альбом"
 
 #: ../src/soundconverter.py:1599
-#, fuzzy
 msgid "Available patterns:"
-msgstr "Шаблон имени файла: "
+msgstr "Доступные шаблоны:"
 
 #: ../src/soundconverter.py:1742
 #, python-format
@@ -432,13 +435,12 @@ msgid "Target bitrate: %s"
 msgstr "Выходной битрейт: %s"
 
 #: ../src/soundconverter.py:2135
-#, fuzzy
 msgid "Conversion Canceled"
 msgstr "Преобразование отменено"
 
 #: ../src/soundconverter.py:2170
 msgid "Cannot overwrite source file(s)!"
-msgstr ""
+msgstr "Не могу перезаписать исходные файл(-ы)!"
 
 #: ../src/soundconverter.py:2183
 #, python-format
@@ -466,7 +468,6 @@ msgid "Add Folder..."
 msgstr "Добавить папку..."
 
 #: ../src/soundconverter.py:2547
-#, fuzzy
 msgid "Conversion cancelled"
 msgstr "Преобразование отменено"
 
@@ -543,7 +544,6 @@ msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Вести себя тихо. Сообщать только об ошибках."
 
 #: ../src/soundconverter.py:2855
-#, fuzzy
 msgid "Print additional debug information"
 msgstr "Выводить дополнительную отладочную информацию"
 
@@ -568,7 +568,7 @@ msgstr ""
 
 #: ../src/soundconverter.py:2864
 msgid "Force number of concurrent conversions."
-msgstr ""
+msgstr "Количество одновременных преобразований."
 
 #~ msgid "_Remove"
 #~ msgstr "_Удалить"

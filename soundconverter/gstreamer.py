@@ -28,6 +28,7 @@ import gobject
 import gst
 import gnomevfs
 import gtk # TODO
+import gconf
 
 from fileoperations import vfs_encode_filename, file_encode_filename
 from fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
@@ -74,7 +75,9 @@ encoders = (
     ('id3v2mux',  'MP3 Tags'),
     ('xingmux',   'Xing Header'),
     ('lame',      'MP3'),
-    ('faac',      'AAC'))
+    ('faac',      'AAC'),
+    ('mp4mux',    'AAC'),
+    )
 
 available_elements = {}
 
@@ -88,6 +91,25 @@ for encoder, name in encoders:
 
 if 'oggmux' not in available_elements:
     del available_elements['vorbisenc']
+
+
+# load gstreamer audio profiles
+_GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
+_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/0.10/audio/global/profile_list"
+audio_profiles_list = []
+audio_profiles_dict = {}
+
+_GCONF = gconf.client_get_default()
+profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
+for name in profiles:
+    if (_GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active")):
+        description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
+        extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
+        pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
+        profile = description, extension, pipeline
+        audio_profiles_list.append(profile)
+        audio_profiles_dict[description] = profile
+
 
 
 class Pipeline(BackgroundTask):
@@ -322,7 +344,7 @@ class Decoder(Pipeline):
                 taglist['year'] = taglist[k].year
                 taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
                                     taglist[k].month, taglist[k].day)
-
+        print taglist.keys()
         tag_whitelist = (
             'artist',
             'album',
@@ -454,6 +476,7 @@ class Converter(Decoder):
             'audio/x-wav': self.add_wav_encoder,
             'audio/mpeg': self.add_mp3_encoder,
             'audio/x-m4a': self.add_aac_encoder,
+            'gst-profile': self.add_audio_profile,
         }
 
         self.add_command('audioconvert')
@@ -549,6 +572,9 @@ class Converter(Decoder):
     def set_wav_sample_width(self, sample_width):
         self.wav_sample_width = sample_width
 
+    def set_audio_profile(self, audio_profile):
+        self.audio_profile = audio_profile
+
     def add_flac_encoder(self):
         s = 'flacenc mid-side-stereo=true quality=%s' % self.flac_compression
         return s
@@ -596,8 +622,11 @@ class Converter(Decoder):
         return cmd
 
     def add_aac_encoder(self):
-        return 'faac profile=2 bitrate=%s ! ffmux_mp4' % \
-            (self.aac_quality * 1000)
+        return 'faac profile=2 bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
+
+    def add_audio_profile(self):
+        pipeline = audio_profiles_dict[self.audio_profile][2]
+        return pipeline
 
 
 class ConverterQueueCanceled(SoundConverterException):
@@ -695,6 +724,7 @@ class ConverterQueue(TaskQueue):
         c.set_aac_quality(self.window.prefs.get_int('aac-quality'))
         c.set_flac_compression(self.window.prefs.get_int('flac-compression'))
         c.set_wav_sample_width(self.window.prefs.get_int('wav-sample-width'))
+        c.set_audio_profile(self.window.prefs.get_string('audio-profile'))
 
         quality = {
             'cbr': 'mp3-cbr-quality',
@@ -711,9 +741,6 @@ class ConverterQueue(TaskQueue):
         #self.total_duration += c.get_duration()
         gobject.timeout_add(100, self.set_progress)
         self.all_tasks = None
-
-    def __work_hook(self, tasks):
-        gobject.idle_add(self.set_progress, (tasks))
 
     def get_progress(self, task):
         return (self.duration_processed +
@@ -749,14 +776,12 @@ class ConverterQueue(TaskQueue):
         for task in tasks:
             if task.converting:
                 position += task.get_position()
-                s.append( '%d/%d' % (task.get_position(), task.sound_file.duration))
-                p = task.get_position() / task.sound_file.duration
-                row = task.sound_file.filelist_row
-                #print row, '%.2f' % p
-                win.filelist.set_row_progress(row, p)
+                s.append('%d/%d' % (task.get_position(), task.sound_file.duration))
+                progress = task.get_position() / task.sound_file.duration
+                self.window.set_file_progress(task.sound_file, progress)
 
 
-        print '%s, %s, ' % (self.duration_processed + position, total_duration), s, self
+        #print '%s, %s, ' % (self.duration_processed + position, total_duration), s, self
         self.window.set_progress(self.duration_processed + position,
                              total_duration, filename)
         return True

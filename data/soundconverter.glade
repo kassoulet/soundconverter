@@ -181,6 +181,9 @@
       <row>
         <col id="0" translatable="yes">AAC (.m4a)</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">GNOME Audio Profile</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="liststore9">
@@ -214,6 +217,7 @@
       </row>
     </data>
   </object>
+  <object class="GtkListStore" id="liststore11"/>
   <object class="GtkWindow" id="window">
     <property name="visible">True</property>
     <property name="title" translatable="yes">SoundConverter</property>
@@ -479,6 +483,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="border_width">1000</property>
+                <property name="headers_visible">False</property>
+                <property name="headers_clickable">False</property>
                 <property name="rules_hint">True</property>
               </object>
             </child>
@@ -559,7 +565,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="progressfile">
-                    <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">current file</property>
                     <property name="ellipsize">middle</property>
@@ -1734,6 +1739,54 @@
                                 <property name="tab_fill">False</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkTable" id="table7">
+                                <property name="visible">True</property>
+                                <property name="n_rows">2</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">6</property>
+                                <property name="row_spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="label4">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Profile:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="gstprofile">
+                                    <property name="visible">True</property>
+                                    <property name="model">liststore11</property>
+                                    <signal name="changed" handler="on_gstprofile_changed"/>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options"></property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">5</property>
+                              </packing>
+                            </child>
+                            <child type="tab">
+                              <object class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">gst-profile</property>
+                              </object>
+                              <packing>
+                                <property name="position">5</property>
+                                <property name="tab_fill">False</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="position">2</property>
@@ -1980,8 +2033,8 @@
           <object class="GtkFileChooserWidget" id="filechooserwidget">
             <property name="visible">True</property>
             <property name="border_width">5</property>
-            <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
           </object>
           <packing>
             <property name="position">2</property>

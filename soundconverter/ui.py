@@ -39,10 +39,37 @@ from queue import TaskQueue
 from utils import log, debug
 from messagearea import MessageArea
 
+import gconf
+_GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
+_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/0.10/audio/global/profile_list"
+audio_profiles_list = []
+audio_profiles_dict = {}
+
+
+_GCONF = gconf.client_get_default()
+profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
+for name in profiles:
+    if (_GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active")):
+        description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
+        extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
+        pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
+        profile = description, extension, pipeline
+        audio_profiles_list.append(profile)
+        audio_profiles_dict[description] = profile
+
 
 # Names of columns in the file list
-VISIBLE_COLUMNS = ['filename']
-ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
+MODEL = [ gobject.TYPE_STRING,   # visible filename
+          gobject.TYPE_PYOBJECT, # soundfile
+          gobject.TYPE_FLOAT,    # progress
+          gobject.TYPE_STRING,   # status
+          gobject.TYPE_STRING,   # complete filename
+    ]
+
+COLUMNS = ['filename']
+
+#VISIBLE_COLUMNS = ['filename']
+#ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
 
 MP3_CBR, MP3_ABR, MP3_VBR = range(3)
 
@@ -99,18 +126,12 @@ class FileList:
         self.tagreaders = TaskQueue()
         self.filelist = {}
 
-        args = []
-        for name in ALL_COLUMNS:
-            if name in VISIBLE_COLUMNS:
-                args.append(gobject.TYPE_STRING)
-            else:
-                args.append(gobject.TYPE_PYOBJECT)
-        args.append(gobject.TYPE_FLOAT)
-        args.append(gobject.TYPE_STRING)
-        self.model = apply(gtk.ListStore, args)
+        self.model = apply(gtk.ListStore, MODEL)
 
         self.widget = builder.get_object('filelist')
-        self.widget.set_model(self.model)
+        self.sortedmodel = gtk.TreeModelSort(self.model)
+        self.widget.set_model(self.sortedmodel)
+        self.sortedmodel.set_sort_column_id(4, gtk.SORT_ASCENDING)
         self.widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
         self.widget.drag_dest_set(gtk.DEST_DEFAULT_ALL,
@@ -133,13 +154,12 @@ class FileList:
         renderer = gtk.CellRendererText()
         import pango
         renderer.set_property('ellipsize', pango.ELLIPSIZE_MIDDLE)
-        for name in VISIBLE_COLUMNS:
-            column = gtk.TreeViewColumn(name,
-                                        renderer,
-                                        markup=ALL_COLUMNS.index(name),
-                                        )
-            column.set_expand(True)
-            self.widget.append_column(column)
+        column = gtk.TreeViewColumn('Filename',
+                                    renderer,
+                                    markup=0,
+                                    )
+        column.set_expand(True)
+        self.widget.append_column(column)
 
         self.window.progressbarstatus.hide()
 
@@ -236,9 +256,8 @@ class FileList:
             typefinder.set_found_type_hook(self.found_type)
             self.typefinders.add_task(typefinder)
 
-        self.skiptags = True #len(files) > 100
+        self.skiptags = True
         if self.skiptags:
-            log(_('too much files, skipping tag reading.'))
             for i in self.model:
                 i[0] = self.format_cell(i[1])
 
@@ -323,8 +342,12 @@ class FileList:
         if text is not None:
             self.model[number][3] = text
 
+    def hide_row_progress(self):
+        self.progress_column.set_visible(False)
+
     def append_file(self, sound_file):
-        i = self.model.append([self.format_cell(sound_file), sound_file, 0, ''])
+        i = self.model.append([self.format_cell(sound_file), sound_file, 0, '',
+                                sound_file.uri])
         sound_file.filelist_row = len(self.model) - 1
 
     def append_file_tags(self, tagreader):
@@ -424,6 +447,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'flac-speed': 0,
         'force-mono': 0,
         'last-used-folder': None,
+        'audio-profile': None,
     }
 
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
@@ -504,6 +528,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
                     ('audio/x-flac'  , 'flacenc'),
                     ('audio/x-wav'   , 'wavenc'),
                     ('audio/x-m4a'   , 'faac'),
+                    ('gst-profile'   , None),
                     ) # must be in same order in output_mime_type
 
         # desactivate output if encoder plugin is not present
@@ -517,7 +542,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         for b in widgets:
             mime, encoder_name = b
             encoder_present = encoder_name in available_elements
-            if not encoder_present:
+            if encoder_name and not encoder_present:
                 del model[i]
                 if mime_type == mime:
                     mime_type = self.defaults['output-mime-type']
@@ -595,6 +620,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.resample_rate.set_active(idx)
 
         self.force_mono.set_active(self.get_int('force-mono'))
+
+        for i, profile in enumerate(audio_profiles_list):
+            description, extension, pipeline = profile
+            self.gstprofile.append_text('%s (.%s)' % (description, extension))
+            if description == self.get_string('audio-profile'):
+                self.gstprofile.set_active(i)
 
         self.update_example()
 
@@ -686,14 +717,17 @@ class PreferencesDialog(GladeWindow, GConfStore):
     def generate_filename(self, sound_file, for_display=False):
         self.gconf.clear_cache()
         output_type = self.get_string('output-mime-type')
+        profile = self.get_string('audio-profile')
+        profile_ext = audio_profiles_dict[profile][1] if profile else ''
         output_suffix = {
                         'audio/x-vorbis': '.ogg',
                         'audio/x-flac': '.flac',
                         'audio/x-wav': '.wav',
                         'audio/mpeg': '.mp3',
                         'audio/x-m4a': '.m4a',
-                    }.get(output_type, None)
-
+                        'gst-profile': '.' + profile_ext,
+                    }.get(output_type, '.?')
+        print output_type
         generator = TargetNameGenerator()
 
         if output_suffix == '.ogg' and self.get_int('vorbis-oga-extension'):
@@ -769,7 +803,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if ret == gtk.RESPONSE_OK:
             folder = self.target_folder_chooser.get_uri()
             if folder:
-                self.set_string('selected-folder', folder)
+                self.set_string('selected-folder', urllib.unquote(folder))
                 self.update_selected_folder()
                 self.update_example()
 
@@ -828,6 +862,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
                         'audio/x-flac': 2,
                         'audio/x-wav': 3,
                         'audio/x-m4a': 4,
+                        'gst-profile': 5,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -890,6 +925,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
     def on_flac_compression_changed(self, combobox):
         quality = (0, 5, 8)
         self.set_int('flac-compression', quality[combobox.get_active()])
+        self.update_example()
+
+    def on_gstprofile_changed(self, combobox):
+        profile = audio_profiles_list[combobox.get_active()]
+        description, extension, pipeline = profile
+        self.set_string('audio-profile', description)
         self.update_example()
 
     def on_force_mono_toggle(self, button):
@@ -1052,6 +1093,7 @@ class CustomFileChooser:
             return getattr(self.fcw, attr)
 
 _old_progress = 0
+_old_total = 0
 
 class SoundConverterWindow(GladeWindow):
 
@@ -1228,6 +1270,7 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
+        print 'reading tags:', sound_file
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.tags_read)
         tagreader.start()
@@ -1290,12 +1333,12 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def on_button_pause_clicked(self, *args):
-        task = self.converter.get_current_task()
-        if task:
-            self.converter.paused = not self.converter.paused
-            task.toggle_pause(self.converter.paused)
-        else:
+        tasks = self.converter.running_tasks
+        if not tasks:
             return
+        self.converter.paused = not self.converter.paused
+        for task in tasks:
+            task.toggle_pause(self.converter.paused)
         if self.converter.paused:
             self.display_progress(_('Paused'))
 
@@ -1358,31 +1401,44 @@ class SoundConverterWindow(GladeWindow):
                                                 self.converter.running_tasks)
         self.progressbar.set_text(_('Converting file %d of %d  (%s)') % (
                                     done + 1, total, remaining))
+        self.progressbar.set_text(_('%s') % remaining)
+
+    def set_file_progress(self, sound_file, progress):
+        row = sound_file.filelist_row
+        self.filelist.set_row_progress(row, progress)
 
     def set_progress(self, done_so_far=0, total=0, current_file=None):
 
         global _old_progress
-        if done_so_far < _old_progress:
-            raise RuntimeError
+        #if done_so_far < _old_progress:
+        #    raise RuntimeError
+        if done_so_far == _old_progress:
+            return
         _old_progress = done_so_far
+        #global _old_total
+        #if total < _old_total:
+        #    raise RuntimeError
+        #_old_total = total
 
+        if self.converter.paused:
+            return
 
         if not total or not done_so_far:
             self.progressbar.set_text(' ')
             self.progressbar.set_fraction(0.0)
             self.progressbar.pulse()
             self.progressfile.set_markup('')
+            self.filelist.hide_row_progress()
             return
         if time.time() < self.progress_time + 0.10:
             # ten updates per second should be enough
             return
-        self.progress_time = time.time()
 
         self.set_status(_('Converting')) # TODO
 
-        self.progressfile.set_markup('<i><small>%s</small></i>' %
-                                    gobject.markup_escape_text(current_file)
-                                    if current_file else '')
+        #self.progressfile.set_markup('<i><small>%s</small></i>' %
+        #                            gobject.markup_escape_text(current_file)
+        #                            if current_file else '')
 
         t = time.time() - self.converter.run_start_time - \
                           self.converter.paused_time
@@ -1397,8 +1453,20 @@ class SoundConverterWindow(GladeWindow):
         r = (t / fraction - t)
         s = r % 60
         m = r / 60
-        remaining = _('%d:%02d left') % (m, s)
+
+        #print m,s, abs(self.progress_time-time.time())
+        from math import ceil
+
+        if m > 1.0:
+            remaining = _('Less than %d minutes left.') % ceil(m)
+        else:
+            remaining = _('Less than one minute left.')
+            if s < 10:
+                remaining = '%d' % s
+
+        #remaining = _('%d:%02d left') % (m, s)
         self.display_progress(remaining)
+        self.progress_time = time.time()
 
     def set_status(self, text=None):
         if not text:

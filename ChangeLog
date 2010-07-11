@@ -1,3 +1,33 @@
+2010-07-11  Gautier Portet <kassoulet gmail com>
+	* po/de.po po/ru.po: Update de and ru translations.
+	  (thanks Wolfgang & Oleg)
+
+2010-06-24  Gautier Portet <kassoulet gmail com>
+	* src/soundconverter.py: Destination filename was url encoded when stored
+	  in gconf.
+	  (thanks Simón, fixes #17291)
+
+2010-06-24  Gautier Portet <kassoulet gmail com>
+	* src/soundconverter.py: Fix track number/count missing when writing to
+	  AAC files.
+
+	  (thanks Montel and Tim-Philipp, fixes #17291)
+
+2010-06-16  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix progress bar oddities, crash in TaskQueue and
+	  duplicate mp3 entry in desktop file.
+	  (Thanks Michael, closes #17269, #17268 and #17266)
+
+	  release 1.5.3 (1.5.2 was broken)
+
+2010-06-13  Gautier Portet <kassoulet gmail com>
+
+	* src/soundconverter.py: Fix typo preventing SoundConverter to run.
+	  (thanks logicaldash & mpmic, fixes #17244)
+
+	  release 1.5.1
+
 2010-05-18  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: Faster TypeFinder.
@@ -6,11 +36,13 @@
 	  Fix missing "year" tag. (closes #16425)
 	  Code cleaning.
 
+	  release 1.5.0
+
 2010-03-17  Gautier Portet <kassoulet gmail com>
 
-	* src/soundconverter.py: Improve command line parser so gstreamer options 
+	* src/soundconverter.py: Improve command line parser so gstreamer options
 	  are working.
-	  
+
 2010-03-11  Gautier Portet <kassoulet gmail com>
 
 	* src/soundconverter.py: New command line parser.
