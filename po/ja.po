@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-15 20:39+0100\n"
-"PO-Revision-Date: 2008-11-24 11:56+0000\n"
-"Last-Translator: MIZUNO J. Y. <Unknown>\n"
+"POT-Creation-Date: 2010-09-08 14:11+0200\n"
+"PO-Revision-Date: 2010-02-11 13:32+0000\n"
+"Last-Translator: vbk <vbkaisetsu@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-24 12:28+0000\n"
+"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -31,492 +31,351 @@ msgstr "サウンド変換"
 
 #: ../data/soundconverter.glade.h:1
 msgid ""
-"32 bits\n"
-"16 bits\n"
-"8 bits"
+"\n"
+"Gnome SoundConverter\n"
+"\n"
+"Development Preview\n"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:4
+#: ../data/soundconverter.glade.h:6
+msgid ""
+"&#xA9; 2004 Lars Wirzenius <liw@iki.fi>\n"
+"&#xA9; 2005-2010 Gautier Portet <kassoulet@gmail.com>"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:8
+msgid "11025"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:9
+msgid "128000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:10
+msgid "16 bits (default)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:11
+msgid "22050"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:12
+msgid "32 bits"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:13
+msgid "44100"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:14
+msgid "48000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:15
+msgid "72000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:16
+msgid "8 bits (very low quality)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:17
+msgid "96000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:18
 msgid "<b>How to name files?</b>"
 msgstr "<b>ファイル名をどのように付けますか？</b>"
 
-#: ../data/soundconverter.glade.h:5
+#: ../data/soundconverter.glade.h:19
 msgid "<b>Type of result?</b>"
 msgstr "<b>なにに変換しますか？</b>"
 
-#: ../data/soundconverter.glade.h:6
+#: ../data/soundconverter.glade.h:20
 msgid "<b>Where to place results?</b>"
 msgstr "<b>どこへ変換結果を保存しますか？</b>"
 
-#: ../data/soundconverter.glade.h:7
+#: ../data/soundconverter.glade.h:21
 msgid "<big><b>File exists already</b></big>\n"
 msgstr "<big><b>ファイルが既に存在します</b></big>\n"
 
-#: ../data/soundconverter.glade.h:9
+#: ../data/soundconverter.glade.h:23
 msgid "<i>Example filename:</i>"
 msgstr "<i>ファイル名の例:</i>"
 
-#: ../data/soundconverter.glade.h:10
+#: ../data/soundconverter.glade.h:24
+msgid "AAC (.m4a)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:25
 msgid "Add _Folder"
 msgstr "フォルダを追加(_F)"
 
-#: ../data/soundconverter.glade.h:11
+#: ../data/soundconverter.glade.h:26
+msgid "Average (ABR)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:27
+msgid "Better (Slower)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:28
 msgid "Bitrate mode:"
 msgstr "ビットレートモード:"
 
-#: ../data/soundconverter.glade.h:12
+#: ../data/soundconverter.glade.h:29
 msgid "Choose..."
 msgstr "選択..."
 
-#: ../data/soundconverter.glade.h:13
+#: ../data/soundconverter.glade.h:30
 #, fuzzy
 msgid "Compression:"
 msgstr "圧縮無し"
 
-#: ../data/soundconverter.glade.h:14
-msgid ""
-"Constant (CBR)\n"
-"Average (ABR)\n"
-"Variable (VBR) - Best quality"
+#: ../data/soundconverter.glade.h:31
+msgid "Constant (CBR)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:32
+msgid "Create subfolders: "
+msgstr "サブフォルダを作成: "
+
+#: ../data/soundconverter.glade.h:33
+msgid "Default"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:34
+msgid "Delete original file"
+msgstr "変換元のファイルを削除する"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Error"
+msgstr "エラー"
+
+#: ../data/soundconverter.glade.h:36
+msgid "FLAC Lossless (.flac)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:37
+msgid "File exists already"
+msgstr "ファイルが既に存在します"
+
+#: ../data/soundconverter.glade.h:38
+msgid "Filename pattern: "
+msgstr "ファイル名パターン: "
+
+#: ../data/soundconverter.glade.h:39
+msgid "Filter "
+msgstr "フィルター "
+
+#: ../data/soundconverter.glade.h:40
+msgid "Force mono output"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:41
+msgid "Format: "
+msgstr "フォーマット: "
+
+#: ../data/soundconverter.glade.h:42
+msgid "GNOME Audio Profile"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:43
+msgid "High"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:44
+msgid "Insanely High"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:45
+msgid "Into a specified folder"
+msgstr "指定したフォルダへ入れる"
+
+#: ../data/soundconverter.glade.h:46
+msgid "Less (Faster)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:47
+msgid "Low"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:48
+msgid "MP3 (.mp3)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:49
+msgid "MP3 Encoder is not present."
+msgstr "MP3 のエンコーダーが有りません。"
+
+#: ../data/soundconverter.glade.h:50
+msgid "MS Wave (.wav)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:51
+msgid "Normal"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:52
+#, fuzzy
+msgid "Ogg Vorbis (.ogg)"
+msgstr "Ogg Vorbis"
+
+#: ../data/soundconverter.glade.h:53
+msgid "Preferences"
+msgstr "設定"
+
+#: ../data/soundconverter.glade.h:54
+msgid "Profile:"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:55
+msgid "Quality:"
+msgstr "音質:"
+
+#: ../data/soundconverter.glade.h:56
+msgid "Read how to install"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:57
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "文字、数字、./_- 以外を取り除く"
+
+#: ../data/soundconverter.glade.h:58
+msgid "Replace all messy characters"
+msgstr "厄介な文字を置換える"
+
+#: ../data/soundconverter.glade.h:59
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:60
+msgid "Same folder as the input file"
+msgstr "入力ファイルと同じフォルダ"
+
+#: ../data/soundconverter.glade.h:61
+msgid "Sample width:"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
+msgid "SoundConverter"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:63
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:64
+#, fuzzy
+msgid "Variable (VBR) - Best quality"
 msgstr ""
 "固定 (CBR)\n"
 "平均 (ABR)\n"
 "可変 (VBR) - 最高の音質"
 
-#: ../data/soundconverter.glade.h:17
-msgid "Create subfolders: "
-msgstr "サブフォルダを作成: "
-
-#: ../data/soundconverter.glade.h:18
-msgid "Delete original file"
-msgstr "変換元のファイルを削除する"
-
-#: ../data/soundconverter.glade.h:19
-msgid "Error"
-msgstr "エラー"
-
-#: ../data/soundconverter.glade.h:20
-msgid ""
-"Fast\n"
-"Medium\n"
-"Slow"
+#: ../data/soundconverter.glade.h:65
+msgid "Very High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:23
-msgid "File exists already"
-msgstr "ファイルが既に存在します"
-
-#: ../data/soundconverter.glade.h:24
-msgid "Filename pattern: "
-msgstr "ファイル名パターン: "
-
-#: ../data/soundconverter.glade.h:25
-msgid "Filter "
-msgstr "フィルター "
-
-#: ../data/soundconverter.glade.h:26
-msgid "Force mono output"
+#: ../data/soundconverter.glade.h:66
+msgid "Very Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:27
-msgid "Format: "
-msgstr "フォーマット: "
-
-#: ../data/soundconverter.glade.h:28
-msgid "GNOME Sound Conversion"
-msgstr "GNOME サウンド変換"
-
-#: ../data/soundconverter.glade.h:29
-msgid "Into a specified folder"
-msgstr "指定したフォルダへ入れる"
-
-#: ../data/soundconverter.glade.h:30
-msgid "MP3 Encoder is not present."
-msgstr "MP3 のエンコーダーが有りません。"
-
-#: ../data/soundconverter.glade.h:31
-#, fuzzy
-msgid ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
-msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
-
-#: ../data/soundconverter.glade.h:36
-msgid "Preferences"
-msgstr "設定"
-
-#: ../data/soundconverter.glade.h:37
-msgid "Quality:"
-msgstr "音質"
-
-#: ../data/soundconverter.glade.h:38
-msgid "Read how to install"
+#: ../data/soundconverter.glade.h:67
+msgid "Website"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:39
-msgid "Remove all chars except letters, digits and ./_-"
-msgstr "文字、数字、./_- 以外を取り除く"
-
-#: ../data/soundconverter.glade.h:40
-msgid "Replace all messy characters"
-msgstr "厄介な文字を置換える"
-
-#: ../data/soundconverter.glade.h:41
-msgid "Resample"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:42
-msgid "Same folder as the input file"
-msgstr "入力ファイルと同じフォルダ"
-
-#: ../data/soundconverter.glade.h:43
-msgid "Sample width:"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:44
-msgid "SoundConverter"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:45
-msgid "Use .oga extension"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:46
-#, fuzzy
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High\n"
-"Insanely High"
-msgstr ""
-"とても低い\n"
-"低い\n"
-"普通\n"
-"高い\n"
-"とても高い"
-
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:68
 msgid "Where to place results?"
 msgstr "どこへ変換結果を保存しますか？"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:69
 msgid "_Add File"
 msgstr "ファイルを追加(_A)"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:70
 msgid "_Apply to entire queue"
 msgstr "全体のキューに適用(_A)"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:71
 msgid "_Edit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:72
 #, fuzzy
 msgid "_File"
 msgstr "ファイルを追加(_A)"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:73
 msgid "_Help"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:74
 msgid "_Overwrite"
 msgstr "上書き(_O)"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:75
 msgid "_Skip"
 msgstr "スキップ(_S)"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:76
 msgid "aac"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:61
-msgid ""
-"artist/album\n"
-"artist - album"
-msgstr ""
-"アーティスト/アルバム\n"
-"アーティスト - アルバム"
+#: ../data/soundconverter.glade.h:77
+msgid "artist - album"
+msgstr "アーティスト - アルバム"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:78
+msgid "artist/album"
+msgstr "アーティスト/アルバム"
+
+#: ../data/soundconverter.glade.h:79
+#, fuzzy
+msgid "current file"
+msgstr "ファイルを開く"
+
+#: ../data/soundconverter.glade.h:80
 msgid "dialog1"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:81
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:82
+msgid "gst-profile"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:83
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:84
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:67
-msgid ""
-"track_number - track_title\n"
-"track_title\n"
+#: ../data/soundconverter.glade.h:85
+#, fuzzy
+msgid "track_number - track_title"
 msgstr ""
 "トラック番号 - タイトル\n"
 "タイトル\n"
 
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:71
-msgid "translator_credits"
-msgstr ""
+#: ../data/soundconverter.glade.h:86
+#, fuzzy
+msgid "track_title"
+msgstr "タイトル"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:87
 msgid "wav"
 msgstr "wav"
 
-#: ../data/soundconverter.glade.h:73
+#: ../data/soundconverter.glade.h:88
 msgid "~xxx kbps"
 msgstr ""
 
-#. traductors: These are the custom filename patterns. Only if it does make sense.
-#: ../src/soundconverter.py:154
-#, fuzzy
-msgid "Artist Album Title Track Total Genre Date Year Timestamp"
-msgstr "アーティスト アルバム タイトル トラック 合計 ジャンル 日付 年"
-
-#: ../src/soundconverter.py:188
-msgid "All files"
-msgstr ""
-
-#: ../src/soundconverter.py:594
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Error: %s\n"
-"%s\n"
-msgstr ""
-"\n"
-"\n"
-"エラー: %s\n"
-"%s\n"
-
-#: ../src/soundconverter.py:820
-msgid "Internal error"
-msgstr "内部エラー"
-
-#: ../src/soundconverter.py:821
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Couldn't link GStreamer elements.\n"
-" これをバグとして報告して下さい。"
-
-#: ../src/soundconverter.py:826
-#, python-format
-msgid "Unknown type %s"
-msgstr "未知の種類 %s"
-
-#: ../src/soundconverter.py:827
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"%s は未知の種類のファイルです。\n"
-" もし重要であれば、\n"
-" この種類のファイルをサポートするよう\n"
-" 開発者に依頼して下さい。"
-
-#: ../src/soundconverter.py:1133
-msgid "Target exists."
-msgstr "ターゲットが存在します。"
-
-#: ../src/soundconverter.py:1134
-#, python-format
-msgid "The output file %s already exists."
-msgstr "出力ファイル %s は既に存在します。"
-
-#: ../src/soundconverter.py:1194
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "'%s' 形式用のデコーダーを作成できません。"
-
-#: ../src/soundconverter.py:1209
-#, python-format
-msgid "Cannot create '%s' folder."
-msgstr "'%s' フォルダを作成できません。"
-
-#: ../src/soundconverter.py:1241
-msgid "GStreamer Error:"
-msgstr ""
-
-#: ../src/soundconverter.py:1385
-#, fuzzy
-msgid "Adding files..."
-msgstr "フォルダを追加..."
-
-#: ../src/soundconverter.py:1450
-msgid "loading tags..."
-msgstr "タグの読込み中..."
-
-#: ../src/soundconverter.py:1452
-msgid "no tags"
-msgstr "タグ無し"
-
-#: ../src/soundconverter.py:1497
-msgid "unknown"
-msgstr "未知"
-
-#: ../src/soundconverter.py:1526
-msgid "Same as input, but replacing the suffix"
-msgstr "拡張子のみ変更する"
-
-#: ../src/soundconverter.py:1527
-msgid "Same as input, but with an additional suffix"
-msgstr "拡張子を付け加える"
-
-#: ../src/soundconverter.py:1528
-msgid "Track number - title"
-msgstr "トラック番号 - タイトル"
-
-#: ../src/soundconverter.py:1529
-msgid "Track title"
-msgstr "タイトル"
-
-#: ../src/soundconverter.py:1530
-msgid "Artist - title"
-msgstr "アーティスト - タイトル"
-
-#: ../src/soundconverter.py:1531
-msgid "Custom filename pattern"
-msgstr "ファイル名パターンを細かく設定"
-
-#: ../src/soundconverter.py:1535
-msgid "artist/album"
-msgstr "アーティスト/アルバム"
-
-#: ../src/soundconverter.py:1536
-msgid "artist-album"
-msgstr "アーティスト-アルバム"
-
-#: ../src/soundconverter.py:1537
-msgid "artist - album"
-msgstr "アーティスト - アルバム"
-
-#: ../src/soundconverter.py:1599
-#, fuzzy
-msgid "Available patterns:"
-msgstr "ファイル名パターン: "
-
-#: ../src/soundconverter.py:1742
-#, python-format
-msgid "Into folder %s"
-msgstr "このフォルダの中へ '%s'"
-
-#: ../src/soundconverter.py:1821
-#, python-format
-msgid "Target bitrate: %s"
-msgstr "ターゲットのビットレート: %s"
-
-#: ../src/soundconverter.py:2135
-#, fuzzy
-msgid "Conversion Canceled"
-msgstr "変換中止"
-
-#: ../src/soundconverter.py:2170
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:2183
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" exists already.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"出力ファイル <i>%s</i> が\n"
-" 既に存在します。\n"
-" このファイルを飛ばしますか？ 上書きしますか？ 変換を中止しますか？\n"
-
-#: ../src/soundconverter.py:2281
-#, python-format
-msgid "Conversion done, in %s"
-msgstr "%s で変換を完了しました。"
-
-#: ../src/soundconverter.py:2317
-msgid "Open a file"
-msgstr "ファイルを開く"
-
-#: ../src/soundconverter.py:2409
-msgid "Add Folder..."
-msgstr "フォルダを追加..."
-
-#: ../src/soundconverter.py:2547
-#, fuzzy
-msgid "Conversion cancelled"
-msgstr "変換中止"
-
-#: ../src/soundconverter.py:2570
-msgid "Waiting for tags"
-msgstr "タグを待機"
-
-#: ../src/soundconverter.py:2577
-msgid "Waiting for tags..."
-msgstr "タグを待機..."
-
-#: ../src/soundconverter.py:2585 ../src/soundconverter.py:2598
-msgid "Paused"
-msgstr "一時停止"
-
-#: ../src/soundconverter.py:2602
-msgid "Canceled"
-msgstr "キャンセルされました"
-
-#: ../src/soundconverter.py:2651
-#, python-format
-msgid "Converting file %d of %d  (%s)"
-msgstr "ファイル変換中 %d 中 %d (%s)"
-
-#: ../src/soundconverter.py:2664
-msgid "Converting"
-msgstr "変換中"
-
-#: ../src/soundconverter.py:2681
-#, python-format
-msgid "%d:%02d left"
-msgstr "%d:%02d 経過"
-
-#: ../src/soundconverter.py:2686
-msgid "Ready"
-msgstr "準備完了"
-
-#: ../src/soundconverter.py:2767
-#, python-format
-msgid "%s: OK"
-msgstr "%s: OK"
-
-#: ../src/soundconverter.py:2828
-#, python-format
-msgid "Usage: %s [options] [soundfile ...]"
-msgstr "使用法: %s [オプション] [サウンドファイル ...]"
-
-#: ../src/soundconverter.py:2843
-msgid "Print out a usage summary."
-msgstr "使用法の概略を表示する。"
-
-#: ../src/soundconverter.py:2846
+#: ../bin/soundconverter.py:98
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -524,57 +383,108 @@ msgstr ""
 "コマンドラインから、GUI なしのバッチモードで変換する。\n"
 " シェルスクリプトなどで利用できます。"
 
-#: ../src/soundconverter.py:2849
-#, python-format
+#: ../bin/soundconverter.py:103
+#, fuzzy
 msgid ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
+"Show tags for input files instead of convertingthem. This indicates \n"
+" command line batch modeand disables the graphical user interface."
+msgstr ""
+"入力ファイルの変換ではなく、タグの表示をする。\n"
+" コマンドラインのバッチモードで非 GUI の環境で動きます。"
+
+#: ../bin/soundconverter.py:108
+#, fuzzy, python-format
+msgid ""
+"Set the output MIME type for batch mode. The defaultis %s. Note that you "
+"probably want to set the outputsuffix as well."
 msgstr ""
 "バッチモード用に出力の MIME タイプを設定する。デフォルトは %s。\n"
 " 注 たいていの場合これは出力の拡張子と\n"
 " 同じです。"
 
-#: ../src/soundconverter.py:2852
+#: ../bin/soundconverter.py:112
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "静かにする。通常の出力を表示せずエラーのみにする。"
 
-#: ../src/soundconverter.py:2855
+#: ../bin/soundconverter.py:114
 #, fuzzy
 msgid "Print additional debug information"
 msgstr "追加のデバッグ情報を表示する"
 
-#: ../src/soundconverter.py:2858
-#, python-format
+#: ../bin/soundconverter.py:116
+#, fuzzy, python-format
 msgid ""
-"Set the output filename suffix for batch mode. The default is \n"
-" %s . Note that the suffix does not affect\n"
+"Set the output filename suffix for batch mode.The default is %s . Note that "
+"the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
 "バッチモード用に出力ファイルの拡張子を設定する。デフォルトは %s。\n"
 " 注 この拡張子は出力の MIME タイプには\n"
 " 影響しません。"
 
-#: ../src/soundconverter.py:2861
-msgid ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
-msgstr ""
-"入力ファイルの変換ではなく、タグの表示をする。\n"
-" コマンドラインのバッチモードで非 GUI の環境で動きます。"
-
-#: ../src/soundconverter.py:2864
+#: ../bin/soundconverter.py:120
 msgid "Force number of concurrent conversions."
 msgstr ""
 
-#~ msgid "_Remove"
-#~ msgstr "削除(_R)"
+#: ../bin/soundconverter.py:122
+msgid "Show GStreamer Options"
+msgstr ""
+
+#~ msgid "Artist Album Title Track Total Genre Date Year"
+#~ msgstr "アーティスト アルバム タイトル トラック 合計 ジャンル 日付 年"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "省略: '%s'"
 
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Error: %s\n"
+#~ "%s\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "エラー: %s\n"
+#~ "%s\n"
+
+#~ msgid "Internal error"
+#~ msgstr "内部エラー"
+
+#~ msgid ""
+#~ "Couldn't link GStreamer elements.\n"
+#~ " Please report this as a bug."
+#~ msgstr ""
+#~ "Couldn't link GStreamer elements.\n"
+#~ " これをバグとして報告して下さい。"
+
+#~ msgid "Unknown type %s"
+#~ msgstr "未知の種類 %s"
+
+#~ msgid ""
+#~ "The file %s is of an unknown type.\n"
+#~ " Please ask the developers to add support\n"
+#~ " for files of this type if it is important\n"
+#~ " to you."
+#~ msgstr ""
+#~ "%s は未知の種類のファイルです。\n"
+#~ " もし重要であれば、\n"
+#~ " この種類のファイルをサポートするよう\n"
+#~ " 開発者に依頼して下さい。"
+
+#~ msgid "Target exists."
+#~ msgstr "ターゲットが存在します。"
+
+#~ msgid "The output file %s already exists."
+#~ msgstr "出力ファイル %s は既に存在します。"
+
+#~ msgid "Cannot create a decoder for '%s' format."
+#~ msgstr "'%s' 形式用のデコーダーを作成できません。"
+
 #~ msgid "Creating folder: '%s'"
 #~ msgstr "フォルダ作成: '%s'"
+
+#~ msgid "Cannot create '%s' folder."
+#~ msgstr "'%s' フォルダを作成できません。"
 
 #~ msgid "Cannot set permission on '%s'"
 #~ msgstr "’%s' にアクセス権を設定できません。"
@@ -582,8 +492,92 @@ msgstr ""
 #~ msgid "file already present: '%s'"
 #~ msgstr "既存のファイル: '%s'"
 
+#~ msgid "loading tags..."
+#~ msgstr "タグの読込み中..."
+
+#~ msgid "no tags"
+#~ msgstr "タグ無し"
+
+#~ msgid "unknown"
+#~ msgstr "未知"
+
+#~ msgid "Same as input, but replacing the suffix"
+#~ msgstr "拡張子のみ変更する"
+
+#~ msgid "Same as input, but with an additional suffix"
+#~ msgstr "拡張子を付け加える"
+
+#~ msgid "Track number - title"
+#~ msgstr "トラック番号 - タイトル"
+
+#~ msgid "Artist - title"
+#~ msgstr "アーティスト - タイトル"
+
+#~ msgid "Custom filename pattern"
+#~ msgstr "ファイル名パターンを細かく設定"
+
+#~ msgid "artist-album"
+#~ msgstr "アーティスト-アルバム"
+
+#~ msgid "Into folder %s"
+#~ msgstr "このフォルダの中へ '%s'"
+
+#~ msgid "Target bitrate: %s"
+#~ msgstr "ターゲットのビットレート: %s"
+
+#~ msgid "Convertion Canceled"
+#~ msgstr "変換中止"
+
+#~ msgid ""
+#~ "The output file <i>%s</i>\n"
+#~ " exists already.\n"
+#~ " Do you want to skip the file, overwrite it or cancel the conversion?\n"
+#~ msgstr ""
+#~ "出力ファイル <i>%s</i> が\n"
+#~ " 既に存在します。\n"
+#~ " このファイルを飛ばしますか？ 上書きしますか？ 変換を中止しますか？\n"
+
+#~ msgid "Conversion done, in %s"
+#~ msgstr "%s で変換を完了しました。"
+
+#~ msgid "Add Folder..."
+#~ msgstr "フォルダを追加..."
+
 #~ msgid "canceling conversion."
 #~ msgstr "変換を中止しています。"
+
+#~ msgid "Waiting for tags"
+#~ msgstr "タグを待機"
+
+#~ msgid "Waiting for tags..."
+#~ msgstr "タグを待機..."
+
+#~ msgid "Paused"
+#~ msgstr "一時停止"
+
+#~ msgid "Canceled"
+#~ msgstr "キャンセルされました"
+
+#~ msgid "Converting file %d of %d  (%s)"
+#~ msgstr "ファイル変換中 %d 中 %d (%s)"
+
+#~ msgid "Converting"
+#~ msgstr "変換中"
+
+#~ msgid "%d:%02d left"
+#~ msgstr "残り時間 %d:%02d"
+
+#~ msgid "Ready"
+#~ msgstr "準備完了"
+
+#~ msgid "%s: OK"
+#~ msgstr "%s: OK"
+
+#~ msgid "Usage: %s [options] [soundfile ...]"
+#~ msgstr "使用法: %s [オプション] [サウンドファイル ...]"
+
+#~ msgid "Print out a usage summary."
+#~ msgstr "使用法の概略を表示する。"
 
 #~ msgid "FLAC"
 #~ msgstr "FLAC"
@@ -594,14 +588,48 @@ msgstr ""
 #~ msgid "Free Lossy Compression"
 #~ msgstr "自由に使える、不可逆(劣化)圧縮"
 
+#~ msgid "GNOME Sound Conversion"
+#~ msgstr "GNOME サウンド変換"
+
 #~ msgid "MP3"
 #~ msgstr "MP3"
 
 #~ msgid "Non-Free Lossy Compression"
 #~ msgstr "自由でない、不可逆(劣化)圧縮"
 
-#~ msgid "Ogg Vorbis"
-#~ msgstr "Ogg Vorbis"
+#~ msgid ""
+#~ "Ogg Vorbis (.ogg)\n"
+#~ "MP3  (.mp3)\n"
+#~ "FLAC Lossless (.flac)\n"
+#~ "MS Wave (.wav)"
+#~ msgstr ""
+#~ "Ogg Vorbis (.ogg)\n"
+#~ "MP3 (.mp3)\n"
+#~ "FLAC Lossless (.flac)\n"
+#~ "MS Wave (.wav)"
+
+#~ msgid ""
+#~ "Very Low\n"
+#~ "Low\n"
+#~ "Normal\n"
+#~ "High\n"
+#~ "Very High"
+#~ msgstr ""
+#~ "とても低い\n"
+#~ "低い\n"
+#~ "普通\n"
+#~ "高い\n"
+#~ "とても高い"
 
 #~ msgid "WAV"
 #~ msgstr "WAV"
+
+#~ msgid "_Remove"
+#~ msgstr "削除(_R)"
+
+#~ msgid ""
+#~ "artist/album\n"
+#~ "artist - album"
+#~ msgstr ""
+#~ "アーティスト/アルバム\n"
+#~ "アーティスト - アルバム"

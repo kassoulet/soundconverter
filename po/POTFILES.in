@@ -1,4 +1,19 @@
 [encoding: UTF-8]
 data/soundconverter.desktop.in.in
 data/soundconverter.glade
-src/soundconverter.py
+bin/soundconverter.py
+soundconverter/error.py
+soundconverter/fileoperations.py
+soundconverter/gconfstore.py
+soundconverter/gstreamer.py
+soundconverter/__init__.py
+soundconverter/messagearea.py
+soundconverter/namegenerator.py
+soundconverter/notify.py
+soundconverter/queue.py
+soundconverter/settings.py
+soundconverter/soundfile.py
+soundconverter/task.py
+soundconverter/ui.py
+soundconverter/utils.py
+

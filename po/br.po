@@ -1,557 +1,638 @@
 # Breton translation for soundconverter
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the soundconverter package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+# Denis <denisarnuad@yahoo.fr>, 2008.
+# Jamy <jamybzh@free.fr>, 2009
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-15 20:39+0100\n"
-"PO-Revision-Date: 2008-10-13 07:45+0000\n"
-"Last-Translator: Denis ARNAUD <Unknown>\n"
+"POT-Creation-Date: 2010-09-08 14:11+0200\n"
+"PO-Revision-Date: 2010-06-23 10:04+0000\n"
+"Last-Translator: Denis <Unknown>\n"
 "Language-Team: Breton <br@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-05 20:56+0000\n"
+"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr ""
+msgstr "Amdroadur etre furmadoù klevet"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr ""
+msgstr "Amdreiñ restroù klevet ouzh furmadoù all"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr ""
+msgstr "Amdroer Sound Converter"
 
 #: ../data/soundconverter.glade.h:1
 msgid ""
-"32 bits\n"
-"16 bits\n"
-"8 bits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:4
-msgid "<b>How to name files?</b>"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:5
-msgid "<b>Type of result?</b>"
+"\n"
+"Gnome SoundConverter\n"
+"\n"
+"Development Preview\n"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:6
-msgid "<b>Where to place results?</b>"
+msgid ""
+"&#xA9; 2004 Lars Wirzenius <liw@iki.fi>\n"
+"&#xA9; 2005-2010 Gautier Portet <kassoulet@gmail.com>"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:7
-msgid "<big><b>File exists already</b></big>\n"
+#: ../data/soundconverter.glade.h:8
+msgid "11025"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:9
-msgid "<i>Example filename:</i>"
+msgid "128000"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:10
-msgid "Add _Folder"
-msgstr "Ouzhpennañ ur _renkell"
+msgid "16 bits (default)"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:11
-msgid "Bitrate mode:"
+msgid "22050"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:12
-msgid "Choose..."
+msgid "32 bits"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:13
-msgid "Compression:"
+msgid "44100"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:14
-msgid ""
-"Constant (CBR)\n"
-"Average (ABR)\n"
-"Variable (VBR) - Best quality"
+msgid "48000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:15
+msgid "72000"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:16
+msgid "8 bits (very low quality)"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:17
-msgid "Create subfolders: "
+msgid "96000"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:18
-msgid "Delete original file"
-msgstr ""
+msgid "<b>How to name files?</b>"
+msgstr "<b>Penaos adanviñ ar restroù?</b>"
 
 #: ../data/soundconverter.glade.h:19
-msgid "Error"
-msgstr "Fazi"
+msgid "<b>Type of result?</b>"
+msgstr "<b>Furmad ar restr er maez?</b>"
 
 #: ../data/soundconverter.glade.h:20
-msgid ""
-"Fast\n"
-"Medium\n"
-"Slow"
-msgstr ""
+msgid "<b>Where to place results?</b>"
+msgstr "<b>Pelec'h lechiañ ar restroù amdreet?</b>"
+
+#: ../data/soundconverter.glade.h:21
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>Bez eus c'hoazh ar restr</b></big>\n"
 
 #: ../data/soundconverter.glade.h:23
-msgid "File exists already"
-msgstr ""
+msgid "<i>Example filename:</i>"
+msgstr "<i>Skouer anv restr:</i>"
 
 #: ../data/soundconverter.glade.h:24
-msgid "Filename pattern: "
+msgid "AAC (.m4a)"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:25
-msgid "Filter "
-msgstr "Sil "
+msgid "Add _Folder"
+msgstr "Ouzhpennañ un _teuliad"
 
 #: ../data/soundconverter.glade.h:26
-msgid "Force mono output"
+msgid "Average (ABR)"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:27
-msgid "Format: "
+msgid "Better (Slower)"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:28
-msgid "GNOME Sound Conversion"
-msgstr ""
+msgid "Bitrate mode:"
+msgstr "Kas binarel:"
 
 #: ../data/soundconverter.glade.h:29
-msgid "Into a specified folder"
-msgstr ""
+msgid "Choose..."
+msgstr "Furchal..."
 
 #: ../data/soundconverter.glade.h:30
-msgid "MP3 Encoder is not present."
-msgstr ""
+#, fuzzy
+msgid "Compression:"
+msgstr "Na gwaskadur"
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
-msgid ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)\n"
-"AAC (.m4a)"
+msgid "Constant (CBR)"
 msgstr ""
-"Ogg Vorbis (.ogg)\n"
-"MP3 (.mp3)\n"
-"FLAC Lossless (.flac)\n"
-"MS Wave (.wav)"
+
+#: ../data/soundconverter.glade.h:32
+msgid "Create subfolders: "
+msgstr "Krouiñ is-teuliadoù : "
+
+#: ../data/soundconverter.glade.h:33
+msgid "Default"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:34
+msgid "Delete original file"
+msgstr "Skarzhañ ar restr orin"
+
+#: ../data/soundconverter.glade.h:35
+msgid "Error"
+msgstr "Fazi"
 
 #: ../data/soundconverter.glade.h:36
-msgid "Preferences"
-msgstr "Gwellvezioù"
-
-#: ../data/soundconverter.glade.h:37
-msgid "Quality:"
-msgstr "Perzhded :"
-
-#: ../data/soundconverter.glade.h:38
-msgid "Read how to install"
-msgstr "Lenn penaos staliañ"
-
-#: ../data/soundconverter.glade.h:39
-msgid "Remove all chars except letters, digits and ./_-"
+msgid "FLAC Lossless (.flac)"
 msgstr ""
 
+#: ../data/soundconverter.glade.h:37
+msgid "File exists already"
+msgstr "Bez eus c'hoazh ar restr"
+
+#: ../data/soundconverter.glade.h:38
+msgid "Filename pattern: "
+msgstr "Goustur an anv restr : "
+
+#: ../data/soundconverter.glade.h:39
+msgid "Filter "
+msgstr "Sil "
+
 #: ../data/soundconverter.glade.h:40
-msgid "Replace all messy characters"
+msgid "Force mono output"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:41
-msgid "Resample"
-msgstr ""
+msgid "Format: "
+msgstr "Mentrezh : "
 
 #: ../data/soundconverter.glade.h:42
-msgid "Same folder as the input file"
+msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-msgid "Sample width:"
+msgid "High"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-msgid "SoundConverter"
+msgid "Insanely High"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:45
-msgid "Use .oga extension"
-msgstr ""
+msgid "Into a specified folder"
+msgstr "Er renkell arbennik"
 
 #: ../data/soundconverter.glade.h:46
-msgid ""
-"Very Low\n"
-"Low\n"
-"Normal\n"
-"High\n"
-"Very High\n"
-"Insanely High"
+msgid "Less (Faster)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:47
+msgid "Low"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:48
+msgid "MP3 (.mp3)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:49
+msgid "MP3 Encoder is not present."
+msgstr "N'eus ket enkoder MP3."
+
+#: ../data/soundconverter.glade.h:50
+msgid "MS Wave (.wav)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:51
+msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:52
-msgid "Where to place results?"
-msgstr ""
+#, fuzzy
+msgid "Ogg Vorbis (.ogg)"
+msgstr "Ogg Vorbis"
 
 #: ../data/soundconverter.glade.h:53
-msgid "_Add File"
-msgstr "Ouzhpenn_añ ur restr"
+msgid "Preferences"
+msgstr "Gwellvezioù"
 
 #: ../data/soundconverter.glade.h:54
-msgid "_Apply to entire queue"
+msgid "Profile:"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:55
+msgid "Quality:"
+msgstr "Perzhded :"
+
+#: ../data/soundconverter.glade.h:56
+msgid "Read how to install"
+msgstr "Lenn penaos staliañ"
+
+#: ../data/soundconverter.glade.h:57
+msgid "Remove all chars except letters, digits and ./_-"
+msgstr "Dilemel an holl arouezennoù nemet al lizherennoù, sifroù ha ./_-"
+
+#: ../data/soundconverter.glade.h:58
+msgid "Replace all messy characters"
+msgstr "Erlec'hiañ an holl arouezennoù iskis"
+
+#: ../data/soundconverter.glade.h:59
+msgid "Resample"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:60
+msgid "Same folder as the input file"
+msgstr "Er memes renkell eget an tarzh"
+
+#: ../data/soundconverter.glade.h:61
+msgid "Sample width:"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
+msgid "SoundConverter"
+msgstr "SoundConverter"
+
+#: ../data/soundconverter.glade.h:63
+msgid "Use .oga extension"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:64
+#, fuzzy
+msgid "Variable (VBR) - Best quality"
+msgstr ""
+"Digemmenn (CBR)\n"
+"Keitat (ABR)\n"
+"Argemmus (VBR) - kalite gwelloc'h"
+
+#: ../data/soundconverter.glade.h:65
+msgid "Very High"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:66
+msgid "Very Low"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:67
+msgid "Website"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:68
+msgid "Where to place results?"
+msgstr "E pelec'h lechiañ ar restroù amdreet?"
+
+#: ../data/soundconverter.glade.h:69
+msgid "_Add File"
+msgstr "Ouzhpenn_añ ur restr"
+
+#: ../data/soundconverter.glade.h:70
+msgid "_Apply to entire queue"
+msgstr "_Arloañ evit tout ar steudad c'hortoz"
+
+#: ../data/soundconverter.glade.h:71
 msgid "_Edit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:72
 #, fuzzy
 msgid "_File"
 msgstr "Ouzhpenn_añ ur restr"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:73
 msgid "_Help"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:74
 msgid "_Overwrite"
 msgstr "_Flastrañ"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:75
 msgid "_Skip"
 msgstr "_Mont e biou"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:76
 msgid "aac"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:61
-msgid ""
-"artist/album\n"
-"artist - album"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:63
-msgid "dialog1"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:64
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:65
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:66
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:67
-msgid ""
-"track_number - track_title\n"
-"track_title\n"
-msgstr ""
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../data/soundconverter.glade.h:71
-msgid "translator_credits"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:72
-msgid "wav"
-msgstr "wav"
-
-#: ../data/soundconverter.glade.h:73
-msgid "~xxx kbps"
-msgstr ""
-
-#. traductors: These are the custom filename patterns. Only if it does make sense.
-#: ../src/soundconverter.py:154
-#, fuzzy
-msgid "Artist Album Title Track Total Genre Date Year Timestamp"
-msgstr "Arzour Albom Titl Loabr Hollad Doare Deiziad Bloaz"
-
-#: ../src/soundconverter.py:188
-msgid "All files"
-msgstr ""
-
-#: ../src/soundconverter.py:594
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Error: %s\n"
-"%s\n"
-msgstr ""
-"\n"
-"\n"
-"Fazi : %s\n"
-"%s\n"
-
-#: ../src/soundconverter.py:820
-msgid "Internal error"
-msgstr "Fazi diabarzh"
-
-#: ../src/soundconverter.py:821
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-
-#: ../src/soundconverter.py:826
-#, python-format
-msgid "Unknown type %s"
-msgstr "Rizh dianav %s"
-
-#: ../src/soundconverter.py:827
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-
-#: ../src/soundconverter.py:1133
-msgid "Target exists."
-msgstr ""
-
-#: ../src/soundconverter.py:1134
-#, python-format
-msgid "The output file %s already exists."
-msgstr ""
-
-#: ../src/soundconverter.py:1194
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr ""
-
-#: ../src/soundconverter.py:1209
-#, python-format
-msgid "Cannot create '%s' folder."
-msgstr ""
-
-#: ../src/soundconverter.py:1241
-msgid "GStreamer Error:"
-msgstr ""
-
-#: ../src/soundconverter.py:1385
-#, fuzzy
-msgid "Adding files..."
-msgstr "Ouzhpennañ ur renkell ..."
-
-#: ../src/soundconverter.py:1450
-msgid "loading tags..."
-msgstr ""
-
-#: ../src/soundconverter.py:1452
-msgid "no tags"
-msgstr ""
-
-#: ../src/soundconverter.py:1497
-msgid "unknown"
-msgstr "dianav"
-
-#: ../src/soundconverter.py:1526
-msgid "Same as input, but replacing the suffix"
-msgstr ""
-
-#: ../src/soundconverter.py:1527
-msgid "Same as input, but with an additional suffix"
-msgstr ""
-
-#: ../src/soundconverter.py:1528
-msgid "Track number - title"
-msgstr "Niverenn - titl"
-
-#: ../src/soundconverter.py:1529
-msgid "Track title"
-msgstr "Titl al loabr"
-
-#: ../src/soundconverter.py:1530
-msgid "Artist - title"
-msgstr "Arzour - titl"
-
-#: ../src/soundconverter.py:1531
-msgid "Custom filename pattern"
-msgstr ""
-
-#: ../src/soundconverter.py:1535
-msgid "artist/album"
-msgstr "arzour/albom"
-
-#: ../src/soundconverter.py:1536
-msgid "artist-album"
-msgstr "arzour/albom"
-
-#: ../src/soundconverter.py:1537
+#: ../data/soundconverter.glade.h:77
 msgid "artist - album"
 msgstr "arzour - albom"
 
-#: ../src/soundconverter.py:1599
-msgid "Available patterns:"
-msgstr ""
+#: ../data/soundconverter.glade.h:78
+msgid "artist/album"
+msgstr "arzour/albom"
 
-#: ../src/soundconverter.py:1742
-#, python-format
-msgid "Into folder %s"
-msgstr ""
-
-#: ../src/soundconverter.py:1821
-#, python-format
-msgid "Target bitrate: %s"
-msgstr ""
-
-#: ../src/soundconverter.py:2135
+#: ../data/soundconverter.glade.h:79
 #, fuzzy
-msgid "Conversion Canceled"
-msgstr "Amdroadur nullet"
-
-#: ../src/soundconverter.py:2170
-msgid "Cannot overwrite source file(s)!"
-msgstr ""
-
-#: ../src/soundconverter.py:2183
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" exists already.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-
-#: ../src/soundconverter.py:2281
-#, python-format
-msgid "Conversion done, in %s"
-msgstr ""
-
-#: ../src/soundconverter.py:2317
-msgid "Open a file"
+msgid "current file"
 msgstr "Digeriñ ur restr"
 
-#: ../src/soundconverter.py:2409
-msgid "Add Folder..."
-msgstr "Ouzhpennañ ur renkell ..."
+#: ../data/soundconverter.glade.h:80
+msgid "dialog1"
+msgstr "dialog1"
 
-#: ../src/soundconverter.py:2547
+#: ../data/soundconverter.glade.h:81
+msgid "flac"
+msgstr "flac"
+
+#: ../data/soundconverter.glade.h:82
+msgid "gst-profile"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:83
+msgid "mp3"
+msgstr "mp3"
+
+#: ../data/soundconverter.glade.h:84
+msgid "ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:85
 #, fuzzy
-msgid "Conversion cancelled"
-msgstr "Amdroadur nullet"
+msgid "track_number - track_title"
+msgstr ""
+"_niverenn al loabr - _titl al loabr\n"
+"_titl al loabr\n"
 
-#: ../src/soundconverter.py:2570
-msgid "Waiting for tags"
+#: ../data/soundconverter.glade.h:86
+#, fuzzy
+msgid "track_title"
+msgstr "Titl al loabr"
+
+#: ../data/soundconverter.glade.h:87
+msgid "wav"
+msgstr "wav"
+
+#: ../data/soundconverter.glade.h:88
+msgid "~xxx kbps"
 msgstr ""
 
-#: ../src/soundconverter.py:2577
-msgid "Waiting for tags..."
-msgstr ""
-
-#: ../src/soundconverter.py:2585 ../src/soundconverter.py:2598
-msgid "Paused"
-msgstr "Ehanet"
-
-#: ../src/soundconverter.py:2602
-msgid "Canceled"
-msgstr ""
-
-#: ../src/soundconverter.py:2651
-#, python-format
-msgid "Converting file %d of %d  (%s)"
-msgstr ""
-
-#: ../src/soundconverter.py:2664
-msgid "Converting"
-msgstr ""
-
-#: ../src/soundconverter.py:2681
-#, python-format
-msgid "%d:%02d left"
-msgstr ""
-
-#: ../src/soundconverter.py:2686
-msgid "Ready"
-msgstr ""
-
-#: ../src/soundconverter.py:2767
-#, python-format
-msgid "%s: OK"
-msgstr "%s : graet eo"
-
-#: ../src/soundconverter.py:2828
-#, python-format
-msgid "Usage: %s [options] [soundfile ...]"
-msgstr ""
-
-#: ../src/soundconverter.py:2843
-msgid "Print out a usage summary."
-msgstr ""
-
-#: ../src/soundconverter.py:2846
+#: ../bin/soundconverter.py:98
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
+"Amdreiñ er mod  batch, diouzh al linenn urzhiañ, hep etrefas\n"
+" grafek. Da implij er skriptoù shell."
 
-#: ../src/soundconverter.py:2849
-#, python-format
+#: ../bin/soundconverter.py:103
+#, fuzzy
 msgid ""
-"Set the output MIME type for batch mode. The default is\n"
-" %s . Note that you probably want to set\n"
-" the output suffix as well."
+"Show tags for input files instead of convertingthem. This indicates \n"
+" command line batch modeand disables the graphical user interface."
 msgstr ""
+"Diskouez an tagoù restroù tarzh e-lec'h amdreiñ anezho. An dibarzh-se \n"
+" a dorr ar mod batch, hep etrefas grafek."
 
-#: ../src/soundconverter.py:2852
+#: ../bin/soundconverter.py:108
+#, fuzzy, python-format
+msgid ""
+"Set the output MIME type for batch mode. The defaultis %s. Note that you "
+"probably want to set the outputsuffix as well."
+msgstr ""
+"Termenet ar furmad er maez MIME er mod batch. Dre ziouer \n"
+" %s eo an talvoud . Notit e c'hellit termeniñ al\n"
+" lostger restr lec'h kas."
+
+#: ../bin/soundconverter.py:112
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr ""
+msgstr "Didrouzer. Diskouez fazioù nemetken."
 
-#: ../src/soundconverter.py:2855
+#: ../bin/soundconverter.py:114
+#, fuzzy
 msgid "Print additional debug information"
-msgstr ""
+msgstr "Diskouez an titouroù ouzhpenn evit an difazia"
 
-#: ../src/soundconverter.py:2858
-#, python-format
+#: ../bin/soundconverter.py:116
+#, fuzzy, python-format
 msgid ""
-"Set the output filename suffix for batch mode. The default is \n"
-" %s . Note that the suffix does not affect\n"
+"Set the output filename suffix for batch mode.The default is %s . Note that "
+"the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
+"Termenet al lostger restr amdreet evit ar mod batch. Dre ziouer \n"
+" %s eo an talvoud. Notit ne cheñch al lostger \n"
+" ar furmad er maez restr MIME."
 
-#: ../src/soundconverter.py:2861
-msgid ""
-"Show tags for input files instead of converting them. This indicates \n"
-" command line batch mode and disables the graphical user interface."
-msgstr ""
-
-#: ../src/soundconverter.py:2864
+#: ../bin/soundconverter.py:120
 msgid "Force number of concurrent conversions."
 msgstr ""
 
-#~ msgid "_Remove"
-#~ msgstr "_Dilemel"
+#: ../bin/soundconverter.py:122
+msgid "Show GStreamer Options"
+msgstr ""
+
+#~ msgid "Artist Album Title Track Total Genre Date Year"
+#~ msgstr "Arzour Albom Titl Loabr Hollad Doare Deiziad Bloaz"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "tremen: '%s'"
 
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Error: %s\n"
+#~ "%s\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Fazi : %s\n"
+#~ "%s\n"
+
+#~ msgid "Internal error"
+#~ msgstr "Fazi diabarzh"
+
+#~ msgid ""
+#~ "Couldn't link GStreamer elements.\n"
+#~ " Please report this as a bug."
+#~ msgstr ""
+#~ "Na c'hall ket staget elfennoù GStreamer.\n"
+#~ "Mar plij ganeoc'h kelaouit ar fazi."
+
+#~ msgid "Unknown type %s"
+#~ msgstr "Rizh dianav %s"
+
+#~ msgid ""
+#~ "The file %s is of an unknown type.\n"
+#~ " Please ask the developers to add support\n"
+#~ " for files of this type if it is important\n"
+#~ " to you."
+#~ msgstr ""
+#~ "N'eo ket anavet ar restr·%s·.\n"
+#~ " Goulennit d'an diorrorien da ouzhpennañ an embregadur\n"
+#~ " furmad ar restroù-se ma soñjit eo pouezus \n"
+#~ " evidoc'h."
+
+#~ msgid "Target exists."
+#~ msgstr "Bez eus c'hoazh al lec'h kas."
+
+#~ msgid "The output file %s already exists."
+#~ msgstr "Bez eus c'hoazh ar restr %s."
+
+#~ msgid "Cannot create a decoder for '%s' format."
+#~ msgstr "N'eus ket tu da grouiñ un diskoder evit ar furmad '%s'."
+
 #~ msgid "Creating folder: '%s'"
 #~ msgstr "O krouiñ an teuliad : '%s'"
+
+#~ msgid "Cannot create '%s' folder."
+#~ msgstr "N'eus ket tu da grouiñ an teuliad :·'%s'."
+
+#~ msgid "Cannot set permission on '%s'"
+#~ msgstr "N'eus ket tu da cheñch an aotreoù evit '%s'"
+
+#~ msgid "file already present: '%s'"
+#~ msgstr "Restr ez eus c'hoazh : '%s'"
+
+#~ msgid "loading tags..."
+#~ msgstr "O kargañ klavioù..."
+
+#~ msgid "no tags"
+#~ msgstr "Klavioù ebet"
+
+#~ msgid "unknown"
+#~ msgstr "dianav"
+
+#~ msgid "Same as input, but replacing the suffix"
+#~ msgstr "E-giz a ntarzh, oc'h erlec'hiañ al lostger"
+
+#~ msgid "Same as input, but with an additional suffix"
+#~ msgstr "E-giz an tarzh, oc'h ouzhpennañ ul lostger"
+
+#~ msgid "Track number - title"
+#~ msgstr "Niverenn - titl"
+
+#~ msgid "Artist - title"
+#~ msgstr "Arzour - titl"
+
+#~ msgid "Custom filename pattern"
+#~ msgstr "Patrom personelaet evit an anvioù restroù"
+
+#~ msgid "artist-album"
+#~ msgstr "arzour-albom"
+
+#~ msgid "Into folder %s"
+#~ msgstr "En teuliad %s"
+
+#~ msgid "Target bitrate: %s"
+#~ msgstr "Kas binarel al lec'h kas : %s"
+
+#~ msgid "Convertion Canceled"
+#~ msgstr "Amdroadur nullet"
+
+#~ msgid ""
+#~ "The output file <i>%s</i>\n"
+#~ " exists already.\n"
+#~ " Do you want to skip the file, overwrite it or cancel the conversion?\n"
+#~ msgstr ""
+#~ "Bez eus c'hoazh ar restr lec'h kas :\n"
+#~ "<i>%s</i> .\n"
+#~ "C'hoant hoc'h eus mont e biou ar restr, skrivañ warnezhañ pe\n"
+#~ "nullañ an amdreiñ ?\n"
+
+#~ msgid "Conversion done, in %s"
+#~ msgstr "Amdroadur echuet, en %s"
+
+#~ msgid "Add Folder..."
+#~ msgstr "Ouzhpennañ un teuliad..."
 
 #~ msgid "canceling conversion."
 #~ msgstr "o dilezel an amdroadur"
 
+#~ msgid "Waiting for tags"
+#~ msgstr "O c'hortoz evit klavioù"
+
+#~ msgid "Waiting for tags..."
+#~ msgstr "O c'hortoz klavioù..."
+
+#~ msgid "Paused"
+#~ msgstr "Ehanet"
+
+#~ msgid "Canceled"
+#~ msgstr "Nullet"
+
+#~ msgid "Converting file %d of %d  (%s)"
+#~ msgstr "Oc'h amdreiñ ar restr %d war %d (%s)"
+
+#~ msgid "Converting"
+#~ msgstr "Oc'h amdreiñ"
+
+#~ msgid "%d:%02d left"
+#~ msgstr "O chom %d:%02d"
+
+#~ msgid "Ready"
+#~ msgstr "Prest"
+
+#~ msgid "%s: OK"
+#~ msgstr "%s : graet eo"
+
+#~ msgid "Usage: %s [options] [soundfile ...]"
+#~ msgstr "Implijadur : %s [dibarzhioù]·[restroù son·...]"
+
+#~ msgid "Print out a usage summary."
+#~ msgstr "Diskouez ur skoazell vihan implijadur."
+
 #~ msgid "FLAC"
 #~ msgstr "FLAC"
+
+#~ msgid "Free Lossless compression"
+#~ msgstr "Gwaskadur hep koll (frank)"
+
+#~ msgid "Free Lossy Compression"
+#~ msgstr "Gwaskadur gant koll (frank)"
+
+#~ msgid "GNOME Sound Conversion"
+#~ msgstr "Amdroadur sonioù GNOME"
 
 #~ msgid "MP3"
 #~ msgstr "MP3"
 
-#~ msgid "Ogg Vorbis"
-#~ msgstr "Ogg Vorbis"
+#~ msgid "Non-Free Lossy Compression"
+#~ msgstr "Gwaskadur gant koll (na frank)"
+
+#~ msgid ""
+#~ "Ogg Vorbis (.ogg)\n"
+#~ "MP3  (.mp3)\n"
+#~ "FLAC Lossless (.flac)\n"
+#~ "MS Wave (.wav)"
+#~ msgstr ""
+#~ "Ogg Vorbis (.ogg)\n"
+#~ "MP3 (.mp3)\n"
+#~ "FLAC Lossless (.flac)\n"
+#~ "MS Wave (.wav)"
+
+#~ msgid ""
+#~ "Very Low\n"
+#~ "Low\n"
+#~ "Normal\n"
+#~ "High\n"
+#~ "Very High"
+#~ msgstr ""
+#~ "Izel tre\n"
+#~ "Izel\n"
+#~ "Reizh\n"
+#~ "Uhel\n"
+#~ "Uhel tre"
 
 #~ msgid "WAV"
 #~ msgstr "WAV"
+
+#~ msgid "_Remove"
+#~ msgstr "_Dilemel"
+
+#~ msgid ""
+#~ "artist/album\n"
+#~ "artist - album"
+#~ msgstr ""
+#~ "arzour/albom\n"
+#~ "arzour - albom"
