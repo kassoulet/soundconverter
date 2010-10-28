@@ -562,8 +562,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
         w = self.vorbis_quality
         quality = self.get_float('vorbis-quality')
         quality_setting = {0: 0, 0.2: 1, 0.4: 2, 0.6: 3, 0.8: 4, 1.0: 5}
-        w.set_active(5)
+        w.set_active(-1)
+        print quality
         for k, v in quality_setting.iteritems():
+            print k, v, abs(quality - k)
             if abs(quality - k) < 0.01:
                 self.vorbis_quality.set_active(v)
         if self.get_int('vorbis-oga-extension'):
