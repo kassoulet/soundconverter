@@ -83,6 +83,7 @@ class TaskQueue(BackgroundTask):
 
     def finished(self):
         """ BackgroundTask finish callback """
+        print 'Queue.finished'
         log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time,
                 self.count))
         self.queue_ended()

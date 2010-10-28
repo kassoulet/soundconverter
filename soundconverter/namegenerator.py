@@ -82,16 +82,11 @@ class TargetNameGenerator:
 
         assert self.suffix, 'you just forgot to call set_target_suffix()'
 
-        u = gnomevfs.URI(sound_file.get_uri())
+        u = gnomevfs.URI(sound_file.uri)
         root, ext = os.path.splitext(u.path)
-        if u.host_port:
-            host = '%s:%s' % (u.host_name, u.host_port)
-        else:
-            host = u.host_name # TODO, where is host used ?
 
-        root = sound_file.get_base_path()
-        basename, ext = os.path.splitext(urllib.unquote(
-                                            sound_file.get_filename()))
+        root = sound_file.base_path
+        basename, ext = os.path.splitext(urllib.unquote(sound_file.filename))
 
         # make sure basename constains only the filename
         basefolder, basename = os.path.split(basename)
@@ -108,8 +103,8 @@ class TargetNameGenerator:
             'year': '',
             'date': '',
         }
-        for key in sound_file.keys():
-            d[key] = sound_file[key]
+        for key in sound_file.tags:
+            d[key] = sound_file.tags[key]
             if isinstance(d[key], basestring):
                 # take care of tags containing slashes
                 d[key] = d[key].replace('/', '-')
@@ -134,6 +129,10 @@ class TargetNameGenerator:
                     s += c
             result = s
 
+        #print 'folder:', self.folder
+        #print 'root:', root
+        #print 'basefolder:', basefolder
+        #print 'result:', result
         if self.folder is None:
             folder = root
         else:

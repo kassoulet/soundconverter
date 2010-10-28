@@ -25,6 +25,7 @@ import gtk
 import gobject
 import gnome
 import gnomevfs
+import urllib
 from gettext import gettext as _
 
 from gconfstore import GConfStore
@@ -103,7 +104,7 @@ class ErrorDialog:
         self.primary = builder.get_object('primary_error_label')
         self.secondary = builder.get_object('secondary_error_label')
 
-    def show(self, primary, secondary):
+    def show_error(self, primary, secondary):
         self.primary.set_markup(primary)
         self.secondary.set_markup(secondary)
         self.dialog.run()
@@ -175,9 +176,7 @@ class FileList:
         i = self.model.get_iter_first()
         while i:
             f = {}
-            for c in ALL_COLUMNS:
-                f[c] = self.model.get_value(i, ALL_COLUMNS.index(c))
-            files.append(f['META'])
+            files.append(self.model.get_value(i, 1))
 
             i = self.model.iter_next(i)
         return files
@@ -190,7 +189,7 @@ class FileList:
         return False
 
     def found_type(self, sound_file, mime):
-        debug('found_type', sound_file.get_filename())
+        debug('found_type', sound_file.filename)
 
         self.append_file(sound_file)
         self.window.set_sensitive()
@@ -246,11 +245,11 @@ class FileList:
 
         for f in files:
             sound_file = SoundFile(f, base)
-            if sound_file.get_uri() in self.filelist:
-                log('file already present: \'%s\'' % sound_file.get_uri())
+            if sound_file.uri in self.filelist:
+                log('file already present: \'%s\'' % sound_file.uri)
                 continue
 
-            self.filelist[sound_file.get_uri()] = True
+            self.filelist[sound_file.uri] = True
 
             typefinder = TypeFinder(sound_file)
             typefinder.set_found_type_hook(self.found_type)
@@ -301,11 +300,10 @@ class FileList:
 
         params = {}
         params['filename'] = gobject.markup_escape_text(unquote_filename(
-                                                    sound_file.get_filename()))
+                                                    sound_file.filename))
         for item in ('title', 'artist', 'album'):
-            params[item] = gobject.markup_escape_text(format_tag(
-                                                    sound_file.get_tag(item)))
-        if sound_file['bitrate']:
+            params[item] = gobject.markup_escape_text(format_tag(sound_file.tags[item]))
+        if sound_file.tags.get('bitrate'):
             params['bitrate'] = ', %s kbps' % (sound_file['bitrate'] / 1000)
         else:
             params['bitrate'] = ''
@@ -357,7 +355,7 @@ class FileList:
         for key in ALL_COLUMNS:
             fields[key] = _('unknown')
         fields['META'] = sound_file
-        fields['filename'] = sound_file.get_filename_for_display()
+        fields['filename'] = sound_file.filename_for_display
 
         # TODO: SLOW!
         for i in self.model:
@@ -366,7 +364,7 @@ class FileList:
         self.window.set_sensitive()
 
     def remove(self, iter):
-        uri = self.model.get(iter, 1)[0].get_uri()
+        uri = self.model.get(iter, 1)[0].uri
         del self.filelist[uri]
         self.model.remove(iter)
 
@@ -612,7 +610,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.resample_toggle.set_active(self.get_int('output-resample'))
             self.resample_rate.set_sensitive(1)
             rates = [11025, 22050, 44100, 48000, 72000, 96000, 128000]
-            rr_entry.set_text('%d' % (self.get_int('resample-rate')))
+            self.resample_rate_entry.set_text('%d' % (self.get_int('resample-rate')))
             rate = self.get_int('resample-rate')
             try:
                 idx = rates.index(rate)
@@ -623,9 +621,17 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         self.force_mono.set_active(self.get_int('force-mono'))
 
+        if not self.gstprofile.get_model().get_n_columns():
+            model = gtk.ListStore(str)
+            self.gstprofile.set_model(model)
+            cell = gtk.CellRendererText()
+            self.gstprofile.pack_start(cell)
+            self.gstprofile.add_attribute(cell,'text',0)
+            self.gstprofile.set_active(0)
+
         for i, profile in enumerate(audio_profiles_list):
             description, extension, pipeline = profile
-            self.gstprofile.append_text('%s (.%s)' % (description, extension))
+            self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
             if description == self.get_string('audio-profile'):
                 self.gstprofile.set_active(i)
 
@@ -676,11 +682,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
     def update_example(self):
         sound_file = SoundFile('foo/bar.flac')
-        sound_file.add_tags({
-            'track-number': 1L,
-            'track-count': 99L,
-        })
-        sound_file.add_tags(locale_patterns_dict)
+        sound_file.tags.update({'track-number': 1L, 'track-count': 99L})
+        sound_file.tags.update(locale_patterns_dict)
 
         s = gobject.markup_escape_text(beautify_uri(
                         self.generate_filename(sound_file, for_display=True)))
@@ -803,7 +806,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         ret = self.target_folder_chooser.run()
         self.target_folder_chooser.hide()
         if ret == gtk.RESPONSE_OK:
-            folder = self.target_folder_chooser.get_uri()
+            folder = self.target_folder_chooser.uri
             if folder:
                 self.set_string('selected-folder', urllib.unquote(folder))
                 self.update_selected_folder()
@@ -1122,7 +1125,6 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog = builder.get_object('existsdialog')
         self.existsdialog.message = builder.get_object('exists_message')
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
-        self.status = builder.get_object('statustext')
         #self.progressfile = glade.get_widget('progressfile')
 
         self.addfolderchooser = gtk.FileChooserDialog(_('Add Folder...'),
@@ -1300,6 +1302,7 @@ class SoundConverterWindow(GladeWindow):
         return False
 
     def wait_tags_and_convert(self):
+        raise NotImplementedError
         #TODO not_ready = [s for s in self.filelist.get_files() if not s.tags_read]
         #if not_ready:
         #   self.progressbar.pulse()
@@ -1473,7 +1476,7 @@ class SoundConverterWindow(GladeWindow):
     def set_status(self, text=None):
         if not text:
             text = _('Ready')
-        self.status.set_markup(text)
+        self.statustext.set_markup(text)
         gtk_iteration()
 
 
@@ -1490,7 +1493,8 @@ def gui_main(name, version, gladefile, input_files):
     global win
     win = SoundConverterWindow(builder)
     # global error # TODO
-    # error = ErrorDialog(builder)
+    import error
+    error.set_error_handler(ErrorDialog(builder))
     gobject.idle_add(win.filelist.add_uris, input_files)
     win.set_sensitive()
     gtk.main()

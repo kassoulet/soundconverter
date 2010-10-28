@@ -38,9 +38,6 @@ class ConversionTargetExists(SoundConverterException):
                             (_('The output file %s already exists.')) % uri)
 
 
-error = None
-
-
 class NoLink(SoundConverterException):
 
     def __init__(self):
@@ -62,9 +59,24 @@ class UnknownType(SoundConverterException):
 
 class ErrorPrinter:
 
-    def show(self, primary, secondary):
+    def show_error(self, primary, secondary):
         sys.stderr.write(_('\n\nError: %s\n%s\n') % (primary, secondary))
         sys.exit(1)
 
     def show_exception(self, e):
         self.show(e.primary, e.secondary)
+
+
+error_handler = ErrorPrinter()
+
+def set_error_handler(handler):
+    global error_handler
+    error_handler = handler
+
+def show_error(primary, secondary):
+    error_handler.show_error(primary, secondary)
+
+def show_exception(e):
+    error_handler.show_exception(e)
+
+

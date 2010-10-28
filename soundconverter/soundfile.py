@@ -26,10 +26,15 @@ from fileoperations import unquote_filename
 
 
 class SoundFile:
-
     """Meta data information about a sound file (uri, tags)."""
 
     def __init__(self, uri, base_path=None):
+        """
+        Create a SoundFile object.
+        if base_path is set, the uri is cut in two parts,
+         - the base folder
+         - the remaining folder+filename.
+        """
 
         self.uri = uri
 
@@ -51,31 +56,12 @@ class SoundFile:
         self.duration = 0
         self.mime_type = None
 
-    def get_uri(self):
-        return self.uri
-
-    def get_base_path(self):
-        return self.base_path
-
-    def get_filename(self):
-        return self.filename
-
-    def get_filename_for_display(self):
+    @property
+    def filename_for_display(self):
+        """
+        Returns the filename in a suitable for display form.
+        """
         return gobject.filename_display_name(
                 unquote_filename(self.filename))
 
-    def add_tags(self, taglist):
-        for key in taglist.keys():
-            self.tags[key] = taglist[key]
 
-    def get_tag_names(self):
-        return self.tags.keys()
-
-    def get_tag(self, key, default=''):
-        return self.tags.get(key, default)
-
-    get = get_tag
-    __getitem__ = get_tag
-
-    def keys(self):
-        return self.tags.keys()

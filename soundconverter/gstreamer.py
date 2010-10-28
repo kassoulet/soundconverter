@@ -38,6 +38,7 @@ from queue import TaskQueue
 from utils import debug, log
 from settings import mime_whitelist
 from error import SoundConverterException
+from error import show_error
 from notify import notification
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind')
@@ -132,11 +133,13 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def finished(self):
+        print 'finished', self
         for element, sid in self.connected_signals:
             element.disconnect(sid)
         self.stop_pipeline()
 
     def abort(self):
+        print 'Pipeline.abort'
         self.finished()
 
     def add_command(self, command):
@@ -174,8 +177,7 @@ class Pipeline(BackgroundTask):
             dialog.hide()
             return
 
-        #TODO error.show('Error', 'failed to install plugins: %s' %
-         #gobject.markup_escape_text(str(result)))
+        show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
 
     def on_error(self, error):
         self.error = error
@@ -231,7 +233,9 @@ class Pipeline(BackgroundTask):
                 del self.command
                 del self.signals
             except gobject.GError, e:
-                # TODO error.show('GStreamer error when creating pipeline', str(e))
+                show_error('GStreamer error when creating pipeline', str(e))
+                print 'ERROR:', str(e)
+                self.error = str(e)
                 self.eos = True # TODO
                 self.done()
                 return
@@ -263,14 +267,13 @@ class TypeFinder(Pipeline):
         self.sound_file = sound_file
 
         command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
-            (gstreamer_source, encode_filename(self.sound_file.get_uri()))
+            (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
         self.add_signal('typefinder', 'have-type', self.have_type)
 
     def on_error(self, error):
         self.error = error
-        log('error: %s (%s)' % (error,
-            self.sound_file.get_filename_for_display()))
+        log('error: %s (%s)' % (error, self.sound_file.filename_for_display))
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
@@ -278,7 +281,7 @@ class TypeFinder(Pipeline):
     def have_type(self, typefind, probability, caps):
         mime_type = caps.to_string()
         debug('have_type:', mime_type,
-                                self.sound_file.get_filename_for_display())
+                                self.sound_file.filename_for_display)
         self.sound_file.mime_type = None
         #self.sound_file.mime_type = mime_type
         for t in mime_whitelist:
@@ -305,6 +308,7 @@ class Decoder(Pipeline):
     """A GstPipeline background task that decodes data and finds tags."""
 
     def __init__(self, sound_file):
+        print 'Decoder.init', sound_file.filename, self
         Pipeline.__init__(self)
         self.sound_file = sound_file
         self.time = 0
@@ -312,7 +316,7 @@ class Decoder(Pipeline):
         self.probe_id = None
 
         command = '%s location="%s" name=src ! decodebin name=decoder' % \
-            (gstreamer_source, encode_filename(self.sound_file.get_uri()))
+            (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
         self.add_signal('decoder', 'new-decoded-pad', self.new_decoded_pad)
 
@@ -321,12 +325,13 @@ class Decoder(Pipeline):
     def on_error(self, error):
         self.error = error
         log('error: %s (%s)' % (error,
-            self.sound_file.get_filename_for_display()))
+            self.sound_file.filename_for_display))
 
     def have_type(self, typefind, probability, caps):
         pass
 
     def query_duration(self):
+        print 'query_duration', self
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(
@@ -336,7 +341,7 @@ class Decoder(Pipeline):
             pass
 
     def found_tag(self, decoder, something, taglist):
-        #debug('found_tags:', self.sound_file.get_filename_for_display())
+        debug('found_tags:', self.sound_file.filename_for_display)
         #debug('\ttitle=%s' % (taglist['title']))
         for k in taglist.keys():
             #debug('\t%s=%s' % (k, taglist[k]))
@@ -344,7 +349,7 @@ class Decoder(Pipeline):
                 taglist['year'] = taglist[k].year
                 taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
                                     taglist[k].month, taglist[k].day)
-        print taglist.keys()
+        #print taglist.keys()
         tag_whitelist = (
             'artist',
             'album',
@@ -362,7 +367,7 @@ class Decoder(Pipeline):
                 tags[k] = taglist[k]
 
         #print tags
-        self.sound_file.add_tags(tags)
+        self.sound_file.tags.update(tags)
         self.sound_file.have_tags = True
 
         try:
@@ -385,6 +390,7 @@ class Decoder(Pipeline):
 
     def new_decoded_pad(self, decoder, pad, is_last):
         """ called when a decoded pad is created """
+        print 'new_decoded_pad'
         self.probe_id = pad.add_buffer_probe(self._buffer_probe)
         self.probed_pad = pad
         self.processing = True
@@ -399,7 +405,7 @@ class Decoder(Pipeline):
         return self.sound_file
 
     def get_input_uri(self):
-        return self.sound_file.get_uri()
+        return self.sound_file.uri
 
     def get_duration(self):
         """ return the total duration of the sound file """
@@ -533,7 +539,7 @@ class Converter(Decoder):
 
         # Copy file permissions
         try:
-            info = gnomevfs.get_file_info(self.sound_file.get_uri(),
+            info = gnomevfs.get_file_info(self.sound_file.uri,
                                         gnomevfs.FILE_INFO_FIELDS_PERMISSIONS)
             gnomevfs.set_file_info(self.output_filename, info,
                                             gnomevfs.SET_FILE_INFO_PERMISSIONS)
@@ -542,17 +548,18 @@ class Converter(Decoder):
                         gnomevfs.format_uri_for_display(self.output_filename))
 
         if self.delete_original and self.processing and not self.error:
-            log('deleting: \'%s\'' % self.sound_file.get_uri())
+            log('deleting: \'%s\'' % self.sound_file.uri)
             try:
-                gnomevfs.unlink(self.sound_file.get_uri())
+                gnomevfs.unlink(self.sound_file.uri)
             except:
                 log('Cannot remove \'%s\'' %
                         gnomevfs.format_uri_for_display(self.output_filename))
 
     def on_error(self, err):
-        pass
-        # TODO error.show('<b>%s</b>' % _('GStreamer Error:'), '%s\n<i>(%s)</i>' % (err,
-        #    self.sound_file.get_filename_for_display()))
+        #pass
+
+        show_error('<b>%s</b>' % _('GStreamer Error:'), '%s\n<i>(%s)</i>' % (err,
+                    self.sound_file.filename_for_display))
 
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality
@@ -651,6 +658,8 @@ class ConverterQueue(TaskQueue):
         self.total_duration = 0
         self.duration_processed = 0
         self.overwrite_action = None
+        self.errors = []
+        self.error_count = 0
 
     def add(self, sound_file):
         output_filename = self.window.prefs.generate_filename(sound_file)
@@ -667,8 +676,8 @@ class ConverterQueue(TaskQueue):
             return
 
         # do not overwrite source file !!
-        if output_filename == sound_file.get_uri():
-            # TODO error.show(_('Cannot overwrite source file(s)!'), '')
+        if output_filename == sound_file.uri:
+            show_error(_('Cannot overwrite source file(s)!'), '')
             raise ConverterQueueCanceled()
 
         if exists:
@@ -751,7 +760,7 @@ class ConverterQueue(TaskQueue):
         tasks = self.running_tasks
         filename = ''
         if tasks and tasks[0]:
-            filename = tasks[0].sound_file.get_filename_for_display()
+            filename = tasks[0].sound_file.filename_for_display
 
         # try to get all tasks durations
         total_duration = self.total_duration
@@ -788,17 +797,26 @@ class ConverterQueue(TaskQueue):
 
     def on_task_finished(self, task):
         self.duration_processed += task.get_duration()
+        self.errors.append(task.error)
+        if task.error:
+            self.error_count += 1
 
     def finished(self):
+        print 'ConverterQueue.finished', self
+        if self.running_tasks:
+            print self.running_tasks
+            raise NotImplementedError
         TaskQueue.finished(self)
-        self.reset_counters()
         self.window.set_progress(0, 0)
         self.window.set_sensitive()
         self.window.conversion_ended()
         total_time = self.run_finish_time - self.run_start_time
         msg = _('Conversion done, in %s') % self.format_time(total_time)
-        notification(msg)
+        if self.error_count:
+            msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
+        notification(msg)
+        self.reset_counters()
 
     def format_time(self, seconds):
         units = [(86400, 'd'),
