@@ -785,8 +785,8 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Where to place results?</property>
     <property name="type_hint">dialog</property>
-    <property name="action">select-folder</property>
     <property name="local_only">False</property>
+    <property name="action">select-folder</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
@@ -1287,10 +1287,11 @@
                     <child>
                       <object class="GtkVBox" id="vbox14">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkHBox" id="hbox19">
                             <property name="visible">True</property>
-                            <property name="spacing">4</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel" id="label32">
                                 <property name="width_request">100</property>
@@ -1333,6 +1334,7 @@
                           <object class="GtkNotebook" id="quality_tabs">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tab_pos">bottom</property>
                             <property name="show_border">False</property>
                             <child>
                               <object class="GtkVBox" id="vbox21">
@@ -1748,10 +1750,15 @@
                                 <property name="row_spacing">6</property>
                                 <child>
                                   <object class="GtkLabel" id="label4">
+                                    <property name="width_request">100</property>
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Profile:</property>
                                   </object>
+                                  <packing>
+                                    <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options"></property>
+                                  </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="gstprofile">
@@ -1762,8 +1769,7 @@
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                                 <child>
