@@ -1,3 +1,7 @@
+2010-11-20  Gautier Portet <gautier soundconverter org>
+	* src/soundconverter.py: Make sure all child dialog have a transient.
+	 (thanks Cosimo)
+
 2010-09-13  Gautier Portet <kassoulet gmail com>
 	* src/soundconverter.py: Remove wrong default for Ogg Quality combobox.
 	  (thanks elitenoobboy, fixes #17503)

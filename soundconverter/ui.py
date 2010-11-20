@@ -1027,13 +1027,14 @@ class CustomFileChooser:
     Custom file chooser.\n
     """
 
-    def __init__(self, builder):
+    def __init__(self, builder, parent):
         """
         Constructor
         Load glade object, create a combobox
         """
         self.dlg = builder.get_object('custom_file_chooser')
         self.dlg.set_title(_('Open a file'))
+        self.dlg.set_transient_for(parent)
 
         # setup
         self.fcw = builder.get_object('filechooserwidget')
@@ -1113,12 +1114,12 @@ class SoundConverterWindow(GladeWindow):
     def __init__(self, builder):
         GladeWindow.__init__(self, builder)
         GladeWindow.builder = builder
+        self.widget = builder.get_object('window')
         self.prefs = PreferencesDialog(builder)
-        self.addchooser = CustomFileChooser(builder)
+        self.addchooser = CustomFileChooser(builder, self.widget)
         GladeWindow.connect_signals()
 
 
-        self.widget = builder.get_object('window')
         self.filelist = FileList(self, builder)
         self.filelist_selection = self.filelist.widget.get_selection()
         self.filelist_selection.connect('changed', self.selection_changed)
@@ -1151,6 +1152,7 @@ class SoundConverterWindow(GladeWindow):
 
         self.aboutdialog.set_property('name', NAME)
         self.aboutdialog.set_property('version', VERSION)
+        self.aboutdialog.set_transient_for(self.widget)
 
         self.convertion_waiting = False
 
