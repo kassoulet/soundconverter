@@ -750,7 +750,7 @@ class ConverterQueue(TaskQueue):
         c.add_listener('finished', self.on_task_finished)
         #c.got_duration = False
         #self.total_duration += c.get_duration()
-        gobject.timeout_add(1000, self.set_progress)
+        gobject.timeout_add(100, self.set_progress)
         self.all_tasks = None
 
     def get_progress(self, task):
