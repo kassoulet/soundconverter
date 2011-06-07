@@ -25,7 +25,7 @@ import os
 import urllib
 import unicodedata
 import gnomevfs
-
+from fileoperations import vfs_exists
 
 class TargetNameGenerator:
 
@@ -41,30 +41,7 @@ class TargetNameGenerator:
         self.suffix = None
         self.replace_messy_chars = False
         self.max_tries = 2
-        #if use_gnomevfs: TODO
-        #   self.exists = gnomevfs.exists
-        #else:
-        #   self.exists = os.path.exists
-        self.exists = os.path.exists
-
-    # This is useful for unit testing.
-    def set_exists(self, exists):
-        self.exists = exists
-
-    def set_target_suffix(self, suffix):
-        self.suffix = suffix
-
-    def set_folder(self, folder):
-        self.folder = folder
-
-    def set_subfolder_pattern(self, pattern):
-        self.subfolders = pattern
-
-    def set_basename_pattern(self, pattern):
-        self.basename = pattern
-
-    def set_replace_messy_chars(self, yes_or_no):
-        self.replace_messy_chars = yes_or_no
+        self.exists = vfs_exists
 
     def _unicode_to_ascii(self, unicode_string):
         # thanks to
