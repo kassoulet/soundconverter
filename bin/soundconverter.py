@@ -134,15 +134,17 @@ soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.settings import settings
 
 parser = parse_command_line()
-# remove gstreamer arguments so only gstreamer see them.
+# remove gstreamer arguments so only gstreamer sees them.
 args = [a for a in sys.argv[1:] if '-gst' not in a]
 
 options, files = parser.parse_args(args)
 
-if options.mode:
-    settings['mode'] = options.mode
-if options.jobs:
-    settings['jobs'] = options.jobs
+for k in dir(options):
+    if k.startswith('_'):
+        continue
+    if getattr(options, k) is None:
+        continue
+    settings[k] = getattr(options, k)
 
 print '  using %d thread(s)' % settings['jobs']
 
