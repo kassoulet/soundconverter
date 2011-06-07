@@ -696,6 +696,7 @@ class ConverterQueue(TaskQueue):
                     ' cancel the conversion?\n') % dpath
 
                 dialog.message.set_markup(msg)
+                dialog.set_transient_for(self.window.widget)
 
                 if self.overwrite_action != None:
                     dialog.apply_to_all.set_active(True)
