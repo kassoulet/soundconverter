@@ -349,15 +349,15 @@ class Decoder(Pipeline):
             'date',
             'year',
             'timestamp',
+            'disc-number',
+            'disc-count',
         )
         tags = {}
         for k in taglist.keys():
             if k in tag_whitelist:
                 tags[k] = taglist[k]
 
-        #print tags
         self.sound_file.tags.update(tags)
-        self.sound_file.have_tags = True
 
         try:
             self.sound_file.duration = self.pipeline.query_duration(

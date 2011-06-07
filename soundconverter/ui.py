@@ -681,7 +681,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
     def update_example(self):
         sound_file = SoundFile('foo/bar.flac')
-        sound_file.tags.update({'track-number': 1L, 'track-count': 99L})
+        sound_file.tags.update({'track-number': 1, 'track-count': 99})
+        sound_file.tags.update({'disc-number': 2, 'disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
 
         s = gobject.markup_escape_text(beautify_uri(

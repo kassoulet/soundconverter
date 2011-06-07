@@ -71,14 +71,16 @@ class TargetNameGenerator:
         d = {
             '.inputname': basename,
             '.ext': ext,
-            'album': '',
-            'artist': '',
-            'title': '',
+            'album': 'Unknown Album',
+            'artist': 'Unknown Artist',
+            'title': 'Unknown Title',
             'track-number': 0,
             'track-count': 0,
             'genre': '',
             'year': '',
             'date': '',
+            'disc-number': 0,
+            'disc-count': 0,
         }
         for key in sound_file.tags:
             d[key] = sound_file.tags[key]

@@ -34,11 +34,13 @@ mime_whitelist = (
     'application/x-3gp',
 )
 
+# TODO: remove locale patterns...
+
 # custom filename patterns
-english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp'
+english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal'
 
 # traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Title Track Total Genre Date Year Timestamp')
+locale_patterns = _('Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal')
 
 patterns_formats = (
     '%(artist)s',
@@ -50,6 +52,8 @@ patterns_formats = (
     '%(date)s',
     '%(year)s',
     '%(timestamp)s',
+    '%(disc-number)d',
+    '%(disc-count)d',
 )
 
 # add english and locale
