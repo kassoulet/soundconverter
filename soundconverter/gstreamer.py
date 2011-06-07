@@ -112,7 +112,6 @@ for name in profiles:
         audio_profiles_dict[description] = profile
 
 
-
 class Pipeline(BackgroundTask):
 
     """A background task for running a GstPipeline."""
@@ -133,13 +132,11 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def finished(self):
-        print 'finished', self
         for element, sid in self.connected_signals:
             element.disconnect(sid)
         self.stop_pipeline()
 
     def abort(self):
-        print 'Pipeline.abort'
         self.finished()
 
     def add_command(self, command):
@@ -234,9 +231,8 @@ class Pipeline(BackgroundTask):
                 del self.signals
             except gobject.GError, e:
                 show_error('GStreamer error when creating pipeline', str(e))
-                print 'ERROR:', str(e)
                 self.error = str(e)
-                self.eos = True # TODO
+                self.eos = True
                 self.done()
                 return
 
@@ -295,7 +291,6 @@ class TypeFinder(Pipeline):
     def finished(self):
         Pipeline.finished(self)
         if self.error:
-            print 'error:', self.error
             return
         if self.found_type_hook and self.sound_file.mime_type:
             gobject.idle_add(self.found_type_hook, self.sound_file,
@@ -308,7 +303,6 @@ class Decoder(Pipeline):
     """A GstPipeline background task that decodes data and finds tags."""
 
     def __init__(self, sound_file):
-        print 'Decoder.init', sound_file.filename, self
         Pipeline.__init__(self)
         self.sound_file = sound_file
         self.time = 0
@@ -320,8 +314,6 @@ class Decoder(Pipeline):
         self.add_command(command)
         self.add_signal('decoder', 'new-decoded-pad', self.new_decoded_pad)
 
-        # TODO add error management
-
     def on_error(self, error):
         self.error = error
         log('error: %s (%s)' % (error,
@@ -331,7 +323,6 @@ class Decoder(Pipeline):
         pass
 
     def query_duration(self):
-        print 'query_duration', self
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(
@@ -342,14 +333,12 @@ class Decoder(Pipeline):
 
     def found_tag(self, decoder, something, taglist):
         debug('found_tags:', self.sound_file.filename_for_display)
-        #debug('\ttitle=%s' % (taglist['title']))
         for k in taglist.keys():
-            #debug('\t%s=%s' % (k, taglist[k]))
+            debug('\t%s=%s' % (k, taglist[k]))
             if isinstance(taglist[k], gst.Date):
                 taglist['year'] = taglist[k].year
                 taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
                                     taglist[k].month, taglist[k].day)
-        #print taglist.keys()
         tag_whitelist = (
             'artist',
             'album',
@@ -390,7 +379,6 @@ class Decoder(Pipeline):
 
     def new_decoded_pad(self, decoder, pad, is_last):
         """ called when a decoded pad is created """
-        print 'new_decoded_pad'
         self.probe_id = pad.add_buffer_probe(self._buffer_probe)
         self.probed_pad = pad
         self.processing = True
@@ -486,17 +474,14 @@ class Converter(Decoder):
         }
 
         self.add_command('audioconvert')
-        #TODO self.add_command('audioscale')
 
-        #Hacked in audio resampling support
+        # audio resampling support
         if self.output_resample:
-            self.add_command('audioresample ! audio/x-raw-float,rate=%d' %
+            self.add_command('audioresample ! rate=%d ! audioconvert' %
                      (self.resample_rate))
-            self.add_command('audioconvert')
 
         if self.force_mono:
-            self.add_command('audioresample ! audio/x-raw-float,channels=1')
-            self.add_command('audioconvert')
+            self.add_command('audioresample ! channels=1 ! audioconvert')
 
         encoder = self.encoders[self.output_type]()
         if not encoder:
@@ -517,7 +502,7 @@ class Converter(Decoder):
         if dirname and not gnomevfs.exists(dirname):
             log('Creating folder: \'%s\'' % dirname)
             if not vfs_makedirs(str(dirname)):
-                # TODO add error management
+                # TODO add better error management
                 dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                             gtk.MESSAGE_ERROR,
                             gtk.BUTTONS_OK,
@@ -643,6 +628,13 @@ class ConverterQueueCanceled(SoundConverterException):
     def __init__(self):
         SoundConverterException.__init__(self, _('Conversion Canceled'), '')
 
+class ConverterQueueError(SoundConverterException):
+
+    """Exception thrown when a ConverterQueue had an error."""
+
+    def __init__(self):
+        SoundConverterException.__init__(self, _('Conversion Error'), '')
+
 
 class ConverterQueue(TaskQueue):
 
@@ -671,12 +663,21 @@ class ConverterQueue(TaskQueue):
             gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
         except gnomevfs.NotFoundError:
             exists = False
+        except gnomevfs.AccessDeniedError:
+            self.error_count += 1
+            msg = _('Access denied: \'%s\'' % output_filename)
+            #show_error(msg, '')
+            raise ConverterQueueError()
+            return
         except:
+            self.error_count += 1
             log('Invalid URI: \'%s\'' % output_filename)
+            raise ConverterQueueError()
             return
 
         # do not overwrite source file !!
         if output_filename == sound_file.uri:
+            self.error_count += 1
             show_error(_('Cannot overwrite source file(s)!'), '')
             raise ConverterQueueCanceled()
 
@@ -748,7 +749,7 @@ class ConverterQueue(TaskQueue):
         c.add_listener('finished', self.on_task_finished)
         #c.got_duration = False
         #self.total_duration += c.get_duration()
-        gobject.timeout_add(100, self.set_progress)
+        gobject.timeout_add(1000, self.set_progress)
         self.all_tasks = None
 
     def get_progress(self, task):
@@ -782,18 +783,21 @@ class ConverterQueue(TaskQueue):
         from ui import win
         position = 0.0
         s = []
+        prolist = []
+        for task in range(self.finished_tasks):
+            prolist.append(1.0)
         for task in tasks:
             if task.converting:
                 position += task.get_position()
-                s.append('%d/%d' % (task.get_position(), task.sound_file.duration))
-                progress = task.get_position() / task.sound_file.duration
-                self.window.set_file_progress(task.sound_file, progress)
+                taskprogress = float(task.get_position()) / task.sound_file.duration if task.sound_file.duration else 0
+                prolist.append(taskprogress)
+                self.window.set_file_progress(task.sound_file, taskprogress)
+        for task in self.waiting_tasks:
+            prolist.append(0.0)
 
-
-        #print '%s, %s, ' % (self.duration_processed + position, total_duration), s, self
-        self.window.set_progress(self.duration_processed + position,
-                             total_duration, filename)
-        return True
+        progress = sum(prolist)/len(prolist)
+        self.window.set_progress(progress, 1.0, filename)
+        return self.running
 
     def on_task_finished(self, task):
         self.duration_processed += task.get_duration()
@@ -802,7 +806,7 @@ class ConverterQueue(TaskQueue):
             self.error_count += 1
 
     def finished(self):
-        print 'ConverterQueue.finished', self
+        #print 'ConverterQueue.finished', self
         if self.running_tasks:
             print self.running_tasks
             raise NotImplementedError
@@ -815,7 +819,8 @@ class ConverterQueue(TaskQueue):
         if self.error_count:
             msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
-        notification(msg)
+        if not self.window.is_active():
+            notification(msg)
         self.reset_counters()
 
     def format_time(self, seconds):

@@ -21,6 +21,7 @@
 
 import os
 import time
+import sys
 import gtk
 import gobject
 import gnome
@@ -31,7 +32,7 @@ from gettext import gettext as _
 from gconfstore import GConfStore
 from fileoperations import filename_to_uri, beautify_uri
 from fileoperations import unquote_filename, vfs_walk
-from gstreamer import ConverterQueue, ConverterQueueCanceled
+from gstreamer import ConverterQueue, ConverterQueueCanceled, ConverterQueueError
 from gstreamer import available_elements, TypeFinder, TagReader
 from soundfile import SoundFile
 from settings import locale_patterns_dict, custom_patterns, filepattern
@@ -39,6 +40,7 @@ from namegenerator import TargetNameGenerator
 from queue import TaskQueue
 from utils import log, debug
 from messagearea import MessageArea
+from error import show_error
 
 import gconf
 _GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
@@ -98,17 +100,38 @@ def format_tag(tag):
 
 
 class ErrorDialog:
-
+    
     def __init__(self, builder):
         self.dialog = builder.get_object('error_dialog')
+        self.dialog.set_transient_for(builder.get_object('window'))
         self.primary = builder.get_object('primary_error_label')
         self.secondary = builder.get_object('secondary_error_label')
 
     def show_error(self, primary, secondary):
         self.primary.set_markup(primary)
         self.secondary.set_markup(secondary)
+        sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
         self.dialog.run()
         self.dialog.hide()
+
+    def show_exception(self, exception):
+        self.show('<b>%s</b>' % gobject.markup_escape_text(exception.primary),
+                    exception.secondary)
+
+
+class MsgAreaErrorDialog:
+    
+    def __init__(self, builder):
+        self.dialog = builder.get_object('error_frame')
+        self.primary = builder.get_object('label_error')
+
+    def show_error(self, primary, secondary):
+        sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
+        #self.msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, primary, secondary)
+        #self.msg_area.show()
+        self.primary.set_text(primary)
+        self.dialog.show()
+        
 
     def show_exception(self, exception):
         self.show('<b>%s</b>' % gobject.markup_escape_text(exception.primary),
@@ -172,14 +195,7 @@ class FileList:
             context.finish(True, False, time)
 
     def get_files(self):
-        files = []
-        i = self.model.get_iter_first()
-        while i:
-            f = {}
-            files.append(self.model.get_value(i, 1))
-
-            i = self.model.iter_next(i)
-        return files
+        return [i[1] for i in self.sortedmodel]
 
     def update_progress(self, queue):
         if queue.running:
@@ -194,10 +210,9 @@ class FileList:
         self.append_file(sound_file)
         self.window.set_sensitive()
 
-        tagreader = TagReader(sound_file)
-        tagreader.set_found_tag_hook(self.append_file_tags)
-
-        self.tagreaders.add_task(tagreader)
+        #tagreader = TagReader(sound_file)
+        #tagreader.set_found_tag_hook(self.append_file_tags)
+        #self.tagreaders.add_task(tagreader)
 
     def add_uris(self, uris, base=None, filter=None):
         files = []
@@ -207,8 +222,8 @@ class FileList:
             if not uri:
                 continue
             if uri.startswith('cdda:'):
-                #TODO error.show('Cannot read from Audio CD.',
-                #    'Use SoundJuicer Audio CD Extractor instead.')
+                show_error('Cannot read from Audio CD.',
+                    'Use SoundJuicer Audio CD Extractor instead.')
                 return
             try:
                 info = gnomevfs.get_file_info(gnomevfs.URI(uri),
@@ -348,21 +363,6 @@ class FileList:
                                 sound_file.uri])
         sound_file.filelist_row = len(self.model) - 1
 
-    def append_file_tags(self, tagreader):
-        sound_file = tagreader.get_sound_file()
-
-        fields = {}
-        for key in ALL_COLUMNS:
-            fields[key] = _('unknown')
-        fields['META'] = sound_file
-        fields['filename'] = sound_file.filename_for_display
-
-        # TODO: SLOW!
-        for i in self.model:
-            if i[1] == sound_file:
-                i[0] = self.format_cell(sound_file)
-        self.window.set_sensitive()
-
     def remove(self, iter):
         uri = self.model.get(iter, 1)[0].uri
         del self.filelist[uri]
@@ -451,11 +451,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
                          'subfolder_pattern']
 
-    def __init__(self, builder):
+    def __init__(self, builder, parent):
         GladeWindow.__init__(self, builder)
         GConfStore.__init__(self, '/apps/SoundConverter', self.defaults)
 
         self.dialog = builder.get_object('prefsdialog')
+        self.dialog.set_transient_for(parent)
         self.example = builder.get_object('example_filename')
         self.force_mono = builder.get_object('force-mono')
 
@@ -561,9 +562,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         quality = self.get_float('vorbis-quality')
         quality_setting = {0: 0, 0.2: 1, 0.4: 2, 0.6: 3, 0.8: 4, 1.0: 5}
         w.set_active(-1)
-        print quality
         for k, v in quality_setting.iteritems():
-            print k, v, abs(quality - k)
             if abs(quality - k) < 0.01:
                 self.vorbis_quality.set_active(v)
         if self.get_int('vorbis-oga-extension'):
@@ -732,43 +731,36 @@ class PreferencesDialog(GladeWindow, GConfStore):
                         'audio/x-m4a': '.m4a',
                         'gst-profile': '.' + profile_ext,
                     }.get(output_type, '.?')
-        print output_type
+
         generator = TargetNameGenerator()
 
         if output_suffix == '.ogg' and self.get_int('vorbis-oga-extension'):
             output_suffix = '.oga'
 
-        generator.set_target_suffix(output_suffix)
+        generator.suffix = output_suffix
 
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
             folder = filename_to_uri(folder)
-            generator.set_folder(folder)
+            generator.folder = folder
 
         if self.get_int('create-subfolders'):
-            generator.set_subfolder_pattern(
-                self.get_subfolder_pattern())
+            generator.subfolders = self.get_subfolder_pattern()
 
-        generator.set_basename_pattern(self.get_basename_pattern())
+        generator.basename = self.get_basename_pattern()
         if for_display:
-            generator.set_replace_messy_chars(False)
+            generator.replace_messy_chars = False
             return unquote_filename(generator.get_target_name(sound_file))
         else:
-            generator.set_replace_messy_chars(
-                self.get_int('replace-messy-chars'))
+            generator.replace_messy_chars = self.get_int('replace-messy-chars')
             return generator.get_target_name(sound_file)
 
     def process_custom_pattern(self, pattern):
-
         for k in custom_patterns:
             pattern = pattern.replace(k, custom_patterns[k])
         return pattern
 
     def set_sensitive(self):
-
-        #TODO
-        return
-
         for widget in self.sensitive_widgets.values():
             widget.set_sensitive(False)
 
@@ -806,7 +798,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         ret = self.target_folder_chooser.run()
         self.target_folder_chooser.hide()
         if ret == gtk.RESPONSE_OK:
-            folder = self.target_folder_chooser.uri
+            folder = self.target_folder_chooser.get_uri()
             if folder:
                 self.set_string('selected-folder', urllib.unquote(folder))
                 self.update_selected_folder()
@@ -1115,7 +1107,7 @@ class SoundConverterWindow(GladeWindow):
         GladeWindow.__init__(self, builder)
         GladeWindow.builder = builder
         self.widget = builder.get_object('window')
-        self.prefs = PreferencesDialog(builder)
+        self.prefs = PreferencesDialog(builder, self.widget)
         self.addchooser = CustomFileChooser(builder, self.widget)
         GladeWindow.connect_signals()
 
@@ -1154,8 +1146,6 @@ class SoundConverterWindow(GladeWindow):
         self.aboutdialog.set_property('version', VERSION)
         self.aboutdialog.set_transient_for(self.widget)
 
-        self.convertion_waiting = False
-
         self.converter = ConverterQueue(self)
 
         self._lock_convert_button = False
@@ -1169,26 +1159,24 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
         self.set_status()
 
-        """
-        msg = \
-                _('The output file <i>%s</i>\n exists already.\n '\
+        
+        msg = _('The output file <i>%s</i>\n exists already.\n '\
                     'Do you want to skip the file, overwrite it or'\
                     ' cancel the conversion?\n') % '/foo/bar/baz'
         vbox = self.vbox_status
-        msg_area = MessageArea()
-        msg_area.add_button('_Overwrite', 1)
-        msg_area.add_button('_Skip', 2)
+        self.msg_area = msg_area = MessageArea()
+        #msg_area.add_button('_Overwrite', 1)
+        #msg_area.add_button('_Skip', 2)
         msg_area.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
-        checkbox = gtk.CheckButton('Apply to _all queue')
-        checkbox.show()
-        msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, 'Overwrite file?',
-                                    msg, checkbox)
+        #checkbox = gtk.CheckButton('Apply to _all queue')
+        #checkbox.show()
+        #msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, 'Access Denied',                                    msg, checkbox)
 
         #msg_area.connect("response", self.OnMessageAreaReponse, msg_area)
         #msg_area.connect("close", self.OnMessageAreaClose, msg_area)
         vbox.pack_start(msg_area, False, False)
-        msg_area.show()
-        """
+        #msg_area.show()
+        
 
 
     # This bit of code constructs a list of methods for binding to Gtk+
@@ -1276,10 +1264,11 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
-        print 'reading tags:', sound_file
-        tagreader = TagReader(sound_file)
-        tagreader.set_found_tag_hook(self.tags_read)
-        tagreader.start()
+        print '############# READ TAGS #################'
+        #print 'reading tags:', sound_file
+        #tagreader = TagReader(sound_file)
+        #tagreader.set_found_tag_hook(self.tags_read)
+        #tagreader.start()
 
     def tags_read(self, tagreader):
         sound_file = tagreader.get_sound_file()
@@ -1288,18 +1277,21 @@ class SoundConverterWindow(GladeWindow):
     def do_convert(self):
         try:
             for sound_file in self.filelist.get_files():
-                if sound_file.tags_read:
-                    self.converter.add(sound_file)
-                else:
-                    self.read_tags(sound_file)
+                self.converter.add(sound_file)
+                #if sound_file.tags_read: # TODO
+                #    self.converter.add(sound_file)
+                #else:
+                #    self.read_tags(sound_file)
         except ConverterQueueCanceled:
             log('cancelling conversion.')
             self.conversion_ended()
             self.set_status(_('Conversion cancelled'))
+        except ConverterQueueError:
+            self.conversion_ended()
+            self.set_status(_('ERROR TODO'))
         else:
             self.set_status('')
             self.converter.start()
-            self.convertion_waiting = False
             self.set_sensitive()
         return False
 
@@ -1318,25 +1310,21 @@ class SoundConverterWindow(GladeWindow):
             return
 
         if not self.converter.running:
-            self.set_status(_('Waiting for tags'))
             self.progress_frame.show()
             self.status_frame.hide()
             self.progress_time = time.time()
             self.set_progress()
-            #self.widget.set_sensitive(False)
+            self.widget.set_sensitive(False)
 
-            self.convertion_waiting = True
-            self.set_status(_('Waiting for tags...'))
+            self.set_status(_('Converting'))
 
-            #thread.start_thread(self.do_convert, ())
             self.do_convert()
-            #gobject.timeout_add(100, self.wait_tags_and_convert)
         else:
             self.converter.paused = not self.converter.paused
             if self.converter.paused:
                 self.set_status(_('Paused'))
             else:
-                self.set_status('')
+                self.set_status(_('Converting'))
         self.set_sensitive()
 
     def on_button_pause_clicked(self, *args):
@@ -1370,6 +1358,7 @@ class SoundConverterWindow(GladeWindow):
         about = self.aboutdialog
         about.set_property('name', NAME)
         about.set_property('version', VERSION)
+        about.set_transient_for(self.widget)
         #TODO: about.set_property('translator_credits', TRANSLATORS)
         about.show()
 
@@ -1441,7 +1430,7 @@ class SoundConverterWindow(GladeWindow):
             # ten updates per second should be enough
             return
 
-        self.set_status(_('Converting')) # TODO
+        #self.set_status(_('Converting')) # TODO
 
         #self.progressfile.set_markup('<i><small>%s</small></i>' %
         #                            gobject.markup_escape_text(current_file)
@@ -1471,7 +1460,8 @@ class SoundConverterWindow(GladeWindow):
             if s < 10:
                 remaining = '%d' % s
 
-        #remaining = _('%d:%02d left') % (m, s)
+        #print done_so_far, total
+        remaining = _('%d:%02d left') % (m, s)
         self.display_progress(remaining)
         self.progress_time = time.time()
 
@@ -1480,6 +1470,9 @@ class SoundConverterWindow(GladeWindow):
             text = _('Ready')
         self.statustext.set_markup(text)
         gtk_iteration()
+
+    def is_active(self):
+        return self.widget.is_active()
 
 
 NAME = VERSION = None
@@ -1494,9 +1487,12 @@ def gui_main(name, version, gladefile, input_files):
 
     global win
     win = SoundConverterWindow(builder)
-    # global error # TODO
     import error
-    error.set_error_handler(ErrorDialog(builder))
+    #error.set_error_handler(ErrorDialog(builder))
+    error_dialog = MsgAreaErrorDialog(builder)
+    error_dialog.msg_area = win.msg_area
+    error.set_error_handler(error_dialog)
+    
     gobject.idle_add(win.filelist.add_uris, input_files)
     win.set_sensitive()
     gtk.main()

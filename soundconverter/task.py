@@ -21,7 +21,7 @@
 
 import time
 import gobject
-from error import SoundConverterException
+from error import SoundConverterException, show_exception
 
 
 class BackgroundTask:
@@ -46,8 +46,7 @@ class BackgroundTask:
         try:
             self.emit('started')
         except SoundConverterException, e:
-            #error.show_exception(e)
-            print 'ERROR:', e # TODO:
+            show_exception(e)
             return
         self.running = True
         self.paused = False
