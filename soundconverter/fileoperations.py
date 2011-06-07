@@ -26,6 +26,7 @@ import gnomevfs
 
 from utils import log
 
+use_gnomevfs = False
 
 def unquote_filename(filename):
     return urllib.unquote(filename)

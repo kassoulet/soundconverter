@@ -33,6 +33,7 @@ import gconf
 from fileoperations import vfs_encode_filename, file_encode_filename
 from fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
 from fileoperations import vfs_exists
+from fileoperations import use_gnomevfs
 from task import BackgroundTask
 from queue import TaskQueue
 from utils import debug, log
@@ -47,7 +48,6 @@ for element in required_elements:
         print "required gstreamer element \'%s\' not found." % element
         sys.exit(1)
 
-use_gnomevfs = False
 
 if gst.element_factory_find('giosrc'):
     gstreamer_source = 'giosrc'
