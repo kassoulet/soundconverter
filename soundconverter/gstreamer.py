@@ -796,7 +796,7 @@ class ConverterQueue(TaskQueue):
         for task in self.waiting_tasks:
             prolist.append(0.0)
 
-        progress = sum(prolist)/len(prolist)
+        progress = sum(prolist)/len(prolist) if prolist else 0
         self.window.set_progress(progress, 1.0, filename)
         return self.running
 
