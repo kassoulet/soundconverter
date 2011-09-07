@@ -119,8 +119,8 @@ class ErrorDialog:
                     exception.secondary)
 
 
-class MsgAreaErrorDialog:
-    
+class MsgAreaErrorDialog_:
+
     def __init__(self, builder):
         self.dialog = builder.get_object('error_frame')
         self.primary = builder.get_object('label_error')
@@ -131,7 +131,7 @@ class MsgAreaErrorDialog:
         #self.msg_area.show()
         self.primary.set_text(primary)
         self.dialog.show()
-        
+
 
     def show_exception(self, exception):
         self.show('<b>%s</b>' % gobject.markup_escape_text(exception.primary),
@@ -1489,11 +1489,11 @@ def gui_main(name, version, gladefile, input_files):
     global win
     win = SoundConverterWindow(builder)
     import error
-    #error.set_error_handler(ErrorDialog(builder))
-    error_dialog = MsgAreaErrorDialog(builder)
-    error_dialog.msg_area = win.msg_area
-    error.set_error_handler(error_dialog)
-    
+    error.set_error_handler(ErrorDialog(builder))
+    #error_dialog = MsgAreaErrorDialog(builder)
+    #error_dialog.msg_area = win.msg_area
+    #error.set_error_handler(error_dialog)
+
     gobject.idle_add(win.filelist.add_uris, input_files)
     win.set_sensitive()
     gtk.main()
