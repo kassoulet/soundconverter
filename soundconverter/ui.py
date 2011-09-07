@@ -471,7 +471,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.set_sensitive()
 
         tip = [_('Available patterns:')]
-        for k in locale_patterns_dict.values():
+        for k in sorted(locale_patterns_dict.values()):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
 
