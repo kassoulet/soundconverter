@@ -59,13 +59,16 @@ class TaskQueue(BackgroundTask):
             self.start_next_task()
 
     def start_next_task(self):
+        if not self.waiting_tasks:
+            if not self.running_tasks:
+                self.done()
+            return
+
         to_start = settings['jobs'] - len(self.running_tasks)
         for i in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
             except IndexError:
-                if not self.running_tasks:
-                    self.done()
                 return
             self.running_tasks.append(task)
             task.add_listener('finished', self.task_finished)
