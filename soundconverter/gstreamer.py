@@ -127,6 +127,7 @@ class Pipeline(BackgroundTask):
         self.eos = False
         self.error = None
         self.connected_signals = []
+        self.aborted = False
 
     def started(self):
         self.play()
@@ -137,6 +138,7 @@ class Pipeline(BackgroundTask):
         self.stop_pipeline()
 
     def abort(self):
+        self.aborted = True
         self.finished()
 
     def add_command(self, command):
@@ -521,6 +523,10 @@ class Converter(Decoder):
     def finished(self):
         self.converting = False
         Pipeline.finished(self)
+
+        if self.aborted:
+            # TODO: remove partial file
+            return
 
         # Copy file permissions
         try:
