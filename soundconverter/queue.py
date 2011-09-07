@@ -76,16 +76,18 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """ BackgroundTask setup callback """
+        self.count = 0
+        self.finished_tasks = 0
         self.start_time = time.time()
         self.start_next_task()
-        self.finished_tasks = 0
-        self.count = 0
 
     def finished(self):
         """ BackgroundTask finish callback """
         log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time,
                 self.count))
         self.queue_ended()
+        self.count = 0
+        self.start_time = None
 
     def task_finished(self, task=None):
         if not self.running_tasks:
