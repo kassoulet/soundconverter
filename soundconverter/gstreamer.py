@@ -525,7 +525,8 @@ class Converter(Decoder):
         Pipeline.finished(self)
 
         if self.aborted:
-            # TODO: remove partial file
+            # remove partial file
+            gnomevfs.unlink(self.output_filename)
             return
 
         # Copy file permissions
