@@ -35,7 +35,7 @@ from fileoperations import unquote_filename, vfs_walk
 from gstreamer import ConverterQueue, ConverterQueueCanceled, ConverterQueueError
 from gstreamer import available_elements, TypeFinder, TagReader
 from soundfile import SoundFile
-from settings import locale_patterns_dict, custom_patterns, filepattern
+from settings import locale_patterns_dict, custom_patterns, filepattern, settings
 from namegenerator import TargetNameGenerator
 from queue import TaskQueue
 from utils import log, debug
@@ -446,10 +446,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'force-mono': 0,
         'last-used-folder': None,
         'audio-profile': None,
+        'limit-jobs': 0,
+        'number-of-jobs': 1,
     }
 
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
-                         'subfolder_pattern']
+                         'subfolder_pattern', 'jobs_spinbutton']
 
     def __init__(self, builder, parent):
         GladeWindow.__init__(self, builder)
@@ -634,6 +636,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
             if description == self.get_string('audio-profile'):
                 self.gstprofile.set_active(i)
 
+        self.jobs.set_active(self.get_int('limit-jobs'))
+        self.jobs_spinbutton.set_value(self.get_int('number-of-jobs'))
+
+        self.update_jobs()
         self.update_example()
 
     def update_selected_folder(self):
@@ -772,6 +778,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         self.sensitive_widgets['vorbis_quality'].set_sensitive(
             self.get_string('output-mime-type') == 'audio/x-vorbis')
+
+        self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
+            self.get_int('limit-jobs'))
 
     def run(self):
         self.dialog.run()
@@ -1013,6 +1022,22 @@ class PreferencesDialog(GladeWindow, GConfStore):
     def on_resample_toggle(self, rstoggle):
         self.set_int('output-resample', rstoggle.get_active())
         self.resample_rate.set_sensitive(rstoggle.get_active())
+
+    def on_jobs_toggled(self, jtoggle):
+        self.set_int('limit-jobs', jtoggle.get_active())
+        self.jobs_spinbutton.set_sensitive(jtoggle.get_active())
+        self.update_jobs()
+
+    def on_jobs_spinbutton_value_changed(self, jspinbutton):
+        self.set_int('number-of-jobs', int(jspinbutton.get_value()))
+        self.update_jobs()
+
+    def update_jobs(self):
+        if self.get_int('limit-jobs'):
+            settings['jobs'] = self.get_int('number-of-jobs')
+        else:
+            settings['jobs'] = settings['max-jobs']
+        self.set_sensitive()
 
 
 class CustomFileChooser:

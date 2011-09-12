@@ -79,6 +79,7 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """ BackgroundTask setup callback """
+        log('Queue start: %d tasks, %d thread(s).' % (len(self.waiting_tasks), settings['jobs']))
         self.count = 0
         self.finished_tasks = 0
         self.start_time = time.time()
