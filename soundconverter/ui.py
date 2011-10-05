@@ -214,7 +214,7 @@ class FileList:
         #tagreader.set_found_tag_hook(self.append_file_tags)
         #self.tagreaders.add_task(tagreader)
 
-    def add_uris(self, uris, base=None, filter=None):
+    def add_uris(self, uris, base=None, extensions=None):
         files = []
         self.window.set_status(_('Adding files...'))
 
@@ -247,10 +247,13 @@ class FileList:
             if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
                 log('walking: \'%s\'' % uri)
                 filelist = vfs_walk(gnomevfs.URI(uri))
-                if filter:
-                    filelist = [f for f in filelist
-                                                if f.lower().endswith(filter)]
-
+                accepted = []
+                if extensions:
+                    for f in filelist:
+                        for extension in extensions:
+                            if f.lower().endswith(extension):
+                                accepted.append(f)
+                    filelist = accepted
                 files.extend(filelist)
             else:
                 files.append(uri)
@@ -1259,12 +1262,11 @@ class SoundConverterWindow(GladeWindow):
 
             folders = self.addfolderchooser.get_uris()
 
-            filter = None
+            extensions = None
             if self.combo.get_active():
-                filter = os.path.splitext(filepattern[self.combo.get_active()]
-                        [1]) [1]
-
-            self.filelist.add_uris(folders, filter=filter)
+                patterns = filepattern[self.combo.get_active()][1].split(';')
+                extensions = [os.path.splitext(p)[1] for p in patterns]
+            self.filelist.add_uris(folders, extensions=extensions)
 
             self.prefs.set_string('last-used-folder',
                             self.addfolderchooser.get_current_folder_uri())
