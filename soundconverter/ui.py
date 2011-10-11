@@ -100,7 +100,7 @@ def format_tag(tag):
 
 
 class ErrorDialog:
-    
+
     def __init__(self, builder):
         self.dialog = builder.get_object('error_dialog')
         self.dialog.set_transient_for(builder.get_object('window'))
@@ -273,10 +273,8 @@ class FileList:
             typefinder.set_found_type_hook(self.found_type)
             self.typefinders.add_task(typefinder)
 
-        self.skiptags = True
-        if self.skiptags:
-            for i in self.model:
-                i[0] = self.format_cell(i[1])
+        for i in self.model:
+            i[0] = self.format_cell(i[1])
 
         if files and not self.typefinders.running:
             self.window.progressbarstatus.show()
@@ -288,16 +286,8 @@ class FileList:
             self.window.set_status()
 
     def typefinder_queue_ended(self):
-
-        if self.skiptags:
-            self.window.set_status()
-            self.window.progressbarstatus.hide()
-        else:
-            if not self.tagreaders.running:
-                self.window.set_status(_('Reading tags...'))
-                self.tagreaders.start()
-                gobject.timeout_add(100, self.update_progress, self.tagreaders)
-                self.tagreaders.queue_ended = self.tagreader_queue_ended
+        self.window.set_status()
+        self.window.progressbarstatus.hide()
 
     def tagreader_queue_ended(self):
         self.window.progressbarstatus.hide()
@@ -308,47 +298,7 @@ class FileList:
         self.tagreaders.abort()
 
     def format_cell(self, sound_file):
-        template_tags = '%(artist)s - <i>%(album)s</i> - <b>%(title)s</b>\n'\
-                        '<small>%(filename)s</small>'
-        template_loading = '<i>%s</i>\n<small>%%(filename)s</small>' \
-                            % _('loading tags...')
-        template_notags = '<span foreground=\'red\'>%s</span>\n'\
-                            '<small>%%(filename)s</small>' % _('no tags')
-        template_skiptags = '%(filename)s'
-
-        params = {}
-        params['filename'] = gobject.markup_escape_text(unquote_filename(
-                                                    sound_file.filename))
-        for item in ('title', 'artist', 'album'):
-            params[item] = gobject.markup_escape_text(format_tag(sound_file.tags[item]))
-        if sound_file.tags.get('bitrate'):
-            params['bitrate'] = ', %s kbps' % (sound_file['bitrate'] / 1000)
-        else:
-            params['bitrate'] = ''
-
-        if sound_file.have_tags:
-            template = template_tags
-        else:
-            if self.skiptags:
-                template = template_skiptags
-            elif sound_file.tags_read:
-                template = template_notags
-            else:
-                template = template_loading
-
-        for tag, unicode_string in params.items():
-            try:
-                if not isinstance(unicode_string, unicode):
-                    # try to convert from utf-8
-                    unicode_string = unicode(unicode_string, 'utf-8')
-            except UnicodeDecodeError:
-                # well, let's fool python and use some 8bit codec...
-                unicode_string = unicode(unicode_string, 'iso-8859-1')
-            params[tag] = unicode_string
-
-        s = template % params
-
-        return s
+        return '%(filename)s' % params
 
     def set_row_progress(self, number, progress=None, text=None):
         self.progress_column.set_visible(True)
@@ -612,7 +562,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         if self.get_int('output-resample'):
             self.resample_toggle.set_active(self.get_int('output-resample'))
-            self.resample_rate.set_sensitive(1)
+            self.resample_rate.set_sensitive(True)
             rates = [11025, 22050, 44100, 48000, 72000, 96000, 128000]
             self.resample_rate_entry.set_text('%d' % (self.get_int('resample-rate')))
             rate = self.get_int('resample-rate')
@@ -758,6 +708,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
             generator.subfolders = self.get_subfolder_pattern()
 
         generator.basename = self.get_basename_pattern()
+
+        self.require_tags = generator.require_tags()
+
         if for_display:
             generator.replace_messy_chars = False
             return unquote_filename(generator.get_target_name(sound_file))
@@ -1292,24 +1245,34 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
-        print '############# READ TAGS #################'
-        #print 'reading tags:', sound_file
-        #tagreader = TagReader(sound_file)
-        #tagreader.set_found_tag_hook(self.tags_read)
-        #tagreader.start()
+        if sound_file.tags_read: assert False
+
+        tagreader = TagReader(sound_file)
+        tagreader.set_found_tag_hook(self.tags_read)
+        #self.tagreaders.add(tagreader)
+        tagreader.start()
 
     def tags_read(self, tagreader):
         sound_file = tagreader.get_sound_file()
         self.converter.add(sound_file)
+        self.ready_to_convert += 1
 
     def do_convert(self):
         try:
+            self.ready_to_convert = 0
             for sound_file in self.filelist.get_files():
-                self.converter.add(sound_file)
-                #if sound_file.tags_read: # TODO
-                #    self.converter.add(sound_file)
-                #else:
-                #    self.read_tags(sound_file)
+                print sound_file.filename
+                if self.prefs.require_tags:
+                    self.set_status(_('Reading tags...'))
+                    self.read_tags(sound_file)
+                else:
+                    self.ready_to_convert += 1
+                    self.converter.add(sound_file)
+
+            while not self.ready_to_convert:
+                print 'waiting...'
+                gtk_sleep(1)
+
         except ConverterQueueCanceled:
             log('cancelling conversion.')
             self.conversion_ended()
@@ -1323,16 +1286,6 @@ class SoundConverterWindow(GladeWindow):
             self.set_sensitive()
         return False
 
-    def wait_tags_and_convert(self):
-        raise NotImplementedError
-        #TODO not_ready = [s for s in self.filelist.get_files() if not s.tags_read]
-        #if not_ready:
-        #   self.progressbar.pulse()
-        return True
-
-        self.do_convert()
-        return False
-
     def on_convert_button_clicked(self, *args):
         if self._lock_convert_button:
             return
@@ -1342,7 +1295,7 @@ class SoundConverterWindow(GladeWindow):
             self.status_frame.hide()
             self.progress_time = time.time()
             self.set_progress()
-            self.widget.set_sensitive(False)
+            #self.widget.set_sensitive(False)
 
             self.set_status(_('Converting'))
 
