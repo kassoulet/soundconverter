@@ -298,7 +298,8 @@ class FileList:
         self.tagreaders.abort()
 
     def format_cell(self, sound_file):
-        return '%(filename)s' % params
+        return '%s' % gobject.markup_escape_text(unquote_filename(
+                                                  sound_file.filename))
 
     def set_row_progress(self, number, progress=None, text=None):
         self.progress_column.set_visible(True)
@@ -1260,10 +1261,10 @@ class SoundConverterWindow(GladeWindow):
     def do_convert(self):
         try:
             self.ready_to_convert = 0
+            if self.prefs.require_tags:
+                self.set_status(_('Reading tags...'))
             for sound_file in self.filelist.get_files():
-                print sound_file.filename
                 if self.prefs.require_tags:
-                    self.set_status(_('Reading tags...'))
                     self.read_tags(sound_file)
                 else:
                     self.ready_to_convert += 1
@@ -1353,6 +1354,13 @@ class SoundConverterWindow(GladeWindow):
         self.progress_frame.hide()
         self.status_frame.show()
         self.widget.set_sensitive(True)
+        try:
+            from gi.repository import Unity
+            launcher = Unity.LauncherEntry.get_for_desktop_id ("soundconverter.desktop")
+            launcher.set_property("progress_visible", False)
+        except ImportError:
+            pass
+
 
     def set_widget_sensitive(self, name, sensitivity):
         self.sensitive_widgets[name].set_sensitive(sensitivity)
@@ -1425,11 +1433,19 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.pulse()
             return
 
-        fraction = float(done_so_far) / total
-        self.progressbar.set_fraction(min(fraction, 1.0))
+        fraction = min(float(done_so_far) / total, 1.0)
+        self.progressbar.set_fraction(fraction)
         r = (t / fraction - t)
         s = r % 60
         m = r / 60
+
+        try:
+            from gi.repository import Unity
+            launcher = Unity.LauncherEntry.get_for_desktop_id ("soundconverter.desktop")
+            launcher.set_property("progress", fraction)
+            launcher.set_property("progress_visible", True)
+        except ImportError:
+            pass
 
         #print m,s, abs(self.progress_time-time.time())
         from math import ceil
