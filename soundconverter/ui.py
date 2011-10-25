@@ -386,7 +386,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'output-suffix': '.ogg',
         'vorbis-quality': 0.6,
         'vorbis-oga-extension': 0,
-        'mp3-mode': 'vbr',          # 0: cbr, 1: abr, 2: vbr
+        'mp3-mode': 'vbr',
         'mp3-cbr-quality': 192,
         'mp3-abr-quality': 192,
         'mp3-vbr-quality': 3,

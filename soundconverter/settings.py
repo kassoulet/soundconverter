@@ -37,10 +37,10 @@ mime_whitelist = (
 # TODO: remove locale patterns...
 
 # custom filename patterns
-english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal'
+english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
 
 # traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal')
+locale_patterns = _('Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext')
 
 patterns_formats = (
     '%(artist)s',
@@ -54,6 +54,7 @@ patterns_formats = (
     '%(timestamp)s',
     '%(disc-number)d',
     '%(disc-count)d',
+    '%(.target-ext)s',
 )
 
 # add english and locale

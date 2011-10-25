@@ -1,3 +1,7 @@
+2011-10-25  Gautier Portet <gautier soundconverter org>
+	* Add {Ext} to custom filename pattern. Filled by target extension.
+	 (Thanks C.Breuer)
+
 2010-11-20  Gautier Portet <gautier soundconverter org>
 	* src/soundconverter.py: Make sure all child dialog have a transient.
 	 (thanks Cosimo)

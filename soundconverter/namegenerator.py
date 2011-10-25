@@ -71,6 +71,7 @@ class TargetNameGenerator:
         d = {
             '.inputname': basename,
             '.ext': ext,
+            '.target-ext': self.suffix[1:],
             'album': 'Unknown Album',
             'artist': 'Unknown Artist',
             'title': 'Unknown Title',
