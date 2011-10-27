@@ -232,7 +232,7 @@ class FileList:
                 log('uri not found: \'%s\'' % uri)
                 continue
             except gnomevfs.InvalidURIError:
-                log('unvalid uri: \'%s\'' % uri)
+                log('invalid uri: \'%s\'' % uri)
                 continue
             except gnomevfs.AccessDeniedError:
                 log('access denied: \'%s\'' % uri)
@@ -313,8 +313,8 @@ class FileList:
         self.progress_column.set_visible(False)
 
     def append_file(self, sound_file):
-        i = self.model.append([self.format_cell(sound_file), sound_file, 0, '',
-                                sound_file.uri])
+        self.model.append([self.format_cell(sound_file), sound_file, 0, '',
+                           sound_file.uri])
         sound_file.filelist_row = len(self.model) - 1
 
     def remove(self, iter):
@@ -422,7 +422,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.sensitive_widgets = {}
         for name in self.sensitive_names:
             self.sensitive_widgets[name] = builder.get_object(name)
-            assert self.sensitive_widgets[name] != None
+            assert self.sensitive_widgets[name] is not None
         self.set_widget_initial_values(builder)
         self.set_sensitive()
 
@@ -1246,7 +1246,10 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
-        if sound_file.tags_read: assert False
+        if sound_file.tags_read: # TODO: factorize
+            self.converter.add(sound_file)
+            self.ready_to_convert += 1
+            return
 
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.tags_read)
@@ -1258,9 +1261,22 @@ class SoundConverterWindow(GladeWindow):
         self.converter.add(sound_file)
         self.ready_to_convert += 1
 
+    def on_progress(self):
+        perfile = {}
+        for s in self.filelist.get_files():
+            perfile[s] = 1.0
+        running, progress = self.converter.get_progress(perfile)
+        self.set_progress(progress, 1.0)
+
+        for sound_file, taskprogress in perfile.iteritems():
+            self.set_file_progress(sound_file, taskprogress)
+
+        return running
+
     def do_convert(self):
         try:
             self.ready_to_convert = 0
+            gobject.timeout_add(100, self.on_progress)
             if self.prefs.require_tags:
                 self.set_status(_('Reading tags...'))
             for sound_file in self.filelist.get_files():
@@ -1395,22 +1411,15 @@ class SoundConverterWindow(GladeWindow):
     def set_progress(self, done_so_far=0, total=0, current_file=None):
 
         global _old_progress
-        #if done_so_far < _old_progress:
-        #    raise RuntimeError
-        if done_so_far == _old_progress:
-            return
-        _old_progress = done_so_far
-        #global _old_total
-        #if total < _old_total:
-        #    raise RuntimeError
-        #_old_total = total
+        #if done_so_far == _old_progress:
+        #    return
+        #_old_progress = done_so_far
 
-        if self.converter.paused:
-            return
+        #if self.converter.paused:
+        #    return
 
         if not total or not done_so_far:
             self.progressbar.set_text(' ')
-            self.progressbar.set_fraction(0.0)
             self.progressbar.pulse()
             self.progressfile.set_markup('')
             self.filelist.hide_row_progress()

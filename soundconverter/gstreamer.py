@@ -103,7 +103,7 @@ audio_profiles_dict = {}
 _GCONF = gconf.client_get_default()
 profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
 for name in profiles:
-    if (_GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active")):
+    if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
         description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
         extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
         pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
@@ -480,13 +480,14 @@ class Converter(Decoder):
         # audio resampling support
         if self.output_resample:
             self.add_command('audioresample ! rate=%d ! audioconvert' %
-                     (self.resample_rate))
+                     self.resample_rate)
 
         if self.force_mono:
             self.add_command('audioresample ! channels=1 ! audioconvert')
 
         encoder = self.encoders[self.output_type]()
         if not encoder:
+            # TODO: is this used ?
             # TODO: add proper error management when an encoder cannot be created
             dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                         gtk.MESSAGE_ERROR,
@@ -659,6 +660,7 @@ class ConverterQueue(TaskQueue):
         self.overwrite_action = None
         self.errors = []
         self.error_count = 0
+        self.all_tasks = None
 
     def add(self, sound_file):
         output_filename = self.window.prefs.generate_filename(sound_file)
@@ -705,7 +707,7 @@ class ConverterQueue(TaskQueue):
                 dialog.message.set_markup(msg)
                 dialog.set_transient_for(self.window.widget)
 
-                if self.overwrite_action != None:
+                if self.overwrite_action is not None:
                     dialog.apply_to_all.set_active(True)
                 else:
                     dialog.apply_to_all.set_active(False)
@@ -753,23 +755,18 @@ class ConverterQueue(TaskQueue):
         c.set_mp3_mode(mode)
         c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
         c.init()
-        self.add_task(c)
         c.add_listener('finished', self.on_task_finished)
+        self.add_task(c)
         #c.got_duration = False
         #self.total_duration += c.get_duration()
-        gobject.timeout_add(100, self.set_progress)
-        self.all_tasks = None
+        #gobject.timeout_add(100, self.set_progress) # TODO one per converter?!?
 
-    def get_progress(self, task):
+    def _get_progress(self, task):
         return (self.duration_processed +
                     task.get_position()) / self.total_duration
 
-    def set_progress(self, tasks=None):
-
+    def get_progress(self, per_file_progress):
         tasks = self.running_tasks
-        filename = ''
-        if tasks and tasks[0]:
-            filename = tasks[0].sound_file.filename_for_display
 
         # try to get all tasks durations
         total_duration = self.total_duration
@@ -777,7 +774,6 @@ class ConverterQueue(TaskQueue):
             self.all_tasks = []
             self.all_tasks.extend(self.waiting_tasks)
             self.all_tasks.extend(self.running_tasks)
-            #self.all_tasks.extend(self.finished_tasks)
 
         for task in self.all_tasks:
             if not task.got_duration:
@@ -788,24 +784,23 @@ class ConverterQueue(TaskQueue):
                 else:
                     total_duration = 0
 
-        from ui import win
         position = 0.0
         s = []
         prolist = []
         for task in range(self.finished_tasks):
-            prolist.append(1.0)
+            prolist.append(1.0) #TODO !!
         for task in tasks:
             if task.converting:
                 position += task.get_position()
                 taskprogress = float(task.get_position()) / task.sound_file.duration if task.sound_file.duration else 0
                 prolist.append(taskprogress)
-                self.window.set_file_progress(task.sound_file, taskprogress)
+                per_file_progress[task.sound_file] = taskprogress
         for task in self.waiting_tasks:
             prolist.append(0.0)
+            per_file_progress[task.sound_file] = 0.0
 
         progress = sum(prolist)/len(prolist) if prolist else 0
-        self.window.set_progress(progress, 1.0, filename)
-        return self.running
+        return self.running, progress
 
     def on_task_finished(self, task):
         self.duration_processed += task.get_duration()
