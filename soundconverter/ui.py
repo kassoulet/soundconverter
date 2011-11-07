@@ -148,7 +148,7 @@ class FileList:
         self.window = window
         self.typefinders = TaskQueue()
         self.tagreaders = TaskQueue()
-        self.filelist = {}
+        self.filelist = set()
 
         self.model = apply(gtk.ListStore, MODEL)
 
@@ -267,8 +267,6 @@ class FileList:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
 
-            self.filelist[sound_file.uri] = True
-
             typefinder = TypeFinder(sound_file)
             typefinder.set_found_type_hook(self.found_type)
             self.typefinders.add_task(typefinder)
@@ -315,11 +313,12 @@ class FileList:
     def append_file(self, sound_file):
         self.model.append([self.format_cell(sound_file), sound_file, 0, '',
                            sound_file.uri])
+        self.filelist.add(sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
     def remove(self, iter):
         uri = self.model.get(iter, 1)[0].uri
-        del self.filelist[uri]
+        self.filelist.remove(uri)
         self.model.remove(iter)
 
     def is_nonempty(self):
