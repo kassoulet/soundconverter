@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <title>SoundConverter - GNOME Sound Conversion</title>
+
+   <link rel="stylesheet" href="grid.css" type="text/css">
+   <link rel="stylesheet" href="style.css" type="text/css">
+
+   <!--[if lt IE 7]>
+   <link rel="stylesheet" href="ie.css" type="text/css" />
+   <![endif]-->
+   <link rel="shortcut icon" href="/favicon.ico" />
+</head>
+
+<body>
+
+
+<div class="container_12">
+
+<div class="prefix_1 grid_10 suffix_1 content">
+
+
+	<h3>SoundConverter Changelog</h3>
+<b>Version 1.5.4</b>
+
+	<ul>
+
+	<li>
+	Fix unhandled exception when displaying notifications if notify daemon is down.
+	</li>
+	<em>
+	(thanks Michael, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17797&group_id=3213">#17797</a>)
+	</em>
+
+	<li>
+	Apply patch: CLI mode crash when converting to FLAC.
+	</li>
+	<em>
+	(thanks Michael)
+	</em>
+
+	<li>
+	Apply patch with many batch mode fixes:
+	<ul>
+		<li>cli options -t, -m, -s fail or crash</li>
+		<li>crash</li>
+		<li>stop killing output files in batch mode	</li>
+	</ul>
+	</li>
+	<em>
+	(thanks Michael, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17743&group_id=3213">#17743</a>, <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17735&group_id=3213">#17735</a>, <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17502&group_id=3213">#17502</a>)
+	</em>
+
+	<li>
+	Fix destination folder quoting.
+	</li>
+	<em>
+	(thanks Michael & Elitenoobboy, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17426&group_id=3213">#17426</a>)
+	</em>
+
+	<li>
+	Make sure all child dialog have a transient.
+	</li>
+	<em>
+	(thanks Cosimo)
+	</em>
+
+	<li>
+	Add Folder was broken when using Ogg Vorbis filter and trying to add .ogg files, since the extension filter contained two extension patterns and add_uris supported only one.
+	</li>
+	<em>
+	(thanks philchand, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17675&group_id=3213">#17675</a>)
+	</em>
+
+	<li>
+	Destination filename was url encoded when stored in gconf.
+	</li>
+	<em>
+	(thanks Simón, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17302&group_id=3213">#17302</a>)
+	</em>
+
+	<li>
+	Fix track number missing when writing to AAC files.
+	</li>
+	<em>
+	(thanks Montel and Tim-Philipp, fixes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17291&group_id=3213">#17291</a>)
+	</em>
+
+	<li>
+	Translations updated.
+	</li>
+
+	</ul>
+<b>Version 1.5.3</b>
+
+	<ul>
+
+	<li>Fix crash in TaskQueue</li>
+	<li>Fix progress bar oddities.</li>
+
+	<em>(Closes
+	<a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17244&group_id=3213">#17244</a>,
+	<a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17264&group_id=3213">#17264</a>,
+	<a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17266&group_id=3213">#17266</a>,
+	<a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17268&group_id=3213">#17268</a> and
+	<a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=17269&group_id=3213">#17269</a>).
+	Thank you so much Zachary and Michael.</em>
+
+	</ul>
+
+<b>Version 1.5.0</b>
+
+
+	<ul>
+
+	<li>Faster TypeFinder. & Memory usage reduction.</li>
+	(61.9s -> 2.8s, 45.5MB -> 37.8MB to load 2918 files)
+	<li>Fix missing "year" tag. (closes <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=016425&group_id=3213">#16425</a>)</li>
+	<li>New, working, command line parser.</li>
+
+	</ul>
+
+
+
+<b>Version 1.5.0 (alpha1)</b>
+
+
+	<ul>
+	<li>New Asynchronous core. Adding files is much faster.</li>
+
+	<li>Add wav sample width setting. (8/16/32 bits)</li>
+	<li>Add flac compression setting.</li>
+
+	<li>Remember the last used folder when adding files/folders.</li>
+		<em>(thanks szpak, add <a href="http://developer.berlios.de/feature/?func=detailfeature&feature_id=4807&group_id=3213">#4807</a>)</em>
+
+	<li>Add realaudio to mime whitelist.</li>
+	<em>(thanks Lonnie, fix lp:<a href="https://bugs.launchpad.net/bugs/518973">518973</a>)</em>
+
+	<li>Fix tagreader stall when adding unrecognized files.</li>
+
+
+	<li>Fix missing quoting when using destination folder.</li>
+
+
+	<li>Fix hanging when trying to load DXR files.</li>
+	<em>(thanks Nastrafireblaze, fix lp:<a href="https://bugs.launchpad.net/bugs/479420">479420</a>)</em>
+
+	<li>Fix wrong destination folder when using both same-folder-as-source, base folder, and custom filename patterns.</li>
+	<em>(thanks Tino, fix <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=016295&group_id=3213">#016295</a>)</em>
+
+	<li>Update dutch translation.</li>
+	<em>(thanks Tino)</em>
+
+	<li>Follow symbolic links when adding files.</li>
+
+	</ul>
+
+<p>	<small>A lot of code has been changed, please file bugs if anything bad happens, thank you.</small></p>
+
+
+
+
+<b>Version 1.4.4</b>
+	<ul>
+	<li>Force vbr-max-bitrate to 320 when using mp3+vbr, since gstreamer now defaults to 160.</li>
+	<em>(thanks psychoman, fix <a href="http://developer.berlios.de/bugs/?func=detailbug&bug_id=15950&group_id=3213">#15950</a>)</em>
+
+	<li>Activate GVfs authentication so we can log to remote shares.</li>
+	<em>(thanks ikus060, fix lp:<a href="https://bugs.launchpad.net/bugs/386849">386849</a>)</em>
+
+	<li>Fix crash in query_duration.</li>
+	<em>(fix lp:<a href="https://bugs.launchpad.net/bugs/333024">333024</a>)</em>
+
+	<li>Change deprecated Tooltip code, SoundConverter now requires GTK 2.12+!</li>
+	<em>(thanks Matt)</em>
+
+	<li>Reset status after clearing file list.</li>
+	<em>(Thanks Sean)</em>
+
+
+	<li>Fix unhandled exception when removing original files went bad.</li>
+	<em>(thanks surreal, fix lp:<a href="https://bugs.launchpad.net/bugs/278782">278782</a>)</em>
+
+
+	<li>Allow loading glade file from source folder so you can run soundconverter without installing.</li>
+	<em>(Thanks Geoff)</em>
+
+	<li>Rosetta sync, Update all translations.<br/>
+	Add Bulgarian, Danish, English (Australia), Estonian, Japanese and Vietnamese translations.</li>
+
+	<li>A some minor cosmetic changes.</li>
+	<em>(Thanks Uwe)</em>
+</ul>
+
+<b>Version 1.4.3</b>
+	<ul>
+	<li>Fix freezing when adding encrypted mp4 files.</li>
+	<em>fix lp:<a href="https://bugs.launchpad.net/bugs/263889">263889</a></em>
+	<li>Display notification at the end of conversion.</li>
+	<em>(thanks Royall)</em>
+	<li>Display error dialog when something bad happened.</li>
+
+	<li>And minor corrections, like Preference Dialog fixes,
+	spellings fixes, a better URI handling and others minor glitches fixed.</li>
+	<em>(thanks Geoff, Hew)</em>
+	</ul>
+
+<b>Version 1.4.2</b>
+	<ul>
+	<li>Translations update.</li>
+	<em>(thanks Translation-love-team)</em>
+	<li>Add a checkbox to optionally choose .oga extension for vorbis files.</li>
+	<em>(thanks Ben&amp;Andy for lobbying)</em>
+	<li>Minor bugfixes (python 2.5 problem, and some interface stalling fixes).</li>
+	<em>(thanks Dag)</em>
+	</ul>
+
+<b>Version 1.4.1</b>
+	<ul>
+	<li>Fix crash at startup when more than one encoding format is missing.</li>
+	<em>(thanks Denis)</em>
+	<li>Stop trying to load all the whole disk at startup, due to broken option parser.</li>
+	</ul>
+
+<b>Version 1.4.0</b>
+	<ul>
+		<li>Add AAC quality setting.</li>
+		<li>Added an higher quality level to Vorbis and MP3, now up to 320kbps*.</li>
+			<em>(thanks Juan Martin and Michael) (fix #3955)</em>
+		<li>Fix an old problem with spaces in folder names.</li>
+		<li>Flac files will be smaller (~20%), by forcing "join stereo" option.</li>
+			<em>(thanks Georges)</em>
+		<li>Add optional resampling.</li>
+			<em>(thanks Francis)</em>
+		<li>Add {Timestamp} custom filename template.</li>
+			<em>(thanks Mark)</em>
+		<li>Updated Polish translation.</li>
+			<em>(thanks Tomasz)</em>
+	</ul>
+<p>	<small>* and it's just useless :)</small></p>
+
+ <b>Version 1.3.2</b>
+
+	<ul>
+
+		<li>Add AAC encoding support.</li>
+			<em>(thanks Ian) (fix #001653)</em>
+		<li>Use gstreamer gio source when available </li>
+			<em>(fix #14184)</em>
+		<li>Create-folders is also actived when using same-as-input-folder.</li>
+			<em>(thanks Jason) (fix #13915)</em>
+		<li>Fix problem with slashes in tags. No more creating unwanted folders. This is just a fast hack, slash is just replaced by dash.</li>
+			<em>(thanks Fred) (fix #14286)</em>
+		<li>Fix crash when gnomevfssink not present.</li>
+
+		<li>Fix small crasher in batch mode.</li>
+			<em>(fix LP: #243831)</em>
+		<li>Updated Polish tranlation.</li>
+			<em>(thanks Piotr)</em>
+
+	</ul>
+
+
+
+<b>Version 1.3.1</b>
+
+	<ul>
+		<li>SoundConverter is now able to run multiple conversions at the same&nbsp;time.</li>
+  		<em>Default is one per core, you can adjust with&nbsp;--jobs.</em><br>
+  		Note that SoundConverter is now <b>4 times faster</b>*.
+
+		<li>Fixes various crashers reported by&nbsp;ubunteros.</li>
+		<em>(thanks Michael, Øyvind Stegard, Matthieu, ...and&nbsp;apport !)</em>
+
+		<li>Updated Polish, Serbian and German&nbsp;translations.</li>
+
+	</ul>
+
+<p>		<small>Version 1.3.0 was broken,&nbsp;sorry.<br>
+		* on quad core processors.</small></p>
+
+
+<b>Version 1.2.0</b>
+
+	<ul>
+		<li>TagReader perform *much* faster (500s&nbsp;->&nbsp;20s&nbsp;on&nbsp;260&nbsp;files)</li>
+		<em>(thanks thaytan on #gstreamer)</em>
+		<li>Progress indicator reset after a&nbsp;conversion.</li>
+		<li>Updated Arabic Catalan Czech Spanish French Slovak&nbsp;translations.</li>
+		<li>Added Esperanto &amp; Persian&nbsp;translations.</li>
+	</ul>
+
+<b>Version 1.1.0</b>
+
+	<ul>
+		<li>Support for Codec Buddy. So missing plugins for reading files will be installed automatically (where supported).</li>
+		<li>Display an message when trying to read Audio CD. (Audio CD are complicated to work with, use Soundjuicer instead...)</li>
+		<li>Little faster starting time.</li>
+	</ul>
+
+	<b>Version 1.0.2</b>
+
+<ul>
+	<li>Fix crasher when using cdda:// uris.</li>
+</ul>
+
+	<b>Version 1.0.1</b>
+
+	<ul>
+		<li>Fix crashes when using filenames with unicode.</li>
+	</ul>
+
+
+<b>Version 1.0.0</b>
+
+	<ul>
+		<li>Fix crash in format_tag() when loading file with binary tags.</li>
+		<li>Fix annoying gvfs error message at startup when output folder is not set.</li>
+		<li>CustomFileChooser now have case-insensitive filters.</li>
+		<li>Add 3gp to the mime whitelist.</li>
+	<li>Add a clear list button on toolbar.</li>
+	</ul>
+
+
+
+
+
+</div>
+
+
+
+
+<div class="container_12">
+<div class="prefix_1 grid_10 suffix_1 legal">
+website &copy; 2006-2011 <a href="http://kassoulet.free.fr">Gautier Portet</a>
+ +
+<a href="http://inkscape.org">inkscape</a>
+ +
+<a href="http://960.gs/">960.gs</a>
+
+
+</div>
+</div>
+
+
+<!--
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-905365-2";
+
+urchinTracker();
+
+</script>-->
+</body>
+</html>
+
