@@ -27,6 +27,7 @@ import unicodedata
 import gnomevfs
 from fileoperations import vfs_exists
 
+
 class TargetNameGenerator:
 
     """Generator for creating the target name from an input name."""
@@ -121,3 +122,13 @@ class TargetNameGenerator:
         result = os.path.join(folder, basefolder, urllib.quote(result))
 
         return result
+        
+    def require_tags(self):
+        from settings import patterns_formats
+        pattern = os.path.join(self.subfolders, self.basename + self.suffix)
+        for p in patterns_formats:
+            if p in pattern:
+                return True
+        return False        
+        
+        
