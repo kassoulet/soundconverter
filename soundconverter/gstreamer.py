@@ -610,6 +610,7 @@ class Converter(Decoder):
             elif properties[self.mp3_mode][0]:
                 cmd += 'vbr-max-bitrate=320 '
             cmd += '%s=%s ' % (properties[self.mp3_mode][1], self.mp3_quality)
+            #cmd += 'lowpass-freq=22000 '
 
             if available_elements['xingmux'] and properties[self.mp3_mode][0]:
                 # add xing header when creating VBR mp3
