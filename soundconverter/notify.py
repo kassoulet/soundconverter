@@ -31,8 +31,11 @@ try:
 
 
     def _notification(message):
-        n = pynotify.Notification('SoundConverter', message)
-        n.show()
+        try:
+            n = pynotify.Notification('SoundConverter', message)
+            n.show()
+        except glib.GError:
+            pass 
 
     if pynotify.init('Basics'):
         notification = _notification
