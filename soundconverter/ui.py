@@ -1313,6 +1313,7 @@ class SoundConverterWindow(GladeWindow):
             return
 
         if not self.converter.running:
+            self.set_progress(0)
             self.progress_frame.show()
             self.status_frame.hide()
             self.progress_time = time.time()
