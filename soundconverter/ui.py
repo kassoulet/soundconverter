@@ -1252,7 +1252,6 @@ class SoundConverterWindow(GladeWindow):
 
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.tags_read)
-        #self.tagreaders.add(tagreader)
         tagreader.start()
 
     def tags_read(self, tagreader):
@@ -1261,19 +1260,26 @@ class SoundConverterWindow(GladeWindow):
         self.ready_to_convert += 1
 
     def on_progress(self):
+        if not self.ready_to_convert: # still waiting for tags
+            self.set_progress()
+            return True
+
         perfile = {}
         for s in self.filelist.get_files():
             perfile[s] = 1.0
         running, progress = self.converter.get_progress(perfile)
-        self.set_progress(progress, 1.0)
 
-        for sound_file, taskprogress in perfile.iteritems():
-            self.set_file_progress(sound_file, taskprogress)
+        if running:
+            self.set_progress(progress)
+
+            for sound_file, taskprogress in perfile.iteritems():
+                self.set_file_progress(sound_file, taskprogress)
 
         return running
 
     def do_convert(self):
         try:
+
             self.ready_to_convert = 0
             gobject.timeout_add(100, self.on_progress)
             if self.prefs.require_tags:

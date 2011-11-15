@@ -760,7 +760,7 @@ class ConverterQueue(TaskQueue):
         self.add_task(c)
         #c.got_duration = False
         #self.total_duration += c.get_duration()
-        #gobject.timeout_add(100, self.set_progress) # TODO one per converter?!?
+
 
     def _get_progress(self, task):
         return (self.duration_processed +
@@ -801,7 +801,7 @@ class ConverterQueue(TaskQueue):
             per_file_progress[task.sound_file] = 0.0
 
         progress = sum(prolist)/len(prolist) if prolist else 0
-        return self.running, progress
+        return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
         self.duration_processed += task.get_duration()
