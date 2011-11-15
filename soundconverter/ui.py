@@ -1317,12 +1317,11 @@ class SoundConverterWindow(GladeWindow):
             self.status_frame.hide()
             self.progress_time = time.time()
             self.set_progress()
-            #self.widget.set_sensitive(False)
 
             self.set_status(_('Converting'))
 
             self.do_convert()
-        else:
+        else: # TODO: really ?
             self.converter.paused = not self.converter.paused
             if self.converter.paused:
                 self.set_status(_('Paused'))
@@ -1413,31 +1412,16 @@ class SoundConverterWindow(GladeWindow):
         row = sound_file.filelist_row
         self.filelist.set_row_progress(row, progress)
 
-    def set_progress(self, done_so_far=0, total=0, current_file=None):
-
-        global _old_progress
-        #if done_so_far == _old_progress:
-        #    return
-        #_old_progress = done_so_far
-
-        #if self.converter.paused:
-        #    return
-
-        if not total or not done_so_far:
+    def set_progress(self, fraction=None):
+        if not fraction:
             self.progressbar.set_text(' ')
-            self.progressbar.pulse()
+            if fraction is None:
+                self.progressbar.pulse()
+            else:
+                self.progressbar.set_fraction(0)
             self.progressfile.set_markup('')
             self.filelist.hide_row_progress()
             return
-        if time.time() < self.progress_time + 0.10:
-            # ten updates per second should be enough
-            return
-
-        #self.set_status(_('Converting')) # TODO
-
-        #self.progressfile.set_markup('<i><small>%s</small></i>' %
-        #                            gobject.markup_escape_text(current_file)
-        #                            if current_file else '')
 
         t = time.time() - self.converter.run_start_time - \
                           self.converter.paused_time
@@ -1447,21 +1431,24 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.pulse()
             return
 
-        fraction = min(float(done_so_far) / total, 1.0)
         self.progressbar.set_fraction(fraction)
         r = (t / fraction - t)
         s = r % 60
         m = r / 60
 
         try:
+            pass
+            import gi
+            #unity = gi.module.gi._gi.Repository.get_default().enumerate_versions('Unity')
+            # or silence logging.error
             from gi.repository import Unity
             launcher = Unity.LauncherEntry.get_for_desktop_id ("soundconverter.desktop")
             launcher.set_property("progress", fraction)
             launcher.set_property("progress_visible", True)
         except ImportError:
+            #print 'import error'
             pass
 
-        #print m,s, abs(self.progress_time-time.time())
         from math import ceil
 
         if m > 1.0:
@@ -1471,7 +1458,6 @@ class SoundConverterWindow(GladeWindow):
             if s < 10:
                 remaining = '%d' % s
 
-        #print done_so_far, total
         remaining = _('%d:%02d left') % (m, s)
         self.display_progress(remaining)
         self.progress_time = time.time()

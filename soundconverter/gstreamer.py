@@ -815,7 +815,7 @@ class ConverterQueue(TaskQueue):
             print self.running_tasks
             raise NotImplementedError
         TaskQueue.finished(self)
-        self.window.set_progress(0, 0)
+        #self.window.set_progress()
         self.window.set_sensitive()
         self.window.conversion_ended()
         total_time = self.run_finish_time - self.run_start_time
@@ -824,7 +824,7 @@ class ConverterQueue(TaskQueue):
             msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
         if not self.window.is_active():
-            notification(msg)
+            notification(msg) # this must move
         self.reset_counters()
 
     def format_time(self, seconds):
@@ -844,6 +844,8 @@ class ConverterQueue(TaskQueue):
 
     def abort(self):
         TaskQueue.abort(self)
-        self.window.set_progress(0, 0)
+        #self.window.set_progress(0)
         self.window.set_sensitive()
         self.reset_counters()
+
+
