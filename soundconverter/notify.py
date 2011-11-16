@@ -34,7 +34,7 @@ try:
         try:
             n = pynotify.Notification('SoundConverter', message)
             n.show()
-        except glib.GError:
+        except:
             pass 
 
     if pynotify.init('Basics'):
