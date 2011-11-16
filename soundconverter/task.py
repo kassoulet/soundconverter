@@ -37,7 +37,6 @@ class BackgroundTask:
     def __init__(self):
         self.paused = False
         self.running = False
-        self.current_paused_time = 0
         self.listeners = {}
         self.progress = None
 
@@ -51,8 +50,6 @@ class BackgroundTask:
         self.running = True
         self.paused = False
         self.run_start_time = time.time()
-        self.current_paused_time = 0
-        self.paused_time = 0
 
     def add_listener(self, signal, listener):
         """Add a custom listener to the given signal.
@@ -88,3 +85,5 @@ class BackgroundTask:
     def finished(self):
         """Clean up the task after all work has been done."""
         pass
+        
+        

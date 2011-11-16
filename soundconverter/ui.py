@@ -1082,17 +1082,17 @@ class SoundConverterWindow(GladeWindow):
     sensitive_names = ['remove', 'clearlist',
                        'toolbutton_clearlist', 'convert_button']
     unsensitive_when_converting = ['remove', 'clearlist', 'prefs_button',
-            'toolbutton_addfile', 'toolbutton_addfolder',
+            'toolbutton_addfile', 'toolbutton_addfolder', 'convert_button',
             'toolbutton_clearlist', 'filelist', 'menubar']
 
     def __init__(self, builder):
+        self.paused_time = 0
         GladeWindow.__init__(self, builder)
         GladeWindow.builder = builder
         self.widget = builder.get_object('window')
         self.prefs = PreferencesDialog(builder, self.widget)
         self.addchooser = CustomFileChooser(builder, self.widget)
         GladeWindow.connect_signals()
-
 
         self.filelist = FileList(self, builder)
         self.filelist_selection = self.filelist.widget.get_selection()
@@ -1333,12 +1333,15 @@ class SoundConverterWindow(GladeWindow):
     def on_button_pause_clicked(self, *args):
         tasks = self.converter.running_tasks
         if not tasks:
+            print 'no tasks to pause'
             return
         self.converter.paused = not self.converter.paused
         for task in tasks:
             task.toggle_pause(self.converter.paused)
         if self.converter.paused:
-            self.display_progress(_('Paused'))
+            self.current_pause_start = time.time()
+        else:
+            self.paused_time += time.time() - self.current_pause_start
 
     def on_button_cancel_clicked(self, *args):
         self.converter.abort()
@@ -1373,6 +1376,7 @@ class SoundConverterWindow(GladeWindow):
 
     def conversion_ended(self):
         self.progress_frame.hide()
+        self.filelist.hide_row_progress()
         self.status_frame.show()
         self.widget.set_sensitive(True)
         try:
@@ -1387,7 +1391,7 @@ class SoundConverterWindow(GladeWindow):
         self.sensitive_widgets[name].set_sensitive(sensitivity)
 
     def set_sensitive(self):
-
+        """update the sensitive state of UI for the current state"""
         for w in self.unsensitive_when_converting:
             self.set_widget_sensitive(w, not self.converter.running)
 
@@ -1395,19 +1399,6 @@ class SoundConverterWindow(GladeWindow):
             self.filelist_selection.count_selected_rows() > 0)
         self.set_widget_sensitive('convert_button',
                                     self.filelist.is_nonempty())
-
-        self._lock_convert_button = True
-        self.sensitive_widgets['convert_button'].set_active(
-            self.converter.running and not self.converter.paused)
-        self._lock_convert_button = False
-
-    def display_progress(self, remaining):
-        done = self.converter.finished_tasks
-        total = done + len(self.converter.waiting_tasks) + len(
-                                                self.converter.running_tasks)
-        self.progressbar.set_text(_('Converting file %d of %d  (%s)') % (
-                                    done + 1, total, remaining))
-        self.progressbar.set_text(_('%s') % remaining)
 
     def set_file_progress(self, sound_file, progress):
         row = sound_file.filelist_row
@@ -1424,8 +1415,12 @@ class SoundConverterWindow(GladeWindow):
             self.filelist.hide_row_progress()
             return
 
+        if self.converter.paused:
+            self.progressbar.set_text(_('Paused'))
+            return
+            
         t = time.time() - self.converter.run_start_time - \
-                          self.converter.paused_time
+                          self.paused_time
 
         if (t < 1):
             # wait a bit not to display crap
@@ -1434,7 +1429,7 @@ class SoundConverterWindow(GladeWindow):
 
         self.progressbar.set_fraction(fraction)
         r = (t / fraction - t)
-        s = r % 60
+        s = max(r % 60, 1)
         m = r / 60
 
         try:
@@ -1450,17 +1445,8 @@ class SoundConverterWindow(GladeWindow):
             #print 'import error'
             pass
 
-        from math import ceil
-
-        if m > 1.0:
-            remaining = _('Less than %d minutes left.') % ceil(m)
-        else:
-            remaining = _('Less than one minute left.')
-            if s < 10:
-                remaining = '%d' % s
-
         remaining = _('%d:%02d left') % (m, s)
-        self.display_progress(remaining)
+        self.progressbar.set_text(remaining)
         self.progress_time = time.time()
 
     def set_status(self, text=None):

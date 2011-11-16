@@ -2234,7 +2234,7 @@ Development Preview
             <property name="can_focus">False</property>
             <property name="toolbar_style">both</property>
             <child>
-              <object class="GtkToggleToolButton" id="convert_button">
+              <object class="GtkToolButton" id="convert_button">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -2435,7 +2435,7 @@ Development Preview
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="button_pause">
+                      <object class="GtkToggleButton" id="button_pause">
                         <property name="label">gtk-media-pause</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
