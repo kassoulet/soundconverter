@@ -415,6 +415,7 @@ class TagReader(Decoder):
         Decoder.__init__(self, sound_file)
         self.found_tag_hook = None
         self.found_tags = False
+        self.tagread = False
         self.run_start_time = 0
         self.add_command('fakesink')
         self.add_signal(None, 'message::state-changed', self.on_state_changed)
