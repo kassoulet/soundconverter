@@ -1,1 +1,20 @@
 http://developer.berlios.de/projects/soundconverter/
+
+
+conversion vers vorbis a regler. tester si encore probleme
+avec bin2
+
+mp3 16khz -> faire une table, ou un param avec la freq ?
+
+Error: <b>GStreamer Error:</b>
+Could not decode stream.
+<i>(04. Ninjaman - Laugh And Grin.flac)</i>
+
+Creating folder:
+
+non-thread-safe plugins: plusieurs process ?
+
+Un seul thread pour le typefind ?
+
+Clear ne vide pas la memoire ?
+

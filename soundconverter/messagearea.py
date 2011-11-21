@@ -50,7 +50,7 @@ class MessageArea(gtk.HBox):
 
         self.set_app_paintable(True)
 
-        self.connect("expose-event", self.paint_message_area)
+        #self.connect("expose-event", self.paint_message_area)
         self.connect("size-allocate", self.on_size_allocate)
 
         # Note that we connect to style-set on one of the internal
@@ -188,6 +188,10 @@ class MessageArea(gtk.HBox):
         primary_label.set_alignment(0, 0.5)
         primary_label.set_flags(gtk.CAN_FOCUS)
         primary_label.set_selectable(True)
+        
+        textcolor = self.get_style().text[1]
+        self.get_style().text[0] = self.get_style().text[1]
+        
         primary_label.show()
 
         vbox.pack_start(primary_label, True, True)

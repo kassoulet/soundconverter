@@ -238,9 +238,9 @@ class Pipeline(BackgroundTask):
                 self.done()
                 return
 
-        bus.add_signal_watch()
-        watch_id = bus.connect('message', self.on_message)
-        self.watch_id = watch_id
+            bus.add_signal_watch()
+            watch_id = bus.connect('message', self.on_message)
+            self.watch_id = watch_id
 
         self.pipeline.set_state(gst.STATE_PLAYING)
 
@@ -415,6 +415,7 @@ class TagReader(Decoder):
         Decoder.__init__(self, sound_file)
         self.found_tag_hook = None
         self.found_tags = False
+        self.tagread = False
         self.run_start_time = 0
         self.add_command('fakesink')
         self.add_signal(None, 'message::state-changed', self.on_state_changed)
@@ -610,6 +611,7 @@ class Converter(Decoder):
             elif properties[self.mp3_mode][0]:
                 cmd += 'vbr-max-bitrate=320 '
             cmd += '%s=%s ' % (properties[self.mp3_mode][1], self.mp3_quality)
+            #cmd += 'lowpass-freq=22000 '
 
             if available_elements['xingmux'] and properties[self.mp3_mode][0]:
                 # add xing header when creating VBR mp3
@@ -675,12 +677,15 @@ class ConverterQueue(TaskQueue):
         except gnomevfs.AccessDeniedError:
             self.error_count += 1
             msg = _('Access denied: \'%s\'' % output_filename)
-            #show_error(msg, '')
+            log(msg) # TODO
+            show_error(msg, '')
             raise ConverterQueueError()
             return
         except:
             self.error_count += 1
-            log('Invalid URI: \'%s\'' % output_filename)
+            msg = 'Invalid URI: \'%s\'' % output_filename
+            log(msg) # TODO
+            show_error(msg, '')
             raise ConverterQueueError()
             return
 
@@ -691,7 +696,7 @@ class ConverterQueue(TaskQueue):
             raise ConverterQueueCanceled()
 
         if exists:
-            if self.overwrite_action != None:
+            if self.overwrite_action is not None:
                 result = self.overwrite_action
             else:
                 dialog = self.window.existsdialog
@@ -731,7 +736,7 @@ class ConverterQueue(TaskQueue):
             else:
                 # cancel operation
                 # TODO
-                raise ConverterQueueCanceled()
+                raise ConverterQueueCanceled() # TODO: CRASH!!
 
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),
@@ -759,7 +764,7 @@ class ConverterQueue(TaskQueue):
         self.add_task(c)
         #c.got_duration = False
         #self.total_duration += c.get_duration()
-        #gobject.timeout_add(100, self.set_progress) # TODO one per converter?!?
+
 
     def _get_progress(self, task):
         return (self.duration_processed +
@@ -800,7 +805,7 @@ class ConverterQueue(TaskQueue):
             per_file_progress[task.sound_file] = 0.0
 
         progress = sum(prolist)/len(prolist) if prolist else 0
-        return self.running, progress
+        return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
         self.duration_processed += task.get_duration()
@@ -814,7 +819,7 @@ class ConverterQueue(TaskQueue):
             print self.running_tasks
             raise NotImplementedError
         TaskQueue.finished(self)
-        self.window.set_progress(0, 0)
+        #self.window.set_progress()
         self.window.set_sensitive()
         self.window.conversion_ended()
         total_time = self.run_finish_time - self.run_start_time
@@ -823,7 +828,7 @@ class ConverterQueue(TaskQueue):
             msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
         if not self.window.is_active():
-            notification(msg)
+            notification(msg) # this must move
         self.reset_counters()
 
     def format_time(self, seconds):
@@ -843,6 +848,8 @@ class ConverterQueue(TaskQueue):
 
     def abort(self):
         TaskQueue.abort(self)
-        self.window.set_progress(0, 0)
+        #self.window.set_progress(0)
         self.window.set_sensitive()
         self.reset_counters()
+
+
