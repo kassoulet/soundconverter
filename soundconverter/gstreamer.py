@@ -42,7 +42,7 @@ from error import SoundConverterException
 from error import show_error
 from notify import notification
 
-required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind')
+required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not gst.element_factory_find(element):
         print "required gstreamer element \'%s\' not found." % element
@@ -476,7 +476,7 @@ class Converter(Decoder):
             'gst-profile': self.add_audio_profile,
         }
 
-        self.add_command('audioconvert')
+        self.add_command('audioconvert ! audiorate')
 
         # audio resampling support
         if self.output_resample:
