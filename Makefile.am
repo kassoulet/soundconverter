@@ -11,6 +11,11 @@ DISTCLEANFILES = intltool-extract.in intltool-merge.in intltool-update.in intlto
 
 
 release: dist
-	svn -m "release $(VERSION)" copy . svn+ssh://kassoulet@svn.berlios.de/svnroot/repos/soundconverter/tags/release-$(VERSION)
-	lftp -c "open ftp.berlios.de/incoming ; put soundconverter-$(VERSION).tar.gz"
+	echo git tag -a $(VERSION)
+	echo git push --tags 
+	echo lp-project-upload soundconverter $(VERSION) soundconverter-$(VERSION).tar.bz2
 
+# generate the changelog from git log
+changelog:
+	git log 3fd8.. --pretty --numstat --summary | ./git2cl.pl > ChangeLog
+	cat ChangeLog.old >> ChangeLog
