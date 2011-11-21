@@ -123,4 +123,5 @@ settings = {
     'cli-output-type': 'audio/x-vorbis',
     'cli-output-suffix': '.ogg',
     'jobs': cpu_count(),
+    'max-jobs': cpu_count(),
 }

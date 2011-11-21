@@ -1141,10 +1141,10 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
         self.set_status()
 
-        
-        msg = _('The output file <i>%s</i>\n exists already.\n '\
-                    'Do you want to skip the file, overwrite it or'\
-                    ' cancel the conversion?\n') % '/foo/bar/baz'
+
+        #msg = _('The output file <i>%s</i>\n exists already.\n '\
+        #            'Do you want to skip the file, overwrite it or'\
+        #            ' cancel the conversion?\n') % '/foo/bar/baz'
         vbox = self.vbox_status
         self.msg_area = msg_area = MessageArea()
         #msg_area.add_button('_Overwrite', 1)

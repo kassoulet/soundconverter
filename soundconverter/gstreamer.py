@@ -238,9 +238,9 @@ class Pipeline(BackgroundTask):
                 self.done()
                 return
 
-        bus.add_signal_watch()
-        watch_id = bus.connect('message', self.on_message)
-        self.watch_id = watch_id
+            bus.add_signal_watch()
+            watch_id = bus.connect('message', self.on_message)
+            self.watch_id = watch_id
 
         self.pipeline.set_state(gst.STATE_PLAYING)
 
@@ -676,12 +676,15 @@ class ConverterQueue(TaskQueue):
         except gnomevfs.AccessDeniedError:
             self.error_count += 1
             msg = _('Access denied: \'%s\'' % output_filename)
-            #show_error(msg, '')
+            log(msg) # TODO
+            show_error(msg, '')
             raise ConverterQueueError()
             return
         except:
             self.error_count += 1
-            log('Invalid URI: \'%s\'' % output_filename)
+            msg = 'Invalid URI: \'%s\'' % output_filename
+            log(msg) # TODO
+            show_error(msg, '')
             raise ConverterQueueError()
             return
 
@@ -692,7 +695,7 @@ class ConverterQueue(TaskQueue):
             raise ConverterQueueCanceled()
 
         if exists:
-            if self.overwrite_action != None:
+            if self.overwrite_action is not None:
                 result = self.overwrite_action
             else:
                 dialog = self.window.existsdialog
@@ -732,7 +735,7 @@ class ConverterQueue(TaskQueue):
             else:
                 # cancel operation
                 # TODO
-                raise ConverterQueueCanceled()
+                raise ConverterQueueCanceled() # TODO: CRASH!!
 
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),

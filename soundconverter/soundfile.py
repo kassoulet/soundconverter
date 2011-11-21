@@ -27,6 +27,7 @@ from fileoperations import unquote_filename
 
 class SoundFile:
     """Meta data information about a sound file (uri, tags)."""
+    __slots__ = ['uri','base_path','filename','tags','tags_read','duration','mime_type']
 
     def __init__(self, uri, base_path=None):
         """
@@ -45,15 +46,10 @@ class SoundFile:
             self.base_path, self.filename = os.path.split(self.uri)
             self.base_path += '/'
 
-        self.tags = {
-            'track-number': 0,
-            'title':  'Unknown Title',
-            'artist': 'Unknown Artist',
-            'album':  'Unknown Album',
-        }
-        self.have_tags = False
-        self.tags_read = False
-        self.duration = 0
+        self.tags = {}
+        #self.have_tags = False
+        self.tags_read = False # TODO
+        self.duration = None
         self.mime_type = None
 
     @property
