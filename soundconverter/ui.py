@@ -1427,6 +1427,7 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.pulse()
             return
 
+        fraction = min(max(fraction, 0.0), 1.0)
         self.progressbar.set_fraction(fraction)
         r = (t / fraction - t)
         s = max(r % 60, 1)
