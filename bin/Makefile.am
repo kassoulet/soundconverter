@@ -1,6 +1,7 @@
 bin_SCRIPTS = \
 	soundconverter
 
+EXTRA_DIST = soundconverter.py
 CLEANFILES = $(bin_SCRIPTS)
 
 soundconverter: soundconverter.py

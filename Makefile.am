@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-AUTOMAKE_OPTIONS = dist-bzip2
+AUTOMAKE_OPTIONS = dist-xz no-dist-gzip
 
-SUBDIRS = soundconverter bin data doc po
+SUBDIRS = bin soundconverter data doc po
 
 CLEANFILES=
 
@@ -10,10 +10,10 @@ EXTRA_DIST = autogen.sh
 DISTCLEANFILES = intltool-extract.in intltool-merge.in intltool-update.in intltool-extract intltool-merge intltool-update
 
 
-release: dist
+release: changelog dist
 	echo git tag -a $(VERSION)
 	echo git push --tags 
-	echo lp-project-upload soundconverter $(VERSION) soundconverter-$(VERSION).tar.bz2
+	echo lp-project-upload soundconverter $(VERSION) soundconverter-$(VERSION).tar.xz
 
 # generate the changelog from git log
 changelog:

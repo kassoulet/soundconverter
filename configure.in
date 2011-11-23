@@ -1,8 +1,9 @@
 dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.53)
-AC_INIT(bin/soundconverter.py)
-AM_INIT_AUTOMAKE([soundconverter], [1.6.0-alpha])
+AC_PREREQ([2.68])
+AC_INIT
+AC_CONFIG_SRCDIR([bin/soundconverter.py])
+AM_INIT_AUTOMAKE([soundconverter], [1.6.0-rc1])
 
 m4_define(required_python_abi, [2.5])
 m4_define(required_python_version, [2.5])
@@ -18,7 +19,7 @@ GETTEXT_PACKAGE="soundconverter"
 AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
-AC_PROG_INTLTOOL
+IT_PROG_INTLTOOL
 
 AM_PATH_PYTHON(required_python_version)
 
@@ -30,7 +31,7 @@ import pygtk; pygtk.require('2.0')
 import gobject
 assert gobject.pygtk_version >= tuple(map(int, 'required_pygtk_version'.split('.')))
 "
-if $PYTHON -c "$prog" 1>&AC_FD_CC 2>&AC_FD_CC; then
+if $PYTHON -c "$prog" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
     AC_MSG_RESULT(found)
 else
     AC_MSG_RESULT(not found)
@@ -44,19 +45,19 @@ import pygtk; pygtk.require('2.0')
 import gnome
 assert gnome.gnome_python_version >= tuple(map(int, 'required_pygnome_version'.split('.')))
 "
-if $PYTHON -c "$prog" 1>&AC_FD_CC 2>&AC_FD_CC; then
+if $PYTHON -c "$prog" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
     AC_MSG_RESULT(found)
 else
     AC_MSG_RESULT(not found)
     AC_MSG_ERROR(required python-gnome version not found)
 fi
 
-AC_OUTPUT(
-        Makefile
+AC_CONFIG_FILES([Makefile
         po/Makefile.in
         soundconverter/Makefile
         bin/Makefile
         data/Makefile
         data/soundconverter.desktop.in
         doc/Makefile
-        )
+        ])
+AC_OUTPUT
