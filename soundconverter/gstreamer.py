@@ -735,8 +735,7 @@ class ConverterQueue(TaskQueue):
                 return
             else:
                 # cancel operation
-                # TODO
-                raise ConverterQueueCanceled() # TODO: CRASH!!
+                raise ConverterQueueCanceled()
 
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),

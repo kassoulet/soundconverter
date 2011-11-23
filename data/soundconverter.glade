@@ -10,13 +10,11 @@
     <property name="type_hint">normal</property>
     <property name="program_name">SoundConverter</property>
     <property name="copyright" translatable="yes">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-© 2005-2010 Gautier Portet &lt;kassoulet@gmail.com&gt;</property>
+© 2005-2011 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">
 Gnome SoundConverter
-
-Development Preview
 </property>
-    <property name="website">http://soundconverter.berlios.de</property>
+    <property name="website">http://soundconverter.org</property>
     <property name="website_label" translatable="yes">Website</property>
     <property name="authors"></property>
     <property name="logo">soundconverter-logo.svg</property>
@@ -1944,7 +1942,7 @@ Development Preview
                             <property name="has_tooltip">True</property>
                             <property name="use_action_appearance">False</property>
                             <property name="relief">none</property>
-                            <property name="uri">http://soundconverter.berlios.de/gstreamer-mp3-encoding-howto/</property>
+                            <property name="uri">http://soundconverter.org/gstreamer-mp3-encoding-howto/</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>

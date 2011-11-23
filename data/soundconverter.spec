@@ -6,8 +6,8 @@ License: GPL
 BuildArch: noarch
 Group: Applications/Multimedia
 Source: http://
-URL: http://soundconverter.berlios.de
-Packager: Gautier Portet < kassoulet users.berlios.de >
+URL: http://soundconverter.org
+Packager: Gautier Portet < gautier@soundconverter.org >
 Requires: python, pygtk2, pygtk2-libglade TODO
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u})
 
