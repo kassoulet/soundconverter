@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 0.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-23 22:46+0100\n"
+"POT-Creation-Date: 2011-11-23 23:53+0100\n"
 "PO-Revision-Date: 2009-11-13 19:59+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Portuguese/Brazil <gnome-l10n-br@listas.cipsga.org.br>\n"
@@ -40,232 +40,221 @@ msgid ""
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:4
-msgid "11025"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:5
-msgid "128000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:6
 msgid "16 bits (default)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:7
-msgid "22050"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:8
+#: ../data/soundconverter.glade.h:5
 msgid "32 bits"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:9
-msgid "44100"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:10
-msgid "48000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:11
-msgid "72000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:12
+#: ../data/soundconverter.glade.h:6
 msgid "8 bits (very low quality)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:13
-msgid "96000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:14
+#: ../data/soundconverter.glade.h:7
 msgid "<b>How to name files?</b>"
 msgstr "<b>Como nomear os arquivos?</b>"
 
-#: ../data/soundconverter.glade.h:15
+#: ../data/soundconverter.glade.h:8
 msgid "<b>Type of result?</b>"
 msgstr "<b>Formato de arquivo (resultado)</b>"
 
-#: ../data/soundconverter.glade.h:16
+#: ../data/soundconverter.glade.h:9
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Onde colocar o resultado?</b>"
 
-#: ../data/soundconverter.glade.h:17
+#: ../data/soundconverter.glade.h:10
 msgid "<big><b>File exists already</b></big>\n"
 msgstr "<big><b>Arquivo já existe</b></big>\n"
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:12
 msgid "<i>Example filename:</i>"
 msgstr "<i>Exemplo:</i>"
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:13
+msgid "AAC"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:14
 msgid "AAC (.m4a)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:21
+#: ../data/soundconverter.glade.h:15
 msgid "Add _Folder"
 msgstr "Adicionar _Pasta"
 
-#: ../data/soundconverter.glade.h:22
+#: ../data/soundconverter.glade.h:16
 msgid "Average (ABR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:23
+#: ../data/soundconverter.glade.h:17
 msgid "Better (Slower)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:18
 msgid "Bitrate mode:"
 msgstr "Bitrate mode:"
 
-#: ../data/soundconverter.glade.h:25
+#: ../data/soundconverter.glade.h:19
 msgid "Choose..."
 msgstr "Procurar"
 
-#: ../data/soundconverter.glade.h:26
+#: ../data/soundconverter.glade.h:20
 #, fuzzy
 msgid "Compression:"
 msgstr "Sem compressão"
 
-#: ../data/soundconverter.glade.h:27
+#: ../data/soundconverter.glade.h:21
 msgid "Constant (CBR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:28
+#: ../data/soundconverter.glade.h:22
 msgid "Create subfolders: "
 msgstr "Criar subpastas: "
 
-#: ../data/soundconverter.glade.h:29
+#: ../data/soundconverter.glade.h:23
 msgid "Default"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:24
 msgid "Delete original file"
 msgstr "Deletar arquivo original"
 
-#: ../data/soundconverter.glade.h:31
+#: ../data/soundconverter.glade.h:25
 msgid "Error"
 msgstr "Erro"
 
-#: ../data/soundconverter.glade.h:32
+#: ../data/soundconverter.glade.h:26
+msgid "FLAC"
+msgstr "FLAC"
+
+#: ../data/soundconverter.glade.h:27
 msgid "FLAC Lossless (.flac)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:33
+#: ../data/soundconverter.glade.h:28
 msgid "File exists already"
 msgstr "Arquivo já existe"
 
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:29
 msgid "Filename pattern: "
 msgstr "Padrão para nome de arquivo: "
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:30
 msgid "Filter "
 msgstr "Filtro "
 
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:31
 msgid "Force mono output"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:32
 msgid "Format: "
 msgstr "Formato: "
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:33
 msgid "GNOME Audio Profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:34
 msgid "High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:35
 msgid "Insanely High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:36
 msgid "Into a specified folder"
 msgstr "Em uma pasta especí­fica"
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:37
 msgid "Less (Faster)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:38
 msgid "Limit number of parallel jobs"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:39
 msgid "Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:40
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:41
 msgid "MP3 (.mp3)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:42
 msgid "MP3 Encoder is not present."
 msgstr "Encoder MP3 não presente"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:43
 msgid "MS Wave (.wav)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:44
 msgid "Normal"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:45
+#, fuzzy
+msgid "Ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:46
 #, fuzzy
 msgid "Ogg Vorbis (.ogg)"
 msgstr "Ogg Vorbis"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:47
 msgid "Preferences"
 msgstr "Preferências"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:48
 msgid "Profile:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:49
 msgid "Quality:"
 msgstr "Qualidade:"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:50
 msgid "Read how to install"
 msgstr "Leia how to install"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:51
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Remove todos os caracteres, exceto letras, dí­gitos e ./_-"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:52
 msgid "Replace all messy characters"
 msgstr "Trocar todos os caracteres estranhos"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:53
 msgid "Resample"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:54
 msgid "Same folder as the input file"
 msgstr "Mesma pasta que o arquivo original"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:55
 msgid "Sample width:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:56
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:57
 msgid "Use .oga extension"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:58
 #, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
@@ -273,116 +262,82 @@ msgstr ""
 "Médio (ABR)\n"
 "Variável (VBR) - Melhor qualidade"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:59
 msgid "Very High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:60
 msgid "Very Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:61
+msgid "WAV"
+msgstr "WAV"
+
+#: ../data/soundconverter.glade.h:62
 msgid "Website"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:63
 msgid "Where to place results?"
 msgstr "Onde colocar o resultado?"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:64
 msgid "_Add File"
 msgstr "_Adicionar Arquivo(s)"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:65
 msgid "_Apply to entire queue"
 msgstr "_Aplicar a fila toda"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:66
 msgid "_Edit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:67
 #, fuzzy
 msgid "_File"
 msgstr "_Adicionar Arquivo(s)"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:68
 msgid "_Help"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:69
 msgid "_Overwrite"
 msgstr "S_obrescreve"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:70
 msgid "_Skip"
 msgstr "P_ula"
 
-#: ../data/soundconverter.glade.h:73
-msgid "aac"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:74 ../soundconverter/ui.py:373
+#: ../data/soundconverter.glade.h:71 ../soundconverter/ui.py:373
 msgid "artist - album"
 msgstr "artista - álbum"
 
-#: ../data/soundconverter.glade.h:75 ../soundconverter/ui.py:371
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:371
 msgid "artist/album"
 msgstr "artista/álbum"
 
-#: ../data/soundconverter.glade.h:76
-#, fuzzy
-msgid "current file"
-msgstr "Abrir um arquivo"
-
-#: ../data/soundconverter.glade.h:77
+#: ../data/soundconverter.glade.h:73
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:78
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:79
+#: ../data/soundconverter.glade.h:74
 msgid "gst-profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:80
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:81
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:82
+#: ../data/soundconverter.glade.h:75
 #, fuzzy
 msgid "track_number - track_title"
 msgstr ""
 "número_faixa - título_faixa\n"
 "título_faixa\n"
 
-#: ../data/soundconverter.glade.h:83
+#: ../data/soundconverter.glade.h:76
 #, fuzzy
 msgid "track_title"
 msgstr "Tí­tulo da faixa"
-
-#: ../data/soundconverter.glade.h:84
-msgid "wav"
-msgstr "wav"
-
-#: ../data/soundconverter.glade.h:85
-msgid "~xxx kbps"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:86
-#, fuzzy
-msgid ""
-"© 2004 Lars Wirzenius <liw@iki.fi>\n"
-"© 2005-2011 Gautier Portet <gautier@soundconverter.org>"
-msgstr ""
-"Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
-"Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
 
 #: ../bin/soundconverter.py:98
 msgid ""
@@ -659,6 +614,27 @@ msgstr "%d:%02d restante"
 msgid "Ready"
 msgstr "Pronto"
 
+#, fuzzy
+#~ msgid "current file"
+#~ msgstr "Abrir um arquivo"
+
+#~ msgid "flac"
+#~ msgstr "flac"
+
+#~ msgid "mp3"
+#~ msgstr "mp3"
+
+#~ msgid "wav"
+#~ msgstr "wav"
+
+#, fuzzy
+#~ msgid ""
+#~ "© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "© 2005-2011 Gautier Portet <gautier@soundconverter.org>"
+#~ msgstr ""
+#~ "Copyright Â© 2004 Lars Wirzenius <liw@iki.fi>\n"
+#~ "Copyright Â© 2005 Gautier Portet <kassoulet@gmail.com>"
+
 #~ msgid "skipping: '%s'"
 #~ msgstr "pulando: '%s'"
 
@@ -698,9 +674,6 @@ msgstr "Pronto"
 #~ msgid "Print out a usage summary."
 #~ msgstr "Imprime um sumário de uso"
 
-#~ msgid "FLAC"
-#~ msgstr "FLAC"
-
 #~ msgid "Free Lossless compression"
 #~ msgstr "Compressão sem perdas"
 
@@ -709,9 +682,6 @@ msgstr "Pronto"
 
 #~ msgid "GNOME Sound Conversion"
 #~ msgstr "Conversor de Som para o GNOME"
-
-#~ msgid "MP3"
-#~ msgstr "MP3"
 
 #~ msgid "Non-Free Lossy Compression"
 #~ msgstr "Compressão sem perdas (não livre)"
@@ -739,9 +709,6 @@ msgstr "Pronto"
 #~ "Normal\n"
 #~ "Alta\n"
 #~ "Altíssima"
-
-#~ msgid "WAV"
-#~ msgstr "WAV"
 
 #~ msgid "_Remove"
 #~ msgstr "_Remover"

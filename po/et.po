@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SoundConverter 1.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-23 22:46+0100\n"
+"POT-Creation-Date: 2011-11-23 23:53+0100\n"
 "PO-Revision-Date: 2010-08-24 18:02+0300\n"
 "Last-Translator: mihkel <turakas gmail com>\n"
 "Language-Team: Estonian <et@li.org>\n"
@@ -37,231 +37,220 @@ msgid ""
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:4
-msgid "11025"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:5
-msgid "128000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:6
 msgid "16 bits (default)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:7
-msgid "22050"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:8
+#: ../data/soundconverter.glade.h:5
 msgid "32 bits"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:9
-msgid "44100"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:10
-msgid "48000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:11
-msgid "72000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:12
+#: ../data/soundconverter.glade.h:6
 msgid "8 bits (very low quality)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:13
-msgid "96000"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:14
+#: ../data/soundconverter.glade.h:7
 msgid "<b>How to name files?</b>"
 msgstr "<b>Kuidas faile nimetada?</b>"
 
-#: ../data/soundconverter.glade.h:15
+#: ../data/soundconverter.glade.h:8
 msgid "<b>Type of result?</b>"
 msgstr "<b>Tulemuse tüüp?</b>"
 
-#: ../data/soundconverter.glade.h:16
+#: ../data/soundconverter.glade.h:9
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Kuhu asetada tulemused?</b>"
 
-#: ../data/soundconverter.glade.h:17
+#: ../data/soundconverter.glade.h:10
 msgid "<big><b>File exists already</b></big>\n"
 msgstr "<big><b>Fail on juba olemas</b></big>\n"
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:12
 msgid "<i>Example filename:</i>"
 msgstr "<i>Näidis failinimi:</i>"
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:13
+msgid "AAC"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:14
 msgid "AAC (.m4a)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:21
+#: ../data/soundconverter.glade.h:15
 msgid "Add _Folder"
 msgstr "_Kausta lisamine"
 
-#: ../data/soundconverter.glade.h:22
+#: ../data/soundconverter.glade.h:16
 msgid "Average (ABR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:23
+#: ../data/soundconverter.glade.h:17
 msgid "Better (Slower)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:18
 msgid "Bitrate mode:"
 msgstr "Bitikiiruse režiim:"
 
-#: ../data/soundconverter.glade.h:25
+#: ../data/soundconverter.glade.h:19
 msgid "Choose..."
 msgstr "Vali..."
 
-#: ../data/soundconverter.glade.h:26
+#: ../data/soundconverter.glade.h:20
 msgid "Compression:"
 msgstr "Tihendus:"
 
-#: ../data/soundconverter.glade.h:27
+#: ../data/soundconverter.glade.h:21
 msgid "Constant (CBR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:28
+#: ../data/soundconverter.glade.h:22
 msgid "Create subfolders: "
 msgstr "Loo alamkataloogid: "
 
-#: ../data/soundconverter.glade.h:29
+#: ../data/soundconverter.glade.h:23
 msgid "Default"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:24
 msgid "Delete original file"
 msgstr "Kustuta originaalfail"
 
-#: ../data/soundconverter.glade.h:31
+#: ../data/soundconverter.glade.h:25
 msgid "Error"
 msgstr "Tõrge"
 
-#: ../data/soundconverter.glade.h:32
+#: ../data/soundconverter.glade.h:26
+msgid "FLAC"
+msgstr "FLAC"
+
+#: ../data/soundconverter.glade.h:27
 msgid "FLAC Lossless (.flac)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:33
+#: ../data/soundconverter.glade.h:28
 msgid "File exists already"
 msgstr "Fail on juba olemas"
 
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:29
 msgid "Filename pattern: "
 msgstr "Failinime muster: "
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:30
 msgid "Filter "
 msgstr "Filter "
 
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:31
 msgid "Force mono output"
 msgstr "Sunni mono väljund"
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:32
 msgid "Format: "
 msgstr "Vorming: "
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:33
 msgid "GNOME Audio Profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:34
 msgid "High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:35
 msgid "Insanely High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:36
 msgid "Into a specified folder"
 msgstr "Määratud kataloogi"
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:37
 msgid "Less (Faster)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:38
 msgid "Limit number of parallel jobs"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:39
 msgid "Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:40
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:41
 msgid "MP3 (.mp3)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:42
 msgid "MP3 Encoder is not present."
 msgstr "Puudub MP3-e enkodeerija."
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:43
 msgid "MS Wave (.wav)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:44
 msgid "Normal"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:45
+#, fuzzy
+msgid "Ogg"
+msgstr "ogg"
+
+#: ../data/soundconverter.glade.h:46
 #, fuzzy
 msgid "Ogg Vorbis (.ogg)"
 msgstr "Ogg Vorbis"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:47
 msgid "Preferences"
 msgstr "Seaded"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:48
 msgid "Profile:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:49
 msgid "Quality:"
 msgstr "Kvaliteet:"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:50
 msgid "Read how to install"
 msgstr "Loe, kuidas paigaldada"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:51
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Eemalda kõik märgid v.a. tähed, numbrid ja ./_-"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:52
 msgid "Replace all messy characters"
 msgstr "Asenda kõik koledad märgid"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:53
 msgid "Resample"
 msgstr "Diskreedi ümber"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:54
 msgid "Same folder as the input file"
 msgstr "Sisendfailiga sama kaust"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:55
 msgid "Sample width:"
 msgstr "Diskreedi laius:"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:56
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:57
 msgid "Use .oga extension"
 msgstr "Kasuta .oga laiendit"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:58
 #, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
@@ -269,112 +258,81 @@ msgstr ""
 "Keskmine (ABR)\n"
 "Muutuv (VBR) - parim kvaliteet"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:59
 msgid "Very High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:60
 msgid "Very Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:61
+msgid "WAV"
+msgstr "WAV"
+
+#: ../data/soundconverter.glade.h:62
 msgid "Website"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:63
 msgid "Where to place results?"
 msgstr "Kuhu asetada tulemused?"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:64
 msgid "_Add File"
 msgstr "Faili _lisamine"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:65
 msgid "_Apply to entire queue"
 msgstr "R_akenda tervele järjekorrale"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:66
 msgid "_Edit"
 msgstr "_Redigeeri"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:67
 msgid "_File"
 msgstr "_Fail"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:68
 msgid "_Help"
 msgstr "A_bi"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:69
 msgid "_Overwrite"
 msgstr "_Kirjuta üle"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:70
 msgid "_Skip"
 msgstr "_Jäta vahele"
 
-#: ../data/soundconverter.glade.h:73
-msgid "aac"
-msgstr "aac"
-
-#: ../data/soundconverter.glade.h:74 ../soundconverter/ui.py:373
+#: ../data/soundconverter.glade.h:71 ../soundconverter/ui.py:373
 msgid "artist - album"
 msgstr "esitaja - album"
 
-#: ../data/soundconverter.glade.h:75 ../soundconverter/ui.py:371
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:371
 msgid "artist/album"
 msgstr "esitaja/album"
 
-#: ../data/soundconverter.glade.h:76
-#, fuzzy
-msgid "current file"
-msgstr "Faili avamine"
-
-#: ../data/soundconverter.glade.h:77
+#: ../data/soundconverter.glade.h:73
 msgid "dialog1"
 msgstr "dialoog1"
 
-#: ../data/soundconverter.glade.h:78
-msgid "flac"
-msgstr "flac"
-
-#: ../data/soundconverter.glade.h:79
+#: ../data/soundconverter.glade.h:74
 msgid "gst-profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:80
-msgid "mp3"
-msgstr "mp3"
-
-#: ../data/soundconverter.glade.h:81
-msgid "ogg"
-msgstr "ogg"
-
-#: ../data/soundconverter.glade.h:82
+#: ../data/soundconverter.glade.h:75
 #, fuzzy
 msgid "track_number - track_title"
 msgstr ""
 "raja_number - raja_pealkiri\n"
 "raja_pealkiri\n"
 
-#: ../data/soundconverter.glade.h:83
+#: ../data/soundconverter.glade.h:76
 #, fuzzy
 msgid "track_title"
 msgstr "Raja pealkiri"
-
-#: ../data/soundconverter.glade.h:84
-msgid "wav"
-msgstr "wav"
-
-#: ../data/soundconverter.glade.h:85
-msgid "~xxx kbps"
-msgstr "~xxx kbps"
-
-#: ../data/soundconverter.glade.h:86
-msgid ""
-"© 2004 Lars Wirzenius <liw@iki.fi>\n"
-"© 2005-2011 Gautier Portet <gautier@soundconverter.org>"
-msgstr ""
 
 #: ../bin/soundconverter.py:98
 msgid ""
@@ -641,6 +599,25 @@ msgstr "%d:%02d jäänud"
 msgid "Ready"
 msgstr "Valmis"
 
+#~ msgid "aac"
+#~ msgstr "aac"
+
+#, fuzzy
+#~ msgid "current file"
+#~ msgstr "Faili avamine"
+
+#~ msgid "flac"
+#~ msgstr "flac"
+
+#~ msgid "mp3"
+#~ msgstr "mp3"
+
+#~ msgid "wav"
+#~ msgstr "wav"
+
+#~ msgid "~xxx kbps"
+#~ msgstr "~xxx kbps"
+
 #~ msgid ""
 #~ "32 bits\n"
 #~ "16 bits\n"
@@ -734,12 +711,3 @@ msgstr "Valmis"
 
 #~ msgid "Creating folder: '%s'"
 #~ msgstr "Loon kasuta: '%s'"
-
-#~ msgid "FLAC"
-#~ msgstr "FLAC"
-
-#~ msgid "MP3"
-#~ msgstr "MP3"
-
-#~ msgid "WAV"
-#~ msgstr "WAV"

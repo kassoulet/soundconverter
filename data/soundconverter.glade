@@ -9,7 +9,7 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">normal</property>
     <property name="program_name">SoundConverter</property>
-    <property name="copyright" translatable="yes">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
+    <property name="copyright" translatable="no">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
 © 2005-2011 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">
 Gnome SoundConverter
@@ -507,25 +507,25 @@ Gnome SoundConverter
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">11025</col>
+        <col id="0" translatable="no">11025</col>
       </row>
       <row>
-        <col id="0" translatable="yes">22050</col>
+        <col id="0" translatable="no">22050</col>
       </row>
       <row>
-        <col id="0" translatable="yes">44100</col>
+        <col id="0" translatable="no">44100</col>
       </row>
       <row>
-        <col id="0" translatable="yes">48000</col>
+        <col id="0" translatable="no">48000</col>
       </row>
       <row>
-        <col id="0" translatable="yes">72000</col>
+        <col id="0" translatable="no">72000</col>
       </row>
       <row>
-        <col id="0" translatable="yes">96000</col>
+        <col id="0" translatable="no">96000</col>
       </row>
       <row>
-        <col id="0" translatable="yes">128000</col>
+        <col id="0" translatable="no">128000</col>
       </row>
     </data>
   </object>
@@ -1076,7 +1076,7 @@ Gnome SoundConverter
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">label27</property>
+                                <property name="label" translatable="no">label27</property>
                                 <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="ellipsize">start</property>
@@ -1287,7 +1287,7 @@ Gnome SoundConverter
                               <object class="GtkLabel" id="label22">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">ogg</property>
+                                <property name="label" translatable="yes">Ogg</property>
                               </object>
                               <packing>
                                 <property name="tab_fill">False</property>
@@ -1431,7 +1431,7 @@ Gnome SoundConverter
                               <object class="GtkLabel" id="label23">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">mp3</property>
+                                <property name="label" translatable="yes">MP3</property>
                               </object>
                               <packing>
                                 <property name="position">1</property>
@@ -1493,7 +1493,7 @@ Gnome SoundConverter
                               <object class="GtkLabel" id="label24">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">flac</property>
+                                <property name="label" translatable="yes">FLAC</property>
                               </object>
                               <packing>
                                 <property name="position">2</property>
@@ -1555,7 +1555,7 @@ Gnome SoundConverter
                               <object class="GtkLabel" id="label25">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">wav</property>
+                                <property name="label" translatable="yes">WAV</property>
                               </object>
                               <packing>
                                 <property name="position">3</property>
@@ -1617,7 +1617,7 @@ Gnome SoundConverter
                               <object class="GtkLabel" id="label111">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">aac</property>
+                                <property name="label" translatable="yes">AAC</property>
                               </object>
                               <packing>
                                 <property name="position">4</property>
@@ -1692,7 +1692,7 @@ Gnome SoundConverter
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">~xxx kbps</property>
+                            <property name="label" translatable="no">~xxx kbps</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -2459,7 +2459,7 @@ Gnome SoundConverter
                   <object class="GtkLabel" id="progressfile">
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">current file</property>
+                    <property name="label" translatable="no">current file</property>
                     <property name="ellipsize">middle</property>
                     <property name="single_line_mode">True</property>
                   </object>
