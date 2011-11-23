@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-08 14:11+0200\n"
+"POT-Creation-Date: 2011-11-23 22:46+0100\n"
 "PO-Revision-Date: 2009-11-13 22:12+0000\n"
 "Last-Translator: alHakim <nurhakimsamah@bluehyppo.com>\n"
 "Language-Team: Malay <ms@li.org>\n"
+"Language: ms\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,242 +31,239 @@ msgid "Sound Converter"
 msgstr "Penukar Audio"
 
 #: ../data/soundconverter.glade.h:1
+#, fuzzy
 msgid ""
 "\n"
 "Gnome SoundConverter\n"
-"\n"
-"Development Preview\n"
-msgstr ""
+msgstr "PenukarAudio"
 
-#: ../data/soundconverter.glade.h:6
-msgid ""
-"&#xA9; 2004 Lars Wirzenius <liw@iki.fi>\n"
-"&#xA9; 2005-2010 Gautier Portet <kassoulet@gmail.com>"
-msgstr ""
-
-#: ../data/soundconverter.glade.h:8
+#: ../data/soundconverter.glade.h:4
 msgid "11025"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:9
+#: ../data/soundconverter.glade.h:5
 msgid "128000"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:10
+#: ../data/soundconverter.glade.h:6
 msgid "16 bits (default)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:11
+#: ../data/soundconverter.glade.h:7
 msgid "22050"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:12
+#: ../data/soundconverter.glade.h:8
 msgid "32 bits"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:13
+#: ../data/soundconverter.glade.h:9
 msgid "44100"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:14
+#: ../data/soundconverter.glade.h:10
 msgid "48000"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:15
+#: ../data/soundconverter.glade.h:11
 msgid "72000"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:16
+#: ../data/soundconverter.glade.h:12
 msgid "8 bits (very low quality)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:17
+#: ../data/soundconverter.glade.h:13
 msgid "96000"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:18
+#: ../data/soundconverter.glade.h:14
 msgid "<b>How to name files?</b>"
 msgstr "<b>Bagaimana hendak menamakan file ini ?</b>"
 
-#: ../data/soundconverter.glade.h:19
+#: ../data/soundconverter.glade.h:15
 msgid "<b>Type of result?</b>"
 msgstr "<b>Jenis keputusan ?</b>"
 
-#: ../data/soundconverter.glade.h:20
+#: ../data/soundconverter.glade.h:16
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Dimanakah hendak meletakkan keputusan ?</b>"
 
-#: ../data/soundconverter.glade.h:21
+#: ../data/soundconverter.glade.h:17
 msgid "<big><b>File exists already</b></big>\n"
 msgstr "<big><b>File telah wujud</b></big>\n"
 
-#: ../data/soundconverter.glade.h:23
+#: ../data/soundconverter.glade.h:19
 msgid "<i>Example filename:</i>"
 msgstr "<i>Contoh nama file:</i>"
 
-#: ../data/soundconverter.glade.h:24
+#: ../data/soundconverter.glade.h:20
 msgid "AAC (.m4a)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:25
+#: ../data/soundconverter.glade.h:21
 msgid "Add _Folder"
 msgstr "Tambah _Folder"
 
-#: ../data/soundconverter.glade.h:26
+#: ../data/soundconverter.glade.h:22
 msgid "Average (ABR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:27
+#: ../data/soundconverter.glade.h:23
 msgid "Better (Slower)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:28
+#: ../data/soundconverter.glade.h:24
 msgid "Bitrate mode:"
 msgstr "Mod Kadar bit:"
 
-#: ../data/soundconverter.glade.h:29
+#: ../data/soundconverter.glade.h:25
 msgid "Choose..."
 msgstr "Pilih..."
 
-#: ../data/soundconverter.glade.h:30
+#: ../data/soundconverter.glade.h:26
 #, fuzzy
 msgid "Compression:"
 msgstr "Tiada Mampatan"
 
-#: ../data/soundconverter.glade.h:31
+#: ../data/soundconverter.glade.h:27
 msgid "Constant (CBR)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:32
+#: ../data/soundconverter.glade.h:28
 msgid "Create subfolders: "
 msgstr "Bina subfolder: "
 
-#: ../data/soundconverter.glade.h:33
+#: ../data/soundconverter.glade.h:29
 msgid "Default"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:34
+#: ../data/soundconverter.glade.h:30
 msgid "Delete original file"
 msgstr "Buang file asal"
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:31
 msgid "Error"
 msgstr "Ralat"
 
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:32
 msgid "FLAC Lossless (.flac)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:33
 msgid "File exists already"
 msgstr "File telah wujud"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:34
 msgid "Filename pattern: "
 msgstr "Paten nama file: "
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:35
 msgid "Filter "
 msgstr "Penapis "
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:36
 msgid "Force mono output"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:37
 msgid "Format: "
 msgstr "Format: "
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:38
 msgid "GNOME Audio Profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:39
 msgid "High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:40
 msgid "Insanely High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
 msgstr "Kedalam spesifik folder"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:42
 msgid "Less (Faster)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:43
+msgid "Limit number of parallel jobs"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:44
 msgid "Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:45
 msgid "MP3 (.mp3)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:46
 msgid "MP3 Encoder is not present."
 msgstr "Enkoder MP3 tidak wujud."
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:47
 msgid "MS Wave (.wav)"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:48
 msgid "Normal"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:49
 #, fuzzy
 msgid "Ogg Vorbis (.ogg)"
 msgstr "Ogg Vorbis"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:50
 msgid "Preferences"
 msgstr "Tetapan"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:51
 msgid "Profile:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:52
 msgid "Quality:"
 msgstr "Kualiti:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:53
 msgid "Read how to install"
 msgstr "Baca bagaimana untuk memasang"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:54
 msgid "Remove all chars except letters, digits and ./_-"
 msgstr "Buang semua karakter selain huruf, angka dan ./_-"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:55
 msgid "Replace all messy characters"
 msgstr "Gantikan semua karakter yang berselerak"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:56
 msgid "Resample"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:57
 msgid "Same folder as the input file"
 msgstr "Folder yang sama dengan aliran masuk"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:59
 msgid "SoundConverter"
 msgstr "PenukarAudio"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:60
 msgid "Use .oga extension"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:61
 #, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
@@ -273,106 +271,112 @@ msgstr ""
 "Purata (ABR)\n"
 "Tidak Tetap (VBR) - Kualiti terbaik"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:62
 msgid "Very High"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:63
 msgid "Very Low"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:64
 msgid "Website"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:65
 msgid "Where to place results?"
 msgstr "Dimanakah hendak meletakkan keputusan ?"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:66
 msgid "_Add File"
 msgstr "_Tambah File"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:67
 msgid "_Apply to entire queue"
 msgstr "_Jalankan keseluruh baris"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:68
 msgid "_Edit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:69
 #, fuzzy
 msgid "_File"
 msgstr "_Tambah File"
 
-#: ../data/soundconverter.glade.h:73
+#: ../data/soundconverter.glade.h:70
 msgid "_Help"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:74
+#: ../data/soundconverter.glade.h:71
 msgid "_Overwrite"
 msgstr "_Tindih"
 
-#: ../data/soundconverter.glade.h:75
+#: ../data/soundconverter.glade.h:72
 msgid "_Skip"
 msgstr "_Lompat"
 
-#: ../data/soundconverter.glade.h:76
+#: ../data/soundconverter.glade.h:73
 msgid "aac"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:77
+#: ../data/soundconverter.glade.h:74 ../soundconverter/ui.py:373
 msgid "artist - album"
 msgstr "artis - album"
 
-#: ../data/soundconverter.glade.h:78
+#: ../data/soundconverter.glade.h:75 ../soundconverter/ui.py:371
 msgid "artist/album"
 msgstr "artis/album"
 
-#: ../data/soundconverter.glade.h:79
+#: ../data/soundconverter.glade.h:76
 #, fuzzy
 msgid "current file"
 msgstr "Buka fail"
 
-#: ../data/soundconverter.glade.h:80
+#: ../data/soundconverter.glade.h:77
 msgid "dialog1"
 msgstr "dialog1"
 
-#: ../data/soundconverter.glade.h:81
+#: ../data/soundconverter.glade.h:78
 msgid "flac"
 msgstr "flac"
 
-#: ../data/soundconverter.glade.h:82
+#: ../data/soundconverter.glade.h:79
 msgid "gst-profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:83
+#: ../data/soundconverter.glade.h:80
 msgid "mp3"
 msgstr "mp3"
 
-#: ../data/soundconverter.glade.h:84
+#: ../data/soundconverter.glade.h:81
 msgid "ogg"
 msgstr "ogg"
 
-#: ../data/soundconverter.glade.h:85
+#: ../data/soundconverter.glade.h:82
 #, fuzzy
 msgid "track_number - track_title"
 msgstr ""
 "trek_nombor - trek_tajuk\n"
 "trek_tajuk\n"
 
-#: ../data/soundconverter.glade.h:86
+#: ../data/soundconverter.glade.h:83
 #, fuzzy
 msgid "track_title"
 msgstr "Tajuk trek"
 
-#: ../data/soundconverter.glade.h:87
+#: ../data/soundconverter.glade.h:84
 msgid "wav"
 msgstr "wav"
 
-#: ../data/soundconverter.glade.h:88
+#: ../data/soundconverter.glade.h:85
 msgid "~xxx kbps"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:86
+msgid ""
+"© 2004 Lars Wirzenius <liw@iki.fi>\n"
+"© 2005-2011 Gautier Portet <gautier@soundconverter.org>"
 msgstr ""
 
 #: ../bin/soundconverter.py:98
@@ -431,61 +435,232 @@ msgstr ""
 msgid "Show GStreamer Options"
 msgstr ""
 
-#~ msgid "Artist Album Title Track Total Genre Date Year"
-#~ msgstr "Artis Album Tajuk Trek Jumlah Genre Tarikh Tahun"
+#: ../soundconverter/error.py:37
+msgid "Target exists."
+msgstr "Sasaran wujud."
+
+#: ../soundconverter/error.py:38
+#, python-format
+msgid "The output file %s already exists."
+msgstr "File keluaran %s telah pun wujud."
+
+#: ../soundconverter/error.py:44
+msgid "Internal error"
+msgstr "Ralat dalaman"
+
+#: ../soundconverter/error.py:45
+msgid ""
+"Couldn't link GStreamer elements.\n"
+" Please report this as a bug."
+msgstr ""
+"Tidak dapat merangkaikan elemen GStreamer.\n"
+" Sila laporkan pepijat ini."
+
+#: ../soundconverter/error.py:53
+#, python-format
+msgid "Unknown type %s"
+msgstr "Jenis tidak dikenali %s"
+
+#: ../soundconverter/error.py:54
+#, python-format
+msgid ""
+"The file %s is of an unknown type.\n"
+" Please ask the developers to add support\n"
+" for files of this type if it is important\n"
+" to you."
+msgstr ""
+"File %s adalah tidak dikenali jenisnya.\n"
+" Sila minta kepada pembangun supaya menambah sokongan\n"
+" untuk file ini sekiranya ia adalah penting\n"
+" kepada anda."
+
+#: ../soundconverter/error.py:63
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"Ralat: %s\n"
+"%s\n"
+
+#: ../soundconverter/gstreamer.py:496
+#, python-format
+msgid "Cannot create a decoder for '%s' format."
+msgstr "Tidak dapat membina dekoder untuk format %s."
+
+#: ../soundconverter/gstreamer.py:513
+#, python-format
+msgid "Cannot create '%s' folder."
+msgstr "Tidak dapat membuat folder '%s'"
+
+#. pass
+#: ../soundconverter/gstreamer.py:555
+msgid "GStreamer Error:"
+msgstr ""
+
+#: ../soundconverter/gstreamer.py:639
+#, fuzzy
+msgid "Conversion Canceled"
+msgstr "Pertukaran dibatalkan"
+
+#: ../soundconverter/gstreamer.py:646
+#, fuzzy
+msgid "Conversion Error"
+msgstr "Pertikaran selesai, dalam %s"
+
+#: ../soundconverter/gstreamer.py:679
+#, python-format
+msgid "Access denied: '%s'"
+msgstr ""
+
+#: ../soundconverter/gstreamer.py:695
+msgid "Cannot overwrite source file(s)!"
+msgstr ""
+
+#: ../soundconverter/gstreamer.py:708
+#, python-format
+msgid ""
+"The output file <i>%s</i>\n"
+" exists already.\n"
+" Do you want to skip the file, overwrite it or cancel the conversion?\n"
+msgstr ""
+"File aliran keluar <i>%s</i>\n"
+" tekah wujud.\n"
+" Adakah anda mahu melompat file ini, menindihnya atau membatalkan "
+"pertukaran ?\n"
+
+#: ../soundconverter/gstreamer.py:819
+#, python-format
+msgid "Conversion done, in %s"
+msgstr "Pertikaran selesai, dalam %s"
+
+#. traductors: These are the custom filename patterns. Only if it makes sense.
+#: ../soundconverter/settings.py:43
+#, fuzzy
+msgid ""
+"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
+"DiscTotal Ext"
+msgstr "Artis Album Tajuk Trek Jumlah Genre Tarikh Tahun"
+
+#: ../soundconverter/settings.py:80
+msgid "All files"
+msgstr ""
+
+#: ../soundconverter/ui.py:113 ../soundconverter/ui.py:129
+#, fuzzy, python-format
+msgid ""
+"\n"
+"Error: %s\n"
+"%s\n"
+msgstr ""
+"\n"
+"\n"
+"Ralat: %s\n"
+"%s\n"
+
+#: ../soundconverter/ui.py:219
+#, fuzzy
+msgid "Adding files..."
+msgstr "memuatkan tanda..."
+
+#: ../soundconverter/ui.py:361
+msgid "Same as input, but replacing the suffix"
+msgstr "Sama seperti aliranmasuk, tetapi menggantikan kata awalan"
+
+#: ../soundconverter/ui.py:363
+msgid "Same as input, but with an additional suffix"
+msgstr "Sama seperti aliranmasuk, tetapi menambah kata awalan"
+
+#: ../soundconverter/ui.py:364
+msgid "Track number - title"
+msgstr "Nombor trek - tajuk"
+
+#: ../soundconverter/ui.py:365
+#, fuzzy
+msgid "Track title"
+msgstr "Tajuk trek"
+
+#: ../soundconverter/ui.py:366
+msgid "Artist - title"
+msgstr "Artis - tajuk"
+
+#: ../soundconverter/ui.py:367
+msgid "Custom filename pattern"
+msgstr "Paten nama file sendiri"
+
+#: ../soundconverter/ui.py:372
+msgid "artist-album"
+msgstr "artis-album"
+
+#: ../soundconverter/ui.py:428
+#, fuzzy
+msgid "Available patterns:"
+msgstr "Paten nama file: "
+
+#: ../soundconverter/ui.py:600
+#, python-format
+msgid "Into folder %s"
+msgstr "Kedalam folder %s"
+
+#: ../soundconverter/ui.py:677
+#, python-format
+msgid "Target bitrate: %s"
+msgstr "Kadar bit sasaran: %s"
+
+#: ../soundconverter/ui.py:1010
+#, fuzzy
+msgid "Open a file"
+msgstr "Buka fail"
+
+#. self.progressfile = glade.get_widget('progressfile')
+#: ../soundconverter/ui.py:1105
+msgid "Add Folder..."
+msgstr "Tambah Folder..."
+
+#: ../soundconverter/ui.py:1283
+#, fuzzy
+msgid "Reading tags..."
+msgstr "memuatkan tanda..."
+
+#: ../soundconverter/ui.py:1297
+#, fuzzy
+msgid "Conversion cancelled"
+msgstr "Pertukaran dibatalkan"
+
+#: ../soundconverter/ui.py:1300
+msgid "Error when converting"
+msgstr ""
+
+#: ../soundconverter/ui.py:1314
+msgid "Converting"
+msgstr "Menukar"
+
+#: ../soundconverter/ui.py:1334
+msgid "Canceled"
+msgstr "Batal"
+
+#: ../soundconverter/ui.py:1406
+msgid "Paused"
+msgstr "Rehat"
+
+#: ../soundconverter/ui.py:1423
+#, python-format
+msgid "%d:%02d left"
+msgstr "%d:%02d tinggal"
+
+#: ../soundconverter/ui.py:1429
+msgid "Ready"
+msgstr "Sedia"
 
 #~ msgid "skipping: '%s'"
 #~ msgstr "melompat: '%s'"
 
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Error: %s\n"
-#~ "%s\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Ralat: %s\n"
-#~ "%s\n"
-
-#~ msgid "Internal error"
-#~ msgstr "Ralat dalaman"
-
-#~ msgid ""
-#~ "Couldn't link GStreamer elements.\n"
-#~ " Please report this as a bug."
-#~ msgstr ""
-#~ "Tidak dapat merangkaikan elemen GStreamer.\n"
-#~ " Sila laporkan pepijat ini."
-
-#~ msgid "Unknown type %s"
-#~ msgstr "Jenis tidak dikenali %s"
-
-#~ msgid ""
-#~ "The file %s is of an unknown type.\n"
-#~ " Please ask the developers to add support\n"
-#~ " for files of this type if it is important\n"
-#~ " to you."
-#~ msgstr ""
-#~ "File %s adalah tidak dikenali jenisnya.\n"
-#~ " Sila minta kepada pembangun supaya menambah sokongan\n"
-#~ " untuk file ini sekiranya ia adalah penting\n"
-#~ " kepada anda."
-
-#~ msgid "Target exists."
-#~ msgstr "Sasaran wujud."
-
-#~ msgid "The output file %s already exists."
-#~ msgstr "File keluaran %s telah pun wujud."
-
-#~ msgid "Cannot create a decoder for '%s' format."
-#~ msgstr "Tidak dapat membina dekoder untuk format %s."
-
 #~ msgid "Creating folder: '%s'"
 #~ msgstr "Membina folder: '%s'"
-
-#~ msgid "Cannot create '%s' folder."
-#~ msgstr "Tidak dapat membuat folder '%s'"
 
 #~ msgid "Cannot set permission on '%s'"
 #~ msgstr "Tidak dapat menetapkan kebenaran pada '%s'"
@@ -493,57 +668,11 @@ msgstr ""
 #~ msgid "file already present: '%s'"
 #~ msgstr "file telah muncul: '%s'"
 
-#~ msgid "loading tags..."
-#~ msgstr "memuatkan tanda..."
-
 #~ msgid "no tags"
 #~ msgstr "tiada tanda"
 
 #~ msgid "unknown"
 #~ msgstr "tidak diketahui"
-
-#~ msgid "Same as input, but replacing the suffix"
-#~ msgstr "Sama seperti aliranmasuk, tetapi menggantikan kata awalan"
-
-#~ msgid "Same as input, but with an additional suffix"
-#~ msgstr "Sama seperti aliranmasuk, tetapi menambah kata awalan"
-
-#~ msgid "Track number - title"
-#~ msgstr "Nombor trek - tajuk"
-
-#~ msgid "Artist - title"
-#~ msgstr "Artis - tajuk"
-
-#~ msgid "Custom filename pattern"
-#~ msgstr "Paten nama file sendiri"
-
-#~ msgid "artist-album"
-#~ msgstr "artis-album"
-
-#~ msgid "Into folder %s"
-#~ msgstr "Kedalam folder %s"
-
-#~ msgid "Target bitrate: %s"
-#~ msgstr "Kadar bit sasaran: %s"
-
-#~ msgid "Convertion Canceled"
-#~ msgstr "Pertukaran dibatalkan"
-
-#~ msgid ""
-#~ "The output file <i>%s</i>\n"
-#~ " exists already.\n"
-#~ " Do you want to skip the file, overwrite it or cancel the conversion?\n"
-#~ msgstr ""
-#~ "File aliran keluar <i>%s</i>\n"
-#~ " tekah wujud.\n"
-#~ " Adakah anda mahu melompat file ini, menindihnya atau membatalkan "
-#~ "pertukaran ?\n"
-
-#~ msgid "Conversion done, in %s"
-#~ msgstr "Pertikaran selesai, dalam %s"
-
-#~ msgid "Add Folder..."
-#~ msgstr "Tambah Folder..."
 
 #~ msgid "canceling conversion."
 #~ msgstr "membatalkan pertukaran."
@@ -554,23 +683,8 @@ msgstr ""
 #~ msgid "Waiting for tags..."
 #~ msgstr "Menunggu untuk data"
 
-#~ msgid "Paused"
-#~ msgstr "Rehat"
-
-#~ msgid "Canceled"
-#~ msgstr "Batal"
-
 #~ msgid "Converting file %d of %d  (%s)"
 #~ msgstr "Menukar file %d daripada %d  (%s)"
-
-#~ msgid "Converting"
-#~ msgstr "Menukar"
-
-#~ msgid "%d:%02d left"
-#~ msgstr "%d:%02d tinggal"
-
-#~ msgid "Ready"
-#~ msgstr "Sedia"
 
 #~ msgid "%s: OK"
 #~ msgstr "%s: Baik"
