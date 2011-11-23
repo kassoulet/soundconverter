@@ -110,10 +110,6 @@ class TargetNameGenerator:
                     s += c
             result = s
 
-        #print 'folder:', self.folder
-        #print 'root:', root
-        #print 'basefolder:', basefolder
-        #print 'result:', result
         if self.folder is None:
             folder = root
         else:

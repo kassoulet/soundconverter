@@ -1026,7 +1026,7 @@ class CustomFileChooser:
         self.combo.pack_start(combo_rend, True)
         self.combo.add_attribute(combo_rend, 'text', 0)
 
-        # get all (gstreamer) knew files Todo
+        # TODO: get all (gstreamer) knew files
         for name, pattern in filepattern:
             self.add_pattern(name, pattern)
         self.combo.set_active(0)
@@ -1110,14 +1110,13 @@ class SoundConverterWindow(GladeWindow):
         #TODO self.addfolderchooser.set_local_only(not use_gnomevfs)
 
         self.combo = gtk.ComboBox()
-        #self.combo.connect('changed',self.on_combo_changed)
         self.store = gtk.ListStore(str)
         self.combo.set_model(self.store)
         combo_rend = gtk.CellRendererText()
         self.combo.pack_start(combo_rend, True)
         self.combo.add_attribute(combo_rend, 'text', 0)
 
-        # get all (gstreamer) knew files Todo
+        # TODO: get all (gstreamer) knew files
         for files in filepattern:
             self.store.append(['%s (%s)' % (files[0], files[1])])
 
@@ -1129,8 +1128,6 @@ class SoundConverterWindow(GladeWindow):
         self.aboutdialog.set_transient_for(self.widget)
 
         self.converter = ConverterQueue(self)
-
-        self._lock_convert_button = False
 
         self.sensitive_widgets = {}
         for name in self.sensitive_names:
@@ -1292,8 +1289,7 @@ class SoundConverterWindow(GladeWindow):
                     self.converter.add(sound_file)
 
             while not self.ready_to_convert:
-                print 'waiting...'
-                gtk_sleep(1)
+                gtk_sleep(0.1)
 
         except ConverterQueueCanceled:
             log('cancelling conversion.')
@@ -1301,7 +1297,7 @@ class SoundConverterWindow(GladeWindow):
             self.set_status(_('Conversion cancelled'))
         except ConverterQueueError:
             self.conversion_ended()
-            self.set_status(_('ERROR TODO'))
+            self.set_status(_('Error when converting'))
         else:
             self.set_status('')
             self.converter.start()
@@ -1309,31 +1305,21 @@ class SoundConverterWindow(GladeWindow):
         return False
 
     def on_convert_button_clicked(self, *args):
-        if self._lock_convert_button:
-            return
-
-        if not self.converter.running:
-            self.set_progress(0)
-            self.progress_frame.show()
-            self.status_frame.hide()
-            self.progress_time = time.time()
-            self.set_progress()
-
-            self.set_status(_('Converting'))
-
-            self.do_convert()
-        else: # TODO: really ?
-            self.converter.paused = not self.converter.paused
-            if self.converter.paused:
-                self.set_status(_('Paused'))
-            else:
-                self.set_status(_('Converting'))
+        # reset and show progress bar
+        self.set_progress(0)
+        self.progress_frame.show()
+        self.status_frame.hide()
+        self.progress_time = time.time()
+        self.set_progress()
+        self.set_status(_('Converting'))
+        # start conversion
+        self.do_convert()
+        # update ui
         self.set_sensitive()
 
     def on_button_pause_clicked(self, *args):
         tasks = self.converter.running_tasks
         if not tasks:
-            print 'no tasks to pause'
             return
         self.converter.paused = not self.converter.paused
         for task in tasks:
@@ -1395,10 +1381,11 @@ class SoundConverterWindow(GladeWindow):
         for w in self.unsensitive_when_converting:
             self.set_widget_sensitive(w, not self.converter.running)
 
-        self.set_widget_sensitive('remove',
-            self.filelist_selection.count_selected_rows() > 0)
-        self.set_widget_sensitive('convert_button',
-                                    self.filelist.is_nonempty())
+        if not self.converter.running:
+            self.set_widget_sensitive('remove',
+                self.filelist_selection.count_selected_rows() > 0)
+            self.set_widget_sensitive('convert_button',
+                                        self.filelist.is_nonempty())
 
     def set_file_progress(self, sound_file, progress):
         row = sound_file.filelist_row
@@ -1432,19 +1419,6 @@ class SoundConverterWindow(GladeWindow):
         r = (t / fraction - t)
         s = max(r % 60, 1)
         m = r / 60
-
-        try:
-            pass
-            import gi
-            #unity = gi.module.gi._gi.Repository.get_default().enumerate_versions('Unity')
-            # or silence logging.error
-            from gi.repository import Unity
-            launcher = Unity.LauncherEntry.get_for_desktop_id ("soundconverter.desktop")
-            launcher.set_property("progress", fraction)
-            launcher.set_property("progress_visible", True)
-        except ImportError:
-            #print 'import error'
-            pass
 
         remaining = _('%d:%02d left') % (m, s)
         self.progressbar.set_text(remaining)

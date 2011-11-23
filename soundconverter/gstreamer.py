@@ -677,14 +677,14 @@ class ConverterQueue(TaskQueue):
         except gnomevfs.AccessDeniedError:
             self.error_count += 1
             msg = _('Access denied: \'%s\'' % output_filename)
-            log(msg) # TODO
+            log(msg)
             show_error(msg, '')
             raise ConverterQueueError()
             return
         except:
             self.error_count += 1
             msg = 'Invalid URI: \'%s\'' % output_filename
-            log(msg) # TODO
+            log(msg)
             show_error(msg, '')
             raise ConverterQueueError()
             return
@@ -761,9 +761,6 @@ class ConverterQueue(TaskQueue):
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
-        #c.got_duration = False
-        #self.total_duration += c.get_duration()
-
 
     def _get_progress(self, task):
         return (self.duration_processed +
@@ -792,7 +789,7 @@ class ConverterQueue(TaskQueue):
         s = []
         prolist = []
         for task in range(self.finished_tasks):
-            prolist.append(1.0) #TODO !!
+            prolist.append(1.0)
         for task in tasks:
             if task.converting:
                 position += task.get_position()
@@ -813,12 +810,9 @@ class ConverterQueue(TaskQueue):
             self.error_count += 1
 
     def finished(self):
-        #print 'ConverterQueue.finished', self
         if self.running_tasks:
-            print self.running_tasks
-            raise NotImplementedError
+            raise RuntimeError
         TaskQueue.finished(self)
-        #self.window.set_progress()
         self.window.set_sensitive()
         self.window.conversion_ended()
         total_time = self.run_finish_time - self.run_start_time
@@ -847,7 +841,6 @@ class ConverterQueue(TaskQueue):
 
     def abort(self):
         TaskQueue.abort(self)
-        #self.window.set_progress(0)
         self.window.set_sensitive()
         self.reset_counters()
 

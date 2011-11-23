@@ -47,8 +47,7 @@ class SoundFile:
             self.base_path += '/'
 
         self.tags = {}
-        #self.have_tags = False
-        self.tags_read = False # TODO
+        self.tags_read = False
         self.duration = None
         self.mime_type = None
 
