@@ -782,11 +782,8 @@ class ConverterQueue(TaskQueue):
                 if duration:
                     self.total_duration += duration
                     task.got_duration = True
-                else:
-                    total_duration = 0
 
         position = 0.0
-        s = []
         prolist = []
         for task in range(self.finished_tasks):
             prolist.append(1.0)

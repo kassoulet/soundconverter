@@ -25,7 +25,6 @@ SoundConverter Launcher.
 
 import os
 import sys
-import string
 import locale
 import gettext
 from optparse import OptionParser
@@ -46,10 +45,10 @@ locale.setlocale(locale.LC_ALL,'')
 gettext.textdomain(PACKAGE)
 gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
 
+from gettext import gettext as _
 
 def _add_soundconverter_path():
     global localedir
-    folder = os.path.dirname(os.path.abspath(__file__))
     root = os.path.join(LIBDIR, 'soundconverter', 'python')
 
     if not root in sys.path:

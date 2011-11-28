@@ -32,6 +32,7 @@ from gettext import gettext as _
 from gconfstore import GConfStore
 from fileoperations import filename_to_uri, beautify_uri
 from fileoperations import unquote_filename, vfs_walk
+from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue, ConverterQueueCanceled, ConverterQueueError
 from gstreamer import available_elements, TypeFinder, TagReader
 from soundfile import SoundFile
@@ -1012,7 +1013,7 @@ class CustomFileChooser:
 
         # setup
         self.fcw = builder.get_object('filechooserwidget')
-        #TODO self.fcw.set_local_only(not use_gnomevfs)
+        self.fcw.set_local_only(not use_gnomevfs)
         self.fcw.set_select_multiple(True)
 
         self.pattern = []
@@ -1100,14 +1101,13 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog = builder.get_object('existsdialog')
         self.existsdialog.message = builder.get_object('exists_message')
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
-        #self.progressfile = glade.get_widget('progressfile')
 
         self.addfolderchooser = gtk.FileChooserDialog(_('Add Folder...'),
             self.widget, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
             gtk.RESPONSE_OK))
         self.addfolderchooser.set_select_multiple(True)
-        #TODO self.addfolderchooser.set_local_only(not use_gnomevfs)
+        self.addfolderchooser.set_local_only(not use_gnomevfs)
 
         self.combo = gtk.ComboBox()
         self.store = gtk.ListStore(str)
