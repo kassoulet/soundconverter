@@ -11,7 +11,7 @@ DISTCLEANFILES = intltool-extract.in intltool-merge.in intltool-update.in intlto
 
 
 release: changelog dist
-	echo git tag -a $(VERSION)
+	echo git tag -a $(VERSION) -m release-$(VERSION)
 	echo git push --tags 
 	echo lp-project-upload soundconverter $(VERSION) soundconverter-$(VERSION).tar.xz
 
