@@ -1244,7 +1244,7 @@ class SoundConverterWindow(GladeWindow):
     def read_tags(self, sound_file):
         if sound_file.tags_read: # TODO: factorize
             self.converter.add(sound_file)
-            self.ready_to_convert += 1
+            self.pulse_progress += 1
             return
 
         tagreader = TagReader(sound_file)
@@ -1254,10 +1254,10 @@ class SoundConverterWindow(GladeWindow):
     def tags_read(self, tagreader):
         sound_file = tagreader.get_sound_file()
         self.converter.add(sound_file)
-        self.ready_to_convert += 1
+        self.pulse_progress += 1
 
     def on_progress(self):
-        if not self.ready_to_convert: # still waiting for tags
+        if self.pulse_progress: # still waiting for tags
             self.set_progress()
             return True
 
@@ -1276,8 +1276,7 @@ class SoundConverterWindow(GladeWindow):
 
     def do_convert(self):
         try:
-
-            self.ready_to_convert = 0
+            self.pulse_progress = True
             gobject.timeout_add(100, self.on_progress)
             if self.prefs.require_tags:
                 self.set_status(_('Reading tags...'))
@@ -1285,11 +1284,8 @@ class SoundConverterWindow(GladeWindow):
                 if self.prefs.require_tags:
                     self.read_tags(sound_file)
                 else:
-                    self.ready_to_convert += 1
                     self.converter.add(sound_file)
-
-            while not self.ready_to_convert:
-                gtk_sleep(0.1)
+                    self.pulse_progress = False
 
         except ConverterQueueCanceled:
             log('cancelling conversion.')
@@ -1361,6 +1357,7 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def conversion_ended(self):
+        self.pulse_progress = False
         self.progress_frame.hide()
         self.filelist.hide_row_progress()
         self.status_frame.show()
