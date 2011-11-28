@@ -770,7 +770,6 @@ class ConverterQueue(TaskQueue):
         tasks = self.running_tasks
 
         # try to get all tasks durations
-        total_duration = self.total_duration
         if not self.all_tasks:
             self.all_tasks = []
             self.all_tasks.extend(self.waiting_tasks)

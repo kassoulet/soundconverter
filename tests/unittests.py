@@ -10,9 +10,9 @@ from soundconverter.soundfile import SoundFile
 from soundconverter.fileoperations import filename_to_uri
 
 def quote(ss):
-	if isinstance(ss, unicode):
-		ss = ss.encode('utf-8')
-	return urllib.quote(ss)
+    if isinstance(ss, unicode):
+        ss = ss.encode('utf-8')
+    return urllib.quote(ss)
 
 class FilenameToUriTest(unittest.TestCase):
 
@@ -61,11 +61,11 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
                              "/path/to/file.ogg")
 
     def testNoSuffix(self):
-    	try:
-    		self.g.get_target_name(self.s)
-    	except AssertionError:
-    		return # ok
-    	assert False
+        try:
+            self.g.get_target_name(self.s)
+        except AssertionError:
+            return # ok
+        assert False
 
     def testNoExtension(self):
         self.g.suffix = ".ogg"
