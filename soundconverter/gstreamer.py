@@ -168,6 +168,7 @@ class Pipeline(BackgroundTask):
             self.parsed = False
             self.duration = None
             self.finished()
+            vfs_unlink(self.output_filename)
             self.play()
             return
         self.done()
