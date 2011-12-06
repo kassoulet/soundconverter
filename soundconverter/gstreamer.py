@@ -135,6 +135,7 @@ class Pipeline(BackgroundTask):
     def finished(self):
         for element, sid in self.connected_signals:
             element.disconnect(sid)
+        self.connected_signals = []
         self.stop_pipeline()
 
     def abort(self):
@@ -161,9 +162,12 @@ class Pipeline(BackgroundTask):
         pass
 
     def install_plugin_cb(self, result):
-        if result == gst.pbutils.INSTALL_PLUGINS_SUCCESS:
+        if result in (gst.pbutils.INSTALL_PLUGINS_SUCCESS,
+                      gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
             gst.update_registry()
             self.parsed = False
+            self.duration = None
+            self.finished()
             self.play()
             return
         self.done()
@@ -229,8 +233,7 @@ class Pipeline(BackgroundTask):
                     self.connected_signals.append((element, sid,))
 
                 self.parsed = True
-                del self.command
-                del self.signals
+
             except gobject.GError, e:
                 show_error('GStreamer error when creating pipeline', str(e))
                 self.error = str(e)
@@ -252,7 +255,7 @@ class Pipeline(BackgroundTask):
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
         self.pipeline.set_state(gst.STATE_NULL)
-        self.pipeline = None
+        #self.pipeline = None
 
     def get_position(self):
         return NotImplementedError
@@ -331,7 +334,7 @@ class Decoder(Pipeline):
                                             gst.FORMAT_TIME)[0] / gst.SECOND
                 debug('got file duration:', self.sound_file.duration)
         except gst.QueryError:
-            pass
+            self.sound_file.duration = None
 
     def found_tag(self, decoder, something, taglist):
         debug('found_tags:', self.sound_file.filename_for_display)
@@ -371,12 +374,10 @@ class Decoder(Pipeline):
         """buffer probe callback used to get real time
            since the beginning of the stream"""
         if buffer.timestamp == gst.CLOCK_TIME_NONE:
-            debug('removing buffer probe')
             pad.remove_buffer_probe(self.probe_id)
             return False
 
         self.position = float(buffer.timestamp) / gst.SECOND
-
         return True
 
     def new_decoded_pad(self, decoder, pad, is_last):
@@ -447,8 +448,6 @@ class Converter(Decoder):
                     resample_rate=48000, force_mono=False):
         Decoder.__init__(self, sound_file)
 
-        self.converting = True
-
         self.output_filename = output_filename
         self.output_type = output_type
         self.vorbis_quality = None
@@ -475,7 +474,6 @@ class Converter(Decoder):
             'audio/x-m4a': self.add_aac_encoder,
             'gst-profile': self.add_audio_profile,
         }
-
         self.add_command('audioconvert ! audiorate')
 
         # audio resampling support
@@ -523,12 +521,14 @@ class Converter(Decoder):
             vfs_unlink(self.output_filename)
 
     def finished(self):
-        self.converting = False
         Pipeline.finished(self)
 
         if self.aborted:
             # remove partial file
-            gnomevfs.unlink(self.output_filename)
+            try:
+                gnomevfs.unlink(self.output_filename)
+            except:
+                pass
             return
 
         # Copy file permissions
@@ -762,10 +762,6 @@ class ConverterQueue(TaskQueue):
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
 
-    def _get_progress(self, task):
-        return (self.duration_processed +
-                    task.get_position()) / self.total_duration
-
     def get_progress(self, per_file_progress):
         tasks = self.running_tasks
 
@@ -776,18 +772,17 @@ class ConverterQueue(TaskQueue):
             self.all_tasks.extend(self.running_tasks)
 
         for task in self.all_tasks:
-            if not task.got_duration:
-                duration = task.sound_file.duration
+            if task.sound_file.duration is None:
+                duration = task.get_duration()
                 if duration:
                     self.total_duration += duration
-                    task.got_duration = True
 
         position = 0.0
         prolist = []
-        for task in range(self.finished_tasks):
+        for task in range(self.finished_tasks): # TODO: use the add, luke
             prolist.append(1.0)
         for task in tasks:
-            if task.converting:
+            if task.running:
                 position += task.get_position()
                 taskprogress = float(task.get_position()) / task.sound_file.duration if task.sound_file.duration else 0
                 prolist.append(taskprogress)
@@ -800,7 +795,9 @@ class ConverterQueue(TaskQueue):
         return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
-        self.duration_processed += task.get_duration()
+        duration = task.get_duration()
+        if duration:
+            self.duration_processed += duration
         self.errors.append(task.error)
         if task.error:
             self.error_count += 1
