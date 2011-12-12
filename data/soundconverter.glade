@@ -1794,7 +1794,7 @@
                 <property name="can_focus">False</property>
                 <property name="spacing">4</property>
                 <child>
-                  <object class="GtkCheckButton" id="force-mono">
+                  <object class="GtkCheckButton" id="force_mono">
                     <property name="label" translatable="yes">Force mono output</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>

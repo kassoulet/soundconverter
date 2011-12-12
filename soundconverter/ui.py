@@ -405,7 +405,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
     }
 
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
-                         'subfolder_pattern', 'jobs_spinbutton']
+                       'subfolder_pattern', 'jobs_spinbutton', 'resample_toggle',
+                       'force_mono']
 
     def __init__(self, builder, parent):
         GladeWindow.__init__(self, builder)
@@ -414,7 +415,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.dialog = builder.get_object('prefsdialog')
         self.dialog.set_transient_for(parent)
         self.example = builder.get_object('example_filename')
-        self.force_mono = builder.get_object('force-mono')
+        self.force_mono = builder.get_object('force_mono')
 
         self.target_bitrate = None
         self.convert_setting_from_old_version()
@@ -738,6 +739,13 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
             self.get_int('limit-jobs'))
+
+        if self.get_string('output-mime-type') == 'gst-profile':
+            self.sensitive_widgets['resample_toggle'].set_sensitive(False)
+            self.sensitive_widgets['force_mono'].set_sensitive(False)
+        else:
+            self.sensitive_widgets['resample_toggle'].set_sensitive(True)
+            self.sensitive_widgets['force_mono'].set_sensitive(True)
 
     def run(self):
         self.dialog.run()

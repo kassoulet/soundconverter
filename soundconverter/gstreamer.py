@@ -482,6 +482,7 @@ class Converter(Decoder):
         # audio resampling support
         if self.output_resample:
             self.add_command('audio/x-raw-int,rate=%d' % self.resample_rate)
+            self.add_command('audioresample')
             self.add_command('audioconvert')
 
         if self.force_mono:
