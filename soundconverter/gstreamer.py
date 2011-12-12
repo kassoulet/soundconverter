@@ -475,15 +475,18 @@ class Converter(Decoder):
             'audio/x-m4a': self.add_aac_encoder,
             'gst-profile': self.add_audio_profile,
         }
-        self.add_command('audioconvert ! audiorate')
+        self.add_command('audiorate')
+        self.add_command('audioresample')
+        self.add_command('audioconvert')
 
         # audio resampling support
         if self.output_resample:
-            self.add_command('audioresample ! rate=%d ! audioconvert' %
-                     self.resample_rate)
+            self.add_command('audio/x-raw-int,rate=%d' % self.resample_rate)
+            self.add_command('audioconvert')
 
         if self.force_mono:
-            self.add_command('audioresample ! channels=1 ! audioconvert')
+            self.add_command('audio/x-raw-int,channels=1')
+            self.add_command('audioconvert')
 
         encoder = self.encoders[self.output_type]()
         if not encoder:
@@ -582,7 +585,7 @@ class Converter(Decoder):
         return s
 
     def add_wav_encoder(self):
-        return 'audio/x-raw-int,width=%d ! audioconvert ! wavenc' % (
+        return 'audio/x-raw-int,width=%d ! wavenc' % (
                 self.wav_sample_width)
 
     def add_oggvorbis_encoder(self):
