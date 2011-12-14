@@ -31,8 +31,6 @@ desktop_files=$(desktop_in_files:.desktop.in=.desktop)
 Applicationsdir = $(datadir)/applications
 Applications_DATA = $(desktop_files)
 
-EXTRA_DIST = soundconverter.gladep \
-        $(desktop_in_files)     \
-        $(desktop_files)
+EXTRA_DIST = $(desktop_in_files) $(desktop_files)
 
 DISTCLEANFILES = $(desktop_files)

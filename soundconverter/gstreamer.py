@@ -598,7 +598,7 @@ class Converter(Decoder):
 
     def add_mp3_encoder(self):
 
-        cmd = 'lame quality=2 '
+        cmd = 'lame quality=2 ' # DEPRECATED !
 
         if self.mp3_mode is not None:
             properties = {

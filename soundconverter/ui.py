@@ -566,7 +566,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.resample_toggle.set_active(self.get_int('output-resample'))
             self.resample_rate.set_sensitive(True)
             rates = [11025, 22050, 44100, 48000, 72000, 96000, 128000]
-            self.resample_rate_entry.set_text('%d' % (self.get_int('resample-rate')))
+            #self.resample_rate_entry.set_text('%d' % (self.get_int('resample-rate')))
             rate = self.get_int('resample-rate')
             try:
                 idx = rates.index(rate)

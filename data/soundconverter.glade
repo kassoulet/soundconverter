@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="2.20"/>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -9,7 +8,7 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">normal</property>
     <property name="program_name">SoundConverter</property>
-    <property name="copyright" translatable="no">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
+    <property name="copyright">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
 © 2005-2011 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">GNOME-powered Sound Conversion</property>
     <property name="website">http://soundconverter.org</property>
@@ -18,12 +17,13 @@
     <property name="logo">soundconverter-logo.svg</property>
     <signal name="response" handler="on_aboutdialog_response" swapped="no"/>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox1">
+      <object class="GtkBox" id="dialog-vbox1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area1">
+          <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -73,13 +73,14 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox8">
+      <object class="GtkBox" id="dialog-vbox8">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area8">
+          <object class="GtkButtonBox" id="dialog-action_area8">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="cancelbutton1">
@@ -186,11 +187,12 @@
     <property name="type_hint">dialog</property>
     <property name="urgency_hint">True</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox6">
+      <object class="GtkBox" id="dialog-vbox6">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area6">
+          <object class="GtkButtonBox" id="dialog-action_area6">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -301,11 +303,12 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox3">
+      <object class="GtkBox" id="dialog-vbox3">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area3">
+          <object class="GtkButtonBox" id="dialog-action_area3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -498,35 +501,6 @@
     <property name="step_increment">1</property>
     <property name="page_increment">1</property>
   </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="no">11025</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">22050</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">44100</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">48000</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">72000</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">96000</col>
-      </row>
-      <row>
-        <col id="0" translatable="no">128000</col>
-      </row>
-    </data>
-  </object>
   <object class="GtkListStore" id="liststore10">
     <columns>
       <!-- column-name item -->
@@ -714,6 +688,35 @@
       </row>
     </data>
   </object>
+  <object class="GtkListStore" id="liststore_resample">
+    <columns>
+      <!-- column-name gchararray1 -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">11025</col>
+      </row>
+      <row>
+        <col id="0">22050</col>
+      </row>
+      <row>
+        <col id="0">44100</col>
+      </row>
+      <row>
+        <col id="0">48000</col>
+      </row>
+      <row>
+        <col id="0">72000</col>
+      </row>
+      <row>
+        <col id="0">96000</col>
+      </row>
+      <row>
+        <col id="0">128000</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkDialog" id="prefsdialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Preferences</property>
@@ -721,11 +724,11 @@
     <property name="icon_name">soundconverter</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox7">
+      <object class="GtkBox" id="dialog-vbox7">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area7">
+          <object class="GtkButtonBox" id="dialog-action_area7">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -1016,8 +1019,6 @@
                                 <property name="invisible_char">●</property>
                                 <property name="primary_icon_activatable">False</property>
                                 <property name="secondary_icon_activatable">False</property>
-                                <property name="primary_icon_sensitive">True</property>
-                                <property name="secondary_icon_sensitive">True</property>
                                 <signal name="changed" handler="on_custom_filename_changed" swapped="no"/>
                               </object>
                               <packing>
@@ -1074,7 +1075,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="no">label27</property>
+                                <property name="label">label27</property>
                                 <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="ellipsize">start</property>
@@ -1397,8 +1398,6 @@
                                         <property name="invisible_char">●</property>
                                         <property name="primary_icon_activatable">False</property>
                                         <property name="secondary_icon_activatable">False</property>
-                                        <property name="primary_icon_sensitive">True</property>
-                                        <property name="secondary_icon_sensitive">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -1690,7 +1689,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="no">~xxx kbps</property>
+                            <property name="label">~xxx kbps</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1741,31 +1740,23 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxEntry" id="resample_rate">
+                  <object class="GtkComboBox" id="resample_rate">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
-                    <property name="model">liststore1</property>
+                    <property name="model">liststore_resample</property>
+                    <property name="has_entry">True</property>
+                    <property name="entry_text_column">0</property>
                     <signal name="changed" handler="on_resample_rate_changed" swapped="no"/>
-                    <child>
-                      <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                      <attributes>
-                        <attribute name="text">0</attribute>
-                      </attributes>
-                    </child>
                     <child internal-child="entry">
-                      <object class="GtkEntry" id="comboboxentry-entry2">
+                      <object class="GtkEntry" id="resample_rate_entry">
                         <property name="can_focus">False</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
+                        <property name="text" translatable="yes">11025</property>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -1848,8 +1839,6 @@
                     <property name="invisible_char">•</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">jobs_adjustment</property>
                     <property name="climb_rate">1</property>
                     <signal name="value-changed" handler="on_jobs_spinbutton_value_changed" swapped="no"/>
@@ -1990,12 +1979,13 @@
     <property name="action">select-folder</property>
     <property name="local_only">False</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox5">
+      <object class="GtkBox" id="dialog-vbox5">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">24</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area5">
+          <object class="GtkButtonBox" id="dialog-action_area5">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -2311,6 +2301,7 @@
             </child>
             <child>
               <object class="GtkSeparatorToolItem" id="separatortoolitem2">
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>
               <packing>
@@ -2319,6 +2310,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="prefs_button">
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
                 <property name="is_important">True</property>
@@ -2354,8 +2346,6 @@
           <object class="GtkScrolledWindow" id="scrolledwindow2">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
             <child>
               <object class="GtkTreeView" id="filelist">
                 <property name="visible">True</property>
@@ -2364,6 +2354,9 @@
                 <property name="headers_visible">False</property>
                 <property name="headers_clickable">False</property>
                 <property name="rules_hint">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection" id="treeview-selection1"/>
+                </child>
               </object>
             </child>
           </object>
@@ -2457,7 +2450,7 @@
                   <object class="GtkLabel" id="progressfile">
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="no">current file</property>
+                    <property name="label">current file</property>
                     <property name="ellipsize">middle</property>
                     <property name="single_line_mode">True</property>
                   </object>

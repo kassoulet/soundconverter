@@ -16,6 +16,6 @@ release: changelog dist
 	echo lp-project-upload soundconverter $(VERSION) soundconverter-$(VERSION).tar.xz
 
 # generate the changelog from git log
-#changelog:
-#	git log 3fd8.. --pretty --numstat --summary | ./git2cl.pl > ChangeLog
-#	cat ChangeLog.old >> ChangeLog
+changelog:
+	git log 3fd8.. --pretty --numstat --summary | ./git2cl.pl > ChangeLog
+	cat ChangeLog.old >> ChangeLog

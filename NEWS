@@ -1,0 +1,34 @@
+
+Version 2.0-rc2
+===============
+
+Automatic codec install is repaired.
+Gnome Audio profiles are working.
+
+
+Version 2.0-rc1
+===============
+
+Great code reorganization and cleaning.
+Display individual files progression.
+
+Gnome audio profiles support!
+  #510550
+  
+Fix broken Vorbis output.
+  #508767
+
+Much faster adding of files, since we only read the tags when we have to.
+
+Smoother operation, lesser unresponsive moments.
+  #784926
+
+Add {Ext} {DiscNumber} and {DiscTotal} filename patterns.
+
+You can now limit the number of parallel conversions.
+
+The partial files are removed when canceling a conversion.
+
+What is know to be broken : Automatic codec install, work in progress.
+
+
