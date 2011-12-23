@@ -335,12 +335,13 @@ class GladeWindow(object):
     callbacks = {}
     builder = None
 
-    def __init__(self, plop):
+    def __init__(self, builder):
         '''
         Init GladeWindow, stores the objects's potential callbacks for later.
         You have to call connect_signals() when all descendants are ready.'''
+        GladeWindow.builder = builder
         GladeWindow.callbacks.update(dict([[x, getattr(self, x)]
-                                                        for x in dir(self)]))
+                                     for x in dir(self) if x.startswith('on_')]))
 
     def __getattr__(self, attribute):
         '''Allow direct use of window widget.'''
@@ -405,7 +406,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
     }
 
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
-                       'subfolder_pattern', 'jobs_spinbutton', 'resample_toggle',
+                       'subfolder_pattern', 'jobs_spinbutton', 'resample_hbox',
                        'force_mono']
 
     def __init__(self, builder, parent):
@@ -431,6 +432,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
         for k in sorted(locale_patterns_dict.values()):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
+        
+        #self.resample_rate.connect('changed', self._on_resample_rate_changed)
 
     def convert_setting_from_old_version(self):
         """ try to convert previous settings"""
@@ -562,19 +565,20 @@ class PreferencesDialog(GladeWindow, GConfStore):
         else:
             self.custom_filename_box.set_sensitive(False)
 
-        if self.get_int('output-resample'):
-            self.resample_toggle.set_active(self.get_int('output-resample'))
-            self.resample_rate.set_sensitive(True)
-            rates = [11025, 22050, 44100, 48000, 72000, 96000, 128000]
-            #self.resample_rate_entry.set_text('%d' % (self.get_int('resample-rate')))
-            rate = self.get_int('resample-rate')
-            try:
-                idx = rates.index(rate)
-            except ValueError:
-                self.resample_rate.insert_text(0, str(rate))
-                idx = 0
-            self.resample_rate.set_active(idx)
+        
+        self.resample_toggle.set_active(self.get_int('output-resample'))
 
+        cell = gtk.CellRendererText()
+        self.resample_rate.pack_start(cell, True)
+        self.resample_rate.add_attribute(cell, 'text', 0)
+        rates = [8000, 11025, 22050, 44100, 48000, 96000]
+        rate = self.get_int('resample-rate')
+        try:
+            idx = rates.index(rate)
+        except ValueError:
+            idx = -1
+        self.resample_rate.set_active(idx)
+        
         self.force_mono.set_active(self.get_int('force-mono'))
 
         if not self.gstprofile.get_model().get_n_columns():
@@ -739,13 +743,14 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
             self.get_int('limit-jobs'))
-
+        
         if self.get_string('output-mime-type') == 'gst-profile':
-            self.sensitive_widgets['resample_toggle'].set_sensitive(False)
+            self.sensitive_widgets['resample_hbox'].set_sensitive(False)
             self.sensitive_widgets['force_mono'].set_sensitive(False)
         else:
-            self.sensitive_widgets['resample_toggle'].set_sensitive(True)
+            self.sensitive_widgets['resample_hbox'].set_sensitive(True)
             self.sensitive_widgets['force_mono'].set_sensitive(True)
+        
 
     def run(self):
         self.dialog.run()
@@ -980,9 +985,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.update_example()
 
     def on_resample_rate_changed(self, combobox):
-        changeto = combobox.get_active_text()
-        if int(changeto) >= 2:
-            self.set_int('resample-rate', int(changeto))
+        model = combobox.get_model()
+        iter = combobox.get_active_iter()
+        changeto =  model.get_value(iter, 0)
+        self.set_int('resample-rate', int(changeto))
 
     def on_resample_toggle(self, rstoggle):
         self.set_int('output-resample', rstoggle.get_active())
@@ -1097,7 +1103,7 @@ class SoundConverterWindow(GladeWindow):
     def __init__(self, builder):
         self.paused_time = 0
         GladeWindow.__init__(self, builder)
-        GladeWindow.builder = builder
+
         self.widget = builder.get_object('window')
         self.prefs = PreferencesDialog(builder, self.widget)
         self.addchooser = CustomFileChooser(builder, self.widget)

@@ -76,6 +76,7 @@
       <object class="GtkBox" id="dialog-vbox8">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area8">
             <property name="visible">True</property>
@@ -695,6 +696,9 @@
     </columns>
     <data>
       <row>
+        <col id="0">8000</col>
+      </row>
+      <row>
         <col id="0">11025</col>
       </row>
       <row>
@@ -727,6 +731,7 @@
       <object class="GtkBox" id="dialog-vbox7">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area7">
             <property name="visible">True</property>
@@ -1744,15 +1749,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="model">liststore_resample</property>
-                    <property name="has_entry">True</property>
                     <property name="entry_text_column">0</property>
                     <signal name="changed" handler="on_resample_rate_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="resample_rate_entry">
-                        <property name="can_focus">False</property>
-                        <property name="text" translatable="yes">11025</property>
-                      </object>
-                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
