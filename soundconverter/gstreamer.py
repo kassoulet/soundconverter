@@ -104,9 +104,18 @@ _GCONF = gconf.client_get_default()
 profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
 for name in profiles:
     if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
+        # get profile
         description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
         extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
         pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
+        # check profile validity
+        if not extension or not pipeline:
+            continue
+        if not description:
+            description = extension
+        if description in audio_profiles_dict:
+            continue
+        # store
         profile = description, extension, pipeline
         audio_profiles_list.append(profile)
         audio_profiles_dict[description] = profile
