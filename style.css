@@ -94,6 +94,10 @@ h3 {
 	text-align: center;
 }
 
+.screenshots img {
+    margin: 1em;
+}
+
 .footer p {
 	padding: 0;
 	margin: 0;
