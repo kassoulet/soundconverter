@@ -532,14 +532,13 @@ class PreferencesDialog(GladeWindow, GConfStore):
         # check if we can found the stored audio profile
         found_profile = False
         stored_profile = self.get_string('audio-profile')
-        if stored_profile:
-            for i, profile in enumerate(audio_profiles_list):
-                description, extension, pipeline = profile
-                self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
-                if description == stored_profile:
-                    self.gstprofile.set_active(i)
-                    found_profile = True
-        if not found_profile:
+        for i, profile in enumerate(audio_profiles_list):
+            description, extension, pipeline = profile
+            self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
+            if description == stored_profile:
+                self.gstprofile.set_active(i)
+                found_profile = True
+        if not found_profile and stored_profile:
             # reset default output
             log('Cannot find audio profile "%s", resetting to default output.' 
                 % stored_profile)
