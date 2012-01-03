@@ -187,6 +187,10 @@ class FileList:
         self.widget.append_column(column)
 
         self.window.progressbarstatus.hide()
+        
+        #self.waiting_files = []
+        # add files to filelist in batches. Mush faster, and suffisant.
+        #gobject.timeout_add(500, self.commit_waiting_files)
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
@@ -310,6 +314,18 @@ class FileList:
 
     def hide_row_progress(self):
         self.progress_column.set_visible(False)
+
+    def ___append_file(self, sound_file):
+        self.waiting_files.append(sound_file)
+
+    def ___commit_waiting_files(self):
+        if self.waiting_files:
+            save = self.widget.get_model()
+            self.widget.set_model(None)
+            while self.waiting_files:
+                self._append_file(self.waiting_files.pop())
+            self.widget.set_model(save)
+        return True
 
     def append_file(self, sound_file):
         self.model.append([self.format_cell(sound_file), sound_file, 0, '',
