@@ -1283,12 +1283,8 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def on_clearlist_activate(self, *args):
-        self.filelist_selection.select_all()
-        model, paths = self.filelist_selection.get_selected_rows()
-        while paths:
-            i = self.filelist.model.get_iter(paths[0])
-            self.filelist.remove(i)
-            model, paths = self.filelist_selection.get_selected_rows()
+        self.filelist.model.clear()
+        self.filelist.filelist.clear()
         self.set_sensitive()
         self.set_status()
 
