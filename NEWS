@@ -1,10 +1,24 @@
 
+Version 2.0-rc4
+===============
+Reset selected audio profile if not a valid one.
+  #814015
+    
+Adding is 4x faster. We first scan the files, then add to the
+filelist.
+
+Clearing the filelist is now instant.
+
+Version 2.0-rc3
+===============
+Fix resample combobox. Was not working anymore.
+
 Version 2.0-rc2
 ===============
 
 Automatic codec install is repaired.
 Gnome Audio profiles are working.
-
+Fix 8 bits wav encoding.
 
 Version 2.0-rc1
 ===============
