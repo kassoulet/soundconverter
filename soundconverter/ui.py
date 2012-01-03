@@ -496,6 +496,32 @@ class PreferencesDialog(GladeWindow, GConfStore):
         assert len(model) == len(widgets), 'model:%d widgets:%d' % (len(model),
                                                                  len(widgets))
 
+        if not self.gstprofile.get_model().get_n_columns():
+            model = gtk.ListStore(str)
+            self.gstprofile.set_model(model)
+            cell = gtk.CellRendererText()
+            self.gstprofile.pack_start(cell)
+            self.gstprofile.add_attribute(cell,'text',0)
+            self.gstprofile.set_active(0)
+            
+        # check if we can found the stored audio profile
+        found_profile = False
+        stored_profile = self.get_string('audio-profile')
+        if stored_profile:
+            for i, profile in enumerate(audio_profiles_list):
+                description, extension, pipeline = profile
+                self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
+                if description == stored_profile:
+                    self.gstprofile.set_active(i)
+                    found_profile = True
+        if not found_profile:
+            # reset default output
+            log('Cannot find audio profile "%s", resetting to default output.' 
+                % stored_profile)
+            self.set_string('audio-profile', '')
+            self.gstprofile.set_active(0)
+            mime_type = self.defaults['output-mime-type']
+            
         self.present_mime_types = []
         i = 0
         for b in widgets:
@@ -580,20 +606,6 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.resample_rate.set_active(idx)
         
         self.force_mono.set_active(self.get_int('force-mono'))
-
-        if not self.gstprofile.get_model().get_n_columns():
-            model = gtk.ListStore(str)
-            self.gstprofile.set_model(model)
-            cell = gtk.CellRendererText()
-            self.gstprofile.pack_start(cell)
-            self.gstprofile.add_attribute(cell,'text',0)
-            self.gstprofile.set_active(0)
-
-        for i, profile in enumerate(audio_profiles_list):
-            description, extension, pipeline = profile
-            self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
-            if description == self.get_string('audio-profile'):
-                self.gstprofile.set_active(i)
 
         self.jobs.set_active(self.get_int('limit-jobs'))
         self.jobs_spinbutton.set_value(self.get_int('number-of-jobs'))
