@@ -188,9 +188,10 @@ class FileList:
 
         self.window.progressbarstatus.hide()
         
-        #self.waiting_files = []
-        # add files to filelist in batches. Mush faster, and suffisant.
-        #gobject.timeout_add(500, self.commit_waiting_files)
+        self.waiting_files = []
+        # add files to filelist in batches. Much faster, and suffisant.
+        gobject.timeout_add(100, self.commit_waiting_files)
+        self.waiting_files_last = 0
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
@@ -215,13 +216,9 @@ class FileList:
         self.append_file(sound_file)
         self.window.set_sensitive()
 
-        #tagreader = TagReader(sound_file)
-        #tagreader.set_found_tag_hook(self.append_file_tags)
-        #self.tagreaders.add_task(tagreader)
-
     def add_uris(self, uris, base=None, extensions=None):
         files = []
-        self.window.set_status(_('Adding files...'))
+        self.window.set_status(_('Scanning files...'))
 
         for uri in uris:
             if not uri:
@@ -289,12 +286,9 @@ class FileList:
             self.window.set_status()
 
     def typefinder_queue_ended(self):
-        self.window.set_status()
-        self.window.progressbarstatus.hide()
-
-    def tagreader_queue_ended(self):
-        self.window.progressbarstatus.hide()
-        self.window.set_status()
+        if not self.waiting_files:
+            self.window.set_status()
+            self.window.progressbarstatus.hide()
 
     def abort(self):
         self.typefinders.abort()
@@ -315,19 +309,37 @@ class FileList:
     def hide_row_progress(self):
         self.progress_column.set_visible(False)
 
-    def ___append_file(self, sound_file):
+    def append_file(self, sound_file):
         self.waiting_files.append(sound_file)
 
-    def ___commit_waiting_files(self):
+    def commit_waiting_files(self):
+        if self.waiting_files_last != len(self.waiting_files):
+            # still adding files
+            self.waiting_files_last = len(self.waiting_files)
+            return True
+        
+        start = time.time()
         if self.waiting_files:
+            self.window.set_status(_('Adding files...'))
             save = self.widget.get_model()
             self.widget.set_model(None)
+            n = 0.0
+            next = time.time()
             while self.waiting_files:
                 self._append_file(self.waiting_files.pop())
+                n += 1
+                if time.time() > next: 
+                    # keep UI responsive
+                    gtk_iteration() 
+                    self.window.progressbarstatus.set_fraction(n/self.waiting_files_last)
+                    next = time.time() + 0.01
             self.widget.set_model(save)
+            
+            self.window.set_status()
+            self.window.progressbarstatus.hide()
         return True
 
-    def append_file(self, sound_file):
+    def _append_file(self, sound_file):
         self.model.append([self.format_cell(sound_file), sound_file, 0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
