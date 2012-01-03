@@ -148,7 +148,6 @@ class FileList:
     def __init__(self, window, builder):
         self.window = window
         self.typefinders = TaskQueue()
-        self.tagreaders = TaskQueue()
         self.filelist = set()
 
         self.model = apply(gtk.ListStore, MODEL)
@@ -281,7 +280,6 @@ class FileList:
             self.typefinders.queue_ended = self.typefinder_queue_ended
             self.typefinders.start()
             gobject.timeout_add(100, self.update_progress, self.typefinders)
-            self.tagreaders.queue_ended = self.tagreader_queue_ended
         else:
             self.window.set_status()
 
@@ -292,7 +290,6 @@ class FileList:
 
     def abort(self):
         self.typefinders.abort()
-        self.tagreaders.abort()
 
     def format_cell(self, sound_file):
         return '%s' % gobject.markup_escape_text(unquote_filename(
