@@ -315,7 +315,6 @@ class FileList:
             self.waiting_files_last = len(self.waiting_files)
             return True
         
-        start = time.time()
         if self.waiting_files:
             self.window.set_status(_('Adding files...'))
             save = self.widget.get_model()
