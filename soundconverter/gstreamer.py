@@ -80,15 +80,15 @@ encoders = (
     ('mp4mux',    'AAC'),
     )
 
-available_elements = {}
+available_elements = set()
 
 for encoder, name in encoders:
     have_it = bool(gst.element_factory_find(encoder))
     if have_it:
-        available_elements[encoder] = True
+        available_elements.add(encoder)
     else:
-        print ("\t'%s' gstreamer element not found"
-            ", disabling %s." % (encoder, name))
+        print ('  "%s" gstreamer element not found'
+            ', disabling %s output.' % (encoder, name))
 
 if 'oggmux' not in available_elements:
     del available_elements['vorbisenc']

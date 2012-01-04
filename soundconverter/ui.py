@@ -521,8 +521,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
                                                                  len(widgets))
 
         if not self.gstprofile.get_model().get_n_columns():
-            model = gtk.ListStore(str)
-            self.gstprofile.set_model(model)
+            self.gstprofile.set_model(gtk.ListStore(str))
             cell = gtk.CellRendererText()
             self.gstprofile.pack_start(cell)
             self.gstprofile.add_attribute(cell,'text',0)
@@ -547,6 +546,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             
         self.present_mime_types = []
         i = 0
+        model = self.output_mime_type.get_model()
         for b in widgets:
             mime, encoder_name = b
             encoder_present = encoder_name in available_elements
