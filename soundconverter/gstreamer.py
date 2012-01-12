@@ -322,7 +322,8 @@ class Decoder(Pipeline):
     def found_tag(self, decoder, something, taglist):
         debug('found_tags:', self.sound_file.filename_for_display)
         for k in taglist.keys():
-            debug('\t%s=%s' % (k, taglist[k]))
+            if 'image' not in k:
+                debug('\t%s=%s' % (k, taglist[k]))
             if isinstance(taglist[k], gst.Date):
                 taglist['year'] = taglist[k].year
                 taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
