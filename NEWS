@@ -1,4 +1,23 @@
 
+
+Version 2.0-rc5
+===============
+Fix problem with Mime type combobox when any encoder is disabled.
+  Closes #911759
+  
+Check validity of Gstreamer Audio Profiles. (for real this time)
+  Fix commit d5b5046, closes fedora #744596.
+
+Remove horizontal scroller on filelist since it should never be shown.
+
+Translate default album/artist/title names.
+  Closes #910522.
+
+Don't try to display images in log :)
+
+Update-po
+Update frecnh translation.
+
 Version 2.0-rc4
 ===============
 Reset selected audio profile if not a valid one.
