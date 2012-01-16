@@ -37,10 +37,11 @@ from fileoperations import use_gnomevfs
 from task import BackgroundTask
 from queue import TaskQueue
 from utils import debug, log
-from settings import mime_whitelist
+from settings import mime_whitelist, filename_blacklist
 from error import SoundConverterException
 from error import show_error
 from notify import notification
+from fnmatch import fnmatch
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
@@ -272,7 +273,13 @@ class TypeFinder(Pipeline):
             if t in mime_type:
                 self.sound_file.mime_type = mime_type
         if not self.sound_file.mime_type:
-            log('Mime type skipped: %s' % mime_type)
+            log('mime type skipped: %s' % mime_type)
+        for t in filename_blacklist:
+            if fnmatch(self.sound_file.uri, t):
+                self.sound_file.mime_type = None
+                log('filename blacklisted (%s): %s' % (t,
+                        self.sound_file.filename_for_display))
+                
         self.pipeline.set_state(gst.STATE_NULL)
         self.done()
 

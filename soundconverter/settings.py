@@ -34,6 +34,10 @@ mime_whitelist = (
     'application/x-3gp',
 )
 
+filename_blacklist = (
+    '*.iso',
+)
+
 # TODO: remove locale patterns...
 
 # custom filename patterns
