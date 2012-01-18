@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-12-20 15:29+0000\n"
-"Last-Translator: XChesser <Unknown>\n"
+"PO-Revision-Date: 2012-01-13 03:42+0000\n"
+"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: ru\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -91,9 +91,8 @@ msgid "Choose..."
 msgstr "Выбрать..."
 
 #: ../data/soundconverter.glade.h:17
-#, fuzzy
 msgid "Compression:"
-msgstr "Без сжатия"
+msgstr "Сжатие:"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -137,7 +136,7 @@ msgstr "Фильтр "
 
 #: ../data/soundconverter.glade.h:28
 msgid "Force mono output"
-msgstr ""
+msgstr "Принудительный вывод моно"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Format: "
@@ -148,9 +147,8 @@ msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid "GNOME-powered Sound Conversion"
-msgstr "Преобразование звуковых файлов в GNOME"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
@@ -197,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ogg"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "Ogg Vorbis"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -232,7 +228,7 @@ msgstr "Заменить все некорректные символы"
 
 #: ../data/soundconverter.glade.h:51
 msgid "Resample"
-msgstr ""
+msgstr "Изменение частоты"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Same folder as the input file"
@@ -240,7 +236,7 @@ msgstr "В ту же папку, где находится исходный фа
 
 #: ../data/soundconverter.glade.h:53
 msgid "Sample width:"
-msgstr ""
+msgstr "Разрядность семпла:"
 
 #: ../data/soundconverter.glade.h:54
 msgid "SoundConverter"
@@ -248,15 +244,11 @@ msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:55
 msgid "Use .oga extension"
-msgstr ""
+msgstr "Использовать .oga расширение файла"
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
-"Постоянный (CBR)\n"
-"Усреднённый (ABR)\n"
-"Переменный (VBR) - Наилучшее качество"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
@@ -288,16 +280,15 @@ msgstr "_Применить ко всей очереди"
 
 #: ../data/soundconverter.glade.h:64
 msgid "_Edit"
-msgstr ""
+msgstr "_Правка"
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "_Добавить файл"
+msgstr "_Файл"
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
-msgstr ""
+msgstr "_Справка"
 
 #: ../data/soundconverter.glade.h:67
 msgid "_Overwrite"
@@ -324,16 +315,12 @@ msgid "gst-profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "track_number - track_title"
 msgstr ""
-"номер_дорожки - название_дорожки\n"
-"название_дорожки\n"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "Название дорожки"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
@@ -345,51 +332,48 @@ msgstr ""
 "Этим можно пользоваться, скажем, в сценариях."
 
 #: ../bin/soundconverter.py:102
-#, fuzzy
 msgid ""
 "Show tags for input files instead of convertingthem. This indicates \n"
 " command line batch modeand disables the graphical user interface."
 msgstr ""
-"Показывать тэги исходных файлов вместо преобразования этих файлов.\n"
-"Это нужно для отключения графического режима и перехода в пакетный режим."
+"Отображать теги входных файлов, вместо того, чтобы конвертировать их.\n"
+"Этот параметр работает только в пакетном режиме командной строки и\n"
+"отключает графический интерфейс."
 
 #: ../bin/soundconverter.py:107
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output MIME type for batch mode. The defaultis %s. Note that you "
 "probably want to set the outputsuffix as well."
 msgstr ""
-"Установить MIME-тип выводимых файлов для пакетного режима.\n"
-"По умолчанию используется %s . Обратите внимание: возможно,\n"
-"вам также нужно указать суффикс выводимых файлов."
+"Установить MIME-тип в пакетном режиме (по умолчанию, %s). Заметьте, что вам, "
+"возможно, следует также указать суффикс для имен сохраняемых файлов."
 
 #: ../bin/soundconverter.py:111
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Вести себя тихо. Сообщать только об ошибках."
 
 #: ../bin/soundconverter.py:113
-#, fuzzy
 msgid "Print additional debug information"
-msgstr "Выводить дополнительную отладочную информацию"
+msgstr "Отображать дополнительную отладочную информацию"
 
 #: ../bin/soundconverter.py:115
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
 "the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
-"Установить суффикс имён файлов для пакетного режима.\n"
-"По умолчанию используется %s . Обратите внимание: \n"
-"суффикс не влияет на MIME-тип выводимых файлов."
+"Задаёт суффикс выходных файлов в пакетном режиме (по умолчанию, %s). "
+"Заметьте, что значение суффикса никак не влияет на MIME-тип выходного файла."
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
-msgstr ""
+msgstr "Количество одновременных конвертирований."
 
 #: ../bin/soundconverter.py:121
 msgid "Show GStreamer Options"
-msgstr ""
+msgstr "Вывести настройки GStreamer"
 
 #: ../soundconverter/error.py:37
 msgid "Target exists."
@@ -459,14 +443,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "Преобразование отменено"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "Преобразование завершено, потребовалось n %s"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -495,53 +477,43 @@ msgid "Conversion done, in %s"
 msgstr "Преобразование завершено, потребовалось n %s"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "неизвестно"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "Неизвестный тип %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "Неизвестный тип %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
-#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "Артист Альбом Название Трек Всего Жанр Дата Год"
+msgstr ""
 
 #: ../soundconverter/settings.py:80
 msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"Ошибка: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
-#, fuzzy
 msgid "Scanning files..."
-msgstr "Загружаются тэги..."
+msgstr ""
 
 #: ../soundconverter/ui.py:328
-#, fuzzy
 msgid "Adding files..."
-msgstr "Загружаются тэги..."
+msgstr ""
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -556,9 +528,8 @@ msgid "Track number - title"
 msgstr "Номер дорожки - название"
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "Название дорожки"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -573,9 +544,8 @@ msgid "artist-album"
 msgstr "исполнитель-альбом"
 
 #: ../soundconverter/ui.py:464
-#, fuzzy
 msgid "Available patterns:"
-msgstr "Шаблон имени файла: "
+msgstr ""
 
 #: ../soundconverter/ui.py:650
 #, python-format
@@ -588,23 +558,20 @@ msgid "Target bitrate: %s"
 msgstr "Выходной битрейт: %s"
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "Открыть файл"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
 msgstr "Добавить папку..."
 
 #: ../soundconverter/ui.py:1336
-#, fuzzy
 msgid "Reading tags..."
-msgstr "Загружаются тэги..."
+msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "Преобразование отменено"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -630,126 +597,3 @@ msgstr "Осталось %d:%02d"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "Готово"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "SoundConverter"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "Открыть файл"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "пропускается: '%s'"
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "Создаётся папка: '%s'"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "Невозможно установить права для '%s'"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "файл уже существует: '%s'"
-
-#~ msgid "no tags"
-#~ msgstr "Нет тэгов"
-
-#~ msgid "canceling conversion."
-#~ msgstr "Преобразование отменяется."
-
-#~ msgid "Waiting for tags"
-#~ msgstr "Загружаются тэги"
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "Загружаются тэги..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "Конвертируется файл %d из %d  (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s: OK"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "Использование: %s [ключи] [звуковой файл ...]"
-
-#~ msgid "Print out a usage summary."
-#~ msgstr "Вывести справку по использованию"
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "Свободное сжатие без потерь"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "Свободное сжатие с потерями"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "Несвободное сжатие с потерями"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "Очень низкое\n"
-#~ "Низкое\n"
-#~ "Нормальное\n"
-#~ "Высокое\n"
-#~ "Очень высокое"
-
-#~ msgid "_Remove"
-#~ msgstr "_Удалить"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "исполнитель/альбом\n"
-#~ "исполнитель - альбом"
-
-#~ msgid "The file %s exists already"
-#~ msgstr "Файл %s уже существует"
-
-#~ msgid "asdf"
-#~ msgstr "asdf"
-
-#~ msgid "zxcv"
-#~ msgstr "zxcv"
-
-#~ msgid ""
-#~ "{Artist}: Artist name\n"
-#~ "{Album}: Album name\n"
-#~ "{Title}: Song title\n"
-#~ "{Track}: Track number\n"
-#~ "{Total}: Total number of tracks in album"
-#~ msgstr ""
-#~ "{Artist}: Имя исполнителя\n"
-#~ "{Album}: Название альбома\n"
-#~ "{Title}: Название песни\n"
-#~ "{Track}: Номер дорожки\n"
-#~ "{Total}: Общее число дорожек в альбоме"
-
-#~ msgid "Same as input, but with new suffix"
-#~ msgstr "То же, что в исходнике, но с новым суффиксом"

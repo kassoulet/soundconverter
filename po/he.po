@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-13 20:32+0000\n"
+"PO-Revision-Date: 2012-01-13 03:37+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: LANG <EMAIL@ADDRESS>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: \n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -91,9 +91,8 @@ msgid "Choose..."
 msgstr "בחר..."
 
 #: ../data/soundconverter.glade.h:17
-#, fuzzy
 msgid "Compression:"
-msgstr "ללא דחיסה"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -148,9 +147,8 @@ msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid "GNOME-powered Sound Conversion"
-msgstr "ממיר סאונד של גנום"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
@@ -197,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ogg"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "Ogg Vorbis"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -251,12 +247,8 @@ msgid "Use .oga extension"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
-"קבוע (CBR)\n"
-"ממוצע(ABR)\n"
-"משתנה(VBR) - האיכות הכי גבוהה"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
@@ -291,9 +283,8 @@ msgid "_Edit"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "_הוסף קובץ"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
@@ -324,16 +315,12 @@ msgid "gst-profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "track_number - track_title"
 msgstr ""
-"מספר_רצועה - כותרת_רצועה\n"
-"כותרת_רצועה\n"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "כותרת הרצועה"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
@@ -344,43 +331,33 @@ msgstr ""
 "טוב לשימוש, למשל, מסקריפט."
 
 #: ../bin/soundconverter.py:102
-#, fuzzy
 msgid ""
 "Show tags for input files instead of convertingthem. This indicates \n"
 " command line batch modeand disables the graphical user interface."
 msgstr ""
-"הצג את התוויות של קבצי הקלט, במקום להמיר אותם. זה מפעיל\n"
-"את מצב אצווה ומבטל את ממשק המשתמש הגרפי"
 
 #: ../bin/soundconverter.py:107
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output MIME type for batch mode. The defaultis %s. Note that you "
 "probably want to set the outputsuffix as well."
 msgstr ""
-"קבע את MIME הפלט במצב אצווה. ברירת המחדל היא\n"
-"%s . שים לב שייתכן ותרצה לקבוע\n"
-"גם את סיומת הפלט."
 
 #: ../bin/soundconverter.py:111
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "מצב שקט. אל תכתוב פלט רגיל, רק שגיאות."
 
 #: ../bin/soundconverter.py:113
-#, fuzzy
 msgid "Print additional debug information"
-msgstr "הדפס הודעות debug נוספות"
+msgstr ""
 
 #: ../bin/soundconverter.py:115
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
 "the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
-"קבע את סיומת הקבצים במצב אצווה. ברירת המחדל היא\n"
-" %s. שים לב שהסיומת אינה משפיעה על \n"
-"סוג ה MIME של הקובץ."
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
@@ -458,14 +435,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "המרה בוטלה"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "ההמרה הסתיימה, ב %s"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -493,53 +468,43 @@ msgid "Conversion done, in %s"
 msgstr "ההמרה הסתיימה, ב %s"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "לא מוכר"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "סוג לא מוכר %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "סוג לא מוכר %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
-#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "אמן אלבום כותרת רצואה סה\"כ סגנון תאריך שנה"
+msgstr ""
 
 #: ../soundconverter/settings.py:80
 msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"שגיאה: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
-#, fuzzy
 msgid "Scanning files..."
-msgstr "טוען תוויות..."
+msgstr ""
 
 #: ../soundconverter/ui.py:328
-#, fuzzy
 msgid "Adding files..."
-msgstr "טוען תוויות..."
+msgstr ""
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -554,9 +519,8 @@ msgid "Track number - title"
 msgstr "מספר הרצועה - כותרת"
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "כותרת הרצועה"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -571,9 +535,8 @@ msgid "artist-album"
 msgstr "אומן-אלבום"
 
 #: ../soundconverter/ui.py:464
-#, fuzzy
 msgid "Available patterns:"
-msgstr "תבנית שם קובץ: "
+msgstr ""
 
 #: ../soundconverter/ui.py:650
 #, python-format
@@ -586,23 +549,20 @@ msgid "Target bitrate: %s"
 msgstr "קצב סיביות היעד: %s"
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "פתח קובץ"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
 msgstr "הוסף תיקייה..."
 
 #: ../soundconverter/ui.py:1336
-#, fuzzy
 msgid "Reading tags..."
-msgstr "טוען תוויות..."
+msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "המרה בוטלה"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -628,101 +588,3 @@ msgstr "%d:%02d נותרו"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "מוכן"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "ממיר סאונד"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "פתח קובץ"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "מדלג: '%s'"
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "יוצר תיקייה: '%s'"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "לא יכול לקבוע הרשאות על '%s'"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "הקובץ כבר קיים: '%s'"
-
-#~ msgid "no tags"
-#~ msgstr "אין תוויות"
-
-#~ msgid "canceling conversion."
-#~ msgstr "מבטל המרה."
-
-#~ msgid "Waiting for tags"
-#~ msgstr "ממתין עבור תגיות"
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "ממתין עבור תגיות..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "ממיר קובץ %d מתוך %d (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s:OK"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "שימוש: %s [אפשרויות] [קבצי אודיו ....]"
-
-#~ msgid "Print out a usage summary."
-#~ msgstr "הדפס הוראות שימוש."
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "דחיסה Lossless"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "דחיסה Lossy"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "דחיסה Lossy לא חופשית"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3 (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "נמוך מאוד\n"
-#~ "נמוך\n"
-#~ "רגיל\n"
-#~ "גבוה\n"
-#~ "גבוה מאוד"
-
-#~ msgid "_Remove"
-#~ msgstr "_הסר"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "אומן/אלבום\n"
-#~ "אומן - אלבום"

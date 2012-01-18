@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-12 22:56+0100\n"
+"POT-Creation-Date: 2012-01-18 22:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -406,39 +406,39 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:482
+#: ../soundconverter/gstreamer.py:489
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:499
+#: ../soundconverter/gstreamer.py:506
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr ""
 
 #. pass
-#: ../soundconverter/gstreamer.py:543
+#: ../soundconverter/gstreamer.py:550
 msgid "GStreamer Error:"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:627
+#: ../soundconverter/gstreamer.py:634
 msgid "Conversion Canceled"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:634
+#: ../soundconverter/gstreamer.py:641
 msgid "Conversion Error"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:667
+#: ../soundconverter/gstreamer.py:674
 #, python-format
 msgid "Access denied: '%s'"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:683
+#: ../soundconverter/gstreamer.py:690
 msgid "Cannot overwrite source file(s)!"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:696
+#: ../soundconverter/gstreamer.py:703
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -446,7 +446,7 @@ msgid ""
 " Do you want to skip the file, overwrite it or cancel the conversion?\n"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:800
+#: ../soundconverter/gstreamer.py:807
 #, python-format
 msgid "Conversion done, in %s"
 msgstr ""
@@ -464,13 +464,13 @@ msgid "Unknown Title"
 msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
-#: ../soundconverter/settings.py:43
+#: ../soundconverter/settings.py:47
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
 
-#: ../soundconverter/settings.py:80
+#: ../soundconverter/settings.py:84
 msgid "All files"
 msgstr ""
 

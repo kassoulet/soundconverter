@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-13 22:08+0000\n"
-"Last-Translator: Anthony <Unknown>\n"
+"PO-Revision-Date: 2012-01-13 03:38+0000\n"
+"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: \n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -28,7 +28,7 @@ msgstr "将音频文件转换为其它格式"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr "声音转换程序"
+msgstr "音频转换器"
 
 #: ../data/soundconverter.glade.h:1
 msgid "16 bits (default)"
@@ -48,11 +48,11 @@ msgstr "<b>如何命名文件？</b>"
 
 #: ../data/soundconverter.glade.h:5
 msgid "<b>Type of result?</b>"
-msgstr "<b>结果类型？</b>"
+msgstr "输出格式"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<b>Where to place results?</b>"
-msgstr ""
+msgstr "输出路径"
 
 #: ../data/soundconverter.glade.h:7
 msgid "<big><b>File exists already</b></big>\n"
@@ -84,16 +84,15 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:15
 msgid "Bitrate mode:"
-msgstr "比特模式："
+msgstr "比特率模式"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Choose..."
 msgstr "选择..."
 
 #: ../data/soundconverter.glade.h:17
-#, fuzzy
 msgid "Compression:"
-msgstr "无压缩"
+msgstr "压缩："
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -113,7 +112,7 @@ msgstr "删除源文件"
 
 #: ../data/soundconverter.glade.h:22
 msgid "Error"
-msgstr "错误"
+msgstr "错误！"
 
 #: ../data/soundconverter.glade.h:23
 msgid "FLAC"
@@ -137,7 +136,7 @@ msgstr "过滤器 "
 
 #: ../data/soundconverter.glade.h:28
 msgid "Force mono output"
-msgstr ""
+msgstr "单声道输出"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Format: "
@@ -148,9 +147,8 @@ msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid "GNOME-powered Sound Conversion"
-msgstr "GNOME 音频转换程序"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
@@ -162,7 +160,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:34
 msgid "Into a specified folder"
-msgstr ""
+msgstr "到指定文件夹"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Less (Faster)"
@@ -197,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ogg"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "Ogg Vorbis"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -228,11 +224,11 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:50
 msgid "Replace all messy characters"
-msgstr ""
+msgstr "替换乱码字符"
 
 #: ../data/soundconverter.glade.h:51
 msgid "Resample"
-msgstr ""
+msgstr "重采样"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Same folder as the input file"
@@ -248,15 +244,11 @@ msgstr "音频转换程序"
 
 #: ../data/soundconverter.glade.h:55
 msgid "Use .oga extension"
-msgstr ""
+msgstr "使用 .oga 扩展"
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
-"固定比特率 (CBR)\n"
-"平均比特率 (ABR)\n"
-"可变比特率 (VBR) - 最佳质量"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
@@ -288,16 +280,15 @@ msgstr "应用到整个队列(_A)"
 
 #: ../data/soundconverter.glade.h:64
 msgid "_Edit"
-msgstr ""
+msgstr "编辑(_E)"
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "添加文件(_A)"
+msgstr "文件(_F)"
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
-msgstr ""
+msgstr "帮助 (_H)"
 
 #: ../data/soundconverter.glade.h:67
 msgid "_Overwrite"
@@ -324,22 +315,20 @@ msgid "gst-profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "track_number - track_title"
 msgstr ""
-"音轨号 - 音轨标题\n"
-"音轨标题\n"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "音轨标题"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
+"使用没有图形用户界面的命令行进行批处理模式转换。\n"
+" 你可以通过Shell脚本使用此功能。"
 
 #: ../bin/soundconverter.py:102
 msgid ""
@@ -359,9 +348,8 @@ msgid "Be quiet. Don't write normal output, only errors."
 msgstr "安静模式。仅输出错误。"
 
 #: ../bin/soundconverter.py:113
-#, fuzzy
 msgid "Print additional debug information"
-msgstr "显示附加的调试信息"
+msgstr "打印附加调试信息"
 
 #: ../bin/soundconverter.py:115
 #, python-format
@@ -377,7 +365,7 @@ msgstr ""
 
 #: ../bin/soundconverter.py:121
 msgid "Show GStreamer Options"
-msgstr ""
+msgstr "显示 GStreamer 选项"
 
 #: ../soundconverter/error.py:37
 msgid "Target exists."
@@ -447,14 +435,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "转换已取消"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "转换完毕，耗时 %s"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -482,53 +468,43 @@ msgid "Conversion done, in %s"
 msgstr "转换完毕，耗时 %s"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "未知"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "未知类型 %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "未知类型 %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
-#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "艺人 专辑 标题 音轨 总计 流派 日期 年份"
+msgstr ""
 
 #: ../soundconverter/settings.py:80
 msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"错误： %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
-#, fuzzy
 msgid "Scanning files..."
-msgstr "载入标签..."
+msgstr ""
 
 #: ../soundconverter/ui.py:328
-#, fuzzy
 msgid "Adding files..."
-msgstr "载入标签..."
+msgstr ""
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -543,9 +519,8 @@ msgid "Track number - title"
 msgstr "音轨号 - 标题"
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "音轨标题"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -574,23 +549,20 @@ msgid "Target bitrate: %s"
 msgstr "目标比特率：%s"
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "打开文件"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
 msgstr "添加文件夹..."
 
 #: ../soundconverter/ui.py:1336
-#, fuzzy
 msgid "Reading tags..."
-msgstr "载入标签..."
+msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "转换已取消"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -616,101 +588,3 @@ msgstr "剩余 %d:%02d"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "就绪"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "音频转换程序"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "打开文件"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "跳过：“%s”"
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "创建文件夹：“%s”"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "无法设置“%s”的权限"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "文件已经存在：“%s”"
-
-#~ msgid "no tags"
-#~ msgstr "无标签"
-
-#~ msgid "canceling conversion."
-#~ msgstr "取消转换。"
-
-#~ msgid "Waiting for tags"
-#~ msgstr "等待标记"
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "等待标记..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "正在转换 %d/%d (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s：完成"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "用法：%s [选项] [音频文件 ...]"
-
-#~ msgid "Print out a usage summary."
-#~ msgstr "显示用法小结。"
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "自由无损压缩格式"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "自由有损压缩格式"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "非自由有损压缩格式"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3 (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "非常低\n"
-#~ "低\n"
-#~ "一般\n"
-#~ "高\n"
-#~ "非常高"
-
-#~ msgid "_Remove"
-#~ msgstr "移除(_R)"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "艺人/专辑\n"
-#~ "艺人 - 专辑"

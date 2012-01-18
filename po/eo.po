@@ -8,27 +8,27 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-17 23:47+0000\n"
-"Last-Translator: Alexandre Sapata Carbonell <alexandrenescau@gmail.com>\n"
+"PO-Revision-Date: 2012-01-13 03:36+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
 "Language-Team: Esperanto <eo@li.org>\n"
-"Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: eo\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
-msgstr ""
+msgstr "Konvertilo por sonformoj"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Convert audio files into other formats"
-msgstr ""
+msgstr "Konverti sondosierojn al aliaj formoj"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Sound Converter"
-msgstr "Konvertoro sonoro"
+msgstr "Sonkonvertilo"
 
 #: ../data/soundconverter.glade.h:1
 msgid "16 bits (default)"
@@ -44,23 +44,23 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:4
 msgid "<b>How to name files?</b>"
-msgstr ""
+msgstr "<b>Kiel nomi la dosierojn?</b>"
 
 #: ../data/soundconverter.glade.h:5
 msgid "<b>Type of result?</b>"
-msgstr ""
+msgstr "<b>Rezultotipo?</b>"
 
 #: ../data/soundconverter.glade.h:6
 msgid "<b>Where to place results?</b>"
-msgstr ""
+msgstr "<b>Kien meti rezultojn?</b>"
 
 #: ../data/soundconverter.glade.h:7
 msgid "<big><b>File exists already</b></big>\n"
-msgstr ""
+msgstr "<big><b>Dosiero jam ekzistas</b></big>\n"
 
 #: ../data/soundconverter.glade.h:9
 msgid "<i>Example filename:</i>"
-msgstr ""
+msgstr "<i>Ekzempla dosiernomo:</i>"
 
 #: ../data/soundconverter.glade.h:10
 msgid "AAC"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:12
 msgid "Add _Folder"
-msgstr ""
+msgstr "Aldoni d_osierujon"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Average (ABR)"
@@ -84,15 +84,15 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:15
 msgid "Bitrate mode:"
-msgstr ""
+msgstr "Reĝimo por bitrapido:"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Choose..."
-msgstr ""
+msgstr "Elekti..."
 
 #: ../data/soundconverter.glade.h:17
 msgid "Compression:"
-msgstr ""
+msgstr "Densigo:"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -100,7 +100,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:19
 msgid "Create subfolders: "
-msgstr ""
+msgstr "Krei subdosierujojn: "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Default"
@@ -108,11 +108,11 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:21
 msgid "Delete original file"
-msgstr ""
+msgstr "Forigi originalan dosieron"
 
 #: ../data/soundconverter.glade.h:22
 msgid "Error"
-msgstr ""
+msgstr "Eraro"
 
 #: ../data/soundconverter.glade.h:23
 msgid "FLAC"
@@ -124,23 +124,23 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:25
 msgid "File exists already"
-msgstr ""
+msgstr "Dosiero jam ekzistas"
 
 #: ../data/soundconverter.glade.h:26
 msgid "Filename pattern: "
-msgstr ""
+msgstr "Modelo de dosiernomo: "
 
 #: ../data/soundconverter.glade.h:27
 msgid "Filter "
-msgstr ""
+msgstr "Filtrilo "
 
 #: ../data/soundconverter.glade.h:28
 msgid "Force mono output"
-msgstr ""
+msgstr "Trudi unukanalan eligon"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Format: "
-msgstr ""
+msgstr "Formo: "
 
 #: ../data/soundconverter.glade.h:30
 msgid "GNOME Audio Profile"
@@ -160,7 +160,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:34
 msgid "Into a specified folder"
-msgstr ""
+msgstr "En specifitan dosierujon"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Less (Faster)"
@@ -184,7 +184,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 msgid "MP3 Encoder is not present."
-msgstr ""
+msgstr "MP3-kodilo ne disponeblas"
 
 #: ../data/soundconverter.glade.h:41
 msgid "MS Wave (.wav)"
@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
-msgstr ""
+msgstr "Agordoj"
 
 #: ../data/soundconverter.glade.h:46
 msgid "Profile:"
@@ -212,39 +212,39 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:47
 msgid "Quality:"
-msgstr ""
+msgstr "Kvalito:"
 
 #: ../data/soundconverter.glade.h:48
 msgid "Read how to install"
-msgstr ""
+msgstr "Legu kiel instali"
 
 #: ../data/soundconverter.glade.h:49
 msgid "Remove all chars except letters, digits and ./_-"
-msgstr ""
+msgstr "Forigi ĉiujn signojn krom literojn, ciferojn kaj ./_-"
 
 #: ../data/soundconverter.glade.h:50
 msgid "Replace all messy characters"
-msgstr ""
+msgstr "Anstataŭigi ĉiujn nekutimajn signojn"
 
 #: ../data/soundconverter.glade.h:51
 msgid "Resample"
-msgstr ""
+msgstr "Respecimeni"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Same folder as the input file"
-msgstr ""
+msgstr "Sama dosierujo kiel tiu de la eniga dosiero"
 
 #: ../data/soundconverter.glade.h:53
 msgid "Sample width:"
-msgstr ""
+msgstr "Specimenlarĝo"
 
 #: ../data/soundconverter.glade.h:54
 msgid "SoundConverter"
-msgstr ""
+msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:55
 msgid "Use .oga extension"
-msgstr ""
+msgstr "Uzi sufikson .oga"
 
 #: ../data/soundconverter.glade.h:56
 msgid "Variable (VBR) - Best quality"
@@ -268,35 +268,35 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:61
 msgid "Where to place results?"
-msgstr ""
+msgstr "Kien meti rezultojn?"
 
 #: ../data/soundconverter.glade.h:62
 msgid "_Add File"
-msgstr ""
+msgstr "_Aldoni dosieron"
 
 #: ../data/soundconverter.glade.h:63
 msgid "_Apply to entire queue"
-msgstr ""
+msgstr "_Apliki al tuta atendovico"
 
 #: ../data/soundconverter.glade.h:64
 msgid "_Edit"
-msgstr ""
+msgstr "_Redakti"
 
 #: ../data/soundconverter.glade.h:65
 msgid "_File"
-msgstr ""
+msgstr "_Dosiero"
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
-msgstr ""
+msgstr "_Helpo"
 
 #: ../data/soundconverter.glade.h:67
 msgid "_Overwrite"
-msgstr ""
+msgstr "_Anstataŭigi"
 
 #: ../data/soundconverter.glade.h:68
 msgid "_Skip"
-msgstr ""
+msgstr "_Transsalti"
 
 #: ../data/soundconverter.glade.h:69 ../soundconverter/ui.py:408
 msgid "artist - album"
@@ -308,7 +308,7 @@ msgstr "artisto/albumo"
 
 #: ../data/soundconverter.glade.h:71
 msgid "dialog1"
-msgstr ""
+msgstr "dialogo1"
 
 #: ../data/soundconverter.glade.h:72
 msgid "gst-profile"
@@ -327,12 +327,17 @@ msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
+"Konverti en komandreĝimo, per la komanda linio, sen grafika\n"
+" interfaco. Vi povas uzi tion ĉi ekde ekzemple ŝelskriptoj."
 
 #: ../bin/soundconverter.py:102
 msgid ""
 "Show tags for input files instead of convertingthem. This indicates \n"
 " command line batch modeand disables the graphical user interface."
 msgstr ""
+"Montri etikedojn por originalaj dosieroj anstataŭ konverti ilin. Tio "
+"indikas\n"
+" komandlinian komandreĝimon sen grafika interfaco."
 
 #: ../bin/soundconverter.py:107
 #, python-format
@@ -340,14 +345,16 @@ msgid ""
 "Set the output MIME type for batch mode. The defaultis %s. Note that you "
 "probably want to set the outputsuffix as well."
 msgstr ""
+"Agordi la eligan MIME-tipon por komandreĝimo. La normo estas %s. Notu ke vi "
+"verŝajne volas krome agordi la celdosieran sufikson."
 
 #: ../bin/soundconverter.py:111
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr ""
+msgstr "Silenta reĝimo. Montri ne la norman eligon, nur erarojn."
 
 #: ../bin/soundconverter.py:113
 msgid "Print additional debug information"
-msgstr ""
+msgstr "Montri aldonajn sencimigajn informojn"
 
 #: ../bin/soundconverter.py:115
 #, python-format
@@ -356,14 +363,17 @@ msgid ""
 "the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
+"Agordi la celdosieran sufikson por komandreĝimo. La normo estas %s. Notu ke "
+"la sufikso ne influas\n"
+"la MIME-tipon de la celdosiero."
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
-msgstr ""
+msgstr "Trudi nombron da nunaj konvertoj."
 
 #: ../bin/soundconverter.py:121
 msgid "Show GStreamer Options"
-msgstr ""
+msgstr "Montri opciojn de GStreamer"
 
 #: ../soundconverter/error.py:37
 msgid "Target exists."
@@ -431,9 +441,8 @@ msgid "Conversion Canceled"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "Eraro interna"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -458,19 +467,16 @@ msgid "Conversion done, in %s"
 msgstr ""
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "nekonato"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "Tipo nekonata %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "Tipo nekonata %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
@@ -484,16 +490,12 @@ msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"Eraro: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
 msgid "Scanning files..."
@@ -585,9 +587,3 @@ msgstr ""
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr ""
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "Konvertoro sonoro"

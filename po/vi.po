@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-12-03 23:58+0000\n"
+"PO-Revision-Date: 2012-01-13 03:56+0000\n"
 "Last-Translator: huanctv <huanctv@gmail.com>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: vi\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -91,9 +91,8 @@ msgid "Choose..."
 msgstr "Chọn..."
 
 #: ../data/soundconverter.glade.h:17
-#, fuzzy
 msgid "Compression:"
-msgstr "Không nén"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -148,9 +147,8 @@ msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid "GNOME-powered Sound Conversion"
-msgstr "GNOME Sound Conversion"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
@@ -197,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ogg"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "Ogg Vorbis"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -251,12 +247,8 @@ msgid "Use .oga extension"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
-"Không đổi (CBR)\n"
-"Trung bình (ABR)\n"
-"Thay đổi (VBR) - Chất lượng tốt nhất"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
@@ -291,9 +283,8 @@ msgid "_Edit"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "T_hêm File"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
@@ -324,16 +315,12 @@ msgid "gst-profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "track_number - track_title"
 msgstr ""
-"Track_số - tên_track\n"
-"tên_track\n"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "Tiêu đề track"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
@@ -344,42 +331,33 @@ msgstr ""
 "Bạn có thể thực hiện kiểu này bằng cách dùng shell scripts."
 
 #: ../bin/soundconverter.py:102
-#, fuzzy
 msgid ""
 "Show tags for input files instead of convertingthem. This indicates \n"
 " command line batch modeand disables the graphical user interface."
 msgstr ""
-"Hiện tag của file đầu vào thay vì chuyển đổi chúng. Điều này yêu cầu \n"
-"hoạt động trong chế độ dòng lệnh và vô hiệu hóa giao diện đồ họa."
 
 #: ../bin/soundconverter.py:107
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output MIME type for batch mode. The defaultis %s. Note that you "
 "probably want to set the outputsuffix as well."
 msgstr ""
-"Gán kiểu MIME ra cho chế độ batch. Mặc định là\n"
-" %s. Nhớ rằng, có thể bạn muốn đặt\n"
-" phần hậu tố cho lối ra."
 
 #: ../bin/soundconverter.py:111
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Chỉ hiện ra những thông tin về lỗi"
 
 #: ../bin/soundconverter.py:113
-#, fuzzy
 msgid "Print additional debug information"
-msgstr "In ra những thông tin hỗ trợ debug"
+msgstr ""
 
 #: ../bin/soundconverter.py:115
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
 "the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
-"Đặt phần hậu tố cho file lối ra trong chế độ batch. Mặc định là \n"
-" %s. Nhớ rằng phần hậu tố này không ảnh hưởng gì đến MIME."
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
@@ -456,14 +434,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "Sự chuyển đổi bị hủy"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "Quá trình đã hoàn thành, trong %s"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -491,53 +467,43 @@ msgid "Conversion done, in %s"
 msgstr "Quá trình đã hoàn thành, trong %s"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "không rõ"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "Kiểu không xác định %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "Kiểu không xác định %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
-#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "Nghệ sĩ Album Tiêu đề Track Tổng số Thể loại Ngày Năm"
+msgstr ""
 
 #: ../soundconverter/settings.py:80
 msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"Lỗi: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
-#, fuzzy
 msgid "Scanning files..."
-msgstr "đang tải tag..."
+msgstr ""
 
 #: ../soundconverter/ui.py:328
-#, fuzzy
 msgid "Adding files..."
-msgstr "đang tải tag..."
+msgstr ""
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -552,9 +518,8 @@ msgid "Track number - title"
 msgstr "Track số - tiêu đề"
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "Tiêu đề track"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -569,9 +534,8 @@ msgid "artist-album"
 msgstr "nghệ sĩ-album"
 
 #: ../soundconverter/ui.py:464
-#, fuzzy
 msgid "Available patterns:"
-msgstr "Tên file mẫu: "
+msgstr ""
 
 #: ../soundconverter/ui.py:650
 #, python-format
@@ -584,23 +548,20 @@ msgid "Target bitrate: %s"
 msgstr "bitrate lối ra: %s"
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "Mở một file"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
 msgstr "Thêm thư mục..."
 
 #: ../soundconverter/ui.py:1336
-#, fuzzy
 msgid "Reading tags..."
-msgstr "đang tải tag..."
+msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "Sự chuyển đổi bị hủy"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -626,101 +587,3 @@ msgstr "%d:%02d trôi qua"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "Sẵn sàng"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "SoundConverter"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "Mở một file"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "bỏ qua: '%s'"
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "Tạo thư mục: '%s'"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "Không thể phân quyền trên '%s'"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "file đã có mặt: '%s'"
-
-#~ msgid "no tags"
-#~ msgstr "không tag"
-
-#~ msgid "canceling conversion."
-#~ msgstr "đang hủy tiến trình."
-
-#~ msgid "Waiting for tags"
-#~ msgstr "Đang chờ tag"
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "Đang chờ tag..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "Đang quá trình chuyển %d trong %d (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s: Đồng ý"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "Cách dùng: %s [options] [file nhạc ...]"
-
-#~ msgid "Print out a usage summary."
-#~ msgstr "In ra tóm tắt cách sử dụng."
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "Nén Free Lossless"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "Nén Free Lossy"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "Nén Non-Free Lossy"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3 (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "Rất thấp\n"
-#~ "Thấp\n"
-#~ "Bình thường\n"
-#~ "Cao\n"
-#~ "Rất cao"
-
-#~ msgid "_Remove"
-#~ msgstr "Loại _bỏ"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "nghệ sĩ/album\n"
-#~ "nghệ sĩ - album"

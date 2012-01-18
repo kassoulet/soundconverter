@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-24 23:12+0000\n"
+"PO-Revision-Date: 2012-01-13 03:51+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Telugu <te@li.org>\n"
-"Language: te\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: te\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -195,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ఓజిజి"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "ఓగ్గ్ వోర్బిస్"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -429,14 +427,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "మార్చడం ఆపివేయడం అయింది"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "%s లోపల ,మార్చడం అయిపొయింది"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -461,19 +457,16 @@ msgid "Conversion done, in %s"
 msgstr "%s లోపల ,మార్చడం అయిపొయింది"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "తెలియని"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "తెలెయని రకము %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "తెలెయని రకము %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
@@ -487,16 +480,12 @@ msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"దోషము: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
 msgid "Scanning files..."
@@ -549,9 +538,8 @@ msgid "Target bitrate: %s"
 msgstr ""
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "దస్త్రమును తెరువు"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
@@ -562,9 +550,8 @@ msgid "Reading tags..."
 msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "మార్చడం ఆపివేయడం అయింది"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -590,40 +577,3 @@ msgstr "%d:%02d మిగిలింది"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "సిద్దము"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "దవనిని మార్చేది"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "దస్త్రమును తెరువు"
-
-#~ msgid "mp3"
-#~ msgstr "ఎంపి 3"
-
-#~ msgid "wav"
-#~ msgstr "వఏవి"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "'%s':విదిచిపెటడం  అయినది"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "'%s' నందు అంగీకారము కుదరదు"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "'%s':ఈ ఫైల్ ముందే ఉంది"
-
-#~ msgid "canceling conversion."
-#~ msgstr "మార్చివేయడం రద్దుచేయబడినది"
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "%d of %d (%s) ఫైల్ మార్చివేయడం  జరుగుతుంది"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s:సరే"
-
-#~ msgid "_Remove"
-#~ msgstr "_తొలగించు"

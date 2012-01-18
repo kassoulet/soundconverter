@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-24 22:51+0000\n"
+"PO-Revision-Date: 2012-01-13 03:44+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Hindi <hi@li.org>\n"
-"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: hi\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -195,9 +195,8 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ओग्ग"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
 msgid "Ogg Vorbis (.ogg)"
@@ -413,9 +412,9 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/gstreamer.py:482
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create a decoder for '%s' format."
-msgstr "'%s' फोल्डर संबव नहीं हे"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:499
 #, python-format
@@ -428,14 +427,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "बदलना रुक्दियागाया"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "रूपान्तरण"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -460,18 +457,16 @@ msgid "Conversion done, in %s"
 msgstr ""
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "अग्यात"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
 msgid "Unknown Artist"
 msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "अग्यात"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
@@ -485,16 +480,12 @@ msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"गलती :%s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
 msgid "Scanning files..."
@@ -547,9 +538,8 @@ msgid "Target bitrate: %s"
 msgstr ""
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "एक फ़ाइल खोलें"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
@@ -560,9 +550,8 @@ msgid "Reading tags..."
 msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "बदलना रुक्दियागाया"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -588,42 +577,3 @@ msgstr "%d:%02d बाकि हे"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "तैयार"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "दवानी बदलनेवाला"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "एक फ़ाइल खोलें"
-
-#~ msgid "mp3"
-#~ msgstr "यम् पि ३"
-
-#~ msgid "wav"
-#~ msgstr "वेव"
-
-#~ msgid "canceling conversion."
-#~ msgstr "बदलना रोख्दिअजारा"
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "%d of %d (%s) फिल्स बदल रहा हे"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s: टीक हे"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "ओग्ग वोर्बिस (.ओग्ग)\n"
-#~ "म्प३ (.म्प३)\n"
-#~ "फलक लोस्स्लेस (.फलक)\n"
-#~ "मस वाव (.वाव)"
-
-#~ msgid "_Remove"
-#~ msgstr "मिटावो"

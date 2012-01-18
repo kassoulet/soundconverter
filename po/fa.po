@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-18 00:34+0000\n"
+"PO-Revision-Date: 2012-01-13 03:36+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
-"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: fa\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -283,9 +283,8 @@ msgid "_Edit"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "صافی "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
@@ -320,9 +319,8 @@ msgid "track_number - track_title"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "عنوان شیار"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
@@ -429,9 +427,8 @@ msgid "Conversion Canceled"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "خطای درونی"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -456,18 +453,16 @@ msgid "Conversion done, in %s"
 msgstr ""
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "نامعلوم"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
 msgid "Unknown Artist"
 msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "نامعلوم"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
@@ -509,14 +504,12 @@ msgid "Track number - title"
 msgstr ""
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "عنوان شیار"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
-#, fuzzy
 msgid "Artist - title"
-msgstr "هنرمند - آلبوم"
+msgstr ""
 
 #: ../soundconverter/ui.py:402
 msgid "Custom filename pattern"
@@ -580,15 +573,3 @@ msgstr ""
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "آماده"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "no tags"
-#~ msgstr "بدون برچسب"
-
-#~ msgid "_Remove"
-#~ msgstr "_حذف"

@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2012-01-12 23:16+0100\n"
-"Last-Translator: Uwe Bugla <Unknown>\n"
+"PO-Revision-Date: 2012-01-16 13:02+0000\n"
+"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: French <en@li.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: fr\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -33,7 +33,7 @@ msgstr "Convertisseur Audio SoundConverter"
 
 #: ../data/soundconverter.glade.h:1
 msgid "16 bits (default)"
-msgstr "16 bits (par défault)"
+msgstr "16 bits (par défaut)"
 
 #: ../data/soundconverter.glade.h:2
 msgid "32 bits"
@@ -41,7 +41,7 @@ msgstr "32 bits"
 
 #: ../data/soundconverter.glade.h:3
 msgid "8 bits (very low quality)"
-msgstr "8 bits (très basse qualité)"
+msgstr "8 bits (Très faible qualité)"
 
 #: ../data/soundconverter.glade.h:4
 msgid "<b>How to name files?</b>"
@@ -77,11 +77,11 @@ msgstr "Ajouter _Répertoire"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Average (ABR)"
-msgstr "Moyenne (ABR)"
+msgstr "Moyen (ABR)"
 
 #: ../data/soundconverter.glade.h:14
 msgid "Better (Slower)"
-msgstr "Meilleure (plus lent)"
+msgstr "Bonne qualité (mais plus lent)"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Bitrate mode:"
@@ -93,7 +93,7 @@ msgstr "Parcourir..."
 
 #: ../data/soundconverter.glade.h:17
 msgid "Compression:"
-msgstr "Compression : "
+msgstr "Compression:"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -105,7 +105,7 @@ msgstr "Créer des sous-dossiers : "
 
 #: ../data/soundconverter.glade.h:20
 msgid "Default"
-msgstr "Défaut"
+msgstr "Par défaut"
 
 #: ../data/soundconverter.glade.h:21
 msgid "Delete original file"
@@ -153,11 +153,11 @@ msgstr "Conversion Audio avec GNOME"
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
-msgstr "Haute"
+msgstr "Élevée"
 
 #: ../data/soundconverter.glade.h:33
 msgid "Insanely High"
-msgstr "Très très haute"
+msgstr "Incroyablement élevée"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Into a specified folder"
@@ -165,7 +165,7 @@ msgstr "Dans le dossier spécifié"
 
 #: ../data/soundconverter.glade.h:35
 msgid "Less (Faster)"
-msgstr "Moins (plus rapide)"
+msgstr "Qualitéé moindre (mais plus rapide)"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Limit number of parallel jobs"
@@ -237,7 +237,7 @@ msgstr "Dans le même dossier que la source"
 
 #: ../data/soundconverter.glade.h:53
 msgid "Sample width:"
-msgstr "Échantillonage :"
+msgstr "Échantillonage:"
 
 #: ../data/soundconverter.glade.h:54
 msgid "SoundConverter"
@@ -253,7 +253,7 @@ msgstr "Variable(VBR)-Meilleure qualité"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
-msgstr "Très haute"
+msgstr "Très élevée"
 
 #: ../data/soundconverter.glade.h:58
 msgid "Very Low"
@@ -313,11 +313,11 @@ msgstr "dialog1"
 
 #: ../data/soundconverter.glade.h:72
 msgid "gst-profile"
-msgstr ""
+msgstr "Profil GST"
 
 #: ../data/soundconverter.glade.h:73
 msgid "track_number - track_title"
-msgstr "Numéro_de_piste - Titre_de_la_piste"
+msgstr "Numéros de piste - Titre de piste"
 
 #: ../data/soundconverter.glade.h:74
 msgid "track_title"
@@ -370,7 +370,7 @@ msgstr ""
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
-msgstr "Force le nombre de conversion simultanées"
+msgstr "Force le nombre de convertions simultanées"
 
 #: ../bin/soundconverter.py:121
 msgid "Show GStreamer Options"
@@ -445,16 +445,16 @@ msgstr "Erreur GStreamer :"
 
 #: ../soundconverter/gstreamer.py:627
 msgid "Conversion Canceled"
-msgstr "Conversion abandonnée"
+msgstr "Convertion interrompue"
 
 #: ../soundconverter/gstreamer.py:634
 msgid "Conversion Error"
-msgstr "Erreur pendant la conversion"
+msgstr "Erreur lors de la conversion"
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
 msgid "Access denied: '%s'"
-msgstr ""
+msgstr "Accès refusé : '%s'"
 
 #: ../soundconverter/gstreamer.py:683
 msgid "Cannot overwrite source file(s)!"
@@ -510,16 +510,16 @@ msgid ""
 "%s\n"
 msgstr ""
 "\n"
-"Erreur :·%s\n"
+"Erreur: %s\n"
 "%s\n"
 
 #: ../soundconverter/ui.py:229
 msgid "Scanning files..."
-msgstr "Scan des fichiers..."
+msgstr "Examen des fichiers..."
 
 #: ../soundconverter/ui.py:328
 msgid "Adding files..."
-msgstr "Ajout des fichiers..."
+msgstr "Insertion des fichiers..."
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -535,7 +535,7 @@ msgstr "Numéro de piste - titre"
 
 #: ../soundconverter/ui.py:400
 msgid "Track title"
-msgstr "Titre de la piste"
+msgstr "Titre"
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -551,7 +551,7 @@ msgstr "artiste-album"
 
 #: ../soundconverter/ui.py:464
 msgid "Available patterns:"
-msgstr "Modèles disponibles : "
+msgstr "Motifs disponibles:"
 
 #: ../soundconverter/ui.py:650
 #, python-format
@@ -577,7 +577,7 @@ msgstr "Lecture des tags..."
 
 #: ../soundconverter/ui.py:1347
 msgid "Conversion cancelled"
-msgstr "Conversion abandonnée"
+msgstr "Conversion annulée"
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -603,113 +603,3 @@ msgstr "%d:%02d restantes"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "Prêt"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "Convertisseur Audio SoundConverter"
-
-#~ msgid "aac"
-#~ msgstr "aac"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "Ouvrir un fichier"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "Passe : '%s'"
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "Création du répertoire : '%s'"
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "Impossible de changer les permissions pour '%s'"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "fichier déjà existant :·'%s'"
-
-#~ msgid "no tags"
-#~ msgstr "Pas de tags"
-
-#~ msgid "canceling conversion."
-#~ msgstr "Abandonne la conversion"
-
-#~ msgid "Waiting for tags"
-#~ msgstr "En attente des tags..."
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "En attente des tags..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "Conversion du fichier %d sur %d  (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s :·OK"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "Utilisation : %s [options]·[fichiers son·...]"
-
-#~ msgid "Print out a usage summary."
-#~ msgstr "Affiche une courte aide à l'utilisation."
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "Compression sans perte (libre)"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "Compression avec perte (libre)"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "Compression avec perte (non libre)"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "OggVorbis(.ogg)\n"
-#~ "MP3(.mp3)\n"
-#~ "FLACLossless(.flac)\n"
-#~ "MSWave(.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "Très Faible\n"
-#~ "Faible\n"
-#~ "Normale\n"
-#~ "Haute\n"
-#~ "Très Haute"
-
-#~ msgid "_Remove"
-#~ msgstr "_Retirer"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "artiste/album\n"
-#~ "artiste - album"
-
-#~ msgid "No documentation written."
-#~ msgstr "Pas de documentation écrite"
-
-#~ msgid "Select _All"
-#~ msgstr "_Tout sélectionner"
-
-#~ msgid "_Clear List"
-#~ msgstr "_Vider la Liste"

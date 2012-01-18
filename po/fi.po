@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 22:56+0100\n"
-"PO-Revision-Date: 2009-11-24 23:29+0000\n"
+"PO-Revision-Date: 2012-01-13 03:57+0000\n"
 "Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-07 11:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-18 21:12+0000\n"
+"X-Generator: Launchpad (build 14681)\n"
+"Language: fi\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Audio Format Converter"
@@ -91,9 +91,8 @@ msgid "Choose..."
 msgstr "Valitse..."
 
 #: ../data/soundconverter.glade.h:17
-#, fuzzy
 msgid "Compression:"
-msgstr "Ei pakkausta"
+msgstr "Pakkaus"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Constant (CBR)"
@@ -137,7 +136,7 @@ msgstr "Suodatin "
 
 #: ../data/soundconverter.glade.h:28
 msgid "Force mono output"
-msgstr ""
+msgstr "Pakota mono -ulostulo"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Format: "
@@ -148,9 +147,8 @@ msgid "GNOME Audio Profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:31
-#, fuzzy
 msgid "GNOME-powered Sound Conversion"
-msgstr "Gnome-äänenmuunnin"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:32
 msgid "High"
@@ -197,14 +195,12 @@ msgid "Normal"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:43
-#, fuzzy
 msgid "Ogg"
-msgstr "ogg"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
-#, fuzzy
 msgid "Ogg Vorbis (.ogg)"
-msgstr "Ogg Vorbis"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Preferences"
@@ -232,7 +228,7 @@ msgstr "Korvaa kaikki sekavat kirjaimet"
 
 #: ../data/soundconverter.glade.h:51
 msgid "Resample"
-msgstr ""
+msgstr "Tarkkuuden muutos"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Same folder as the input file"
@@ -248,15 +244,11 @@ msgstr "Äänenmuunnin"
 
 #: ../data/soundconverter.glade.h:55
 msgid "Use .oga extension"
-msgstr ""
+msgstr "Käytä tiedostopäätettä .oga"
 
 #: ../data/soundconverter.glade.h:56
-#, fuzzy
 msgid "Variable (VBR) - Best quality"
 msgstr ""
-"Tasainen (CBR)\n"
-"Keskimääräinen (ABR)\n"
-"Muuttuva (VBR) - paras laatu"
 
 #: ../data/soundconverter.glade.h:57
 msgid "Very High"
@@ -288,16 +280,15 @@ msgstr "_Toteuta koko jonoon"
 
 #: ../data/soundconverter.glade.h:64
 msgid "_Edit"
-msgstr ""
+msgstr "_Muokkaa"
 
 #: ../data/soundconverter.glade.h:65
-#, fuzzy
 msgid "_File"
-msgstr "_Lisää tiedosto"
+msgstr "_Tiedosto"
 
 #: ../data/soundconverter.glade.h:66
 msgid "_Help"
-msgstr ""
+msgstr "_Ohje"
 
 #: ../data/soundconverter.glade.h:67
 msgid "_Overwrite"
@@ -324,16 +315,12 @@ msgid "gst-profile"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "track_number - track_title"
 msgstr ""
-"raidan_numero - raidan_kappale\n"
-"raidan_kappale\n"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "track_title"
-msgstr "Kappale"
+msgstr ""
 
 #: ../bin/soundconverter.py:97
 msgid ""
@@ -350,34 +337,27 @@ msgid ""
 msgstr ""
 
 #: ../bin/soundconverter.py:107
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output MIME type for batch mode. The defaultis %s. Note that you "
 "probably want to set the outputsuffix as well."
 msgstr ""
-"Aseta kohteen MIME-tyyppi erätilassa. Oletus on\n"
-" %s. Huomaa, että haluat varmaankin muuttaa\n"
-" myös kohteen päätteen."
 
 #: ../bin/soundconverter.py:111
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Hiljainen tila. Ei kirjoita normaalia tulostetta, vain virheet."
 
 #: ../bin/soundconverter.py:113
-#, fuzzy
 msgid "Print additional debug information"
-msgstr "Tulosta valinnaiset ohjelmistovirheiden jäljitystiedot"
+msgstr "Tulosta virheenjäljitystietoja"
 
 #: ../bin/soundconverter.py:115
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
 "the suffix does notaffect\n"
 " the output MIME type."
 msgstr ""
-"Aseta kohteen pääte erätilassa. Oletus on \n"
-" %s. Huomaa, että pääte ei vaikuta\n"
-" kohteen MIME-tyyppiin."
 
 #: ../bin/soundconverter.py:119
 msgid "Force number of concurrent conversions."
@@ -385,7 +365,7 @@ msgstr ""
 
 #: ../bin/soundconverter.py:121
 msgid "Show GStreamer Options"
-msgstr ""
+msgstr "Näytä GStreamerin valitsimet"
 
 #: ../soundconverter/error.py:37
 msgid "Target exists."
@@ -454,14 +434,12 @@ msgid "GStreamer Error:"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:627
-#, fuzzy
 msgid "Conversion Canceled"
-msgstr "Muunnos peruutettu"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:634
-#, fuzzy
 msgid "Conversion Error"
-msgstr "Muunnos valmis, %s"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:667
 #, python-format
@@ -489,53 +467,43 @@ msgid "Conversion done, in %s"
 msgstr "Muunnos valmis, %s"
 
 #: ../soundconverter/namegenerator.py:76
-#, fuzzy
 msgid "Unknown Album"
-msgstr "tuntematon"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:77
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "Tuntematon tyyppi %s"
+msgstr ""
 
 #: ../soundconverter/namegenerator.py:78
-#, fuzzy
 msgid "Unknown Title"
-msgstr "Tuntematon tyyppi %s"
+msgstr ""
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:43
-#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "Esittäjä Albumi Nimi Raita Yhteensä Tyyli Pvm Vuosi"
+msgstr ""
 
 #: ../soundconverter/settings.py:80
 msgid "All files"
 msgstr ""
 
 #: ../soundconverter/ui.py:123 ../soundconverter/ui.py:139
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
-"\n"
-"\n"
-"Virhe: %s\n"
-"%s\n"
 
 #: ../soundconverter/ui.py:229
-#, fuzzy
 msgid "Scanning files..."
-msgstr "Ladataan tunnisteita..."
+msgstr ""
 
 #: ../soundconverter/ui.py:328
-#, fuzzy
 msgid "Adding files..."
-msgstr "Ladataan tunnisteita..."
+msgstr ""
 
 #: ../soundconverter/ui.py:396
 msgid "Same as input, but replacing the suffix"
@@ -550,9 +518,8 @@ msgid "Track number - title"
 msgstr "Raidan numero - kappale"
 
 #: ../soundconverter/ui.py:400
-#, fuzzy
 msgid "Track title"
-msgstr "Kappale"
+msgstr ""
 
 #: ../soundconverter/ui.py:401
 msgid "Artist - title"
@@ -567,9 +534,8 @@ msgid "artist-album"
 msgstr "esittäjä-levy"
 
 #: ../soundconverter/ui.py:464
-#, fuzzy
 msgid "Available patterns:"
-msgstr "Tiedostonimen kaava: "
+msgstr ""
 
 #: ../soundconverter/ui.py:650
 #, python-format
@@ -582,23 +548,20 @@ msgid "Target bitrate: %s"
 msgstr "Kohteen bittinopeus: %s"
 
 #: ../soundconverter/ui.py:1069
-#, fuzzy
 msgid "Open a file"
-msgstr "Avaa tiedosto"
+msgstr ""
 
 #: ../soundconverter/ui.py:1163
 msgid "Add Folder..."
 msgstr "Lisää kansio..."
 
 #: ../soundconverter/ui.py:1336
-#, fuzzy
 msgid "Reading tags..."
-msgstr "Ladataan tunnisteita..."
+msgstr ""
 
 #: ../soundconverter/ui.py:1347
-#, fuzzy
 msgid "Conversion cancelled"
-msgstr "Muunnos peruutettu"
+msgstr ""
 
 #: ../soundconverter/ui.py:1350
 msgid "Error when converting"
@@ -624,98 +587,3 @@ msgstr "%d:%02d jäljellä"
 #: ../soundconverter/ui.py:1480
 msgid "Ready"
 msgstr "Valmis"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Gnome SoundConverter\n"
-#~ msgstr "Äänenmuunnin"
-
-#, fuzzy
-#~ msgid "current file"
-#~ msgstr "Avaa tiedosto"
-
-#~ msgid "flac"
-#~ msgstr "flac"
-
-#~ msgid "mp3"
-#~ msgstr "mp3"
-
-#~ msgid "wav"
-#~ msgstr "wav"
-
-#~ msgid "skipping: '%s'"
-#~ msgstr "ohitetaan: \"%s\""
-
-#~ msgid "Creating folder: '%s'"
-#~ msgstr "Luodaan hakemisto: '\"%s\""
-
-#~ msgid "Cannot set permission on '%s'"
-#~ msgstr "Oikeuksia kohteelle \"%s\" ei voida asettaa"
-
-#~ msgid "file already present: '%s'"
-#~ msgstr "tiedosto on jo olemassa: \"%s\""
-
-#~ msgid "no tags"
-#~ msgstr "ei tunnisteita"
-
-#~ msgid "canceling conversion."
-#~ msgstr "perutaan muunnosta."
-
-#~ msgid "Waiting for tags"
-#~ msgstr "Odotetaan tunnisteita"
-
-#~ msgid "Waiting for tags..."
-#~ msgstr "Odotetaan tunnisteita..."
-
-#~ msgid "Converting file %d of %d  (%s)"
-#~ msgstr "Muunnetaan tiedostoa %d / %d (%s)"
-
-#~ msgid "%s: OK"
-#~ msgstr "%s: OK"
-
-#~ msgid "Usage: %s [options] [soundfile ...]"
-#~ msgstr "Käyttö: %s [valinnat] [äänitiedosto ...]"
-
-#~ msgid "Free Lossless compression"
-#~ msgstr "Vapaa häviötön pakkaus"
-
-#~ msgid "Free Lossy Compression"
-#~ msgstr "Vapaa häviöllinen pakkaus"
-
-#~ msgid "Non-Free Lossy Compression"
-#~ msgstr "Ei-vapaa häviöllinen pakkaus"
-
-#~ msgid ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC Lossless (.flac)\n"
-#~ "MS Wave (.wav)"
-#~ msgstr ""
-#~ "Ogg Vorbis (.ogg)\n"
-#~ "MP3  (.mp3)\n"
-#~ "FLAC (häviötön) (.flac)\n"
-#~ "MS Wave (.wav)"
-
-#~ msgid ""
-#~ "Very Low\n"
-#~ "Low\n"
-#~ "Normal\n"
-#~ "High\n"
-#~ "Very High"
-#~ msgstr ""
-#~ "Hyvin matala\n"
-#~ "Matala\n"
-#~ "Normaali\n"
-#~ "Korkea\n"
-#~ "Hyvin korkea"
-
-#~ msgid "_Remove"
-#~ msgstr "Poi_sta"
-
-#~ msgid ""
-#~ "artist/album\n"
-#~ "artist - album"
-#~ msgstr ""
-#~ "esittäjä/levy\n"
-#~ "esittäjä - levy"
