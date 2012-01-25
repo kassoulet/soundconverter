@@ -1253,10 +1253,10 @@ class SoundConverterWindow(GladeWindow):
 
         ret = self.addchooser.run()
         self.addchooser.hide()
-        if ret == gtk.RESPONSE_OK:
+        folder = self.addchooser.get_current_folder_uri()
+        if ret == gtk.RESPONSE_OK and folder:
             self.filelist.add_uris(self.addchooser.get_uris())
-            self.prefs.set_string('last-used-folder',
-                self.addchooser.get_current_folder_uri())
+            self.prefs.set_string('last-used-folder', folder)
         self.set_sensitive()
 
     def on_addfolder_activate(self, *args):
