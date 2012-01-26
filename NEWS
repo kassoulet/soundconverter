@@ -1,4 +1,17 @@
 
+Version 2.0
+===========
+
+Exclude .iso files from conversion since we cannot read them.
+
+Update translations.
+
+Fix crash when last-used-folders and recent.xbel are empty.
+  closes #921515, thanks Danilo & Michael.
+  
+Fix unresponsible UI when reading a lot of tags.
+  closes #917439, thanks Ben.
+
 
 Version 2.0-rc5
 ===============
