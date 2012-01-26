@@ -398,6 +398,10 @@ class Decoder(Pipeline):
         """ return the current pipeline position in the stream """
         return self.position
 
+# this is needed since TagReader caller don't keep a reference long enough,
+# and so tagReaders will be deleted before the callback are called,
+# resulting in awful crashes...
+dontdelete = []
 
 class TagReader(Decoder):
 
@@ -412,6 +416,7 @@ class TagReader(Decoder):
         self.add_command('fakesink')
         self.add_signal(None, 'message::state-changed', self.on_state_changed)
         self.tagread = False
+        dontdelete.append(self)
 
     def set_found_tag_hook(self, found_tag_hook):
         self.found_tag_hook = found_tag_hook
@@ -428,6 +433,7 @@ class TagReader(Decoder):
         self.sound_file.tags_read = True
         if self.found_tag_hook:
             gobject.idle_add(self.found_tag_hook, self)
+        dontdelete.remove(self)
 
 
 class Converter(Decoder):
