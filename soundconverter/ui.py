@@ -1298,7 +1298,6 @@ class SoundConverterWindow(GladeWindow):
     def read_tags(self, sound_file):
         if sound_file.tags_read: # TODO: factorize
             self.converter.add(sound_file)
-            self.pulse_progress += 1
             return
 
         tagreader = TagReader(sound_file)
@@ -1308,10 +1307,12 @@ class SoundConverterWindow(GladeWindow):
     def tags_read(self, tagreader):
         sound_file = tagreader.get_sound_file()
         self.converter.add(sound_file)
-        self.pulse_progress += 1
 
     def on_progress(self):
-        if self.pulse_progress: # still waiting for tags
+        if self.pulse_progress > 0: # still waiting for tags
+            self.set_progress(self.pulse_progress, display_time=False)
+            return True
+        if self.pulse_progress == -1: # still waiting for add
             self.set_progress()
             return True
 
@@ -1322,7 +1323,6 @@ class SoundConverterWindow(GladeWindow):
 
         if running:
             self.set_progress(progress)
-
             for sound_file, taskprogress in perfile.iteritems():
                 self.set_file_progress(sound_file, taskprogress)
 
@@ -1330,16 +1330,19 @@ class SoundConverterWindow(GladeWindow):
 
     def do_convert(self):
         try:
-            self.pulse_progress = True
+            self.pulse_progress = -1
             gobject.timeout_add(100, self.on_progress)
             if self.prefs.require_tags:
-                self.set_status(_('Reading tags...'))
-            for sound_file in self.filelist.get_files():
+                self.progressbar.set_text(_('Reading tags...'))
+            files = self.filelist.get_files()
+            total = len(files)
+            for i, sound_file in enumerate(files):
+                gtk_iteration()
                 if self.prefs.require_tags:
                     self.read_tags(sound_file)
+                    self.pulse_progress = float(i)/total
                 else:
                     self.converter.add(sound_file)
-                    self.pulse_progress = False
 
         except ConverterQueueCanceled:
             log('cancelling conversion.')
@@ -1350,6 +1353,7 @@ class SoundConverterWindow(GladeWindow):
             self.set_status(_('Error when converting'))
         else:
             self.set_status('')
+            self.pulse_progress = None
             self.converter.start()
             self.set_sensitive()
         return False
@@ -1442,13 +1446,13 @@ class SoundConverterWindow(GladeWindow):
         row = sound_file.filelist_row
         self.filelist.set_row_progress(row, progress)
 
-    def set_progress(self, fraction=None):
+    def set_progress(self, fraction=None, display_time=True):
         if not fraction:
-            self.progressbar.set_text(' ')
             if fraction is None:
                 self.progressbar.pulse()
             else:
                 self.progressbar.set_fraction(0)
+                self.progressbar.set_text('')
             self.progressfile.set_markup('')
             self.filelist.hide_row_progress()
             return
@@ -1456,24 +1460,25 @@ class SoundConverterWindow(GladeWindow):
         if self.converter.paused:
             self.progressbar.set_text(_('Paused'))
             return
-            
-        t = time.time() - self.converter.run_start_time - \
-                          self.paused_time
-
-        if (t < 1):
-            # wait a bit not to display crap
-            self.progressbar.pulse()
-            return
 
         fraction = min(max(fraction, 0.0), 1.0)
         self.progressbar.set_fraction(fraction)
-        r = (t / fraction - t)
-        s = max(r % 60, 1)
-        m = r / 60
+            
+        if display_time:
+            t = time.time() - self.converter.run_start_time - \
+                              self.paused_time
+            if (t < 1):
+                # wait a bit not to display crap
+                self.progressbar.pulse()
+                return
 
-        remaining = _('%d:%02d left') % (m, s)
-        self.progressbar.set_text(remaining)
-        self.progress_time = time.time()
+            r = (t / fraction - t)
+            s = max(r % 60, 1)
+            m = r / 60
+
+            remaining = _('%d:%02d left') % (m, s)
+            self.progressbar.set_text(remaining)
+            self.progress_time = time.time()
 
     def set_status(self, text=None):
         if not text:
