@@ -23,6 +23,114 @@
 
 
 	<h3>SoundConverter Changelog</h3>
+	
+	<b>Version 2.0</b>
+
+	<ul>
+
+	<li>
+Great code reorganization and cleaning.
+	</li>
+	<li>
+Display individual files progression.
+	</li>
+
+	<li>
+Gnome audio profiles support!
+	</li>
+	<em>
+    (fix lp:<a href="https://bugs.launchpad.net/bugs/510550">510550</a>)
+    </em>
+  
+	<li>
+Fix broken Vorbis output.
+	</li>
+	<em>
+    (thanks Jarno & Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/508767">508767</a>)
+    </em>
+
+	<li>
+Much faster adding of files, since we only read the tags when we have to.
+	</li>
+
+	<li>
+Smoother operation, lesser unresponsive moments.
+	</li>
+	<em>
+    (thanks Yaroslav & Steven, fix lp:<a href="https://bugs.launchpad.net/bugs/784926">784926</a>)
+    </em>
+
+	<li>
+Add {Ext} {DiscNumber} and {DiscTotal} filename patterns.
+	</li>
+
+	<li>
+You can now limit the number of parallel conversions.
+	</li>
+
+	<li>
+The partial files are removed when canceling a conversion.
+	</li>
+
+	<li>
+Fix 8 bits wav encoding.
+	</li>
+
+	<li>
+Reset selected audio profile if not a valid one.
+	</li>
+	<em>
+    (thanks Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/814015">814015</a>)
+    </em>
+    
+	<li>
+Clearing the filelist is now instant.
+	</li>
+
+	<li>
+Fix problem with Mime type combobox when one or more encoder is disabled.
+	</li>
+	<em>
+    (thanks Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/911759">911759</a>)
+    </em>
+  
+	<li>
+Check validity of Gstreamer Audio Profiles.
+	</li>
+	<em>
+    (thanks Danilo & Michael, fix fedora:<a href="https://bugzilla.redhat.com/744596">744596</a>)
+    </em>
+
+	<li>
+Translate default album/artist/title names.
+	</li>
+	<em>
+    (thanks Handrik, fix lp:<a href="https://bugs.launchpad.net/bugs/910522">910522</a>)
+    </em>
+
+	<li>
+Don't try to display images in log :)
+	</li>
+
+	<li>
+Exclude .iso files from conversion since we cannot read them.
+	</li>
+
+	<li>
+Fix crash when last-used-folders and recent.xbel are empty.
+	</li>
+	<em>
+    (thanks Danilo & Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/921515">921515</a>)
+    </em>
+
+	<li>
+	Translations updated.
+	</li>
+
+	</ul>
+	
+	
+	
 <b>Version 1.5.4</b>
 
 	<ul>
