@@ -474,7 +474,7 @@
     <property name="can_focus">False</property>
     <property name="xpad">6</property>
     <property name="stock">gtk-dialog-warning</property>
-    <property name="icon-size">6</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image2a">
     <property name="visible">True</property>
@@ -493,7 +493,7 @@
     <property name="xpad">12</property>
     <property name="ypad">12</property>
     <property name="stock">gtk-dialog-error</property>
-    <property name="icon-size">6</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkAdjustment" id="jobs_adjustment">
     <property name="lower">1</property>
