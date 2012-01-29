@@ -92,7 +92,7 @@ for encoder, name in encoders:
             ', disabling %s output.' % (encoder, name))
 
 if 'oggmux' not in available_elements:
-    del available_elements['vorbisenc']
+    available_elements.discard('vorbisenc')
 
 
 class Pipeline(BackgroundTask):
@@ -614,11 +614,11 @@ class Converter(Decoder):
             cmd += '%s=%s ' % (properties[self.mp3_mode][1], self.mp3_quality)
             #cmd += 'lowpass-freq=22000 '
 
-            if available_elements['xingmux'] and properties[self.mp3_mode][0]:
+            if 'xingmux' in available_elements and properties[self.mp3_mode][0]:
                 # add xing header when creating VBR mp3
                 cmd += '! xingmux '
 
-        if available_elements['id3v2mux']:
+        if 'id3v2mux' in available_elements:
             # add tags
             cmd += '! id3v2mux '
 
