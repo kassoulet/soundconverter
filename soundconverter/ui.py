@@ -35,6 +35,7 @@ from fileoperations import unquote_filename, vfs_walk
 from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue, ConverterQueueCanceled, ConverterQueueError
 from gstreamer import available_elements, TypeFinder, TagReader
+from gstreamer import audio_profiles_list, audio_profiles_dict
 from soundfile import SoundFile
 from settings import locale_patterns_dict, custom_patterns, filepattern, settings
 from namegenerator import TargetNameGenerator
@@ -42,34 +43,6 @@ from queue import TaskQueue
 from utils import log, debug
 from messagearea import MessageArea
 from error import show_error
-
-import gconf
-# load gstreamer audio profiles
-_GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
-_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/0.10/audio/global/profile_list"
-audio_profiles_list = []
-audio_profiles_dict = {}
-
-_GCONF = gconf.client_get_default()
-profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
-for name in profiles:
-    if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
-        # get profile
-        description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
-        extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
-        pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
-        # check profile validity
-        if not extension or not pipeline:
-            continue
-        if not description:
-            description = extension
-        if description in audio_profiles_dict:
-            continue
-        # store
-        profile = description, extension, pipeline
-        audio_profiles_list.append(profile)
-        audio_profiles_dict[description] = profile
-
 
 # Names of columns in the file list
 MODEL = [ gobject.TYPE_STRING,   # visible filename
