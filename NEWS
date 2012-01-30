@@ -1,4 +1,18 @@
 
+Version 2.0.1
+=============
+
+Fix size of icons in menu bar.
+  thanks Johan.
+
+Fix syntax error when converting to mp3.
+  thanks Jakob.
+
+Fix broken GNOME Audio Profiles.
+
+Add audio/flac in supported mimetypes, fixing "open with" in recent ditribs.
+
+
 Version 2.0
 ===========
 
