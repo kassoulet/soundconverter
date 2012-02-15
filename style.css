@@ -7,22 +7,14 @@ body {
 	margin: 0;
 	padding: 0;
 	color: #333;
-	background-color: #f9f7f5;
-	background-color: #3c352f;
-	background-color: #2e3438;
-	background-color: #f9f7f5;
-
-	background-color: #fff;
-
 	font-family: "Droid Sans", "Myriad Pro", "Sans";
 	font-size: 14px;
 	line-height: 1.5em;
 
-	background: url(background.png) repeat-y center;
+	background: url(waves2.png) repeat-y center,
+            	url(waves.png)  repeat center;
 	background-color: #fff;
 }
-
-
 
 a {
 	color: #d53;
@@ -47,6 +39,11 @@ a:hover:visited {
 a>img {
 	border: none;
 }
+
+.content img {
+	border: 4px solid black;
+}
+
 
 h3 {
 	font-size: 130%;
