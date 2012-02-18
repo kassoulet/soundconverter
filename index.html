@@ -15,10 +15,32 @@
    
    
 <style>
-   @media screen and (min-width: 900px) and (min-device-width: 900px) {
-body {
-	margin-left: 1em;
-	margin-right: 1em;
+   @media (max-width: 900px)  {
+    body {
+	    margin-left: 1em;
+	    margin-right: 1em;
+    }
+    .centered {
+    	text-align: center;
+    }
+    #logo {
+	    display: inline;
+	    margin-bottom: 3em;
+    }
+}
+   @media (max-device-width: 900px) {
+    body {
+	    margin-left: 1em;
+	    margin-right: 1em;
+	    background: #ff3;
+    }
+    .centered {
+    	text-align: center;
+    }
+    #logo {
+	    display: inline;
+	    margin-bottom: 3em;
+    }
 }
 </style>
    
@@ -30,7 +52,7 @@ body {
 
 <div class="container_12 header">
 
-	<div class="prefix_1 grid_5">
+	<div class="prefix_1 grid_5 centered">
 		<img src="logo.png" id="logo" alt="SoundConverter">
 		<h1>SoundConverter</h1>
 		<h2>GNOME Audio File Transcoding</h2>
