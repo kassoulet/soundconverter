@@ -99,26 +99,26 @@ def parse_command_line():
             'can use this from, say, shell scripts.'))
     parser.add_option('-t', '--tags', dest="mode", action='callback',
         callback=mode_callback,  callback_kwargs={'mode':'tags'},
-        help=_('Show tags for input files instead of converting'
-            'them. This indicates \n command line batch mode'
+        help=_('Show tags for input files instead of converting '
+            'them. This indicates \n command line batch mode '
             'and disables the graphical user interface.'))
     parser.add_option('-m', '--mime-type', action="store_true",
         dest="batch_mime",
-        help=_('Set the output MIME type for batch mode. The default'
-            'is %s. Note that you probably want to set the output'
+        help=_('Set the output MIME type for batch mode. The default '
+            'is %s. Note that you probably want to set the output '
             'suffix as well.') % settings['cli-output-type'])
     parser.add_option('-q', '--quiet', action="store_true", dest="quiet",
         help=_("Be quiet. Don't write normal output, only errors."))
     parser.add_option('-d', '--debug', action="store_true", dest="debug",
-        help=_('Print additional debug information'))
+        help=_('Displays additional debug information'))
     parser.add_option('-s', '--suffix', dest="new_suffix",
         help=_('Set the output filename suffix for batch mode.'
-            'The default is %s . Note that the suffix does not'
+            'The default is %s . Note that the suffix does not '
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
     parser.add_option('-j', '--jobs', action='store', type='int', dest='jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.'))
     parser.add_option('--help-gst', action="store_true", dest="_unused",
-        help=_('Show GStreamer Options'))
+        help=_('Shows GStreamer Options'))
     return parser
 
 

@@ -732,7 +732,7 @@ class ConverterQueue(TaskQueue):
                 dpath = gobject.markup_escape_text(dpath)
 
                 msg = \
-                _('The output file <i>%s</i>\n exists already.\n '\
+                _('The output file <i>%s</i>\n already exists.\n '\
                     'Do you want to skip the file, overwrite it or'\
                     ' cancel the conversion?\n') % dpath
 
@@ -838,7 +838,7 @@ class ConverterQueue(TaskQueue):
         self.window.set_sensitive()
         self.window.conversion_ended()
         total_time = self.run_finish_time - self.run_start_time
-        msg = _('Conversion done, in %s') % self.format_time(total_time)
+        msg = _('Conversion done in %s') % self.format_time(total_time)
         if self.error_count:
             msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
