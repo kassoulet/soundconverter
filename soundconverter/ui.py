@@ -279,8 +279,9 @@ class FileList:
 
     def set_row_progress(self, number, progress=None, text=None):
         self.progress_column.set_visible(True)
-
         if progress is not None:
+            if self.model[number][2] == 1.0:
+                return # already...
             self.model[number][2] = progress * 100.0
         if text is not None:
             self.model[number][3] = text
@@ -1297,7 +1298,8 @@ class SoundConverterWindow(GladeWindow):
         if running:
             self.set_progress(progress)
             for sound_file, taskprogress in perfile.iteritems():
-                self.set_file_progress(sound_file, taskprogress)
+                if taskprogress > 0.0:
+                    self.set_file_progress(sound_file, taskprogress)
 
         return running
 
@@ -1307,13 +1309,15 @@ class SoundConverterWindow(GladeWindow):
             gobject.timeout_add(100, self.on_progress)
             if self.prefs.require_tags:
                 self.progressbar.set_text(_('Reading tags...'))
+            else:
+                self.progressbar.set_text(_('Preparing conversion...'))
             files = self.filelist.get_files()
             total = len(files)
             for i, sound_file in enumerate(files):
                 gtk_iteration()
+                self.pulse_progress = float(i)/total
                 if self.prefs.require_tags:
                     self.read_tags(sound_file)
-                    self.pulse_progress = float(i)/total
                 else:
                     self.converter.add(sound_file)
 
