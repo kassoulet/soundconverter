@@ -319,7 +319,7 @@ class FileList:
         return True
 
     def _append_file(self, sound_file):
-        self.model.append([self.format_cell(sound_file), sound_file, 0, '',
+        self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
@@ -1292,15 +1292,18 @@ class SoundConverterWindow(GladeWindow):
 
         perfile = {}
         for s in self.filelist.get_files():
-            perfile[s] = 1.0
+            perfile[s] = None
         running, progress = self.converter.get_progress(perfile)
 
         if running:
             self.set_progress(progress)
             for sound_file, taskprogress in perfile.iteritems():
                 if taskprogress > 0.0:
+                    sound_file.progress = taskprogress
                     self.set_file_progress(sound_file, taskprogress)
-
+                if taskprogress is None and sound_file.progress:
+                    self.set_file_progress(sound_file, 1.0)
+                    sound_file.progress = None
         return running
 
     def do_convert(self):
@@ -1316,6 +1319,7 @@ class SoundConverterWindow(GladeWindow):
             for i, sound_file in enumerate(files):
                 gtk_iteration()
                 self.pulse_progress = float(i)/total
+                sound_file.progress = None
                 if self.prefs.require_tags:
                     self.read_tags(sound_file)
                 else:

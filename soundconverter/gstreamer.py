@@ -817,7 +817,6 @@ class ConverterQueue(TaskQueue):
                 per_file_progress[task.sound_file] = taskprogress
         for task in self.waiting_tasks:
             prolist.append(0.0)
-            per_file_progress[task.sound_file] = 0.0
 
         progress = sum(prolist)/len(prolist) if prolist else 0
         progress = min(max(progress, 0.0), 1.0)
