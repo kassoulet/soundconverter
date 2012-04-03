@@ -115,6 +115,10 @@ class TargetNameGenerator:
         else:
             folder = urllib.quote(self.folder, '/:')
 
+        if '/' in pattern:
+            # we are creating folders using tags, disable basefolder handling
+            basefolder = ''
+
         result = os.path.join(folder, basefolder, urllib.quote(result))
 
         return result
