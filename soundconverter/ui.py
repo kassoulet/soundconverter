@@ -1283,7 +1283,7 @@ class SoundConverterWindow(GladeWindow):
         self.converter.add(sound_file)
 
     def on_progress(self):
-        if self.pulse_progress > 0: # still waiting for tags
+        if self.pulse_progress >= 0: # still waiting for tags
             self.set_progress(self.pulse_progress, display_time=False)
             return True
         if self.pulse_progress == -1: # still waiting for add
