@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-21 19:08+0000\n"
-"PO-Revision-Date: 2012-02-22 13:51+0000\n"
+"POT-Creation-Date: 2012-04-03 13:16+0000\n"
+"PO-Revision-Date: 2012-04-11 16:31+0000\n"
 "Last-Translator: Alain-OIivier Breysse <Unknown>\n"
 "Language-Team: French (Canada) <fr_CA@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 17:40+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-12 11:12+0000\n"
+"X-Generator: Launchpad (build 15070)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -69,11 +69,11 @@ msgstr "<big><b>Le fichier existe déjà</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Appliquer à toute la file"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:379
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:380
 msgid "artist/album"
 msgstr "artiste/album"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:381
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:382
 msgid "artist - album"
 msgstr "artiste - album"
 
@@ -470,7 +470,7 @@ msgstr ""
 " existe déjà.\n"
 " Voulez-vous ignorer ce fichier, l'écraser ou annuler la conversion?\n"
 
-#: ../soundconverter/gstreamer.py:841
+#: ../soundconverter/gstreamer.py:840
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Conversion complétée dans %s"
@@ -515,89 +515,93 @@ msgstr ""
 msgid "Scanning files..."
 msgstr "Analyse des fichiers..."
 
-#: ../soundconverter/ui.py:301
+#: ../soundconverter/ui.py:302
 msgid "Adding files..."
 msgstr "Ajout des fichiers..."
 
-#: ../soundconverter/ui.py:369
+#: ../soundconverter/ui.py:370
 msgid "Same as input, but replacing the suffix"
 msgstr "Comme la source en remplaçant le suffixe"
 
-#: ../soundconverter/ui.py:371
+#: ../soundconverter/ui.py:372
 msgid "Same as input, but with an additional suffix"
 msgstr "Comme la source en ajoutant un suffixe"
 
-#: ../soundconverter/ui.py:372
+#: ../soundconverter/ui.py:373
 msgid "Track number - title"
 msgstr "Numéro de piste - titre"
 
-#: ../soundconverter/ui.py:373
+#: ../soundconverter/ui.py:374
 msgid "Track title"
 msgstr "Titre de la piste"
 
-#: ../soundconverter/ui.py:374
+#: ../soundconverter/ui.py:375
 msgid "Artist - title"
 msgstr "Artiste - titre"
 
-#: ../soundconverter/ui.py:375
+#: ../soundconverter/ui.py:376
 msgid "Custom filename pattern"
 msgstr "Modèle personnalisé pour les noms de fichiers"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:381
 msgid "artist-album"
 msgstr "artiste-album"
 
-#: ../soundconverter/ui.py:437
+#: ../soundconverter/ui.py:438
 msgid "Available patterns:"
 msgstr "Modèles disponibles :"
 
-#: ../soundconverter/ui.py:623
+#: ../soundconverter/ui.py:624
 #, python-format
 msgid "Into folder %s"
 msgstr "Dans le répertoire %s"
 
-#: ../soundconverter/ui.py:700
+#: ../soundconverter/ui.py:701
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Débit binaire cible : %s"
 
-#: ../soundconverter/ui.py:1042
+#: ../soundconverter/ui.py:1043
 msgid "Open a file"
 msgstr "Ouvrir un fichier"
 
-#: ../soundconverter/ui.py:1136
+#: ../soundconverter/ui.py:1137
 msgid "Add Folder..."
 msgstr "Ajouter un répertoire..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1314
 msgid "Reading tags..."
 msgstr "Lecture des labels..."
 
-#: ../soundconverter/ui.py:1323
+#: ../soundconverter/ui.py:1316
+msgid "Preparing conversion..."
+msgstr "Conversion en cours..."
+
+#: ../soundconverter/ui.py:1331
 msgid "Conversion cancelled"
 msgstr "Conversion annulée"
 
-#: ../soundconverter/ui.py:1326
+#: ../soundconverter/ui.py:1334
 msgid "Error when converting"
 msgstr "Erreur lors de la conversion"
 
-#: ../soundconverter/ui.py:1341
+#: ../soundconverter/ui.py:1349
 msgid "Converting"
 msgstr "Conversion en cours"
 
-#: ../soundconverter/ui.py:1361
+#: ../soundconverter/ui.py:1369
 msgid "Canceled"
 msgstr "Annulé"
 
-#: ../soundconverter/ui.py:1434
+#: ../soundconverter/ui.py:1442
 msgid "Paused"
 msgstr "En pause"
 
-#: ../soundconverter/ui.py:1452
+#: ../soundconverter/ui.py:1460
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d restantes"
 
-#: ../soundconverter/ui.py:1458
+#: ../soundconverter/ui.py:1466
 msgid "Ready"
 msgstr "Prêt"
