@@ -75,7 +75,7 @@ class TargetNameGenerator:
             '.target-ext': self.suffix[1:],
             'album': _('Unknown Album'),
             'artist': _('Unknown Artist'),
-            'title': _('Unknown Title'),
+            'title': basename,
             'track-number': 0,
             'track-count': 0,
             'genre': '',
