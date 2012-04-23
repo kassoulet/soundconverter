@@ -1,4 +1,34 @@
 
+Version 2.0.3
+=============
+
+Fix stability and progress related problems.
+
+Disable common path when creating folders using tags.
+(Closes lp:972158, thanks Eric)
+
+Increase Low pass filter frequency when converting to MP3.
+(Closes lp:881413, thanks Michael)
+
+Use original filename as title when tags are not present.
+(Closes lp:984790)
+
+Update Translations.
+
+
+Version 2.0.2
+=============
+
+Fix progress-related blocking by speeding up the progress update.
+(Closes lp:940648, thanks Ben)
+
+Add canadian french.
+(Thanks Alain-Olivier)
+
+Fix many English spelling errors.
+(Thanks Alain-Olivier)
+
+
 Version 2.0.1
 =============
 
