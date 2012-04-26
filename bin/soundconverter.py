@@ -68,7 +68,7 @@ def _check_libs():
         gobject.threads_init()
         import gnomevfs
     except ImportError:
-        print '%s needs pygtk and gnome-python >= 2.12!' % NAME
+        print '%s needs pygtk and gnome-python >= 2.24!' % NAME
         sys.exit(1)
 
     try:
