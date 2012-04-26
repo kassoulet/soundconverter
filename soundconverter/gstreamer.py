@@ -27,7 +27,10 @@ from gettext import gettext as _
 import gobject
 import gst
 import gnomevfs
-import gtk # TODO
+try: # TODO: batch
+    import gtk # TODO
+except:
+    pass
 import gconf
 
 from fileoperations import vfs_encode_filename, file_encode_filename
@@ -40,7 +43,10 @@ from utils import debug, log
 from settings import mime_whitelist, filename_blacklist
 from error import SoundConverterException
 from error import show_error
-from notify import notification
+try: # TODO: batch
+    from notify import notification
+except:
+    pass
 from fnmatch import fnmatch
 
 import gconf

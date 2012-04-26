@@ -16,7 +16,8 @@ soundconverter_PYTHON = \
 	ui.py	\
 	utils.py	\
 	messagearea.py \
-	gconfstore.py
+	gconfstore.py \
+	batch.py
 
 
 clean-local:

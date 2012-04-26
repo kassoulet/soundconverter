@@ -70,6 +70,8 @@ def _check_libs():
     except ImportError:
         print '%s needs pygtk and gnome-python >= 2.24!' % NAME
         sys.exit(1)
+    except:
+        pass
 
     try:
         import pygst
@@ -123,7 +125,7 @@ def parse_command_line():
 
 
 _add_soundconverter_path()
-_check_libs()
+#_check_libs() # TODO: this is needed, but break optparse...
 
 import soundconverter
 soundconverter.NAME = NAME
@@ -147,12 +149,25 @@ for k in dir(options):
 
 print '  using %d thread(s)' % settings['jobs']
 
-from soundconverter.ui import gui_main
+from soundconverter.batch import cli_convert_main
+from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
-
 files = map(filename_to_uri, files)
-gui_main(NAME, VERSION, GLADEFILE, files)
 
+try:
+    from soundconverter.ui import gui_main
+    if settings['mode'] == 'gui':
+        settings['mode'] == 'batch'
+except:
+    pass
+
+    
+if settings['mode'] == 'gui':
+    gui_main(NAME, VERSION, GLADEFILE, files)
+elif settings['mode'] == 'tags':
+    cli_tags_main(files)
+else:
+    cli_convert_main(files)
 
 
 
