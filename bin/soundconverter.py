@@ -156,17 +156,17 @@ files = map(filename_to_uri, files)
 
 try:
     from soundconverter.ui import gui_main
-    if settings['mode'] == 'gui':
-        settings['mode'] == 'batch'
 except:
-    pass
-
+    if settings['mode'] == 'gui':
+        settings['mode'] = 'batch'
     
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 elif settings['mode'] == 'tags':
+    if not files: print 'nothing to do...'
     cli_tags_main(files)
 else:
+    if not files: print 'nothing to do...'
     cli_convert_main(files)
 
 
