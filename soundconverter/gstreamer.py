@@ -27,10 +27,6 @@ from gettext import gettext as _
 import gobject
 import gst
 import gnomevfs
-try: # TODO: batch
-    import gtk # TODO
-except:
-    pass
 import gconf
 
 from fileoperations import vfs_encode_filename, file_encode_filename
@@ -43,10 +39,12 @@ from utils import debug, log
 from settings import mime_whitelist, filename_blacklist
 from error import SoundConverterException
 from error import show_error
-try: # TODO: batch
+try:
     from notify import notification
 except:
-    pass
+    def notification(msg):
+        pass
+        
 from fnmatch import fnmatch
 
 import gconf
@@ -188,12 +186,7 @@ class Pipeline(BackgroundTask):
             return
         self.done()
         if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
-            dialog = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_MODAL,
-                type=gtk.MESSAGE_INFO,
-                buttons=gtk.BUTTONS_OK,
-                message_format='Plugin installation aborted.')
-            dialog.run()
-            dialog.hide()
+            show_error(_('Plugin installation aborted.'))
             return
 
         show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
@@ -521,13 +514,8 @@ class Converter(Decoder):
         if not encoder:
             # TODO: is this used ?
             # TODO: add proper error management when an encoder cannot be created
-            dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
-                        gtk.MESSAGE_ERROR,
-                        gtk.BUTTONS_OK,
-                        _("Cannot create a decoder for \'%s\' format.") % \
+            show_error(_("Cannot create a decoder for \'%s\' format.") % 
                         self.output_type)
-            dialog.run()
-            dialog.hide()
             return
 
         self.add_command(encoder)
@@ -537,14 +525,7 @@ class Converter(Decoder):
         if dirname and not gnomevfs.exists(dirname):
             log('Creating folder: \'%s\'' % dirname)
             if not vfs_makedirs(str(dirname)):
-                # TODO add better error management
-                dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
-                            gtk.MESSAGE_ERROR,
-                            gtk.BUTTONS_OK,
-                            _("Cannot create \'%s\' folder.") % \
-                            dirname)
-                dialog.run()
-                dialog.hide()
+                show_error(_("Cannot create \'%s\' folder.") % dirname)
                 return
 
         self.add_command('%s location="%s"' % (

@@ -125,7 +125,6 @@ def parse_command_line():
 
 
 _add_soundconverter_path()
-#_check_libs() # TODO: this is needed, but break optparse...
 
 import soundconverter
 soundconverter.NAME = NAME
@@ -146,6 +145,8 @@ for k in dir(options):
     if getattr(options, k) is None:
         continue
     settings[k] = getattr(options, k)
+
+_check_libs()
 
 print '  using %d thread(s)' % settings['jobs']
 

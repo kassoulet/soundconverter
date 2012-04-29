@@ -1485,6 +1485,7 @@ def gui_main(name, version, gladefile, input_files):
     win = SoundConverterWindow(builder)
     import error
     error.set_error_handler(ErrorDialog(builder))
+    
     #error_dialog = MsgAreaErrorDialog(builder)
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
