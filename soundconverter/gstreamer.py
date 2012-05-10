@@ -472,11 +472,13 @@ class Converter(Decoder):
 
         self.output_filename = output_filename
         self.output_type = output_type
-        self.vorbis_quality = None
-        self.aac_quality = None
-        self.mp3_bitrate = None
-        self.mp3_mode = None
-        self.mp3_quality = None
+        self.vorbis_quality = 0.6
+        self.aac_quality = 192
+        self.mp3_bitrate = 192
+        self.mp3_mode = 'vbr'
+        self.mp3_quality = 3
+        self.flac_compression = 8
+        self.wav_sample_width = 16
 
         self.output_resample = output_resample
         self.resample_rate = resample_rate

@@ -85,7 +85,18 @@ def _check_libs():
             '.'.join([str(s) for s in gst.gst_version]))
 
 
-
+def check_mime_type(mime):
+    types = {'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav' : 'audio/x-wav',
+        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'}
+    mime = types.get(mime, mime)
+    if mime not in types.values():
+        print 'Cannot use "%s" mime type.' % mime
+        print 'Supported shortcuts and mime types:',
+        for k,v in sorted(types.iteritems()):
+            print '%s %s' % (k,v),
+        print
+        raise SystemExit
+    return mime
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -104,8 +115,7 @@ def parse_command_line():
         help=_('Show tags for input files instead of converting '
             'them. This indicates \n command line batch mode '
             'and disables the graphical user interface.'))
-    parser.add_option('-m', '--mime-type', action="store_true",
-        dest="batch_mime",
+    parser.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type for batch mode. The default '
             'is %s. Note that you probably want to set the output '
             'suffix as well.') % settings['cli-output-type'])
@@ -113,7 +123,7 @@ def parse_command_line():
         help=_("Be quiet. Don't write normal output, only errors."))
     parser.add_option('-d', '--debug', action="store_true", dest="debug",
         help=_('Displays additional debug information'))
-    parser.add_option('-s', '--suffix', dest="new_suffix",
+    parser.add_option('-s', '--suffix', dest="cli-output-suffix",
         help=_('Set the output filename suffix for batch mode.'
             'The default is %s . Note that the suffix does not '
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
@@ -145,6 +155,8 @@ for k in dir(options):
     if getattr(options, k) is None:
         continue
     settings[k] = getattr(options, k)
+
+settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
 

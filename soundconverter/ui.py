@@ -404,7 +404,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'delete-original': 0,
         'output-resample': 0,
         'resample-rate': 48000,
-        'flac-speed': 0,
+        'flac-speed': 0, # TODO used ?
         'force-mono': 0,
         'last-used-folder': None,
         'audio-profile': None,
