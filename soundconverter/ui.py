@@ -201,6 +201,8 @@ class FileList:
         files = []
         self.window.set_status(_('Scanning files...'))
 
+        base = None
+
         for uri in uris:
             if not uri:
                 continue
@@ -229,6 +231,10 @@ class FileList:
 
             if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
                 log('walking: \'%s\'' % uri)
+                if len(uris) == 1:
+                    # if only one folder is passed to the function,
+                    # use its parent as base path.
+                    base = os.path.dirname(uri)
                 filelist = vfs_walk(gnomevfs.URI(uri))
                 accepted = []
                 if extensions:
@@ -241,7 +247,8 @@ class FileList:
             else:
                 files.append(uri)
 
-        base, notused = os.path.split(os.path.commonprefix(files))
+        if not base:
+            base, notused = os.path.split(os.path.commonprefix(files))
         base += '/'
 
         for f in files:
