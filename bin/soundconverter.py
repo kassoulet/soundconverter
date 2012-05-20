@@ -40,12 +40,15 @@ print '%s %s' % (NAME, VERSION)
 GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
 PACKAGE = NAME.lower()
-gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
-locale.setlocale(locale.LC_ALL,'')
-gettext.textdomain(PACKAGE)
-gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
-
-from gettext import gettext as _
+try: 
+    gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
+    locale.setlocale(locale.LC_ALL,'')
+    gettext.textdomain(PACKAGE)
+    gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
+    from gettext import gettext as _
+except:
+    def _(s):
+        return s
 
 def _add_soundconverter_path():
     global localedir
