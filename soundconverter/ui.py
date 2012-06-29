@@ -1257,8 +1257,9 @@ class SoundConverterWindow(GladeWindow):
                 extensions = [os.path.splitext(p)[1] for p in patterns]
             self.filelist.add_uris(folders, extensions=extensions)
 
-            self.prefs.set_string('last-used-folder',
-                            self.addfolderchooser.get_current_folder_uri())
+            folder = self.addfolderchooser.get_current_folder_uri()
+            if folder:
+                self.prefs.set_string('last-used-folder', folder)
 
         self.set_sensitive()
 
