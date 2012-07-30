@@ -641,7 +641,7 @@ class Converter(Decoder):
         return cmd
 
     def add_aac_encoder(self):
-        return 'faac profile=2 bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
+        return 'faac bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
 
     def add_audio_profile(self):
         pipeline = audio_profiles_dict[self.audio_profile][2]
