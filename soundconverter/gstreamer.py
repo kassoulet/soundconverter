@@ -497,6 +497,7 @@ class Converter(Decoder):
             'audio/x-wav': self.add_wav_encoder,
             'audio/mpeg': self.add_mp3_encoder,
             'audio/x-m4a': self.add_aac_encoder,
+            'audio/ogg; codecs=opus': self.add_opus_encoder,
             'gst-profile': self.add_audio_profile,
         }
         self.add_command('audiorate')
@@ -578,6 +579,9 @@ class Converter(Decoder):
     def set_aac_quality(self, quality):
         self.aac_quality = quality
 
+    def set_opus_quality(self, quality):
+        self.opus_quality = quality
+
     def set_mp3_mode(self, mode):
         self.mp3_mode = mode
 
@@ -643,6 +647,9 @@ class Converter(Decoder):
 
     def add_aac_encoder(self):
         return 'faac bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
+
+    def add_opus_encoder(self):
+        return 'opusenc bitrate=%s ! oggmux' % (self.opus_quality * 1000)
 
     def add_audio_profile(self):
         pipeline = audio_profiles_dict[self.audio_profile][2]
@@ -764,6 +771,7 @@ class ConverterQueue(TaskQueue):
                         )
         c.set_vorbis_quality(self.window.prefs.get_float('vorbis-quality'))
         c.set_aac_quality(self.window.prefs.get_int('aac-quality'))
+        c.set_opus_quality(self.window.prefs.get_int('opus-bitrate'))
         c.set_flac_compression(self.window.prefs.get_int('flac-compression'))
         c.set_wav_sample_width(self.window.prefs.get_int('wav-sample-width'))
         c.set_audio_profile(self.window.prefs.get_string('audio-profile'))
