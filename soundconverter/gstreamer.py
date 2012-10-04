@@ -109,6 +109,7 @@ encoders = (
     ('lame',      'MP3'),
     ('faac',      'AAC'),
     ('mp4mux',    'AAC'),
+    ('opusenc',   'Opus'),
     )
 
 available_elements = set()

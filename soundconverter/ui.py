@@ -406,6 +406,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'mp3-abr-quality': 192,
         'mp3-vbr-quality': 3,
         'aac-quality': 192,
+        'opus-bitrate': 64,
         'flac-compression': 8,
         'wav-sample-width': 16,
         'delete-original': 0,
@@ -501,6 +502,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
                     ('audio/x-flac'  , 'flacenc'),
                     ('audio/x-wav'   , 'wavenc'),
                     ('audio/x-m4a'   , 'faac'),
+                    ('audio/ogg; codecs=opus'   , 'opusenc'),
                     ('gst-profile'   , None),
                     ) # must be in same order in output_mime_type
 
@@ -647,6 +649,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
         elif mime_type == 'audio/x-m4a':
             bitrate = self.get_int('aac-quality')
 
+        elif mime_type == 'audio/ogg; codecs=opus':
+            bitrate = self.get_int('opus-bitrate')
+
         elif mime_type == 'audio/mpeg':
             quality = {
                 'cbr': 'mp3-cbr-quality',
@@ -720,6 +725,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
                         'audio/x-wav': '.wav',
                         'audio/mpeg': '.mp3',
                         'audio/x-m4a': '.m4a',
+                        'audio/ogg; codecs=opus': '.opus',
                         'gst-profile': '.' + profile_ext,
                     }.get(output_type, '.?')
 
@@ -864,7 +870,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
                         'audio/x-flac': 2,
                         'audio/x-wav': 3,
                         'audio/x-m4a': 4,
-                        'gst-profile': 5,
+                        'audio/ogg; codecs=opus': 5,
+                        'gst-profile': 6,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -893,6 +900,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if button.get_active():
             self.change_mime_type('audio/x-m4a')
 
+    def on_output_mime_type_opus_toggled(self, button):
+        if button.get_active():
+            self.change_mime_type('audio/ogg; codecs=opus')
+
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return # just de-selectionning
@@ -917,6 +928,11 @@ class PreferencesDialog(GladeWindow, GConfStore):
     def on_aac_quality_changed(self, combobox):
         quality = (64, 96, 128, 192, 256, 320)
         self.set_int('aac-quality', quality[combobox.get_active()])
+        self.update_example()
+
+    def on_opus_quality_changed(self, combobox):
+        quality = (64, 96, 128, 192, 256, 320)
+        self.set_int('opus-bitrate', quality[combobox.get_active()])
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):

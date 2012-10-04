@@ -667,6 +667,9 @@
         <col id="0" translatable="yes">AAC (.m4a)</col>
       </row>
       <row>
+        <col id="0" translatable="yes">Opus (.opus)</col>
+      </row>
+      <row>
         <col id="0" translatable="yes">GNOME Audio Profile</col>
       </row>
     </data>
@@ -1626,6 +1629,68 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkTable" id="table5b">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="n_rows">2</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">6</property>
+                                <property name="row_spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="label38b">
+                                    <property name="width_request">100</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Quality:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options"></property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="opus_quality">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="model">liststore2</property>
+                                    <signal name="changed" handler="on_opus_quality_changed" swapped="no"/>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="cellrenderertext2b"/>
+                                      <attributes>
+                                        <attribute name="text">0</attribute>
+                                      </attributes>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">5</property>
+                              </packing>
+                            </child>
+                            <child type="tab">
+                              <object class="GtkLabel" id="label111b">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Opus</property>
+                              </object>
+                              <packing>
+                                <property name="position">5</property>
+                                <property name="tab_fill">False</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkTable" id="table7">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -1667,7 +1732,7 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="position">5</property>
+                                <property name="position">6</property>
                               </packing>
                             </child>
                             <child type="tab">
@@ -1677,7 +1742,7 @@
                                 <property name="label" translatable="yes">gst-profile</property>
                               </object>
                               <packing>
-                                <property name="position">5</property>
+                                <property name="position">6</property>
                                 <property name="tab_fill">False</property>
                               </packing>
                             </child>
