@@ -575,7 +575,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         w.set_active(quality_setting.get(quality, -1))
 
         w = self.opus_quality
-        quality = self.get_int('opus-quality')
+        quality = self.get_int('opus-bitrate')
         quality_setting = {48: 0, 64: 1, 96: 2, 128: 3, 160: 4, 192: 5}
         w.set_active(quality_setting.get(quality, -1))
 
