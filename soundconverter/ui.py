@@ -406,7 +406,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         'mp3-abr-quality': 192,
         'mp3-vbr-quality': 3,
         'aac-quality': 192,
-        'opus-bitrate': 64,
+        'opus-bitrate': 96,
         'flac-compression': 8,
         'wav-sample-width': 16,
         'delete-original': 0,
@@ -572,6 +572,11 @@ class PreferencesDialog(GladeWindow, GConfStore):
         w = self.aac_quality
         quality = self.get_int('aac-quality')
         quality_setting = {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5}
+        w.set_active(quality_setting.get(quality, -1))
+
+        w = self.opus_quality
+        quality = self.get_int('opus-quality')
+        quality_setting = {48: 0, 64: 1, 96: 2, 128: 3, 160: 4, 192: 5}
         w.set_active(quality_setting.get(quality, -1))
 
         w = self.flac_compression
@@ -931,7 +936,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.update_example()
 
     def on_opus_quality_changed(self, combobox):
-        quality = (64, 96, 128, 192, 256, 320)
+        quality = (48, 64, 96, 128, 160, 192)
         self.set_int('opus-bitrate', quality[combobox.get_active()])
         self.update_example()
 
