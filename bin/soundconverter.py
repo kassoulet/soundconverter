@@ -45,10 +45,12 @@ try:
     locale.setlocale(locale.LC_ALL,'')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
-    from gettext import gettext as _
-except:
-    def _(s):
-        return s
+    #from gettext import gettext as _
+except locale.Error:
+    print '  cannot use system locale.'
+    locale.setlocale(locale.LC_ALL,'C')
+    gettext.textdomain(PACKAGE)
+    gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
 
 def _add_soundconverter_path():
     global localedir
