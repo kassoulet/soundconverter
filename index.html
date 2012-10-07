@@ -80,7 +80,7 @@
 	SoundConverter is the leading audio file converter for the GNOME Desktop.
 	It reads anything GStreamer can read
 	(Ogg Vorbis, AAC, MP3, FLAC, WAV, AVI, MPEG, MOV, M4A, AC3, DTS, ALAC, MPC, Shorten, APE, SID, MOD, XM, S3M, etc...),
-	and writes to WAV, FLAC, MP3, AAC, and Ogg Vorbis files, or use a <a href="http://library.gnome.org/users/gnome-audio-profiles/stable/gnome-audio-profiles-usage.html.en">GNOME Audio Profile</a>.
+	and writes to Opus, Ogg Vorbis, FLAC, WAV, AAC, and MP3 files, or use any <a href="http://library.gnome.org/users/gnome-audio-profiles/stable/gnome-audio-profiles-usage.html.en">GNOME Audio Profile</a>.
 	</p>
 
 	<p>
@@ -94,7 +94,7 @@
 <div class="container_12 prefix_1 grid_3">
 
 	<h3>Download</h3>
-	<a href="https://launchpad.net/soundconverter/trunk/2.0.3">SoundConverter 2.0.3 (Source)</a> <br>
+	<a href="https://launchpad.net/soundconverter/trunk/2.0.4">SoundConverter 2.0.4 (Source)</a> <br>
 
 	<a href="https://launchpad.net/soundconverter/+download">Others versions</a> <br>
 
@@ -125,6 +125,41 @@
 </p>
 
 	<h3>News</h3>
+
+	<b>Version 2.0.4</b>
+	<ul>
+	<li>
+	Add support for <a href="http://www.opus-codec.org/">Opus codec</a>.
+	</li>
+	<li>
+    Fix command line arguments parsing.
+	</li>
+	<em>
+    (Closes lp:<a href="https://bugs.launchpad.net/bugs/995862">995862</a>, thanks Michael)
+    </em>
+	<li>
+Fix problem with AAC settings.
+	</li>
+	<em>
+    (Closes lp:<a href="https://bugs.launchpad.net/bugs/954555">954555</a>, thanks Patrick and zebul666)
+    </em>
+	<li>
+Fix crash in FolderChooser. 836338
+	</li>
+	<em>
+    (Closes redhat:<a href="https://bugzilla.redhat.com/836338">836338</a>)
+    </em>
+	<li>
+    Fix yet another problem with filenames handling.
+	</li>
+	<em>
+    (Closes lp:<a href="https://bugs.launchpad.net/bugs/998371">998371</a>, thanks Bastian)
+    </em>
+	<li>
+Update Translations.
+	</li>
+	</ul>
+
 
 	<b>Version 2.0.3</b>
 	<ul>

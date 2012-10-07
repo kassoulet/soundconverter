@@ -41,7 +41,9 @@ a>img {
 }
 
 .content img {
-	border: 4px solid black;
+    -moz-box-shadow:    0 0 10px 0 #000;
+    -webkit-box-shadow: 0 0 10px 0 #000;
+    box-shadow:         0 0 10px 0 #000;
 }
 
 
