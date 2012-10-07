@@ -1,4 +1,22 @@
 
+Version 2.0.4
+=============
+
+Add support for Opus codec (http://www.opus-codec.org/)
+
+Fix command line arguments parsing.
+(Closes lp:995862, thanks Michael)
+
+Fix problem with AAC settings.
+(closes lp:954555, thanks Patrick and zebul666)
+
+Fix crash in FolderChooser.
+(Closes fedora:836338, thanks Michael)
+
+Fix yet another problem with URIs handling.
+(Closes lp:998371, thanks Bastian)
+
+
 Version 2.0.3
 =============
 

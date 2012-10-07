@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the soundconverter package.
 # Guillaume Bedot <littletux@zarb.org>, 2007.
 # Uwe Bugla <Unknown>, 2012.
+# daufinsyd <sydney.gems@laposte.net>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-30 15:28+0000\n"
-"PO-Revision-Date: 2012-05-30 11:09+0000\n"
+"PO-Revision-Date: 2012-10-07 15:44+0200\n"
 "Last-Translator: daufinsyd <sydney.gems@laposte.net>\n"
 "Language-Team: French <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-10-06 15:24+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Generator: Gtranslator 2.91.5\n"
 "Language: fr\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -480,7 +481,7 @@ msgstr ""
 #: ../soundconverter/gstreamer.py:830
 #, python-format
 msgid "Conversion done in %s"
-msgstr "Conversion complétée dans %s"
+msgstr "Conversion complétée en %s"
 
 #: ../soundconverter/namegenerator.py:76
 msgid "Unknown Album"
