@@ -60,7 +60,10 @@ class UnknownType(SoundConverterException):
 class ErrorPrinter:
 
     def show_error(self, primary, secondary):
-        sys.stderr.write(_('\n\nError: %s\n%s\n') % (primary, secondary))
+        try:
+            sys.stderr.write(_('\n\nError: %s\n%s\n') % (primary, secondary))
+        except:
+            pass
         sys.exit(1)
 
     def show_exception(self, e):

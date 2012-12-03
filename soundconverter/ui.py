@@ -93,7 +93,10 @@ class ErrorDialog:
     def show_error(self, primary, secondary):
         self.primary.set_markup(primary)
         self.secondary.set_markup(secondary)
-        sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
+        try:
+            sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
+        except:
+            pass
         self.dialog.run()
         self.dialog.hide()
 
@@ -109,7 +112,10 @@ class MsgAreaErrorDialog_:
         self.primary = builder.get_object('label_error')
 
     def show_error(self, primary, secondary):
-        sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
+        try:
+            sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
+        except:
+            pass
         #self.msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, primary, secondary)
         #self.msg_area.show()
         self.primary.set_text(primary)
