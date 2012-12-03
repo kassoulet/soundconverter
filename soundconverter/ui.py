@@ -818,9 +818,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
     def on_choose_folder_clicked(self, button):
         ret = self.target_folder_chooser.run()
+        folder = self.target_folder_chooser.get_uri()
         self.target_folder_chooser.hide()
         if ret == gtk.RESPONSE_OK:
-            folder = self.target_folder_chooser.get_uri()
             if folder:
                 self.set_string('selected-folder', urllib.unquote(folder))
                 self.update_selected_folder()
@@ -1260,8 +1260,8 @@ class SoundConverterWindow(GladeWindow):
             self.addchooser.set_current_folder_uri(last_folder)
 
         ret = self.addchooser.run()
-        self.addchooser.hide()
         folder = self.addchooser.get_current_folder_uri()
+        self.addchooser.hide()
         if ret == gtk.RESPONSE_OK and folder:
             self.filelist.add_uris(self.addchooser.get_uris())
             self.prefs.set_string('last-used-folder', folder)
@@ -1273,18 +1273,15 @@ class SoundConverterWindow(GladeWindow):
             self.addfolderchooser.set_current_folder_uri(last_folder)
 
         ret = self.addfolderchooser.run()
+        folders = self.addfolderchooser.get_uris()
+        folder = self.addfolderchooser.get_current_folder_uri()
         self.addfolderchooser.hide()
         if ret == gtk.RESPONSE_OK:
-
-            folders = self.addfolderchooser.get_uris()
-
             extensions = None
             if self.combo.get_active():
                 patterns = filepattern[self.combo.get_active()][1].split(';')
                 extensions = [os.path.splitext(p)[1] for p in patterns]
             self.filelist.add_uris(folders, extensions=extensions)
-
-            folder = self.addfolderchooser.get_current_folder_uri()
             if folder:
                 self.prefs.set_string('last-used-folder', folder)
 
