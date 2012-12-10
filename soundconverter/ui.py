@@ -254,7 +254,10 @@ class FileList:
                 files.append(uri)
 
         if not base:
-            base, notused = os.path.split(os.path.commonprefix(files))
+            base = os.path.commonprefix(files)
+            if not base[-1].endswith('/'):
+                # we want a common folder
+                base = base[0:base.rfind('/')]
         base += '/'
 
         for f in files:
