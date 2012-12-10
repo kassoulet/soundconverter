@@ -255,10 +255,12 @@ class FileList:
 
         if not base:
             base = os.path.commonprefix(files)
-            if not base[-1].endswith('/'):
+            if base and not base.endswith('/'):
                 # we want a common folder
                 base = base[0:base.rfind('/')]
-        base += '/'
+                base += '/'
+        else:
+            base += '/'
 
         for f in files:
             sound_file = SoundFile(f, base)
