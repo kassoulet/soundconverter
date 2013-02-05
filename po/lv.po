@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-07-30 15:28+0000\n"
-"PO-Revision-Date: 2012-06-26 01:24+0000\n"
-"Last-Translator: Rūdolfs Mazurs <Unknown>\n"
+"POT-Creation-Date: 2012-12-10 15:45+0000\n"
+"PO-Revision-Date: 2012-10-19 12:40+0000\n"
+"Last-Translator: tuxmaniack <Unknown>\n"
 "Language-Team: Latviešu <lata-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-06 15:24+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Launchpad-Export-Date: 2013-02-05 13:08+0000\n"
+"X-Generator: Launchpad (build 16468)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -70,11 +70,11 @@ msgstr "<big><b>Tāda datne jau eksistē</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Attiecināt uz visiem"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:387
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:398
 msgid "artist/album"
 msgstr "izpildītājs/albums"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:389
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:400
 msgid "artist - album"
 msgstr "izpildītājs - albums"
 
@@ -120,7 +120,7 @@ msgstr "Maza (ātrāk)"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Default"
-msgstr "Nokusējuma"
+msgstr "Noklusējuma"
 
 #: ../data/soundconverter.glade.h:25
 msgid "Better (Slower)"
@@ -159,170 +159,178 @@ msgid "AAC (.m4a)"
 msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
+msgid "Opus (.opus)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
 msgstr "GNOME audio profils"
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
 msgstr "celiņa_numurs - celiņa_nosaukums"
 
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:37
 msgid "track_title"
 msgstr "celiņa_nosaukums"
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:38
 msgid "Preferences"
 msgstr "Iestatījumi"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
 msgstr "Tajā pat mapē, kur ir ievades datnes"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:40
 msgid "Choose..."
 msgstr "Izvēlēties..."
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
 msgstr "Norādītajā mapē"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
 msgstr "Izveidot apakšmapes: "
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
 msgstr "Dzēst oriģinālo datni"
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Kur novietot rezultātu?</b>"
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
 msgstr "Datnes nosaukuma raksts: "
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
 msgstr "Aizvietot visas neatbilstīgās rakstzīmes"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
 msgstr "Izņemt visas rakstzīmes, izņemto burtus, ciparus un ./_-"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
 msgstr "<i>Datnes nosaukuma piemērs:</i>"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:49
 msgid "<b>How to name files?</b>"
 msgstr "<b>Kā nosaukt datnes?</b>"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "Format: "
 msgstr "Formāts: "
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Quality:"
 msgstr "Kvalitāte:"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Use .oga extension"
 msgstr "Lietot .oga paplašinājumu"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Ogg"
 msgstr "Ogg"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
 msgstr "Bitu ātrums:"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "Compression:"
 msgstr "Saspiešana:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
 msgstr "Parauga platums:"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
+msgid "Opus"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
 msgid "Profile:"
 msgstr "Profils:"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
 msgstr "gst-profils"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
 msgstr "<b>Rezultāta tips?</b>"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:65
 msgid "Resample"
 msgstr "Mainīt nolases biežumu"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:66
 msgid "Force mono output"
 msgstr "Uzspiest mono izvadi"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
 msgstr "Ierobežot paralēlo darbu skaitu"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
 msgstr "Nav pieejams MP3 kodētājs."
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
 msgstr "Kā instalēt"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
 msgstr "Kur novietot rezultātu?"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:72
 msgid "_File"
 msgstr "_Datne"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:73
 msgid "_Edit"
 msgstr "R_ediģēt"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:74
 msgid "_Help"
 msgstr "_Palīdzība"
 
-#: ../data/soundconverter.glade.h:73
+#: ../data/soundconverter.glade.h:75
 msgid "_Add File"
 msgstr "Pievienot d_atni"
 
-#: ../data/soundconverter.glade.h:74
+#: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
 msgstr "Pievienot _mapi"
 
-#: ../bin/soundconverter.py:113
+#: ../bin/soundconverter.py:115
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -330,7 +338,7 @@ msgstr ""
 "Konvertēt pakešu režīmā, no komandrindas bez grafiskas saskarnes.\n"
 "Jūs varat to izmantot, teiksim, no čaulu skriptiem."
 
-#: ../bin/soundconverter.py:118
+#: ../bin/soundconverter.py:120
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -338,7 +346,7 @@ msgstr ""
 "Rādīt birkas ievades datnēm nevis tos pārveidot. Tas norāda\n"
 "komandrindas pakešu režīmu un deaktivē grafisko saskarni."
 
-#: ../bin/soundconverter.py:122
+#: ../bin/soundconverter.py:124
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
@@ -347,15 +355,15 @@ msgstr ""
 "Iestatīt izvades MIME tipu pakešu režīmam. Noklusējuma ir %s. Ņemiet vērā, "
 "ka visdrīzāk vajadzētu iestatīt ari izvades sufiksu."
 
-#: ../bin/soundconverter.py:126
+#: ../bin/soundconverter.py:128
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Būt klusam. Neizvadīt parasto izvadi, tikai kļūdas."
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:130
 msgid "Displays additional debug information"
 msgstr "Rādīt papildu atkļūdošanas informāciju"
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:132
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -366,11 +374,11 @@ msgstr ""
 "Ņemiet vērā, ka sufiks \n"
 "neietekmē izvades MIME tipu."
 
-#: ../bin/soundconverter.py:134
+#: ../bin/soundconverter.py:136
 msgid "Force number of concurrent conversions."
 msgstr "Piespiedu vienlaicīgo pārveidošanu skaits."
 
-#: ../bin/soundconverter.py:136
+#: ../bin/soundconverter.py:138
 msgid "Shows GStreamer Options"
 msgstr "Rāda GStreamer opcijas"
 
@@ -413,7 +421,7 @@ msgstr ""
 " atbalstu datnēm ar šādu tipu, ja tas jums\n"
 " ir svarīgi."
 
-#: ../soundconverter/error.py:63
+#: ../soundconverter/error.py:64
 #, python-format
 msgid ""
 "\n"
@@ -426,45 +434,45 @@ msgstr ""
 "Kļūda: %s\n"
 "%s\n"
 
-#: ../soundconverter/gstreamer.py:189
+#: ../soundconverter/gstreamer.py:190
 msgid "Plugin installation aborted."
 msgstr "Spraudņa instalēšana tika apturēta."
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
-#: ../soundconverter/gstreamer.py:519
+#: ../soundconverter/gstreamer.py:521
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Nevar izveidot dekoderu “%s” formātam."
 
-#: ../soundconverter/gstreamer.py:530
+#: ../soundconverter/gstreamer.py:532
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nevar izveidot mapi “%s”."
 
 #. pass
-#: ../soundconverter/gstreamer.py:571
+#: ../soundconverter/gstreamer.py:573
 msgid "GStreamer Error:"
 msgstr "GStreamer kļūda:"
 
-#: ../soundconverter/gstreamer.py:656
+#: ../soundconverter/gstreamer.py:664
 msgid "Conversion Canceled"
 msgstr "Pārveidošana ir atcelta"
 
-#: ../soundconverter/gstreamer.py:663
+#: ../soundconverter/gstreamer.py:671
 msgid "Conversion Error"
 msgstr "Pārveidošanas kļūda"
 
-#: ../soundconverter/gstreamer.py:696
+#: ../soundconverter/gstreamer.py:704
 #, python-format
 msgid "Access denied: '%s'"
 msgstr "Pieeja ir liegta “%s”"
 
-#: ../soundconverter/gstreamer.py:712
+#: ../soundconverter/gstreamer.py:720
 msgid "Cannot overwrite source file(s)!"
 msgstr "Nevar pārrakstīt avota datni(-es)!"
 
-#: ../soundconverter/gstreamer.py:725
+#: ../soundconverter/gstreamer.py:733
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -473,9 +481,9 @@ msgid ""
 msgstr ""
 "Izvades datne <i>%s</i>\n"
 " jau eksistē.\n"
-" Vai vēlaties izlaist datni, pārrakstīt to vai atvelt pārveidošanu?\n"
+" Vai vēlaties izlaist datni, pārrakstīt to vai atcelt pārveidošanu?\n"
 
-#: ../soundconverter/gstreamer.py:830
+#: ../soundconverter/gstreamer.py:839
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Pārveidošana ir pabeigta %s"
@@ -501,7 +509,7 @@ msgstr ""
 msgid "All files"
 msgstr "Visas datnes"
 
-#: ../soundconverter/ui.py:96 ../soundconverter/ui.py:112
+#: ../soundconverter/ui.py:97 ../soundconverter/ui.py:116
 #, python-format
 msgid ""
 "\n"
@@ -512,97 +520,97 @@ msgstr ""
 "Kļūda: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:202
+#: ../soundconverter/ui.py:208
 msgid "Scanning files..."
 msgstr "Skenē datnes..."
 
-#: ../soundconverter/ui.py:309
+#: ../soundconverter/ui.py:320
 msgid "Adding files..."
 msgstr "Pievieno datnes..."
 
-#: ../soundconverter/ui.py:377
+#: ../soundconverter/ui.py:388
 msgid "Same as input, but replacing the suffix"
 msgstr "Tāds pats kā ievade, bet aizvieto sufiksu"
 
-#: ../soundconverter/ui.py:379
+#: ../soundconverter/ui.py:390
 msgid "Same as input, but with an additional suffix"
 msgstr "Tāds pats kā ievade, bet ar papildu sufiksu"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:391
 msgid "Track number - title"
 msgstr "Celiņa numurs - nosaukums"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:392
 msgid "Track title"
 msgstr "Celiņa nosaukums"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:393
 msgid "Artist - title"
 msgstr "Izpildītājs - nosaukums"
 
-#: ../soundconverter/ui.py:383
+#: ../soundconverter/ui.py:394
 msgid "Custom filename pattern"
 msgstr "Pielāgots datnes nosaukuma raksts"
 
-#: ../soundconverter/ui.py:388
+#: ../soundconverter/ui.py:399
 msgid "artist-album"
 msgstr "izpildītājs-albums"
 
-#: ../soundconverter/ui.py:445
+#: ../soundconverter/ui.py:457
 msgid "Available patterns:"
 msgstr "Pieejamie raksti:"
 
-#: ../soundconverter/ui.py:631
+#: ../soundconverter/ui.py:649
 #, python-format
 msgid "Into folder %s"
 msgstr "Mapē %s"
 
-#: ../soundconverter/ui.py:708
+#: ../soundconverter/ui.py:729
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Mērķa bitu ātrums: %s"
 
-#: ../soundconverter/ui.py:1050
+#: ../soundconverter/ui.py:1082
 msgid "Open a file"
 msgstr "Atvērt datni"
 
-#: ../soundconverter/ui.py:1144
+#: ../soundconverter/ui.py:1176
 msgid "Add Folder..."
 msgstr "Pievienot mapi..."
 
-#: ../soundconverter/ui.py:1322
+#: ../soundconverter/ui.py:1351
 msgid "Reading tags..."
 msgstr "Lasa birkas..."
 
-#: ../soundconverter/ui.py:1324
+#: ../soundconverter/ui.py:1353
 msgid "Preparing conversion..."
 msgstr "Sagatavo pārveidošanu..."
 
-#: ../soundconverter/ui.py:1339
+#: ../soundconverter/ui.py:1368
 msgid "Conversion cancelled"
 msgstr "Pārveidošana ir atcelta"
 
-#: ../soundconverter/ui.py:1342
+#: ../soundconverter/ui.py:1371
 msgid "Error when converting"
 msgstr "Kļūda pārveidojot"
 
-#: ../soundconverter/ui.py:1357
+#: ../soundconverter/ui.py:1386
 msgid "Converting"
 msgstr "Pārveido"
 
-#: ../soundconverter/ui.py:1377
+#: ../soundconverter/ui.py:1406
 msgid "Canceled"
 msgstr "Atcelts"
 
-#: ../soundconverter/ui.py:1450
+#: ../soundconverter/ui.py:1479
 msgid "Paused"
 msgstr "Pauzēts"
 
-#: ../soundconverter/ui.py:1468
+#: ../soundconverter/ui.py:1497
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d ir atlicis"
 
-#: ../soundconverter/ui.py:1474
+#: ../soundconverter/ui.py:1503
 msgid "Ready"
 msgstr "Gatavs"

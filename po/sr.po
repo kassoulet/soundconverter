@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Prekoder zvuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-30 15:28+0000\n"
+"POT-Creation-Date: 2012-12-10 15:45+0000\n"
 "PO-Revision-Date: 2012-07-16 12:23+0000\n"
 "Last-Translator: Марко М. Костић <Unknown>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-06 15:24+0000\n"
-"X-Generator: Launchpad (build 16061)\n"
+"X-Launchpad-Export-Date: 2013-02-05 13:08+0000\n"
+"X-Generator: Launchpad (build 16468)\n"
 "Language: sr\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -70,11 +70,11 @@ msgstr "<big><b>Датотека већ постоји</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "Примени на _све датотеке"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:387
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:398
 msgid "artist/album"
 msgstr "извођач/албум"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:389
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:400
 msgid "artist - album"
 msgstr "извођач — албум"
 
@@ -159,170 +159,178 @@ msgid "AAC (.m4a)"
 msgstr "ААЦ (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
+msgid "Opus (.opus)"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
 msgstr "Гномов профил звука"
 
-#: ../data/soundconverter.glade.h:35
+#: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
 msgstr "број_нумере — наслов_нумере"
 
-#: ../data/soundconverter.glade.h:36
+#: ../data/soundconverter.glade.h:37
 msgid "track_title"
 msgstr "наслов_нумере"
 
-#: ../data/soundconverter.glade.h:37
+#: ../data/soundconverter.glade.h:38
 msgid "Preferences"
 msgstr "Поставке"
 
-#: ../data/soundconverter.glade.h:38
+#: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
 msgstr "У исту фасциклу улазне датотеке"
 
-#: ../data/soundconverter.glade.h:39
+#: ../data/soundconverter.glade.h:40
 msgid "Choose..."
 msgstr "Изабери..."
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
 msgstr "У одређену фасциклу"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
 msgstr "Направи подфасцикле: "
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
 msgstr "Уклони оригиналне датотеке"
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Где ће бити смештени резултати?</b>"
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
 msgstr "Шаблон назива датотеке: "
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
 msgstr "Замени све лоше знаке"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
 msgstr "Уклони све знаке осим слова, цифара и ./_-"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
 msgstr "<i>Пример назива датотеке:</i>"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:49
 msgid "<b>How to name files?</b>"
 msgstr "<b>Како ће бити именоване датотеке?</b>"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "Format: "
 msgstr "Формат: "
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Quality:"
 msgstr "Квалитет:"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Use .oga extension"
 msgstr "Користи „.oga“ проширење"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Ogg"
 msgstr "Огг"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
 msgstr "Битски проток:"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "MP3"
 msgstr "МП3"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "Compression:"
 msgstr "Сажимање:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "FLAC"
 msgstr "ФЛАЦ"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
 msgstr "Величина узорка:"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "WAV"
 msgstr "ВАВ"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "AAC"
 msgstr "ААЦ"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
+msgid "Opus"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:62
 msgid "Profile:"
 msgstr "Профил:"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
 msgstr "гст-профил"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
 msgstr "<b>Која ће бити врста резултата?</b>"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:65
 msgid "Resample"
 msgstr "Поново узоркуј"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:66
 msgid "Force mono output"
 msgstr "Присили моно излаз"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
 msgstr "Ограничи број истовремених послова"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
 msgstr "МП3 енкодер није присутан."
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
 msgstr "Прочитајте како да га инсталирате"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
 msgstr "Где да сместим резултате?"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
 msgstr "Претварач звука"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:72
 msgid "_File"
 msgstr "_Датотека"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:73
 msgid "_Edit"
 msgstr "_Уређивање"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:74
 msgid "_Help"
 msgstr "_Помоћ"
 
-#: ../data/soundconverter.glade.h:73
+#: ../data/soundconverter.glade.h:75
 msgid "_Add File"
 msgstr "Додај _датотеку"
 
-#: ../data/soundconverter.glade.h:74
+#: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
 msgstr "Додај _фасциклу"
 
-#: ../bin/soundconverter.py:113
+#: ../bin/soundconverter.py:115
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -331,7 +339,7 @@ msgstr ""
 "окружења.\n"
 " Ово можете да користите, рецимо, из скрипти шкољке."
 
-#: ../bin/soundconverter.py:118
+#: ../bin/soundconverter.py:120
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -339,7 +347,7 @@ msgstr ""
 "Приказује ознаке улазних датотека уместо да их претвара. Ово показује \n"
 " групни режим линије наредби и искључује графичко сучеље корисника."
 
-#: ../bin/soundconverter.py:122
+#: ../bin/soundconverter.py:124
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
@@ -348,15 +356,15 @@ msgstr ""
 "Поставља излазну МИМЕ врсту за групни режим. Основно је %s. Знајте да ћете "
 "највероватније желети да поставите излазни суфикс у сваком случају."
 
-#: ../bin/soundconverter.py:126
+#: ../bin/soundconverter.py:128
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Ради тихо. Не исписује нормалне резултате, само грешке."
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:130
 msgid "Displays additional debug information"
 msgstr "Приказује додатне податке за уклањање грешака"
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:132
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -367,11 +375,11 @@ msgstr ""
 "Знајте да суфикс не утиче на\n"
 " излазну МИМЕ врсту."
 
-#: ../bin/soundconverter.py:134
+#: ../bin/soundconverter.py:136
 msgid "Force number of concurrent conversions."
 msgstr "Присиљава број конкурентних претварања."
 
-#: ../bin/soundconverter.py:136
+#: ../bin/soundconverter.py:138
 msgid "Shows GStreamer Options"
 msgstr "Приказује опције Гстримера"
 
@@ -414,7 +422,7 @@ msgstr ""
 " за датотеке ове врсте ако вам је то врло\n"
 " битно."
 
-#: ../soundconverter/error.py:63
+#: ../soundconverter/error.py:64
 #, python-format
 msgid ""
 "\n"
@@ -427,45 +435,45 @@ msgstr ""
 "Грешка: %s\n"
 "%s\n"
 
-#: ../soundconverter/gstreamer.py:189
+#: ../soundconverter/gstreamer.py:190
 msgid "Plugin installation aborted."
 msgstr "Инсталирање прикључка прекинуто"
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
-#: ../soundconverter/gstreamer.py:519
+#: ../soundconverter/gstreamer.py:521
 #, python-format
 msgid "Cannot create a decoder for '%s' format."
 msgstr "Не могу да створим декодер за „%s“ формат."
 
-#: ../soundconverter/gstreamer.py:530
+#: ../soundconverter/gstreamer.py:532
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Не могу да направим „%s“ фасциклу."
 
 #. pass
-#: ../soundconverter/gstreamer.py:571
+#: ../soundconverter/gstreamer.py:573
 msgid "GStreamer Error:"
 msgstr "Грешка Гстримера:"
 
-#: ../soundconverter/gstreamer.py:656
+#: ../soundconverter/gstreamer.py:664
 msgid "Conversion Canceled"
 msgstr "Претварање је отказано"
 
-#: ../soundconverter/gstreamer.py:663
+#: ../soundconverter/gstreamer.py:671
 msgid "Conversion Error"
 msgstr "Грешка претварања"
 
-#: ../soundconverter/gstreamer.py:696
+#: ../soundconverter/gstreamer.py:704
 #, python-format
 msgid "Access denied: '%s'"
 msgstr "Приступ је одбијен: „%s“"
 
-#: ../soundconverter/gstreamer.py:712
+#: ../soundconverter/gstreamer.py:720
 msgid "Cannot overwrite source file(s)!"
 msgstr "Не могу да пишем преко изворне датотеке!"
 
-#: ../soundconverter/gstreamer.py:725
+#: ../soundconverter/gstreamer.py:733
 #, python-format
 msgid ""
 "The output file <i>%s</i>\n"
@@ -477,7 +485,7 @@ msgstr ""
 " Да ли желите да прескочите датотеку, да је препишете или да откажете "
 "претварање?\n"
 
-#: ../soundconverter/gstreamer.py:830
+#: ../soundconverter/gstreamer.py:839
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Претварање је обављено за %s"
@@ -503,7 +511,7 @@ msgstr ""
 msgid "All files"
 msgstr "Све датотеке"
 
-#: ../soundconverter/ui.py:96 ../soundconverter/ui.py:112
+#: ../soundconverter/ui.py:97 ../soundconverter/ui.py:116
 #, python-format
 msgid ""
 "\n"
@@ -514,97 +522,97 @@ msgstr ""
 "Грешка: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:202
+#: ../soundconverter/ui.py:208
 msgid "Scanning files..."
 msgstr "Претражујем датотеке..."
 
-#: ../soundconverter/ui.py:309
+#: ../soundconverter/ui.py:320
 msgid "Adding files..."
 msgstr "Додајем датотеке..."
 
-#: ../soundconverter/ui.py:377
+#: ../soundconverter/ui.py:388
 msgid "Same as input, but replacing the suffix"
 msgstr "Исто као улазна, али замени суфикс"
 
-#: ../soundconverter/ui.py:379
+#: ../soundconverter/ui.py:390
 msgid "Same as input, but with an additional suffix"
 msgstr "Исто као улазна, али са додатним суфиксом"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:391
 msgid "Track number - title"
 msgstr "Број нумере — наслов"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:392
 msgid "Track title"
 msgstr "Наслов нумере"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:393
 msgid "Artist - title"
 msgstr "Извођач — наслов"
 
-#: ../soundconverter/ui.py:383
+#: ../soundconverter/ui.py:394
 msgid "Custom filename pattern"
 msgstr "Произвољни шаблон назива датотеке"
 
-#: ../soundconverter/ui.py:388
+#: ../soundconverter/ui.py:399
 msgid "artist-album"
 msgstr "извођач-албум"
 
-#: ../soundconverter/ui.py:445
+#: ../soundconverter/ui.py:457
 msgid "Available patterns:"
 msgstr "Доступни шаблони:"
 
-#: ../soundconverter/ui.py:631
+#: ../soundconverter/ui.py:649
 #, python-format
 msgid "Into folder %s"
 msgstr "У фасциклу %s"
 
-#: ../soundconverter/ui.py:708
+#: ../soundconverter/ui.py:729
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Ciljni protok: %s"
 
-#: ../soundconverter/ui.py:1050
+#: ../soundconverter/ui.py:1082
 msgid "Open a file"
 msgstr "Отвори датотеку"
 
-#: ../soundconverter/ui.py:1144
+#: ../soundconverter/ui.py:1176
 msgid "Add Folder..."
 msgstr "Додај фасциклу..."
 
-#: ../soundconverter/ui.py:1322
+#: ../soundconverter/ui.py:1351
 msgid "Reading tags..."
 msgstr "Читам ознаке..."
 
-#: ../soundconverter/ui.py:1324
+#: ../soundconverter/ui.py:1353
 msgid "Preparing conversion..."
 msgstr "Припремам претварање..."
 
-#: ../soundconverter/ui.py:1339
+#: ../soundconverter/ui.py:1368
 msgid "Conversion cancelled"
 msgstr "Претварање је отказано"
 
-#: ../soundconverter/ui.py:1342
+#: ../soundconverter/ui.py:1371
 msgid "Error when converting"
 msgstr "Грешка приликом претварања"
 
-#: ../soundconverter/ui.py:1357
+#: ../soundconverter/ui.py:1386
 msgid "Converting"
 msgstr "Претварам"
 
-#: ../soundconverter/ui.py:1377
+#: ../soundconverter/ui.py:1406
 msgid "Canceled"
 msgstr "Отказано"
 
-#: ../soundconverter/ui.py:1450
+#: ../soundconverter/ui.py:1479
 msgid "Paused"
 msgstr "Заустављено"
 
-#: ../soundconverter/ui.py:1468
+#: ../soundconverter/ui.py:1497
 #, python-format
 msgid "%d:%02d left"
 msgstr "преостало време: %d:%02d"
 
-#: ../soundconverter/ui.py:1474
+#: ../soundconverter/ui.py:1503
 msgid "Ready"
 msgstr "Спреман"
