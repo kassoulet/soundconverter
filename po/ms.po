@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-05 15:32+0100\n"
+"POT-Creation-Date: 2013-02-05 17:17+0100\n"
 "PO-Revision-Date: 2013-01-14 11:33+0000\n"
 "Last-Translator: abuyop <Unknown>\n"
 "Language-Team: Malay <ms@li.org>\n"
@@ -178,144 +178,145 @@ msgstr "tajuk_trek"
 msgid "Preferences"
 msgstr "Keutamaan"
 
-#. yopla
-#: ../data/soundconverter.glade.h:40
-#, fuzzy
-msgctxt "yop"
-msgid "Same folder as the input file"
-msgstr "Folder serupa dengan fail input"
-
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:39
 msgid "Choose..."
 msgstr "Pilih..."
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:40
 msgid "Into a specified folder"
 msgstr "Ke dalam folder yang dinyatakan"
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:41
 msgid "Create subfolders: "
 msgstr "Cipta subfolder: "
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:42
 msgid "Delete original file"
 msgstr "Buang fail asal"
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:43
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Manakah hendak letakkan hasil ?</b>"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:44
 msgid "Filename pattern: "
 msgstr "Corak nama fail: "
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:45
 msgid "Replace all messy characters"
 msgstr "Gantikan semua aksara yang berselerak"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:46
 msgid "Remove all characters except letters, digits and ./_-"
 msgstr "Buang semua aksara kecuali huruf, digit dan ./_-"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:47
 msgid "<i>Example filename:</i>"
 msgstr "<i>Nama fail contoh:</i>"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:48
 msgid "<b>How to name files?</b>"
 msgstr "<b>Bagaimana hendak menamakan fail ini ?</b>"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:49
 msgid "Format: "
 msgstr "Format: "
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:50
 msgid "Quality:"
 msgstr "Kualiti:"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:51
 msgid "Use .oga extension"
 msgstr "Guna sambungan .oga"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:52
 msgid "Ogg"
 msgstr "Ogg"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:53
 msgid "Bitrate mode:"
 msgstr "Mod Kadar bit:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:54
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:55
 msgid "Compression:"
 msgstr "Pemampatan:"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:56
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:57
 msgid "Sample width:"
 msgstr "Lebar sampel:"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:58
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:59
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:60
 msgid "Opus"
 msgstr "Opus"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:61
 msgid "Profile:"
 msgstr "Profil:"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:62
 msgid "gst-profile"
 msgstr "profil-gst"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:63
 msgid "<b>Type of result?</b>"
 msgstr "<b>Jenis hasil?</b>"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:64
 msgid "Resample"
 msgstr "Sampel semula"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:65
 msgid "Force mono output"
 msgstr "Paksa output mono"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:66
 msgid "Limit number of parallel jobs"
 msgstr "Bilangan had bagi kerja selari"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:67
 msgid "MP3 Encoder is not present."
 msgstr "Pengekod MP3 tidak hadir."
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:68
 msgid "Read how to install"
 msgstr "Baca bagaimana hendak dipasang"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:69
 msgid "Where to place results?"
 msgstr "Manakah hendak meletakkan hasil?"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:70
 msgid "SoundConverter"
 msgstr "Penukar Bunyi"
 
-#: ../data/soundconverter.glade.h:73
+#: ../data/soundconverter.glade.h:71
 msgid "_File"
 msgstr "_Fail"
+
+#: ../data/soundconverter.glade.h:72
+msgid "_Add File"
+msgstr "_Tambah Fail"
+
+#: ../data/soundconverter.glade.h:73
+msgid "Add _Folder"
+msgstr "Tambah _Folder"
 
 #: ../data/soundconverter.glade.h:74
 msgid "_Edit"
@@ -325,15 +326,7 @@ msgstr "_Sunting"
 msgid "_Help"
 msgstr "_Bantuan"
 
-#: ../data/soundconverter.glade.h:76
-msgid "_Add File"
-msgstr "_Tambah Fail"
-
-#: ../data/soundconverter.glade.h:77
-msgid "Add _Folder"
-msgstr "Tambah _Folder"
-
-#: ../bin/soundconverter.py:115
+#: ../bin/soundconverter.py:116
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -341,7 +334,7 @@ msgstr ""
 "Tukar dalam mod kelumpok, daria baris perintah, tanpa antaramuka\n"
 " pengguna. Anda boleh guna ini daripada skrip shell."
 
-#: ../bin/soundconverter.py:120
+#: ../bin/soundconverter.py:121
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -350,7 +343,7 @@ msgstr ""
 "mod kelumpok baris perintah dan lumpuhkan antaramuka pengguna\n"
 "bergrafik."
 
-#: ../bin/soundconverter.py:124
+#: ../bin/soundconverter.py:125
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
@@ -359,15 +352,15 @@ msgstr ""
 "Tetapkan jenis MIME output untuk mod kelumpok. Lalai ialah %s. Perhatian, "
 "anda kemungkinan hendak tetapkan akhiran output juga."
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:129
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Senyap. Jangan tulis output biasa, hanya ralat."
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:131
 msgid "Displays additional debug information"
 msgstr "Papar maklumat nyahpepijat tambahan"
 
-#: ../bin/soundconverter.py:132
+#: ../bin/soundconverter.py:133
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -378,11 +371,11 @@ msgstr ""
 "Perhatian akhiran tidak memberi\n"
 " kesan pada jenis MIME output."
 
-#: ../bin/soundconverter.py:136
+#: ../bin/soundconverter.py:137
 msgid "Force number of concurrent conversions."
 msgstr "Paksa bilangan penukaran serentak."
 
-#: ../bin/soundconverter.py:138
+#: ../bin/soundconverter.py:139
 msgid "Shows GStreamer Options"
 msgstr "Papar Pilihan GStreamer"
 
@@ -618,3 +611,8 @@ msgstr "%d:%02d berbaki"
 #: ../soundconverter/ui.py:1504
 msgid "Ready"
 msgstr "Sedia"
+
+#, fuzzy
+#~ msgctxt "yop"
+#~ msgid "Same folder as the input file"
+#~ msgstr "Folder serupa dengan fail input"
