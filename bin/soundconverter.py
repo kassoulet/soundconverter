@@ -41,8 +41,9 @@ GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
 PACKAGE = NAME.lower()
 try: 
-    gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
     locale.setlocale(locale.LC_ALL,'')
+    locale.bindtextdomain(PACKAGE,'@datadir@/locale')
+    gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
     #from gettext import gettext as _
@@ -164,6 +165,11 @@ for k in dir(options):
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
+
+import gtk
+import gtk.glade
+gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
+gtk.glade.textdomain(PACKAGE)
 
 print '  using %d thread(s)' % settings['jobs']
 
