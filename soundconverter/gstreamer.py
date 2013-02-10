@@ -503,14 +503,14 @@ class Converter(Decoder):
             'gst-profile': self.add_audio_profile,
         }
         self.add_command('audiorate')
-        self.add_command('audioresample')
         self.add_command('audioconvert')
+        self.add_command('audioresample')
 
         # audio resampling support
         if self.output_resample:
             self.add_command('audio/x-raw-int,rate=%d' % self.resample_rate)
-            self.add_command('audioresample')
             self.add_command('audioconvert')
+            self.add_command('audioresample')
 
         if self.force_mono:
             self.add_command('audio/x-raw-int,channels=1')
