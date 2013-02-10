@@ -187,7 +187,7 @@ class Pipeline(BackgroundTask):
             return
         self.done()
         if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
-            show_error(_('Plugin installation aborted.'))
+            show_error('Error', _('Plugin installation aborted.'))
             return
 
         show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
@@ -349,6 +349,8 @@ class Decoder(Pipeline):
                 self.sound_file.duration = self.pipeline.query_duration(
                                             gst.FORMAT_TIME)[0] / gst.SECOND
                 debug('got file duration:', self.sound_file.duration)
+                if self.sound_file.duration < 0:
+                    self.sound_file.duration = None
         except gst.QueryError:
             self.sound_file.duration = None
 
@@ -518,7 +520,7 @@ class Converter(Decoder):
         if not encoder:
             # TODO: is this used ?
             # TODO: add proper error management when an encoder cannot be created
-            show_error(_("Cannot create a decoder for \'%s\' format.") % 
+            show_error(_('Error', "Cannot create a decoder for \'%s\' format.") % 
                         self.output_type)
             return
 
@@ -529,7 +531,7 @@ class Converter(Decoder):
         if dirname and not gnomevfs.exists(dirname):
             log('Creating folder: \'%s\'' % dirname)
             if not vfs_makedirs(str(dirname)):
-                show_error(_("Cannot create \'%s\' folder.") % dirname)
+                show_error('Error', _("Cannot create \'%s\' folder.") % dirname)
                 return
 
         self.add_command('%s location="%s"' % (
