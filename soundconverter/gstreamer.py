@@ -658,20 +658,7 @@ class Converter(Decoder):
         return pipeline
 
 
-class ConverterQueueCanceled(SoundConverterException):
-
-    """Exception thrown when a ConverterQueue is canceled."""
-
-    def __init__(self):
-        SoundConverterException.__init__(self, _('Conversion Canceled'), '')
-
-class ConverterQueueError(SoundConverterException):
-
-    """Exception thrown when a ConverterQueue had an error."""
-
-    def __init__(self):
-        SoundConverterException.__init__(self, _('Conversion Error'), '')
-
+CONVERSION_OK, CONVERSION_CANCELED, CONVERSION_ERROR = 0,1,2
 
 class ConverterQueue(TaskQueue):
 
@@ -706,21 +693,19 @@ class ConverterQueue(TaskQueue):
             msg = _('Access denied: \'%s\'' % output_filename)
             log(msg)
             show_error(msg, '')
-            raise ConverterQueueError()
-            return
+            return CONVERSION_ERROR
         except:
             self.error_count += 1
             msg = 'Invalid URI: \'%s\'' % output_filename
             log(msg)
             show_error(msg, '')
-            raise ConverterQueueError()
-            return
+            return CONVERSION_ERROR
 
         # do not overwrite source file !!
         if output_filename == sound_file.uri:
             self.error_count += 1
             show_error(_('Cannot overwrite source file(s)!'), '')
-            raise ConverterQueueCanceled()
+            return CONVERSION_ERROR
 
         if exists:
             if self.overwrite_action is not None:
@@ -762,7 +747,8 @@ class ConverterQueue(TaskQueue):
                 return
             else:
                 # cancel operation
-                raise ConverterQueueCanceled()
+                return CONVERSION_CANCELED
+
 
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),
@@ -789,6 +775,7 @@ class ConverterQueue(TaskQueue):
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
+        return CONVERSION_OK
 
     def get_progress(self, per_file_progress):
         tasks = self.running_tasks

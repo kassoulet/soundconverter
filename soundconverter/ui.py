@@ -33,9 +33,10 @@ from gconfstore import GConfStore
 from fileoperations import filename_to_uri, beautify_uri
 from fileoperations import unquote_filename, vfs_walk
 from fileoperations import use_gnomevfs
-from gstreamer import ConverterQueue, ConverterQueueCanceled, ConverterQueueError
+from gstreamer import ConverterQueue
 from gstreamer import available_elements, TypeFinder, TagReader
 from gstreamer import audio_profiles_list, audio_profiles_dict
+from gstreamer import CONVERSION_CANCELED, CONVERSION_ERROR
 from soundfile import SoundFile
 from settings import locale_patterns_dict, custom_patterns, filepattern, settings
 from namegenerator import TargetNameGenerator
@@ -1307,17 +1308,23 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
-        if sound_file.tags_read: # TODO: factorize
-            self.converter.add(sound_file)
+        if not sound_file.tags_read:
+            if self.prefs.require_tags:
+                self.read_tags(sound_file)
+            else:
+                self.do_add_file(sound_file)
             return
 
         tagreader = TagReader(sound_file)
         tagreader.set_found_tag_hook(self.tags_read)
         tagreader.start()
 
+    def do_add_file(self, sound_file):
+        self.conversion_error = self.converter.add(sound_file)
+
     def tags_read(self, tagreader):
         sound_file = tagreader.get_sound_file()
-        self.converter.add(sound_file)
+        self.do_add_file(sound_file)
 
     def on_progress(self):
         if self.pulse_progress >= 0: # still waiting for tags
@@ -1344,37 +1351,37 @@ class SoundConverterWindow(GladeWindow):
         return running
 
     def do_convert(self):
-        try:
-            self.pulse_progress = -1
-            gobject.timeout_add(100, self.on_progress)
-            if self.prefs.require_tags:
-                self.progressbar.set_text(_('Reading tags...'))
-            else:
-                self.progressbar.set_text(_('Preparing conversion...'))
-            files = self.filelist.get_files()
-            total = len(files)
-            for i, sound_file in enumerate(files):
-                gtk_iteration()
-                self.pulse_progress = float(i)/total
-                sound_file.progress = None
-                if self.prefs.require_tags:
-                    self.read_tags(sound_file)
-                else:
-                    self.converter.add(sound_file)
-
-        except ConverterQueueCanceled:
-            log('cancelling conversion.')
-            self.conversion_ended()
-            self.set_status(_('Conversion cancelled'))
-        except ConverterQueueError:
-            self.conversion_ended()
-            self.set_status(_('Error when converting'))
+        self.conversion_error = None
+        self.pulse_progress = -1
+        gobject.timeout_add(100, self.on_progress)
+        if self.prefs.require_tags:
+            self.progressbar.set_text(_('Reading tags...'))
         else:
-            self.set_status('')
-            self.pulse_progress = None
-            self.converter.start()
-            self.set_sensitive()
-        return False
+            self.progressbar.set_text(_('Preparing conversion...'))
+        files = self.filelist.get_files()
+        total = len(files)
+        for i, sound_file in enumerate(files):
+            gtk_iteration()
+            self.pulse_progress = float(i)/total
+            sound_file.progress = None
+            if self.prefs.require_tags:
+                self.read_tags(sound_file)
+            else:
+                self.do_add_file(sound_file)
+            if self.conversion_error == CONVERSION_CANCELED:
+                log('cancelling conversion.')
+                self.conversion_ended()
+                self.set_status(_('Conversion cancelled'))
+                return
+            if self.conversion_error == CONVERSION_ERROR:
+                self.conversion_ended()
+                self.set_status(_('Error while converting'))
+                return
+        # all was OK
+        self.set_status('')
+        self.pulse_progress = None
+        self.converter.start()
+        self.set_sensitive()
 
     def on_convert_button_clicked(self, *args):
         # reset and show progress bar
