@@ -1301,7 +1301,8 @@ class SoundConverterWindow(GladeWindow):
     def on_remove_activate(self, *args):
         model, paths = self.filelist_selection.get_selected_rows()
         while paths:
-            i = self.filelist.model.get_iter(paths[0])
+            childpath = model.convert_path_to_child_path(paths[0])
+            i = self.filelist.model.get_iter(childpath)
             self.filelist.remove(i)
             model, paths = self.filelist_selection.get_selected_rows()
         self.set_sensitive()
