@@ -183,7 +183,7 @@ class FileList:
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
-
+        widget.stop_emission('drag_data_received')
         if mime_id >= 0 and mime_id < len(self.drop_mime_types):
             self.add_uris([uri.strip() for uri in selection.data.split('\n')])
             context.finish(True, False, time)
