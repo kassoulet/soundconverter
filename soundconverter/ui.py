@@ -553,14 +553,19 @@ class PreferencesDialog(GladeWindow, GConfStore):
         model = self.output_mime_type.get_model()
         for b in widgets:
             mime, encoder_name = b
-            encoder_present = encoder_name in available_elements
-            if encoder_name and not encoder_present:
+            # valid encoder?
+            encoder_present = encoder_name and encoder_name in available_elements
+            # valid profile?
+            profile_present = mime == 'gst-profile' and audio_profiles_list
+            if encoder_present or profile_present:
+                # add to supported outputs
+                self.present_mime_types.append(mime)
+                i += 1
+            else:
+                # remove it.
                 del model[i]
                 if mime_type == mime:
                     mime_type = self.defaults['output-mime-type']
-            else:
-                self.present_mime_types.append(mime)
-                i += 1
         for i, mime in enumerate(self.present_mime_types):
             if mime_type == mime:
                 widget.set_active(i)
