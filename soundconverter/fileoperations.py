@@ -109,10 +109,10 @@ def filename_to_uri(filename):
     """Convert a filename to a valid uri.
     Filename can be a relative or absolute path, or an uri.
     """
-    url = urlparse.urlparse(filename)
-    if not url[0]:
+    if '://' not in filename:
+        # convert local filename to uri
         filename = urllib.pathname2url(os.path.abspath(filename))
-        filename = str(gnomevfs.URI(filename))
+    filename = str(gnomevfs.URI(filename))
     return filename
 
 
@@ -124,3 +124,4 @@ def vfs_encode_filename(filename):
 
 def file_encode_filename(filename):
     return gnomevfs.get_local_path_from_uri(filename).replace(' ', '\ ')
+    
