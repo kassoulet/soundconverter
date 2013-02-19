@@ -20,16 +20,17 @@
 # USA
 
 
+import sys
+import gobject
+import time
 from soundfile import SoundFile
 import error
 from soundconverter.settings import settings
 from gstreamer import TagReader
-import gobject
-import time
 from namegenerator import TargetNameGenerator
 from queue import TaskQueue
 from gstreamer import Converter
-import sys
+from fileoperations import unquote_filename
 
 def cli_tags_main(input_files):
     error.set_error_handler(error.ErrorPrinter())
@@ -96,7 +97,7 @@ def cli_convert_main(input_files):
                 percent = '%.1f %%' % percent
             else:
                 percent = '/-\|' [int(time.time()) % 4]
-            progress.show('%s: %s' % (c.sound_file.filename[-65:], percent ))
+            progress.show('%s: %s' % (unquote_filename(c.sound_file.filename[-65:]), percent ))
             time.sleep(0.01)
             context.iteration(True)
         print

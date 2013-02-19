@@ -32,6 +32,7 @@ import gconf
 from fileoperations import vfs_encode_filename, file_encode_filename
 from fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
 from fileoperations import vfs_exists
+from fileoperations import beautify_uri
 from fileoperations import use_gnomevfs
 from task import BackgroundTask
 from queue import TaskQueue
@@ -537,7 +538,7 @@ class Converter(Decoder):
         self.add_command('%s location="%s"' % (
             gstreamer_sink, encode_filename(self.output_filename)))
         if self.overwrite and vfs_exists(self.output_filename):
-            log('overwriting \'%s\'' % self.output_filename)
+            log('overwriting \'%s\'' % beautify_uri(self.output_filename))
             vfs_unlink(self.output_filename)
 
     def finished(self):

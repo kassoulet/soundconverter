@@ -176,6 +176,7 @@ print '  using %d thread(s)' % settings['jobs']
 from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
+
 files = map(filename_to_uri, files)
 
 try:
