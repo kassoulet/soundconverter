@@ -1314,11 +1314,8 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def read_tags(self, sound_file):
-        if not sound_file.tags_read:
-            if self.prefs.require_tags:
-                self.read_tags(sound_file)
-            else:
-                self.do_add_file(sound_file)
+        if sound_file.tags_read:
+            self.do_add_file(sound_file)
             return
 
         tagreader = TagReader(sound_file)
