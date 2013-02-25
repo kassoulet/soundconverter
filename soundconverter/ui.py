@@ -1394,6 +1394,8 @@ class SoundConverterWindow(GladeWindow):
         self.progress_time = time.time()
         self.set_progress()
         self.set_status(_('Converting'))
+        for soundfile in self.filelist.get_files():
+            self.set_file_progress(soundfile, 0.0)
         # start conversion
         self.do_convert()
         # update ui
