@@ -141,20 +141,21 @@ class Pipeline(BackgroundTask):
         self.eos = False
         self.error = None
         self.connected_signals = []
-        self.aborted = False
 
     def started(self):
         self.play()
 
-    def finished(self):
+    def cleanup(self):
         for element, sid in self.connected_signals:
             element.disconnect(sid)
         self.connected_signals = []
         self.stop_pipeline()
 
-    def abort(self):
-        self.aborted = True
-        self.finished()
+    def aborted(self):
+        self.cleanup()
+
+    def finished(self):
+        self.cleanup()
 
     def add_command(self, command):
         self.command.append(command)
@@ -541,16 +542,16 @@ class Converter(Decoder):
             log('overwriting \'%s\'' % beautify_uri(self.output_filename))
             vfs_unlink(self.output_filename)
 
+    def aborted(self):
+        # remove partial file
+        try:
+            gnomevfs.unlink(self.output_filename)
+        except:
+            log('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
+        return
+
     def finished(self):
         Pipeline.finished(self)
-
-        if self.aborted:
-            # remove partial file
-            try:
-                gnomevfs.unlink(self.output_filename)
-            except:
-                pass
-            return
 
         # Copy file permissions
         try:

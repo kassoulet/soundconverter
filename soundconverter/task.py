@@ -69,6 +69,11 @@ class BackgroundTask:
 
     def abort(self):
         """Stop task processing. finished() is not called."""
+        self.emit('aborted')
+        self.running = False
+
+    def aborted(self):
+        """called when the task is aborted."""
         pass
 
     def started(self):

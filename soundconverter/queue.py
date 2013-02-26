@@ -107,6 +107,7 @@ class TaskQueue(BackgroundTask):
         self.running_tasks = []
         self.waiting_tasks = []
         self.running = False
+        self.start_time = None
 
     # The following is called when the Queue is finished
     def queue_ended(self):
