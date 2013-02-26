@@ -34,7 +34,6 @@ class BackgroundTask:
     normally."""
 
     def __init__(self):
-        self.paused = False
         self.running = False
         self.listeners = {}
         self.progress = None
@@ -43,7 +42,6 @@ class BackgroundTask:
         """Start running the task. Call started()."""
         self.emit('started')
         self.running = True
-        self.paused = False
         self.run_start_time = time.time()
 
     def add_listener(self, signal, listener):

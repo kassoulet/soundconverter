@@ -670,6 +670,7 @@ class ConverterQueue(TaskQueue):
         self.window = window
         self.overwrite_action = None
         self.reset_counters()
+        self.paused = False
 
     def reset_counters(self):
         self.total_duration = 0
