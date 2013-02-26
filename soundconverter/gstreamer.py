@@ -329,7 +329,6 @@ class Decoder(Pipeline):
         self.sound_file = sound_file
         self.time = 0
         self.position = 0
-        self.probe_id = None
 
         command = '%s location="%s" name=src ! decodebin name=decoder' % \
             (gstreamer_source, encode_filename(self.sound_file.uri))
@@ -345,6 +344,9 @@ class Decoder(Pipeline):
         pass
 
     def query_duration(self):
+        """
+        Ask for the duration of the current pipeline.
+        """
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(
@@ -355,7 +357,24 @@ class Decoder(Pipeline):
         except gst.QueryError:
             self.sound_file.duration = None
 
+    def query_position(self):
+        """
+        Ask for the stream position of the current pipeline.
+        """
+        try:
+            if self.pipeline:
+                self.position = self.pipeline.query_position(
+                                            gst.FORMAT_TIME)[0] / gst.SECOND
+                if self.position < 0:
+                    self.position = 0
+        except gst.QueryError:
+            self.position = 0
+
+
     def found_tag(self, decoder, something, taglist):
+        """
+        Called when the decoder reads a tag.
+        """
         debug('found_tags:', self.sound_file.filename_for_display)
         for k in taglist.keys():
             if 'image' not in k:
@@ -383,33 +402,14 @@ class Decoder(Pipeline):
                 tags[k] = taglist[k]
 
         self.sound_file.tags.update(tags)
-
-        try:
-            self.sound_file.duration = self.pipeline.query_duration(
-                                            gst.FORMAT_TIME)[0] / gst.SECOND
-        except gst.QueryError:
-            pass
-
-    def _buffer_probe(self, pad, buffer):
-        """buffer probe callback used to get real time
-           since the beginning of the stream"""
-        if buffer.timestamp == gst.CLOCK_TIME_NONE:
-            pad.remove_buffer_probe(self.probe_id)
-            return False
-
-        self.position = float(buffer.timestamp) / gst.SECOND
-        return True
+        self.query_duration()
 
     def new_decoded_pad(self, decoder, pad, is_last):
         """ called when a decoded pad is created """
-        self.probe_id = pad.add_buffer_probe(self._buffer_probe)
-        self.probed_pad = pad
-        self.processing = True
         self.query_duration()
+        self.processing = True
 
     def finished(self):
-        if self.probe_id:
-            self.probed_pad.remove_buffer_probe(self.probe_id)
         Pipeline.finished(self)
 
     def get_sound_file(self):
@@ -425,6 +425,7 @@ class Decoder(Pipeline):
 
     def get_position(self):
         """ return the current pipeline position in the stream """
+        self.query_position()
         return self.position
 
 # this is needed since TagReader caller don't keep a reference long enough,
