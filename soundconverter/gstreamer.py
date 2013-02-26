@@ -818,6 +818,7 @@ class ConverterQueue(TaskQueue):
         self.errors.append(task.error)
         if task.error:
             self.error_count += 1
+        self.sound_file.progress = 1.0
 
     def finished(self):
         if self.running_tasks:
