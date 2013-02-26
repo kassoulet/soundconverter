@@ -21,7 +21,6 @@
 
 import time
 import gobject
-from error import SoundConverterException, show_exception
 
 
 class BackgroundTask:
@@ -42,11 +41,7 @@ class BackgroundTask:
 
     def start(self):
         """Start running the task. Call started()."""
-        try:
-            self.emit('started')
-        except SoundConverterException, e:
-            show_exception(e)
-            return
+        self.emit('started')
         self.running = True
         self.paused = False
         self.run_start_time = time.time()

@@ -38,7 +38,6 @@ from task import BackgroundTask
 from queue import TaskQueue
 from utils import debug, log
 from settings import mime_whitelist, filename_blacklist
-from error import SoundConverterException
 from error import show_error
 try:
     from notify import notification

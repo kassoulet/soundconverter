@@ -101,10 +101,6 @@ class ErrorDialog:
         self.dialog.run()
         self.dialog.hide()
 
-    def show_exception(self, exception):
-        self.show('<b>%s</b>' % gobject.markup_escape_text(exception.primary),
-                    exception.secondary)
-
 
 class MsgAreaErrorDialog_:
 

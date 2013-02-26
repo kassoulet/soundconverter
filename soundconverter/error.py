@@ -23,40 +23,6 @@ from gettext import gettext as _
 import sys
 
 
-class SoundConverterException(Exception):
-
-    def __init__(self, primary, secondary):
-        Exception.__init__(self)
-        self.primary = primary
-        self.secondary = secondary
-
-
-class ConversionTargetExists(SoundConverterException):
-
-    def __init__(self, uri):
-        SoundConverterException.__init__(self, _('Target exists.'),
-                            (_('The output file %s already exists.')) % uri)
-
-
-class NoLink(SoundConverterException):
-
-    def __init__(self):
-        SoundConverterException.__init__(self, _('Internal error'),
-                _('Couldn\'t link GStreamer elements.\n '
-                    'Please report this as a bug.'))
-
-
-class UnknownType(SoundConverterException):
-
-    def __init__(self, uri, mime_type):
-        SoundConverterException.__init__(self,
-                _('Unknown type %s') % mime_type,
-                (_('The file %s is of an unknown type.\n '
-                    'Please ask the developers to add support\n '
-                    'for files of this type if it is important\n to you.'))
-                    % uri)
-
-
 class ErrorPrinter:
 
     def show_error(self, primary, secondary):
@@ -65,9 +31,6 @@ class ErrorPrinter:
         except:
             pass
         sys.exit(1)
-
-    def show_exception(self, e):
-        self.show(e.primary, e.secondary)
 
 
 error_handler = ErrorPrinter()
@@ -78,8 +41,4 @@ def set_error_handler(handler):
 
 def show_error(primary, secondary):
     error_handler.show_error(primary, secondary)
-
-def show_exception(e):
-    error_handler.show_exception(e)
-
 
