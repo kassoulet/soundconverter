@@ -1297,10 +1297,15 @@ class SoundConverterWindow(GladeWindow):
     def on_remove_activate(self, *args):
         model, paths = self.filelist_selection.get_selected_rows()
         while paths:
+            # Remove files
             childpath = model.convert_path_to_child_path(paths[0])
             i = self.filelist.model.get_iter(childpath)
             self.filelist.remove(i)
             model, paths = self.filelist_selection.get_selected_rows()
+        # re-assign row numbers
+        files = self.filelist.get_files()
+        for i, sound_file in enumerate(files):
+            sound_file.filelist_row = i
         self.set_sensitive()
 
     def on_clearlist_activate(self, *args):
