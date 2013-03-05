@@ -98,7 +98,8 @@ class TaskQueue(BackgroundTask):
     def task_finished(self, task=None):
         if not self.running_tasks:
             return
-        self.running_tasks.remove(task)
+        if task in self.running_tasks:
+            self.running_tasks.remove(task)
         self.finished_tasks += 1
         self.start_next_task()
 
