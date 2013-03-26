@@ -25,6 +25,7 @@ import urlparse
 import gnomevfs
 
 from utils import log
+from error import show_error
 
 use_gnomevfs = False
 
@@ -96,6 +97,27 @@ def vfs_makedirs(path_to_create):
 
 def vfs_unlink(filename):
     gnomevfs.unlink(gnomevfs.URI(filename))
+
+
+def vfs_rename(original, newname):
+    """Rename a gnomevfs file"""
+    
+    uri = gnomevfs.URI(newname)
+    dirname = uri.parent
+    if dirname and not gnomevfs.exists(dirname):
+        log('Creating folder: \'%s\'' % dirname)
+        if not vfs_makedirs(str(dirname)):
+            show_error('Error', _("Cannot create \'%s\' folder.") % dirname)
+            return
+
+    try:
+        gnomevfs.xfer_uri(gnomevfs.URI(original), uri,
+                          gnomevfs.XFER_REMOVESOURCE,
+                          gnomevfs.XFER_ERROR_MODE_ABORT,
+                          gnomevfs.XFER_OVERWRITE_MODE_ABORT
+                         )
+    except Exception as error:
+        log('Error while renaming file: %s' % error)
 
 
 def vfs_exists(filename):

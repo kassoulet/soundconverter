@@ -31,6 +31,7 @@ import gconf
 
 from fileoperations import vfs_encode_filename, file_encode_filename
 from fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
+from fileoperations import vfs_rename
 from fileoperations import vfs_exists
 from fileoperations import beautify_uri
 from fileoperations import use_gnomevfs
@@ -430,7 +431,7 @@ class Decoder(Pipeline):
 
 # this is needed since TagReader caller don't keep a reference long enough,
 # and so tagReaders will be deleted before the callback are called,
-# resulting in awful crashes...
+# resulting in awful crashes... TODO: we have to remove this.
 dontdelete = []
 
 class TagReader(Decoder):
@@ -682,76 +683,16 @@ class ConverterQueue(TaskQueue):
         self.all_tasks = None
 
     def add(self, sound_file):
-        output_filename = self.window.prefs.generate_filename(sound_file)
-        path = urlparse(output_filename) [2]
+        # generate a temporary filename from source name and output suffix
+        output_suffix = self.window.prefs.get_output_suffix()
+        output_filename = sound_file.uri + '%s~SC~' % output_suffix
+        
+        if vfs_exists(output_filename):
+            # always overwrite temporary files
+            vfs_unlink(output_filename)
+        
+        path = urlparse(output_filename)[2]
         path = unquote_filename(path)
-
-        exists = True
-        try:
-            gnomevfs.get_file_info(gnomevfs.URI((output_filename)))
-        except gnomevfs.NotFoundError:
-            exists = False
-        except gnomevfs.AccessDeniedError:
-            self.error_count += 1
-            msg = _('Access denied: \'%s\'' % output_filename)
-            log(msg)
-            show_error(msg, '')
-            return CONVERSION_ERROR
-        except:
-            self.error_count += 1
-            msg = 'Invalid URI: \'%s\'' % output_filename
-            log(msg)
-            show_error(msg, '')
-            return CONVERSION_ERROR
-
-        # do not overwrite source file !!
-        if output_filename == sound_file.uri:
-            self.error_count += 1
-            show_error(_('Cannot overwrite source file(s)!'), '')
-            return CONVERSION_ERROR
-
-        if exists:
-            if self.overwrite_action is not None:
-                result = self.overwrite_action
-            else:
-                dialog = self.window.existsdialog
-
-                dpath = os.path.basename(path)
-                dpath = gobject.markup_escape_text(dpath)
-
-                msg = \
-                _('The output file <i>%s</i>\n already exists.\n '\
-                    'Do you want to skip the file, overwrite it or'\
-                    ' cancel the conversion?\n') % dpath
-
-                dialog.message.set_markup(msg)
-                dialog.set_transient_for(self.window.widget)
-
-                if self.overwrite_action is not None:
-                    dialog.apply_to_all.set_active(True)
-                else:
-                    dialog.apply_to_all.set_active(False)
-
-                result = dialog.run()
-                dialog.hide()
-
-                if dialog.apply_to_all.get_active():
-                    if result == 1 or result == 0:
-                        self.overwrite_action = result
-
-            if result == 1:
-                # overwrite
-                try:
-                    vfs_unlink(output_filename)
-                except gnomevfs.NotFoundError:
-                    pass
-            elif result == 0:
-                # skip file
-                return
-            else:
-                # cancel operation
-                return CONVERSION_CANCELED
-
 
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),
@@ -814,6 +755,20 @@ class ConverterQueue(TaskQueue):
         return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
+        # rename temporary file 
+        newname = self.window.prefs.generate_filename(task.sound_file)
+        log(task.output_filename, '->', newname)
+        
+        # safe mode. generate a filename until we find a free one
+        p,e = os.path.splitext(newname)
+        p = p + ' (%d)' + e
+        i = 1
+        while vfs_exists(newname):
+            newname = p % i
+            i += 1
+        
+        vfs_rename(task.output_filename, newname)
+    
         duration = task.get_duration()
         if duration:
             self.duration_processed += duration

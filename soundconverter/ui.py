@@ -250,6 +250,8 @@ class FileList:
             else:
                 files.append(uri)
 
+        files = [f for f in files if not f.endswith('~SC~')]
+
         if not base:
             base = os.path.commonprefix(files)
             if base and not base.endswith('/'):
@@ -732,27 +734,27 @@ class PreferencesDialog(GladeWindow, GConfStore):
                     self.get_bitrate_from_settings())
         self.aprox_bitrate.set_markup(markup)
 
-    def generate_filename(self, sound_file, for_display=False):
+    def get_output_suffix(self):
         self.gconf.clear_cache()
         output_type = self.get_string('output-mime-type')
         profile = self.get_string('audio-profile')
         profile_ext = audio_profiles_dict[profile][1] if profile else ''
         output_suffix = {
-                        'audio/x-vorbis': '.ogg',
-                        'audio/x-flac': '.flac',
-                        'audio/x-wav': '.wav',
-                        'audio/mpeg': '.mp3',
-                        'audio/x-m4a': '.m4a',
-                        'audio/ogg; codecs=opus': '.opus',
-                        'gst-profile': '.' + profile_ext,
-                    }.get(output_type, '.?')
-
-        generator = TargetNameGenerator()
-
+                'audio/x-vorbis': '.ogg',
+                'audio/x-flac': '.flac',
+                'audio/x-wav': '.wav',
+                'audio/mpeg': '.mp3',
+                'audio/x-m4a': '.m4a',
+                'audio/ogg; codecs=opus': '.opus',
+                'gst-profile': '.' + profile_ext,
+        }.get(output_type, '.?')
         if output_suffix == '.ogg' and self.get_int('vorbis-oga-extension'):
             output_suffix = '.oga'
+        return output_suffix
 
-        generator.suffix = output_suffix
+    def generate_filename(self, sound_file, for_display=False):
+        generator = TargetNameGenerator()
+        generator.suffix = self.get_output_suffix()
 
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
@@ -763,8 +765,6 @@ class PreferencesDialog(GladeWindow, GConfStore):
             generator.subfolders = self.get_subfolder_pattern()
 
         generator.basename = self.get_basename_pattern()
-
-        self.require_tags = generator.require_tags()
 
         if for_display:
             generator.replace_messy_chars = False
@@ -1358,20 +1358,14 @@ class SoundConverterWindow(GladeWindow):
         self.conversion_error = None
         self.pulse_progress = -1
         gobject.timeout_add(100, self.on_progress)
-        if self.prefs.require_tags:
-            self.progressbar.set_text(_('Reading tags...'))
-        else:
-            self.progressbar.set_text(_('Preparing conversion...'))
+        self.progressbar.set_text(_('Preparing conversion...'))
         files = self.filelist.get_files()
         total = len(files)
         for i, sound_file in enumerate(files):
             gtk_iteration()
             self.pulse_progress = float(i)/total
             sound_file.progress = None
-            if self.prefs.require_tags:
-                self.read_tags(sound_file)
-            else:
-                self.do_add_file(sound_file)
+            self.do_add_file(sound_file)
             if self.conversion_error == CONVERSION_CANCELED:
                 log('cancelling conversion.')
                 self.conversion_ended()

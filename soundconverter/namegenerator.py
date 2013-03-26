@@ -123,12 +123,4 @@ class TargetNameGenerator:
 
         return result
         
-    def require_tags(self):
-        from settings import patterns_formats
-        pattern = os.path.join(self.subfolders, self.basename + self.suffix)
-        for p in patterns_formats:
-            if p in pattern:
-                return True
-        return False        
-        
-        
+
