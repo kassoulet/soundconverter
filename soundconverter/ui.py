@@ -36,7 +36,6 @@ from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue
 from gstreamer import available_elements, TypeFinder, TagReader
 from gstreamer import audio_profiles_list, audio_profiles_dict
-from gstreamer import CONVERSION_CANCELED, CONVERSION_ERROR
 from soundfile import SoundFile
 from settings import locale_patterns_dict, custom_patterns, filepattern, settings
 from namegenerator import TargetNameGenerator
@@ -71,16 +70,6 @@ def gtk_sleep(duration):
     while time.time() < start + duration:
         time.sleep(0.010)
         gtk_iteration()
-
-
-def format_tag(tag):
-    if isinstance(tag, list):
-        if len(tag) > 1:
-            tag = ', '.join(tag[:-1]) + ' & ' + tag[-1]
-        else:
-            tag = tag[0]
-
-    return tag
 
 
 class ErrorDialog:
@@ -1314,22 +1303,6 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
         self.set_status()
 
-    def read_tags(self, sound_file):
-        if sound_file.tags_read:
-            self.do_add_file(sound_file)
-            return
-
-        tagreader = TagReader(sound_file)
-        tagreader.set_found_tag_hook(self.tags_read)
-        tagreader.start()
-
-    def do_add_file(self, sound_file):
-        self.conversion_error = self.converter.add(sound_file)
-
-    def tags_read(self, tagreader):
-        sound_file = tagreader.get_sound_file()
-        self.do_add_file(sound_file)
-
     def on_progress(self):
         if self.pulse_progress >= 0: # still waiting for tags
             self.set_progress(self.pulse_progress, display_time=False)
@@ -1355,7 +1328,6 @@ class SoundConverterWindow(GladeWindow):
         return running
 
     def do_convert(self):
-        self.conversion_error = None
         self.pulse_progress = -1
         gobject.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion...'))
@@ -1363,18 +1335,9 @@ class SoundConverterWindow(GladeWindow):
         total = len(files)
         for i, sound_file in enumerate(files):
             gtk_iteration()
-            self.pulse_progress = float(i)/total
+            self.pulse_progress = float(i)/total # TODO: still needed?
             sound_file.progress = None
-            self.do_add_file(sound_file)
-            if self.conversion_error == CONVERSION_CANCELED:
-                log('cancelling conversion.')
-                self.conversion_ended()
-                self.set_status(_('Conversion cancelled'))
-                return
-            if self.conversion_error == CONVERSION_ERROR:
-                self.conversion_ended()
-                self.set_status(_('Error while converting'))
-                return
+            self.converter.add(sound_file)
         # all was OK
         self.set_status('')
         self.pulse_progress = None

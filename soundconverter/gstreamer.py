@@ -429,10 +429,6 @@ class Decoder(Pipeline):
         self.query_position()
         return self.position
 
-# this is needed since TagReader caller don't keep a reference long enough,
-# and so tagReaders will be deleted before the callback are called,
-# resulting in awful crashes... TODO: we have to remove this.
-dontdelete = []
 
 class TagReader(Decoder):
 
@@ -447,7 +443,6 @@ class TagReader(Decoder):
         self.add_command('fakesink')
         self.add_signal(None, 'message::state-changed', self.on_state_changed)
         self.tagread = False
-        dontdelete.append(self)
 
     def set_found_tag_hook(self, found_tag_hook):
         self.found_tag_hook = found_tag_hook
@@ -464,7 +459,6 @@ class TagReader(Decoder):
         self.sound_file.tags_read = True
         if self.found_tag_hook:
             gobject.idle_add(self.found_tag_hook, self)
-        dontdelete.remove(self)
 
 
 class Converter(Decoder):
@@ -661,8 +655,6 @@ class Converter(Decoder):
         return pipeline
 
 
-CONVERSION_OK, CONVERSION_CANCELED, CONVERSION_ERROR = 0,1,2
-
 class ConverterQueue(TaskQueue):
 
     """Background task for converting many files."""
@@ -719,7 +711,6 @@ class ConverterQueue(TaskQueue):
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
-        return CONVERSION_OK
 
     def get_progress(self, per_file_progress):
         tasks = self.running_tasks
