@@ -74,7 +74,7 @@ def vfs_walk(uri):
 
 
 def vfs_makedirs(path_to_create):
-    """Similar to os.makedirs, but with gnomevfs"""
+    """Similar to os.makedirs, but with gnomevfs."""
 
     uri = gnomevfs.URI(path_to_create)
     path = uri.path
@@ -96,6 +96,8 @@ def vfs_makedirs(path_to_create):
 
 
 def vfs_unlink(filename):
+    """Delete a gnomevfs file."""
+    
     gnomevfs.unlink(gnomevfs.URI(filename))
 
 
