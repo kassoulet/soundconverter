@@ -1362,12 +1362,8 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def on_button_pause_clicked(self, *args):
-        tasks = self.converter.running_tasks
-        if not tasks:
-            return
-        self.converter.paused = not self.converter.paused
-        for task in tasks:
-            task.toggle_pause(self.converter.paused)
+        self.converter.toggle_pause(not self.converter.paused)
+            
         if self.converter.paused:
             self.current_pause_start = time.time()
         else:

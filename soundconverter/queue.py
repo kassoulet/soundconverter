@@ -49,6 +49,7 @@ class TaskQueue(BackgroundTask):
         self.finished_tasks = 0
         self.start_time = None
         self.count = 0
+        self.paused = False
 
     def add_task(self, task):
         """Add a task to the queue."""
@@ -73,6 +74,8 @@ class TaskQueue(BackgroundTask):
             self.running_tasks.append(task)
             task.add_listener('finished', self.task_finished)
             task.start()
+            if self.paused:
+                task.toggle_pause(True)
             self.count += 1
         total = len(self.waiting_tasks) + self.finished_tasks
         self.progress = float(self.finished_tasks) / total if total else 0
@@ -111,6 +114,11 @@ class TaskQueue(BackgroundTask):
         self.waiting_tasks = []
         self.running = False
         self.start_time = None
+
+    def toggle_pause(self, paused):
+        self.paused = paused
+        for task in self.running_tasks:
+            task.toggle_pause(self.paused)
 
     # The following is called when the Queue is finished
     def queue_ended(self):

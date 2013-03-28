@@ -664,7 +664,6 @@ class ConverterQueue(TaskQueue):
         self.window = window
         self.overwrite_action = None
         self.reset_counters()
-        self.paused = False
 
     def reset_counters(self):
         self.total_duration = 0
@@ -748,10 +747,11 @@ class ConverterQueue(TaskQueue):
     def on_task_finished(self, task):
         # rename temporary file 
         newname = self.window.prefs.generate_filename(task.sound_file)
-        log(task.output_filename, '->', newname)
+        log(beautify_uri(task.output_filename), '->', beautify_uri(newname))
         
         # safe mode. generate a filename until we find a free one
         p,e = os.path.splitext(newname)
+        p = p.replace('%', '%%')
         p = p + ' (%d)' + e
         i = 1
         while vfs_exists(newname):
@@ -802,5 +802,7 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
+
+
 
 
