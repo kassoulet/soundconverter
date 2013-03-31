@@ -109,7 +109,7 @@ def vfs_rename(original, newname):
     if dirname and not gnomevfs.exists(dirname):
         log('Creating folder: \'%s\'' % dirname)
         if not vfs_makedirs(str(dirname)):
-            show_error('Error', _("Cannot create \'%s\' folder.") % dirname)
+            show_error(_('Cannot create folder!'), unquote_filename(dirname.path))
             return
 
     try:
@@ -119,7 +119,8 @@ def vfs_rename(original, newname):
                           gnomevfs.XFER_OVERWRITE_MODE_ABORT
                          )
     except Exception as error:
-        log('Error while renaming file: %s' % error)
+        show_error(_('Error while renaming file!'), '%s: %s' % (beautify_uri(newname), error))
+        
 
 
 def vfs_exists(filename):
