@@ -13,7 +13,6 @@
    <![endif]-->
    <link rel="shortcut icon" href="favicon.ico" />
    
-   
 <style>
    @media (max-width: 900px)  {
     body {
@@ -94,7 +93,7 @@
 <div class="container_12 prefix_1 grid_3">
 
 	<h3>Download</h3>
-	<a href="https://launchpad.net/soundconverter/trunk/2.0.4">SoundConverter 2.0.4 (Source)</a> <br>
+	<a href="https://launchpad.net/soundconverter/trunk/2.1.0">SoundConverter 2.1.0 (Source)</a> <br>
 
 	<a href="https://launchpad.net/soundconverter/+download">Others versions</a> <br>
 
@@ -125,6 +124,15 @@
 </p>
 
 	<h3>News</h3>
+
+	<b>Version 2.1.0</b>
+	<ul>
+
+	<li>Instead of reading tags and then converting, SoundConverter now converts instantly and rename with the final filename after conversion. 
+	This is faster, and remove all multithreading-related problems</li>
+	<em>(Closes lp:<a href="https://bugs.launchpad.net/bugs/1121254">1121254</a>)</em>
+	<li>Also fix a number of problems, please see details on the <a href="https://launchpad.net/soundconverter/trunk/2.1.0">release page</a>.</li>
+	</ul>
 
 	<b>Version 2.0.4</b>
 	<ul>
@@ -159,185 +167,6 @@ Fix crash in FolderChooser. 836338
 Update Translations.
 	</li>
 	</ul>
-
-
-	<b>Version 2.0.3</b>
-	<ul>
-	<li>
-	Fix stability and progress related problems.
-	</li>
-	<li>
-Disable common path when creating folders using tags.
-	</li>
-	<em>
-    (Closes lp:<a href="https://bugs.launchpad.net/bugs/972158">972158</a>, thanks Eric)
-    </em>
-	<li>
-Increase Low pass filter frequency when converting to MP3.
-	</li>
-	<em>
-    (Closes lp:<a href="https://bugs.launchpad.net/bugs/881413">881413</a>, thanks Michael)
-    </em>
-	<li>
-Use original filename as title when tags are not present.
-	</li>
-	<em>
-    (Closes lp:<a href="https://bugs.launchpad.net/bugs/984790">984790</a>)
-    </em>
-	<li>
-Update Translations.
-	</li>
-	</ul>
-
-<b>Version 2.0.2</b>
-
-	<ul>
-	<li>
-    Fix progress-related blocking by speeding up the progress update.
-	</li>
-	<em>
-    (Closes lp:<a href="https://bugs.launchpad.net/bugs/940648">940648</a>, thanks Ben)
-    </em>
-
-	<li>
-    Add canadian french.
-	</li>
-	<em>
-    (Thanks Alain-Olivier)
-    </em>
-
-	<li>
-    Fix many English spelling errors.
-	</li>
-	<em>
-    (Thanks Alain-Olivier)
-    </em>
-
-	</ul>
-
-<b>Version 2.0.1</b>
-
-	<ul>
-
-	<li>
-    Fix size of icons in menu bar.
-	</li>
-	<em>
-    (thanks Johan)
-    </em>
-	<li>
-    Fix syntax error when converting to mp3.
-	</li>
-	<em>
-    (thanks Jakob)
-    </em>
-	<li>
-    Fix broken GNOME Audio Profiles.
-	</li>
-	<li>
-    Add audio/flac in supported mimetypes, fixing "open with" in recent ditribs.
-	</li>
-
-	</ul>
-	
-<b>Version 2.0</b>
-
-	<ul>
-
-	<li>
-Great code reorganization and cleaning.
-	</li>
-	<li>
-Display individual files progression.
-	</li>
-  
-	<li>
-Fix broken Vorbis output.
-	</li>
-	<em>
-    (thanks Jarno & Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/508767">508767</a>)
-    </em>
-
-	<li>
-Much faster adding of files, since we only read the tags when we have to.
-	</li>
-
-	<li>
-Smoother operation, lesser unresponsive moments.
-	</li>
-	<em>
-    (thanks Yaroslav & Steven, fix lp:<a href="https://bugs.launchpad.net/bugs/784926">784926</a>)
-    </em>
-
-	<li>
-Add {Ext} {DiscNumber} and {DiscTotal} filename patterns.
-	</li>
-
-	<li>
-You can now limit the number of parallel conversions.
-	</li>
-
-	<li>
-The partial files are removed when canceling a conversion.
-	</li>
-
-	<li>
-Fix 8 bits wav encoding.
-	</li>
-
-	<li>
-Reset selected audio profile if not a valid one.
-	</li>
-	<em>
-    (thanks Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/814015">814015</a>)
-    </em>
-    
-	<li>
-Clearing the filelist is now instant.
-	</li>
-
-	<li>
-Fix problem with Mime type combobox when one or more encoder is disabled.
-	</li>
-	<em>
-    (thanks Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/911759">911759</a>)
-    </em>
-  
-	<li>
-Check validity of Gstreamer Audio Profiles.
-	</li>
-	<em>
-    (thanks Danilo & Michael, fix fedora:<a href="https://bugzilla.redhat.com/744596">744596</a>)
-    </em>
-
-	<li>
-Translate default album/artist/title names.
-	</li>
-	<em>
-    (thanks Handrik, fix lp:<a href="https://bugs.launchpad.net/bugs/910522">910522</a>)
-    </em>
-
-	<li>
-Don't try to display images in log :)
-	</li>
-
-	<li>
-Exclude .iso files from conversion since we cannot read them.
-	</li>
-
-	<li>
-Fix crash when last-used-folders and recent.xbel are empty.
-	</li>
-	<em>
-    (thanks Danilo & Michael, fix lp:<a href="https://bugs.launchpad.net/bugs/921515">921515</a>)
-    </em>
-
-	<li>
-	Translations updated.
-	</li>
-
-	</ul>
-
 
 	
 	<a href="changelog.html">Full changelog.</a>
