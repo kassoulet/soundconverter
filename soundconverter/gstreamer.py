@@ -770,6 +770,19 @@ class ConverterQueue(TaskQueue):
         return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
+        task.sound_file.progress = 1.0
+        
+        if task.error:
+            debug('error in task, skipping rename:', task.output_filename)
+            vfs_unlink(task.output_filename)
+            self.errors.append(task.error)
+            self.error_count += 1
+            return
+            
+        duration = task.get_duration()
+        if duration:
+            self.duration_processed += duration
+
         # rename temporary file 
         newname = self.window.prefs.generate_filename(task.sound_file)
         log(beautify_uri(task.output_filename), '->', beautify_uri(newname))
@@ -783,15 +796,10 @@ class ConverterQueue(TaskQueue):
             newname = p % i
             i += 1
         
-        vfs_rename(task.output_filename, newname)
-    
-        duration = task.get_duration()
-        if duration:
-            self.duration_processed += duration
-        self.errors.append(task.error)
+        task.error = vfs_rename(task.output_filename, newname)
         if task.error:
+            self.errors.append(task.error)
             self.error_count += 1
-        task.sound_file.progress = 1.0
 
     def finished(self):
         if self.running_tasks:
