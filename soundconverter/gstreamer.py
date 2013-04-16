@@ -802,6 +802,7 @@ class ConverterQueue(TaskQueue):
             self.error_count += 1
 
     def finished(self):
+        # This must be called with emit_async
         if self.running_tasks:
             raise RuntimeError
         TaskQueue.finished(self)

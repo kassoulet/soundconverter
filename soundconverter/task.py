@@ -60,12 +60,21 @@ class BackgroundTask:
             for listener in self.listeners[signal]:
                 gobject.idle_add(listener, self)
 
+    def emit_sync(self, signal):
+        """Call the signal handlers.
+        Callbacks are called synchronously."""
+        getattr(self, signal)()
+        if signal in self.listeners:
+            print self.listeners[signal]
+            for listener in self.listeners[signal]:
+                listener(self)
+
     def done(self):
         """Call to end normally the task."""
         self.run_finish_time = time.time()
         if self.running:
+            self.emit_sync('finished')
             self.running = False
-            self.emit('finished')
 
     def abort(self):
         """Stop task processing. finished() is not called."""
