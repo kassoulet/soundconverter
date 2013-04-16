@@ -26,6 +26,7 @@ from gettext import gettext as _
 
 import gobject
 import gst
+import gst.pbutils
 import gnomevfs
 import gconf
 
@@ -47,6 +48,19 @@ except:
         pass
         
 from fnmatch import fnmatch
+
+import time
+import gtk
+def gtk_iteration():
+    while gtk.events_pending():
+        gtk.main_iteration(False)
+
+
+def gtk_sleep(duration):
+    start = time.time()
+    while time.time() < start + duration:
+        time.sleep(0.010)
+        gtk_iteration()
 
 import gconf
 # load gstreamer audio profiles
@@ -114,6 +128,7 @@ encoders = (
     )
 
 available_elements = set()
+user_canceled_codec_installation = False
 
 for encoder, name in encoders:
     have_it = bool(gst.element_factory_find(encoder))
@@ -177,21 +192,27 @@ class Pipeline(BackgroundTask):
     def found_tag(self, decoder, something, taglist):
         pass
 
+    def restart(self):
+        self.parsed = False
+        self.duration = None
+        self.finished()
+        if vfs_exists(self.output_filename):
+            vfs_unlink(self.output_filename)
+        self.play()
+
     def install_plugin_cb(self, result):
         if result in (gst.pbutils.INSTALL_PLUGINS_SUCCESS,
                       gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
             gst.update_registry()
-            self.parsed = False
-            self.duration = None
-            self.finished()
-            vfs_unlink(self.output_filename)
-            self.play()
+            self.restart()
+            return
+        if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
+            self.error = _('Plugin installation aborted.')
+            global user_canceled_codec_installation
+            user_canceled_codec_installation = True
+            self.done()
             return
         self.done()
-        if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
-            show_error('Error', _('Plugin installation aborted.'))
-            return
-
         show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
 
     def on_error(self, error):
@@ -202,22 +223,27 @@ class Pipeline(BackgroundTask):
         t = message.type
         import gst
         if t == gst.MESSAGE_ERROR:
-            error, debug = message.parse_error()
+            error, _ = message.parse_error()
             self.eos = True
             self.on_error(error)
             self.done()
-
-        elif t == gst.MESSAGE_ELEMENT:
-            st = message.structure
-            if st and st.get_name().startswith('missing-'):
-                self.pipeline.set_state(gst.STATE_NULL)
-                if gst.pygst_version >= (0, 10, 10):
-                    import gst.pbutils
-                    detail = gst.pbutils.\
-                        missing_plugin_message_get_installer_detail(message)
-                    ctx = gst.pbutils.InstallPluginsContext()
-                    gst.pbutils.install_plugins_async([detail], ctx,
-                                                        self.install_plugin_cb)
+        elif gst.pbutils.is_missing_plugin_message(message):
+            global user_canceled_codec_installation
+            detail = gst.pbutils.missing_plugin_message_get_installer_detail(message)
+            debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
+            self.pipeline.set_state(gst.STATE_NULL)
+            if gst.pbutils.install_plugins_installation_in_progress():
+                while gst.pbutils.install_plugins_installation_in_progress():
+                    gtk_sleep(0.1)
+                self.restart()
+                return
+            if user_canceled_codec_installation:
+                self.error = 'Plugin installation cancelled'
+                debug(self.error)
+                self.done()
+                return
+            ctx = gst.pbutils.InstallPluginsContext()
+            gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
 
         elif t == gst.MESSAGE_EOS:
             self.eos = True
@@ -612,7 +638,6 @@ class Converter(Decoder):
         return cmd
 
     def add_mp3_encoder(self):
-
         cmd = 'lame quality=2 ' # DEPRECATED !
 
         if self.mp3_mode is not None:
