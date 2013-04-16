@@ -110,7 +110,7 @@ def vfs_rename(original, newname):
         log('Creating folder: \'%s\'' % dirname)
         if not vfs_makedirs(str(dirname)):
             show_error(_('Cannot create folder!'), unquote_filename(dirname.path))
-            return
+            return 'cannot-create-folder'
 
     try:
         gnomevfs.xfer_uri(gnomevfs.URI(original), uri,
@@ -119,8 +119,10 @@ def vfs_rename(original, newname):
                           gnomevfs.XFER_OVERWRITE_MODE_ABORT
                          )
     except Exception as error:
+        # TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
+        # or an option to stop all processing.
         show_error(_('Error while renaming file!'), '%s: %s' % (beautify_uri(newname), error))
-        
+        return 'cannot-rename-file'
 
 
 def vfs_exists(filename):
