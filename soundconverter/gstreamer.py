@@ -774,7 +774,8 @@ class ConverterQueue(TaskQueue):
         
         if task.error:
             debug('error in task, skipping rename:', task.output_filename)
-            vfs_unlink(task.output_filename)
+            if vfs_exists(task.output_filename):
+                vfs_unlink(task.output_filename)
             self.errors.append(task.error)
             self.error_count += 1
             return
