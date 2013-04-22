@@ -638,26 +638,16 @@ class Converter(Decoder):
         return cmd
 
     def add_mp3_encoder(self):
-        cmd = 'lame quality=2 ' # DEPRECATED !
+        cmd = 'lamemp3enc encoding-engine-quality=2 '
 
         if self.mp3_mode is not None:
             properties = {
-                'cbr' : (0, 'bitrate'),
-                'abr' : (3, 'vbr-mean-bitrate'),
-                'vbr' : (4, 'vbr-quality')
+                'cbr' : 'target=bitrate cbr=true bitrate=%s ',
+                'abr' : 'target=bitrate cbr=false bitrate=%s ',
+                'vbr' : 'target=quality cbr=false quality=%s ',
             }
 
-            cmd += 'vbr=%s ' % properties[self.mp3_mode][0]
-            if self.mp3_quality == 9:
-                # GStreamer set max bitrate to 320 but lame uses
-                # mpeg2 with vbr-quality==9, so max bitrate is 160
-                # - update: now set to 128 since lame don't accept 160 anymore.
-                cmd += 'vbr-max-bitrate=128 '
-            elif properties[self.mp3_mode][0]:
-                cmd += 'vbr-max-bitrate=320 '
-            cmd += '%s=%s ' % (properties[self.mp3_mode][1], self.mp3_quality)
-            if properties[self.mp3_mode][0] and self.mp3_quality < 4:
-                cmd += 'lowpass-freq=20000 '
+            cmd += properties[self.mp3_mode] % self.mp3_quality
 
             if 'xingmux' in available_elements and properties[self.mp3_mode][0]:
                 # add xing header when creating VBR mp3
