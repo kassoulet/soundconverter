@@ -400,7 +400,7 @@ msgid ""
 " Please report this as a bug."
 msgstr ""
 "Ne peut lier les éléments GStreamer.\n"
-" Veuillez rapporter cela en tant que boque."
+" Veuillez rapporter cela en tant que bogue."
 
 #: ../soundconverter/error.py:53
 #, python-format
