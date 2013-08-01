@@ -92,7 +92,7 @@ for name in profiles:
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not gst.element_factory_find(element):
-        print "required gstreamer element \'%s\' not found." % element
+        print("required gstreamer element \'%s\' not found." % element)
         sys.exit(1)
 
 if gst.element_factory_find('giosrc'):
@@ -100,18 +100,18 @@ if gst.element_factory_find('giosrc'):
     gstreamer_sink = 'giosink'
     encode_filename = vfs_encode_filename
     use_gnomevfs = True
-    print '  using gio'
+    print('  using gio')
 elif gst.element_factory_find('gnomevfssrc'):
     gstreamer_source = 'gnomevfssrc'
     gstreamer_sink = 'gnomevfssink'
     encode_filename = vfs_encode_filename
     use_gnomevfs = True
-    print '  using deprecated gnomevfssrc'
+    print('  using deprecated gnomevfssrc')
 else:
     gstreamer_source = 'filesrc'
     gstreamer_sink = 'filesink'
     encode_filename = file_encode_filename
-    print '  not using gnomevfssrc, look for a gnomevfs gstreamer package.'
+    print('  not using gnomevfssrc, look for a gnomevfs gstreamer package.')
 
 
 encoders = (
@@ -827,7 +827,3 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
-
-
-
-

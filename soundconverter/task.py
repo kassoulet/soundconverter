@@ -46,7 +46,7 @@ class BackgroundTask:
 
     def add_listener(self, signal, listener):
         """Add a custom listener to the given signal.
-            Signals are 'started' and 'finished'"""
+        Signals are 'started' and 'finished'"""
         if signal not in self.listeners:
             self.listeners[signal] = []
         self.listeners[signal].append(listener)
@@ -65,7 +65,7 @@ class BackgroundTask:
         Callbacks are called synchronously."""
         getattr(self, signal)()
         if signal in self.listeners:
-            print self.listeners[signal]
+            print(self.listeners[signal])
             for listener in self.listeners[signal]:
                 listener(self)
 
@@ -82,15 +82,13 @@ class BackgroundTask:
         self.running = False
 
     def aborted(self):
-        """called when the task is aborted."""
+        """Called when the task is aborted."""
         pass
 
     def started(self):
-        """called when the task starts."""
+        """Called when the task starts."""
         pass
 
     def finished(self):
         """Clean up the task after all work has been done."""
         pass
-        
-        
