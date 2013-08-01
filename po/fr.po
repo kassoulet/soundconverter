@@ -435,7 +435,7 @@ msgstr ""
 
 #: ../soundconverter/gstreamer.py:190
 msgid "Plugin installation aborted."
-msgstr "L’installation du greffon a été interrompuz."
+msgstr "L’installation du greffon a été interrompue."
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
