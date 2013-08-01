@@ -40,7 +40,7 @@ def cli_tags_main(input_files):
     for input_file in input_files:
         input_file = SoundFile(input_file)
         if not settings['quiet']:
-            print input_file.filename
+            print(input_file.filename)
         t = TagReader(input_file)
         t.start()
         while t.running:
@@ -49,7 +49,7 @@ def cli_tags_main(input_files):
             
         if not settings['quiet']:
             for key in sorted(input_file.tags):
-                print '     %s: %s' % (key, input_file.tags[key])
+                print('     %s: %s' % (key, input_file.tags[key]))
 
 
 class CliProgress:
