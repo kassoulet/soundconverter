@@ -109,7 +109,6 @@ class TargetNameGenerator:
                 else:
                     s += c
             result = s
-            del s
 
         if self.folder is None:
             folder = root
