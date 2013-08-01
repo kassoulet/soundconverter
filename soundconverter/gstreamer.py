@@ -100,18 +100,18 @@ if gst.element_factory_find('giosrc'):
     gstreamer_sink = 'giosink'
     encode_filename = vfs_encode_filename
     use_gnomevfs = True
-    print '  using gio'
+    print('  using gio')
 elif gst.element_factory_find('gnomevfssrc'):
     gstreamer_source = 'gnomevfssrc'
     gstreamer_sink = 'gnomevfssink'
     encode_filename = vfs_encode_filename
     use_gnomevfs = True
-    print '  using deprecated gnomevfssrc'
+    print('  using deprecated gnomevfssrc')
 else:
     gstreamer_source = 'filesrc'
     gstreamer_sink = 'filesink'
     encode_filename = file_encode_filename
-    print '  not using gnomevfssrc, look for a gnomevfs gstreamer package.'
+    print('  not using gnomevfssrc, look for a gnomevfs gstreamer package.')
 
 
 encoders = (
