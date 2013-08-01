@@ -35,7 +35,7 @@ DATADIR = '@datadir@'
 
 NAME = 'SoundConverter'
 VERSION = '@version@'
-print '%s %s' % (NAME, VERSION)
+print( '%s %s' % (NAME, VERSION) )
 
 GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
@@ -48,7 +48,7 @@ try:
     gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
     #from gettext import gettext as _
 except locale.Error:
-    print '  cannot use system locale.'
+    print('  cannot use system locale.')
     locale.setlocale(locale.LC_ALL,'C')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
@@ -74,7 +74,7 @@ def _check_libs():
         gobject.threads_init()
         import gnomevfs
     except ImportError, error :
-        print '%s needs pygtk and gnome-python >= 2.24! (Error: "%s")' % (NAME, error)
+        print('%s needs pygtk and gnome-python >= 2.24! (Error: "%s")' % (NAME, error))
         sys.exit(1)
     except:
         pass
@@ -84,11 +84,11 @@ def _check_libs():
         pygst.require('0.10')
         import gst
     except ImportError:
-        print '%s needs python-gstreamer 0.10!' % NAME
+        print('%s needs python-gstreamer 0.10!' % NAME)
         sys.exit(1)
 
-    print '  using Gstreamer version: %s' % (
-            '.'.join([str(s) for s in gst.gst_version]))
+    print( '  using Gstreamer version: %s' % (
+            '.'.join([str(s) for s in gst.gst_version])) )
 
 
 def check_mime_type(mime):
@@ -96,11 +96,11 @@ def check_mime_type(mime):
         'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'}
     mime = types.get(mime, mime)
     if mime not in types.values():
-        print 'Cannot use "%s" mime type.' % mime
+        print('Cannot use "%s" mime type.' % mime)
         print 'Supported shortcuts and mime types:',
         for k,v in sorted(types.iteritems()):
             print '%s %s' % (k,v),
-        print
+        print()
         raise SystemExit
     return mime
 
@@ -171,7 +171,7 @@ import gtk.glade
 gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
 gtk.glade.textdomain(PACKAGE)
 
-print '  using %d thread(s)' % settings['jobs']
+print('  using %d thread(s)' % settings['jobs'])
 
 from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
@@ -188,10 +188,12 @@ except:
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 elif settings['mode'] == 'tags':
-    if not files: print 'nothing to do...'
+    if not files:
+        print('nothing to do...')
     cli_tags_main(files)
 else:
-    if not files: print 'nothing to do...'
+    if not files:
+        print('nothing to do...')
     cli_convert_main(files)
 
 
