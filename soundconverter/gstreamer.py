@@ -92,7 +92,7 @@ for name in profiles:
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not gst.element_factory_find(element):
-        print "required gstreamer element \'%s\' not found." % element
+        print("required gstreamer element \'%s\' not found." % element)
         sys.exit(1)
 
 if gst.element_factory_find('giosrc'):
@@ -827,7 +827,3 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
-
-
-
-
