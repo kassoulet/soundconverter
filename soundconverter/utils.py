@@ -30,7 +30,7 @@ def log(*args):
     Can be disabled with 'quiet' option
     """
     if not settings['quiet']:
-        print ' '.join([str(msg) for msg in args])
+        print( ' '.join([str(msg) for msg in args]) )
 
 
 def debug(*args):
@@ -39,7 +39,4 @@ def debug(*args):
     Only when activated by 'debug' option
     """
     if settings['debug']:
-        print ' '.join([str(msg) for msg in args])
-        
-        
-
+        print( ' '.join([str(msg) for msg in args]) )

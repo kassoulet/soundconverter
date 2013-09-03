@@ -122,5 +122,3 @@ class TargetNameGenerator:
         result = os.path.join(folder, basefolder, urllib.quote(result))
 
         return result
-        
-

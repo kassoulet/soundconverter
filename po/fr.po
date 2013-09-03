@@ -34,7 +34,7 @@ msgstr "Convertit des fichiers audio en d'autres formats"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
-msgstr "Conversion Audio avec GNOME"
+msgstr "Conversion audio avec GNOME"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
@@ -94,7 +94,7 @@ msgstr "Normale"
 
 #: ../data/soundconverter.glade.h:17
 msgid "High"
-msgstr "Haute"
+msgstr "Élevée"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Very High"
@@ -106,7 +106,7 @@ msgstr "Incroyablement élevée"
 
 #: ../data/soundconverter.glade.h:20
 msgid "8 bits (very low quality)"
-msgstr "8 bits (très basse qualité)"
+msgstr "8 bits (qualité très basse)"
 
 #: ../data/soundconverter.glade.h:21
 msgid "16 bits (default)"
@@ -166,7 +166,7 @@ msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
-msgstr "Profil Audio GNOME"
+msgstr "Profil audio GNOME"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
@@ -306,7 +306,7 @@ msgstr "Où placer les fichiers convertis ?"
 
 #: ../data/soundconverter.glade.h:70
 msgid "SoundConverter"
-msgstr "Convertisseur Audio SoundConverter"
+msgstr "Convertisseur audio SoundConverter"
 
 #: ../data/soundconverter.glade.h:71
 msgid "_File"
@@ -341,7 +341,7 @@ msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Montre les tags des fichiers source au lieu de les convertir. Ceci indique \n"
+"Montre les tags des fichiers sources au lieu de les convertir. Ceci indique \n"
 " le mode batch depuis la ligne de commande et désactive l'interface "
 "graphique."
 
@@ -400,7 +400,7 @@ msgid ""
 " Please report this as a bug."
 msgstr ""
 "Ne peut lier les éléments GStreamer.\n"
-" Veuillez rapporter ce boque SVP."
+" Veuillez rapporter cela en tant que bogue."
 
 #: ../soundconverter/error.py:53
 #, python-format
@@ -435,7 +435,7 @@ msgstr ""
 
 #: ../soundconverter/gstreamer.py:190
 msgid "Plugin installation aborted."
-msgstr "L’installation du greffon a été interrompu."
+msgstr "L’installation du greffon a été interrompue."
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
@@ -469,7 +469,7 @@ msgstr "Accès refusé : '%s'"
 
 #: ../soundconverter/gstreamer.py:722
 msgid "Cannot overwrite source file(s)!"
-msgstr "Ne peux pas écraser le/les  fichier(s) source !"
+msgstr "Ne peux pas écraser le(s) fichier(s) source(s) !"
 
 #: ../soundconverter/gstreamer.py:735
 #, python-format
