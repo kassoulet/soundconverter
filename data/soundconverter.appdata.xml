@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+<id type="desktop">soundconverter.desktop</id>
+<licence>CC0</licence>
+<description>
+<p>
+SoundConverter is the leading audio file converter for the GNOME Desktop.
+</p>
+<p>
+SoundConverter is a simple to use, and very fast audio converter. It can convert multiples files at same the time to speed up the conversion. It can also extract the audio from videos. 
+</p>
+</description>
+<url type="homepage">http://soundconverter.org/</url>
+<screenshots>
+<screenshot type="default">http://soundconverter.org/screenshot-soundconverter.png</screenshot>
+</screenshots>
+
+<updatecontact>gautier@soundconverter.org</updatecontact>
+</application>
