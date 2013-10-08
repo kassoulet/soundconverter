@@ -589,7 +589,7 @@ class Converter(Decoder):
         if self.delete_original and self.processing and not self.error:
             log('deleting: \'%s\'' % self.sound_file.uri)
             try:
-                gnomevfs.unlink(self.sound_file.uri)
+                vfs_unlink(self.sound_file.uri)
             except:
                 log('Cannot remove \'%s\'' %
                         gnomevfs.format_uri_for_display(self.output_filename))
