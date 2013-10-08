@@ -226,6 +226,7 @@ class Pipeline(BackgroundTask):
         if t == gst.MESSAGE_ERROR:
             error, _ = message.parse_error()
             self.eos = True
+            self.error = error
             self.on_error(error)
             self.done()
         elif gst.pbutils.is_missing_plugin_message(message):
