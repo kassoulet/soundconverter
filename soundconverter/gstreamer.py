@@ -113,6 +113,8 @@ else:
     encode_filename = file_encode_filename
     print('  not using gnomevfssrc, look for a gnomevfs gstreamer package.')
 
+# used to dismiss codec installation if the user already canceled it
+user_canceled_codec_installation = False
 
 encoders = (
     ('flacenc',   'FLAC'),
@@ -128,7 +130,6 @@ encoders = (
     )
 
 available_elements = set()
-user_canceled_codec_installation = False
 
 for encoder, name in encoders:
     have_it = bool(gst.element_factory_find(encoder))
@@ -687,6 +688,8 @@ class ConverterQueue(TaskQueue):
         self.errors = []
         self.error_count = 0
         self.all_tasks = None
+        global user_canceled_codec_installation
+        user_canceled_codec_installation = True
 
     def add(self, sound_file):
         # generate a temporary filename from source name and output suffix
