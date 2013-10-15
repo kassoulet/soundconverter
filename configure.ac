@@ -5,10 +5,10 @@ AC_INIT([soundconverter], [2.1.1])
 AC_CONFIG_SRCDIR([bin/soundconverter.py])
 AM_INIT_AUTOMAKE
 
-m4_define(required_python_abi, [2.5])
-m4_define(required_python_version, [2.5])
-m4_define(required_pygtk_version, [2.24])
-m4_define(required_pygnome_version, [2.16])
+m4_define(required_python_abi, [3.0])
+m4_define(required_python_version, [3.0])
+m4_define(required_gtk_version, [3.0])
+m4_define(required_gst_version, [1.0])
 
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
@@ -24,32 +24,34 @@ IT_PROG_INTLTOOL
 AM_PATH_PYTHON(required_python_version)
 
 
-dnl Check for correctly installed pygtk
-AC_MSG_CHECKING(for pygtk required_pygtk_version installed)
+dnl Check for correctly installed gtk
+AC_MSG_CHECKING(for gtk required_gtk_version installed)
 prog="
-import pygtk; pygtk.require('2.0')
-import gobject
-assert gobject.pygtk_version >= tuple(map(int, 'required_pygtk_version'.split('.')))
+import gi
+gi.require_version('Gtk', 'required_gtk_version')
+from gi.repository import Gtk
+assert Gtk._version
 "
 if $PYTHON -c "$prog" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
     AC_MSG_RESULT(found)
 else
     AC_MSG_RESULT(not found)
-    AC_MSG_ERROR(required pygtk version not found)
+    AC_MSG_ERROR(required gtk version not found)
 fi
 
-dnl Check for correctly installed pygnome
-AC_MSG_CHECKING(for python-gnome required_pygnome_version installed)
+dnl Check for correctly installed gstreamer
+AC_MSG_CHECKING(for gstreamer required_gst_version installed)
 prog="
-import pygtk; pygtk.require('2.0')
-import gnome
-assert gnome.gnome_python_version >= tuple(map(int, 'required_pygnome_version'.split('.')))
+import gi
+gi.require_version('Gst', 'required_gst_version')
+from gi.repository import Gst
+assert Gst.version
 "
 if $PYTHON -c "$prog" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
     AC_MSG_RESULT(found)
 else
     AC_MSG_RESULT(not found)
-    AC_MSG_ERROR(required python-gnome version not found)
+    AC_MSG_ERROR(required gstreamer version not found)
 fi
 
 AC_CONFIG_FILES([Makefile
