@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -20,9 +20,9 @@
 # USA
 
 import time
-from task import BackgroundTask
-from settings import settings
-from utils import log
+from .task import BackgroundTask
+from .settings import settings
+from .utils import log
 
 
 class TaskQueue(BackgroundTask):

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -21,28 +21,25 @@
 
 import os
 import sys
-from urlparse import urlparse
+from urllib.parse import urlparse
 from gettext import gettext as _
 
-import gobject
-import gst
-import gst.pbutils
-import gnomevfs
-import gconf
+import gi
+from gi.repository import Gst, Gtk, GObject, GConf
 
-from fileoperations import vfs_encode_filename, file_encode_filename
-from fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
-from fileoperations import vfs_rename
-from fileoperations import vfs_exists
-from fileoperations import beautify_uri
-from fileoperations import use_gnomevfs
-from task import BackgroundTask
-from queue import TaskQueue
-from utils import debug, log
-from settings import mime_whitelist, filename_blacklist
-from error import show_error
+from .fileoperations import vfs_encode_filename, file_encode_filename
+from .fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
+from .fileoperations import vfs_rename
+from .fileoperations import vfs_exists
+from .fileoperations import beautify_uri
+from .fileoperations import use_gnomevfs
+from .task import BackgroundTask
+from .queue import TaskQueue
+from .utils import debug, log
+from .settings import mime_whitelist, filename_blacklist
+from .error import show_error
 try:
-    from notify import notification
+    from .notify import notification
 except:
     def notification(msg):
         pass
@@ -50,10 +47,9 @@ except:
 from fnmatch import fnmatch
 
 import time
-import gtk
 def gtk_iteration():
-    while gtk.events_pending():
-        gtk.main_iteration(False)
+    while Gtk.events_pending():
+        Gtk.main_iteration(False)
 
 
 def gtk_sleep(duration):
@@ -62,15 +58,14 @@ def gtk_sleep(duration):
         time.sleep(0.010)
         gtk_iteration()
 
-import gconf
 # load gstreamer audio profiles
 _GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
 _GCONF_PROFILE_LIST_PATH = "/system/gstreamer/0.10/audio/global/profile_list"
 audio_profiles_list = []
 audio_profiles_dict = {}
 
-_GCONF = gconf.client_get_default()
-profiles = _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
+# XXX _GCONF = GConf.Client()
+profiles = [] # _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
 for name in profiles:
     if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
         # get profile
@@ -91,17 +86,17 @@ for name in profiles:
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
-    if not gst.element_factory_find(element):
-        print("required gstreamer element \'%s\' not found." % element)
+    if not Gst.ElementFactory.find(element):
+        print(("required gstreamer element \'%s\' not found." % element))
         sys.exit(1)
 
-if gst.element_factory_find('giosrc'):
+if Gst.ElementFactory.find('giosrc'):
     gstreamer_source = 'giosrc'
     gstreamer_sink = 'giosink'
     encode_filename = vfs_encode_filename
     use_gnomevfs = True
     print('  using gio')
-elif gst.element_factory_find('gnomevfssrc'):
+elif Gst.ElementFactory.find('gnomevfssrc'):
     gstreamer_source = 'gnomevfssrc'
     gstreamer_sink = 'gnomevfssink'
     encode_filename = vfs_encode_filename
@@ -132,12 +127,12 @@ encoders = (
 available_elements = set()
 
 for encoder, name in encoders:
-    have_it = bool(gst.element_factory_find(encoder))
+    have_it = bool(Gst.ElementFactory.find(encoder))
     if have_it:
         available_elements.add(encoder)
     else:
-        print ('  "%s" gstreamer element not found'
-            ', disabling %s output.' % (encoder, name))
+        print(('  "%s" gstreamer element not found'
+            ', disabling %s output.' % (encoder, name)))
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
@@ -186,9 +181,9 @@ class Pipeline(BackgroundTask):
             return
 
         if paused:
-            self.pipeline.set_state(gst.STATE_PAUSED)
+            self.pipeline.set_state(Gst.STATE_PAUSED)
         else:
-            self.pipeline.set_state(gst.STATE_PLAYING)
+            self.pipeline.set_state(Gst.STATE_PLAYING)
 
     def found_tag(self, decoder, something, taglist):
         pass
@@ -202,12 +197,12 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def install_plugin_cb(self, result):
-        if result in (gst.pbutils.INSTALL_PLUGINS_SUCCESS,
-                      gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
-            gst.update_registry()
+        if result in (Gst.pbutils.INSTALL_PLUGINS_SUCCESS,
+                      Gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
+            Gst.update_registry()
             self.restart()
             return
-        if result == gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
+        if result == Gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
             self.error = _('Plugin installation aborted.')
             global user_canceled_codec_installation
             user_canceled_codec_installation = True
@@ -222,20 +217,20 @@ class Pipeline(BackgroundTask):
 
     def on_message(self, bus, message):
         t = message.type
-        import gst
-        if t == gst.MESSAGE_ERROR:
+        import Gst
+        if t == Gst.MESSAGE_ERROR:
             error, _ = message.parse_error()
             self.eos = True
             self.error = error
             self.on_error(error)
             self.done()
-        elif gst.pbutils.is_missing_plugin_message(message):
+        elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
-            detail = gst.pbutils.missing_plugin_message_get_installer_detail(message)
+            detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
             debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
-            self.pipeline.set_state(gst.STATE_NULL)
-            if gst.pbutils.install_plugins_installation_in_progress():
-                while gst.pbutils.install_plugins_installation_in_progress():
+            self.pipeline.set_state(Gst.STATE_NULL)
+            if Gst.pbutils.install_plugins_installation_in_progress():
+                while Gst.pbutils.install_plugins_installation_in_progress():
                     gtk_sleep(0.1)
                 self.restart()
                 return
@@ -244,14 +239,14 @@ class Pipeline(BackgroundTask):
                 debug(self.error)
                 self.done()
                 return
-            ctx = gst.pbutils.InstallPluginsContext()
-            gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
+            ctx = Gst.pbutils.InstallPluginsContext()
+            Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
 
-        elif t == gst.MESSAGE_EOS:
+        elif t == Gst.MESSAGE_EOS:
             self.eos = True
             self.done()
 
-        elif t == gst.MESSAGE_TAG:
+        elif t == Gst.MESSAGE_TAG:
             self.found_tag(self, '', message.parse_tag())
         return True
 
@@ -260,7 +255,7 @@ class Pipeline(BackgroundTask):
             command = ' ! '.join(self.command)
             debug('launching: \'%s\'' % command)
             try:
-                self.pipeline = gst.parse_launch(command)
+                self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
                 assert not self.connected_signals
                 self.connected_signals = []
@@ -274,7 +269,7 @@ class Pipeline(BackgroundTask):
 
                 self.parsed = True
 
-            except gobject.GError, e:
+            except gobject.GError as e:
                 show_error('GStreamer error when creating pipeline', str(e))
                 self.error = str(e)
                 self.eos = True
@@ -285,7 +280,7 @@ class Pipeline(BackgroundTask):
             watch_id = bus.connect('message', self.on_message)
             self.watch_id = watch_id
 
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.STATE_PLAYING)
 
     def stop_pipeline(self):
         if not self.pipeline:
@@ -294,7 +289,7 @@ class Pipeline(BackgroundTask):
         bus = self.pipeline.get_bus()
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
-        self.pipeline.set_state(gst.STATE_NULL)
+        self.pipeline.set_state(Gst.STATE_NULL)
         #self.pipeline = None
 
     def get_position(self):
@@ -336,7 +331,7 @@ class TypeFinder(Pipeline):
                 log('filename blacklisted (%s): %s' % (t,
                         self.sound_file.filename_for_display))
                 
-        self.pipeline.set_state(gst.STATE_NULL)
+        self.pipeline.set_state(Gst.STATE_NULL)
         self.done()
 
     def finished(self):
@@ -379,11 +374,11 @@ class Decoder(Pipeline):
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(
-                                            gst.FORMAT_TIME)[0] / gst.SECOND
+                                            Gst.FORMAT_TIME)[0] / Gst.SECOND
                 debug('got file duration:', self.sound_file.duration)
                 if self.sound_file.duration < 0:
                     self.sound_file.duration = None
-        except gst.QueryError:
+        except Gst.QueryError:
             self.sound_file.duration = None
 
     def query_position(self):
@@ -393,10 +388,10 @@ class Decoder(Pipeline):
         try:
             if self.pipeline:
                 self.position = self.pipeline.query_position(
-                                            gst.FORMAT_TIME)[0] / gst.SECOND
+                                            Gst.FORMAT_TIME)[0] / Gst.SECOND
                 if self.position < 0:
                     self.position = 0
-        except gst.QueryError:
+        except Gst.QueryError:
             self.position = 0
 
 
@@ -405,10 +400,10 @@ class Decoder(Pipeline):
         Called when the decoder reads a tag.
         """
         debug('found_tags:', self.sound_file.filename_for_display)
-        for k in taglist.keys():
+        for k in list(taglist.keys()):
             if 'image' not in k:
                 debug('\t%s=%s' % (k, taglist[k]))
-            if isinstance(taglist[k], gst.Date):
+            if isinstance(taglist[k], Gst.Date):
                 taglist['year'] = taglist[k].year
                 taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
                                     taglist[k].month, taglist[k].day)
@@ -426,7 +421,7 @@ class Decoder(Pipeline):
             'disc-count',
         )
         tags = {}
-        for k in taglist.keys():
+        for k in list(taglist.keys()):
             if k in tag_whitelist:
                 tags[k] = taglist[k]
 
@@ -477,7 +472,7 @@ class TagReader(Decoder):
 
     def on_state_changed(self, bus, message):
         prev, new, pending = message.parse_state_changed()
-        if new == gst.STATE_PLAYING and not self.tagread:
+        if new == Gst.STATE_PLAYING and not self.tagread:
             self.tagread = True
             debug('TagReading done...')
             self.done()

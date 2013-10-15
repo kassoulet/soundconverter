@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -21,26 +21,27 @@
 
 
 import sys
-import gobject
+import gi
 import time
-from soundfile import SoundFile
-import error
+from gi.repository import GObject
+
+from .soundfile import SoundFile
+from . import error
 from soundconverter.settings import settings
-from gstreamer import TagReader
-from namegenerator import TargetNameGenerator
-from queue import TaskQueue
-from gstreamer import Converter
-from fileoperations import unquote_filename
+from .gstreamer import TagReader
+from .namegenerator import TargetNameGenerator
+from .queue import TaskQueue
+from .gstreamer import Converter
+from .fileoperations import unquote_filename
 
 def cli_tags_main(input_files):
     error.set_error_handler(error.ErrorPrinter())
-    loop = gobject.MainLoop()
-    gobject.threads_init()
+    loop = GObject.MainLoop()
     context = loop.get_context()
     for input_file in input_files:
         input_file = SoundFile(input_file)
         if not settings['quiet']:
-            print(input_file.filename)
+            print((input_file.filename))
         t = TagReader(input_file)
         t.start()
         while t.running:
@@ -49,7 +50,7 @@ def cli_tags_main(input_files):
             
         if not settings['quiet']:
             for key in sorted(input_file.tags):
-                print('     %s: %s' % (key, input_file.tags[key]))
+                print(('     %s: %s' % (key, input_file.tags[key])))
 
 
 class CliProgress:
@@ -70,8 +71,7 @@ class CliProgress:
 
 
 def cli_convert_main(input_files):
-    loop = gobject.MainLoop()
-    gobject.threads_init()
+    loop = GObject.MainLoop()
     context = loop.get_context()
     error.set_error_handler(error.ErrorPrinter())
 
@@ -100,7 +100,7 @@ def cli_convert_main(input_files):
             progress.show('%s: %s' % (unquote_filename(c.sound_file.filename[-65:]), percent ))
             time.sleep(0.01)
             context.iteration(True)
-        print
+        print()
 
     previous_filename = None
     

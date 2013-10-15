@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -66,11 +66,11 @@ custom_patterns = english_patterns + ' ' + locale_patterns
 # convert to list
 custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
 # and finally to dict, thus removing doubles
-custom_patterns = dict(zip(custom_patterns, patterns_formats * 2))
+custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
 
-locale_patterns_dict = dict(zip(
+locale_patterns_dict = dict(list(zip(
     [p.lower() for p in english_patterns.split()],
-    ['{%s}' % p for p in locale_patterns.split()]))
+    ['{%s}' % p for p in locale_patterns.split()])))
 
 # add here the formats not containing tags
 # not to bother searching in them

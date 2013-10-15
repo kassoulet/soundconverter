@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -20,9 +20,10 @@
 # USA
 
 import os
-import gobject
+import gi
+from gi.repository import GObject
 
-from fileoperations import unquote_filename
+from .fileoperations import unquote_filename
 
 
 class SoundFile:
@@ -56,7 +57,7 @@ class SoundFile:
         """
         Returns the filename in a suitable for display form.
         """
-        return gobject.filename_display_name(
+        return GObject.filename_display_name(
                 unquote_filename(self.filename))
 
 

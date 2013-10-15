@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -35,7 +35,7 @@ DATADIR = '@datadir@'
 
 NAME = 'SoundConverter'
 VERSION = '@version@'
-print( '%s %s' % (NAME, VERSION) )
+print(( '%s %s' % (NAME, VERSION) ))
 
 GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
@@ -45,13 +45,13 @@ try:
     locale.bindtextdomain(PACKAGE,'@datadir@/locale')
     gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
+    gettext.install(PACKAGE,localedir='@datadir@/locale')
     #from gettext import gettext as _
 except locale.Error:
     print('  cannot use system locale.')
     locale.setlocale(locale.LC_ALL,'C')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale',unicode=1)
+    gettext.install(PACKAGE,localedir='@datadir@/locale')
 
 def _add_soundconverter_path():
     global localedir
@@ -63,44 +63,35 @@ def _add_soundconverter_path():
 
 def _check_libs():
     try:
-        import pygtk
-        pygtk.require('2.0')
-        import gtk
-        import gnome
-        import gnome.ui
-        gnome.ui.authentication_manager_init()
-        import gconf
-        import gobject
-        gobject.threads_init()
-        import gnomevfs
-    except ImportError, error :
-        print('%s needs pygtk and gnome-python >= 2.24! (Error: "%s")' % (NAME, error))
-        sys.exit(1)
-    except:
-        pass
-
-    try:
-        import pygst
-        pygst.require('0.10')
-        import gst
-    except ImportError:
-        print('%s needs python-gstreamer 0.10!' % NAME)
+        import gi
+        gi.require_version('Gst', '1.0')
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gst
+        from gi.repository import Gtk, Gdk
+        from gi.repository import GObject
+        GObject.threads_init()
+        Gdk.threads_init()
+        Gst.init(None)
+        # XXX gnome.ui.authentication_manager_init()
+    except ImportError as error :
+        print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
         sys.exit(1)
 
-    print( '  using Gstreamer version: %s' % (
-            '.'.join([str(s) for s in gst.gst_version])) )
+    print(( '  using GTK version: %s' % Gtk._version))
+    print(( '  using Gstreamer version: %s' % (
+            '.'.join([str(s) for s in Gst.version()])) ))
 
 
 def check_mime_type(mime):
     types = {'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav' : 'audio/x-wav',
         'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'}
     mime = types.get(mime, mime)
-    if mime not in types.values():
-        print('Cannot use "%s" mime type.' % mime)
-        print 'Supported shortcuts and mime types:',
-        for k,v in sorted(types.iteritems()):
-            print '%s %s' % (k,v),
-        print()
+    if mime not in list(types.values()):
+        print(('Cannot use "%s" mime type.' % mime))
+        msg = 'Supported shortcuts and mime types:'
+        for k,v in sorted(types.items()):
+            msg += ' %s %s' % (k,v)
+        print(msg)
         raise SystemExit
     return mime
 
@@ -166,18 +157,18 @@ settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
 
-import gtk
-import gtk.glade
-gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
-gtk.glade.textdomain(PACKAGE)
+#import gtk
+#import gtk.glade
+#XXX gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
+#gtk.glade.textdomain(PACKAGE)
 
-print('  using %d thread(s)' % settings['jobs'])
+print(('  using %d thread(s)' % settings['jobs']))
 
 from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
 
-files = map(filename_to_uri, files)
+files = list(map(filename_to_uri, files))
 
 try:
     from soundconverter.ui import gui_main

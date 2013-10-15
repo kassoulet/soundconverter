@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -20,17 +20,18 @@
 # USA
 
 import os
-import urllib
-import urlparse
-import gnomevfs
+import urllib.request, urllib.parse, urllib.error
+#import urlparse XXX
+import gi
+from gi.repository import GObject
 
-from utils import log
-from error import show_error
+from .utils import log
+from .error import show_error
 
 use_gnomevfs = False
 
 def unquote_filename(filename):
-    return urllib.unquote(filename)
+    return urllib.parse.unquote(filename)
 
 
 def beautify_uri(uri):
@@ -87,7 +88,7 @@ def vfs_makedirs(path_to_create):
             continue
         uri = uri.append_string(folder.replace('%2f', '/'))
         try:
-            gnomevfs.make_directory(uri, 0777)
+            gnomevfs.make_directory(uri, 0o777)
         except gnomevfs.FileExistsError:
             pass
         except:
@@ -138,7 +139,7 @@ def filename_to_uri(filename):
     """
     if '://' not in filename:
         # convert local filename to uri
-        filename = urllib.pathname2url(os.path.abspath(filename))
+        filename = urllib.request.pathname2url(os.path.abspath(filename))
     filename = str(gnomevfs.URI(filename))
     return filename
 

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from urllib import unquote
-import urllib
+from urllib.parse import unquote
+import urllib.request, urllib.parse, urllib.error
 from soundconverter import *
 
 from soundconverter.namegenerator import TargetNameGenerator
@@ -11,9 +11,9 @@ from soundconverter.soundfile import SoundFile
 from soundconverter.fileoperations import filename_to_uri
 
 def quote(ss):
-    if isinstance(ss, unicode):
+    if isinstance(ss, str):
         ss = ss.encode('utf-8')
-    return urllib.quote(ss)
+    return urllib.parse.quote(ss)
 
 class FilenameToUriTest(unittest.TestCase):
 
@@ -42,8 +42,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
 
     def tearDown(self):
@@ -105,8 +105,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ssh:user@server:port///path/to/file.ogg")
@@ -121,8 +121,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "/music/file.ogg")
@@ -137,8 +137,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ftp:user2@dest-server:another-port:/music/file.ogg")
@@ -149,13 +149,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.folder = "ftp:user2@dest-server:another-port:" + quote("/mûsîc/")
         self.g.replace_messy_chars = False
 
-        self.s = SoundFile("ssh:user@server:port" + quote(u"///path/to/file with \u041d chars.flac"))
+        self.s = SoundFile("ssh:user@server:port" + quote("///path/to/file with \u041d chars.flac"))
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ftp:user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg")
@@ -171,8 +171,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ftp:user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs фズ.ogg"))
@@ -187,8 +187,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "ftp:user2@dest-server:another-port:/" + quote("mûsîc") + "/file_with_strange_chars.ogg")
@@ -206,7 +206,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
                              "fîlé.flac")
         self.s = SoundFile("ssh:user@server:port///path/to/\xaa.flac")
         self.failUnlessEqual(self.s.filename_for_display,
-                             u"\ufffd.flac")
+                             "\ufffd.flac")
 
     def test8bits(self):
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
@@ -230,8 +230,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "\xa0\xb0\xc0\xd0",
             "title": "\xa1\xb1\xc1\xd1",
             "album": "\xa2\xb2\xc2\xd2",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
@@ -247,8 +247,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.g.suffix = ".ogg"
         self.failUnlessEqual(self.g.get_target_name(self.s),
@@ -261,8 +261,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
@@ -276,8 +276,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.g.suffix = ".ogg"
         self.g.basename = "%(title)s"
@@ -290,8 +290,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
-            "track-number": 1L,
-            "track-count": 11L,
+            "track-number": 1,
+            "track-count": 11,
         })
         self.g.suffix = ".ogg"
         self.g.folder = "/music"

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -20,7 +20,8 @@
 # USA
 
 import time
-import gobject
+import gi
+from gi.repository import GObject
 
 
 class BackgroundTask:
@@ -55,17 +56,17 @@ class BackgroundTask:
         """Call the signal handlers.
         Callbacks are called as gtk idle funcs to be sure
         they are in the main thread."""
-        gobject.idle_add(getattr(self, signal))
+        GObject.idle_add(getattr(self, signal))
         if signal in self.listeners:
             for listener in self.listeners[signal]:
-                gobject.idle_add(listener, self)
+                GObject.idle_add(listener, self)
 
     def emit_sync(self, signal):
         """Call the signal handlers.
         Callbacks are called synchronously."""
         getattr(self, signal)()
         if signal in self.listeners:
-            print(self.listeners[signal])
+            print((self.listeners[signal]))
             for listener in self.listeners[signal]:
                 listener(self)
 

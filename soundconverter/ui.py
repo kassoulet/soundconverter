@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -26,23 +26,23 @@ import gtk
 import gobject
 import gnome
 import gnomevfs
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from gettext import gettext as _
 
-from gconfstore import GConfStore
-from fileoperations import filename_to_uri, beautify_uri
-from fileoperations import unquote_filename, vfs_walk
-from fileoperations import use_gnomevfs
-from gstreamer import ConverterQueue
-from gstreamer import available_elements, TypeFinder, TagReader
-from gstreamer import audio_profiles_list, audio_profiles_dict
-from soundfile import SoundFile
-from settings import locale_patterns_dict, custom_patterns, filepattern, settings
-from namegenerator import TargetNameGenerator
-from queue import TaskQueue
-from utils import log, debug
-from messagearea import MessageArea
-from error import show_error
+from .gconfstore import GConfStore
+from .fileoperations import filename_to_uri, beautify_uri
+from .fileoperations import unquote_filename, vfs_walk
+from .fileoperations import use_gnomevfs
+from .gstreamer import ConverterQueue
+from .gstreamer import available_elements, TypeFinder, TagReader
+from .gstreamer import audio_profiles_list, audio_profiles_dict
+from .soundfile import SoundFile
+from .settings import locale_patterns_dict, custom_patterns, filepattern, settings
+from .namegenerator import TargetNameGenerator
+from .queue import TaskQueue
+from .utils import log, debug
+from .messagearea import MessageArea
+from .error import show_error
 
 # Names of columns in the file list
 MODEL = [ gobject.TYPE_STRING,   # visible filename
@@ -57,7 +57,7 @@ COLUMNS = ['filename']
 #VISIBLE_COLUMNS = ['filename']
 #ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
 
-MP3_CBR, MP3_ABR, MP3_VBR = range(3)
+MP3_CBR, MP3_ABR, MP3_VBR = list(range(3))
 
 
 def gtk_iteration():
@@ -124,7 +124,7 @@ class FileList:
         self.typefinders = TaskQueue()
         self.filelist = set()
 
-        self.model = apply(gtk.ListStore, MODEL)
+        self.model = gtk.ListStore(*MODEL)
 
         self.widget = builder.get_object('filelist')
         self.sortedmodel = gtk.TreeModelSort(self.model)
@@ -133,9 +133,7 @@ class FileList:
         self.widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
         self.widget.drag_dest_set(gtk.DEST_DEFAULT_ALL,
-                                    map(lambda i:
-                                        (self.drop_mime_types[i], 0, i),
-                                        range(len(self.drop_mime_types))),
+                                    [(self.drop_mime_types[i], 0, i) for i in range(len(self.drop_mime_types))],
                                         gtk.gdk.ACTION_COPY)
         self.widget.connect('drag_data_received', self.drag_data_received)
 
@@ -214,7 +212,7 @@ class FileList:
             except gnomevfs.AccessDeniedError:
                 log('access denied: \'%s\'' % uri)
                 continue
-            except TypeError, e:
+            except TypeError as e:
                 log('add error: %s (\'%s\')' % (e, uri))
                 continue
             except:
@@ -457,7 +455,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.get_float('vorbis-quality')
         except gobject.GError:
             log('deleting old settings...')
-            [self.gconf.unset(self.path(k)) for k in self.defaults.keys()]
+            [self.gconf.unset(self.path(k)) for k in list(self.defaults.keys())]
 
         self.gconf.clear_cache()
 
@@ -567,7 +565,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         quality = self.get_float('vorbis-quality')
         quality_setting = {0: 0, 0.2: 1, 0.4: 2, 0.6: 3, 0.8: 4, 1.0: 5}
         w.set_active(-1)
-        for k, v in quality_setting.iteritems():
+        for k, v in quality_setting.items():
             if abs(quality - k) < 0.01:
                 self.vorbis_quality.set_active(v)
         if self.get_int('vorbis-oga-extension'):
@@ -702,7 +700,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
             tag = s[b:e+1]
             if tag.lower() in [
-                            v.lower() for v in locale_patterns_dict.values()]:
+                            v.lower() for v in list(locale_patterns_dict.values())]:
                 k = tag
                 l = k.replace('{', '<b>{')
                 l = l.replace('}', '}</b>')
@@ -768,7 +766,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         return pattern
 
     def set_sensitive(self):
-        for widget in self.sensitive_widgets.values():
+        for widget in list(self.sensitive_widgets.values()):
             widget.set_sensitive(False)
 
         x = self.get_int('same-folder-as-input')
@@ -818,7 +816,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.target_folder_chooser.hide()
         if ret == gtk.RESPONSE_OK:
             if folder:
-                self.set_string('selected-folder', urllib.unquote(folder))
+                self.set_string('selected-folder', urllib.parse.unquote(folder))
                 self.update_selected_folder()
                 self.update_example()
 
@@ -1320,7 +1318,7 @@ class SoundConverterWindow(GladeWindow):
 
         if running:
             self.set_progress(progress)
-            for sound_file, taskprogress in perfile.iteritems():
+            for sound_file, taskprogress in perfile.items():
                 if taskprogress > 0.0:
                     sound_file.progress = taskprogress
                     self.set_file_progress(sound_file, taskprogress)
@@ -1488,7 +1486,7 @@ def gui_main(name, version, gladefile, input_files):
 
     global win
     win = SoundConverterWindow(builder)
-    import error
+    from . import error
     error.set_error_handler(ErrorDialog(builder))
     
     #error_dialog = MsgAreaErrorDialog(builder)

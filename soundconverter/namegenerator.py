@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
@@ -22,10 +22,10 @@
 import string
 import time
 import os
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import gnomevfs
-from fileoperations import vfs_exists
+from .fileoperations import vfs_exists
 
 
 class TargetNameGenerator:
@@ -48,11 +48,11 @@ class TargetNameGenerator:
         # thanks to
         # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
         try:
-            unicode_string = unicode(unicode_string, 'utf-8')
+            unicode_string = str(unicode_string, 'utf-8')
             return unicodedata.normalize('NFKD', unicode_string).encode(
                                                             'ASCII', 'ignore')
         except UnicodeDecodeError:
-            unicode_string = unicode(unicode_string, 'iso-8859-1')
+            unicode_string = str(unicode_string, 'iso-8859-1')
             return unicodedata.normalize('NFKD', unicode_string).encode(
                                                             'ASCII', 'replace')
 
@@ -64,7 +64,7 @@ class TargetNameGenerator:
         root, ext = os.path.splitext(u.path)
 
         root = sound_file.base_path
-        basename, ext = os.path.splitext(urllib.unquote(sound_file.filename))
+        basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))
 
         # make sure basename constains only the filename
         basefolder, basename = os.path.split(basename)
@@ -86,7 +86,7 @@ class TargetNameGenerator:
         }
         for key in sound_file.tags:
             d[key] = sound_file.tags[key]
-            if isinstance(d[key], basestring):
+            if isinstance(d[key], str):
                 # take care of tags containing slashes
                 d[key] = d[key].replace('/', '-')
 
@@ -97,7 +97,7 @@ class TargetNameGenerator:
 
         pattern = os.path.join(self.subfolders, self.basename + self.suffix)
         result = pattern % d
-        if isinstance(result, unicode):
+        if isinstance(result, str):
             result = result.encode('utf-8')
 
         if self.replace_messy_chars:
@@ -113,12 +113,12 @@ class TargetNameGenerator:
         if self.folder is None:
             folder = root
         else:
-            folder = urllib.quote(self.folder, '/:')
+            folder = urllib.parse.quote(self.folder, '/:')
 
         if '/' in pattern:
             # we are creating folders using tags, disable basefolder handling
             basefolder = ''
 
-        result = os.path.join(folder, basefolder, urllib.quote(result))
+        result = os.path.join(folder, basefolder, urllib.parse.quote(result))
 
         return result
