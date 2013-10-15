@@ -157,10 +157,10 @@ settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
 
-#import gtk
-#import gtk.glade
-#XXX gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
-#gtk.glade.textdomain(PACKAGE)
+#from gi.repository import Gtk
+#import Gtk.glade
+#XXX Gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
+#Gtk.glade.textdomain(PACKAGE)
 
 print(('  using %d thread(s)' % settings['jobs']))
 

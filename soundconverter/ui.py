@@ -22,8 +22,8 @@
 import os
 import time
 import sys
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 import gnome
 import gnomevfs
 import urllib.request, urllib.parse, urllib.error
@@ -45,11 +45,11 @@ from .messagearea import MessageArea
 from .error import show_error
 
 # Names of columns in the file list
-MODEL = [ gobject.TYPE_STRING,   # visible filename
-          gobject.TYPE_PYOBJECT, # soundfile
-          gobject.TYPE_FLOAT,    # progress
-          gobject.TYPE_STRING,   # status
-          gobject.TYPE_STRING,   # complete filename
+MODEL = [ GObject.TYPE_STRING,   # visible filename
+          GObject.TYPE_PYOBJECT, # soundfile
+          GObject.TYPE_FLOAT,    # progress
+          GObject.TYPE_STRING,   # status
+          GObject.TYPE_STRING,   # complete filename
     ]
 
 COLUMNS = ['filename']
@@ -61,8 +61,8 @@ MP3_CBR, MP3_ABR, MP3_VBR = list(range(3))
 
 
 def gtk_iteration():
-    while gtk.events_pending():
-        gtk.main_iteration(False)
+    while Gtk.events_pending():
+        Gtk.main_iteration(False)
 
 
 def gtk_sleep(duration):
@@ -102,14 +102,14 @@ class MsgAreaErrorDialog_:
             sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
         except:
             pass
-        #self.msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, primary, secondary)
+        #self.msg_area.set_text_and_icon(Gtk.STOCK_DIALOG_ERROR, primary, secondary)
         #self.msg_area.show()
         self.primary.set_text(primary)
         self.dialog.show()
 
 
     def show_exception(self, exception):
-        self.show('<b>%s</b>' % gobject.markup_escape_text(exception.primary),
+        self.show('<b>%s</b>' % GObject.markup_escape_text(exception.primary),
                     exception.secondary)
 
 
@@ -124,21 +124,21 @@ class FileList:
         self.typefinders = TaskQueue()
         self.filelist = set()
 
-        self.model = gtk.ListStore(*MODEL)
+        self.model = Gtk.ListStore(*MODEL)
 
         self.widget = builder.get_object('filelist')
-        self.sortedmodel = gtk.TreeModelSort(self.model)
+        self.sortedmodel = Gtk.TreeModelSort(self.model)
         self.widget.set_model(self.sortedmodel)
-        self.sortedmodel.set_sort_column_id(4, gtk.SORT_ASCENDING)
-        self.widget.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
+        self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
-        self.widget.drag_dest_set(gtk.DEST_DEFAULT_ALL,
+        self.widget.drag_dest_set(Gtk.DestDefaults.ALL,
                                     [(self.drop_mime_types[i], 0, i) for i in range(len(self.drop_mime_types))],
-                                        gtk.gdk.ACTION_COPY)
+                                        Gdk.DragAction.COPY)
         self.widget.connect('drag_data_received', self.drag_data_received)
 
-        renderer = gtk.CellRendererProgress()
-        column = gtk.TreeViewColumn('progress',
+        renderer = Gtk.CellRendererProgress()
+        column = Gtk.TreeViewColumn('progress',
                                     renderer,
                                     value=2,
                                     text=3,
@@ -147,10 +147,10 @@ class FileList:
         self.progress_column = column
         self.progress_column.set_visible(False)
 
-        renderer = gtk.CellRendererText()
-        import pango
-        renderer.set_property('ellipsize', pango.ELLIPSIZE_MIDDLE)
-        column = gtk.TreeViewColumn('Filename',
+        renderer = Gtk.CellRendererText()
+        from gi.repository import Pango
+        renderer.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
+        column = Gtk.TreeViewColumn('Filename',
                                     renderer,
                                     markup=0,
                                     )
@@ -161,7 +161,7 @@ class FileList:
         
         self.waiting_files = []
         # add files to filelist in batches. Much faster, and suffisant.
-        gobject.timeout_add(100, self.commit_waiting_files)
+        GObject.timeout_add(100, self.commit_waiting_files)
         self.waiting_files_last = 0
 
     def drag_data_received(self, widget, context, x, y, selection,
@@ -265,7 +265,7 @@ class FileList:
             self.window.progressbarstatus.show()
             self.typefinders.queue_ended = self.typefinder_queue_ended
             self.typefinders.start()
-            gobject.timeout_add(100, self.update_progress, self.typefinders)
+            GObject.timeout_add(100, self.update_progress, self.typefinders)
         else:
             self.window.set_status()
 
@@ -278,7 +278,7 @@ class FileList:
         self.typefinders.abort()
 
     def format_cell(self, sound_file):
-        return '%s' % gobject.markup_escape_text(unquote_filename(
+        return '%s' % GObject.markup_escape_text(unquote_filename(
                                                   sound_file.filename))
 
     def set_row_progress(self, number, progress=None, text=None):
@@ -453,11 +453,11 @@ class PreferencesDialog(GladeWindow, GConfStore):
         # vorbis quality was once stored as an int enum
         try:
             self.get_float('vorbis-quality')
-        except gobject.GError:
+        except GObject.GError:
             log('deleting old settings...')
-            [self.gconf.unset(self.path(k)) for k in list(self.defaults.keys())]
+            [self.GConf.unset(self.path(k)) for k in list(self.defaults.keys())]
 
-        self.gconf.clear_cache()
+        self.GConf.clear_cache()
 
     def set_widget_initial_values(self, builder):
 
@@ -510,9 +510,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
                                                                  len(widgets))
 
         if not self.gstprofile.get_model().get_n_columns():
-            self.gstprofile.set_model(gtk.ListStore(str))
-            cell = gtk.CellRendererText()
-            self.gstprofile.pack_start(cell)
+            self.gstprofile.set_model(Gtk.ListStore(str))
+            cell = Gtk.CellRendererText()
+            self.gstprofile.pack_start(cell, True, True, 0)
             self.gstprofile.add_attribute(cell,'text',0)
             self.gstprofile.set_active(0)
             
@@ -616,7 +616,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         
         self.resample_toggle.set_active(self.get_int('output-resample'))
 
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         self.resample_rate.pack_start(cell, True)
         self.resample_rate.add_attribute(cell, 'text', 0)
         rates = [8000, 11025, 22050, 44100, 48000, 96000]
@@ -687,7 +687,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         sound_file.tags.update({'disc-number': 2, 'disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
 
-        s = gobject.markup_escape_text(beautify_uri(
+        s = GObject.markup_escape_text(beautify_uri(
                         self.generate_filename(sound_file, for_display=True)))
         p = 0
         replaces = []
@@ -722,7 +722,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.aprox_bitrate.set_markup(markup)
 
     def get_output_suffix(self):
-        self.gconf.clear_cache()
+        self.GConf.clear_cache()
         output_type = self.get_string('output-mime-type')
         profile = self.get_string('audio-profile')
         profile_ext = audio_profiles_dict[profile][1] if profile else ''
@@ -814,7 +814,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         ret = self.target_folder_chooser.run()
         folder = self.target_folder_chooser.get_uri()
         self.target_folder_chooser.hide()
-        if ret == gtk.RESPONSE_OK:
+        if ret == Gtk.ResponseType.OK:
             if folder:
                 self.set_string('selected-folder', urllib.parse.unquote(folder))
                 self.update_selected_folder()
@@ -1081,9 +1081,9 @@ class CustomFileChooser:
         # Create combobox model
         self.combo = builder.get_object('filtercombo')
         self.combo.connect('changed', self.on_combo_changed)
-        self.store = gtk.ListStore(str)
+        self.store = Gtk.ListStore(str)
         self.combo.set_model(self.store)
-        combo_rend = gtk.CellRendererText()
+        combo_rend = Gtk.CellRendererText()
         self.combo.pack_start(combo_rend, True)
         self.combo.add_attribute(combo_rend, 'text', 0)
 
@@ -1112,10 +1112,10 @@ class CustomFileChooser:
         Callback for combobox 'changed' signal\n
         Set a new filter for the filechooserwidget
         """
-        filter = gtk.FileFilter()
+        filter = Gtk.FileFilter()
         active = self.combo.get_active()
         if active:
-            filter.add_custom(gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb,
+            filter.add_custom(Gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb,
                                         self.pattern[self.combo.get_active()])
         else:
             filter.add_pattern('*.*')
@@ -1162,17 +1162,17 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog.message = builder.get_object('exists_message')
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
 
-        self.addfolderchooser = gtk.FileChooserDialog(_('Add Folder...'),
-            self.widget, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-            (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
-            gtk.RESPONSE_OK))
+        self.addfolderchooser = Gtk.FileChooserDialog(_('Add Folder...'),
+            self.widget, Gtk.FileChooserAction.SELECT_FOLDER,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK))
         self.addfolderchooser.set_select_multiple(True)
         self.addfolderchooser.set_local_only(not use_gnomevfs)
 
-        self.combo = gtk.ComboBox()
-        self.store = gtk.ListStore(str)
+        self.combo = Gtk.ComboBox()
+        self.store = Gtk.ListStore(str)
         self.combo.set_model(self.store)
-        combo_rend = gtk.CellRendererText()
+        combo_rend = Gtk.CellRendererText()
         self.combo.pack_start(combo_rend, True)
         self.combo.add_attribute(combo_rend, 'text', 0)
 
@@ -1206,10 +1206,10 @@ class SoundConverterWindow(GladeWindow):
         self.msg_area = msg_area = MessageArea()
         #msg_area.add_button('_Overwrite', 1)
         #msg_area.add_button('_Skip', 2)
-        msg_area.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
-        #checkbox = gtk.CheckButton('Apply to _all queue')
+        msg_area.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CLOSE)
+        #checkbox = Gtk.CheckButton('Apply to _all queue')
         #checkbox.show()
-        #msg_area.set_text_and_icon(gtk.STOCK_DIALOG_ERROR, 'Access Denied',                                    msg, checkbox)
+        #msg_area.set_text_and_icon(Gtk.STOCK_DIALOG_ERROR, 'Access Denied',                                    msg, checkbox)
 
         #msg_area.connect("response", self.OnMessageAreaReponse, msg_area)
         #msg_area.connect("close", self.OnMessageAreaClose, msg_area)
@@ -1241,7 +1241,7 @@ class SoundConverterWindow(GladeWindow):
         # yes, this sucks badly, but signals can still be called by gstreamer
         #  so wait a bit for things to calm down, and quit.
         gtk_sleep(1)
-        gtk.main_quit()
+        Gtk.main_quit()
         return True
 
     on_window_delete_event = close
@@ -1256,7 +1256,7 @@ class SoundConverterWindow(GladeWindow):
         ret = self.addchooser.run()
         folder = self.addchooser.get_current_folder_uri()
         self.addchooser.hide()
-        if ret == gtk.RESPONSE_OK and folder:
+        if ret == Gtk.ResponseType.OK and folder:
             self.filelist.add_uris(self.addchooser.get_uris())
             self.prefs.set_string('last-used-folder', folder)
         self.set_sensitive()
@@ -1270,7 +1270,7 @@ class SoundConverterWindow(GladeWindow):
         folders = self.addfolderchooser.get_uris()
         folder = self.addfolderchooser.get_current_folder_uri()
         self.addfolderchooser.hide()
-        if ret == gtk.RESPONSE_OK:
+        if ret == Gtk.ResponseType.OK:
             extensions = None
             if self.combo.get_active():
                 patterns = filepattern[self.combo.get_active()][1].split(';')
@@ -1329,7 +1329,7 @@ class SoundConverterWindow(GladeWindow):
 
     def do_convert(self):
         self.pulse_progress = -1
-        gobject.timeout_add(100, self.on_progress)
+        GObject.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion...'))
         files = self.filelist.get_files()
         total = len(files)
@@ -1481,7 +1481,7 @@ def gui_main(name, version, gladefile, input_files):
     global NAME, VERSION
     NAME, VERSION = name, version
     gnome.init(name, version)
-    builder = gtk.Builder()
+    builder = Gtk.Builder()
     builder.add_from_file(gladefile)
 
     global win
@@ -1493,6 +1493,6 @@ def gui_main(name, version, gladefile, input_files):
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
 
-    gobject.idle_add(win.filelist.add_uris, input_files)
+    GObject.idle_add(win.filelist.add_uris, input_files)
     win.set_sensitive()
-    gtk.main()
+    Gtk.main()

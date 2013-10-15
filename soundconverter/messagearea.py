@@ -21,28 +21,28 @@
 
 # THIS FILE WAS PART OF THE JOKOSHER PROJECT AND LICENSED UNDER THE GPL.
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 
-class MessageArea(gtk.HBox):
+class MessageArea(Gtk.HBox):
 
     __gsignals__ = {
-        "response"  : ( gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT,) ),
-        "close"     : ( gobject.SIGNAL_RUN_LAST | gobject.SIGNAL_ACTION, gobject.TYPE_NONE, () )
+        "response"  : ( GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_INT,) ),
+        "close"     : ( GObject.SignalFlags.RUN_LAST | GObject.SignalFlags.ACTION, None, () )
     }
 
     def __init__(self):
-        gtk.HBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.contents = None
         self.changing_style = False
 
-        self.main_hbox = gtk.HBox(False, 16) # FIXME: use style properties
+        self.main_hbox = Gtk.HBox(False, 16) # FIXME: use style properties
         self.main_hbox.show()
         self.main_hbox.set_border_width(8) # FIXME: use style properties
 
-        self.action_area = gtk.VBox(True, 3) # FIXME: use style properties */
+        self.action_area = Gtk.VBox(True, 3) # FIXME: use style properties */
         self.action_area.show()
 
         self.main_hbox.pack_end(self.action_area, False, True)
@@ -69,7 +69,7 @@ class MessageArea(gtk.HBox):
             return
 
         # This is a hack needed to use the tooltip background color
-        window = gtk.Window(gtk.WINDOW_POPUP)
+        window = Gtk.Window(Gtk.WindowType.POPUP)
         window.set_name("gtk-tooltip")
         window.ensure_style()
         style = window.get_style()
@@ -88,14 +88,14 @@ class MessageArea(gtk.HBox):
         y = a.y + 1
         width = a.width - 2
         height = a.height - 2
-        widget.style.paint_flat_box(widget.window, gtk.STATE_NORMAL, gtk.SHADOW_OUT, None,
+        widget.style.paint_flat_box(widget.window, Gtk.StateType.NORMAL, Gtk.ShadowType.OUT, None,
                                     widget, "tooltip", x, y, width, height)
         return False
 
     def action_widget_activated(self, widget):
         resp = self.get_response_data(widget)
         if resp is None:
-            resp = gtk.RESPONSE_NONE
+            resp = Gtk.ResponseType.NONE
         self.response(resp)
 
     def get_response_data(self, widget):
@@ -112,7 +112,7 @@ class MessageArea(gtk.HBox):
         except ValueError:
             signal = None
 
-        if isinstance(child, gtk.Button):
+        if isinstance(child, Gtk.Button):
             child.connect("clicked", self.action_widget_activated)
         elif signal:
             child.connect(signal, self.action_widget_activated)
@@ -120,15 +120,15 @@ class MessageArea(gtk.HBox):
             pass
             #g_warning("Only 'activatable' widgets can be packed into the action area of a GeditMessageArea");
 
-        if response_id != gtk.RESPONSE_HELP:
+        if response_id != Gtk.ResponseType.HELP:
             self.action_area.pack_end(child, False, False)
         else:
             self.action_area.pack_start(child, False, False)
 
 
     def add_button(self, text, response_id):
-        button = gtk.Button(stock=text)
-        button.set_flags(gtk.CAN_DEFAULT)
+        button = Gtk.Button(stock=text)
+        button.set_can_default(True)
         button.show()
         self.add_action_widget(button, response_id)
         return button
@@ -157,9 +157,9 @@ class MessageArea(gtk.HBox):
         self.emit("response", response_id)
 
     def add_stock_button_with_text(self, text, stock_id, response_id):
-        button = gtk.Button(text, use_underline=True)
-        button.set_image(gtk.image_new_from_stock(stock_id,gtk.ICON_SIZE_BUTTON))
-        button.set_flags(gtk.CAN_DEFAULT)
+        button = Gtk.Button(text, use_underline=True)
+        button.set_image(Gtk.Image.new_from_stock(stock_id,Gtk.IconSize.BUTTON))
+        button.set_can_default(True)
         button.show()
         self.add_action_widget(button, response_id)
 
@@ -169,24 +169,24 @@ class MessageArea(gtk.HBox):
 
     def set_text_and_icon(self, icon_stock_id, primary_text,
                             secondary_text=None, additionnal_widget=None):
-        hbox_content = gtk.HBox(False, 8)
+        hbox_content = Gtk.HBox(False, 8)
         hbox_content.show()
 
-        image = gtk.image_new_from_stock(icon_stock_id, gtk.ICON_SIZE_DIALOG)
+        image = Gtk.Image.new_from_stock(icon_stock_id, Gtk.IconSize.DIALOG)
         image.show()
         hbox_content.pack_start(image, False, False)
         image.set_alignment(0.5, 0.5)
 
-        vbox = gtk.VBox(False, 6)
+        vbox = Gtk.VBox(False, 6)
         vbox.show()
         hbox_content.pack_start(vbox, True, True)
 
         primary_markup = "<b>%s</b>" % primary_text
-        primary_label = gtk.Label(primary_markup)
+        primary_label = Gtk.Label(label=primary_markup)
         primary_label.set_use_markup(True)
         primary_label.set_line_wrap(True)
         primary_label.set_alignment(0, 0.5)
-        primary_label.set_flags(gtk.CAN_FOCUS)
+        primary_label.set_flags(Gtk.CAN_FOCUS)
         primary_label.set_selectable(True)
         
         textcolor = self.get_style().text[1]
@@ -198,8 +198,8 @@ class MessageArea(gtk.HBox):
 
         if secondary_text:
             secondary_markup = "<small>%s</small>" % secondary_text
-            secondary_label = gtk.Label(secondary_markup)
-            secondary_label.set_flags(gtk.CAN_FOCUS)
+            secondary_label = Gtk.Label(label=secondary_markup)
+            secondary_label.set_flags(Gtk.CAN_FOCUS)
             secondary_label.set_use_markup(True)
             secondary_label.set_line_wrap(True)
             secondary_label.set_selectable(True)
@@ -214,6 +214,6 @@ class MessageArea(gtk.HBox):
         self.set_contents(hbox_content)
 
 
-gtk.binding_entry_add_signal(MessageArea, gtk.gdk.keyval_from_name("Escape"), 0, "close")
+Gtk.binding_entry_add_signal(MessageArea, Gdk.keyval_from_name("Escape"), 0, "close")
 
 

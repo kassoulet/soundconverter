@@ -19,40 +19,40 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import gconf
+from gi.repository import GConf
 
 
 class GConfStore(object):
 
     def __init__(self, root, defaults):
-        self.gconf = gconf.client_get_default()
-        self.gconf.add_dir(root, gconf.CLIENT_PRELOAD_ONELEVEL)
+        self.gconf = GConf.Client.get_default()
+        self.GConf.add_dir(root, GConf.ClientPreloadType.PRELOAD_ONELEVEL)
         self.root = root
         self.defaults = defaults
 
     def get_with_default(self, getter, key):
-        if self.gconf.get(self.path(key)) is None:
+        if self.GConf.get(self.path(key)) is None:
             return self.defaults[key]
         else:
             return getter(self.path(key))
 
     def get_int(self, key):
-        return self.get_with_default(self.gconf.get_int, key)
+        return self.get_with_default(self.GConf.get_int, key)
 
     def set_int(self, key, value):
-        self.gconf.set_int(self.path(key), value)
+        self.GConf.set_int(self.path(key), value)
 
     def get_float(self, key):
-        return self.get_with_default(self.gconf.get_float, key)
+        return self.get_with_default(self.GConf.get_float, key)
 
     def set_float(self, key, value):
-        self.gconf.set_float(self.path(key), value)
+        self.GConf.set_float(self.path(key), value)
 
     def get_string(self, key):
-        return self.get_with_default(self.gconf.get_string, key)
+        return self.get_with_default(self.GConf.get_string, key)
 
     def set_string(self, key, value):
-        self.gconf.set_string(self.path(key), value)
+        self.GConf.set_string(self.path(key), value)
 
     def path(self, key):
         assert key in self.defaults, 'missing gconf default:%s' % key

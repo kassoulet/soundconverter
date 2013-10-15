@@ -27,17 +27,17 @@ def _notification_dummy(message):
 notification = _notification_dummy
 
 try:
-    import pynotify
+    from gi.repository import Notify
 
 
     def _notification(message):
         try:
-            n = pynotify.Notification('SoundConverter', message)
+            n = Notify.Notification('SoundConverter', message)
             n.show()
         except:
             pass 
 
-    if pynotify.init('Basics'):
+    if Notify.init('Basics'):
         notification = _notification
 
 except ImportError:

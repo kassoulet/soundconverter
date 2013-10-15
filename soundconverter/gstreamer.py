@@ -181,9 +181,9 @@ class Pipeline(BackgroundTask):
             return
 
         if paused:
-            self.pipeline.set_state(Gst.STATE_PAUSED)
+            self.pipeline.set_state(Gst.State.PAUSED)
         else:
-            self.pipeline.set_state(Gst.STATE_PLAYING)
+            self.pipeline.set_state(Gst.State.PLAYING)
 
     def found_tag(self, decoder, something, taglist):
         pass
@@ -209,7 +209,7 @@ class Pipeline(BackgroundTask):
             self.done()
             return
         self.done()
-        show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
+        show_error('Error', 'failed to install plugins: %s' % GObject.markup_escape_text(str(result)))
 
     def on_error(self, error):
         self.error = error
@@ -218,7 +218,7 @@ class Pipeline(BackgroundTask):
     def on_message(self, bus, message):
         t = message.type
         import Gst
-        if t == Gst.MESSAGE_ERROR:
+        if t == Gst.MessageType.ERROR:
             error, _ = message.parse_error()
             self.eos = True
             self.error = error
@@ -228,7 +228,7 @@ class Pipeline(BackgroundTask):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
             debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
-            self.pipeline.set_state(Gst.STATE_NULL)
+            self.pipeline.set_state(Gst.State.NULL)
             if Gst.pbutils.install_plugins_installation_in_progress():
                 while Gst.pbutils.install_plugins_installation_in_progress():
                     gtk_sleep(0.1)
@@ -242,11 +242,11 @@ class Pipeline(BackgroundTask):
             ctx = Gst.pbutils.InstallPluginsContext()
             Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
 
-        elif t == Gst.MESSAGE_EOS:
+        elif t == Gst.MessageType.EOS:
             self.eos = True
             self.done()
 
-        elif t == Gst.MESSAGE_TAG:
+        elif t == Gst.MessageType.TAG:
             self.found_tag(self, '', message.parse_tag())
         return True
 
@@ -269,7 +269,7 @@ class Pipeline(BackgroundTask):
 
                 self.parsed = True
 
-            except gobject.GError as e:
+            except GObject.GError as e:
                 show_error('GStreamer error when creating pipeline', str(e))
                 self.error = str(e)
                 self.eos = True
@@ -280,7 +280,7 @@ class Pipeline(BackgroundTask):
             watch_id = bus.connect('message', self.on_message)
             self.watch_id = watch_id
 
-        self.pipeline.set_state(Gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.State.PLAYING)
 
     def stop_pipeline(self):
         if not self.pipeline:
@@ -289,7 +289,7 @@ class Pipeline(BackgroundTask):
         bus = self.pipeline.get_bus()
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
-        self.pipeline.set_state(Gst.STATE_NULL)
+        self.pipeline.set_state(Gst.State.NULL)
         #self.pipeline = None
 
     def get_position(self):
@@ -331,7 +331,7 @@ class TypeFinder(Pipeline):
                 log('filename blacklisted (%s): %s' % (t,
                         self.sound_file.filename_for_display))
                 
-        self.pipeline.set_state(Gst.STATE_NULL)
+        self.pipeline.set_state(Gst.State.NULL)
         self.done()
 
     def finished(self):
@@ -339,7 +339,7 @@ class TypeFinder(Pipeline):
         if self.error:
             return
         if self.found_type_hook and self.sound_file.mime_type:
-            gobject.idle_add(self.found_type_hook, self.sound_file,
+            GObject.idle_add(self.found_type_hook, self.sound_file,
                                 self.sound_file.mime_type)
             self.sound_file.mime_type = True # remove string
 
@@ -374,7 +374,7 @@ class Decoder(Pipeline):
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(
-                                            Gst.FORMAT_TIME)[0] / Gst.SECOND
+                                            Gst.Format.TIME)[0] / Gst.SECOND
                 debug('got file duration:', self.sound_file.duration)
                 if self.sound_file.duration < 0:
                     self.sound_file.duration = None
@@ -388,7 +388,7 @@ class Decoder(Pipeline):
         try:
             if self.pipeline:
                 self.position = self.pipeline.query_position(
-                                            Gst.FORMAT_TIME)[0] / Gst.SECOND
+                                            Gst.Format.TIME)[0] / Gst.SECOND
                 if self.position < 0:
                     self.position = 0
         except Gst.QueryError:
@@ -472,7 +472,7 @@ class TagReader(Decoder):
 
     def on_state_changed(self, bus, message):
         prev, new, pending = message.parse_state_changed()
-        if new == Gst.STATE_PLAYING and not self.tagread:
+        if new == Gst.State.PLAYING and not self.tagread:
             self.tagread = True
             debug('TagReading done...')
             self.done()
@@ -481,7 +481,7 @@ class TagReader(Decoder):
         Pipeline.finished(self)
         self.sound_file.tags_read = True
         if self.found_tag_hook:
-            gobject.idle_add(self.found_tag_hook, self)
+            GObject.idle_add(self.found_tag_hook, self)
 
 
 class Converter(Decoder):
