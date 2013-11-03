@@ -750,8 +750,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
             folder = filename_to_uri(folder)
             generator.folder = folder
 
-        if self.get_int('create-subfolders'):
-            generator.subfolders = self.get_subfolder_pattern()
+            if self.get_int('create-subfolders'):
+                generator.subfolders = self.get_subfolder_pattern()
 
         generator.basename = self.get_basename_pattern()
 
