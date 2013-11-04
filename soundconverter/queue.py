@@ -20,9 +20,9 @@
 # USA
 
 import time
-from .task import BackgroundTask
-from .settings import settings
-from .utils import log
+from soundconverter.task import BackgroundTask
+from soundconverter.settings import settings
+from soundconverter.utils import log
 
 
 class TaskQueue(BackgroundTask):
@@ -60,12 +60,14 @@ class TaskQueue(BackgroundTask):
             self.start_next_task()
 
     def start_next_task(self):
+        print('TaskQueue.start_next_task')
         if not self.waiting_tasks:
             if not self.running_tasks:
                 self.done()
             return
 
         to_start = settings['jobs'] - len(self.running_tasks)
+        to_start = 1 # XXX
         for i in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
@@ -103,6 +105,7 @@ class TaskQueue(BackgroundTask):
         self.running = False
 
     def task_finished(self, task=None):
+        print('TaskQueue.task_finished')
         if not self.running_tasks:
             return
         if task in self.running_tasks:

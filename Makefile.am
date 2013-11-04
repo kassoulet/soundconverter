@@ -19,3 +19,6 @@ release: changelog dist
 changelog:
 	git log 3fd8.. --pretty --numstat --summary | ./git2cl.pl > ChangeLog
 	cat ChangeLog.old >> ChangeLog
+
+test:
+	PYTHONPATH=. python3 tests/unittests.py 

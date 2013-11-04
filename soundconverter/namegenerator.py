@@ -24,8 +24,9 @@ import time
 import os
 import urllib.request, urllib.parse, urllib.error
 import unicodedata
-import gnomevfs
-from .fileoperations import vfs_exists
+import gi
+from gi.repository import Gio
+from soundconverter.fileoperations import vfs_exists, filename_to_uri
 
 
 class TargetNameGenerator:
@@ -60,8 +61,7 @@ class TargetNameGenerator:
 
         assert self.suffix, 'you just forgot to call set_target_suffix()'
 
-        u = gnomevfs.URI(sound_file.uri)
-        root, ext = os.path.splitext(u.path)
+        root, ext = os.path.splitext(urllib.parse.urlparse(sound_file.uri).path)
 
         root = sound_file.base_path
         basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))

@@ -21,12 +21,11 @@
 
 import os
 import urllib.request, urllib.parse, urllib.error
-#import urlparse XXX
 import gi
-from gi.repository import GObject
+from gi.repository import GObject, Gio
 
-from .utils import log
-from .error import show_error
+from soundconverter.utils import log
+from soundconverter.error import show_error
 
 use_gnomevfs = False
 
@@ -39,38 +38,24 @@ def beautify_uri(uri):
 
 
 def vfs_walk(uri):
-    """similar to os.path.walk, but with gnomevfs.
+    """similar to os.path.walk, but with Gio.
 
     uri -- the base folder uri.
     return a list of uri.
 
     """
-    if str(uri)[-1] != '/':
-        uri = uri.append_string('/')
-
     filelist = []
 
-    try:
-        dirlist = gnomevfs.open_directory(uri, gnomevfs.FILE_INFO_FOLLOW_LINKS)
-    except:
-        log("skipping: '%s\'" % uri)
-        return filelist
-
+    dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
+    print(dirlist)
     for file_info in dirlist:
-        try:
-            if file_info.name[0] == '.':
-                continue
-
-            if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-                filelist.extend(
-                    vfs_walk(uri.append_path(file_info.name)))
-
-            if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
-                filelist.append(str(uri.append_file_name(file_info.name)))
-        except ValueError:
-            # this can happen when you do not have sufficent
-            # permissions to read file info.
-            log("skipping: \'%s\'" % uri)
+        name = file_info.get_name()
+        print(name)
+        info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
+        if info == Gio.FileType.DIRECTORY:
+            filelist.extend(vfs_walk(uri + '/' + name))
+        if info == Gio.FileType.REGULAR:
+            filelist.append(str(uri + '/' + name))
     return filelist
 
 
@@ -139,8 +124,8 @@ def filename_to_uri(filename):
     """
     if '://' not in filename:
         # convert local filename to uri
-        filename = urllib.request.pathname2url(os.path.abspath(filename))
-    filename = str(gnomevfs.URI(filename))
+        filename = 'file://' + urllib.request.pathname2url(os.path.abspath(filename))
+    filename = Gio.file_parse_name(filename).get_uri()
     return filename
 
 
@@ -151,5 +136,5 @@ def vfs_encode_filename(filename):
 
 
 def file_encode_filename(filename):
-    return gnomevfs.get_local_path_from_uri(filename).replace(' ', '\ ')
+    return Gio.get_local_path_from_uri(filename).replace(' ', '\ ')
     

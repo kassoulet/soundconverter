@@ -22,27 +22,28 @@
 import os
 import time
 import sys
-from gi.repository import Gtk
-from gi.repository import GObject
-import gnome
-import gnomevfs
 import urllib.request, urllib.parse, urllib.error
 from gettext import gettext as _
 
-from .gconfstore import GConfStore
-from .fileoperations import filename_to_uri, beautify_uri
-from .fileoperations import unquote_filename, vfs_walk
-from .fileoperations import use_gnomevfs
-from .gstreamer import ConverterQueue
-from .gstreamer import available_elements, TypeFinder, TagReader
-from .gstreamer import audio_profiles_list, audio_profiles_dict
-from .soundfile import SoundFile
-from .settings import locale_patterns_dict, custom_patterns, filepattern, settings
-from .namegenerator import TargetNameGenerator
-from .queue import TaskQueue
-from .utils import log, debug
-from .messagearea import MessageArea
-from .error import show_error
+from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import Gio
+from gi.repository import Gdk
+from gi.repository import GLib
+
+from soundconverter.gconfstore import GConfStore
+from soundconverter.fileoperations import filename_to_uri, beautify_uri
+from soundconverter.fileoperations import unquote_filename, vfs_walk
+from soundconverter.fileoperations import use_gnomevfs
+from soundconverter.gstreamer import ConverterQueue
+from soundconverter.gstreamer import available_elements, TypeFinder, TagReader
+from soundconverter.gstreamer import audio_profiles_list, audio_profiles_dict
+from soundconverter.soundfile import SoundFile
+from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings
+from soundconverter.namegenerator import TargetNameGenerator
+from soundconverter.queue import TaskQueue
+from soundconverter.utils import log, debug
+from soundconverter.error import show_error
 
 # Names of columns in the file list
 MODEL = [ GObject.TYPE_STRING,   # visible filename
@@ -62,7 +63,7 @@ MP3_CBR, MP3_ABR, MP3_VBR = list(range(3))
 
 def gtk_iteration():
     while Gtk.events_pending():
-        Gtk.main_iteration(False)
+        Gtk.main_iteration()
 
 
 def gtk_sleep(duration):
@@ -70,6 +71,9 @@ def gtk_sleep(duration):
     while time.time() < start + duration:
         time.sleep(0.010)
         gtk_iteration()
+
+
+
 
 
 class ErrorDialog:
@@ -133,7 +137,8 @@ class FileList:
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.widget.drag_dest_set(Gtk.DestDefaults.ALL,
-                                    [(self.drop_mime_types[i], 0, i) for i in range(len(self.drop_mime_types))],
+                                    [],
+                                    #XXX [(self.drop_mime_types[i], 0, i) for i in range(len(self.drop_mime_types))],
                                         Gdk.DragAction.COPY)
         self.widget.connect('drag_data_received', self.drag_data_received)
 
@@ -161,13 +166,13 @@ class FileList:
         
         self.waiting_files = []
         # add files to filelist in batches. Much faster, and suffisant.
-        GObject.timeout_add(100, self.commit_waiting_files)
+        # XXX GObject.timeout_add(100, self.commit_waiting_files)
         self.waiting_files_last = 0
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
         widget.stop_emission('drag_data_received')
-        if mime_id >= 0 and mime_id < len(self.drop_mime_types):
+        if 0 <= mime_id < len(self.drop_mime_types):
             self.add_uris([uri.strip() for uri in selection.data.split('\n')])
             context.finish(True, False, time)
 
@@ -189,43 +194,42 @@ class FileList:
 
     def add_uris(self, uris, base=None, extensions=None):
         files = []
-        self.window.set_status(_('Scanning files...'))
+        #self.window.set_status(_('Scanning files...'))
 
         base = None
 
         for uri in uris:
+            print(uri)
             if not uri:
                 continue
             if uri.startswith('cdda:'):
                 show_error('Cannot read from Audio CD.',
                     'Use SoundJuicer Audio CD Extractor instead.')
                 return
-            try:
-                info = gnomevfs.get_file_info(gnomevfs.URI(uri),
-                            gnomevfs.FILE_INFO_FOLLOW_LINKS)
-            except gnomevfs.NotFoundError:
-                log('uri not found: \'%s\'' % uri)
-                continue
-            except gnomevfs.InvalidURIError:
-                log('invalid uri: \'%s\'' % uri)
-                continue
-            except gnomevfs.AccessDeniedError:
-                log('access denied: \'%s\'' % uri)
-                continue
-            except TypeError as e:
-                log('add error: %s (\'%s\')' % (e, uri))
-                continue
-            except:
-                log('error in get_file_info: %s' % (uri))
-                continue
+            info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
+            #except gnomevfs.NotFoundError:
+            #    log('uri not found: \'%s\'' % uri)
+            #    continue
+            #except gnomevfs.InvalidURIError:
+            #    log('invalid uri: \'%s\'' % uri)
+            #    continue
+            #except gnomevfs.AccessDeniedError:
+            #    log('access denied: \'%s\'' % uri)
+            #    continue
+            #except TypeError as e:
+            #    log('add error: %s (\'%s\')' % (e, uri))
+            #    continue
+            #except:
+            #    log('error in get_file_info: %s' % (uri))
+            #    continue
 
-            if info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+            if info == Gio.FileType.DIRECTORY:
                 log('walking: \'%s\'' % uri)
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
                     base = os.path.dirname(uri)
-                filelist = vfs_walk(gnomevfs.URI(uri))
+                filelist = vfs_walk(uri)
                 accepted = []
                 if extensions:
                     for f in filelist:
@@ -347,15 +351,15 @@ class GladeWindow(object):
     builder = None
 
     def __init__(self, builder):
-        '''
+        """
         Init GladeWindow, stores the objects's potential callbacks for later.
-        You have to call connect_signals() when all descendants are ready.'''
+        You have to call connect_signals() when all descendants are ready."""
         GladeWindow.builder = builder
         GladeWindow.callbacks.update(dict([[x, getattr(self, x)]
                                      for x in dir(self) if x.startswith('on_')]))
 
     def __getattr__(self, attribute):
-        '''Allow direct use of window widget.'''
+        """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
             raise AttributeError('Widget \'%s\' not found' % attribute)
@@ -364,7 +368,7 @@ class GladeWindow(object):
 
     @staticmethod
     def connect_signals():
-        '''Connect all GladeWindow objects to theirs respective signals'''
+        """Connect all GladeWindow objects to theirs respective signals"""
         GladeWindow.builder.connect_signals(GladeWindow.callbacks)
 
 
@@ -455,9 +459,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.get_float('vorbis-quality')
         except GObject.GError:
             log('deleting old settings...')
-            [self.GConf.unset(self.path(k)) for k in list(self.defaults.keys())]
+            [self.gconf.unset(self.path(k)) for k in list(self.defaults.keys())]
 
-        self.GConf.clear_cache()
+        self.gconf.clear_cache()
 
     def set_widget_initial_values(self, builder):
 
@@ -512,7 +516,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if not self.gstprofile.get_model().get_n_columns():
             self.gstprofile.set_model(Gtk.ListStore(str))
             cell = Gtk.CellRendererText()
-            self.gstprofile.pack_start(cell, True, True, 0)
+            self.gstprofile.pack_start(cell, 0)
             self.gstprofile.add_attribute(cell,'text',0)
             self.gstprofile.set_active(0)
             
@@ -722,7 +726,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.aprox_bitrate.set_markup(markup)
 
     def get_output_suffix(self):
-        self.GConf.clear_cache()
+        self.gconf.clear_cache()
         output_type = self.get_string('output-mime-type')
         profile = self.get_string('audio-profile')
         profile_ext = audio_profiles_dict[profile][1] if profile else ''
@@ -1203,17 +1207,17 @@ class SoundConverterWindow(GladeWindow):
         #            'Do you want to skip the file, overwrite it or'\
         #            ' cancel the conversion?\n') % '/foo/bar/baz'
         vbox = self.vbox_status
-        self.msg_area = msg_area = MessageArea()
+        #self.msg_area = msg_area = MessageArea()
         #msg_area.add_button('_Overwrite', 1)
         #msg_area.add_button('_Skip', 2)
-        msg_area.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CLOSE)
+        #msg_area.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CLOSE)
         #checkbox = Gtk.CheckButton('Apply to _all queue')
         #checkbox.show()
         #msg_area.set_text_and_icon(Gtk.STOCK_DIALOG_ERROR, 'Access Denied',                                    msg, checkbox)
 
         #msg_area.connect("response", self.OnMessageAreaReponse, msg_area)
         #msg_area.connect("close", self.OnMessageAreaClose, msg_area)
-        vbox.pack_start(msg_area, False, False)
+        #vbox.pack_start(msg_area, False, False)
         #msg_area.show()
         
 
@@ -1235,11 +1239,11 @@ class SoundConverterWindow(GladeWindow):
         debug('closing...')
         self.filelist.abort()
         self.converter.abort()
-        self.widget.hide_all()
+        self.widget.hide()
         self.widget.destroy()
         # wait one second...
         # yes, this sucks badly, but signals can still be called by gstreamer
-        #  so wait a bit for things to calm down, and quit.
+        # so wait a bit for things to calm down, and quit.
         gtk_sleep(1)
         Gtk.main_quit()
         return True
@@ -1308,7 +1312,7 @@ class SoundConverterWindow(GladeWindow):
         if self.pulse_progress == -1: # still waiting for add
             self.set_progress()
             return True
-        if self.pulse_progress == False: # conversion ended
+        if not self.pulse_progress: # conversion ended
             return False
 
         perfile = {}
@@ -1451,7 +1455,7 @@ class SoundConverterWindow(GladeWindow):
         if display_time:
             t = time.time() - self.converter.run_start_time - \
                               self.paused_time
-            if (t < 1):
+            if t < 1:
                 # wait a bit not to display crap
                 self.progressbar.pulse()
                 return
@@ -1480,7 +1484,7 @@ win = None
 def gui_main(name, version, gladefile, input_files):
     global NAME, VERSION
     NAME, VERSION = name, version
-    gnome.init(name, version)
+    # XXX gnome.init(name, version)
     builder = Gtk.Builder()
     builder.add_from_file(gladefile)
 

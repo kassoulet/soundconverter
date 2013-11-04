@@ -93,10 +93,10 @@ filepattern = (
 
 
 def cpu_count():
-    '''
+    """
     Returns the number of CPUs in the system.
     (from pyprocessing)
-    '''
+    """
     import sys
     import os
     if sys.platform == 'win32':

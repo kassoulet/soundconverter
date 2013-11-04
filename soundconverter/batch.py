@@ -25,14 +25,14 @@ import gi
 import time
 from gi.repository import GObject
 
-from .soundfile import SoundFile
-from . import error
+from soundconverter.soundfile import SoundFile
+from soundconverter import error
 from soundconverter.settings import settings
-from .gstreamer import TagReader
-from .namegenerator import TargetNameGenerator
-from .queue import TaskQueue
-from .gstreamer import Converter
-from .fileoperations import unquote_filename
+from soundconverter.gstreamer import TagReader
+from soundconverter.namegenerator import TargetNameGenerator
+from soundconverter.queue import TaskQueue
+from soundconverter.gstreamer import Converter
+from soundconverter.fileoperations import unquote_filename
 
 def cli_tags_main(input_files):
     error.set_error_handler(error.ErrorPrinter())
@@ -41,7 +41,7 @@ def cli_tags_main(input_files):
     for input_file in input_files:
         input_file = SoundFile(input_file)
         if not settings['quiet']:
-            print((input_file.filename))
+            print(input_file.filename)
         t = TagReader(input_file)
         t.start()
         while t.running:

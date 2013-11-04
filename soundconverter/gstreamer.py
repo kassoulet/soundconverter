@@ -27,19 +27,19 @@ from gettext import gettext as _
 import gi
 from gi.repository import Gst, Gtk, GObject, GConf
 
-from .fileoperations import vfs_encode_filename, file_encode_filename
-from .fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
-from .fileoperations import vfs_rename
-from .fileoperations import vfs_exists
-from .fileoperations import beautify_uri
-from .fileoperations import use_gnomevfs
-from .task import BackgroundTask
-from .queue import TaskQueue
-from .utils import debug, log
-from .settings import mime_whitelist, filename_blacklist
-from .error import show_error
+from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
+from soundconverter.fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
+from soundconverter.fileoperations import vfs_rename
+from soundconverter.fileoperations import vfs_exists
+from soundconverter.fileoperations import beautify_uri
+from soundconverter.fileoperations import use_gnomevfs
+from soundconverter.task import BackgroundTask
+from soundconverter.queue import TaskQueue
+from soundconverter.utils import debug, log, idle
+from soundconverter.settings import mime_whitelist, filename_blacklist
+from soundconverter.error import show_error
 try:
-    from .notify import notification
+    from soundconverter.notify import notification
 except:
     def notification(msg):
         pass
@@ -59,13 +59,13 @@ def gtk_sleep(duration):
         gtk_iteration()
 
 # load gstreamer audio profiles
-_GCONF_PROFILE_PATH = "/system/gstreamer/0.10/audio/profiles/"
-_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/0.10/audio/global/profile_list"
+_GCONF_PROFILE_PATH = "/system/gstreamer/1.0/audio/profiles/"
+_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/1.0/audio/global/profile_list"
 audio_profiles_list = []
 audio_profiles_dict = {}
 
-# XXX _GCONF = GConf.Client()
-profiles = [] # _GCONF.get_list(_GCONF_PROFILE_LIST_PATH, 1)
+_GCONF = GConf.Client.get_default()
+profiles = _GCONF.all_dirs(_GCONF_PROFILE_LIST_PATH)
 for name in profiles:
     if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
         # get profile
@@ -167,6 +167,7 @@ class Pipeline(BackgroundTask):
         self.cleanup()
 
     def finished(self):
+        print('Pipeline.finished')
         self.cleanup()
 
     def add_command(self, command):
@@ -197,6 +198,7 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def install_plugin_cb(self, result):
+        return # XXX
         if result in (Gst.pbutils.INSTALL_PLUGINS_SUCCESS,
                       Gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
             Gst.update_registry()
@@ -216,15 +218,17 @@ class Pipeline(BackgroundTask):
         log('error: %s (%s)' % (error, self.command))
 
     def on_message(self, bus, message):
+        import threading
+        print('Pipeline.on_message', threading.current_thread())
         t = message.type
-        import Gst
+        print(t)
         if t == Gst.MessageType.ERROR:
             error, _ = message.parse_error()
             self.eos = True
             self.error = error
             self.on_error(error)
             self.done()
-        elif Gst.pbutils.is_missing_plugin_message(message):
+            """ XXX elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
             debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
@@ -241,16 +245,18 @@ class Pipeline(BackgroundTask):
                 return
             ctx = Gst.pbutils.InstallPluginsContext()
             Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
-
+            """
         elif t == Gst.MessageType.EOS:
             self.eos = True
             self.done()
 
         elif t == Gst.MessageType.TAG:
             self.found_tag(self, '', message.parse_tag())
+        print('on_message END')
         return True
 
     def play(self):
+        print('Pipeline.play')
         if not self.parsed:
             command = ' ! '.join(self.command)
             debug('launching: \'%s\'' % command)
@@ -279,10 +285,13 @@ class Pipeline(BackgroundTask):
             bus.add_signal_watch()
             watch_id = bus.connect('message', self.on_message)
             self.watch_id = watch_id
+            print('play watchid:', watch_id)
 
         self.pipeline.set_state(Gst.State.PLAYING)
 
+    @idle
     def stop_pipeline(self):
+        print('Pipeline.stop_pipeline')
         if not self.pipeline:
             debug('pipeline already stopped!')
             return
@@ -291,6 +300,7 @@ class Pipeline(BackgroundTask):
         bus.remove_signal_watch()
         self.pipeline.set_state(Gst.State.NULL)
         #self.pipeline = None
+        print('  end')
 
     def get_position(self):
         return NotImplementedError
@@ -315,6 +325,7 @@ class TypeFinder(Pipeline):
         self.found_type_hook = found_type_hook
 
     def have_type(self, typefind, probability, caps):
+        print('have_type')
         mime_type = caps.to_string()
         debug('have_type:', mime_type,
                                 self.sound_file.filename_for_display)
@@ -331,10 +342,12 @@ class TypeFinder(Pipeline):
                 log('filename blacklisted (%s): %s' % (t,
                         self.sound_file.filename_for_display))
                 
-        self.pipeline.set_state(Gst.State.NULL)
+        #self.pipeline.set_state(Gst.State.NULL)
+        self.stop_pipeline()
         self.done()
 
     def finished(self):
+        print('TypeFinder.finished')
         Pipeline.finished(self)
         if self.error:
             return

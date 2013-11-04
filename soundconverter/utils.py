@@ -22,7 +22,7 @@
 # logging & debugging
 
 from .settings import settings
-
+from gi.repository import GObject
 
 def log(*args):
     """
@@ -40,3 +40,8 @@ def debug(*args):
     """
     if settings['debug']:
         print(( ' '.join([str(msg) for msg in args]) ))
+
+def idle(func):
+    def callback(*args):
+        GObject.idle_add(func, *args)
+    return callback
