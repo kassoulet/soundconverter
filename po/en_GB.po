@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-05 17:17+0100\n"
-"PO-Revision-Date: 2012-05-10 20:13+0000\n"
-"Last-Translator: Sid Roberts <Unknown>\n"
+"POT-Creation-Date: 2013-11-04 01:03+0000\n"
+"PO-Revision-Date: 2013-08-14 23:58+0000\n"
+"Last-Translator: Anthony Harrington <untaintableangel@ubuntu.com>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 13:08+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2013-11-04 13:04+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: \n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -46,7 +46,9 @@ msgstr "dialog1"
 msgid "Filter "
 msgstr "Filter "
 
-#: ../data/soundconverter.glade.h:5
+#. TODO: is this used ?
+#. TODO: add proper error management when an encoder cannot be created
+#: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:548
 msgid "Error"
 msgstr "Error"
 
@@ -70,11 +72,11 @@ msgstr "<big><b>File exists already</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Apply to entire queue"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:399
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:386
 msgid "artist/album"
 msgstr "artist/album"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:401
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:388
 msgid "artist - album"
 msgstr "artist - album"
 
@@ -160,7 +162,7 @@ msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Opus (.opus)"
-msgstr ""
+msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
@@ -179,152 +181,156 @@ msgid "Preferences"
 msgstr "Preferences"
 
 #: ../data/soundconverter.glade.h:39
+msgid "Same folder as the input file"
+msgstr "Same folder as the input file"
+
+#: ../data/soundconverter.glade.h:40
 msgid "Choose..."
 msgstr "Choose..."
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
 msgstr "Into a specified folder"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
 msgstr "Create subfolders: "
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
 msgstr "Delete original file"
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Where to place results?</b>"
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
 msgstr "Filename pattern: "
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
 msgstr "Replace all messy characters"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
 msgstr "Remove all characters except letters, digits and ./_-"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
 msgstr "<i>Example filename:</i>"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:49
 msgid "<b>How to name files?</b>"
 msgstr "<b>How to name files?</b>"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "Format: "
 msgstr "Format: "
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Quality:"
 msgstr "Quality:"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Use .oga extension"
 msgstr "Use .oga extension"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Ogg"
 msgstr "Ogg"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
 msgstr "Bitrate mode:"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "Compression:"
 msgstr "Compression:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
 msgstr "Sample width:"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:60
-msgid "Opus"
-msgstr ""
-
 #: ../data/soundconverter.glade.h:61
+msgid "Opus"
+msgstr "Opus"
+
+#: ../data/soundconverter.glade.h:62
 msgid "Profile:"
 msgstr "Profile:"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
 msgstr "gst-profile"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
 msgstr "<b>Type of result?</b>"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:65
 msgid "Resample"
 msgstr "Resample"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:66
 msgid "Force mono output"
 msgstr "Force mono output"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
 msgstr "Limit number of parallel jobs"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
 msgstr "MP3 Encoder is not present."
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
 msgstr "Read how to install"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
 msgstr "Where to place results?"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:72
 msgid "_File"
 msgstr "_File"
 
-#: ../data/soundconverter.glade.h:72
-msgid "_Add File"
-msgstr "_Add File"
-
 #: ../data/soundconverter.glade.h:73
-msgid "Add _Folder"
-msgstr "Add _Folder"
-
-#: ../data/soundconverter.glade.h:74
 msgid "_Edit"
 msgstr "_Edit"
 
-#: ../data/soundconverter.glade.h:75
+#: ../data/soundconverter.glade.h:74
 msgid "_Help"
 msgstr "_Help"
+
+#: ../data/soundconverter.glade.h:75
+msgid "_Add File"
+msgstr "_Add File"
+
+#: ../data/soundconverter.glade.h:76
+msgid "Add _Folder"
+msgstr "Add _Folder"
 
 #: ../bin/soundconverter.py:116
 msgid ""
@@ -378,46 +384,7 @@ msgstr "Force number of concurrent conversions."
 msgid "Shows GStreamer Options"
 msgstr "Shows GStreamer Options"
 
-#: ../soundconverter/error.py:37
-msgid "Target exists."
-msgstr "Target exists."
-
-#: ../soundconverter/error.py:38
-#, python-format
-msgid "The output file %s already exists."
-msgstr "The output file %s already exists."
-
-#: ../soundconverter/error.py:44
-msgid "Internal error"
-msgstr "Internal error"
-
-#: ../soundconverter/error.py:45
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-
-#: ../soundconverter/error.py:53
-#, python-format
-msgid "Unknown type %s"
-msgstr "Unknown type %s"
-
-#: ../soundconverter/error.py:54
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-
-#: ../soundconverter/error.py:64
+#: ../soundconverter/error.py:30
 #, python-format
 msgid ""
 "\n"
@@ -430,56 +397,31 @@ msgstr ""
 "Error: %s\n"
 "%s\n"
 
-#: ../soundconverter/gstreamer.py:190
+#: ../soundconverter/fileoperations.py:112
+msgid "Cannot create folder!"
+msgstr "Cannot create folder!"
+
+#. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
+#. or an option to stop all processing.
+#: ../soundconverter/fileoperations.py:124
+msgid "Error while renaming file!"
+msgstr "Error while renaming file!"
+
+#: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
 msgstr "Plugin installation aborted."
 
-#. TODO: is this used ?
-#. TODO: add proper error management when an encoder cannot be created
-#: ../soundconverter/gstreamer.py:523
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "Cannot create a decoder for '%s' format."
-
-#: ../soundconverter/gstreamer.py:534
+#: ../soundconverter/gstreamer.py:559
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Cannot create '%s' folder."
 
 #. pass
-#: ../soundconverter/gstreamer.py:575
+#: ../soundconverter/gstreamer.py:600
 msgid "GStreamer Error:"
 msgstr "GStreamer Error:"
 
-#: ../soundconverter/gstreamer.py:666
-msgid "Conversion Canceled"
-msgstr "Conversion Cancelled"
-
-#: ../soundconverter/gstreamer.py:673
-msgid "Conversion Error"
-msgstr "Conversion Error"
-
-#: ../soundconverter/gstreamer.py:706
-#, python-format
-msgid "Access denied: '%s'"
-msgstr "Access denied: '%s'"
-
-#: ../soundconverter/gstreamer.py:722
-msgid "Cannot overwrite source file(s)!"
-msgstr "Cannot overwrite source file(s)!"
-
-#: ../soundconverter/gstreamer.py:735
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" already exists.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"The output file <i>%s</i>\n"
-" already exists.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-
-#: ../soundconverter/gstreamer.py:841
+#: ../soundconverter/gstreamer.py:807
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Conversion done in %s"
@@ -505,7 +447,7 @@ msgstr ""
 msgid "All files"
 msgstr "All files"
 
-#: ../soundconverter/ui.py:98 ../soundconverter/ui.py:117
+#: ../soundconverter/ui.py:87 ../soundconverter/ui.py:102
 #, python-format
 msgid ""
 "\n"
@@ -516,102 +458,85 @@ msgstr ""
 "Error: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:209
+#: ../soundconverter/ui.py:194
 msgid "Scanning files..."
 msgstr "Scanning files..."
 
-#: ../soundconverter/ui.py:321
+#: ../soundconverter/ui.py:308
 msgid "Adding files..."
 msgstr "Adding files..."
 
-#: ../soundconverter/ui.py:389
+#: ../soundconverter/ui.py:376
 msgid "Same as input, but replacing the suffix"
 msgstr "Same as input, but replacing the suffix"
 
-#: ../soundconverter/ui.py:391
+#: ../soundconverter/ui.py:378
 msgid "Same as input, but with an additional suffix"
 msgstr "Same as input, but with an additional suffix"
 
-#: ../soundconverter/ui.py:392
+#: ../soundconverter/ui.py:379
 msgid "Track number - title"
 msgstr "Track number - title"
 
-#: ../soundconverter/ui.py:393
+#: ../soundconverter/ui.py:380
 msgid "Track title"
 msgstr "Track title"
 
-#: ../soundconverter/ui.py:394
+#: ../soundconverter/ui.py:381
 msgid "Artist - title"
 msgstr "Artist - title"
 
-#: ../soundconverter/ui.py:395
+#: ../soundconverter/ui.py:382
 msgid "Custom filename pattern"
 msgstr "Custom filename pattern"
 
-#: ../soundconverter/ui.py:400
+#: ../soundconverter/ui.py:387
 msgid "artist-album"
 msgstr "artist-album"
 
-#: ../soundconverter/ui.py:458
+#: ../soundconverter/ui.py:445
 msgid "Available patterns:"
 msgstr "Available patterns:"
 
-#: ../soundconverter/ui.py:650
+#: ../soundconverter/ui.py:642
 #, python-format
 msgid "Into folder %s"
 msgstr "Into folder %s"
 
-#: ../soundconverter/ui.py:730
+#: ../soundconverter/ui.py:722
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Target bitrate: %s"
 
-#: ../soundconverter/ui.py:1083
+#: ../soundconverter/ui.py:1073
 msgid "Open a file"
 msgstr "Open a file"
 
-#: ../soundconverter/ui.py:1177
+#: ../soundconverter/ui.py:1167
 msgid "Add Folder..."
 msgstr "Add Folder..."
 
-#: ../soundconverter/ui.py:1352
-msgid "Reading tags..."
-msgstr "Reading tags..."
-
-#: ../soundconverter/ui.py:1354
+#: ../soundconverter/ui.py:1335
 msgid "Preparing conversion..."
 msgstr "Preparing conversion..."
 
-#: ../soundconverter/ui.py:1369
-msgid "Conversion cancelled"
-msgstr "Conversion cancelled"
-
-#: ../soundconverter/ui.py:1372
-msgid "Error when converting"
-msgstr "Error when converting"
-
-#: ../soundconverter/ui.py:1387
+#: ../soundconverter/ui.py:1356
 msgid "Converting"
 msgstr "Converting"
 
-#: ../soundconverter/ui.py:1407
+#: ../soundconverter/ui.py:1374
 msgid "Canceled"
 msgstr "Cancelled"
 
-#: ../soundconverter/ui.py:1480
+#: ../soundconverter/ui.py:1447
 msgid "Paused"
 msgstr "Paused"
 
-#: ../soundconverter/ui.py:1498
+#: ../soundconverter/ui.py:1465
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d left"
 
-#: ../soundconverter/ui.py:1504
+#: ../soundconverter/ui.py:1471
 msgid "Ready"
 msgstr "Ready"
-
-#, fuzzy
-#~ msgctxt "yop"
-#~ msgid "Same folder as the input file"
-#~ msgstr "Same folder as the input file"

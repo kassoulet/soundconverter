@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-05 17:17+0100\n"
-"PO-Revision-Date: 2012-12-27 17:57+0000\n"
+"POT-Creation-Date: 2013-11-04 01:03+0000\n"
+"PO-Revision-Date: 2013-04-29 04:05+0000\n"
 "Last-Translator: Petr Šimáček <petr.simacek@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 13:08+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2013-11-04 13:04+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: cs\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -46,7 +46,9 @@ msgstr "dialog1"
 msgid "Filter "
 msgstr "Filtr "
 
-#: ../data/soundconverter.glade.h:5
+#. TODO: is this used ?
+#. TODO: add proper error management when an encoder cannot be created
+#: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:548
 msgid "Error"
 msgstr "Chyba"
 
@@ -70,11 +72,11 @@ msgstr "<big><b>Soubor již existuje</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "Použít n_a celou frontu"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:399
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:386
 msgid "artist/album"
 msgstr "umělec/album"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:401
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:388
 msgid "artist - album"
 msgstr "umělec - album"
 
@@ -179,152 +181,156 @@ msgid "Preferences"
 msgstr "Nastavení"
 
 #: ../data/soundconverter.glade.h:39
+msgid "Same folder as the input file"
+msgstr "Stejná složka jako původní soubor"
+
+#: ../data/soundconverter.glade.h:40
 msgid "Choose..."
 msgstr "Vybrat.."
 
-#: ../data/soundconverter.glade.h:40
+#: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
 msgstr "Do určené složky"
 
-#: ../data/soundconverter.glade.h:41
+#: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
 msgstr "Vytvořit podsložky: "
 
-#: ../data/soundconverter.glade.h:42
+#: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
 msgstr "Smazat původní soubor"
 
-#: ../data/soundconverter.glade.h:43
+#: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
 msgstr "<b>Kam umístit výsledek?</b>"
 
-#: ../data/soundconverter.glade.h:44
+#: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
 msgstr "Vzorek jména souboru: "
 
-#: ../data/soundconverter.glade.h:45
+#: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
 msgstr "Odstranit všechny nepořádné znaky"
 
-#: ../data/soundconverter.glade.h:46
+#: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
 msgstr "Odstranit všechny znaky kromě písmen, číslic a ./_-"
 
-#: ../data/soundconverter.glade.h:47
+#: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
 msgstr "<i>Ukázkové jméno souboru:</i>"
 
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:49
 msgid "<b>How to name files?</b>"
 msgstr "<b>Jak pojmenovat soubory?</b>"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "Format: "
 msgstr "Formát: "
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Quality:"
 msgstr "Kvalita:"
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Use .oga extension"
 msgstr "Použít příponu .oga"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Ogg"
 msgstr "Ogg"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
 msgstr "Typ bitového toku:"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "Compression:"
 msgstr "Komprese:"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
 msgstr "Šířka vzorku:"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
 msgid "Opus"
 msgstr "Opus"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:62
 msgid "Profile:"
 msgstr "Profil:"
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
 msgstr "gst-profil"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
 msgstr "<b>Typ výsledku?</b>"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:65
 msgid "Resample"
 msgstr "Převzorkovat"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:66
 msgid "Force mono output"
 msgstr "Vynutit mono výstup"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
 msgstr "Omezit počet paralelních činností"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
 msgstr "MP3 enkodér není dostupný."
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
 msgstr "Čtěte jak nainstalovat"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
 msgstr "Kam umístit výsledky?"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
 msgstr "Převaděč zvuků"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:72
 msgid "_File"
 msgstr "_Soubor"
 
-#: ../data/soundconverter.glade.h:72
-msgid "_Add File"
-msgstr "Přid_at soubor"
-
 #: ../data/soundconverter.glade.h:73
-msgid "Add _Folder"
-msgstr "Přidat _složku"
-
-#: ../data/soundconverter.glade.h:74
 msgid "_Edit"
 msgstr "_Upravit"
 
-#: ../data/soundconverter.glade.h:75
+#: ../data/soundconverter.glade.h:74
 msgid "_Help"
 msgstr "_Nápověda"
+
+#: ../data/soundconverter.glade.h:75
+msgid "_Add File"
+msgstr "Přid_at soubor"
+
+#: ../data/soundconverter.glade.h:76
+msgid "Add _Folder"
+msgstr "Přidat _složku"
 
 #: ../bin/soundconverter.py:116
 msgid ""
@@ -339,8 +345,8 @@ msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Zobrazit značky (tagy) vstupních souborů namísto jejich převodu. To "
-"znamená \n"
+"Zobrazit značky (tagy) vstupních souborů namísto jejich převodu. To znamená "
+"\n"
 " dávkový režim v příkazovém řádku a vypnutí grafického uživatelského "
 "rozhraní."
 
@@ -368,6 +374,9 @@ msgid ""
 "the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
+"Nastavte výstupní název souboru příponu pro dávkové zpracování. Výchozí je "
+"%s. Všimněte si, že přípona nemá vliv\n"
+" výstup MIME typu."
 
 #: ../bin/soundconverter.py:137
 msgid "Force number of concurrent conversions."
@@ -377,46 +386,7 @@ msgstr "Vynutit počet souběžných konverzí."
 msgid "Shows GStreamer Options"
 msgstr "Zobrazit možnosti GStreameru"
 
-#: ../soundconverter/error.py:37
-msgid "Target exists."
-msgstr "Cíl existuje."
-
-#: ../soundconverter/error.py:38
-#, python-format
-msgid "The output file %s already exists."
-msgstr "Výstupní soubor %s již existuje."
-
-#: ../soundconverter/error.py:44
-msgid "Internal error"
-msgstr "Vnitřní chyba"
-
-#: ../soundconverter/error.py:45
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Nelze připojit GStreamer prvky.\n"
-" Prosím nahlaste toto jako chybu."
-
-#: ../soundconverter/error.py:53
-#, python-format
-msgid "Unknown type %s"
-msgstr "Neznámý typ %s"
-
-#: ../soundconverter/error.py:54
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"Soubor %s je neznámého typu.\n"
-" Prosím požádejte vývojáře, ať přidají podporu\n"
-" pro soubory tohoto typu, pokud je to\n"
-" pro vás důležité."
-
-#: ../soundconverter/error.py:64
+#: ../soundconverter/error.py:30
 #, python-format
 msgid ""
 "\n"
@@ -429,56 +399,31 @@ msgstr ""
 "Chyba: %s\n"
 "%s\n"
 
-#: ../soundconverter/gstreamer.py:190
+#: ../soundconverter/fileoperations.py:112
+msgid "Cannot create folder!"
+msgstr "Nelze vytvořit složku!"
+
+#. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
+#. or an option to stop all processing.
+#: ../soundconverter/fileoperations.py:124
+msgid "Error while renaming file!"
+msgstr "Chyba při přejmenování souboru"
+
+#: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
 msgstr "Instalace zásuvného modulu byla zastavena."
 
-#. TODO: is this used ?
-#. TODO: add proper error management when an encoder cannot be created
-#: ../soundconverter/gstreamer.py:523
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "Nemohu vytvořit dekodér pro formát '%s'."
-
-#: ../soundconverter/gstreamer.py:534
+#: ../soundconverter/gstreamer.py:559
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nelze vytvořit složku '%s'."
 
 #. pass
-#: ../soundconverter/gstreamer.py:575
+#: ../soundconverter/gstreamer.py:600
 msgid "GStreamer Error:"
 msgstr "Chyba GStreameru:"
 
-#: ../soundconverter/gstreamer.py:666
-msgid "Conversion Canceled"
-msgstr "Konverze byla přerušena"
-
-#: ../soundconverter/gstreamer.py:673
-msgid "Conversion Error"
-msgstr "Chyba konverze"
-
-#: ../soundconverter/gstreamer.py:706
-#, python-format
-msgid "Access denied: '%s'"
-msgstr "Přístup odepřen: '%s'"
-
-#: ../soundconverter/gstreamer.py:722
-msgid "Cannot overwrite source file(s)!"
-msgstr "Nelze přepisovat zdrojový soubor(y)!"
-
-#: ../soundconverter/gstreamer.py:735
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" already exists.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"Soubor <i>%s</i>\n"
-" již existuje.\n"
-" Přejete si tento soubor přeskočit, přepsat nebo zastavit konverzi?\n"
-
-#: ../soundconverter/gstreamer.py:841
+#: ../soundconverter/gstreamer.py:807
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Konverze dokončena za %s"
@@ -504,7 +449,7 @@ msgstr ""
 msgid "All files"
 msgstr "Všechny soubory"
 
-#: ../soundconverter/ui.py:98 ../soundconverter/ui.py:117
+#: ../soundconverter/ui.py:87 ../soundconverter/ui.py:102
 #, python-format
 msgid ""
 "\n"
@@ -515,102 +460,85 @@ msgstr ""
 "Chyba: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:209
+#: ../soundconverter/ui.py:194
 msgid "Scanning files..."
 msgstr "Prohledávají se soubory..."
 
-#: ../soundconverter/ui.py:321
+#: ../soundconverter/ui.py:308
 msgid "Adding files..."
 msgstr "Přidávám soubory..."
 
-#: ../soundconverter/ui.py:389
+#: ../soundconverter/ui.py:376
 msgid "Same as input, but replacing the suffix"
 msgstr "Stejně jako vstup, ale s náhradou přípony"
 
-#: ../soundconverter/ui.py:391
+#: ../soundconverter/ui.py:378
 msgid "Same as input, but with an additional suffix"
 msgstr "Stejně jako vstup, ale s dodatečnou příponou"
 
-#: ../soundconverter/ui.py:392
+#: ../soundconverter/ui.py:379
 msgid "Track number - title"
 msgstr "Číslo stopy - název"
 
-#: ../soundconverter/ui.py:393
+#: ../soundconverter/ui.py:380
 msgid "Track title"
 msgstr "Název stopy"
 
-#: ../soundconverter/ui.py:394
+#: ../soundconverter/ui.py:381
 msgid "Artist - title"
 msgstr "Umělec - název"
 
-#: ../soundconverter/ui.py:395
+#: ../soundconverter/ui.py:382
 msgid "Custom filename pattern"
 msgstr "Vlastní vzorek jména souboru"
 
-#: ../soundconverter/ui.py:400
+#: ../soundconverter/ui.py:387
 msgid "artist-album"
 msgstr "umělec-album"
 
-#: ../soundconverter/ui.py:458
+#: ../soundconverter/ui.py:445
 msgid "Available patterns:"
 msgstr "Dostupné vzory:"
 
-#: ../soundconverter/ui.py:650
+#: ../soundconverter/ui.py:642
 #, python-format
 msgid "Into folder %s"
 msgstr "Do složky %s"
 
-#: ../soundconverter/ui.py:730
+#: ../soundconverter/ui.py:722
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Cílový bitový tok: %s"
 
-#: ../soundconverter/ui.py:1083
+#: ../soundconverter/ui.py:1073
 msgid "Open a file"
 msgstr "Otevřít soubor"
 
-#: ../soundconverter/ui.py:1177
+#: ../soundconverter/ui.py:1167
 msgid "Add Folder..."
 msgstr "Přidat složku..."
 
-#: ../soundconverter/ui.py:1352
-msgid "Reading tags..."
-msgstr "Čtení značek"
-
-#: ../soundconverter/ui.py:1354
+#: ../soundconverter/ui.py:1335
 msgid "Preparing conversion..."
 msgstr "Připravuji konverzi..."
 
-#: ../soundconverter/ui.py:1369
-msgid "Conversion cancelled"
-msgstr "Konverze byla zastavena"
-
-#: ../soundconverter/ui.py:1372
-msgid "Error when converting"
-msgstr "Během konverze nastala chyba"
-
-#: ../soundconverter/ui.py:1387
+#: ../soundconverter/ui.py:1356
 msgid "Converting"
 msgstr "Převádění"
 
-#: ../soundconverter/ui.py:1407
+#: ../soundconverter/ui.py:1374
 msgid "Canceled"
 msgstr "Zrušeno"
 
-#: ../soundconverter/ui.py:1480
+#: ../soundconverter/ui.py:1447
 msgid "Paused"
 msgstr "Pozastaveno"
 
-#: ../soundconverter/ui.py:1498
+#: ../soundconverter/ui.py:1465
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d zbývá"
 
-#: ../soundconverter/ui.py:1504
+#: ../soundconverter/ui.py:1471
 msgid "Ready"
 msgstr "Připraven"
-
-#, fuzzy
-#~ msgctxt "yop"
-#~ msgid "Same folder as the input file"
-#~ msgstr "Stejná složka jako vstupní soubor"
