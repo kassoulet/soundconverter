@@ -28,7 +28,7 @@ from soundconverter.fileoperations import unquote_filename
 
 class SoundFile:
     """Meta data information about a sound file (uri, tags)."""
-    __slots__ = ['uri','base_path','filename','tags','tags_read','duration','mime_type', 'filelist_row']
+    # XXX __slots__ = ['uri','base_path','filename','tags','tags_read','duration','mime_type', 'filelist_row', 'progress']
 
     def __init__(self, uri, base_path=None):
         """
@@ -52,6 +52,7 @@ class SoundFile:
         self.duration = None
         self.mime_type = None
         self.filelist_row = None
+        self.progress = None
 
     @property
     def filename_for_display(self):

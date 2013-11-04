@@ -69,9 +69,9 @@ def _check_libs():
         from gi.repository import GObject
         from gi.repository import Gtk, Gdk
         from gi.repository import Gst
+        from gi.repository import GLib
         GObject.threads_init()
         Gst.init(None)
-        #Gdk.threads_init()
         # XXX gnome.ui.authentication_manager_init()
     except ImportError as error :
         print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))

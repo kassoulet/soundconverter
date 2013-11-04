@@ -42,7 +42,7 @@ from soundconverter.soundfile import SoundFile
 from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import log, debug
+from soundconverter.utils import log, debug, idle
 from soundconverter.error import show_error
 
 # Names of columns in the file list
@@ -71,8 +71,6 @@ def gtk_sleep(duration):
     while time.time() < start + duration:
         time.sleep(0.010)
         gtk_iteration()
-
-
 
 
 
@@ -188,10 +186,10 @@ class FileList:
 
     def found_type(self, sound_file, mime):
         debug('found_type', sound_file.filename)
-
         self.append_file(sound_file)
         self.window.set_sensitive()
 
+    @idle
     def add_uris(self, uris, base=None, extensions=None):
         files = []
         #self.window.set_status(_('Scanning files...'))
@@ -299,12 +297,14 @@ class FileList:
 
     def append_file(self, sound_file):
         self.waiting_files.append(sound_file)
+        self.commit_waiting_files()
 
     def commit_waiting_files(self):
-        if self.waiting_files_last != len(self.waiting_files):
+        print('waiting...', self.waiting_files)
+        #XXX if self.waiting_files_last != len(self.waiting_files):
             # still adding files
-            self.waiting_files_last = len(self.waiting_files)
-            return True
+        #    self.waiting_files_last = len(self.waiting_files)
+        #    return True
         
         if self.waiting_files:
             self.window.set_status(_('Adding files...'))
@@ -318,7 +318,7 @@ class FileList:
                 if time.time() > next: 
                     # keep UI responsive
                     gtk_iteration() 
-                    self.window.progressbarstatus.set_fraction(n/self.waiting_files_last)
+                    # XXX self.window.progressbarstatus.set_fraction(n/self.waiting_files_last)
                     next = time.time() + 0.01
             self.widget.set_model(save)
             
@@ -330,6 +330,7 @@ class FileList:
         self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
+        print('adding:', sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
     def remove(self, iter):
@@ -1497,6 +1498,7 @@ def gui_main(name, version, gladefile, input_files):
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
 
-    GObject.idle_add(win.filelist.add_uris, input_files)
+    #GObject.idle_add(win.filelist.add_uris, input_files)
+    win.filelist.add_uris(input_files)
     win.set_sensitive()
     Gtk.main()

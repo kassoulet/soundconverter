@@ -57,7 +57,6 @@ class BackgroundTask:
         """Call the signal handlers.
         Callbacks are called as gtk idle funcs to be sure
         they are in the main thread."""
-        # XXX Gdk.threads_add_idle(GLib.PRIORITY_DEFAULT, getattr(self, signal))
         print('BackgroundTask.emit')
         GObject.idle_add(getattr(self, signal))
         if signal in self.listeners:

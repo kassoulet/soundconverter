@@ -158,6 +158,7 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def cleanup(self):
+        print('cleanup')
         for element, sid in self.connected_signals:
             element.disconnect(sid)
         self.connected_signals = []
@@ -218,6 +219,13 @@ class Pipeline(BackgroundTask):
         log('error: %s (%s)' % (error, self.command))
 
     def on_message(self, bus, message):
+        t = message.type
+        print('MESSAGE:', t)
+        #self.on_message_(bus, message)
+        return True
+
+    @idle
+    def on_message_(self, bus, message):
         import threading
         print('Pipeline.on_message', threading.current_thread())
         t = message.type
@@ -253,7 +261,7 @@ class Pipeline(BackgroundTask):
         elif t == Gst.MessageType.TAG:
             self.found_tag(self, '', message.parse_tag())
         print('on_message END')
-        return True
+        return False
 
     def play(self):
         print('Pipeline.play')
@@ -324,6 +332,7 @@ class TypeFinder(Pipeline):
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
 
+    @idle
     def have_type(self, typefind, probability, caps):
         print('have_type')
         mime_type = caps.to_string()
@@ -342,18 +351,20 @@ class TypeFinder(Pipeline):
                 log('filename blacklisted (%s): %s' % (t,
                         self.sound_file.filename_for_display))
                 
-        #self.pipeline.set_state(Gst.State.NULL)
-        self.stop_pipeline()
+        self.pipeline.set_state(Gst.State.NULL)
         self.done()
 
+    @idle
     def finished(self):
-        print('TypeFinder.finished')
+        print('TypeFinder.finished', self.error)
         Pipeline.finished(self)
         if self.error:
             return
         if self.found_type_hook and self.sound_file.mime_type:
-            GObject.idle_add(self.found_type_hook, self.sound_file,
-                                self.sound_file.mime_type)
+            #GObject.idle_add(self.found_type_hook, self.sound_file,
+            #                    self.sound_file.mime_type)
+            print(self.found_type_hook)
+            self.found_type_hook(self.sound_file, self.sound_file.mime_type)
             self.sound_file.mime_type = True # remove string
 
 
