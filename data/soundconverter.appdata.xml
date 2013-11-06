@@ -12,7 +12,7 @@ SoundConverter is a simple to use, and very fast audio converter. It can convert
 </description>
 <url type="homepage">http://soundconverter.org/</url>
 <screenshots>
-<screenshot type="default">http://soundconverter.org/screenshot-soundconverter.png</screenshot>
+<screenshot type="default" width="502" height="534">http://soundconverter.org/screenshot-soundconverter.png</screenshot>
 </screenshots>
 
 <updatecontact>gautier@soundconverter.org</updatecontact>
