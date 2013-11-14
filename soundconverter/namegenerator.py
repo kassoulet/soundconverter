@@ -19,11 +19,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import string
 import time
 import os
 import urllib
-import unicodedata
 import gnomevfs
 from fileoperations import vfs_exists
 
@@ -32,7 +30,7 @@ class TargetNameGenerator:
 
     """Generator for creating the target name from an input name."""
 
-    nice_chars = string.ascii_letters + string.digits + '.-_/'
+    bad_chars = u'/\\?%*:|"<>\ufffd'
 
     def __init__(self):
         self.folder = None
@@ -43,18 +41,6 @@ class TargetNameGenerator:
         self.replace_messy_chars = False
         self.max_tries = 2
         self.exists = vfs_exists
-
-    def _unicode_to_ascii(self, unicode_string):
-        # thanks to
-        # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
-        try:
-            unicode_string = unicode(unicode_string, 'utf-8')
-            return unicodedata.normalize('NFKD', unicode_string).encode(
-                                                            'ASCII', 'ignore')
-        except UnicodeDecodeError:
-            unicode_string = unicode(unicode_string, 'iso-8859-1')
-            return unicodedata.normalize('NFKD', unicode_string).encode(
-                                                            'ASCII', 'replace')
 
     def get_target_name(self, sound_file):
 
@@ -97,18 +83,18 @@ class TargetNameGenerator:
 
         pattern = os.path.join(self.subfolders, self.basename + self.suffix)
         result = pattern % d
-        if isinstance(result, unicode):
-            result = result.encode('utf-8')
 
         if self.replace_messy_chars:
-            result = self._unicode_to_ascii(result)
-            s = ''
-            for c in result:
-                if c not in self.nice_chars:
-                    s += '_'
-                else:
-                    s += c
-            result = s
+            # convert to unicode object to manage filename letter by letter
+            if not isinstance(result, unicode):
+                result = unicode(result, 'utf-8', 'replace')
+
+            for char in self.bad_chars:
+                result = result.replace(char, '_')
+
+        # convert back to string so that urllib could cope with it
+        if isinstance(result, unicode):
+            result = result.encode('utf-8')
 
         if self.folder is None:
             folder = root
