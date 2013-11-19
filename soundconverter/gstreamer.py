@@ -367,7 +367,7 @@ class Decoder(Pipeline):
         command = '%s location="%s" name=src ! decodebin name=decoder' % \
             (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
-        self.add_signal('decoder', 'new-decoded-pad', self.new_decoded_pad)
+        self.add_signal('decoder', 'pad-added', self.pad_added)
 
     def on_error(self, error):
         self.error = error
@@ -438,7 +438,7 @@ class Decoder(Pipeline):
         self.sound_file.tags.update(tags)
         self.query_duration()
 
-    def new_decoded_pad(self, decoder, pad, is_last):
+    def pad_added(self, decoder, pad):
         """ called when a decoded pad is created """
         self.query_duration()
         self.processing = True
@@ -538,12 +538,12 @@ class Converter(Decoder):
 
         # audio resampling support
         if self.output_resample:
-            self.add_command('audio/x-raw-int,rate=%d' % self.resample_rate)
+            self.add_command('audio/x-raw,rate=%d' % self.resample_rate)
             self.add_command('audioconvert')
             self.add_command('audioresample')
 
         if self.force_mono:
-            self.add_command('audio/x-raw-int,channels=1')
+            self.add_command('audio/x-raw,channels=1')
             self.add_command('audioconvert')
 
         encoder = self.encoders[self.output_type]()
@@ -625,8 +625,8 @@ class Converter(Decoder):
         return s
 
     def add_wav_encoder(self):
-        return 'audio/x-raw-int,width=%d ! wavenc' % (
-                self.wav_sample_width)
+        return 'audio/x-raw,width=%d ! wavenc' % (
+            self.wav_sample_width)
 
     def add_oggvorbis_encoder(self):
         cmd = 'vorbisenc'
