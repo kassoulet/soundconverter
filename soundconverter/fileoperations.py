@@ -27,8 +27,6 @@ from gi.repository import GObject, Gio
 from soundconverter.utils import log
 from soundconverter.error import show_error
 
-use_gnomevfs = False
-
 def unquote_filename(filename):
     return urllib.parse.unquote(filename)
 
@@ -58,38 +56,27 @@ def vfs_walk(uri):
             filelist.append(str(uri + '/' + name))
     return filelist
 
-
 def vfs_makedirs(path_to_create):
     """Similar to os.makedirs, but with gnomevfs."""
+    gfile = Gio.file_parse_name(path_to_create)
+    return gfile.make_directory_with_parents(uri, 0o777)
 
-    uri = gnomevfs.URI(path_to_create)
-    path = uri.path
-
-    # start at root
-    uri = uri.resolve_relative('/')
-
-    for folder in path.split('/'):
-        if not folder:
-            continue
-        uri = uri.append_string(folder.replace('%2f', '/'))
-        try:
-            gnomevfs.make_directory(uri, 0o777)
-        except gnomevfs.FileExistsError:
-            pass
-        except:
-            return False
-    return True
-
+def vfs_getparent(path):
+    """Get folder name."""
+    gfile = Gio.file_parse_name(path)
+    return gfile.get_parent()
 
 def vfs_unlink(filename):
     """Delete a gnomevfs file."""
-    
-    gnomevfs.unlink(gnomevfs.URI(filename))
-
+    gfile = Gio.file_parse_name(filename)
+    return gfile.delete(None)
 
 def vfs_rename(original, newname):
     """Rename a gnomevfs file"""
-    
+    gforiginal = Gio.file_parse_name(original)
+    gfnew = Gio.file_parse_name(newname)
+    gforiginal.move(gfnew)
+    return
     uri = gnomevfs.URI(newname)
     dirname = uri.parent
     if dirname and not gnomevfs.exists(dirname):
@@ -112,11 +99,8 @@ def vfs_rename(original, newname):
 
 
 def vfs_exists(filename):
-    try:
-        return gnomevfs.exists(filename)
-    except:
-        return False
-
+    gfile = Gio.file_parse_name(filename)
+    return gfile.query_exists(None)
 
 def filename_to_uri(filename):
     """Convert a filename to a valid uri.

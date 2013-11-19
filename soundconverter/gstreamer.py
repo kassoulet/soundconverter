@@ -25,14 +25,13 @@ from urllib.parse import urlparse
 from gettext import gettext as _
 
 import gi
-from gi.repository import Gst, Gtk, GObject, GConf
+from gi.repository import Gst, Gtk, GObject, GConf, Gio
 
 from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
 from soundconverter.fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
 from soundconverter.fileoperations import vfs_rename
 from soundconverter.fileoperations import vfs_exists
 from soundconverter.fileoperations import beautify_uri
-from soundconverter.fileoperations import use_gnomevfs
 from soundconverter.task import BackgroundTask
 from soundconverter.queue import TaskQueue
 from soundconverter.utils import debug, log, idle
@@ -90,23 +89,10 @@ for element in required_elements:
         print(("required gstreamer element \'%s\' not found." % element))
         sys.exit(1)
 
-if Gst.ElementFactory.find('giosrc'):
-    gstreamer_source = 'giosrc'
-    gstreamer_sink = 'giosink'
-    encode_filename = vfs_encode_filename
-    use_gnomevfs = True
-    print('  using gio')
-elif Gst.ElementFactory.find('gnomevfssrc'):
-    gstreamer_source = 'gnomevfssrc'
-    gstreamer_sink = 'gnomevfssink'
-    encode_filename = vfs_encode_filename
-    use_gnomevfs = True
-    print('  using deprecated gnomevfssrc')
-else:
-    gstreamer_source = 'filesrc'
-    gstreamer_sink = 'filesink'
-    encode_filename = file_encode_filename
-    print('  not using gnomevfssrc, look for a gnomevfs gstreamer package.')
+gstreamer_source = 'giosrc'
+gstreamer_sink = 'giosink'
+encode_filename = vfs_encode_filename
+print('  using gio')
 
 # used to dismiss codec installation if the user already canceled it
 user_canceled_codec_installation = False
@@ -570,12 +556,12 @@ class Converter(Decoder):
 
         self.add_command(encoder)
 
-        uri = gnomevfs.URI(self.output_filename)
-        dirname = uri.parent
-        if dirname and not gnomevfs.exists(dirname):
-            log('Creating folder: \'%s\'' % dirname)
-            if not vfs_makedirs(str(dirname)):
-                show_error('Error', _("Cannot create \'%s\' folder.") % dirname)
+        gfile = Gio.file_parse_name(self.output_filename)
+        dirname = gfile.get_parent()
+        if dirname and not dirname.query_exists(None):
+            log('Creating folder: \'%s\'' % beautify_uri(dirname))
+            if not dirname.make_directory_with_parents():
+                show_error('Error', _("Cannot create \'%s\' folder.") % beautify_uri(dirname))
                 return
 
         self.add_command('%s location="%s"' % (
@@ -587,7 +573,7 @@ class Converter(Decoder):
     def aborted(self):
         # remove partial file
         try:
-            gnomevfs.unlink(self.output_filename)
+            vfs_unlink(self.output_filename)
         except:
             log('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
         return
@@ -596,22 +582,13 @@ class Converter(Decoder):
         Pipeline.finished(self)
 
         # Copy file permissions
-        try:
-            info = gnomevfs.get_file_info(self.sound_file.uri,
-                                        gnomevfs.FILE_INFO_FIELDS_PERMISSIONS)
-            gnomevfs.set_file_info(self.output_filename, info,
-                                            gnomevfs.SET_FILE_INFO_PERMISSIONS)
-        except:
-            log('Cannot set permission on \'%s\'' %
-                        gnomevfs.format_uri_for_display(self.output_filename))
+        if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(Gio.file_parse_name(self.output_filename)):
+            log('Cannot set permission on \'%s\'' % beautify_uri(self.output_filename))
 
         if self.delete_original and self.processing and not self.error:
             log('deleting: \'%s\'' % self.sound_file.uri)
-            try:
-                vfs_unlink(self.sound_file.uri)
-            except:
-                log('Cannot remove \'%s\'' %
-                        gnomevfs.format_uri_for_display(self.output_filename))
+            if not vfs_unlink(self.sound_file.uri):
+                log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
 
     def on_error(self, err):
         #pass

@@ -34,7 +34,6 @@ from gi.repository import GLib
 from soundconverter.gconfstore import GConfStore
 from soundconverter.fileoperations import filename_to_uri, beautify_uri
 from soundconverter.fileoperations import unquote_filename, vfs_walk
-from soundconverter.fileoperations import use_gnomevfs
 from soundconverter.gstreamer import ConverterQueue
 from soundconverter.gstreamer import available_elements, TypeFinder, TagReader
 from soundconverter.gstreamer import audio_profiles_list, audio_profiles_dict
@@ -193,8 +192,6 @@ class FileList:
     def add_uris(self, uris, base=None, extensions=None):
         files = []
         #self.window.set_status(_('Scanning files...'))
-
-        base = None
 
         for uri in uris:
             print(uri)
@@ -1078,7 +1075,7 @@ class CustomFileChooser:
 
         # setup
         self.fcw = builder.get_object('filechooserwidget')
-        self.fcw.set_local_only(not use_gnomevfs)
+        self.fcw.set_local_only(False)
         self.fcw.set_select_multiple(True)
 
         self.pattern = []
@@ -1172,7 +1169,7 @@ class SoundConverterWindow(GladeWindow):
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
             Gtk.ResponseType.OK))
         self.addfolderchooser.set_select_multiple(True)
-        self.addfolderchooser.set_local_only(not use_gnomevfs)
+        self.addfolderchooser.set_local_only(False)
 
         self.combo = Gtk.ComboBox()
         self.store = Gtk.ListStore(str)
