@@ -42,6 +42,6 @@ def debug(*args):
         print(( ' '.join([str(msg) for msg in args]) ))
 
 def idle(func):
-    def callback(*args):
-        GObject.idle_add(func, *args)
+    def callback(*args, **kwargs):
+        GObject.idle_add(func, *args, **kwargs)
     return callback
