@@ -67,11 +67,14 @@ def _check_libs():
         gi.require_version('Gst', '1.0')
         gi.require_version('Gtk', '3.0')
         from gi.repository import GObject
-        from gi.repository import Gtk, Gdk
-        from gi.repository import Gst
-        from gi.repository import GLib
+        # force GIL creation - see https://bugzilla.gnome.org/show_bug.cgi?id=710447
+        import threading
+        threading.Thread(target=lambda: None).start()
         GObject.threads_init()
+        from gi.repository import Gst
         Gst.init(None)
+        from gi.repository import Gtk, Gdk
+        from gi.repository import GLib
         # XXX gnome.ui.authentication_manager_init()
     except ImportError as error :
         print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
