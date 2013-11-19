@@ -25,8 +25,8 @@ import sys
 import urllib.request, urllib.parse, urllib.error
 from gettext import gettext as _
 
-from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import Gtk
 from gi.repository import Gio
 from gi.repository import Gdk
 from gi.repository import GLib
@@ -1304,14 +1304,14 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def on_progress(self):
+        if self.pulse_progress is None: # conversion ended
+            return False
         if self.pulse_progress > 0: # still waiting for tags
             self.set_progress(self.pulse_progress, display_time=False)
             return True
         if self.pulse_progress == -1: # still waiting for add
             self.set_progress()
             return True
-        if not self.pulse_progress: # conversion ended
-            return False
 
         perfile = {}
         for s in self.filelist.get_files():
