@@ -76,10 +76,10 @@ class BackgroundTask:
     def done(self):
         """Call to end normally the task."""
         import threading
-        print('BackgroundTask.done', self, threading.active_count(), threading.current_thread(), threading.current_thread().ident)
+        print('BackgroundTask.done', self)
         self.run_finish_time = time.time()
         if self.running:
-            self.emit_sync('finished')
+            self.emit('finished')
             self.running = False
 
     def abort(self):

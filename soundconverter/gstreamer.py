@@ -204,19 +204,17 @@ class Pipeline(BackgroundTask):
         self.error = error
         log('error: %s (%s)' % (error, self.command))
 
-    def on_message(self, bus, message):
-        t = message.type
-        print('MESSAGE:', t)
-        #self.on_message_(bus, message)
+    def on_message_(self, bus, message):
+        self.on_message_(bus, message)
         return True
 
-    @idle
-    def on_message_(self, bus, message):
+    #@idle
+    def on_message(self, bus, message):
         import threading
-        print('Pipeline.on_message', threading.current_thread())
         t = message.type
-        print(t)
+        print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
+            print(Gst.MessageType.ERROR)
             error, _ = message.parse_error()
             self.eos = True
             self.error = error
@@ -241,13 +239,14 @@ class Pipeline(BackgroundTask):
             Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
             """
         elif t == Gst.MessageType.EOS:
+            print(Gst.MessageType.EOS)
             self.eos = True
             self.done()
-
         elif t == Gst.MessageType.TAG:
+            print(Gst.MessageType.TAG)
             self.found_tag(self, '', message.parse_tag())
         print('on_message END')
-        return False
+        return True
 
     def play(self):
         print('Pipeline.play')
@@ -283,7 +282,6 @@ class Pipeline(BackgroundTask):
 
         self.pipeline.set_state(Gst.State.PLAYING)
 
-    @idle
     def stop_pipeline(self):
         print('Pipeline.stop_pipeline')
         if not self.pipeline:
@@ -301,13 +299,12 @@ class Pipeline(BackgroundTask):
 
 
 class TypeFinder(Pipeline):
-
     def __init__(self, sound_file):
         Pipeline.__init__(self)
         self.sound_file = sound_file
 
         command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
-            (gstreamer_source, encode_filename(self.sound_file.uri))
+                  (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
         self.add_signal('typefinder', 'have-type', self.have_type)
 
@@ -318,12 +315,11 @@ class TypeFinder(Pipeline):
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
 
-    @idle
     def have_type(self, typefind, probability, caps):
-        print('have_type')
+        import threading
+        print('HAVETYPE', threading.currentThread())
         mime_type = caps.to_string()
-        debug('have_type:', mime_type,
-                                self.sound_file.filename_for_display)
+        debug('have_type:', mime_type, self.sound_file.filename_for_display)
         self.sound_file.mime_type = None
         #self.sound_file.mime_type = mime_type
         for t in mime_whitelist:
@@ -334,13 +330,13 @@ class TypeFinder(Pipeline):
         for t in filename_blacklist:
             if fnmatch(self.sound_file.uri, t):
                 self.sound_file.mime_type = None
-                log('filename blacklisted (%s): %s' % (t,
-                        self.sound_file.filename_for_display))
-                
-        self.pipeline.set_state(Gst.State.NULL)
-        self.done()
+                log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
 
-    @idle
+        #GObject.idle_add(self.pipeline.set_state, Gst.State.NULL)
+        #gtk_sleep(2)
+        self.done()
+        return True
+
     def finished(self):
         print('TypeFinder.finished', self.error)
         Pipeline.finished(self)
@@ -355,7 +351,6 @@ class TypeFinder(Pipeline):
 
 
 class Decoder(Pipeline):
-
     """A GstPipeline background task that decodes data and finds tags."""
 
     def __init__(self, sound_file):
@@ -365,14 +360,13 @@ class Decoder(Pipeline):
         self.position = 0
 
         command = '%s location="%s" name=src ! decodebin name=decoder' % \
-            (gstreamer_source, encode_filename(self.sound_file.uri))
+                  (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
         self.add_signal('decoder', 'pad-added', self.pad_added)
 
     def on_error(self, error):
         self.error = error
-        log('error: %s (%s)' % (error,
-            self.sound_file.filename_for_display))
+        log('error: %s (%s)' % (error, self.sound_file.filename_for_display))
 
     def have_type(self, typefind, probability, caps):
         pass
