@@ -202,22 +202,6 @@ class FileList:
                     'Use SoundJuicer Audio CD Extractor instead.')
                 return
             info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
-            #except gnomevfs.NotFoundError:
-            #    log('uri not found: \'%s\'' % uri)
-            #    continue
-            #except gnomevfs.InvalidURIError:
-            #    log('invalid uri: \'%s\'' % uri)
-            #    continue
-            #except gnomevfs.AccessDeniedError:
-            #    log('access denied: \'%s\'' % uri)
-            #    continue
-            #except TypeError as e:
-            #    log('add error: %s (\'%s\')' % (e, uri))
-            #    continue
-            #except:
-            #    log('error in get_file_info: %s' % (uri))
-            #    continue
-
             if info == Gio.FileType.DIRECTORY:
                 log('walking: \'%s\'' % uri)
                 if len(uris) == 1:
@@ -264,7 +248,7 @@ class FileList:
             self.window.progressbarstatus.show()
             self.typefinders.queue_ended = self.typefinder_queue_ended
             self.typefinders.start()
-            GObject.timeout_add(100, self.update_progress, self.typefinders)
+            GObject.timeout_add(1000, self.update_progress, self.typefinders)
         else:
             self.window.set_status()
 
@@ -308,15 +292,15 @@ class FileList:
             save = self.widget.get_model()
             self.widget.set_model(None)
             n = 0.0
-            next = time.time()
+            next_time = time.time()
             while self.waiting_files:
                 self._append_file(self.waiting_files.pop())
                 n += 1
-                if time.time() > next: 
+                if time.time() > next_time:
                     # keep UI responsive
                     gtk_iteration() 
                     # XXX self.window.progressbarstatus.set_fraction(n/self.waiting_files_last)
-                    next = time.time() + 0.01
+                    next_time = time.time() + 0.01
             self.widget.set_model(save)
             
             self.window.set_status()
@@ -330,10 +314,10 @@ class FileList:
         print('adding:', sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
-    def remove(self, iter):
-        uri = self.model.get(iter, 1)[0].uri
+    def remove(self, iterator):
+        uri = self.model.get(iterator, 1)[0].uri
         self.filelist.remove(uri)
-        self.model.remove(iter)
+        self.model.remove(iterator)
 
     def is_nonempty(self):
         try:
@@ -1114,14 +1098,14 @@ class CustomFileChooser:
         Callback for combobox 'changed' signal\n
         Set a new filter for the filechooserwidget
         """
-        filter = Gtk.FileFilter()
+        filefilter = Gtk.FileFilter()
         active = self.combo.get_active()
         if active:
-            filter.add_custom(Gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb,
+            filefilter.add_custom(Gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb,
                                         self.pattern[self.combo.get_active()])
         else:
-            filter.add_pattern('*.*')
-        self.fcw.set_filter(filter)
+            filefilter.add_pattern('*.*')
+        self.fcw.set_filter(filefilter)
 
     def __getattr__(self, attr):
         """
@@ -1304,29 +1288,27 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def on_progress(self):
-        if self.pulse_progress is None: # conversion ended
-            return False
-        if self.pulse_progress > 0: # still waiting for tags
-            self.set_progress(self.pulse_progress, display_time=False)
-            return True
-        if self.pulse_progress == -1: # still waiting for add
-            self.set_progress()
-            return True
+        if self.pulse_progress is not None: #
+            if self.pulse_progress > 0: # still waiting for tags
+                self.set_progress(self.pulse_progress, display_time=False)
+                return True
+            if self.pulse_progress == -1: # still waiting for add
+                self.set_progress()
+                return True
 
         perfile = {}
         for s in self.filelist.get_files():
             perfile[s] = None
         running, progress = self.converter.get_progress(perfile)
-
         if running:
             self.set_progress(progress)
             for sound_file, taskprogress in perfile.items():
-                if taskprogress > 0.0:
-                    sound_file.progress = taskprogress
-                    self.set_file_progress(sound_file, taskprogress)
                 if taskprogress is None and sound_file.progress:
                     self.set_file_progress(sound_file, 1.0)
                     sound_file.progress = None
+                if taskprogress is not None and taskprogress > 0.0:
+                    sound_file.progress = taskprogress
+                    self.set_file_progress(sound_file, taskprogress)
         return running
 
     def do_convert(self):
@@ -1337,7 +1319,7 @@ class SoundConverterWindow(GladeWindow):
         total = len(files)
         for i, sound_file in enumerate(files):
             gtk_iteration()
-            self.pulse_progress = float(i)/total # TODO: still needed?
+            self.pulse_progress = i/total  # TODO: still needed?
             sound_file.progress = None
             self.converter.add(sound_file)
         # all was OK

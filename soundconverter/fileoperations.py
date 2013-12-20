@@ -48,7 +48,6 @@ def vfs_walk(uri):
     print(dirlist)
     for file_info in dirlist:
         name = file_info.get_name()
-        print(name)
         info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
         if info == Gio.FileType.DIRECTORY:
             filelist.extend(vfs_walk(uri + '/' + name))
@@ -75,28 +74,11 @@ def vfs_rename(original, newname):
     """Rename a gnomevfs file"""
     gforiginal = Gio.file_parse_name(original)
     gfnew = Gio.file_parse_name(newname)
-    gforiginal.move(gfnew)
-    return
-    uri = gnomevfs.URI(newname)
-    dirname = uri.parent
-    if dirname and not gnomevfs.exists(dirname):
-        log('Creating folder: \'%s\'' % dirname)
-        if not vfs_makedirs(str(dirname)):
-            show_error(_('Cannot create folder!'), unquote_filename(dirname.path))
-            return 'cannot-create-folder'
-
-    try:
-        gnomevfs.xfer_uri(gnomevfs.URI(original), uri,
-                          gnomevfs.XFER_REMOVESOURCE,
-                          gnomevfs.XFER_ERROR_MODE_ABORT,
-                          gnomevfs.XFER_OVERWRITE_MODE_ABORT
-                         )
-    except Exception as error:
-        # TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
-        # or an option to stop all processing.
-        show_error(_('Error while renaming file!'), '%s: %s' % (beautify_uri(newname), error))
-        return 'cannot-rename-file'
-
+    log('Creating folder \'%s\'?' % gfnew.get_parent().get_uri())
+    if not gfnew.get_parent().query_exists(None):
+        log('Creating folder: \'%s\'' % gfnew.get_parent())
+        Gio.File.make_directory_with_parents(gfnew.get_parent(), None)
+    gforiginal.move(gfnew, Gio.FileCopyFlags.NONE, None, None, None)
 
 def vfs_exists(filename):
     gfile = Gio.file_parse_name(filename)

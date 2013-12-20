@@ -164,7 +164,7 @@ class MessageArea(Gtk.HBox):
         self.add_action_widget(button, response_id)
 
     def set_contents(self, contents):
-        self.contents = contents;
+        self.contents = contents
         self.main_hbox.pack_start(self.contents, True, True)
 
     def set_text_and_icon(self, icon_stock_id, primary_text,

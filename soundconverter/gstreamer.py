@@ -37,15 +37,18 @@ from soundconverter.queue import TaskQueue
 from soundconverter.utils import debug, log, idle
 from soundconverter.settings import mime_whitelist, filename_blacklist
 from soundconverter.error import show_error
+
 try:
     from soundconverter.notify import notification
 except:
     def notification(msg):
         pass
-        
+
 from fnmatch import fnmatch
 
 import time
+
+
 def gtk_iteration():
     while Gtk.events_pending():
         Gtk.main_iteration(False)
@@ -78,7 +81,7 @@ for name in profiles:
             description = extension
         if description in audio_profiles_dict:
             continue
-        # store
+            # store
         profile = description, extension, pipeline
         audio_profiles_list.append(profile)
         audio_profiles_dict[description] = profile
@@ -98,17 +101,17 @@ print('  using gio')
 user_canceled_codec_installation = False
 
 encoders = (
-    ('flacenc',   'FLAC'),
-    ('wavenc',    'WAV'),
+    ('flacenc', 'FLAC'),
+    ('wavenc', 'WAV'),
     ('vorbisenc', 'Ogg Vorbis'),
-    ('oggmux',    'Ogg Vorbis'),
-    ('id3v2mux',  'MP3 Tags'),
-    ('xingmux',   'Xing Header'),
-    ('lame',      'MP3'),
-    ('faac',      'AAC'),
-    ('mp4mux',    'AAC'),
-    ('opusenc',   'Opus'),
-    )
+    ('oggmux', 'Ogg Vorbis'),
+    ('id3v2mux', 'MP3 Tags'),
+    ('xingmux', 'Xing Header'),
+    ('lame', 'MP3'),
+    ('faac', 'AAC'),
+    ('mp4mux', 'AAC'),
+    ('opusenc', 'Opus'),
+)
 
 available_elements = set()
 
@@ -118,14 +121,13 @@ for encoder, name in encoders:
         available_elements.add(encoder)
     else:
         print(('  "%s" gstreamer element not found'
-            ', disabling %s output.' % (encoder, name)))
+               ', disabling %s output.' % (encoder, name)))
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
 
 
 class Pipeline(BackgroundTask):
-
     """A background task for running a GstPipeline."""
 
     def __init__(self):
@@ -211,8 +213,9 @@ class Pipeline(BackgroundTask):
     #@idle
     def on_message(self, bus, message):
         import threading
+
         t = message.type
-        print('ONMESSAGE', t, threading.currentThread())
+        #print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
             print(Gst.MessageType.ERROR)
             error, _ = message.parse_error()
@@ -243,9 +246,7 @@ class Pipeline(BackgroundTask):
             self.eos = True
             self.done()
         elif t == Gst.MessageType.TAG:
-            print(Gst.MessageType.TAG)
             self.found_tag(self, '', message.parse_tag())
-        print('on_message END')
         return True
 
     def play(self):
@@ -276,9 +277,7 @@ class Pipeline(BackgroundTask):
                 return
 
             bus.add_signal_watch()
-            watch_id = bus.connect('message', self.on_message)
-            self.watch_id = watch_id
-            print('play watchid:', watch_id)
+            self.watch_id = bus.connect('message', self.on_message)
 
         self.pipeline.set_state(Gst.State.PLAYING)
 
@@ -291,7 +290,6 @@ class Pipeline(BackgroundTask):
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
         self.pipeline.set_state(Gst.State.NULL)
-        #self.pipeline = None
         print('  end')
 
     def get_position(self):
@@ -317,11 +315,11 @@ class TypeFinder(Pipeline):
 
     def have_type(self, typefind, probability, caps):
         import threading
+
         print('HAVETYPE', threading.currentThread())
         mime_type = caps.to_string()
         debug('have_type:', mime_type, self.sound_file.filename_for_display)
         self.sound_file.mime_type = None
-        #self.sound_file.mime_type = mime_type
         for t in mime_whitelist:
             if t in mime_type:
                 self.sound_file.mime_type = mime_type
@@ -332,8 +330,6 @@ class TypeFinder(Pipeline):
                 self.sound_file.mime_type = None
                 log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
 
-        #GObject.idle_add(self.pipeline.set_state, Gst.State.NULL)
-        #gtk_sleep(2)
         self.done()
         return True
 
@@ -343,11 +339,8 @@ class TypeFinder(Pipeline):
         if self.error:
             return
         if self.found_type_hook and self.sound_file.mime_type:
-            #GObject.idle_add(self.found_type_hook, self.sound_file,
-            #                    self.sound_file.mime_type)
-            print(self.found_type_hook)
             self.found_type_hook(self.sound_file, self.sound_file.mime_type)
-            self.sound_file.mime_type = True # remove string
+            self.sound_file.mime_type = True
 
 
 class Decoder(Pipeline):
@@ -377,9 +370,8 @@ class Decoder(Pipeline):
         """
         try:
             if not self.sound_file.duration and self.pipeline:
-                self.sound_file.duration = self.pipeline.query_duration(
-                                            Gst.Format.TIME)[0] / Gst.SECOND
-                debug('got file duration:', self.sound_file.duration)
+                self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
+                print('got file duration:', self.sound_file.duration)
                 if self.sound_file.duration < 0:
                     self.sound_file.duration = None
         except Gst.QueryError:
@@ -391,26 +383,20 @@ class Decoder(Pipeline):
         """
         try:
             if self.pipeline:
-                self.position = self.pipeline.query_position(
-                                            Gst.Format.TIME)[0] / Gst.SECOND
-                if self.position < 0:
-                    self.position = 0
+                self.position = max(0, self.pipeline.query_position(
+                    Gst.Format.TIME)[1] / Gst.SECOND)
+                print('got file position:', self.position)
         except Gst.QueryError:
             self.position = 0
-
 
     def found_tag(self, decoder, something, taglist):
         """
         Called when the decoder reads a tag.
         """
         debug('found_tags:', self.sound_file.filename_for_display)
-        for k in list(taglist.keys()):
-            if 'image' not in k:
-                debug('\t%s=%s' % (k, taglist[k]))
-            if isinstance(taglist[k], Gst.Date):
-                taglist['year'] = taglist[k].year
-                taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
-                                    taglist[k].month, taglist[k].day)
+        taglist.foreach(self.append_tag, None)
+
+    def append_tag(self, taglist, tag, unused_udata):
         tag_whitelist = (
             'artist',
             'album',
@@ -424,11 +410,23 @@ class Decoder(Pipeline):
             'disc-number',
             'disc-count',
         )
-        tags = {}
-        for k in list(taglist.keys()):
-            if k in tag_whitelist:
-                tags[k] = taglist[k]
+        if tag not in tag_whitelist:
+            return
 
+        tag_type = Gst.tag_get_type(tag)
+        type_getters = {
+            GObject.TYPE_STRING: 'get_string',
+            GObject.TYPE_DOUBLE: 'get_double',
+            GObject.TYPE_FLOAT: 'get_float',
+            GObject.TYPE_INT: 'get_int',
+            GObject.TYPE_UINT: 'get_uint',
+        } # XXX Date !
+
+        tags = {}
+        if tag_type in type_getters:
+            value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
+            tags[tag] = value
+            debug('  ', tag, value)
         self.sound_file.tags.update(tags)
         self.query_duration()
 
@@ -458,7 +456,6 @@ class Decoder(Pipeline):
 
 
 class TagReader(Decoder):
-
     """A GstPipeline background task for finding meta tags in a file."""
 
     def __init__(self, sound_file):
@@ -489,12 +486,11 @@ class TagReader(Decoder):
 
 
 class Converter(Decoder):
-
     """A background task for converting files to another format."""
 
     def __init__(self, sound_file, output_filename, output_type,
-                    delete_original=False, output_resample=False,
-                    resample_rate=48000, force_mono=False):
+                 delete_original=False, output_resample=False,
+                 resample_rate=48000, force_mono=False):
         Decoder.__init__(self, sound_file)
 
         self.output_filename = output_filename
@@ -544,8 +540,8 @@ class Converter(Decoder):
         if not encoder:
             # TODO: is this used ?
             # TODO: add proper error management when an encoder cannot be created
-            show_error(_('Error', "Cannot create a decoder for \'%s\' format.") % 
-                        self.output_type)
+            show_error(_('Error', "Cannot create a decoder for \'%s\' format.") %
+                       self.output_type)
             return
 
         self.add_command(encoder)
@@ -576,7 +572,8 @@ class Converter(Decoder):
         Pipeline.finished(self)
 
         # Copy file permissions
-        if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(Gio.file_parse_name(self.output_filename)):
+        if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
+                Gio.file_parse_name(self.output_filename), Gio.FileCopyFlags.NONE, None):
             log('Cannot set permission on \'%s\'' % beautify_uri(self.output_filename))
 
         if self.delete_original and self.processing and not self.error:
@@ -588,7 +585,7 @@ class Converter(Decoder):
         #pass
 
         show_error('<b>%s</b>' % _('GStreamer Error:'), '%s\n<i>(%s)</i>' % (err,
-                    self.sound_file.filename_for_display))
+                                                                             self.sound_file.filename_for_display))
 
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality
@@ -634,9 +631,9 @@ class Converter(Decoder):
 
         if self.mp3_mode is not None:
             properties = {
-                'cbr' : 'target=bitrate cbr=true bitrate=%s ',
-                'abr' : 'target=bitrate cbr=false bitrate=%s ',
-                'vbr' : 'target=quality cbr=false quality=%s ',
+                'cbr': 'target=bitrate cbr=true bitrate=%s ',
+                'abr': 'target=bitrate cbr=false bitrate=%s ',
+                'vbr': 'target=quality cbr=false quality=%s ',
             }
 
             cmd += properties[self.mp3_mode] % self.mp3_quality
@@ -663,7 +660,6 @@ class Converter(Decoder):
 
 
 class ConverterQueue(TaskQueue):
-
     """Background task for converting many files."""
 
     def __init__(self, window):
@@ -686,21 +682,21 @@ class ConverterQueue(TaskQueue):
         # generate a temporary filename from source name and output suffix
         output_suffix = self.window.prefs.get_output_suffix()
         output_filename = sound_file.uri + '%s~SC~' % output_suffix
-        
+
         if vfs_exists(output_filename):
             # always overwrite temporary files
             vfs_unlink(output_filename)
-        
+
         path = urlparse(output_filename)[2]
         path = unquote_filename(path)
 
         c = Converter(sound_file, output_filename,
-                        self.window.prefs.get_string('output-mime-type'),
-                        self.window.prefs.get_int('delete-original'),
-                        self.window.prefs.get_int('output-resample'),
-                        self.window.prefs.get_int('resample-rate'),
-                        self.window.prefs.get_int('force-mono'),
-                        )
+                      self.window.prefs.get_string('output-mime-type'),
+                      self.window.prefs.get_int('delete-original'),
+                      self.window.prefs.get_int('output-resample'),
+                      self.window.prefs.get_int('resample-rate'),
+                      self.window.prefs.get_int('force-mono'),
+        )
         c.set_vorbis_quality(self.window.prefs.get_float('vorbis-quality'))
         c.set_aac_quality(self.window.prefs.get_int('aac-quality'))
         c.set_opus_quality(self.window.prefs.get_int('opus-bitrate'))
@@ -736,26 +732,25 @@ class ConverterQueue(TaskQueue):
                     self.total_duration += duration
 
         position = 0.0
-        prolist = []
-        for task in range(self.finished_tasks): # TODO: use the add, luke
-            prolist.append(1.0)
+        prolist = [1] * self.finished_tasks
         for task in tasks:
             if task.running:
-                position += task.get_position()
-                taskprogress = float(task.get_position()) / task.sound_file.duration if task.sound_file.duration else 0
+                task_position = task.get_position()
+                position += task_position
+                taskprogress = task_position / task.sound_file.duration if task.sound_file.duration else 0
                 taskprogress = min(max(taskprogress, 0.0), 1.0)
                 prolist.append(taskprogress)
                 per_file_progress[task.sound_file] = taskprogress
         for task in self.waiting_tasks:
             prolist.append(0.0)
 
-        progress = sum(prolist)/len(prolist) if prolist else 0
+        progress = sum(prolist) / len(prolist) if prolist else 0
         progress = min(max(progress, 0.0), 1.0)
         return self.running or len(self.all_tasks), progress
 
     def on_task_finished(self, task):
         task.sound_file.progress = 1.0
-        
+
         if task.error:
             debug('error in task, skipping rename:', task.output_filename)
             if vfs_exists(task.output_filename):
@@ -763,7 +758,7 @@ class ConverterQueue(TaskQueue):
             self.errors.append(task.error)
             self.error_count += 1
             return
-            
+
         duration = task.get_duration()
         if duration:
             self.duration_processed += duration
@@ -771,16 +766,16 @@ class ConverterQueue(TaskQueue):
         # rename temporary file 
         newname = self.window.prefs.generate_filename(task.sound_file)
         log(beautify_uri(task.output_filename), '->', beautify_uri(newname))
-        
+
         # safe mode. generate a filename until we find a free one
-        p,e = os.path.splitext(newname)
+        p, e = os.path.splitext(newname)
         p = p.replace('%', '%%')
         p = p + ' (%d)' + e
         i = 1
         while vfs_exists(newname):
             newname = p % i
             i += 1
-        
+
         task.error = vfs_rename(task.output_filename, newname)
         if task.error:
             self.errors.append(task.error)
