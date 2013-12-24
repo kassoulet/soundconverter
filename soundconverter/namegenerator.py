@@ -30,7 +30,7 @@ class TargetNameGenerator:
 
     """Generator for creating the target name from an input name."""
 
-    bad_chars = u'/\\?%*:|"<>\ufffd'
+    bad_chars = u'\\?%*:|"<>\ufffd'
 
     def __init__(self):
         self.folder = None
