@@ -65,7 +65,6 @@ class BackgroundTask:
         Callbacks are called synchronously."""
         getattr(self, signal)()
         if signal in self.listeners:
-            print(self.listeners[signal])
             for listener in self.listeners[signal]:
                 listener(self)
 
