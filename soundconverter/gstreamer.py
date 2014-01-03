@@ -306,10 +306,6 @@ class TypeFinder(Pipeline):
         self.add_command(command)
         self.add_signal('typefinder', 'have-type', self.have_type)
 
-    def on_error(self, error):
-        self.error = error
-        log('error: %s (%s)' % (error, self.sound_file.filename_for_display))
-
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
 
@@ -356,10 +352,6 @@ class Decoder(Pipeline):
                   (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
         self.add_signal('decoder', 'pad-added', self.pad_added)
-
-    def on_error(self, error):
-        self.error = error
-        log('error: %s (%s)' % (error, self.sound_file.filename_for_display))
 
     def have_type(self, typefind, probability, caps):
         pass
@@ -581,11 +573,10 @@ class Converter(Decoder):
             if not vfs_unlink(self.sound_file.uri):
                 log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
 
-    def on_error(self, err):
-        #pass
-
-        show_error('<b>%s</b>' % _('GStreamer Error:'), '%s\n<i>(%s)</i>' % (err,
-                                                                             self.sound_file.filename_for_display))
+    def on_error(self, error):
+        Pipeline.on_error(error)
+        show_error('<b>%s</b>' % _('GStreamer Error:'),
+                   '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display))
 
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality
