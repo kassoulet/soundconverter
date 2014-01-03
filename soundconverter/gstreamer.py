@@ -596,7 +596,7 @@ class Converter(Decoder):
 
     def on_error(self, err):
         #pass
-
+        self.error = err
         show_error('<b>%s</b>' % _('GStreamer Error:'), '%s\n<i>(%s)</i>' % (err,
                     self.sound_file.filename_for_display))
 
