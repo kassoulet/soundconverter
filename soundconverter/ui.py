@@ -1466,6 +1466,7 @@ def gui_main(name, version, gladefile, input_files):
     NAME, VERSION = name, version
     # XXX gnome.init(name, version)
     builder = Gtk.Builder()
+    builder.set_translation_domain(name.lower())
     builder.add_from_file(gladefile)
 
     global win
