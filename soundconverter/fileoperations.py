@@ -51,25 +51,25 @@ def vfs_walk(uri):
 
     try:
         dirlist = gnomevfs.open_directory(uri, gnomevfs.FILE_INFO_FOLLOW_LINKS)
+        for file_info in dirlist:
+            try:
+                if file_info.name[0] == '.':
+                    continue
+
+                if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
+                    filelist.extend(
+                        vfs_walk(uri.append_path(file_info.name)))
+
+                if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
+                    filelist.append(str(uri.append_file_name(file_info.name)))
+            except ValueError:
+                # this can happen when you do not have sufficent
+                # permissions to read file info.
+                log("skipping: \'%s\'" % file_info.name)
     except:
         log("skipping: '%s\'" % uri)
         return filelist
 
-    for file_info in dirlist:
-        try:
-            if file_info.name[0] == '.':
-                continue
-
-            if file_info.type == gnomevfs.FILE_TYPE_DIRECTORY:
-                filelist.extend(
-                    vfs_walk(uri.append_path(file_info.name)))
-
-            if file_info.type == gnomevfs.FILE_TYPE_REGULAR:
-                filelist.append(str(uri.append_file_name(file_info.name)))
-        except ValueError:
-            # this can happen when you do not have sufficent
-            # permissions to read file info.
-            log("skipping: \'%s\'" % uri)
     return filelist
 
 
