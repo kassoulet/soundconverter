@@ -88,7 +88,6 @@ def cli_convert_main(input_files):
         input_file = SoundFile(input_file)
         output_name = generator.get_target_name(input_file)
         c = Converter(input_file, output_name, output_type)
-        c.overwrite = True
         c.init()
         c.start()
         while c.running:

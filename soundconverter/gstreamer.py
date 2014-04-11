@@ -512,7 +512,6 @@ class Converter(Decoder):
         self.resample_rate = resample_rate
         self.force_mono = force_mono
 
-        self.overwrite = False
         self.delete_original = delete_original
 
         self.got_duration = False
@@ -561,9 +560,6 @@ class Converter(Decoder):
 
         self.add_command('%s location="%s"' % (
             gstreamer_sink, encode_filename(self.output_filename)))
-        if self.overwrite and vfs_exists(self.output_filename):
-            log('overwriting \'%s\'' % beautify_uri(self.output_filename))
-            vfs_unlink(self.output_filename)
 
     def aborted(self):
         # remove partial file
@@ -679,13 +675,11 @@ class ConverterQueue(TaskQueue):
     def __init__(self, window):
         TaskQueue.__init__(self)
         self.window = window
-        self.overwrite_action = None
         self.reset_counters()
 
     def reset_counters(self):
         self.total_duration = 0
         self.duration_processed = 0
-        self.overwrite_action = None
         self.errors = []
         self.error_count = 0
         self.all_tasks = None
@@ -700,9 +694,6 @@ class ConverterQueue(TaskQueue):
             # always overwrite temporary files
             vfs_unlink(output_filename)
         
-        path = urlparse(output_filename)[2]
-        path = unquote_filename(path)
-
         c = Converter(sound_file, output_filename,
                         self.window.prefs.get_string('output-mime-type'),
                         self.window.prefs.get_int('delete-original'),
