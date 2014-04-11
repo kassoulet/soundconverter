@@ -20,6 +20,7 @@
 # USA
 
 import os
+from os.path import basename, dirname
 import time
 import sys
 import gtk
@@ -761,6 +762,13 @@ class PreferencesDialog(GladeWindow, GConfStore):
         else:
             generator.replace_messy_chars = self.get_int('replace-messy-chars')
             return generator.get_target_name(sound_file)
+
+    def generate_temp_filename(self, soundfile):
+        folder = dirname(soundfile.uri)
+        if not self.get_int('same-folder-as-input'):
+            folder = self.get_string('selected-folder')
+            folder = filename_to_uri(folder)
+        return folder + '/' + basename(soundfile.filename)
 
     def process_custom_pattern(self, pattern):
         for k in custom_patterns:
