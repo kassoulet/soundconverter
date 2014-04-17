@@ -303,5 +303,20 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.failUnlessEqual(self.g.get_target_name(self.s),
                              "/music/to/Hi%20Ho.ogg")
 
+    def testQuote(self):
+        self.s = SoundFile(quote("/path%/to/file%.flac"))
+        self.s.tags.update({
+            "artist": "Foo%Bar",
+            "title": "Hi%Ho",
+        })
+        self.g.replace_messy_chars = False
+        self.g.suffix = ".ogg"
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             quote("/path%/to/file%.ogg"))
+        self.g.subfolders = "%(artist)s"
+        self.g.basename = "%(title)s"
+        self.failUnlessEqual(self.g.get_target_name(self.s),
+                             quote("/path%/to/Foo%Bar/Hi%Ho.ogg"))
+
 if __name__ == "__main__":
     unittest.main()
