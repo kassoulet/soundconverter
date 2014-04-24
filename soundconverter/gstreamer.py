@@ -526,7 +526,7 @@ class Converter(Decoder):
             'audio/ogg; codecs=opus': self.add_opus_encoder,
             'gst-profile': self.add_audio_profile,
         }
-        self.add_command('audiorate')
+        self.add_command('audiorate tolerance=10000000')
         self.add_command('audioconvert')
         self.add_command('audioresample')
 
