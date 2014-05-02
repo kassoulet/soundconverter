@@ -66,7 +66,7 @@ class TargetNameGenerator:
         root = sound_file.base_path
         basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))
 
-        # make sure basename constains only the filename
+        # make sure basename contains only the filename
         basefolder, basename = os.path.split(basename)
 
         d = {
@@ -113,7 +113,7 @@ class TargetNameGenerator:
         if self.folder is None:
             folder = root
         else:
-            folder = urllib.parse.quote(self.folder, '/:')
+            folder = urllib.parse.quote(self.folder, '/:%@')
 
         if '/' in pattern:
             # we are creating folders using tags, disable basefolder handling
