@@ -24,13 +24,13 @@ import time
 import os
 import urllib.request, urllib.parse, urllib.error
 import unicodedata
+from gettext import gettext as _
 import gi
 from gi.repository import Gio
 from soundconverter.fileoperations import vfs_exists, filename_to_uri
 
 
 class TargetNameGenerator:
-
     """Generator for creating the target name from an input name."""
 
     nice_chars = string.ascii_letters + string.digits + '.-_/'
@@ -48,14 +48,8 @@ class TargetNameGenerator:
     def _unicode_to_ascii(self, unicode_string):
         # thanks to
         # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
-        try:
-            unicode_string = str(unicode_string, 'utf-8')
-            return unicodedata.normalize('NFKD', unicode_string).encode(
-                                                            'ASCII', 'ignore')
-        except UnicodeDecodeError:
-            unicode_string = str(unicode_string, 'iso-8859-1')
-            return unicodedata.normalize('NFKD', unicode_string).encode(
-                                                            'ASCII', 'replace')
+        return str(unicodedata.normalize('NFKD', unicode_string).encode(
+            'ASCII', 'ignore'), 'ASCII')
 
     def get_target_name(self, sound_file):
 
@@ -64,7 +58,8 @@ class TargetNameGenerator:
         root, ext = os.path.splitext(urllib.parse.urlparse(sound_file.uri).path)
 
         root = sound_file.base_path
-        basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))
+        basename, ext = os.path.splitext(
+            urllib.parse.unquote(sound_file.filename))
 
         # make sure basename contains only the filename
         basefolder, basename = os.path.split(basename)
@@ -97,8 +92,6 @@ class TargetNameGenerator:
 
         pattern = os.path.join(self.subfolders, self.basename + self.suffix)
         result = pattern % d
-        if isinstance(result, str):
-            result = result.encode('utf-8')
 
         if self.replace_messy_chars:
             result = self._unicode_to_ascii(result)
