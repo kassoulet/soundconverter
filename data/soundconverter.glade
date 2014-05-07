@@ -2128,7 +2128,7 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="add">
-                        <property name="label">_Add File</property>
+                        <property name="label" translatable="yes">_Add File</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
@@ -2141,7 +2141,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="add_folder">
-                        <property name="label">Add _Folder</property>
+                        <property name="label" translatable="yes">Add _Folder</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
@@ -2207,7 +2207,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="clearlist">
-                        <property name="label">_Clear List</property>
+                        <property name="label" translatable="yes">_Clear List</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
