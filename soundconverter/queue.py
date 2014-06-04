@@ -67,7 +67,6 @@ class TaskQueue(BackgroundTask):
             return
 
         to_start = settings['jobs'] - len(self.running_tasks)
-        to_start = 1 # XXX
         for i in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
