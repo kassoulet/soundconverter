@@ -20,6 +20,7 @@
 # USA
 
 from gettext import gettext as _
+from multiprocessing import cpu_count
 
 # add here any format you want to be read
 mime_whitelist = (
@@ -91,33 +92,6 @@ filepattern = (
     ('AC3',          '*.ac3')
 )
 
-
-def cpu_count():
-    """
-    Returns the number of CPUs in the system.
-    (from pyprocessing)
-    """
-    import sys
-    import os
-    if sys.platform == 'win32':
-        try:
-            num = int(os.environ['NUMBER_OF_PROCESSORS'])
-        except (ValueError, KeyError):
-            num = 0
-    elif sys.platform == 'darwin':
-        try:
-            num = int(os.popen('sysctl -n hw.ncpu').read())
-        except ValueError:
-            num = 0
-    else:
-        try:
-            num = os.sysconf('SC_NPROCESSORS_ONLN')
-        except (ValueError, OSError, AttributeError):
-            num = 0
-    if num >= 1:
-        return num
-    else:
-        return 1
 
 # application-wide settings
 settings = {
