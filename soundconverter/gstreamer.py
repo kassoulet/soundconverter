@@ -386,7 +386,7 @@ class Decoder(Pipeline):
             'track-number',
             'track-count',
             'genre',
-            'date',
+            'datetime',
             'year',
             'timestamp',
             'disc-number',
@@ -402,13 +402,19 @@ class Decoder(Pipeline):
             GObject.TYPE_FLOAT: 'get_float',
             GObject.TYPE_INT: 'get_int',
             GObject.TYPE_UINT: 'get_uint',
-        } # XXX Date !
+        }
 
         tags = {}
         if tag_type in type_getters:
             value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
             tags[tag] = value
             debug('  ', tag, value)
+
+        if tag == 'datetime':
+            dt = taglist.get_date_time(tag)[1]
+            tags['year'] = dt.get_year()
+            tags['date'] = dt.to_iso8601_string()[:10]
+
         self.sound_file.tags.update(tags)
         self.query_duration()
 
