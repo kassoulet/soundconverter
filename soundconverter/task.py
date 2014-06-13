@@ -41,7 +41,6 @@ class BackgroundTask:
 
     def start(self):
         """Start running the task. Call started()."""
-        print('BackgroundTask.start')
         self.emit('started')
         self.running = True
         self.run_start_time = time.time()
@@ -57,7 +56,6 @@ class BackgroundTask:
         """Call the signal handlers.
         Callbacks are called as gtk idle funcs to be sure
         they are in the main thread."""
-        print('BackgroundTask.emit')
         GObject.idle_add(getattr(self, signal))
         if signal in self.listeners:
             for listener in self.listeners[signal]:
@@ -66,7 +64,6 @@ class BackgroundTask:
     def emit_sync(self, signal):
         """Call the signal handlers.
         Callbacks are called synchronously."""
-        print('BackgroundTask.emit_sync:', signal, self)
         getattr(self, signal)()
         if signal in self.listeners:
             print((self.listeners[signal]))

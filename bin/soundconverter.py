@@ -185,8 +185,6 @@ except:
 
 import sys, threading
 
-print('MAIN THREAD:', threading.current_thread())
-
 def tracefunc(frame, event, arg, indent=[0]):
       if event == "call":
           indent[0] += 2
@@ -200,7 +198,6 @@ def tracefunc(frame, event, arg, indent=[0]):
 
 #sys.settrace(tracefunc)
 #threading.settrace(tracefunc)
-
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)

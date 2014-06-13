@@ -146,7 +146,6 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def cleanup(self):
-        print('cleanup')
         for element, sid in self.connected_signals:
             element.disconnect(sid)
         self.connected_signals = []
@@ -156,7 +155,6 @@ class Pipeline(BackgroundTask):
         self.cleanup()
 
     def finished(self):
-        print('Pipeline.finished')
         self.cleanup()
 
     def add_command(self, command):
@@ -217,7 +215,6 @@ class Pipeline(BackgroundTask):
         t = message.type
         #print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
-            print(Gst.MessageType.ERROR)
             error, _ = message.parse_error()
             self.eos = True
             self.error = error
@@ -242,7 +239,6 @@ class Pipeline(BackgroundTask):
             Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
             """
         elif t == Gst.MessageType.EOS:
-            print(Gst.MessageType.EOS)
             self.eos = True
             self.done()
         elif t == Gst.MessageType.TAG:
@@ -282,7 +278,6 @@ class Pipeline(BackgroundTask):
         self.pipeline.set_state(Gst.State.PLAYING)
 
     def stop_pipeline(self):
-        print('Pipeline.stop_pipeline')
         if not self.pipeline:
             debug('pipeline already stopped!')
             return
@@ -290,7 +285,6 @@ class Pipeline(BackgroundTask):
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
         self.pipeline.set_state(Gst.State.NULL)
-        print('  end')
 
     def get_position(self):
         return NotImplementedError
@@ -312,7 +306,6 @@ class TypeFinder(Pipeline):
     def have_type(self, typefind, probability, caps):
         import threading
 
-        print('HAVETYPE', threading.currentThread())
         mime_type = caps.to_string()
         debug('have_type:', mime_type, self.sound_file.filename_for_display)
         self.sound_file.mime_type = None
@@ -330,7 +323,6 @@ class TypeFinder(Pipeline):
         return True
 
     def finished(self):
-        print('TypeFinder.finished', self.error)
         Pipeline.finished(self)
         if self.error:
             return
@@ -363,7 +355,6 @@ class Decoder(Pipeline):
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
-                print('got file duration:', self.sound_file.duration)
                 if self.sound_file.duration < 0:
                     self.sound_file.duration = None
         except Gst.QueryError:
@@ -377,7 +368,6 @@ class Decoder(Pipeline):
             if self.pipeline:
                 self.position = max(0, self.pipeline.query_position(
                     Gst.Format.TIME)[1] / Gst.SECOND)
-                print('got file position:', self.position)
         except Gst.QueryError:
             self.position = 0
 
@@ -529,13 +519,6 @@ class Converter(Decoder):
             self.add_command('audioconvert')
 
         encoder = self.encoders[self.output_type]()
-        if not encoder:
-            # TODO: is this used ?
-            # TODO: add proper error management when an encoder cannot be created
-            show_error(_('Error', "Cannot create a decoder for \'%s\' format.") %
-                       self.output_type)
-            return
-
         self.add_command(encoder)
 
         gfile = Gio.file_parse_name(self.output_filename)

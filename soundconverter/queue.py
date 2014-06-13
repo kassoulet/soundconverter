@@ -60,7 +60,6 @@ class TaskQueue(BackgroundTask):
             self.start_next_task()
 
     def start_next_task(self):
-        print('TaskQueue.start_next_task')
         if not self.waiting_tasks:
             if not self.running_tasks:
                 self.done()
@@ -104,7 +103,6 @@ class TaskQueue(BackgroundTask):
         self.running = False
 
     def task_finished(self, task=None):
-        print('TaskQueue.task_finished')
         if not self.running_tasks:
             return
         if task in self.running_tasks:

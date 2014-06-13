@@ -39,8 +39,6 @@ filename_blacklist = (
     '*.iso',
 )
 
-# TODO: remove locale patterns...
-
 # custom filename patterns
 english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
 

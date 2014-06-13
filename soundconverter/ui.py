@@ -194,7 +194,6 @@ class FileList:
         #self.window.set_status(_('Scanning files...'))
 
         for uri in uris:
-            print(uri)
             if not uri:
                 continue
             if uri.startswith('cdda:'):
@@ -281,7 +280,6 @@ class FileList:
         self.commit_waiting_files()
 
     def commit_waiting_files(self):
-        print('waiting...', self.waiting_files)
         #XXX if self.waiting_files_last != len(self.waiting_files):
             # still adding files
         #    self.waiting_files_last = len(self.waiting_files)
@@ -311,7 +309,6 @@ class FileList:
         self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
-        print('adding:', sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
     def remove(self, iterator):
