@@ -355,7 +355,7 @@ class Decoder(Pipeline):
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
-                if self.sound_file.duration < 0:
+                if self.sound_file.duration <= 0:
                     self.sound_file.duration = None
         except Gst.QueryError:
             self.sound_file.duration = None
