@@ -474,6 +474,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         uri = filename_to_uri(self.get_string('selected-folder'))
         self.target_folder_chooser.set_uri(uri)
+        self.target_folder_chooser.set_local_only(not use_gnomevfs)
         self.update_selected_folder()
 
         w = self.create_subfolders
