@@ -31,7 +31,7 @@ import urllib
 from gettext import gettext as _
 
 from gconfstore import GConfStore
-from fileoperations import filename_to_uri, beautify_uri
+from fileoperations import filename_to_uri, beautify_uri, vfs_writable
 from fileoperations import unquote_filename, vfs_walk
 from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue
@@ -826,6 +826,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
         folder = self.target_folder_chooser.get_uri()
         self.target_folder_chooser.hide()
         if ret == gtk.RESPONSE_OK:
+            writable = vfs_writable(folder)
+            if not writable:
+                show_error(_('Cannot write to folder'), _('"%s" folder is not writable.') % folder)
+                return
             if folder:
                 self.set_string('selected-folder', urllib.unquote(folder))
                 self.update_selected_folder()

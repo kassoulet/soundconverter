@@ -73,6 +73,14 @@ def vfs_walk(uri):
     return filelist
 
 
+def vfs_writable(filename):
+    """Is the path writable?"""
+    tester = filename + '/' + '$write-test$'
+    if vfs_makedirs(tester):
+        gnomevfs.remove_directory(gnomevfs.URI(tester))
+        return True
+
+
 def vfs_makedirs(path_to_create):
     """Similar to os.makedirs, but with gnomevfs."""
 
