@@ -214,7 +214,7 @@ class Pipeline(BackgroundTask):
             self.done()
             return
         self.done()
-        show_error('Error', 'failed to install plugins: %s' % gobject.markup_escape_text(str(result)))
+        show_error('Error', 'failed to install plugin!')
 
     def on_error(self, error):
         self.error = error
@@ -232,18 +232,18 @@ class Pipeline(BackgroundTask):
         elif gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = gst.pbutils.missing_plugin_message_get_installer_detail(message)
-            debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
-            self.pipeline.set_state(gst.STATE_NULL)
-            if gst.pbutils.install_plugins_installation_in_progress():
-                while gst.pbutils.install_plugins_installation_in_progress():
-                    gtk_sleep(0.1)
-                self.restart()
+            plugin_name = detail.split('|')[3]
+            debug('missing plugin:', plugin_name, self.sound_file.uri)
+            mime_type = detail.split('|')[4].split(', ')[0]
+            if 'video' in mime_type:
+                debug('  ignoring video codec: ', mime_type)
                 return
             if user_canceled_codec_installation:
                 self.error = 'Plugin installation cancelled'
                 debug(self.error)
                 self.done()
                 return
+            self.pipeline.set_state(gst.STATE_NULL)
             ctx = gst.pbutils.InstallPluginsContext()
             gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
 
@@ -684,8 +684,6 @@ class ConverterQueue(TaskQueue):
         self.errors = []
         self.error_count = 0
         self.all_tasks = None
-        global user_canceled_codec_installation
-        user_canceled_codec_installation = True
 
     def add(self, sound_file):
         # generate a temporary filename from source name and output suffix
