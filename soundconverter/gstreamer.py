@@ -405,13 +405,6 @@ class Decoder(Pipeline):
         Called when the decoder reads a tag.
         """
         debug('found_tags:', self.sound_file.filename_for_display)
-        for k in taglist.keys():
-            if 'image' not in k:
-                debug('\t%s=%s' % (k, taglist[k]))
-            if isinstance(taglist[k], gst.Date):
-                taglist['year'] = taglist[k].year
-                taglist['date'] = '%04d-%02d-%02d' % (taglist[k].year,
-                                    taglist[k].month, taglist[k].day)
         tag_whitelist = (
             'artist',
             'album',
@@ -429,6 +422,14 @@ class Decoder(Pipeline):
         for k in taglist.keys():
             if k in tag_whitelist:
                 tags[k] = taglist[k]
+
+        for k in tags.keys():
+            if 'image' not in k:
+                debug('\t%s=%s (%s)' % (k, tags[k], type(tags[k])))
+            if isinstance(tags[k], gst.Date):
+                tags['year'] = tags[k].year
+                tags['date'] = '%04d-%02d-%02d' % (tags[k].year,
+                                    tags[k].month, tags[k].day)
 
         self.sound_file.tags.update(tags)
         self.query_duration()
