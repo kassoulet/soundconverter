@@ -21,21 +21,23 @@
 
 import os
 from os.path import basename, dirname
+from random import random
 import time
 import sys
+import urllib
+from gettext import gettext as _
+
 import gtk
 import gobject
 import gnome
 import gnomevfs
-import urllib
-from gettext import gettext as _
-
 from gconfstore import GConfStore
-from fileoperations import filename_to_uri, beautify_uri, vfs_writable
+from fileoperations import filename_to_uri, beautify_uri, vfs_writable, \
+    vfs_exists
 from fileoperations import unquote_filename, vfs_walk
 from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue
-from gstreamer import available_elements, TypeFinder, TagReader
+from gstreamer import available_elements, TypeFinder
 from gstreamer import audio_profiles_list, audio_profiles_dict
 from soundfile import SoundFile
 from settings import locale_patterns_dict, custom_patterns, filepattern, settings
@@ -44,6 +46,7 @@ from queue import TaskQueue
 from utils import log, debug
 from messagearea import MessageArea
 from error import show_error
+
 
 # Names of columns in the file list
 MODEL = [ gobject.TYPE_STRING,   # visible filename
@@ -447,7 +450,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         for k in sorted(locale_patterns_dict.values()):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
-        
+
         #self.resample_rate.connect('changed', self._on_resample_rate_changed)
 
     def convert_setting_from_old_version(self):
@@ -519,7 +522,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             self.gstprofile.pack_start(cell)
             self.gstprofile.add_attribute(cell,'text',0)
             self.gstprofile.set_active(0)
-            
+
         # check if we can found the stored audio profile
         found_profile = False
         stored_profile = self.get_string('audio-profile')
@@ -531,12 +534,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
                 found_profile = True
         if not found_profile and stored_profile:
             # reset default output
-            log('Cannot find audio profile "%s", resetting to default output.' 
+            log('Cannot find audio profile "%s", resetting to default output.'
                 % stored_profile)
             self.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
             mime_type = self.defaults['output-mime-type']
-            
+
         self.present_mime_types = []
         i = 0
         model = self.output_mime_type.get_model()
@@ -617,7 +620,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         else:
             self.custom_filename_box.set_sensitive(False)
 
-        
+
         self.resample_toggle.set_active(self.get_int('output-resample'))
 
         cell = gtk.CellRendererText()
@@ -630,7 +633,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         except ValueError:
             idx = -1
         self.resample_rate.set_active(idx)
-        
+
         self.force_mono.set_active(self.get_int('force-mono'))
 
         self.jobs.set_active(self.get_int('limit-jobs'))
@@ -769,7 +772,11 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
             folder = filename_to_uri(folder)
-        return folder + '/' + basename(soundfile.filename)
+
+        while True:
+            filename = folder + '/' + basename(soundfile.filename) + '~' + str(random())[-6:] + '~SC~'
+            if not vfs_exists(filename):
+                return filename
 
     def process_custom_pattern(self, pattern):
         for k in custom_patterns:
@@ -790,14 +797,14 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
             self.get_int('limit-jobs'))
-        
+
         if self.get_string('output-mime-type') == 'gst-profile':
             self.sensitive_widgets['resample_hbox'].set_sensitive(False)
             self.sensitive_widgets['force_mono'].set_sensitive(False)
         else:
             self.sensitive_widgets['resample_hbox'].set_sensitive(True)
             self.sensitive_widgets['force_mono'].set_sensitive(True)
-        
+
 
     def run(self):
         self.dialog.run()

@@ -689,7 +689,7 @@ class ConverterQueue(TaskQueue):
 
     def add(self, sound_file):
         # generate a temporary filename from source name and output suffix
-        output_filename = self.window.prefs.generate_temp_filename(sound_file) + '~SC~'
+        output_filename = self.window.prefs.generate_temp_filename(sound_file)
 
         if vfs_exists(output_filename):
             # always overwrite temporary files
