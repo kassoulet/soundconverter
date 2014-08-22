@@ -21,6 +21,7 @@
 
 import os
 from os.path import basename, dirname
+from random import random
 import time
 import sys
 import urllib.request, urllib.parse, urllib.error
@@ -749,7 +750,10 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
             folder = filename_to_uri(folder)
-        return folder + '/' + basename(soundfile.filename)
+        while True:
+            filename = folder + '/' + basename(soundfile.filename) + '~' + str(random())[-6:] + '~SC~'
+            if not vfs_exists(filename):
+                return filename
 
     def process_custom_pattern(self, pattern):
         for k in custom_patterns:
