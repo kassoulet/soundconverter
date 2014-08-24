@@ -75,7 +75,6 @@ def _check_libs():
         Gst.init(None)
         from gi.repository import Gtk, Gdk
         from gi.repository import GLib
-        # XXX gnome.ui.authentication_manager_init()
     except ImportError as error :
         print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
         sys.exit(1)
@@ -159,12 +158,6 @@ for k in dir(options):
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
-
-#from gi.repository import Gtk
-#import Gtk.glade
-#XXX Gtk.glade.bindtextdomain(PACKAGE, '@datadir@/locale')
-#Gtk.glade.textdomain(PACKAGE)
-
 print(('  using %d thread(s)' % settings['jobs']))
 
 from soundconverter.batch import cli_convert_main
