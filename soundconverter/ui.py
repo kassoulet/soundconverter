@@ -137,9 +137,11 @@ class FileList:
 
         self.widget.drag_dest_set(Gtk.DestDefaults.ALL,
                                     [],
-                                    #XXX [(self.drop_mime_types[i], 0, i) for i in range(len(self.drop_mime_types))],
-                                        Gdk.DragAction.COPY)
-        self.widget.connect('drag_data_received', self.drag_data_received)
+                                    Gdk.DragAction.COPY)
+        targets = [(accepted, 0, i) for i,accepted in enumerate(self.drop_mime_types)]
+        self.widget.drag_dest_set_target_list(targets)
+
+        self.widget.connect('drag-data-received', self.drag_data_received)
 
         renderer = Gtk.CellRendererProgress()
         column = Gtk.TreeViewColumn('progress',
@@ -170,9 +172,11 @@ class FileList:
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
-        widget.stop_emission('drag_data_received')
+        widget.stop_emission('drag-data-received')
         if 0 <= mime_id < len(self.drop_mime_types):
-            self.add_uris([uri.strip() for uri in selection.data.split('\n')])
+            text = selection.get_data().decode('utf-8')
+            uris = [uri.strip() for uri in text.split('\n')]
+            self.add_uris(uris)
             context.finish(True, False, time)
 
     def get_files(self):
