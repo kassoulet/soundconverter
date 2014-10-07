@@ -35,7 +35,7 @@ from gi.repository import GLib
 
 from soundconverter.gconfstore import GConfStore
 from soundconverter.fileoperations import filename_to_uri, beautify_uri
-from soundconverter.fileoperations import unquote_filename, vfs_walk
+from soundconverter.fileoperations import unquote_filename, vfs_walk, vfs_exists
 from soundconverter.gstreamer import ConverterQueue
 from soundconverter.gstreamer import available_elements, TypeFinder, TagReader
 from soundconverter.gstreamer import audio_profiles_list, audio_profiles_dict
