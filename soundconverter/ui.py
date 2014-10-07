@@ -1458,6 +1458,7 @@ class SoundConverterWindow(GladeWindow):
 
             remaining = _('%d:%02d left') % (m, s)
             self.progressbar.set_text(remaining)
+            self.progressbar.set_show_text(True)
             self.progress_time = time.time()
 
     def set_status(self, text=None):
