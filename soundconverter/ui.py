@@ -1439,6 +1439,7 @@ class SoundConverterWindow(GladeWindow):
 
         if self.converter.paused:
             self.progressbar.set_text(_('Paused'))
+            self.widget.set_title('%s - %s' % (_('SoundConverter'), _('Paused')))
             return
 
         fraction = min(max(fraction, 0.0), 1.0)
@@ -1460,6 +1461,10 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
             self.progress_time = time.time()
+            if fraction == 1.0:
+                self.widget.set_title(_('SoundConverter'))
+            else:
+                self.widget.set_title('%s - %s' % (_('SoundConverter'), remaining))
 
     def set_status(self, text=None):
         if not text:
