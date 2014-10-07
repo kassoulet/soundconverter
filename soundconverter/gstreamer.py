@@ -632,7 +632,7 @@ class Converter(Decoder):
         return 'faac bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
 
     def add_opus_encoder(self):
-        return 'opusenc bitrate=%s ! oggmux' % (self.opus_quality * 1000)
+        return 'opusenc bitrate=%s cbr=false bandwidth=auto ! oggmux' % (self.opus_quality * 1000)
 
     def add_audio_profile(self):
         pipeline = audio_profiles_dict[self.audio_profile][2]
