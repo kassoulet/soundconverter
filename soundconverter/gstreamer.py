@@ -107,7 +107,7 @@ encoders = (
     ('oggmux', 'Ogg Vorbis'),
     ('id3v2mux', 'MP3 Tags'),
     ('xingmux', 'Xing Header'),
-    ('lame', 'MP3'),
+    ('lamemp3enc', 'MP3'),
     ('faac', 'AAC'),
     ('mp4mux', 'AAC'),
     ('opusenc', 'Opus'),

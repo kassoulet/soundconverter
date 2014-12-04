@@ -483,7 +483,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         mime_type = self.get_string('output-mime-type')
 
         widgets = ( ('audio/x-vorbis', 'vorbisenc'),
-                    ('audio/mpeg'    , 'lame'),
+                    ('audio/mpeg'    , 'lamemp3enc'),
                     ('audio/x-flac'  , 'flacenc'),
                     ('audio/x-wav'   , 'wavenc'),
                     ('audio/x-m4a'   , 'faac'),
@@ -545,7 +545,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         self.change_mime_type(mime_type)
 
         # display information about mp3 encoding
-        if 'lame' not in available_elements:
+        if 'lamemp3enc' not in available_elements:
             w = self.lame_absent
             w.show()
 
