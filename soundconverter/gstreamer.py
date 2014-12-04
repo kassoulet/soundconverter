@@ -618,8 +618,8 @@ class Converter(Decoder):
 
             cmd += properties[self.mp3_mode] % self.mp3_quality
 
-            if 'xingmux' in available_elements and properties[self.mp3_mode][0]:
-                # add xing header when creating VBR mp3
+            if 'xingmux' in available_elements and self.mp3_mode != 'cbr':
+                # add xing header when creating VBR/ABR mp3
                 cmd += '! xingmux '
 
         if 'id3v2mux' in available_elements:
