@@ -230,7 +230,7 @@ class FileList:
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
-                    base = os.path.dirname(uri)
+                    base = str(gnomevfs.URI(os.path.dirname(uri)))
                 filelist = vfs_walk(gnomevfs.URI(uri))
                 accepted = []
                 if extensions:
