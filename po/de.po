@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-04 01:03+0000\n"
-"PO-Revision-Date: 2013-02-14 10:51+0000\n"
-"Last-Translator: Achmed Decker <deckerac@outlook.com>\n"
+"POT-Creation-Date: 2014-12-28 01:12+0000\n"
+"PO-Revision-Date: 2014-10-26 01:01+0000\n"
+"Last-Translator: Zdeněk Kopš <zdenekkops@gmail.com>\n"
 "Language-Team: German <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-04 13:04+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2015-01-21 12:32+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: de\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -79,11 +79,11 @@ msgstr "<big><b>Datei ist bereits vorhanden</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Auf gesamte Warteschlange anwenden"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:386
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:391
 msgid "artist/album"
 msgstr "Interpret/Album"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:388
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:393
 msgid "artist - album"
 msgstr "Interpret - Album"
 
@@ -169,7 +169,7 @@ msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Opus (.opus)"
-msgstr "Werk"
+msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
@@ -223,134 +223,139 @@ msgstr "Namensschema: "
 msgid "Replace all messy characters"
 msgstr "Problematische Zeichen entfernen"
 
-#: ../data/soundconverter.glade.h:47
-msgid "Remove all characters except letters, digits and ./_-"
-msgstr "Alle Zeichen außer Buchstaben, Zahlen und ./_- entfernen"
+#: ../data/soundconverter.glade.h:48
+#, no-c-format
+msgid "Replace \\, ?, %, *, :, |, ', \", <, > and &#xfffd; with _"
+msgstr "Ersetze \\, ?, %, *, :, |, ', \", <, > und &#xfffd; durch _"
 
 # # line 1480
-#: ../data/soundconverter.glade.h:48
+#: ../data/soundconverter.glade.h:49
 msgid "<i>Example filename:</i>"
 msgstr "<i>Namensvorschau:</i>"
 
 # # line 1545
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "<b>How to name files?</b>"
 msgstr "<b>Benennung der Zieldateien</b>"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Format: "
 msgstr "Format: "
 
 # # lines 1710 1876 2037
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Quality:"
 msgstr "Qualität:"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Use .oga extension"
 msgstr "Erweiterung .oga verwenden"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Ogg"
 msgstr "Ogg"
 
 # # line 1848
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "Bitrate mode:"
 msgstr "Bitratenmodus:"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "Compression:"
 msgstr "Komprimierung:"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "Sample width:"
 msgstr "Sample-Format:"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:61
-msgid "Opus"
-msgstr "Werk"
-
 #: ../data/soundconverter.glade.h:62
+msgid "Opus"
+msgstr "Opus"
+
+#: ../data/soundconverter.glade.h:63
 msgid "Profile:"
 msgstr "Profil:"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:64
 msgid "gst-profile"
 msgstr "gst-Profil"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:65
 msgid "<b>Type of result?</b>"
 msgstr "<b>Gewünschtes Zielformat</b>"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:66
 msgid "Resample"
 msgstr "Sample-Auflösung:"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:67
 msgid "Force mono output"
 msgstr "Mono-Ausgabe erzwingen"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:68
 msgid "Limit number of parallel jobs"
 msgstr "Anzahl paralleler Konvertierungen begrenzen"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:69
 msgid "MP3 Encoder is not present."
 msgstr "Kein MP3-Kodierer vorhanden."
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:70
 msgid "Read how to install"
 msgstr "Installationshinweise"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:71
 msgid "Where to place results?"
 msgstr "Speicherort für Zieldateien"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:72
 msgid "SoundConverter"
 msgstr "Sound Converter"
 
 # # line 42
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:73
 msgid "_File"
 msgstr "_Datei"
 
-# # line 157
-#: ../data/soundconverter.glade.h:73
-msgid "_Edit"
-msgstr "_Bearbeiten"
-
-# # line 201
-#: ../data/soundconverter.glade.h:74
-msgid "_Help"
-msgstr "_Hilfe"
-
 # # lines 51 279
-#: ../data/soundconverter.glade.h:75
+#: ../data/soundconverter.glade.h:74
 msgid "_Add File"
 msgstr "_Datei hinzufügen"
 
 # # lines 73 + 296
-#: ../data/soundconverter.glade.h:76
+#: ../data/soundconverter.glade.h:75
 msgid "Add _Folder"
 msgstr "_Ordner hinzufügen"
+
+# # line 157
+#: ../data/soundconverter.glade.h:76
+msgid "_Edit"
+msgstr "_Bearbeiten"
+
+#: ../data/soundconverter.glade.h:77
+msgid "_Clear List"
+msgstr "_Liste löschen"
+
+# # line 201
+#: ../data/soundconverter.glade.h:78
+msgid "_Help"
+msgstr "_Hilfe"
 
 #: ../bin/soundconverter.py:116
 msgid ""
@@ -421,15 +426,15 @@ msgstr ""
 "Fehler: %s\n"
 "%s\n"
 
-#: ../soundconverter/fileoperations.py:112
+#: ../soundconverter/fileoperations.py:120
 msgid "Cannot create folder!"
-msgstr ""
+msgstr "Der Ordner konnte nicht erstellt werden."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
-#: ../soundconverter/fileoperations.py:124
+#: ../soundconverter/fileoperations.py:132
 msgid "Error while renaming file!"
-msgstr ""
+msgstr "Fehler beim Umbenennen der Datei"
 
 #: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
@@ -440,21 +445,20 @@ msgstr "Installation der Erweiterung wurde abgebrochen."
 msgid "Cannot create '%s' folder."
 msgstr "Ordner »%s« kann nicht erstellt werden."
 
-#. pass
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:597
 msgid "GStreamer Error:"
 msgstr "GStreamer-Fehler:"
 
-#: ../soundconverter/gstreamer.py:807
+#: ../soundconverter/gstreamer.py:796
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Konvertierung nach %s abgeschlossen"
 
-#: ../soundconverter/namegenerator.py:76
+#: ../soundconverter/namegenerator.py:62
 msgid "Unknown Album"
 msgstr "Unbekanntes Album"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:63
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
 
@@ -471,7 +475,7 @@ msgstr ""
 msgid "All files"
 msgstr "Alle Dateien"
 
-#: ../soundconverter/ui.py:87 ../soundconverter/ui.py:102
+#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
 msgid ""
 "\n"
@@ -482,85 +486,94 @@ msgstr ""
 "Fehler: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:194
+#: ../soundconverter/ui.py:199
 msgid "Scanning files..."
 msgstr "Dateien werden untersucht …"
 
-#: ../soundconverter/ui.py:308
+#: ../soundconverter/ui.py:313
 msgid "Adding files..."
 msgstr "Dateien werden hinzugefügt …"
 
-#: ../soundconverter/ui.py:376
+#: ../soundconverter/ui.py:381
 msgid "Same as input, but replacing the suffix"
 msgstr "Wie Quelldatei, Dateiendung aber ändern"
 
-#: ../soundconverter/ui.py:378
+#: ../soundconverter/ui.py:383
 msgid "Same as input, but with an additional suffix"
 msgstr "Wie Quelldatei, aber mit zusätzlicher Dateiendung"
 
-#: ../soundconverter/ui.py:379
+#: ../soundconverter/ui.py:384
 msgid "Track number - title"
 msgstr "Nummer - Titel"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:385
 msgid "Track title"
 msgstr "Titel"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:386
 msgid "Artist - title"
 msgstr "Interpret - Titel"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:387
 msgid "Custom filename pattern"
 msgstr "Benutzerdefiniertes Dateinamensschema"
 
-#: ../soundconverter/ui.py:387
+#: ../soundconverter/ui.py:392
 msgid "artist-album"
 msgstr "Interpret-Album"
 
-#: ../soundconverter/ui.py:445
+#: ../soundconverter/ui.py:450
 msgid "Available patterns:"
 msgstr "Verfügbare Platzhalter:"
 
-#: ../soundconverter/ui.py:642
+#: ../soundconverter/ui.py:648
 #, python-format
 msgid "Into folder %s"
 msgstr "In Ordner %s"
 
-#: ../soundconverter/ui.py:722
+#: ../soundconverter/ui.py:728
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "<small>Bitrate der Zieldatei: %s</small>"
 
-#: ../soundconverter/ui.py:1073
+#: ../soundconverter/ui.py:839
+msgid "Cannot write to folder"
+msgstr "Kann nicht geschrieben werden in den Ordner"
+
+#: ../soundconverter/ui.py:839
+#, python-format
+msgid "\"%s\" folder is not writable."
+msgstr "Ordner \"%s\" ist nicht beschreibbar."
+
+#: ../soundconverter/ui.py:1094
 msgid "Open a file"
 msgstr "Datei öffnen"
 
-#: ../soundconverter/ui.py:1167
+#: ../soundconverter/ui.py:1188
 msgid "Add Folder..."
 msgstr "Ordner hinzufügen …"
 
-#: ../soundconverter/ui.py:1335
+#: ../soundconverter/ui.py:1356
 msgid "Preparing conversion..."
 msgstr "Konvertierung wird vorbereitet …"
 
-#: ../soundconverter/ui.py:1356
+#: ../soundconverter/ui.py:1377
 msgid "Converting"
 msgstr "Konvertierung läuft"
 
-#: ../soundconverter/ui.py:1374
+#: ../soundconverter/ui.py:1395
 msgid "Canceled"
 msgstr "Abgebrochen"
 
-#: ../soundconverter/ui.py:1447
+#: ../soundconverter/ui.py:1468
 msgid "Paused"
 msgstr "Angehalten"
 
-#: ../soundconverter/ui.py:1465
+#: ../soundconverter/ui.py:1486
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d verbleibend"
 
-#: ../soundconverter/ui.py:1471
+#: ../soundconverter/ui.py:1492
 msgid "Ready"
 msgstr "Bereit"

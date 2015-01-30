@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-04 01:03+0000\n"
-"PO-Revision-Date: 2013-03-07 17:37+0000\n"
+"POT-Creation-Date: 2014-12-28 01:12+0000\n"
+"PO-Revision-Date: 2013-11-27 20:27+0000\n"
 "Last-Translator: jajasuperman <enekosampedro@gmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-04 13:04+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2015-01-21 12:32+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: eu\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -72,11 +72,11 @@ msgstr "<big><b>Fitxategia dagoeneko existitzen da</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Aplikatu ilada osoari"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:386
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:391
 msgid "artist/album"
 msgstr "artista/albuma"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:388
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:393
 msgid "artist - album"
 msgstr "artista - albuma"
 
@@ -212,125 +212,130 @@ msgstr "Fitxategi-izen eredua: "
 msgid "Replace all messy characters"
 msgstr "Ordezkatu karaktere narrats guztiak"
 
-#: ../data/soundconverter.glade.h:47
-msgid "Remove all characters except letters, digits and ./_-"
-msgstr "Kendu karaktere guztiak letrak, zenbakiak eta ./_- ezik"
-
 #: ../data/soundconverter.glade.h:48
+#, no-c-format
+msgid "Replace \\, ?, %, *, :, |, ', \", <, > and &#xfffd; with _"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:49
 msgid "<i>Example filename:</i>"
 msgstr "<i>Fitxategi-izenaren adibidea:<i>"
 
-#: ../data/soundconverter.glade.h:49
+#: ../data/soundconverter.glade.h:50
 msgid "<b>How to name files?</b>"
 msgstr "<b>Nola izendatu fitxategiak?</b>"
 
-#: ../data/soundconverter.glade.h:50
+#: ../data/soundconverter.glade.h:51
 msgid "Format: "
 msgstr "Formatua: "
 
-#: ../data/soundconverter.glade.h:51
+#: ../data/soundconverter.glade.h:52
 msgid "Quality:"
 msgstr "Kalitatea:"
 
-#: ../data/soundconverter.glade.h:52
+#: ../data/soundconverter.glade.h:53
 msgid "Use .oga extension"
 msgstr "Erabili .oga luzapena"
 
-#: ../data/soundconverter.glade.h:53
+#: ../data/soundconverter.glade.h:54
 msgid "Ogg"
 msgstr "Ogg"
 
-#: ../data/soundconverter.glade.h:54
+#: ../data/soundconverter.glade.h:55
 msgid "Bitrate mode:"
 msgstr "Bit-emari modua:"
 
-#: ../data/soundconverter.glade.h:55
+#: ../data/soundconverter.glade.h:56
 msgid "MP3"
 msgstr "MP3"
 
-#: ../data/soundconverter.glade.h:56
+#: ../data/soundconverter.glade.h:57
 msgid "Compression:"
 msgstr "Konpresioa:"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "Sample width:"
 msgstr "Lagin-zabalera:"
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:62
 msgid "Opus"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:63
 msgid "Profile:"
 msgstr "Profila:"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:64
 msgid "gst-profile"
 msgstr "gst-profila"
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:65
 msgid "<b>Type of result?</b>"
 msgstr "<b>Emaitza mota?</b>"
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:66
 msgid "Resample"
 msgstr "Lagindu berriro"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:67
 msgid "Force mono output"
 msgstr "Behartu mono irteera"
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:68
 msgid "Limit number of parallel jobs"
 msgstr "Mugatu lan paralelo kopurua"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:69
 msgid "MP3 Encoder is not present."
 msgstr "MP3 Kodetzailerik ez dago"
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:70
 msgid "Read how to install"
 msgstr "Irakurri nola instalatu"
 
-#: ../data/soundconverter.glade.h:70
+#: ../data/soundconverter.glade.h:71
 msgid "Where to place results?"
 msgstr "Non kokatu emaitzak?"
 
-#: ../data/soundconverter.glade.h:71
+#: ../data/soundconverter.glade.h:72
 msgid "SoundConverter"
 msgstr "Soinu-bihurtzailea"
 
-#: ../data/soundconverter.glade.h:72
+#: ../data/soundconverter.glade.h:73
 msgid "_File"
 msgstr "_Fitxategia"
 
-#: ../data/soundconverter.glade.h:73
-msgid "_Edit"
-msgstr "_Editatu"
-
 #: ../data/soundconverter.glade.h:74
-msgid "_Help"
-msgstr "_Laguntza"
-
-#: ../data/soundconverter.glade.h:75
 msgid "_Add File"
 msgstr "_Gehitu fitxategia"
 
-#: ../data/soundconverter.glade.h:76
+#: ../data/soundconverter.glade.h:75
 msgid "Add _Folder"
 msgstr "_Gehitu karpeta"
+
+#: ../data/soundconverter.glade.h:76
+msgid "_Edit"
+msgstr "_Editatu"
+
+#: ../data/soundconverter.glade.h:77
+msgid "_Clear List"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:78
+msgid "_Help"
+msgstr "_Laguntza"
 
 #: ../bin/soundconverter.py:116
 msgid ""
@@ -398,13 +403,13 @@ msgstr ""
 "Errorea: %s\n"
 "%s\n"
 
-#: ../soundconverter/fileoperations.py:112
+#: ../soundconverter/fileoperations.py:120
 msgid "Cannot create folder!"
 msgstr ""
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
-#: ../soundconverter/fileoperations.py:124
+#: ../soundconverter/fileoperations.py:132
 msgid "Error while renaming file!"
 msgstr ""
 
@@ -417,21 +422,20 @@ msgstr "Plugin instalazioa gelditu da."
 msgid "Cannot create '%s' folder."
 msgstr "Ezin da '%s' karpeta sortu."
 
-#. pass
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:597
 msgid "GStreamer Error:"
 msgstr "GStreamer Errorea:"
 
-#: ../soundconverter/gstreamer.py:807
+#: ../soundconverter/gstreamer.py:796
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Bihurketa eginda %s-(e)n"
 
-#: ../soundconverter/namegenerator.py:76
+#: ../soundconverter/namegenerator.py:62
 msgid "Unknown Album"
 msgstr "Album ezezaguna"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:63
 msgid "Unknown Artist"
 msgstr "Artista ezezaguna"
 
@@ -448,7 +452,7 @@ msgstr ""
 msgid "All files"
 msgstr "Fitxategi guztiak"
 
-#: ../soundconverter/ui.py:87 ../soundconverter/ui.py:102
+#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
 msgid ""
 "\n"
@@ -459,85 +463,94 @@ msgstr ""
 "Errorea: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:194
+#: ../soundconverter/ui.py:199
 msgid "Scanning files..."
 msgstr "Fitxategiak eskaneatzen..."
 
-#: ../soundconverter/ui.py:308
+#: ../soundconverter/ui.py:313
 msgid "Adding files..."
 msgstr "Fitxategiak gehitzen..."
 
-#: ../soundconverter/ui.py:376
+#: ../soundconverter/ui.py:381
 msgid "Same as input, but replacing the suffix"
 msgstr "Sarrerakoa bezalakoa, baina atzizkia ordezkatuz"
 
-#: ../soundconverter/ui.py:378
+#: ../soundconverter/ui.py:383
 msgid "Same as input, but with an additional suffix"
 msgstr "Sarrerakoa bezalakoa, baina atzizki gehigarri batekin"
 
-#: ../soundconverter/ui.py:379
+#: ../soundconverter/ui.py:384
 msgid "Track number - title"
 msgstr "Pista zenbakia - izenburua"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:385
 msgid "Track title"
 msgstr "Pistaren izenburua"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:386
 msgid "Artist - title"
 msgstr "Artista - izenburua"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:387
 msgid "Custom filename pattern"
 msgstr "Fitxategi-izen eredu pertsonalizatua"
 
-#: ../soundconverter/ui.py:387
+#: ../soundconverter/ui.py:392
 msgid "artist-album"
 msgstr "artista-albuma"
 
-#: ../soundconverter/ui.py:445
+#: ../soundconverter/ui.py:450
 msgid "Available patterns:"
 msgstr "Eredu erabilgarriak:"
 
-#: ../soundconverter/ui.py:642
+#: ../soundconverter/ui.py:648
 #, python-format
 msgid "Into folder %s"
 msgstr "%s karpetara"
 
-#: ../soundconverter/ui.py:722
+#: ../soundconverter/ui.py:728
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Helburuko bit-emaria: %s"
 
-#: ../soundconverter/ui.py:1073
+#: ../soundconverter/ui.py:839
+msgid "Cannot write to folder"
+msgstr ""
+
+#: ../soundconverter/ui.py:839
+#, python-format
+msgid "\"%s\" folder is not writable."
+msgstr ""
+
+#: ../soundconverter/ui.py:1094
 msgid "Open a file"
 msgstr "Ireki fitxategi bat"
 
-#: ../soundconverter/ui.py:1167
+#: ../soundconverter/ui.py:1188
 msgid "Add Folder..."
 msgstr "Gehitu karpeta..."
 
-#: ../soundconverter/ui.py:1335
+#: ../soundconverter/ui.py:1356
 msgid "Preparing conversion..."
 msgstr "Bihurketa prestatzen..."
 
-#: ../soundconverter/ui.py:1356
+#: ../soundconverter/ui.py:1377
 msgid "Converting"
 msgstr "Bihurtzen"
 
-#: ../soundconverter/ui.py:1374
+#: ../soundconverter/ui.py:1395
 msgid "Canceled"
 msgstr "Utzita"
 
-#: ../soundconverter/ui.py:1447
+#: ../soundconverter/ui.py:1468
 msgid "Paused"
 msgstr "Pausatuta"
 
-#: ../soundconverter/ui.py:1465
+#: ../soundconverter/ui.py:1486
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d falta dira"
 
-#: ../soundconverter/ui.py:1471
+#: ../soundconverter/ui.py:1492
 msgid "Ready"
 msgstr "Prest"

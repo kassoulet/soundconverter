@@ -1,32 +1,29 @@
-# Serbian translation of Soundconverter.
-# Courtesy of Prevod.org team (http://prevod.org/) -- 2007.
-#
-# This file is distributed under the same license as the Soundconverter package.
-#
-# Miloš Popović <gpopac@gmail.com>, 2007.
+# English (Canada) translation for soundconverter
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the soundconverter package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Prekoder zvuka\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: soundconverter\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-12-28 01:12+0000\n"
-"PO-Revision-Date: 2012-02-22 21:51+0000\n"
-"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
-"Language-Team: Serbian (sr) <gnom@prevod.org>\n"
+"PO-Revision-Date: 2014-01-02 19:54+0000\n"
+"Last-Translator: Anthony Harrington <untaintableangel@ubuntu.com>\n"
+"Language-Team: English (Canada) <en_CA@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-01-21 12:32+0000\n"
 "X-Generator: Launchpad (build 17306)\n"
-"Language: \n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
-msgstr "Prekoder zvuka"
+msgstr ""
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Audio Format Converter"
-msgstr "Prekodiranje zvučnih formata"
+msgstr ""
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Converts audio files into other formats"
@@ -42,45 +39,45 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:3
 msgid "dialog1"
-msgstr "dijalog1"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:4
 msgid "Filter "
-msgstr "Filter "
+msgstr ""
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
 #: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:548
 msgid "Error"
-msgstr "Greška"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:6
 msgid "File exists already"
-msgstr "Datoteka već postoji"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:7
 msgid "_Overwrite"
-msgstr "P_repiši"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:8
 msgid "_Skip"
-msgstr "Pr_eskoči"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:9
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Datoteka već postoji</b></big>\n"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:11
 msgid "_Apply to entire queue"
-msgstr "_Primeni na ceo unos"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:391
 msgid "artist/album"
-msgstr "izvođač/album"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:393
 msgid "artist - album"
-msgstr "izvođač — album"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:14
 msgid "Very Low"
@@ -180,7 +177,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:38
 msgid "Preferences"
-msgstr "Postavke"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
@@ -188,52 +185,52 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:40
 msgid "Choose..."
-msgstr "Izaberi..."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
-msgstr "U izabranu fasciklu"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
-msgstr "Napravi pod-direktorijume: "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
-msgstr "Ukloni originalne datoteke"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
-msgstr "<b>Gde da smestim izlaz?</b>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
-msgstr "Šablon imena: "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
-msgstr "Zameni sve loše karaktere"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:48
 #, no-c-format
 msgid "Replace \\, ?, %, *, :, |, ', \", <, > and &#xfffd; with _"
-msgstr ""
+msgstr "Replace \\, ?, %, *, :, |, ', \", <, > and � with _"
 
 #: ../data/soundconverter.glade.h:49
 msgid "<i>Example filename:</i>"
-msgstr "<i>Primer imena datoteke:</i>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:50
 msgid "<b>How to name files?</b>"
-msgstr "<b>Kako da krstim datoteke?</b>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:51
 msgid "Format: "
-msgstr "Format "
+msgstr ""
 
 #: ../data/soundconverter.glade.h:52
 msgid "Quality:"
-msgstr "Kvalitet:"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:53
 msgid "Use .oga extension"
@@ -245,7 +242,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:55
 msgid "Bitrate mode:"
-msgstr "Bitski protok:"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:56
 msgid "MP3"
@@ -285,7 +282,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:65
 msgid "<b>Type of result?</b>"
-msgstr "<b>Tip izlaza?</b>"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:66
 msgid "Resample"
@@ -301,19 +298,19 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:69
 msgid "MP3 Encoder is not present."
-msgstr "MP3 koder nije dostupan."
+msgstr ""
 
 #: ../data/soundconverter.glade.h:70
 msgid "Read how to install"
-msgstr "Pročitaj kako da instaliram"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:71
 msgid "Where to place results?"
-msgstr "Gde sa smestim izlaz?"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:72
 msgid "SoundConverter"
-msgstr "Prekodiranje Zvuka"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:73
 msgid "_File"
@@ -321,11 +318,11 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:74
 msgid "_Add File"
-msgstr "_Dodaj datoteku"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:75
 msgid "Add _Folder"
-msgstr "Dodaj _fasciklu"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:76
 msgid "_Edit"
@@ -344,8 +341,6 @@ msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Prekodiraj u konzolnom modu, iz komandne linije, bez grafičkog okruženja\n"
-" Možete na primer koristiti ova mod za pisanje skripta."
 
 #: ../bin/soundconverter.py:121
 msgid ""
@@ -362,7 +357,7 @@ msgstr ""
 
 #: ../bin/soundconverter.py:129
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Radi tiho. Ne ispisuj normalni izlaz već samo greške."
+msgstr ""
 
 #: ../bin/soundconverter.py:131
 msgid "Displays additional debug information"

@@ -7,27 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-11-04 01:03+0000\n"
-"PO-Revision-Date: 2013-02-06 02:15+0000\n"
-"Last-Translator: Kim Boram <boramism@gmail.com>\n"
+"POT-Creation-Date: 2014-12-28 01:12+0000\n"
+"PO-Revision-Date: 2014-08-30 19:30+0000\n"
+"Last-Translator: Litty <Unknown>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-04 13:04+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2015-01-21 12:32+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
-msgstr ""
+msgstr "사운드 컨버터"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Audio Format Converter"
-msgstr ""
+msgstr "소리 형식 변환기"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Converts audio files into other formats"
-msgstr ""
+msgstr "소리 파일들을 다른 형식으로 변환"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:4
 msgid "Filter "
-msgstr ""
+msgstr "필터 "
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
@@ -57,11 +57,11 @@ msgstr "파일이 이미 존재합니다."
 
 #: ../data/soundconverter.glade.h:7
 msgid "_Overwrite"
-msgstr ""
+msgstr "덮어쓰기(_O)"
 
 #: ../data/soundconverter.glade.h:8
 msgid "_Skip"
-msgstr ""
+msgstr "넘어가기(_S)"
 
 #: ../data/soundconverter.glade.h:9
 msgid "<big><b>File exists already</b></big>\n"
@@ -69,13 +69,13 @@ msgstr "<big><b>파일이 이미 존재합니다</b></big>\n"
 
 #: ../data/soundconverter.glade.h:11
 msgid "_Apply to entire queue"
-msgstr ""
+msgstr "대기 중인 모든 목록에 적용(_A)"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:386
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:391
 msgid "artist/album"
 msgstr "아티스트/앨범"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:388
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:393
 msgid "artist - album"
 msgstr "아티스트 - 앨범"
 
@@ -105,11 +105,11 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:20
 msgid "8 bits (very low quality)"
-msgstr ""
+msgstr "8비트(최저 음질)"
 
 #: ../data/soundconverter.glade.h:21
 msgid "16 bits (default)"
-msgstr ""
+msgstr "16비트(기본)"
 
 #: ../data/soundconverter.glade.h:22
 msgid "32 bits"
@@ -145,35 +145,35 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:30
 msgid "MP3 (.mp3)"
-msgstr ""
+msgstr "MP3 (.mp3)"
 
 #: ../data/soundconverter.glade.h:31
 msgid "FLAC Lossless (.flac)"
-msgstr ""
+msgstr "FLAC 무손실 (.flac)"
 
 #: ../data/soundconverter.glade.h:32
 msgid "MS Wave (.wav)"
-msgstr ""
+msgstr "MS 웨이브 (.wav)"
 
 #: ../data/soundconverter.glade.h:33
 msgid "AAC (.m4a)"
-msgstr ""
+msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Opus (.opus)"
-msgstr ""
+msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
-msgstr ""
+msgstr "그놈 소리 프로필"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
-msgstr ""
+msgstr "트랙 번호 - 트랙 제목"
 
 #: ../data/soundconverter.glade.h:37
 msgid "track_title"
-msgstr ""
+msgstr "트ᅟ랙 제목"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Preferences"
@@ -201,135 +201,140 @@ msgstr "원본 파일 삭제"
 
 #: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
-msgstr ""
+msgstr "<b>어느 곳에 결과물을 내어 놓으시겠습니까?</b>"
 
 #: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
-msgstr ""
+msgstr "파일 이름 양식: "
 
 #: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:47
-msgid "Remove all characters except letters, digits and ./_-"
-msgstr ""
-
 #: ../data/soundconverter.glade.h:48
-msgid "<i>Example filename:</i>"
+#, no-c-format
+msgid "Replace \\, ?, %, *, :, |, ', \", <, > and &#xfffd; with _"
 msgstr ""
 
 #: ../data/soundconverter.glade.h:49
-msgid "<b>How to name files?</b>"
-msgstr ""
+msgid "<i>Example filename:</i>"
+msgstr "<i>예제 파일 이름:</i>"
 
 #: ../data/soundconverter.glade.h:50
-msgid "Format: "
-msgstr ""
+msgid "<b>How to name files?</b>"
+msgstr "<b>파일 이름을 어떻게 지으시겠습니까?</b>"
 
 #: ../data/soundconverter.glade.h:51
-msgid "Quality:"
-msgstr ""
+msgid "Format: "
+msgstr "형식: "
 
 #: ../data/soundconverter.glade.h:52
-msgid "Use .oga extension"
-msgstr ""
+msgid "Quality:"
+msgstr "음질:"
 
 #: ../data/soundconverter.glade.h:53
-msgid "Ogg"
-msgstr ""
+msgid "Use .oga extension"
+msgstr ".oga 확장자를 사용"
 
 #: ../data/soundconverter.glade.h:54
+msgid "Ogg"
+msgstr "Ogg"
+
+#: ../data/soundconverter.glade.h:55
 msgid "Bitrate mode:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:55
-msgid "MP3"
-msgstr ""
-
 #: ../data/soundconverter.glade.h:56
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:57
 msgid "Compression:"
 msgstr "압축:"
 
-#: ../data/soundconverter.glade.h:57
+#: ../data/soundconverter.glade.h:58
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../data/soundconverter.glade.h:58
+#: ../data/soundconverter.glade.h:59
 msgid "Sample width:"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:59
+#: ../data/soundconverter.glade.h:60
 msgid "WAV"
 msgstr "WAV"
 
-#: ../data/soundconverter.glade.h:60
+#: ../data/soundconverter.glade.h:61
 msgid "AAC"
 msgstr "AAC"
 
-#: ../data/soundconverter.glade.h:61
+#: ../data/soundconverter.glade.h:62
 msgid "Opus"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:62
+#: ../data/soundconverter.glade.h:63
 msgid "Profile:"
 msgstr "프로필:"
 
-#: ../data/soundconverter.glade.h:63
+#: ../data/soundconverter.glade.h:64
 msgid "gst-profile"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:64
+#: ../data/soundconverter.glade.h:65
 msgid "<b>Type of result?</b>"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:65
+#: ../data/soundconverter.glade.h:66
 msgid "Resample"
 msgstr "리샘플"
 
-#: ../data/soundconverter.glade.h:66
+#: ../data/soundconverter.glade.h:67
 msgid "Force mono output"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:67
+#: ../data/soundconverter.glade.h:68
 msgid "Limit number of parallel jobs"
 msgstr "병렬작업의 수 제한"
 
-#: ../data/soundconverter.glade.h:68
+#: ../data/soundconverter.glade.h:69
 msgid "MP3 Encoder is not present."
 msgstr "MP3 인코더가 존재하지 않습니다."
 
-#: ../data/soundconverter.glade.h:69
+#: ../data/soundconverter.glade.h:70
 msgid "Read how to install"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:70
-msgid "Where to place results?"
-msgstr ""
-
 #: ../data/soundconverter.glade.h:71
-msgid "SoundConverter"
-msgstr ""
+msgid "Where to place results?"
+msgstr "어디에 결과물을 놓으시겠습니까?"
 
 #: ../data/soundconverter.glade.h:72
-msgid "_File"
-msgstr ""
+msgid "SoundConverter"
+msgstr "사운드 컨버터"
 
 #: ../data/soundconverter.glade.h:73
-msgid "_Edit"
-msgstr ""
+msgid "_File"
+msgstr "파일(_F)"
 
 #: ../data/soundconverter.glade.h:74
-msgid "_Help"
-msgstr ""
+msgid "_Add File"
+msgstr "파일 추가(_A)"
 
 #: ../data/soundconverter.glade.h:75
-msgid "_Add File"
-msgstr ""
+msgid "Add _Folder"
+msgstr "폴더 추가(_F)"
 
 #: ../data/soundconverter.glade.h:76
-msgid "Add _Folder"
-msgstr ""
+msgid "_Edit"
+msgstr "편집(_E)"
+
+#: ../data/soundconverter.glade.h:77
+msgid "_Clear List"
+msgstr "목록 비우기(_C)"
+
+#: ../data/soundconverter.glade.h:78
+msgid "_Help"
+msgstr "도움말(_H)"
 
 #: ../bin/soundconverter.py:116
 msgid ""
@@ -372,7 +377,7 @@ msgstr ""
 
 #: ../bin/soundconverter.py:139
 msgid "Shows GStreamer Options"
-msgstr ""
+msgstr "GStreamer 선택 사항 보이기"
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -382,41 +387,44 @@ msgid ""
 "Error: %s\n"
 "%s\n"
 msgstr ""
+"\n"
+"\n"
+"오류: %s\n"
+"%s\n"
 
-#: ../soundconverter/fileoperations.py:112
+#: ../soundconverter/fileoperations.py:120
 msgid "Cannot create folder!"
-msgstr ""
+msgstr "폴더를 만들 수가 없습니다!"
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
-#: ../soundconverter/fileoperations.py:124
+#: ../soundconverter/fileoperations.py:132
 msgid "Error while renaming file!"
 msgstr ""
 
 #: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
-msgstr ""
+msgstr "플러그인 설치가 중단되었습니다."
 
 #: ../soundconverter/gstreamer.py:559
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr ""
+msgstr "'%s' 폴더를 만들 수가 없습니다."
 
-#. pass
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:597
 msgid "GStreamer Error:"
-msgstr ""
+msgstr "GStreamer 오류:"
 
-#: ../soundconverter/gstreamer.py:807
+#: ../soundconverter/gstreamer.py:796
 #, python-format
 msgid "Conversion done in %s"
 msgstr ""
 
-#: ../soundconverter/namegenerator.py:76
+#: ../soundconverter/namegenerator.py:62
 msgid "Unknown Album"
 msgstr "알 수 없는 앨범"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:63
 msgid "Unknown Artist"
 msgstr "알 수 없는 아티스트"
 
@@ -431,93 +439,105 @@ msgstr ""
 msgid "All files"
 msgstr "모든 파일들"
 
-#: ../soundconverter/ui.py:87 ../soundconverter/ui.py:102
+#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
 msgid ""
 "\n"
 "Error: %s\n"
 "%s\n"
 msgstr ""
+"\n"
+"오류: %s\n"
+"%s\n"
 
-#: ../soundconverter/ui.py:194
+#: ../soundconverter/ui.py:199
 msgid "Scanning files..."
 msgstr "파일을 찾는 중..."
 
-#: ../soundconverter/ui.py:308
+#: ../soundconverter/ui.py:313
 msgid "Adding files..."
-msgstr ""
+msgstr "파일 추가 중..."
 
-#: ../soundconverter/ui.py:376
+#: ../soundconverter/ui.py:381
 msgid "Same as input, but replacing the suffix"
 msgstr ""
 
-#: ../soundconverter/ui.py:378
+#: ../soundconverter/ui.py:383
 msgid "Same as input, but with an additional suffix"
 msgstr ""
 
-#: ../soundconverter/ui.py:379
+#: ../soundconverter/ui.py:384
 msgid "Track number - title"
-msgstr ""
+msgstr "트랙 번호 - 제목"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:385
 msgid "Track title"
-msgstr ""
+msgstr "트랙 제목"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:386
 msgid "Artist - title"
 msgstr ""
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:387
 msgid "Custom filename pattern"
 msgstr "사용자 파일이름 지정"
 
-#: ../soundconverter/ui.py:387
+#: ../soundconverter/ui.py:392
 msgid "artist-album"
 msgstr "아티스트-앨범"
 
-#: ../soundconverter/ui.py:445
+#: ../soundconverter/ui.py:450
 msgid "Available patterns:"
-msgstr ""
+msgstr "사용 가능한 양식:"
 
-#: ../soundconverter/ui.py:642
+#: ../soundconverter/ui.py:648
 #, python-format
 msgid "Into folder %s"
 msgstr ""
 
-#: ../soundconverter/ui.py:722
+#: ../soundconverter/ui.py:728
 #, python-format
 msgid "Target bitrate: %s"
 msgstr ""
 
-#: ../soundconverter/ui.py:1073
+#: ../soundconverter/ui.py:839
+msgid "Cannot write to folder"
+msgstr ""
+
+#: ../soundconverter/ui.py:839
+#, python-format
+msgid "\"%s\" folder is not writable."
+msgstr ""
+
+#: ../soundconverter/ui.py:1094
 msgid "Open a file"
 msgstr "파일 열기"
 
-#: ../soundconverter/ui.py:1167
+#: ../soundconverter/ui.py:1188
 msgid "Add Folder..."
 msgstr "폴더 추가..."
 
-#: ../soundconverter/ui.py:1335
-msgid "Preparing conversion..."
-msgstr ""
-
 #: ../soundconverter/ui.py:1356
+msgid "Preparing conversion..."
+msgstr "변환 준비 중..."
+
+#: ../soundconverter/ui.py:1377
 msgid "Converting"
-msgstr ""
+msgstr "변환 중"
 
-#: ../soundconverter/ui.py:1374
+#: ../soundconverter/ui.py:1395
 msgid "Canceled"
-msgstr ""
+msgstr "취소됨"
 
-#: ../soundconverter/ui.py:1447
+#: ../soundconverter/ui.py:1468
 msgid "Paused"
-msgstr ""
+msgstr "잠시 멈춤"
 
-#: ../soundconverter/ui.py:1465
+#: ../soundconverter/ui.py:1486
 #, python-format
 msgid "%d:%02d left"
-msgstr ""
+msgstr "%d:%02d 남음"
 
-#: ../soundconverter/ui.py:1471
+#: ../soundconverter/ui.py:1492
 msgid "Ready"
 msgstr ""
