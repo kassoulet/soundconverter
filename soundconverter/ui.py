@@ -174,7 +174,7 @@ class FileList:
                              mime_id, time):
         widget.stop_emission('drag_data_received')
         if mime_id >= 0 and mime_id < len(self.drop_mime_types):
-            uris = [filename_to_uri(uri.strip()) for uri in selection.data.split('\n')]
+            uris = [filename_to_uri(uri.strip()) for uri in selection.data.split('\n') if uri]
             self.add_uris(uris)
             context.finish(True, False, time)
 
