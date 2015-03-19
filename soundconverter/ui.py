@@ -34,7 +34,7 @@ import gnomevfs
 from gconfstore import GConfStore
 from fileoperations import filename_to_uri, beautify_uri, vfs_writable, \
     vfs_exists
-from fileoperations import unquote_filename, vfs_walk
+from fileoperations import unquote_filename, vfs_walk, vfs_exists
 from fileoperations import use_gnomevfs
 from gstreamer import ConverterQueue
 from gstreamer import available_elements, TypeFinder
