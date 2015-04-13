@@ -202,7 +202,7 @@ class Pipeline(BackgroundTask):
 
     def on_error(self, error):
         self.error = error
-        log('error: %s (%s)' % (error, self.command))
+        log('error: %s (%s)' % (error, ' ! '.join(self.command)))
 
     def on_message_(self, bus, message):
         self.on_message_(bus, message)
@@ -563,7 +563,7 @@ class Converter(Decoder):
                 log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
 
     def on_error(self, error):
-        Pipeline.on_error(error)
+        Pipeline.on_error(self, error)
         show_error('<b>%s</b>' % _('GStreamer Error:'),
                    '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display))
 
