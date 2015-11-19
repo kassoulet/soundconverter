@@ -84,6 +84,8 @@ class TargetNameGenerator:
             if isinstance(d[key], str):
                 # take care of tags containing slashes
                 d[key] = d[key].replace('/', '-')
+                if key.endswith('-number'):
+                    d[key] = int(d[key])
 
         # add timestamp to substitution dict -- this could be split into more
         # entries for more fine-grained control over the string by the user...
