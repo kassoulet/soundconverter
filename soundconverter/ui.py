@@ -1102,7 +1102,7 @@ class CustomFileChooser:
         self.store.append(['%s (%s)' % (name, pat)])
 
     def filter_cb(self, info, pattern):
-        filename = info[2]
+        filename = info.display_name
         return filename.lower().endswith(pattern[1:])
 
     def on_combo_changed(self, w):
@@ -1113,7 +1113,7 @@ class CustomFileChooser:
         filefilter = Gtk.FileFilter()
         active = self.combo.get_active()
         if active:
-            filefilter.add_custom(Gtk.FILE_FILTER_DISPLAY_NAME, self.filter_cb,
+            filefilter.add_custom(Gtk.FileFilterFlags.DISPLAY_NAME, self.filter_cb,
                                         self.pattern[self.combo.get_active()])
         else:
             filefilter.add_pattern('*.*')
