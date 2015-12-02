@@ -27,6 +27,8 @@ def _notification_dummy(message):
 notification = _notification_dummy
 
 try:
+    import gi
+    gi.require_version('Notify', '0.7')
     from gi.repository import Notify
 
 
@@ -40,5 +42,5 @@ try:
     if Notify.init('Basics'):
         notification = _notification
 
-except ImportError:
+except (ImportError, ValueError):
     pass

@@ -66,6 +66,7 @@ def _check_libs():
         import gi
         gi.require_version('Gst', '1.0')
         gi.require_version('Gtk', '3.0')
+        gi.require_version('GConf', '2.0')
         from gi.repository import GObject
         # force GIL creation - see https://bugzilla.gnome.org/show_bug.cgi?id=710447
         import threading
@@ -75,7 +76,7 @@ def _check_libs():
         Gst.init(None)
         from gi.repository import Gtk, Gdk
         from gi.repository import GLib
-    except ImportError as error :
+    except (ImportError, ValueError) as error:
         print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
         sys.exit(1)
 
