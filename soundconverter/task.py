@@ -41,9 +41,9 @@ class BackgroundTask:
 
     def start(self):
         """Start running the task. Call started()."""
-        self.emit('started')
         self.running = True
         self.run_start_time = time.time()
+        self.emit('started')
 
     def add_listener(self, signal, listener):
         """Add a custom listener to the given signal.
