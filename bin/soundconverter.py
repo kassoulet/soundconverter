@@ -165,33 +165,13 @@ from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
 
-print(files)
 files = list(map(filename_to_uri, files))
-print(files)
-
-from soundconverter.ui import gui_main
 
 try:
     from soundconverter.ui import gui_main
 except:
     if settings['mode'] == 'gui':
         settings['mode'] = 'batch'
-
-import sys, threading
-
-def tracefunc(frame, event, arg, indent=[0]):
-      if event == "call":
-          indent[0] += 2
-          if not frame.f_code.co_name.startswith('__') and not frame.f_code.co_name.startswith('<'):
-            print("-" * indent[0] + "> call function", frame.f_code.co_name)
-      elif event == "return":
-          if not frame.f_code.co_name.startswith('__') and not frame.f_code.co_name.startswith('<'):
-              print("<" + "-" * indent[0], "exit function", frame.f_code.co_name)
-          indent[0] -= 2
-      return tracefunc
-
-#sys.settrace(tracefunc)
-#threading.settrace(tracefunc)
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)

@@ -246,7 +246,6 @@ class Pipeline(BackgroundTask):
         return True
 
     def play(self):
-        print('Pipeline.play')
         if not self.parsed:
             command = ' ! '.join(self.command)
             debug('launching: \'%s\'' % command)
@@ -304,8 +303,6 @@ class TypeFinder(Pipeline):
         self.found_type_hook = found_type_hook
 
     def have_type(self, typefind, probability, caps):
-        import threading
-
         mime_type = caps.to_string()
         debug('have_type:', mime_type, self.sound_file.filename_for_display)
         self.sound_file.mime_type = None

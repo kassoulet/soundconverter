@@ -45,7 +45,6 @@ def vfs_walk(uri):
     filelist = []
 
     dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
-    print(dirlist)
     for file_info in dirlist:
         name = file_info.get_name()
         info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
