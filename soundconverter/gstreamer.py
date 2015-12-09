@@ -280,10 +280,11 @@ class Pipeline(BackgroundTask):
         if not self.pipeline:
             debug('pipeline already stopped!')
             return
+        self.pipeline.set_state(Gst.State.NULL)
         bus = self.pipeline.get_bus()
         bus.disconnect(self.watch_id)
         bus.remove_signal_watch()
-        self.pipeline.set_state(Gst.State.NULL)
+        self.pipeline = None
 
     def get_position(self):
         return NotImplementedError
