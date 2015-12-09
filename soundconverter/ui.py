@@ -164,10 +164,8 @@ class FileList:
         self.widget.append_column(column)
 
         self.window.progressbarstatus.hide()
-        
+
         self.waiting_files = []
-        # add files to filelist in batches. Much faster, and suffisant.
-        # XXX GObject.timeout_add(100, self.commit_waiting_files)
         self.waiting_files_last = 0
 
     def drag_data_received(self, widget, context, x, y, selection,
@@ -282,36 +280,6 @@ class FileList:
         self.progress_column.set_visible(False)
 
     def append_file(self, sound_file):
-        self.waiting_files.append(sound_file)
-        self.commit_waiting_files()
-
-    def commit_waiting_files(self):
-        #XXX if self.waiting_files_last != len(self.waiting_files):
-            # still adding files
-        #    self.waiting_files_last = len(self.waiting_files)
-        #    return True
-        
-        if self.waiting_files:
-            self.window.set_status(_('Adding files...'))
-            save = self.widget.get_model()
-            self.widget.set_model(None)
-            n = 0.0
-            next_time = time.time()
-            while self.waiting_files:
-                self._append_file(self.waiting_files.pop())
-                n += 1
-                if time.time() > next_time:
-                    # keep UI responsive
-                    gtk_iteration() 
-                    # XXX self.window.progressbarstatus.set_fraction(n/self.waiting_files_last)
-                    next_time = time.time() + 0.01
-            self.widget.set_model(save)
-            
-            self.window.set_status()
-            self.window.progressbarstatus.hide()
-        return True
-
-    def _append_file(self, sound_file):
         self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
