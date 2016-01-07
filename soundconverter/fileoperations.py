@@ -90,8 +90,9 @@ def filename_to_uri(filename):
     if '://' not in filename:
         # convert local filename to uri
         filename = 'file://' + urllib.request.pathname2url(os.path.abspath(filename))
-    filename = Gio.file_parse_name(filename).get_uri()
-    return filename
+
+    uri = Gio.file_parse_name(urllib.parse.quote(filename, '/:%@')).get_uri()
+    return uri
 
 
 # GStreamer gnomevfssrc helpers
@@ -102,4 +103,3 @@ def vfs_encode_filename(filename):
 
 def file_encode_filename(filename):
     return Gio.get_local_path_from_uri(filename).replace(' ', '\ ')
-    
