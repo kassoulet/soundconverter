@@ -594,8 +594,9 @@ class Converter(Decoder):
         return s
 
     def add_wav_encoder(self):
-        return 'audio/x-raw,width=%d ! wavenc' % (
-            self.wav_sample_width)
+        formats = {8:'U8', 16:'S16LE', 24:'S24LE', 32:'S32LE'}
+        return 'audioconvert ! audio/x-raw,format=%s ! wavenc' % (
+            formats[self.wav_sample_width])
 
     def add_oggvorbis_encoder(self):
         cmd = 'vorbisenc'
