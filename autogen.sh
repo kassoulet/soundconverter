@@ -1,48 +1,40 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+# Run this to generate all the initial makefiles, etc.
+test -n "$srcdir" || srcdir=$(dirname "$0")
+test -n "$srcdir" || srcdir=.
 
-PKG_NAME="soundconverter"
-REQUIRED_AUTOCONF_VERSION=2.53
-REQUIRED_AUTOMAKE_VERSION=1.7.2
+olddir=$(pwd)
 
-(test -f $srcdir/configure.ac \
-  && test -f $srcdir/autogen.sh) || {
-    echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
-    echo " top-level $PKG_NAME directory"
+cd $srcdir
+
+(test -f configure.ac) || {
+    echo "*** ERROR: Directory '$srcdir' does not look like the top-level project directory ***"
     exit 1
 }
 
-DIE=0
+PKG_NAME=soundconverter
 
-# This is a bit complicated here since we can't use gnome-config yet.
-# It'll be easier after switching to pkg-config since we can then
-# use pkg-config to find the gnome-autogen.sh script.
-
-gnome_autogen=
-gnome_datadir=
-
-ifs_save="$IFS"; IFS=":"
-for dir in $PATH ; do
-  test -z "$dir" && dir=.
-  if test -f $dir/gnome-autogen.sh ; then
-    gnome_autogen="$dir/gnome-autogen.sh"
-    gnome_datadir=`echo $dir | sed -e 's,/bin$,/share,'`
-    break
-  fi
-done
-IFS="$ifs_save"
-
-if test -z "$gnome_autogen" ; then
-  echo "You need to install the gnome-common module and make"
-  echo "sure the gnome-autogen.sh script is in your \$PATH."
-  exit 1
+if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
+    echo "*** WARNING: I am going to run 'configure' with no arguments." >&2
+    echo "*** If you wish to pass any to it, please specify them on the" >&2
+    echo "*** '$0' command line." >&2
+    echo "" >&2
 fi
 
-GNOME_DATADIR="$gnome_datadir" USE_GNOME2_MACROS=1 . $gnome_autogen
+aclocal --install || exit 1
+glib-gettextize --force --copy || exit 1
+intltoolize --force --copy --automake || exit 1
+autoreconf --verbose --force --install || exit 1
 
-automake -a -f
-autoconf
+cd "$olddir"
+if [ "$NOCONFIGURE" = "" ]; then
+    $srcdir/configure "$@" || exit 1
 
+    if [ "$1" = "--help" ]; then exit 0 else
+        echo "Now type 'make' to compile $PKG_NAME" || exit 1
+    fi
+else
+    echo "Skipping configure process."
+fi
