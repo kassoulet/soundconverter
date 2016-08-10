@@ -406,13 +406,13 @@ class Decoder(Pipeline):
         if tag_type in type_getters:
             value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
             tags[tag] = value
-            debug('  ', tag, value)
 
-        if tag == 'datetime':
+        if 'datetime' in tag:
             dt = taglist.get_date_time(tag)[1]
             tags['year'] = dt.get_year()
             tags['date'] = dt.to_iso8601_string()[:10]
 
+        debug('   ', tags)
         self.sound_file.tags.update(tags)
         self.query_duration()
 
