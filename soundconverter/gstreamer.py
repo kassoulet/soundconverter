@@ -105,8 +105,8 @@ encoders = (
     ('wavenc', 'WAV'),
     ('vorbisenc', 'Ogg Vorbis'),
     ('oggmux', 'Ogg Vorbis'),
-    ('id3v2mux', 'MP3 Tags'),
-    ('xingmux', 'Xing Header'),
+    ('id3mux', 'MP3 tags'),
+    ('xingmux', 'VBR tags'),
     ('lamemp3enc', 'MP3'),
     ('faac', 'AAC'),
     ('mp4mux', 'AAC'),
@@ -621,9 +621,9 @@ class Converter(Decoder):
                 # add xing header when creating VBR/ABR mp3
                 cmd += '! xingmux '
 
-        if 'id3v2mux' in available_elements:
+        if 'id3mux' in available_elements:
             # add tags
-            cmd += '! id3v2mux '
+            cmd += '! id3mux '
 
         return cmd
 
