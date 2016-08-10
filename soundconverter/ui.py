@@ -1303,7 +1303,7 @@ class SoundConverterWindow(GladeWindow):
             sound_file.progress = None
             self.converter.add(sound_file)
         # all was OK
-        self.set_status('')
+        self.set_status()
         self.pulse_progress = None
         self.converter.start()
         self.set_sensitive()
@@ -1429,14 +1429,13 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
             self.progress_time = time.time()
-            if fraction == 1.0:
-                self.widget.set_title(_('SoundConverter'))
-            else:
-                self.widget.set_title('%s - %s' % (_('SoundConverter'), remaining))
+            self.widget.set_title('%s - %s' % (_('SoundConverter'), remaining))
 
-    def set_status(self, text=None):
+    def set_status(self, text=None, ready=True):
         if not text:
             text = _('Ready')
+        if ready:
+            self.widget.set_title(_('SoundConverter'))
         self.statustext.set_markup(text)
         gtk_iteration()
 
