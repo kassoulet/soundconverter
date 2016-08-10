@@ -295,13 +295,22 @@ class TypeFinder(Pipeline):
         Pipeline.__init__(self)
         self.sound_file = sound_file
 
-        command = '%s location="%s" ! typefind name=typefinder ! fakesink' % \
+        command = '%s location="%s" ! decodebin name=decoder ! fakesink' % \
                   (gstreamer_source, encode_filename(self.sound_file.uri))
         self.add_command(command)
-        self.add_signal('typefinder', 'have-type', self.have_type)
+        self.add_signal('decoder', 'pad-added', self.pad_added)
+        # 'typefind' is the name of the typefind element created inside
+        # decodebin. we can't use our own typefind before decodebin anymore,
+        # since its caps would've been the same as decodebin's sink caps.
+        self.add_signal('typefind', 'have-type', self.have_type)
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
+    
+    def pad_added(self, decoder, pad):
+        """ called when a decoded pad is created """
+        self.query_duration()
+        self.done()
 
     def have_type(self, typefind, probability, caps):
         mime_type = caps.to_string()
@@ -316,9 +325,20 @@ class TypeFinder(Pipeline):
             if fnmatch(self.sound_file.uri, t):
                 self.sound_file.mime_type = None
                 log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
-
-        self.done()
+        
         return True
+    
+    def query_duration(self):
+        """
+        Ask for the duration of the current pipeline.
+        """
+        try:
+            if not self.sound_file.duration and self.pipeline:
+                self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
+                if self.sound_file.duration <= 0:
+                    self.sound_file.duration = None
+        except Gst.QueryError:
+            self.sound_file.duration = None
 
     def finished(self):
         Pipeline.finished(self)
@@ -345,18 +365,6 @@ class Decoder(Pipeline):
 
     def have_type(self, typefind, probability, caps):
         pass
-
-    def query_duration(self):
-        """
-        Ask for the duration of the current pipeline.
-        """
-        try:
-            if not self.sound_file.duration and self.pipeline:
-                self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
-                if self.sound_file.duration <= 0:
-                    self.sound_file.duration = None
-        except Gst.QueryError:
-            self.sound_file.duration = None
 
     def query_position(self):
         """
@@ -414,11 +422,9 @@ class Decoder(Pipeline):
 
         debug('   ', tags)
         self.sound_file.tags.update(tags)
-        self.query_duration()
 
     def pad_added(self, decoder, pad):
         """ called when a decoded pad is created """
-        self.query_duration()
         self.processing = True
 
     def finished(self):
@@ -432,7 +438,6 @@ class Decoder(Pipeline):
 
     def get_duration(self):
         """ return the total duration of the sound file """
-        self.query_duration()
         return self.sound_file.duration
 
     def get_position(self):
@@ -794,3 +799,7 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
+    
+    def start(self):
+        self.waiting_tasks.sort(key=Converter.get_duration,reverse=True)
+        TaskQueue.start(self)

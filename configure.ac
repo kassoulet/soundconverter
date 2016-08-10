@@ -4,6 +4,7 @@ AC_PREREQ([2.68])
 AC_INIT([soundconverter], [2.9.0-beta1])
 AC_CONFIG_SRCDIR([bin/soundconverter.py])
 AM_INIT_AUTOMAKE
+AC_CONFIG_MACRO_DIR([m4])
 
 m4_define(required_python_abi, [3.0])
 m4_define(required_python_version, [3.0])
