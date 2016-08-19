@@ -28,7 +28,7 @@ from soundconverter.utils import log
 from soundconverter.error import show_error
 
 def unquote_filename(filename):
-    return urllib.parse.unquote(filename)
+    return urllib.parse.unquote(str(filename))
 
 
 def beautify_uri(uri):
