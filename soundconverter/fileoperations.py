@@ -91,7 +91,7 @@ def filename_to_uri(filename):
         # convert local filename to uri
         filename = 'file://' + urllib.request.pathname2url(os.path.abspath(filename))
 
-    uri = Gio.file_parse_name(urllib.parse.quote(filename, '/:%@')).get_uri()
+    uri = Gio.file_parse_name(filename).get_uri()
     return uri
 
 

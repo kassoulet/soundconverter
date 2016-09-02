@@ -108,7 +108,7 @@ class TargetNameGenerator:
         if self.folder is None:
             folder = root
         else:
-            folder = urllib.parse.quote(self.folder, '/:%@')
+            folder = urllib.parse.quote(self.folder, safe='/:%@')
 
         if '/' in pattern:
             # we are creating folders using tags, disable basefolder handling

@@ -425,7 +425,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
             w = self.into_selected_folder
         w.set_active(True)
 
-        uri = filename_to_uri(self.get_string('selected-folder'))
+        uri = filename_to_uri(urllib.parse.quote(self.get_string('selected-folder'), safe='/:@'))
         self.target_folder_chooser.set_uri(uri)
         self.update_selected_folder()
 
@@ -701,6 +701,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
 
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
+            folder = urllib.parse.quote(folder, safe='/:@')
             folder = filename_to_uri(folder)
             generator.folder = folder
 
