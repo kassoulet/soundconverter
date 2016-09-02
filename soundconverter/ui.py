@@ -1450,7 +1450,6 @@ win = None
 def gui_main(name, version, gladefile, input_files):
     global NAME, VERSION
     NAME, VERSION = name, version
-    # XXX gnome.init(name, version)
     builder = Gtk.Builder()
     builder.set_translation_domain(name.lower())
     builder.add_from_file(gladefile)
@@ -1464,7 +1463,6 @@ def gui_main(name, version, gladefile, input_files):
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
 
-    #GObject.idle_add(win.filelist.add_uris, input_files)
     win.filelist.add_uris(input_files)
     win.set_sensitive()
     Gtk.main()
