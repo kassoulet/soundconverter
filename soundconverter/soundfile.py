@@ -21,7 +21,7 @@
 
 import os
 import gi
-from gi.repository import GObject
+from gi.repository import GLib
 
 from soundconverter.fileoperations import unquote_filename
 
@@ -60,7 +60,7 @@ class SoundFile:
         """
         Returns the filename in a suitable for display form.
         """
-        return GObject.filename_display_name(
+        return GLib.filename_display_name(
                 unquote_filename(self.filename))
 
 
