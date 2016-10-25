@@ -338,9 +338,9 @@ class PreferencesDialog(GladeWindow, GConfStore):
     ]
 
     subfolder_patterns = [
-        ('%(artist)s/%(album)s', _('artist/album')),
-        ('%(artist)s-%(album)s', _('artist-album')),
-        ('%(artist)s - %(album)s', _('artist - album')),
+        ('%(album-artist)s/%(album)s', _('artist/album')),
+        ('%(album-artist)s-%(album)s', _('artist-album')),
+        ('%(album-artist)s - %(album)s', _('artist - album')),
     ]
 
     defaults = {

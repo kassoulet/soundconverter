@@ -40,14 +40,15 @@ filename_blacklist = (
 )
 
 # custom filename patterns
-english_patterns = 'Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
+english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
 
 # traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext')
+locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext')
 
 patterns_formats = (
     '%(artist)s',
     '%(album)s',
+    '%(album-artist)s',
     '%(title)s',
     '%(track-number)02d',
     '%(track-count)02d',

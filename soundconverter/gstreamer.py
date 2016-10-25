@@ -386,6 +386,7 @@ class Decoder(Pipeline):
 
     def append_tag(self, taglist, tag, unused_udata):
         tag_whitelist = (
+            'album-artist',
             'artist',
             'album',
             'title',
