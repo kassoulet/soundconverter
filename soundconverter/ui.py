@@ -248,6 +248,7 @@ class FileList:
             i[0] = self.format_cell(i[1])
 
         if files and not self.typefinders.running:
+            self.window.set_status(_('Searching...'))
             self.window.progressbarstatus.show()
             self.typefinders.queue_ended = self.typefinder_queue_ended
             self.typefinders.start()
@@ -1242,7 +1243,7 @@ class SoundConverterWindow(GladeWindow):
             if self.combo.get_active():
                 patterns = filepattern[self.combo.get_active()][1].split(';')
                 extensions = [os.path.splitext(p)[1] for p in patterns]
-            self.filelist.add_uris(folders, extensions=extensions)
+            self.filelist.add_uris(folders, None, extensions)
             if folder:
                 self.prefs.set_string('last-used-folder', folder)
 
