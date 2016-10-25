@@ -1282,7 +1282,7 @@ class SoundConverterWindow(GladeWindow):
         for s in self.filelist.get_files():
             perfile[s] = None
         running, progress = self.converter.get_progress(perfile)
-        if running:
+        if running is True:
             self.set_progress(progress)
             for sound_file, taskprogress in perfile.items():
                 if taskprogress is None and sound_file.progress:
