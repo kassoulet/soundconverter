@@ -215,7 +215,7 @@ class Pipeline(BackgroundTask):
         t = message.type
         #print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
-            error, _ = message.parse_error()
+            error, __ = message.parse_error()
             self.eos = True
             self.error = error
             self.on_error(error)
