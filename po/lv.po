@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-10 15:45+0000\n"
-"PO-Revision-Date: 2012-10-19 12:40+0000\n"
-"Last-Translator: tuxmaniack <Unknown>\n"
+"POT-Creation-Date: 2013-11-02 18:42+0100\n"
+"PO-Revision-Date: 2015-12-03 06:38+0000\n"
+"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Latviešu <lata-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 13:08+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
+"X-Generator: Launchpad (build 18302)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -46,7 +46,9 @@ msgstr "dialogs1"
 msgid "Filter "
 msgstr "Filtrs "
 
-#: ../data/soundconverter.glade.h:5
+#. TODO: is this used ?
+#. TODO: add proper error management when an encoder cannot be created
+#: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:555
 msgid "Error"
 msgstr "Kļūda"
 
@@ -70,11 +72,11 @@ msgstr "<big><b>Tāda datne jau eksistē</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Attiecināt uz visiem"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:398
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
 msgid "artist/album"
 msgstr "izpildītājs/albums"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:400
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
 msgid "artist - album"
 msgstr "izpildītājs - albums"
 
@@ -330,7 +332,7 @@ msgstr "Pievienot d_atni"
 msgid "Add _Folder"
 msgstr "Pievienot _mapi"
 
-#: ../bin/soundconverter.py:115
+#: ../bin/soundconverter.py:107
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -338,7 +340,7 @@ msgstr ""
 "Konvertēt pakešu režīmā, no komandrindas bez grafiskas saskarnes.\n"
 "Jūs varat to izmantot, teiksim, no čaulu skriptiem."
 
-#: ../bin/soundconverter.py:120
+#: ../bin/soundconverter.py:112
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -346,7 +348,7 @@ msgstr ""
 "Rādīt birkas ievades datnēm nevis tos pārveidot. Tas norāda\n"
 "komandrindas pakešu režīmu un deaktivē grafisko saskarni."
 
-#: ../bin/soundconverter.py:124
+#: ../bin/soundconverter.py:116
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
@@ -355,15 +357,15 @@ msgstr ""
 "Iestatīt izvades MIME tipu pakešu režīmam. Noklusējuma ir %s. Ņemiet vērā, "
 "ka visdrīzāk vajadzētu iestatīt ari izvades sufiksu."
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:120
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Būt klusam. Neizvadīt parasto izvadi, tikai kļūdas."
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:122
 msgid "Displays additional debug information"
 msgstr "Rādīt papildu atkļūdošanas informāciju"
 
-#: ../bin/soundconverter.py:132
+#: ../bin/soundconverter.py:124
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -374,54 +376,15 @@ msgstr ""
 "Ņemiet vērā, ka sufiks \n"
 "neietekmē izvades MIME tipu."
 
-#: ../bin/soundconverter.py:136
+#: ../bin/soundconverter.py:128
 msgid "Force number of concurrent conversions."
 msgstr "Piespiedu vienlaicīgo pārveidošanu skaits."
 
-#: ../bin/soundconverter.py:138
+#: ../bin/soundconverter.py:130
 msgid "Shows GStreamer Options"
 msgstr "Rāda GStreamer opcijas"
 
-#: ../soundconverter/error.py:37
-msgid "Target exists."
-msgstr "Mērķis eksistē."
-
-#: ../soundconverter/error.py:38
-#, python-format
-msgid "The output file %s already exists."
-msgstr "Izvades datne %s jau eksistē."
-
-#: ../soundconverter/error.py:44
-msgid "Internal error"
-msgstr "Iekšēja kļūda"
-
-#: ../soundconverter/error.py:45
-msgid ""
-"Couldn't link GStreamer elements.\n"
-" Please report this as a bug."
-msgstr ""
-"Nevarēja sasaistīt GStreamer elementus.\n"
-" Lūdzu, ziņojiet par to kā par kļūdu."
-
-#: ../soundconverter/error.py:53
-#, python-format
-msgid "Unknown type %s"
-msgstr "Nezināms tips %s"
-
-#: ../soundconverter/error.py:54
-#, python-format
-msgid ""
-"The file %s is of an unknown type.\n"
-" Please ask the developers to add support\n"
-" for files of this type if it is important\n"
-" to you."
-msgstr ""
-"Datnei %s ir nezināms tips.\n"
-" Lūdzu, prasiet, lai izstrādātāji pievieno\n"
-" atbalstu datnēm ar šādu tipu, ja tas jums\n"
-" ir svarīgi."
-
-#: ../soundconverter/error.py:64
+#: ../soundconverter/error.py:30
 #, python-format
 msgid ""
 "\n"
@@ -434,56 +397,31 @@ msgstr ""
 "Kļūda: %s\n"
 "%s\n"
 
-#: ../soundconverter/gstreamer.py:190
+#: ../soundconverter/fileoperations.py:98
+msgid "Cannot create folder!"
+msgstr ""
+
+#. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
+#. or an option to stop all processing.
+#: ../soundconverter/fileoperations.py:110
+msgid "Error while renaming file!"
+msgstr ""
+
+#: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
 msgstr "Spraudņa instalēšana tika apturēta."
 
-#. TODO: is this used ?
-#. TODO: add proper error management when an encoder cannot be created
-#: ../soundconverter/gstreamer.py:521
-#, python-format
-msgid "Cannot create a decoder for '%s' format."
-msgstr "Nevar izveidot dekoderu “%s” formātam."
-
-#: ../soundconverter/gstreamer.py:532
+#: ../soundconverter/gstreamer.py:566
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Nevar izveidot mapi “%s”."
 
 #. pass
-#: ../soundconverter/gstreamer.py:573
+#: ../soundconverter/gstreamer.py:607
 msgid "GStreamer Error:"
 msgstr "GStreamer kļūda:"
 
-#: ../soundconverter/gstreamer.py:664
-msgid "Conversion Canceled"
-msgstr "Pārveidošana ir atcelta"
-
-#: ../soundconverter/gstreamer.py:671
-msgid "Conversion Error"
-msgstr "Pārveidošanas kļūda"
-
-#: ../soundconverter/gstreamer.py:704
-#, python-format
-msgid "Access denied: '%s'"
-msgstr "Pieeja ir liegta “%s”"
-
-#: ../soundconverter/gstreamer.py:720
-msgid "Cannot overwrite source file(s)!"
-msgstr "Nevar pārrakstīt avota datni(-es)!"
-
-#: ../soundconverter/gstreamer.py:733
-#, python-format
-msgid ""
-"The output file <i>%s</i>\n"
-" already exists.\n"
-" Do you want to skip the file, overwrite it or cancel the conversion?\n"
-msgstr ""
-"Izvades datne <i>%s</i>\n"
-" jau eksistē.\n"
-" Vai vēlaties izlaist datni, pārrakstīt to vai atcelt pārveidošanu?\n"
-
-#: ../soundconverter/gstreamer.py:839
+#: ../soundconverter/gstreamer.py:814
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Pārveidošana ir pabeigta %s"
@@ -509,7 +447,7 @@ msgstr ""
 msgid "All files"
 msgstr "Visas datnes"
 
-#: ../soundconverter/ui.py:97 ../soundconverter/ui.py:116
+#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
 msgid ""
 "\n"
@@ -520,97 +458,81 @@ msgstr ""
 "Kļūda: %s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:208
-msgid "Scanning files..."
-msgstr "Skenē datnes..."
-
-#: ../soundconverter/ui.py:320
+#: ../soundconverter/ui.py:310
 msgid "Adding files..."
 msgstr "Pievieno datnes..."
 
-#: ../soundconverter/ui.py:388
+#: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
 msgstr "Tāds pats kā ievade, bet aizvieto sufiksu"
 
-#: ../soundconverter/ui.py:390
+#: ../soundconverter/ui.py:380
 msgid "Same as input, but with an additional suffix"
 msgstr "Tāds pats kā ievade, bet ar papildu sufiksu"
 
-#: ../soundconverter/ui.py:391
+#: ../soundconverter/ui.py:381
 msgid "Track number - title"
 msgstr "Celiņa numurs - nosaukums"
 
-#: ../soundconverter/ui.py:392
+#: ../soundconverter/ui.py:382
 msgid "Track title"
 msgstr "Celiņa nosaukums"
 
-#: ../soundconverter/ui.py:393
+#: ../soundconverter/ui.py:383
 msgid "Artist - title"
 msgstr "Izpildītājs - nosaukums"
 
-#: ../soundconverter/ui.py:394
+#: ../soundconverter/ui.py:384
 msgid "Custom filename pattern"
 msgstr "Pielāgots datnes nosaukuma raksts"
 
-#: ../soundconverter/ui.py:399
+#: ../soundconverter/ui.py:389
 msgid "artist-album"
 msgstr "izpildītājs-albums"
 
-#: ../soundconverter/ui.py:457
+#: ../soundconverter/ui.py:447
 msgid "Available patterns:"
 msgstr "Pieejamie raksti:"
 
-#: ../soundconverter/ui.py:649
+#: ../soundconverter/ui.py:644
 #, python-format
 msgid "Into folder %s"
 msgstr "Mapē %s"
 
-#: ../soundconverter/ui.py:729
+#: ../soundconverter/ui.py:724
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Mērķa bitu ātrums: %s"
 
-#: ../soundconverter/ui.py:1082
+#: ../soundconverter/ui.py:1075
 msgid "Open a file"
 msgstr "Atvērt datni"
 
-#: ../soundconverter/ui.py:1176
+#: ../soundconverter/ui.py:1169
 msgid "Add Folder..."
 msgstr "Pievienot mapi..."
 
-#: ../soundconverter/ui.py:1351
-msgid "Reading tags..."
-msgstr "Lasa birkas..."
-
-#: ../soundconverter/ui.py:1353
+#: ../soundconverter/ui.py:1337
 msgid "Preparing conversion..."
 msgstr "Sagatavo pārveidošanu..."
 
-#: ../soundconverter/ui.py:1368
-msgid "Conversion cancelled"
-msgstr "Pārveidošana ir atcelta"
-
-#: ../soundconverter/ui.py:1371
-msgid "Error when converting"
-msgstr "Kļūda pārveidojot"
-
-#: ../soundconverter/ui.py:1386
+#: ../soundconverter/ui.py:1358
 msgid "Converting"
 msgstr "Pārveido"
 
-#: ../soundconverter/ui.py:1406
+#: ../soundconverter/ui.py:1376
 msgid "Canceled"
 msgstr "Atcelts"
 
-#: ../soundconverter/ui.py:1479
+#: ../soundconverter/ui.py:1449
 msgid "Paused"
 msgstr "Pauzēts"
 
-#: ../soundconverter/ui.py:1497
+#: ../soundconverter/ui.py:1467
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d ir atlicis"
 
-#: ../soundconverter/ui.py:1503
+#: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Gatavs"

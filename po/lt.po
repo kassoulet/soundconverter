@@ -1,17 +1,16 @@
-# Slovak translation for soundconverter
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Lithuanian translation for soundconverter
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the soundconverter package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:38+0000\n"
-"Last-Translator: Pavol Klačanský <pavol@klacansky.com>\n"
-"Language-Team: Slovak <sk@li.org>\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-05-08 20:23+0000\n"
+"Last-Translator: Moo <hazap@hotmail.com>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,125 +19,125 @@ msgstr ""
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
-msgstr "Zvukový konvertor"
+msgstr "Garso keitiklis"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Audio Format Converter"
-msgstr "Prevod formátov zvuku"
+msgstr "Garso formatų keitiklis"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Converts audio files into other formats"
-msgstr "Prevádza audio súbory do rôznych formátov"
+msgstr "Konvertuoja garso failus į kitus formatus"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
-msgstr "GNOME prevod zvuku"
+msgstr "GNOME įgalintas garso konvertavimas"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Interneto svetainė"
 
 #: ../data/soundconverter.glade.h:3
 msgid "dialog1"
-msgstr "dialóg1"
+msgstr "dialogas1"
 
 #: ../data/soundconverter.glade.h:4
 msgid "Filter "
-msgstr "Filter "
+msgstr "Filtras "
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
 #: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:555
 msgid "Error"
-msgstr "Chyba"
+msgstr "Klaida"
 
 #: ../data/soundconverter.glade.h:6
 msgid "File exists already"
-msgstr "Súbor už existuje"
+msgstr "Failas jau yra"
 
 #: ../data/soundconverter.glade.h:7
 msgid "_Overwrite"
-msgstr "_Prepísať"
+msgstr "_Perrašyti"
 
 #: ../data/soundconverter.glade.h:8
 msgid "_Skip"
-msgstr "_Preskočiť"
+msgstr "P_raleisti"
 
 #: ../data/soundconverter.glade.h:9
 msgid "<big><b>File exists already</b></big>\n"
-msgstr "<big><b>Súbor už existuje</b></big>\n"
+msgstr "<big><b>Failas jau yra</b></big>\n"
 
 #: ../data/soundconverter.glade.h:11
 msgid "_Apply to entire queue"
-msgstr "_Použiť na celú frontu"
+msgstr "T_aikyti visai eilei"
 
 #: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
 msgid "artist/album"
-msgstr "umelec/album"
+msgstr "atlikėjas/albumas"
 
 #: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
 msgid "artist - album"
-msgstr "umelec - album"
+msgstr "atlikėjas - albumas"
 
 #: ../data/soundconverter.glade.h:14
 msgid "Very Low"
-msgstr "Veľmi nízka"
+msgstr "Labai žema"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Low"
-msgstr "Nízka"
+msgstr "Žema"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Normal"
-msgstr "Normálna"
+msgstr "Normali"
 
 #: ../data/soundconverter.glade.h:17
 msgid "High"
-msgstr "Vysoká"
+msgstr "Aukšta"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Very High"
-msgstr "Veľmi vysoká"
+msgstr "Labai aukšta"
 
 #: ../data/soundconverter.glade.h:19
 msgid "Insanely High"
-msgstr "Najlepšia"
+msgstr "Beprotiškai aukšta"
 
 #: ../data/soundconverter.glade.h:20
 msgid "8 bits (very low quality)"
-msgstr "8 bitov (veľmi nízka kvalita)"
+msgstr "8 bitai (labai žema kokybė)"
 
 #: ../data/soundconverter.glade.h:21
 msgid "16 bits (default)"
-msgstr "16 bitov (východzie)"
+msgstr "16 bitų (numatytasis)"
 
 #: ../data/soundconverter.glade.h:22
 msgid "32 bits"
-msgstr "32 bitov"
+msgstr "32 bitai"
 
 #: ../data/soundconverter.glade.h:23
 msgid "Less (Faster)"
-msgstr "Nižšia (rýchlejší)"
+msgstr "Mažesnis (Greičiau)"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Default"
-msgstr "Bežná"
+msgstr "Numatytasis"
 
 #: ../data/soundconverter.glade.h:25
 msgid "Better (Slower)"
-msgstr "Vyššia (pomalší)"
+msgstr "Geresnis (Lėčiau)"
 
 #: ../data/soundconverter.glade.h:26
 msgid "Constant (CBR)"
-msgstr "Konštantný (CBR)"
+msgstr "Pastovi (CBR)"
 
 #: ../data/soundconverter.glade.h:27
 msgid "Average (ABR)"
-msgstr "Priemerný (ABR)"
+msgstr "Vidutinė (ABR)"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Variable (VBR) - Best quality"
-msgstr "Promenlivý (VBR)"
+msgstr "Kintamoji (VBR) - Geriausia kokybė"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis (.ogg)"
@@ -150,7 +149,7 @@ msgstr "MP3 (.mp3)"
 
 #: ../data/soundconverter.glade.h:31
 msgid "FLAC Lossless (.flac)"
-msgstr "FLAC bezstratový (.flac)"
+msgstr "FLAC nenuostolingasis (.flac)"
 
 #: ../data/soundconverter.glade.h:32
 msgid "MS Wave (.wav)"
@@ -166,75 +165,75 @@ msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
-msgstr "GNOME Audio Profil"
+msgstr "GNOME garso įrašų profilis"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
-msgstr "stopa_číslo - stopa_titul"
+msgstr "takelio_numeris - takelio_pavadinimas"
 
 #: ../data/soundconverter.glade.h:37
 msgid "track_title"
-msgstr "stopa_titul"
+msgstr "takelio_pavadinimas"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Preferences"
-msgstr "Predvoľby"
+msgstr "Nuostatos"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "Rovnaká zložka ako pôvodný súbor"
+msgstr "Į pradinio failo aplanką"
 
 #: ../data/soundconverter.glade.h:40
 msgid "Choose..."
-msgstr "Vybrať..."
+msgstr "Pasirinkti..."
 
 #: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
-msgstr "Do určeného priečinka"
+msgstr "Į nurodytą aplanką"
 
 #: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
-msgstr "Vytvoriť podpriečinky: "
+msgstr "Sukurti poaplankius: "
 
 #: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
-msgstr "Vymazať pôvodný súbor"
+msgstr "Ištrinti pradinį failą"
 
 #: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
-msgstr "<b>Kam sa majú umiestniť výsledky?</b>"
+msgstr "<b>Kur įrašyti galutinius failus?</b>"
 
 #: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
-msgstr "Vzor názvu súboru: "
+msgstr "Failo pavadinimo šablonas: "
 
 #: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
-msgstr "Odstrániť všetky problémové znaky"
+msgstr "Pakeisti visus netaisyklingus simbolius"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
-msgstr ""
+msgstr "Šalinti visus simbolius išskyrus raides, skaičius ir ./_-"
 
 #: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
-msgstr "<i>Príklad názvu súboru:</i>"
+msgstr "<i>Failo pavadinimo pavyzdys:</i>"
 
 #: ../data/soundconverter.glade.h:49
 msgid "<b>How to name files?</b>"
-msgstr "<b>Aký názov majú mať súbory?</b>"
+msgstr "<b>Kaip pavadinti failus?</b>"
 
 #: ../data/soundconverter.glade.h:50
 msgid "Format: "
-msgstr "Formát: "
+msgstr "Formatas: "
 
 #: ../data/soundconverter.glade.h:51
 msgid "Quality:"
-msgstr "Kvalita:"
+msgstr "Kokybė:"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Use .oga extension"
-msgstr "Použiť príponu .oga"
+msgstr "Naudoti .oga plėtinį"
 
 #: ../data/soundconverter.glade.h:53
 msgid "Ogg"
@@ -242,7 +241,7 @@ msgstr "Ogg"
 
 #: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
-msgstr "Mód bitového toku:"
+msgstr "Pralaidumo veiksena:"
 
 #: ../data/soundconverter.glade.h:55
 msgid "MP3"
@@ -250,7 +249,7 @@ msgstr "MP3"
 
 #: ../data/soundconverter.glade.h:56
 msgid "Compression:"
-msgstr "Kompresia:"
+msgstr "Glaudinimas:"
 
 #: ../data/soundconverter.glade.h:57
 msgid "FLAC"
@@ -258,7 +257,7 @@ msgstr "FLAC"
 
 #: ../data/soundconverter.glade.h:58
 msgid "Sample width:"
-msgstr "Šírka vzorky:"
+msgstr "Ėminių plotis:"
 
 #: ../data/soundconverter.glade.h:59
 msgid "WAV"
@@ -274,80 +273,79 @@ msgstr "Opus"
 
 #: ../data/soundconverter.glade.h:62
 msgid "Profile:"
-msgstr "Profil:"
+msgstr "Profilis:"
 
 #: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
-msgstr "gst-profil"
+msgstr "gst-profile"
 
 #: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
-msgstr "<b>Typ výsledku?</b>"
+msgstr "<b>Galutinių failų tipas?</b>"
 
 #: ../data/soundconverter.glade.h:65
 msgid "Resample"
-msgstr "Prevzorkovať"
+msgstr "Keisti skaitmeninimo dažnį"
 
 #: ../data/soundconverter.glade.h:66
 msgid "Force mono output"
-msgstr "Vynútiť mono výstup"
+msgstr "Priverstinė mono išvestis"
 
 #: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
-msgstr "Obmedziť počet paralelných činností"
+msgstr "Riboti lygiagrečių užduočių skaičių"
 
 #: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
-msgstr "MP3 kódovač nie je prítomný."
+msgstr "Nėra MP3 koduotuvo"
 
 #: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
-msgstr "Čítať ako nainštalovať"
+msgstr "Perskaitykite kaip įdiegti"
 
 #: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
-msgstr "Kam umiestniť výsledky?"
+msgstr "Kur įrašyti galutinius failus?"
 
 #: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
-msgstr "Prevod zvuku"
+msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:72
 msgid "_File"
-msgstr "_Súbor"
+msgstr "_Failas"
 
 #: ../data/soundconverter.glade.h:73
 msgid "_Edit"
-msgstr "_Upraviť"
+msgstr "_Keisti"
 
 #: ../data/soundconverter.glade.h:74
 msgid "_Help"
-msgstr "_Pomocník"
+msgstr "_Pagalba"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_Add File"
-msgstr "_Pridať súbor"
+msgstr "_Pridėti failą"
 
 #: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
-msgstr "Pridať _priečinok"
+msgstr "P_ridėti aplanką"
 
 #: ../bin/soundconverter.py:107
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Previesť v dávkovom režime z príkazového riadku bez grafického rozhrania.\n"
-" Môžte použiť tento spôsob, povedzme, v shellových skriptoch."
+"Konvertuoti komandų veiksenoje, iš komandinės eilutės, be grafinės\n"
+"naudotojo sąsajos. Tai galite naudoti, tarkime, apvalkalo scenarijuose."
 
 #: ../bin/soundconverter.py:112
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Zobraziť značky (tagy) vstupných súborov namiesto ich prevodu. To znamená \n"
-" dávkový režim v príkazovom riadku a vypnutia grafického užívateľského "
-"rozhrania."
+"Vietoj to, kad konvertuoti įvesties failus, rodyti jų žymes. Tai nurodo \n"
+"komandų eilutės komandų veikseną ir išjungia grafinę naudotojo sąsają."
 
 #: ../bin/soundconverter.py:116
 #, python-format
@@ -355,16 +353,17 @@ msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
 "probably want to set the output suffix as well."
 msgstr ""
-"Nastaviť výstupný MIME typ dávkovom režime. Predvolená hodnota je %s. "
-"Pravdepodobne budete chcieť nastaviť výstupný príponu rovnako."
+"Nustatyti komandų veiksenos išvesties MIME tipą. Numatytasis yra %s. "
+"Turėkite omenyje, kad jūs tikriausiai norėsite taip pat nustatyti ir "
+"išvesties povardį."
 
 #: ../bin/soundconverter.py:120
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Nevypisovať zvyčajný výstup, len chyby."
+msgstr "Elgtis tyliai. Rašyti ne normalią išvestį, o tik klaidas."
 
 #: ../bin/soundconverter.py:122
 msgid "Displays additional debug information"
-msgstr "Zobraziť dodatkové informácie pre ladenie"
+msgstr "Rodyti papildomą derinimo informaciją"
 
 #: ../bin/soundconverter.py:124
 #, python-format
@@ -373,17 +372,17 @@ msgid ""
 "the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Nastavte výstupnú príponu názvu súboru pre dávkové spracovanie. Predvolená je"
-"% s. Všimnite si, že prípona nemá vplyv\n"
-" na výstup MIME typu."
+"Nustatyti komandų veiksenos išvesties failo pavadinimo povardį. Numatytasis "
+"yra %s. Turėkite omenyje,\n"
+"kad povardis neįtakoja galutinį MIME tipą."
 
 #: ../bin/soundconverter.py:128
 msgid "Force number of concurrent conversions."
-msgstr "Vynútiť počet súbežných konverzií."
+msgstr "Priverstinis lygiagrečių konvertavimų skaičius."
 
 #: ../bin/soundconverter.py:130
 msgid "Shows GStreamer Options"
-msgstr "Zobraziť možnosti GStreamer"
+msgstr "Rodo GStreamer parinktis"
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -395,45 +394,45 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Chyba: %s\n"
+"Klaida: %s\n"
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
 msgid "Cannot create folder!"
-msgstr "Zložku nie je možné vytvoriť!"
+msgstr "Nepavyksta sukurti aplanko!"
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Chyba pri pokuse o premenovanie súboru!"
+msgstr "Klaida, pervadinant failą!"
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
-msgstr "Inštalácia pluginu prerušena."
+msgstr "Įskiepio diegimas nutrauktas."
 
 #: ../soundconverter/gstreamer.py:566
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "Nemôžem vytvoriť priečinok '%s'."
+msgstr "Nepavyko sukurti aplanko '%s'."
 
 #. pass
 #: ../soundconverter/gstreamer.py:607
 msgid "GStreamer Error:"
-msgstr "GStreamer chyba:"
+msgstr "GStreamer klaida:"
 
 #: ../soundconverter/gstreamer.py:814
 #, python-format
 msgid "Conversion done in %s"
-msgstr "Zostáva %s"
+msgstr "Konvertavimas atliktas per %s"
 
 #: ../soundconverter/namegenerator.py:76
 msgid "Unknown Album"
-msgstr "Neznáme album"
+msgstr "Nežinomas albumas"
 
 #: ../soundconverter/namegenerator.py:77
 msgid "Unknown Artist"
-msgstr "Neznámy interpret"
+msgstr "Nežinomas atlikėjas"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
@@ -441,12 +440,12 @@ msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Interpret Album Titul Stopa Celkom Žáner Dátum Rok ČasováZnámka ČísloDisku "
-"DiskovCelkom Ext"
+"Atlikėjas Albumas Pavadinimas Takelis Viso Žanras Data Metai LaikoŽyma "
+"DiskoNumeris DiskoViso Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
-msgstr "Všetky súbory"
+msgstr "Visi failai"
 
 #: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
@@ -456,84 +455,84 @@ msgid ""
 "%s\n"
 msgstr ""
 "\n"
-"Chyba: %s\n"
+"Klaida: %s\n"
 "%s\n"
 
 #: ../soundconverter/ui.py:310
 msgid "Adding files..."
-msgstr "Pridávam súbory..."
+msgstr "Pridedami failai..."
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
-msgstr "Rovnako ako vstupné, ale nahradí príponu"
+msgstr "Taip pat kaip ir pradinius failus, tik pakeisti povardį"
 
 #: ../soundconverter/ui.py:380
 msgid "Same as input, but with an additional suffix"
-msgstr "Rovnako ako vstupné, ale s pridanou príponou"
+msgstr "Taip pat kaip ir pradinius failus, tik be papildomo povardžio"
 
 #: ../soundconverter/ui.py:381
 msgid "Track number - title"
-msgstr "Číslo stopy - názov"
+msgstr "Takelio numeris - pavadinimas"
 
 #: ../soundconverter/ui.py:382
 msgid "Track title"
-msgstr "Názov stopy"
+msgstr "Takelio pavadinimas"
 
 #: ../soundconverter/ui.py:383
 msgid "Artist - title"
-msgstr "Umelec - názov"
+msgstr "Atlikėjas - pavadinimas"
 
 #: ../soundconverter/ui.py:384
 msgid "Custom filename pattern"
-msgstr "Vlastný názov súboru"
+msgstr "Pasirinktinas failo pavadinimo šablonas"
 
 #: ../soundconverter/ui.py:389
 msgid "artist-album"
-msgstr "umelec-album"
+msgstr "atlikėjas - albumas"
 
 #: ../soundconverter/ui.py:447
 msgid "Available patterns:"
-msgstr "Dostupné vzory:"
+msgstr "Prieinami šablonai:"
 
 #: ../soundconverter/ui.py:644
 #, python-format
 msgid "Into folder %s"
-msgstr "Do priečinka %s"
+msgstr "Į aplanką %s"
 
 #: ../soundconverter/ui.py:724
 #, python-format
 msgid "Target bitrate: %s"
-msgstr "Cieľový bitový tok: %s"
+msgstr "Galutinis pralaidumas: %s"
 
 #: ../soundconverter/ui.py:1075
 msgid "Open a file"
-msgstr "Otvoriť­ súbor"
+msgstr "Atverti failą"
 
 #: ../soundconverter/ui.py:1169
 msgid "Add Folder..."
-msgstr "Pridať priečinok..."
+msgstr "Pridėkite aplanką..."
 
 #: ../soundconverter/ui.py:1337
 msgid "Preparing conversion..."
-msgstr "Pripravuje sa konverzia..."
+msgstr "Ruošiamas konvertavimas..."
 
 #: ../soundconverter/ui.py:1358
 msgid "Converting"
-msgstr "Konvertujem"
+msgstr "Konvertuojama"
 
 #: ../soundconverter/ui.py:1376
 msgid "Canceled"
-msgstr "Zrušené"
+msgstr "Atšaukta"
 
 #: ../soundconverter/ui.py:1449
 msgid "Paused"
-msgstr "Pozastavené"
+msgstr "Pristabdyta"
 
 #: ../soundconverter/ui.py:1467
 #, python-format
 msgid "%d:%02d left"
-msgstr "zostáva %d:%02d"
+msgstr "Liko %d:%02d"
 
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
-msgstr "Pripravený"
+msgstr "Pasiruošta"

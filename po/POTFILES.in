@@ -7,7 +7,6 @@ soundconverter/fileoperations.py
 soundconverter/gconfstore.py
 soundconverter/gstreamer.py
 soundconverter/__init__.py
-soundconverter/messagearea.py
 soundconverter/namegenerator.py
 soundconverter/notify.py
 soundconverter/queue.py
