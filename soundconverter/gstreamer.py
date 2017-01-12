@@ -3,7 +3,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005-2016 Gautier Portet
+# Copyright 2005-2017 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -10,7 +10,7 @@
     <property name="type_hint">normal</property>
     <property name="program_name">SoundConverter</property>
     <property name="copyright">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-© 2005-2016 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
+© 2005-2017 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">GNOME-powered Sound Conversion</property>
     <property name="website">http://soundconverter.org</property>
     <property name="website_label" translatable="yes">Website</property>
