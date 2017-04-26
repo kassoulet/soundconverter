@@ -719,12 +719,12 @@ class PreferencesDialog(GladeWindow, GConfStore):
             return generator.get_target_name(sound_file)
 
     def generate_temp_filename(self, soundfile):
-        folder = dirname(soundfile.uri)
+        folder, basename = os.path.split(soundfile.uri)
         if not self.get_int('same-folder-as-input'):
             folder = self.get_string('selected-folder')
-            folder = filename_to_uri(folder)
+            folder = urllib.parse.quote(folder, safe='/:')
         while True:
-            filename = folder + '/' + basename(soundfile.filename) + '~' + str(random())[-6:] + '~SC~'
+            filename = folder + '/' + basename + '~' + str(random())[-6:] + '~SC~'
             if not vfs_exists(filename):
                 return filename
 
