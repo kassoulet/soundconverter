@@ -28,6 +28,8 @@ class FilenameToUriTest(unittest.TestCase):
         ):
             got = filename_to_uri(i)
             self.assertTrue('://' in got)
+            
+        self.assertEqual(filename_to_uri(r'''/foo/bar-"'@#%&$"€'''), r'''file:///foo/bar-"'@%23%&$"€''')
 
 
 class TargetNameGeneratorTestCases(unittest.TestCase):

@@ -88,8 +88,9 @@ def filename_to_uri(filename):
     """
     if '://' not in filename:
         # convert local filename to uri
-        filename = 'file://' + urllib.request.pathname2url(os.path.abspath(filename))
-
+        filename = 'file://' + os.path.abspath(filename)
+        for char in '#':
+           filename = filename.replace(char, '%%%x' % ord(char))
     uri = Gio.file_parse_name(filename).get_uri()
     return uri
 
