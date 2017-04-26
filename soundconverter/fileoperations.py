@@ -43,15 +43,14 @@ def vfs_walk(uri):
 
     """
     filelist = []
-
     dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
     for file_info in dirlist:
         name = file_info.get_name()
         info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
         if info == Gio.FileType.DIRECTORY:
-            filelist.extend(vfs_walk(uri + '/' + name))
+            filelist.extend(vfs_walk(dirlist.get_child(file_info).get_uri()))
         if info == Gio.FileType.REGULAR:
-            filelist.append(str(uri + '/' + name))
+            filelist.append(str(dirlist.get_child(file_info).get_uri()))
     return filelist
 
 def vfs_makedirs(path_to_create):
