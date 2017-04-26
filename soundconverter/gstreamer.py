@@ -534,7 +534,7 @@ class Converter(Decoder):
         gfile = Gio.file_parse_name(self.output_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
-            log('Creating folder: \'%s\'' % beautify_uri(dirname))
+            log('Creating folder: \'%s\'' % beautify_uri(dirname.get_uri()))
             if not dirname.make_directory_with_parents():
                 show_error('Error', _("Cannot create \'%s\' folder.") % beautify_uri(dirname))
                 return
