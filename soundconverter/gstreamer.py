@@ -800,7 +800,8 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
-    
+
     def start(self):
-        self.waiting_tasks.sort(key=Converter.get_duration,reverse=True)
+        key_lambda = lambda d: Converter.get_duration(d) if not Converter.get_duration(d) is None else 0
+        self.waiting_tasks.sort(key=key_lambda, reverse=True)
         TaskQueue.start(self)
