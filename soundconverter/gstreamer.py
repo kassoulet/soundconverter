@@ -749,7 +749,7 @@ class ConverterQueue(TaskQueue):
 
         # rename temporary file 
         newname = self.window.prefs.generate_filename(task.sound_file)
-        log(beautify_uri(task.output_filename), '->', beautify_uri(newname))
+        debug(beautify_uri(task.output_filename), '->', beautify_uri(newname))
 
         # safe mode. generate a filename until we find a free one
         p, e = os.path.splitext(newname)
