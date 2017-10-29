@@ -127,7 +127,7 @@ def parse_command_line():
         help=_('Set the output filename suffix for batch mode.'
             'The default is %s . Note that the suffix does not '
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
-    parser.add_option('-j', '--jobs', action='store', type='int', dest='jobs',
+    parser.add_option('-j', '--jobs', action='store', type='int', dest='forced-jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.'))
     parser.add_option('--help-gst', action="store_true", dest="_unused",
         help=_('Shows GStreamer Options'))
@@ -159,7 +159,8 @@ for k in dir(options):
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 _check_libs()
-print(('  using %d thread(s)' % settings['jobs']))
+if settings['forced-jobs']:
+    print(('  using %d thread(s)' % settings['forced-jobs']))
 
 from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main

@@ -50,6 +50,8 @@ class TaskQueue(BackgroundTask):
         self.start_time = None
         self.count = 0
         self.paused = False
+        self.jobs = settings['forced-jobs'] or settings['jobs']
+
 
     def add_task(self, task):
         """Add a task to the queue."""
@@ -65,7 +67,7 @@ class TaskQueue(BackgroundTask):
                 self.done()
             return
 
-        to_start = settings['jobs'] - len(self.running_tasks)
+        to_start = self.jobs - len(self.running_tasks)
         for i in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
@@ -82,9 +84,9 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """ BackgroundTask setup callback """
+        jobs = settings['jobs'] or settings['cpu-count']
         log('Queue start: %d tasks, %d thread(s).' % (
-            len(self.waiting_tasks) + len(self.running_tasks),
-            settings['jobs']))
+            len(self.waiting_tasks) + len(self.running_tasks), self.jobs))
         self.count = 0
         self.paused = False
         self.finished_tasks = 0

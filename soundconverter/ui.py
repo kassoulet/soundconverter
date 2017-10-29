@@ -1021,7 +1021,7 @@ class PreferencesDialog(GladeWindow, GConfStore):
         if self.get_int('limit-jobs'):
             settings['jobs'] = self.get_int('number-of-jobs')
         else:
-            settings['jobs'] = settings['max-jobs']
+            settings['jobs'] = None
         self.set_sensitive()
 
 
