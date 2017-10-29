@@ -99,6 +99,7 @@ settings = {
     'debug': False,
     'cli-output-type': 'audio/x-vorbis',
     'cli-output-suffix': '.ogg',
-    'jobs': cpu_count(),
-    'max-jobs': cpu_count(),
+    'jobs': None,
+    'cpu-count': cpu_count(),
+    'forced-jobs': None,
 }
