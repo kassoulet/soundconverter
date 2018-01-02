@@ -1439,6 +1439,7 @@ class SoundConverterWindow(GladeWindow):
         if ready:
             self.widget.set_title(_('SoundConverter'))
         self.statustext.set_markup(text)
+        self.set_sensitive()
         gtk_iteration()
 
     def is_active(self):
