@@ -180,14 +180,19 @@ class FileList:
     def get_files(self):
         return [i[1] for i in self.sortedmodel]
 
-    def update_progress(self, queue):
-        if queue.running:
-            progress = queue.progress if queue.progress else 0
-            self.window.progressbarstatus.set_fraction(progress)
-            return True
-        return False
+    def update_progress(self):
+        gtk_iteration()
+        if self.files_to_add is None:
+            return False
+        if self.files_to_add:
+            fraction = float(len(self.model)) / self.files_to_add
+            self.window.progressbarstatus.set_fraction(fraction)
+        else:
+            self.window.progressbarstatus.pulse()
+        return True
 
     def found_type(self, sound_file, mime):
+        assert False
         debug('found_type', sound_file.filename)
         self.append_file(sound_file)
         self.window.set_sensitive()
@@ -195,9 +200,13 @@ class FileList:
     @idle
     def add_uris(self, uris, base=None, extensions=None):
         files = []
-        #self.window.set_status(_('Scanning files...'))
+        self.window.set_status(_('Scanning files...'))
+        self.window.progressbarstatus.show()
+        self.files_to_add = 0
+        GObject.timeout_add(100, self.update_progress)
 
         for uri in uris:
+            gtk_iteration()
             if not uri:
                 continue
             if uri.startswith('cdda:'):
@@ -234,27 +243,23 @@ class FileList:
         else:
             base += '/'
 
+        log('adding: %d files' % len(files))
+        self.files_to_add = len(files)
+        self.window.set_status(_('Adding Files...'))
         for f in files:
+            gtk_iteration()
             sound_file = SoundFile(f, base)
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
-
-            typefinder = TypeFinder(sound_file)
-            typefinder.set_found_type_hook(self.found_type)
-            self.typefinders.add_task(typefinder)
+            self.append_file(sound_file)
 
         for i in self.model:
             i[0] = self.format_cell(i[1])
 
-        if files and not self.typefinders.running:
-            self.window.set_status(_('Searching...'))
-            self.window.progressbarstatus.show()
-            self.typefinders.queue_ended = self.typefinder_queue_ended
-            self.typefinders.start()
-            GObject.timeout_add(1000, self.update_progress, self.typefinders)
-        else:
-            self.window.set_status()
+        self.window.set_status()
+        self.window.progressbarstatus.hide()
+        self.files_to_add = None
 
     def typefinder_queue_ended(self):
         if not self.waiting_files:
