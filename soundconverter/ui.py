@@ -130,6 +130,7 @@ class FileList:
         self.model = Gtk.ListStore(*MODEL)
 
         self.widget = builder.get_object('filelist')
+        self.widget.props.fixed_height_mode = True
         self.sortedmodel = Gtk.TreeModelSort(self.model)
         self.widget.set_model(self.sortedmodel)
         self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
@@ -149,6 +150,7 @@ class FileList:
                                     value=2,
                                     text=3,
                                     )
+        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         self.widget.append_column(column)
         self.progress_column = column
         self.progress_column.set_visible(False)
@@ -160,6 +162,7 @@ class FileList:
                                     renderer,
                                     markup=0,
                                     )
+        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.set_expand(True)
         self.widget.append_column(column)
 
@@ -199,6 +202,7 @@ class FileList:
 
     @idle
     def add_uris(self, uris, base=None, extensions=None):
+        start_t = time.time()
         files = []
         self.window.set_status(_('Scanning files...'))
         self.window.progressbarstatus.show()
@@ -243,23 +247,24 @@ class FileList:
         else:
             base += '/'
 
+        scan_t = time.time()
         log('adding: %d files' % len(files))
         self.files_to_add = len(files)
         self.window.set_status(_('Adding Files...'))
         for f in files:
-            gtk_iteration()
+            #gtk_iteration()
             sound_file = SoundFile(f, base)
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
             self.append_file(sound_file)
 
-        for i in self.model:
-            i[0] = self.format_cell(i[1])
-
         self.window.set_status()
         self.window.progressbarstatus.hide()
         self.files_to_add = None
+        end_t = time.time()
+        debug('Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
+            len(files), end_t - start_t, scan_t - start_t, end_t-scan_t))
 
     def typefinder_queue_ended(self):
         if not self.waiting_files:
