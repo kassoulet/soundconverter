@@ -51,7 +51,7 @@ class TaskQueue(BackgroundTask):
         self.count = 0
         self.paused = False
         self.jobs = settings['forced-jobs'] or settings['jobs']
-
+        self.jobs = self.jobs or settings['cpu-count']
 
     def add_task(self, task):
         """Add a task to the queue."""
