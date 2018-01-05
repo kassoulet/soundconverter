@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.soundconverter" path="/org/soundconverter/">
+    <key name="same-folder-as-input" type="b">
+      <default>true</default>
+      <summary>Same folder as input</summary>
+      <description></description>
+    </key>
+    <key name="selected-folder" type="s">
+      <default>''</default>
+      <summary>Selected folder</summary>
+      <description>os.path.expanduser('~')</description>
+    </key>
+    <key name="create-subfolders" type="b">
+      <default>false</default>
+      <summary>Create subfolders</summary>
+      <description></description>
+    </key>
+    <key name="subfolder-pattern-index" type="i">
+      <default>0</default>
+      <summary>Subfolder pattern</summary>
+      <description></description>
+    </key>
+    <key name="name-pattern-index" type="i">
+      <default>0</default>
+      <summary>Name pattern</summary>
+      <description></description>
+    </key>
+    <key name="custom-filename-pattern" type="s">
+      <default>'{Track} - {Title}'</default>
+      <summary>Custom filename pattern</summary>
+      <description></description>
+    </key>
+    <key name="replace-messy-chars" type="b">
+      <default>false</default>
+      <summary>Replace messy chars</summary>
+      <description></description>
+    </key>
+    <key name="output-mime-type" type="s">
+      <default>'audio/x-vorbis'</default>
+      <summary>Output MIME type</summary>
+      <description></description>
+    </key>
+    <key name="output-suffix" type="s">
+      <default>'.ogg'</default>
+      <summary>Ouput suffix</summary>
+      <description></description>
+    </key>
+    <key name="vorbis-quality" type="d">
+      <default>0.6</default>
+      <summary>Vorbis quality</summary>
+      <description></description>
+    </key>
+    <key name="vorbis-oga-extension" type="b">
+      <default>false</default>
+      <summary>Vorbis uses .oga extension</summary>
+      <description></description>
+    </key>
+    <key name="mp3-mode" type="s">
+      <default>'vbr'</default>
+      <summary>MP3 mode</summary>
+      <description></description>
+    </key>
+    <key name="mp3-cbr-quality" type="i">
+      <default>192</default>
+      <summary>MP3 CBR quality</summary>
+      <description></description>
+    </key>
+    <key name="mp3-abr-quality" type="i">
+      <default>192</default>
+      <summary>MP3 ABR quality</summary>
+      <description></description>
+    </key>
+    <key name="mp3-vbr-quality" type="i">
+      <default>3</default>
+      <summary>MP3 VBR quality</summary>
+      <description></description>
+    </key>
+    <key name="aac-quality" type="i">
+      <default>192</default>
+      <summary>AAC quality</summary>
+      <description></description>
+    </key>
+    <key name="opus-bitrate" type="i">
+      <default>96</default>
+      <summary>Opus bitrate</summary>
+      <description></description>
+    </key>
+    <key name="flac-compression" type="i">
+      <default>8</default>
+      <summary>Flac compression level</summary>
+      <description></description>
+    </key>
+    <key name="wav-sample-width" type="i">
+      <default>16</default>
+      <summary>Wav sample width</summary>
+      <description></description>
+    </key>
+    <key name="delete-original" type="b">
+      <default>false</default>
+      <summary>Delete original</summary>
+      <description></description>
+    </key>
+    <key name="output-resample" type="b">
+      <default>false</default>
+      <summary>Resample output</summary>
+      <description></description>
+    </key>
+    <key name="resample-rate" type="i">
+      <default>48000</default>
+      <summary>Resample rate</summary>
+      <description></description>
+    </key>
+    <key name="force-mono" type="b">
+      <default>false</default>
+      <summary>Force mono output</summary>
+      <description></description>
+    </key>
+    <key name="last-used-folder" type="s">
+      <default>''</default>
+      <summary>Last used folder</summary>
+      <description></description>
+    </key>
+    <key name="audio-profile" type="s">
+      <default>'GStreamer profile'</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="limit-jobs" type="i">
+      <default>0</default>
+      <summary>Limit jobs</summary>
+      <description></description>
+    </key>    
+    <key name="number-of-jobs" type="i">
+      <default>1</default>
+      <summary>Number of jobs</summary>
+      <description></description>
+    </key>
+  </schema>
+</schemalist>
+        

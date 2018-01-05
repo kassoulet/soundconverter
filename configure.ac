@@ -1,7 +1,7 @@
 dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.68])
-AC_INIT([soundconverter], [3.0.0-beta1])
+AC_INIT([soundconverter], [3.0.0-beta2])
 AC_CONFIG_SRCDIR([bin/soundconverter.py])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
@@ -21,6 +21,7 @@ AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL
+GLIB_GSETTINGS
 
 AM_PATH_PYTHON(required_python_version)
 

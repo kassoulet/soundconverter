@@ -21,6 +21,13 @@
 
 from gi.repository import GConf
 
+from gi.repository import Gio
+ 
+settings = Gio.Settings('org.soundconverter')
+s = settings.get_string('custom-filename-pattern')
+print(s)
+
+raise SystemExit
 
 class GConfStore(object):
 

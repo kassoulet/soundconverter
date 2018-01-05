@@ -15,7 +15,6 @@ soundconverter_PYTHON = \
 	task.py	\
 	ui.py	\
 	utils.py	\
-	gconfstore.py \
 	batch.py
 
 
