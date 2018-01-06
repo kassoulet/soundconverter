@@ -288,7 +288,18 @@ class Pipeline(BackgroundTask):
 
     def get_position(self):
         return NotImplementedError
-
+        
+    def query_duration(self):
+        """
+        Ask for the duration of the current pipeline.
+        """
+        try:
+            if not self.sound_file.duration and self.pipeline:
+                self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
+                if self.sound_file.duration <= 0:
+                    self.sound_file.duration = None
+        except Gst.QueryError:
+            self.sound_file.duration = None
 
 class TypeFinder(Pipeline):
     def __init__(self, sound_file):
@@ -327,18 +338,6 @@ class TypeFinder(Pipeline):
                 log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
         
         return True
-    
-    def query_duration(self):
-        """
-        Ask for the duration of the current pipeline.
-        """
-        try:
-            if not self.sound_file.duration and self.pipeline:
-                self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
-                if self.sound_file.duration <= 0:
-                    self.sound_file.duration = None
-        except Gst.QueryError:
-            self.sound_file.duration = None
 
     def finished(self):
         Pipeline.finished(self)
@@ -427,6 +426,7 @@ class Decoder(Pipeline):
     def pad_added(self, decoder, pad):
         """ called when a decoded pad is created """
         self.processing = True
+        self.query_duration()
 
     def finished(self):
         Pipeline.finished(self)
