@@ -675,27 +675,27 @@ class ConverterQueue(TaskQueue):
         path = unquote_filename(path)
 
         c = Converter(sound_file, output_filename,
-                      self.window.prefs.get_string('output-mime-type'),
-                      self.window.prefs.get_int('delete-original'),
-                      self.window.prefs.get_int('output-resample'),
-                      self.window.prefs.get_int('resample-rate'),
-                      self.window.prefs.get_int('force-mono'),
+                      self.window.prefs.settings.get_string('output-mime-type'),
+                      self.window.prefs.settings.get_boolean('delete-original'),
+                      self.window.prefs.settings.get_boolean('output-resample'),
+                      self.window.prefs.settings.get_int('resample-rate'),
+                      self.window.prefs.settings.get_boolean('force-mono'),
         )
-        c.set_vorbis_quality(self.window.prefs.get_float('vorbis-quality'))
-        c.set_aac_quality(self.window.prefs.get_int('aac-quality'))
-        c.set_opus_quality(self.window.prefs.get_int('opus-bitrate'))
-        c.set_flac_compression(self.window.prefs.get_int('flac-compression'))
-        c.set_wav_sample_width(self.window.prefs.get_int('wav-sample-width'))
-        c.set_audio_profile(self.window.prefs.get_string('audio-profile'))
+        c.set_vorbis_quality(self.window.prefs.settings.get_double('vorbis-quality'))
+        c.set_aac_quality(self.window.prefs.settings.get_int('aac-quality'))
+        c.set_opus_quality(self.window.prefs.settings.get_int('opus-bitrate'))
+        c.set_flac_compression(self.window.prefs.settings.get_int('flac-compression'))
+        c.set_wav_sample_width(self.window.prefs.settings.get_int('wav-sample-width'))
+        c.set_audio_profile(self.window.prefs.settings.get_string('audio-profile'))
 
         quality = {
             'cbr': 'mp3-cbr-quality',
             'abr': 'mp3-abr-quality',
             'vbr': 'mp3-vbr-quality'
         }
-        mode = self.window.prefs.get_string('mp3-mode')
+        mode = self.window.prefs.settings.get_string('mp3-mode')
         c.set_mp3_mode(mode)
-        c.set_mp3_quality(self.window.prefs.get_int(quality[mode]))
+        c.set_mp3_quality(self.window.prefs.settings.get_int(quality[mode]))
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)

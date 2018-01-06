@@ -783,7 +783,7 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_replace_messy_chars_toggled(self, button):
-        self.settings.set_int('replace-messy-chars', button.get_active())
+        self.settings.set_boolean('replace-messy-chars', button.get_active())
 
     def change_mime_type(self, mime_type):
         self.settings.set_string('output-mime-type', mime_type)
@@ -1166,7 +1166,7 @@ class SoundConverterWindow(GladeWindow):
     on_quit_button_clicked = close
 
     def on_add_activate(self, *args):
-        last_folder = self.prefs.get_string('last-used-folder')
+        last_folder = self.prefs.settings.get_string('last-used-folder')
         if last_folder:
             self.addchooser.set_current_folder_uri(last_folder)
 
@@ -1175,11 +1175,11 @@ class SoundConverterWindow(GladeWindow):
         self.addchooser.hide()
         if ret == Gtk.ResponseType.OK and folder:
             self.filelist.add_uris(self.addchooser.get_uris())
-            self.prefs.set_string('last-used-folder', folder)
+            self.prefs.settings.set_string('last-used-folder', folder)
         self.set_sensitive()
 
     def on_addfolder_activate(self, *args):
-        last_folder = self.prefs.get_string('last-used-folder')
+        last_folder = self.prefs.settings.get_string('last-used-folder')
         if last_folder:
             self.addfolderchooser.set_current_folder_uri(last_folder)
 
@@ -1194,7 +1194,7 @@ class SoundConverterWindow(GladeWindow):
                 extensions = [os.path.splitext(p)[1] for p in patterns]
             self.filelist.add_uris(folders, None, extensions)
             if folder:
-                self.prefs.set_string('last-used-folder', folder)
+                self.prefs.settings.set_string('last-used-folder', folder)
 
         self.set_sensitive()
 
