@@ -954,8 +954,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
         quality = self.get_int(keys[mode])
 
         quality_to_preset = {
-            'cbr': {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5},
-            'abr': {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5},
+            'cbr': {64: 0, 96: 1, 128: 2, 160: 3, 192: 4, 256: 5, 320: 6},
+            'abr': {64: 0, 96: 1, 128: 2, 160: 3, 192: 4, 256: 5, 320: 6},
             'vbr': {9: 0, 7: 1, 5: 2, 3: 3, 1: 4, 0: 5}, # inverted !
         }
 
@@ -982,8 +982,8 @@ class PreferencesDialog(GladeWindow, GConfStore):
             'vbr': 'mp3-vbr-quality'
         }
         quality = {
-            'cbr': (64, 96, 128, 192, 256, 320),
-            'abr': (64, 96, 128, 192, 256, 320),
+            'cbr': (64, 96, 128, 160, 192, 256, 320),
+            'abr': (64, 96, 128, 160, 192, 256, 320),
             'vbr': (9, 7, 5, 3, 1, 0),
         }
         mode = self.get_string('mp3-mode')
