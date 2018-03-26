@@ -654,7 +654,6 @@ class ConverterQueue(TaskQueue):
         self.reset_counters()
 
     def reset_counters(self):
-        self.total_duration = 0
         self.duration_processed = 0
         self.overwrite_action = None
         self.errors = []
@@ -712,8 +711,6 @@ class ConverterQueue(TaskQueue):
         for task in self.all_tasks:
             if task.sound_file.duration is None:
                 duration = task.get_duration()
-                if duration:
-                    self.total_duration += duration
 
         position = 0.0
         prolist = [1] * self.finished_tasks
@@ -721,7 +718,10 @@ class ConverterQueue(TaskQueue):
             if task.running:
                 task_position = task.get_position()
                 position += task_position
-                taskprogress = task_position / task.sound_file.duration if task.sound_file.duration else 0
+                per_file_progress[task.sound_file] = None
+                if task.sound_file.duration is None:
+                    continue
+                taskprogress = task_position / task.sound_file.duration
                 taskprogress = min(max(taskprogress, 0.0), 1.0)
                 prolist.append(taskprogress)
                 per_file_progress[task.sound_file] = taskprogress
