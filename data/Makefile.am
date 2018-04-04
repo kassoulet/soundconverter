@@ -33,7 +33,7 @@ gsettings_SCHEMAS = org.soundconverter.gschema.xml
 Applicationsdir = $(datadir)/applications
 Applications_DATA = $(desktop_files)
 
-appdatadir = $(datadir)/appdata
+appdatadir = $(datadir)/metainfo
 dist_appdata_DATA = soundconverter.appdata.xml
 
 EXTRA_DIST = $(desktop_in_files) $(desktop_files) $(gsettings_SCHEMAS)
