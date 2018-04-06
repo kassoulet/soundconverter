@@ -66,7 +66,6 @@ def _check_libs():
         import gi
         gi.require_version('Gst', '1.0')
         gi.require_version('Gtk', '3.0')
-        gi.require_version('GConf', '2.0')
         from gi.repository import GObject
         # force GIL creation - see https://bugzilla.gnome.org/show_bug.cgi?id=710447
         import threading

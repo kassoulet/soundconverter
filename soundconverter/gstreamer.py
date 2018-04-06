@@ -25,7 +25,7 @@ from urllib.parse import urlparse
 from gettext import gettext as _
 
 import gi
-from gi.repository import Gst, Gtk, GObject, GConf, Gio
+from gi.repository import Gst, Gtk, GObject, Gio
 
 from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
 from soundconverter.fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
@@ -66,25 +66,29 @@ _GCONF_PROFILE_LIST_PATH = "/system/gstreamer/1.0/audio/global/profile_list"
 audio_profiles_list = []
 audio_profiles_dict = {}
 
-_GCONF = GConf.Client.get_default()
-profiles = _GCONF.all_dirs(_GCONF_PROFILE_LIST_PATH)
-for name in profiles:
-    if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
-        # get profile
-        description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
-        extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
-        pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
-        # check profile validity
-        if not extension or not pipeline:
-            continue
-        if not description:
-            description = extension
-        if description in audio_profiles_dict:
-            continue
-            # store
-        profile = description, extension, pipeline
-        audio_profiles_list.append(profile)
-        audio_profiles_dict[description] = profile
+try:
+    from gi.repository import GConf
+    _GCONF = GConf.Client.get_default()
+    profiles = _GCONF.all_dirs(_GCONF_PROFILE_LIST_PATH)
+    for name in profiles:
+        if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
+            # get profile
+            description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
+            extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
+            pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
+            # check profile validity
+            if not extension or not pipeline:
+                continue
+            if not description:
+                description = extension
+            if description in audio_profiles_dict:
+                continue
+                # store
+            profile = description, extension, pipeline
+            audio_profiles_list.append(profile)
+            audio_profiles_dict[description] = profile
+except ImportError:
+    pass
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
