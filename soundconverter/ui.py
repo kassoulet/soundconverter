@@ -541,7 +541,7 @@ class PreferencesDialog(GladeWindow):
         cell = Gtk.CellRendererText()
         self.resample_rate.pack_start(cell, True)
         self.resample_rate.add_attribute(cell, 'text', 0)
-        rates = [8000, 11025, 22050, 44100, 48000, 96000]
+        rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
         rate = self.settings.get_int('resample-rate')
         try:
             idx = rates.index(rate)
@@ -948,10 +948,9 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_resample_rate_changed(self, combobox):
-        model = combobox.get_model()
-        iter = combobox.get_active_iter()
-        changeto =  model.get_value(iter, 0)
-        self.settings.set_int('resample-rate', int(changeto))
+        selected = combobox.get_active()
+        rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
+        self.settings.set_int('resample-rate', rates[selected])
 
     def on_resample_toggle(self, rstoggle):
         self.settings.set_boolean('output-resample', rstoggle.get_active())

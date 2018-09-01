@@ -1231,28 +1231,31 @@ Gautier Portet</property>
     </columns>
     <data>
       <row>
-        <col id="0">8000</col>
+        <col id="0">8 kHz</col>
       </row>
       <row>
-        <col id="0">11025</col>
+        <col id="0">11 kHz</col>
       </row>
       <row>
-        <col id="0">22050</col>
+        <col id="0">16 kHz</col>
       </row>
       <row>
-        <col id="0">44100</col>
+        <col id="0">22 kHz</col>
       </row>
       <row>
-        <col id="0">48000</col>
+        <col id="0">32 kHz</col>
       </row>
       <row>
-        <col id="0">72000</col>
+        <col id="0">44 kHz</col>
       </row>
       <row>
-        <col id="0">96000</col>
+        <col id="0">48 kHz</col>
       </row>
       <row>
-        <col id="0">128000</col>
+        <col id="0">96 kHz</col>
+      </row>
+      <row>
+        <col id="0">128 kHz</col>
       </row>
     </data>
   </object>
