@@ -110,9 +110,11 @@ encoders = (
     ('vorbisenc', 'Ogg Vorbis'),
     ('oggmux', 'Ogg Vorbis'),
     ('id3mux', 'MP3 tags'),
+    ('id3v2mux', 'MP3 tags'),
     ('xingmux', 'VBR tags'),
     ('lamemp3enc', 'MP3'),
     ('faac', 'AAC'),
+    ('avenc_aac', 'AAC'),
     ('mp4mux', 'AAC'),
     ('opusenc', 'Opus'),
 )
@@ -634,11 +636,15 @@ class Converter(Decoder):
         if 'id3mux' in available_elements:
             # add tags
             cmd += '! id3mux '
+        elif 'id3v2mux' in available_elements:
+            # add tags
+            cmd += '! id3v2mux '
 
         return cmd
 
     def add_aac_encoder(self):
-        return 'faac bitrate=%s ! mp4mux' % (self.aac_quality * 1000)
+        encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
+        return '%s bitrate=%s ! mp4mux' % (encoder, self.aac_quality * 1000)
 
     def add_opus_encoder(self):
         return 'opusenc bitrate=%s bitrate-type=vbr bandwidth=auto ! oggmux' % (self.opus_quality * 1000)
