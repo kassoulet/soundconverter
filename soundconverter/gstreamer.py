@@ -67,6 +67,7 @@ audio_profiles_list = []
 audio_profiles_dict = {}
 
 try:
+    gi.require_version('GConf', '2.0')
     from gi.repository import GConf
     _GCONF = GConf.Client.get_default()
     profiles = _GCONF.all_dirs(_GCONF_PROFILE_LIST_PATH)
@@ -105,32 +106,41 @@ print('  using gio')
 user_canceled_codec_installation = False
 
 encoders = (
-    ('flacenc', 'FLAC'),
-    ('wavenc', 'WAV'),
-    ('vorbisenc', 'Ogg Vorbis'),
-    ('oggmux', 'Ogg Vorbis'),
-    ('id3mux', 'MP3 tags'),
-    ('id3v2mux', 'MP3 tags'),
-    ('xingmux', 'VBR tags'),
-    ('lamemp3enc', 'MP3'),
-    ('faac', 'AAC'),
-    ('avenc_aac', 'AAC'),
-    ('mp4mux', 'AAC'),
-    ('opusenc', 'Opus'),
+    ('flacenc', 'FLAC', 'flac-enc'),
+    ('wavenc', 'WAV', 'wav-enc'),
+    ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc'),
+    ('oggmux', 'Ogg Vorbis', 'vorbis-mux'),
+    ('id3mux', 'MP3 tags', 'mp3-id-tags'),
+    ('id3v2mux', 'MP3 tags', 'mp3-id-tags'),
+    ('xingmux', 'VBR tags', 'mp3-vbr-tags'),
+    ('lamemp3enc', 'MP3', 'mp3-enc'),
+    ('faac', 'AAC', 'aac-enc'),
+    ('avenc_aac', 'AAC', 'aac-enc'),
+    ('mp4mux', 'AAC', 'aac-mux'),
+    ('opusenc', 'Opus', 'opus-enc'),
 )
 
 available_elements = set()
+functions = dict()
 
-for encoder, name in encoders:
+for encoder, name, function in encoders:
     have_it = bool(Gst.ElementFactory.find(encoder))
     if have_it:
         available_elements.add(encoder)
     else:
-        print(('  "%s" gstreamer element not found'
-               ', disabling %s output.' % (encoder, name)))
+        print('  %s gstreamer element not found' % encoder)
+    function += '_' + name
+    functions[function] = functions.get(function) or have_it
+
+for function in sorted(functions):
+    if not functions[function]:
+        print('  disabling %s output.' % function.split('_')[1])
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
+if 'mp4mux' not in available_elements:
+    available_elements.discard('faac')
+    available_elements.discard('avenc_aac')
 
 
 class Pipeline(BackgroundTask):
