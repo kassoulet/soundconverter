@@ -28,7 +28,7 @@ import gi
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
 from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
-from soundconverter.fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
+from soundconverter.fileoperations import unquote_filename, vfs_unlink
 from soundconverter.fileoperations import vfs_rename
 from soundconverter.fileoperations import vfs_exists
 from soundconverter.fileoperations import beautify_uri
