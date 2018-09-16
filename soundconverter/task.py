@@ -21,7 +21,7 @@
 
 import time
 import gi
-from gi.repository import GObject
+from gi.repository import GLib
 
 
 class BackgroundTask:
@@ -56,10 +56,10 @@ class BackgroundTask:
         """Call the signal handlers.
         Callbacks are called as gtk idle funcs to be sure
         they are in the main thread."""
-        GObject.idle_add(getattr(self, signal))
+        GLib.idle_add(getattr(self, signal))
         if signal in self.listeners:
             for listener in self.listeners[signal]:
-                GObject.idle_add(listener, self)
+                GLib.idle_add(listener, self)
 
     def emit_sync(self, signal):
         """Call the signal handlers.
