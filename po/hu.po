@@ -11,31 +11,31 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:37+0000\n"
-"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
+"PO-Revision-Date: 2017-05-07 14:50+0000\n"
+"Last-Translator: Úr Balázs <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
-msgstr "Hangkonvertáló"
+msgstr "Hangátalakító"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Audio Format Converter"
-msgstr "Audió Formátum Konvertáló"
+msgstr "Hangformátum-átalakító"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Converts audio files into other formats"
-msgstr "Audioformátumokat konvertál más formátumokba"
+msgstr "Hangfájlokat alakít át más formátumokba"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
-msgstr "Gnome alapú hangkonvertáló"
+msgstr "GNOME alapú hangátalakítás"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
@@ -43,7 +43,7 @@ msgstr "Weboldal"
 
 #: ../data/soundconverter.glade.h:3
 msgid "dialog1"
-msgstr "dialog1"
+msgstr "párbeszédablak1"
 
 #: ../data/soundconverter.glade.h:4
 msgid "Filter "
@@ -77,7 +77,7 @@ msgstr "_Alkalmazás a teljes listára"
 
 #: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
 msgid "artist/album"
-msgstr "szerző / album"
+msgstr "előadó/album"
 
 #: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
 msgid "artist - album"
@@ -93,19 +93,19 @@ msgstr "Alacsony"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Normal"
-msgstr "Normális"
+msgstr "Normál"
 
 #: ../data/soundconverter.glade.h:17
 msgid "High"
-msgstr "Jó"
+msgstr "Magas"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Very High"
-msgstr "Nagyon jó"
+msgstr "Nagyon magas"
 
 #: ../data/soundconverter.glade.h:19
 msgid "Insanely High"
-msgstr "Elképesztően jó"
+msgstr "Elképesztően magas"
 
 #: ../data/soundconverter.glade.h:20
 msgid "8 bits (very low quality)"
@@ -141,7 +141,7 @@ msgstr "Átlagos (ABR)"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Variable (VBR) - Best quality"
-msgstr "Változó (VBR)"
+msgstr "Változó (VBR) - legjobb minőség"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis (.ogg)"
@@ -169,7 +169,7 @@ msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
-msgstr "GNOME Hangprofil"
+msgstr "GNOME hangprofil"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
@@ -185,39 +185,39 @@ msgstr "Beállítások"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "Ugyanabba a könyvtárba, ahol a bemeneti fájlok találhatók"
+msgstr "Ugyanaz a mappa mint a bemeneti fájlé"
 
 #: ../data/soundconverter.glade.h:40
 msgid "Choose..."
-msgstr "Tallózás..."
+msgstr "Kiválasztás…"
 
 #: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
-msgstr "Megadott könyvtárba"
+msgstr "Megadott mappába"
 
 #: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
-msgstr "Alkönyvtárak létrehozása: "
+msgstr "Almappák létrehozása: "
 
 #: ../data/soundconverter.glade.h:43
 msgid "Delete original file"
-msgstr "Bemeneti fájlok törlése"
+msgstr "Eredeti fájl törlése"
 
 #: ../data/soundconverter.glade.h:44
 msgid "<b>Where to place results?</b>"
-msgstr "<b>Hova mentsük a konvertált fájlokat?</b>"
+msgstr "<b>Hová kerüljenek az eredmények?</b>"
 
 #: ../data/soundconverter.glade.h:45
 msgid "Filename pattern: "
-msgstr "Fájlnév minta: · "
+msgstr "Fájlnév minta: "
 
 #: ../data/soundconverter.glade.h:46
 msgid "Replace all messy characters"
-msgstr "Minden speciális karakter cseréje"
+msgstr "Összes speciális karakter cseréje"
 
 #: ../data/soundconverter.glade.h:47
 msgid "Remove all characters except letters, digits and ./_-"
-msgstr ""
+msgstr "Minden karakter eltávolítása, kivéve betűk, számok és ./_-"
 
 #: ../data/soundconverter.glade.h:48
 msgid "<i>Example filename:</i>"
@@ -245,7 +245,7 @@ msgstr "Ogg"
 
 #: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
-msgstr "Bitsűrűség módja"
+msgstr "Bitsebesség módja:"
 
 #: ../data/soundconverter.glade.h:55
 msgid "MP3"
@@ -297,11 +297,11 @@ msgstr "Mono kimenet kényszerítése"
 
 #: ../data/soundconverter.glade.h:67
 msgid "Limit number of parallel jobs"
-msgstr "Párhuzamosan futó feladatok limitálása"
+msgstr "Párhuzamos feladatok számának korlátozása"
 
 #: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
-msgstr "Nem áll rendelkezésre mp3 kódoló."
+msgstr "Nem áll rendelkezésre MP3-kódoló."
 
 #: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
@@ -309,11 +309,11 @@ msgstr "Telepítési segédlet elolvasása"
 
 #: ../data/soundconverter.glade.h:70
 msgid "Where to place results?"
-msgstr "Hova mentsük a konvertált fájlokat?"
+msgstr "Hová kerüljenek az eredmények?"
 
 #: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
-msgstr "Hangkonvertáló"
+msgstr "Hangátalakító"
 
 #: ../data/soundconverter.glade.h:72
 msgid "_File"
@@ -333,24 +333,23 @@ msgstr "Fájl _hozzáadása"
 
 #: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
-msgstr "_Könyvtár hozzáadása"
+msgstr "_Mappa hozzáadása"
 
 #: ../bin/soundconverter.py:107
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
 msgstr ""
-"Konvertálás kötegelt módban, parancssorból, grafikus felület nélkül.\n"
-"Ez a mód scriptekből jól használható"
+"Átalakítás kötegelt módban, parancssorból, grafikus felület nélkül.\n"
+"Ezt használhatja akár parancsfájlokból is."
 
 #: ../bin/soundconverter.py:112
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
-"Jelenítse meg a bemeneti fájlok tag-jeit, de ne konvertálja őket. Így "
-"kötegelt módban\n"
-" fut a konvertáló és nem jeleníti meg a grafikus felületet."
+"Bemeneti fájlok címkéinek megjelenítése azok átalakítása helyett. Ez jelzi \n"
+"a parancssori kötegelt módot, és letiltja a grafikus felhasználói felületet."
 
 #: ../bin/soundconverter.py:116
 #, python-format
@@ -358,16 +357,16 @@ msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
 "probably want to set the output suffix as well."
 msgstr ""
-"Állítsa be a kimenet fájl MIME típusát kötegelt módhoz. Az alapértelmezett: "
-"%s. Ajánlott beállítani a kimeneti fájl utótagját is."
+"A kimenet MIME-típusának beállítása kötegelt módnál. Az alapértelmezett: %s. "
+"Ne feledje, hogy valószínűleg a kimeneti utótagot is be kell állítani."
 
 #: ../bin/soundconverter.py:120
 msgid "Be quiet. Don't write normal output, only errors."
-msgstr "Csendes üzemmód, nem használ kimenetet, csak hibákat ír."
+msgstr "Csendes üzemmód. Nem ír normál kimenetet, csak hibákat."
 
 #: ../bin/soundconverter.py:122
 msgid "Displays additional debug information"
-msgstr "További hibakeresési információ megjelenítése"
+msgstr "További hibakeresési információkat jelenít meg"
 
 #: ../bin/soundconverter.py:124
 #, python-format
@@ -376,17 +375,16 @@ msgid ""
 "the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
-"Állítsa be a kimeneti fájl nevének utótagját kötegelt módhoz. Az "
-"alapértelmezett: %s. Az utótag\n"
-" nincs hatással a kimeneti MIME típusra."
+"A kimeneti fájlnév utótag beállítása kötegelt módnál. Az alapértelmezett: "
+"%s. Ne feledje, hogy az utótag nincs hatással a kimenet MIME-típusára."
 
 #: ../bin/soundconverter.py:128
 msgid "Force number of concurrent conversions."
-msgstr "Párhuzamos konvertálás kikényszerítése."
+msgstr "Egyidejű átalakítások számának kényszerítése."
 
 #: ../bin/soundconverter.py:130
 msgid "Shows GStreamer Options"
-msgstr "GStreamer opciók megjelenítése"
+msgstr "Megjeleníti a GStreamer kapcsolókat"
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -402,33 +400,34 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "A könyvtárat nem sikerült létrehozni!"
+msgstr "Nem lehet létrehozni a(z) „%s” mappát."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Hiba a fájl átnevezésekor!"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
-msgstr "Bővítmény telepítés félbeszakítva."
+msgstr "Bővítménytelepítés megszakítva."
 
 #: ../soundconverter/gstreamer.py:566
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "A(z) '%s' könyvtár létrehozása nem lehetséges."
+msgstr "Nem lehet létrehozni a(z) „%s” mappát."
 
 #. pass
 #: ../soundconverter/gstreamer.py:607
 msgid "GStreamer Error:"
-msgstr "GStreamer Hiba:"
+msgstr "GStreamer hiba:"
 
 #: ../soundconverter/gstreamer.py:814
 #, python-format
 msgid "Conversion done in %s"
-msgstr "Konvertálás elkészült %s alatt"
+msgstr "Az átalakítás elkészült %s alatt"
 
 #: ../soundconverter/namegenerator.py:76
 msgid "Unknown Album"
@@ -444,8 +443,6 @@ msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Előadó Album Cím Szám Stílus Dátum Év Időbélyeg LemezSzáma ÖsszesLemez "
-"Kiterjesztés"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -464,19 +461,19 @@ msgstr ""
 
 #: ../soundconverter/ui.py:310
 msgid "Adding files..."
-msgstr "Fájlok hozzáadása..."
+msgstr ""
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
-msgstr "A bemenettel azonos, de cserélje le a kiterjesztést"
+msgstr "A bemenettel azonos, de cserélje le az utótagot"
 
 #: ../soundconverter/ui.py:380
 msgid "Same as input, but with an additional suffix"
-msgstr "A bemenettel azonos, de adja hozzá az új kiterjesztést is"
+msgstr "A bemenettel azonos, de további utótaggal"
 
 #: ../soundconverter/ui.py:381
 msgid "Track number - title"
-msgstr "Track száma - cím"
+msgstr "Dal száma - cím"
 
 #: ../soundconverter/ui.py:382
 msgid "Track title"
@@ -484,29 +481,29 @@ msgstr "Szám címe"
 
 #: ../soundconverter/ui.py:383
 msgid "Artist - title"
-msgstr "Szerző - cím"
+msgstr "Előadó - cím"
 
 #: ../soundconverter/ui.py:384
 msgid "Custom filename pattern"
-msgstr "Egyedi fájlnév minta"
+msgstr "Egyéni fájlnév minta"
 
 #: ../soundconverter/ui.py:389
 msgid "artist-album"
-msgstr "szerző-album"
+msgstr "előadó-album"
 
 #: ../soundconverter/ui.py:447
 msgid "Available patterns:"
-msgstr "Rendelkezésre álló minták:"
+msgstr "Elérhető minták:"
 
 #: ../soundconverter/ui.py:644
 #, python-format
 msgid "Into folder %s"
-msgstr "A(z) %s könyvtárba"
+msgstr "A(z) %s mappába"
 
 #: ../soundconverter/ui.py:724
 #, python-format
 msgid "Target bitrate: %s"
-msgstr "Cél bitráta: %s"
+msgstr "Cél bitsebesség: %s"
 
 #: ../soundconverter/ui.py:1075
 msgid "Open a file"
@@ -514,15 +511,15 @@ msgstr "Fájl megnyitása"
 
 #: ../soundconverter/ui.py:1169
 msgid "Add Folder..."
-msgstr "Könyvtár hozzáadása ..."
+msgstr "Mappa hozzáadása…"
 
 #: ../soundconverter/ui.py:1337
 msgid "Preparing conversion..."
-msgstr "Felkészülés a konvertálásra..."
+msgstr "Átalakítás előkészítése…"
 
 #: ../soundconverter/ui.py:1358
 msgid "Converting"
-msgstr "Konvertálás"
+msgstr "Átalakítás"
 
 #: ../soundconverter/ui.py:1376
 msgid "Canceled"
@@ -535,7 +532,7 @@ msgstr "Szüneteltetve"
 #: ../soundconverter/ui.py:1467
 #, python-format
 msgid "%d:%02d left"
-msgstr "%d:%02d a hátralévő idő"
+msgstr "%d:%02d van hátra"
 
 #: ../soundconverter/ui.py:1473
 msgid "Ready"

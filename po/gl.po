@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:39+0000\n"
-"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
+"PO-Revision-Date: 2018-01-28 22:54+0000\n"
+"Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: Galician <marcoslansgarza@gmail.com>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 "X-Poedit-Language: Galician\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
@@ -400,14 +400,15 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "Non é posible crear o cartafol."
+msgstr "Non é posíbel crear o cartafol '%s'."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Produciuse un erro no renomeado do ficheiro."
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
@@ -438,12 +439,13 @@ msgstr "Artista descoñecido"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
+#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Artista Álbum Título Pista Total Xénero Data Ano MarcaTempo NúmDisco "
-"DiscTotal Ext"
+"Artista Álbum Álbum-Artista Título Pista Total Xénero Data Ano MarcaDeTempo "
+"NúmeroDeDisco TotalDiscos Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -461,6 +463,7 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:310
+#, fuzzy
 msgid "Adding files..."
 msgstr "Engadindo ficheiros..."
 
@@ -538,3 +541,9 @@ msgstr "%d:%02d restantes"
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Listo"
+
+#~ msgid "_Clear List"
+#~ msgstr "Li_mpar lista"
+
+#~ msgid "Scanning files..."
+#~ msgstr "Analizando ficheiros..."

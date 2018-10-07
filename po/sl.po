@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: soundconverter master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:36+0000\n"
-"Last-Translator: Andrej Znidarsic <andrej.znidarsic@gmail.com>\n"
+"PO-Revision-Date: 2018-02-16 08:23+0000\n"
+"Last-Translator: Matic Gradišer <Unknown>\n"
 "Language-Team: Slovenian GNOME translation group <gnome-si@googlegroups."
 "com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -33,7 +33,7 @@ msgstr "Pretvornik zapisov zvoka"
 
 #: ../data/soundconverter.desktop.in.in.h:3
 msgid "Converts audio files into other formats"
-msgstr ""
+msgstr "Pretvori zvočne datoteke v druge formate"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
@@ -41,7 +41,7 @@ msgstr ""
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
-msgstr ""
+msgstr "Spletna stran"
 
 #: ../data/soundconverter.glade.h:3
 msgid "dialog1"
@@ -87,91 +87,91 @@ msgstr "izvajalec - album"
 
 #: ../data/soundconverter.glade.h:14
 msgid "Very Low"
-msgstr ""
+msgstr "Zelo nizko"
 
 #: ../data/soundconverter.glade.h:15
 msgid "Low"
-msgstr ""
+msgstr "Nizko"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Normal"
-msgstr ""
+msgstr "Običajno"
 
 #: ../data/soundconverter.glade.h:17
 msgid "High"
-msgstr ""
+msgstr "Visoko"
 
 #: ../data/soundconverter.glade.h:18
 msgid "Very High"
-msgstr ""
+msgstr "Zelo visoko"
 
 #: ../data/soundconverter.glade.h:19
 msgid "Insanely High"
-msgstr ""
+msgstr "Izjemno visoko"
 
 #: ../data/soundconverter.glade.h:20
 msgid "8 bits (very low quality)"
-msgstr ""
+msgstr "8 bitno (zelo nizka kvaliteta)"
 
 #: ../data/soundconverter.glade.h:21
 msgid "16 bits (default)"
-msgstr ""
+msgstr "16 bitno (normalno)"
 
 #: ../data/soundconverter.glade.h:22
 msgid "32 bits"
-msgstr ""
+msgstr "32 bitno"
 
 #: ../data/soundconverter.glade.h:23
 msgid "Less (Faster)"
-msgstr ""
+msgstr "Manjn (hitreje)"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Default"
-msgstr ""
+msgstr "Privzeto"
 
 #: ../data/soundconverter.glade.h:25
 msgid "Better (Slower)"
-msgstr ""
+msgstr "Bolje (počasneje)"
 
 #: ../data/soundconverter.glade.h:26
 msgid "Constant (CBR)"
-msgstr ""
+msgstr "Konstantno (CBR)"
 
 #: ../data/soundconverter.glade.h:27
 msgid "Average (ABR)"
-msgstr ""
+msgstr "Povprečno (ABR)"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Variable (VBR) - Best quality"
-msgstr ""
+msgstr "Variabilno (VBR) - najboljša kvaliteta"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis (.ogg)"
-msgstr ""
+msgstr "Ogg Vorbis (.ogg)"
 
 #: ../data/soundconverter.glade.h:30
 msgid "MP3 (.mp3)"
-msgstr ""
+msgstr "MP3 (.mp3)"
 
 #: ../data/soundconverter.glade.h:31
 msgid "FLAC Lossless (.flac)"
-msgstr ""
+msgstr "FLAC Lossless (.flac)"
 
 #: ../data/soundconverter.glade.h:32
 msgid "MS Wave (.wav)"
-msgstr ""
+msgstr "MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:33
 msgid "AAC (.m4a)"
-msgstr ""
+msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:34
 msgid "Opus (.opus)"
-msgstr ""
+msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:35
 msgid "GNOME Audio Profile"
-msgstr ""
+msgstr "GNOME Audio Profile"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
@@ -243,7 +243,7 @@ msgstr "Uporabi .oga pripono"
 
 #: ../data/soundconverter.glade.h:53
 msgid "Ogg"
-msgstr ""
+msgstr "Ogg"
 
 #: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
@@ -271,19 +271,19 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:60
 msgid "AAC"
-msgstr ""
+msgstr "AAC"
 
 #: ../data/soundconverter.glade.h:61
 msgid "Opus"
-msgstr ""
+msgstr "Opus"
 
 #: ../data/soundconverter.glade.h:62
 msgid "Profile:"
-msgstr ""
+msgstr "Profil:"
 
 #: ../data/soundconverter.glade.h:63
 msgid "gst-profile"
-msgstr ""
+msgstr "gst-profile"
 
 #: ../data/soundconverter.glade.h:64
 msgid "<b>Type of result?</b>"
@@ -396,8 +396,9 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr ""
+msgstr "Ni mogoče ustvariti mape '%s'"
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
@@ -417,7 +418,7 @@ msgstr "Ni mogoče ustvariti mape '%s'"
 #. pass
 #: ../soundconverter/gstreamer.py:607
 msgid "GStreamer Error:"
-msgstr ""
+msgstr "GStreamer napaka:"
 
 #: ../soundconverter/gstreamer.py:814
 #, python-format
@@ -426,11 +427,11 @@ msgstr ""
 
 #: ../soundconverter/namegenerator.py:76
 msgid "Unknown Album"
-msgstr ""
+msgstr "Neznan album"
 
 #: ../soundconverter/namegenerator.py:77
 msgid "Unknown Artist"
-msgstr ""
+msgstr "Neznan izvajalec"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
@@ -441,7 +442,7 @@ msgstr ""
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
-msgstr ""
+msgstr "Vse datoteke"
 
 #: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
 #, python-format
@@ -452,8 +453,9 @@ msgid ""
 msgstr ""
 
 #: ../soundconverter/ui.py:310
+#, fuzzy
 msgid "Adding files..."
-msgstr ""
+msgstr "Pregledovanje datotek..."
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
@@ -529,3 +531,6 @@ msgstr "%d:%02d preostalo"
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Pripravljeno"
+
+#~ msgid "_Clear List"
+#~ msgstr "_Počisti seznam"

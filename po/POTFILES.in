@@ -4,7 +4,6 @@ data/soundconverter.glade
 bin/soundconverter.py
 soundconverter/error.py
 soundconverter/fileoperations.py
-soundconverter/gconfstore.py
 soundconverter/gstreamer.py
 soundconverter/__init__.py
 soundconverter/namegenerator.py

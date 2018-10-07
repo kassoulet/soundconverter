@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: Soundconverter 0.9.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:39+0000\n"
+"PO-Revision-Date: 2018-05-25 08:35+0000\n"
 "Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -406,14 +406,15 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "Kan map niet aanmaken!"
+msgstr "Kan de map ‘%s’ niet aanmaken."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Fout opgetreden bij hernoemen bestand!"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
@@ -448,8 +449,6 @@ msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Artiest Album Titel Nummer Totaal Genre Datum Jaar Tijdstempel Schijfnummer "
-"Schijftotaal Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -467,8 +466,9 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:310
+#, fuzzy
 msgid "Adding files..."
-msgstr "Bestanden worden toegevoegd…"
+msgstr "Bestanden worden toegevoegd..."
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
@@ -547,3 +547,9 @@ msgstr "%d:%02d resterend"
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Gereed"
+
+#~ msgid "_Clear List"
+#~ msgstr "Lijst _wissen"
+
+#~ msgid "Scanning files..."
+#~ msgstr "Bestanden scannen…"

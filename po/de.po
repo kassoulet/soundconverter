@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2015-12-03 06:39+0000\n"
-"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
+"PO-Revision-Date: 2018-01-16 14:57+0000\n"
+"Last-Translator: Tobias Bannert <tobannert@gmail.com>\n"
 "Language-Team: German <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
-msgstr "Sound Converter"
+msgstr "Klangumwandler"
 
 #: ../data/soundconverter.desktop.in.in.h:2
 msgid "Audio Format Converter"
@@ -35,7 +35,7 @@ msgstr "GNOME-basierte Umwandlung von Audio-Dateien"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
-msgstr "Website"
+msgstr "Internetseite"
 
 # # line 2414
 #: ../data/soundconverter.glade.h:3
@@ -85,7 +85,7 @@ msgstr "Interpret/Album"
 
 #: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
 msgid "artist - album"
-msgstr "Interpret - Album"
+msgstr "Interpret – Album"
 
 #: ../data/soundconverter.glade.h:14
 msgid "Very Low"
@@ -117,7 +117,7 @@ msgstr "8 Bit (sehr niedrige Qualität)"
 
 #: ../data/soundconverter.glade.h:21
 msgid "16 bits (default)"
-msgstr "16 Bit (Standard)"
+msgstr "16 Bit (Vorgabe)"
 
 #: ../data/soundconverter.glade.h:22
 msgid "32 bits"
@@ -129,7 +129,7 @@ msgstr "Geringer (schneller)"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Default"
-msgstr "Standard"
+msgstr "Vorgabe"
 
 #: ../data/soundconverter.glade.h:25
 msgid "Better (Slower)"
@@ -145,7 +145,7 @@ msgstr "Durchschnittliche Bitrate (ABR)"
 
 #: ../data/soundconverter.glade.h:28
 msgid "Variable (VBR) - Best quality"
-msgstr "Variable Bitrate (VBR) - Beste Qualität"
+msgstr "Variable Bitrate (VBR) – höchste Qualität"
 
 #: ../data/soundconverter.glade.h:29
 msgid "Ogg Vorbis (.ogg)"
@@ -177,7 +177,7 @@ msgstr "GNOME-Audio-Profil"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
-msgstr "Nummer - Titel"
+msgstr "Nummer – Titel"
 
 #: ../data/soundconverter.glade.h:37
 msgid "track_title"
@@ -190,7 +190,7 @@ msgstr "Einstellungen"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Same folder as the input file"
-msgstr "Gleiches Verzeichnis wie Eingabedateien"
+msgstr "Gleicher Ordner wie die Eingabedatei"
 
 #: ../data/soundconverter.glade.h:40
 msgid "Choose..."
@@ -325,7 +325,7 @@ msgstr "Speicherort für Zieldateien"
 
 #: ../data/soundconverter.glade.h:71
 msgid "SoundConverter"
-msgstr "Sound Converter"
+msgstr "Klangumwandler"
 
 # # line 42
 #: ../data/soundconverter.glade.h:72
@@ -422,14 +422,15 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "Der Ordner konnte nicht erstellt werden."
+msgstr "Ordner »%s« kann nicht erstellt werden."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Fehler beim Umbenennen der Datei"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
@@ -460,12 +461,13 @@ msgstr "Unbekannter Interpret"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
+#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
-"DiscTotal Ext"
+"Künstler Album Albumkünstler Titel Stück Gesamt Genre Datum Jahr Zeitstempel "
+"Discnummer Discgesamt Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -483,6 +485,7 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:310
+#, fuzzy
 msgid "Adding files..."
 msgstr "Dateien werden hinzugefügt …"
 
@@ -496,7 +499,7 @@ msgstr "Wie Quelldatei, aber mit zusätzlicher Dateiendung"
 
 #: ../soundconverter/ui.py:381
 msgid "Track number - title"
-msgstr "Nummer - Titel"
+msgstr "Nummer – Titel"
 
 #: ../soundconverter/ui.py:382
 msgid "Track title"
@@ -504,7 +507,7 @@ msgstr "Titel"
 
 #: ../soundconverter/ui.py:383
 msgid "Artist - title"
-msgstr "Interpret - Titel"
+msgstr "Interpret – Titel"
 
 #: ../soundconverter/ui.py:384
 msgid "Custom filename pattern"
@@ -542,7 +545,7 @@ msgstr "Konvertierung wird vorbereitet …"
 
 #: ../soundconverter/ui.py:1358
 msgid "Converting"
-msgstr "Konvertierung läuft"
+msgstr "Umwandlung wird durchgeführt"
 
 #: ../soundconverter/ui.py:1376
 msgid "Canceled"
@@ -560,3 +563,9 @@ msgstr "%d:%02d verbleibend"
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Bereit"
+
+#~ msgid "_Clear List"
+#~ msgstr "_Liste leeren"
+
+#~ msgid "Scanning files..."
+#~ msgstr "Dateien werden eingelesen …"

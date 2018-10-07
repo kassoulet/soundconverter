@@ -16,8 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -399,14 +399,15 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "Неуспешно създаване на папка!"
+msgstr "Невъзможно създаването на папка '%s'"
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Грешка при преименуването на файла!"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
@@ -440,7 +441,7 @@ msgstr "Неизвестен изпълнител"
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
-msgstr "Изпълнител Албум Заглавие Песен Общо Жанр Дата Година Диск№"
+msgstr ""
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -459,7 +460,7 @@ msgstr ""
 
 #: ../soundconverter/ui.py:310
 msgid "Adding files..."
-msgstr "Добавяне на файлове..."
+msgstr ""
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"

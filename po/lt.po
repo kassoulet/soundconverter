@@ -6,16 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2016-05-08 20:23+0000\n"
+"PO-Revision-Date: 2018-04-05 20:52+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-01-11 16:08+0000\n"
-"X-Generator: Launchpad (build 18302)\n"
+"X-Launchpad-Export-Date: 2018-10-07 10:08+0000\n"
+"X-Generator: Launchpad (build 18785)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -317,11 +318,11 @@ msgstr "_Failas"
 
 #: ../data/soundconverter.glade.h:73
 msgid "_Edit"
-msgstr "_Keisti"
+msgstr "_Taisyti"
 
 #: ../data/soundconverter.glade.h:74
 msgid "_Help"
-msgstr "_Pagalba"
+msgstr "Ž_inynas"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_Add File"
@@ -398,14 +399,15 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/fileoperations.py:98
+#, fuzzy
 msgid "Cannot create folder!"
-msgstr "Nepavyksta sukurti aplanko!"
+msgstr "Nepavyko sukurti aplanko '%s'."
 
 #. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr "Klaida, pervadinant failą!"
+msgstr ""
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
@@ -436,12 +438,13 @@ msgstr "Nežinomas atlikėjas"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
+#, fuzzy
 msgid ""
 "Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
 "DiscTotal Ext"
 msgstr ""
-"Atlikėjas Albumas Pavadinimas Takelis Viso Žanras Data Metai LaikoŽyma "
-"DiskoNumeris DiskoViso Ext"
+"Atlikėjas Albumas Albumas-Atlikėjas Pavadinimas Takelis Viso Žanras Data "
+"Metai LaikoŽyma DiskoNr DiskeViso Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -459,6 +462,7 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:310
+#, fuzzy
 msgid "Adding files..."
 msgstr "Pridedami failai..."
 
@@ -536,3 +540,9 @@ msgstr "Liko %d:%02d"
 #: ../soundconverter/ui.py:1473
 msgid "Ready"
 msgstr "Pasiruošta"
+
+#~ msgid "_Clear List"
+#~ msgstr "Iš_valyti sąrašą"
+
+#~ msgid "Scanning files..."
+#~ msgstr "Peržiūrimi failai..."
