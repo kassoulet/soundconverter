@@ -1099,9 +1099,9 @@ class SoundConverterWindow(GladeWindow):
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
 
-        self.aboutdialog.set_property('name', NAME)
-        self.aboutdialog.set_property('version', VERSION)
-        self.aboutdialog.set_transient_for(self.widget)
+        #self.aboutdialog.set_property('name', NAME)
+        #self.aboutdialog.set_property('version', VERSION)
+        #self.aboutdialog.set_transient_for(self.widget)
 
         self.converter = ConverterQueue(self)
 
@@ -1304,7 +1304,7 @@ class SoundConverterWindow(GladeWindow):
         about.set_property('version', VERSION)
         about.set_transient_for(self.widget)
         #TODO: about.set_property('translator_credits', TRANSLATORS)
-        about.show()
+        about.run()
 
     def on_aboutdialog_response(self, *args):
         self.aboutdialog.hide()
