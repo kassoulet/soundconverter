@@ -331,6 +331,10 @@ class TypeFinder(Pipeline):
         # since its caps would've been the same as decodebin's sink caps.
         self.add_signal('typefind', 'have-type', self.have_type)
 
+    def on_error(self, error):
+        self.error = error
+        log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
     

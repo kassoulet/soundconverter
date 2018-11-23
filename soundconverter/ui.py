@@ -69,7 +69,7 @@ def gtk_iteration():
 def gtk_sleep(duration):
     start = time.time()
     while time.time() < start + duration:
-        time.sleep(0.010)
+        time.sleep(0.01)
         gtk_iteration()
 
 
@@ -183,21 +183,15 @@ class FileList:
         return [i[1] for i in self.sortedmodel]
 
     def update_progress(self):
-        gtk_iteration()
-        if self.files_to_add is None:
-            return False
-        if self.files_to_add:
-            fraction = float(len(self.model)) / self.files_to_add
-            self.window.progressbarstatus.set_fraction(fraction)
-        else:
+        if self.files_to_add is not None:
             self.window.progressbarstatus.pulse()
-        return True
+            return True
+        return False
 
     def found_type(self, sound_file, mime):
-        assert False
-        debug('found_type', sound_file.filename)
-        self.append_file(sound_file)
-        self.window.set_sensitive()
+        ext = os.path.splitext(sound_file.filename)[1]
+        debug('mime:', ext, mime)
+        self.extensions[ext] = mime
 
     @idle
     def add_uris(self, uris, base=None, extensions=None):
@@ -247,11 +241,32 @@ class FileList:
             base += '/'
 
         scan_t = time.time()
-        log('adding: %d files' % len(files))
+        log('analysing file extensions')
         self.files_to_add = len(files)
         self.window.set_status(_('Adding Files...'))
+        
+        self.extensions = {}
+        extensions = {}
         for f in files:
-            #gtk_iteration()
+            extensions[os.path.splitext(f)[1]] = f
+        for ext, filename in extensions.items():
+            sound_file = SoundFile(filename, base)
+            typefinder = TypeFinder(sound_file)
+            typefinder.set_found_type_hook(self.found_type)
+            self.typefinders.add_task(typefinder)
+
+        self.typefinders.queue_ended = self.typefinder_queue_ended
+        self.typefinders.start()
+
+        while(self.typefinders.running):
+            gtk_iteration()
+            time.sleep(0.1)
+
+        log('adding: %d files' % len(files))
+        for f in files:
+            ext = os.path.splitext(f)[1]
+            if ext not in self.extensions:
+                continue
             sound_file = SoundFile(f, base)
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
