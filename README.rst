@@ -1,5 +1,5 @@
-        README for GNOME sound converter application
-        ============================================
+README for GNOME sound converter application
+============================================
 
 A simple sound converter application for the GNOME environment. It reads
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
@@ -10,64 +10,66 @@ Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
 
-        Supported audio formats
-        -----------------------
+Supported audio formats
+-----------------------
 
 All file formats that GStreamer can read from should now be supported
 (thanks to the wonderful "decodebin" element). The output formats are
 more restricted, however, since there is no "encodebin" element to
 magically convert to any format we might want.
 
-        Type                Supported?
+==========  ==========
+Type        Supported?
+==========  ==========
+Ogg Vorbis  yes
+FLAC        yes
+Wave        yes
+MP3         yes
+==========  ==========
 
-        Ogg Vorbis          yes
-        FLAC                yes
-        Wave                yes
-        MP3                 yes
+Copyright and acknowledgements
+------------------------------
 
-        Copyright and acknowledgements
-        ------------------------------
-
-Copyright 2004 Lars Wirzenius
-Copyright 2005-2017 Gautier Portet
-
-thanks to:
-	Guillaume Bedot
-	Dominik Zabłotny
-	Noa Resare
-	Nil Gradisnik
-	Elias Autio
-	Thom Pischke
-	Qball Cow
-	Janis Blechert
-	Brendan Martens
-	Jason Martens
-	Wouter Stomp
-	Joe Wrigley
-	Jonh Wendell
-	Regis Floret
-	Toni Fiz
-	Seketeli Apelete
-	Cristiano Canguçu
-	Adolfo González Blázquez
-	Marc E.
-	Tobias Kral
-	Hanno Böck
-	Pedro Alejandro López-Valencia
-	James Lee
-	Christopher Barrington-Leigh
-	Thomas Schwing
-	Remi Grolleau
-	Julien Gascard
-	Kamil Páral
-	Stefano Luciani
-	Martin Seifert
-	Claudio Saavedra
-	Ken Harris
-	Jon Arnold
-	Major Kong
-	Uwe Bugla
-
+| Copyright 2004 Lars Wirzenius
+| Copyright 2005-2017 Gautier Portet
+|
+| thanks to:
+| 	Guillaume Bedot
+| 	Dominik Zabłotny
+| 	Noa Resare
+| 	Nil Gradisnik
+| 	Elias Autio
+| 	Thom Pischke
+| 	Qball Cow
+| 	Janis Blechert
+| 	Brendan Martens
+| 	Jason Martens
+| 	Wouter Stomp
+| 	Joe Wrigley
+| 	Jonh Wendell
+| 	Regis Floret
+| 	Toni Fiz
+| 	Seketeli Apelete
+| 	Cristiano Canguçu
+| 	Adolfo González Blázquez
+| 	Marc E.
+| 	Tobias Kral
+| 	Hanno Böck
+| 	Pedro Alejandro López-Valencia
+| 	James Lee
+| 	Christopher Barrington-Leigh
+| 	Thomas Schwing
+| 	Remi Grolleau
+| 	Julien Gascard
+| 	Kamil Páral
+| 	Stefano Luciani
+| 	Martin Seifert
+| 	Claudio Saavedra
+| 	Ken Harris
+| 	Jon Arnold
+| 	Major Kong
+| 	Uwe Bugla
+|
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; version 3 of the License.
