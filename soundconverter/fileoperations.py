@@ -22,7 +22,7 @@
 import os
 import urllib.request, urllib.parse, urllib.error
 import gi
-from gi.repository import GObject, Gio
+from gi.repository import Gio
 
 from soundconverter.utils import debug
 from soundconverter.error import show_error
@@ -52,11 +52,6 @@ def vfs_walk(uri):
         if info == Gio.FileType.REGULAR:
             filelist.append(str(dirlist.get_child(file_info).get_uri()))
     return filelist
-
-def vfs_makedirs(path_to_create):
-    """Similar to os.makedirs, but with gnomevfs."""
-    gfile = Gio.file_parse_name(path_to_create)
-    return gfile.make_directory_with_parents(uri, 0o777)
 
 def vfs_getparent(path):
     """Get folder name."""

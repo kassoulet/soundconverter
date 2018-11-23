@@ -111,7 +111,7 @@ class MsgAreaErrorDialog_:
 
 
     def show_exception(self, exception):
-        self.show('<b>%s</b>' % GObject.markup_escape_text(exception.primary),
+        self.show('<b>%s</b>' % GLib.markup_escape_text(exception.primary),
                     exception.secondary)
 
 
@@ -200,7 +200,7 @@ class FileList:
         self.window.set_status(_('Scanning files...'))
         self.window.progressbarstatus.show()
         self.files_to_add = 0
-        GObject.timeout_add(100, self.update_progress)
+        GLib.timeout_add(100, self.update_progress)
 
         for uri in uris:
             gtk_iteration()
@@ -289,7 +289,7 @@ class FileList:
         self.typefinders.abort()
 
     def format_cell(self, sound_file):
-        return '%s' % GObject.markup_escape_text(unquote_filename(
+        return '%s' % GLib.markup_escape_text(unquote_filename(
                                                   sound_file.filename))
 
     def set_row_progress(self, number, progress=None, text=None):
@@ -624,7 +624,7 @@ class PreferencesDialog(GladeWindow):
         sound_file.tags.update({'disc-number': 2, 'disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
 
-        s = GObject.markup_escape_text(beautify_uri(
+        s = GLib.markup_escape_text(beautify_uri(
                         self.generate_filename(sound_file, for_display=True)))
         p = 0
         replaces = []
@@ -1258,7 +1258,7 @@ class SoundConverterWindow(GladeWindow):
 
     def do_convert(self):
         self.pulse_progress = -1
-        GObject.timeout_add(100, self.on_progress)
+        GLib.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion...'))
         files = self.filelist.get_files()
         total = len(files)

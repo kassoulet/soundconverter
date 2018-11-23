@@ -22,7 +22,7 @@
 # logging & debugging
 
 from .settings import settings
-from gi.repository import GObject
+from gi.repository import GLib
 
 def log(*args):
     """
@@ -43,5 +43,5 @@ def debug(*args):
 
 def idle(func):
     def callback(*args, **kwargs):
-        GObject.idle_add(func, *args, **kwargs)
+        GLib.idle_add(func, *args, **kwargs)
     return callback
