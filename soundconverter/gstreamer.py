@@ -25,10 +25,10 @@ from urllib.parse import urlparse
 from gettext import gettext as _
 
 import gi
-from gi.repository import Gst, Gtk, GObject, Gio
+from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
 from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
-from soundconverter.fileoperations import unquote_filename, vfs_makedirs, vfs_unlink
+from soundconverter.fileoperations import unquote_filename, vfs_unlink
 from soundconverter.fileoperations import vfs_rename
 from soundconverter.fileoperations import vfs_exists
 from soundconverter.fileoperations import beautify_uri
@@ -214,7 +214,7 @@ class Pipeline(BackgroundTask):
             self.done()
             return
         self.done()
-        show_error('Error', 'failed to install plugins: %s' % GObject.markup_escape_text(str(result)))
+        show_error('Error', 'failed to install plugins: %s' % GLib.markup_escape_text(str(result)))
 
     def on_error(self, error):
         self.error = error
@@ -280,7 +280,7 @@ class Pipeline(BackgroundTask):
 
                 self.parsed = True
 
-            except GObject.GError as e:
+            except GLib.GError as e:
                 show_error('GStreamer error when creating pipeline', str(e))
                 self.error = str(e)
                 self.eos = True
@@ -494,7 +494,7 @@ class TagReader(Decoder):
         Pipeline.finished(self)
         self.sound_file.tags_read = True
         if self.found_tag_hook:
-            GObject.idle_add(self.found_tag_hook, self)
+            GLib.idle_add(self.found_tag_hook, self)
 
 
 class Converter(Decoder):

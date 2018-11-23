@@ -23,7 +23,7 @@
 import sys
 import gi
 import time
-from gi.repository import GObject
+from gi.repository import GLib
 
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
@@ -36,7 +36,7 @@ from soundconverter.fileoperations import unquote_filename
 
 def cli_tags_main(input_files):
     error.set_error_handler(error.ErrorPrinter())
-    loop = GObject.MainLoop()
+    loop = GLib.MainLoop()
     context = loop.get_context()
     for input_file in input_files:
         input_file = SoundFile(input_file)
@@ -71,7 +71,7 @@ class CliProgress:
 
 
 def cli_convert_main(input_files):
-    loop = GObject.MainLoop()
+    loop = GLib.MainLoop()
     context = loop.get_context()
     error.set_error_handler(error.ErrorPrinter())
 
