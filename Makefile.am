@@ -9,6 +9,7 @@ CLEANFILES=
 EXTRA_DIST = autogen.sh
 DISTCLEANFILES = intltool-extract.in intltool-merge.in intltool-update.in intltool-extract intltool-merge intltool-update
 
+README: README.md
 
 release: changelog dist
 	echo git tag -a $(VERSION) -m release-$(VERSION)
