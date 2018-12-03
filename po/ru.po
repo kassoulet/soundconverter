@@ -339,7 +339,7 @@ msgid ""
 msgstr ""
 "Преобразовывать в пакетном режиме, из командной строки,\n"
 "без графического пользовательского интерфейса.\n"
-"Этим можно пользоваться, скажем, в сценариях."
+"Этим можно пользоваться, скажем, в скриптах."
 
 #: ../bin/soundconverter.py:112
 msgid ""
@@ -407,11 +407,11 @@ msgstr "Невозможно создать папку '%s'."
 #. or an option to stop all processing.
 #: ../soundconverter/fileoperations.py:110
 msgid "Error while renaming file!"
-msgstr ""
+msgstr "Ошибка при переименовании файла!"
 
 #: ../soundconverter/gstreamer.py:208
 msgid "Plugin installation aborted."
-msgstr "Установка надстройки прервана."
+msgstr "Установка плагина прервана."
 
 #: ../soundconverter/gstreamer.py:566
 #, python-format
@@ -460,7 +460,7 @@ msgstr ""
 
 #: ../soundconverter/ui.py:310
 msgid "Adding files..."
-msgstr ""
+msgstr "Добавление файлов..."
 
 #: ../soundconverter/ui.py:378
 msgid "Same as input, but replacing the suffix"
