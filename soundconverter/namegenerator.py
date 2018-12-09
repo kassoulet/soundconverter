@@ -87,6 +87,9 @@ class TargetNameGenerator:
                 d[key] = d[key].replace('/', '-')
                 if key.endswith('-number'):
                     d[key] = int(d[key])
+        # when artist set & album-artist not, use artist for album-artist
+        if 'artist' in sound_file.tags and 'album-artist' not in sound_file.tags:
+            d['album-artist'] = sound_file.tags['artist']
 
         # add timestamp to substitution dict -- this could be split into more
         # entries for more fine-grained control over the string by the user...
