@@ -244,7 +244,7 @@ class FileList:
         log('analysing file extensions')
         self.files_to_add = len(files)
         self.window.set_status(_('Adding Files...'))
-        
+
         self.extensions = {}
         extensions = {}
         for f in files:
@@ -363,9 +363,14 @@ class PreferencesDialog(GladeWindow):
     ]
 
     subfolder_patterns = [
-        ('%(album-artist)s/%(album)s', _('artist/album')),
-        ('%(album-artist)s-%(album)s', _('artist-album')),
-        ('%(album-artist)s - %(album)s', _('artist - album')),
+        ('%(artist)s/%(date)s - %(album)s', _('artist/date - album')),
+        ('%(artist)s/%(album)s', _('artist/album')),
+        ('%(artist)s-%(album)s', _('artist-album')),
+        ('%(artist)s - %(album)s', _('artist - album')),
+        ('%(album-artist)s/%(date)s - %(album)s', _('{album-artist}/date - album')),
+        ('%(album-artist)s/%(album)s', _('{album-artist}/album')),
+        ('%(album-artist)s-%(album)s', _('{album-artist}-album')),
+        ('%(album-artist)s - %(album)s', _('{album-artist} - album')),
     ]
 
     sensitive_names = ['vorbis_quality', 'choose_folder', 'create_subfolders',
@@ -394,7 +399,7 @@ class PreferencesDialog(GladeWindow):
         for k in sorted(locale_patterns_dict.values()):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
-        
+
         #self.resample_rate.connect('changed', self._on_resample_rate_changed)
 
     def set_widget_initial_values(self, builder):
@@ -453,7 +458,7 @@ class PreferencesDialog(GladeWindow):
             self.gstprofile.pack_start(cell, 0)
             self.gstprofile.add_attribute(cell,'text',0)
             self.gstprofile.set_active(0)
-            
+
         # check if we can found the stored audio profile
         found_profile = False
         stored_profile = self.settings.get_string('audio-profile')
@@ -465,13 +470,13 @@ class PreferencesDialog(GladeWindow):
                 found_profile = True
         if not found_profile and stored_profile:
             # reset default output
-            log('Cannot find audio profile "%s", resetting to default output.' 
+            log('Cannot find audio profile "%s", resetting to default output.'
                 % stored_profile)
             self.settings.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
             self.settings.reset('output-mime-type')
             mime_type = self.settings.get_string('output-mime-type')
-            
+
         self.present_mime_types = []
         i = 0
         model = self.output_mime_type.get_model()
@@ -550,7 +555,7 @@ class PreferencesDialog(GladeWindow):
         else:
             self.custom_filename_box.set_sensitive(False)
 
-        
+
         self.resample_toggle.set_active(self.settings.get_boolean('output-resample'))
 
         cell = Gtk.CellRendererText()
@@ -563,7 +568,7 @@ class PreferencesDialog(GladeWindow):
         except ValueError:
             idx = -1
         self.resample_rate.set_active(idx)
-        
+
         self.force_mono.set_active(self.settings.get_boolean('force-mono'))
 
         self.jobs.set_active(self.settings.get_int('limit-jobs'))
@@ -726,14 +731,14 @@ class PreferencesDialog(GladeWindow):
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
             self.settings.get_int('limit-jobs'))
-        
+
         if self.settings.get_string('output-mime-type') == 'gst-profile':
             self.sensitive_widgets['resample_hbox'].set_sensitive(False)
             self.sensitive_widgets['force_mono'].set_sensitive(False)
         else:
             self.sensitive_widgets['resample_hbox'].set_sensitive(True)
             self.sensitive_widgets['force_mono'].set_sensitive(True)
-        
+
 
     def run(self):
         self.dialog.run()
@@ -1146,7 +1151,7 @@ class SoundConverterWindow(GladeWindow):
         #msg_area.connect("close", self.OnMessageAreaClose, msg_area)
         #vbox.pack_start(msg_area, False, False)
         #msg_area.show()
-        
+
 
 
     # This bit of code constructs a list of methods for binding to Gtk+
@@ -1290,7 +1295,7 @@ class SoundConverterWindow(GladeWindow):
 
     def on_button_pause_clicked(self, *args):
         self.converter.toggle_pause(not self.converter.paused)
-            
+
         if self.converter.paused:
             self.current_pause_start = time.time()
         else:
@@ -1377,7 +1382,7 @@ class SoundConverterWindow(GladeWindow):
 
         fraction = min(max(fraction, 0.0), 1.0)
         self.progressbar.set_fraction(fraction)
-            
+
         if display_time:
             t = time.time() - self.converter.run_start_time - \
                               self.paused_time
@@ -1423,7 +1428,7 @@ def gui_main(name, version, gladefile, input_files):
     win = SoundConverterWindow(builder)
     from . import error
     error.set_error_handler(ErrorDialog(builder))
-    
+
     #error_dialog = MsgAreaErrorDialog(builder)
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
