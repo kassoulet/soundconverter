@@ -1415,6 +1415,9 @@ win = None
 def gui_main(name, version, gladefile, input_files):
     global NAME, VERSION
     NAME, VERSION = name, version
+    GLib.set_application_name(name)
+    GLib.set_prgname(name)
+
     builder = Gtk.Builder()
     builder.set_translation_domain(name.lower())
     builder.add_from_file(gladefile)
