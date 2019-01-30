@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-02 18:42+0100\n"
+"POT-Creation-Date: 2019-01-30 18:52+0100\n"
 "PO-Revision-Date: 2015-12-03 06:36+0000\n"
 "Last-Translator: Pin-hsien Lee <pspeter9931@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -46,9 +46,7 @@ msgstr "dialog1"
 msgid "Filter "
 msgstr "過濾器 "
 
-#. TODO: is this used ?
-#. TODO: add proper error management when an encoder cannot be created
-#: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:555
+#: ../data/soundconverter.glade.h:5
 msgid "Error"
 msgstr "錯誤"
 
@@ -72,11 +70,11 @@ msgstr "<big><b>檔案已經存在</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "套用到所有佇列的檔案(_A)"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:366
 msgid "artist/album"
 msgstr "歌手/專輯"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:368
 msgid "artist - album"
 msgstr "歌手 - 專輯"
 
@@ -305,34 +303,47 @@ msgid "Read how to install"
 msgstr "閱讀如何安裝"
 
 #: ../data/soundconverter.glade.h:70
-msgid "Where to place results?"
-msgstr "輸出結果要放置的地方？"
+msgid "_Clear List"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:71
+msgid "About"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:72
+msgid "Quit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:73 ../soundconverter/ui.py:1375
+#: ../soundconverter/ui.py:1397 ../soundconverter/ui.py:1403
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
-#: ../data/soundconverter.glade.h:72
-msgid "_File"
-msgstr "檔案(_F)"
-
-#: ../data/soundconverter.glade.h:73
-msgid "_Edit"
-msgstr "編輯(_E)"
-
 #: ../data/soundconverter.glade.h:74
-msgid "_Help"
-msgstr "說明(_H)"
-
-#: ../data/soundconverter.glade.h:75
 msgid "_Add File"
 msgstr "加入檔案(_A)"
+
+#: ../data/soundconverter.glade.h:75
+msgid "_File"
+msgstr "檔案(_F)"
 
 #: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
 msgstr "新增資料夾(_F)"
 
-#: ../bin/soundconverter.py:107
+#: ../data/soundconverter.glade.h:77
+msgid "_Edit"
+msgstr "編輯(_E)"
+
+#: ../data/soundconverter.glade.h:78
+msgid "_Help"
+msgstr "說明(_H)"
+
+#: ../data/soundconverter.glade.h:79
+msgid "Where to place results?"
+msgstr "輸出結果要放置的地方？"
+
+#: ../bin/soundconverter.py:109
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -340,7 +351,7 @@ msgstr ""
 "在指令列進行批次模式轉換，不使用圖形使用者\n"
 " 介面。您可以透過如 Shell 腳本來使用此功能。"
 
-#: ../bin/soundconverter.py:112
+#: ../bin/soundconverter.py:114
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
@@ -348,7 +359,7 @@ msgstr ""
 "顯示輸入檔案的標籤，而非轉換它們。這代表會使用 \n"
 " 指令列批次模式，並停用圖形使用者介面。"
 
-#: ../bin/soundconverter.py:116
+#: ../bin/soundconverter.py:118
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
@@ -356,15 +367,15 @@ msgid ""
 msgstr ""
 "設定批次模式的輸出 MIME 類型。預設值為 %s。您或許也想要設定輸出副檔名。"
 
-#: ../bin/soundconverter.py:120
+#: ../bin/soundconverter.py:122
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "安靜模式。僅輸出錯誤訊息。"
 
-#: ../bin/soundconverter.py:122
+#: ../bin/soundconverter.py:124
 msgid "Displays additional debug information"
 msgstr "顯示額外的除錯資訊"
 
-#: ../bin/soundconverter.py:124
+#: ../bin/soundconverter.py:126
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -374,11 +385,11 @@ msgstr ""
 "設定批次模式的輸出副檔名。預設值為 %s。注意，副檔名並不會影響\n"
 " 輸出的 MIME 類型。"
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:130
 msgid "Force number of concurrent conversions."
 msgstr "強制設定同時間進行的轉換工作的數目。"
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:132
 msgid "Shows GStreamer Options"
 msgstr "顯示 GStreamer 選項"
 
@@ -395,56 +406,44 @@ msgstr ""
 "錯誤：%s\n"
 "%s\n"
 
-#: ../soundconverter/fileoperations.py:98
-#, fuzzy
-msgid "Cannot create folder!"
-msgstr "無法建立資料夾「%s」。"
-
-#. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
-#. or an option to stop all processing.
-#: ../soundconverter/fileoperations.py:110
-msgid "Error while renaming file!"
-msgstr ""
-
-#: ../soundconverter/gstreamer.py:208
+#: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
 msgstr "插件安裝已停止。"
 
-#: ../soundconverter/gstreamer.py:566
+#: ../soundconverter/gstreamer.py:559
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "無法建立資料夾「%s」。"
 
-#. pass
-#: ../soundconverter/gstreamer.py:607
+#: ../soundconverter/gstreamer.py:591
 msgid "GStreamer Error:"
 msgstr "GStreamer 錯誤："
 
-#: ../soundconverter/gstreamer.py:814
+#: ../soundconverter/gstreamer.py:800
 #, python-format
 msgid "Conversion done in %s"
 msgstr "轉換完成於 %s"
 
-#: ../soundconverter/namegenerator.py:76
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "未知專輯"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "未知歌手"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
-#: ../soundconverter/settings.py:47
+#: ../soundconverter/settings.py:46
 msgid ""
-"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
-"DiscTotal Ext"
+"Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
+"DiscNumber DiscTotal Ext"
 msgstr ""
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
 msgstr "所有檔案"
 
-#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
+#: ../soundconverter/ui.py:89 ../soundconverter/ui.py:104
 #, python-format
 msgid ""
 "\n"
@@ -455,81 +454,90 @@ msgstr ""
 "錯誤：%s\n"
 "%s\n"
 
-#: ../soundconverter/ui.py:310
-msgid "Adding files..."
+#: ../soundconverter/ui.py:200
+msgid "Scanning files..."
 msgstr ""
 
-#: ../soundconverter/ui.py:378
+#: ../soundconverter/ui.py:246
+#, fuzzy
+msgid "Adding Files..."
+msgstr "加入檔案(_A)"
+
+#: ../soundconverter/ui.py:356
 msgid "Same as input, but replacing the suffix"
 msgstr "和輸入一樣，但替換副檔名"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:358
 msgid "Same as input, but with an additional suffix"
 msgstr "和輸入一樣，但加上其他副檔名"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:359
 msgid "Track number - title"
 msgstr "音軌編號 - 標題"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:360
 msgid "Track title"
 msgstr "音軌 標題"
 
-#: ../soundconverter/ui.py:383
+#: ../soundconverter/ui.py:361
 msgid "Artist - title"
 msgstr "歌手 - 標題"
 
-#: ../soundconverter/ui.py:384
+#: ../soundconverter/ui.py:362
 msgid "Custom filename pattern"
 msgstr "自定檔名樣式"
 
-#: ../soundconverter/ui.py:389
+#: ../soundconverter/ui.py:367
 msgid "artist-album"
 msgstr "歌手-專輯"
 
-#: ../soundconverter/ui.py:447
+#: ../soundconverter/ui.py:393
 msgid "Available patterns:"
 msgstr "可用樣式："
 
-#: ../soundconverter/ui.py:644
+#: ../soundconverter/ui.py:577
 #, python-format
 msgid "Into folder %s"
 msgstr "於資料夾 %s 內"
 
-#: ../soundconverter/ui.py:724
+#: ../soundconverter/ui.py:657
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "目標位元率：%s"
 
-#: ../soundconverter/ui.py:1075
+#: ../soundconverter/ui.py:1002
 msgid "Open a file"
 msgstr "開啟檔案"
 
-#: ../soundconverter/ui.py:1169
+#: ../soundconverter/ui.py:1096
 msgid "Add Folder..."
 msgstr "新增資料夾..."
 
-#: ../soundconverter/ui.py:1337
+#: ../soundconverter/ui.py:1262
 msgid "Preparing conversion..."
 msgstr "正在準備轉換..."
 
-#: ../soundconverter/ui.py:1358
+#: ../soundconverter/ui.py:1283
 msgid "Converting"
 msgstr "轉換中"
 
-#: ../soundconverter/ui.py:1376
+#: ../soundconverter/ui.py:1301
 msgid "Canceled"
 msgstr "已取消"
 
-#: ../soundconverter/ui.py:1449
+#: ../soundconverter/ui.py:1374 ../soundconverter/ui.py:1375
 msgid "Paused"
 msgstr "已暫停"
 
-#: ../soundconverter/ui.py:1467
+#: ../soundconverter/ui.py:1393
 #, python-format
 msgid "%d:%02d left"
 msgstr "剩餘時間 %d:%02d"
 
-#: ../soundconverter/ui.py:1473
+#: ../soundconverter/ui.py:1401
 msgid "Ready"
 msgstr "就緒"
+
+#, fuzzy
+#~ msgid "Cannot create folder!"
+#~ msgstr "無法建立資料夾「%s」。"
