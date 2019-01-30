@@ -10,7 +10,7 @@
     <property name="type_hint">normal</property>
     <property name="program_name">SoundConverter</property>
     <property name="copyright">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-© 2005-2017 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
+© 2005-2019 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">GNOME-powered Sound Conversion</property>
     <property name="website">http://soundconverter.org</property>
     <property name="website_label" translatable="yes">Website</property>
@@ -2116,6 +2116,45 @@ Gautier Portet</property>
           </packing>
         </child>
         <child>
+          <object class="GtkModelButton" id="clear_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">_Clear List</property>
+            <signal name="clicked" handler="on_clearlist_activate" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="about_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">About</property>
+            <signal name="clicked" handler="on_about_activate" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkModelButton" id="quit_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -2126,7 +2165,7 @@ Gautier Portet</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>
@@ -2206,13 +2245,28 @@ Gautier Portet</property>
         <child>
           <object class="GtkButton" id="toolbutton_clearlist">
             <property name="label">gtk-clear</property>
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_stock">True</property>
             <property name="image_position">top</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="on_clearlist_activate" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
+         <object class="GtkButton" id="toolbutton_prefs">
+            <property name="label">gtk-preferences</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_stock">True</property>
+            <property name="image_position">top</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="on_prefs_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="position">5</property>
@@ -2246,7 +2300,7 @@ Gautier Portet</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="menubar">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkMenuItem" id="file1">
