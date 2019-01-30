@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-02 18:42+0100\n"
+"POT-Creation-Date: 2019-01-30 18:52+0100\n"
 "PO-Revision-Date: 2015-12-03 06:38+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Serbian (sr) <gnom@prevod.org>\n"
@@ -48,9 +48,7 @@ msgstr "dijalog1"
 msgid "Filter "
 msgstr "Filter "
 
-#. TODO: is this used ?
-#. TODO: add proper error management when an encoder cannot be created
-#: ../data/soundconverter.glade.h:5 ../soundconverter/gstreamer.py:555
+#: ../data/soundconverter.glade.h:5
 msgid "Error"
 msgstr "Greška"
 
@@ -74,11 +72,11 @@ msgstr "<big><b>Datoteka već postoji</b></big>\n"
 msgid "_Apply to entire queue"
 msgstr "_Primeni na ceo unos"
 
-#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
+#: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:366
 msgid "artist/album"
 msgstr "izvođač/album"
 
-#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:390
+#: ../data/soundconverter.glade.h:13 ../soundconverter/ui.py:368
 msgid "artist - album"
 msgstr "izvođač — album"
 
@@ -307,34 +305,47 @@ msgid "Read how to install"
 msgstr "Pročitaj kako da instaliram"
 
 #: ../data/soundconverter.glade.h:70
-msgid "Where to place results?"
-msgstr "Gde sa smestim izlaz?"
+msgid "_Clear List"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:71
+msgid "About"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:72
+msgid "Quit"
+msgstr ""
+
+#: ../data/soundconverter.glade.h:73 ../soundconverter/ui.py:1375
+#: ../soundconverter/ui.py:1397 ../soundconverter/ui.py:1403
 msgid "SoundConverter"
 msgstr "Prekodiranje Zvuka"
 
-#: ../data/soundconverter.glade.h:72
-msgid "_File"
-msgstr "_Datoteka"
-
-#: ../data/soundconverter.glade.h:73
-msgid "_Edit"
-msgstr "_Uredi"
-
 #: ../data/soundconverter.glade.h:74
-msgid "_Help"
-msgstr "_Pomoć"
-
-#: ../data/soundconverter.glade.h:75
 msgid "_Add File"
 msgstr "_Dodaj datoteku"
+
+#: ../data/soundconverter.glade.h:75
+msgid "_File"
+msgstr "_Datoteka"
 
 #: ../data/soundconverter.glade.h:76
 msgid "Add _Folder"
 msgstr "Dodaj _fasciklu"
 
-#: ../bin/soundconverter.py:107
+#: ../data/soundconverter.glade.h:77
+msgid "_Edit"
+msgstr "_Uredi"
+
+#: ../data/soundconverter.glade.h:78
+msgid "_Help"
+msgstr "_Pomoć"
+
+#: ../data/soundconverter.glade.h:79
+msgid "Where to place results?"
+msgstr "Gde sa smestim izlaz?"
+
+#: ../bin/soundconverter.py:109
 msgid ""
 "Convert in batch mode, from command line, without a graphical user\n"
 " interface. You can use this from, say, shell scripts."
@@ -342,28 +353,28 @@ msgstr ""
 "Prekodira u konzolnom režimu, iz komandne linije, bez grafičkog okruženja\n"
 " Možete na primer koristiti ovaj mod za pisanje skripti."
 
-#: ../bin/soundconverter.py:112
+#: ../bin/soundconverter.py:114
 msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
 
-#: ../bin/soundconverter.py:116
+#: ../bin/soundconverter.py:118
 #, python-format
 msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
 "probably want to set the output suffix as well."
 msgstr ""
 
-#: ../bin/soundconverter.py:120
+#: ../bin/soundconverter.py:122
 msgid "Be quiet. Don't write normal output, only errors."
 msgstr "Radi tiho. Ne ispisuje normalni izlaz već samo greške."
 
-#: ../bin/soundconverter.py:122
+#: ../bin/soundconverter.py:124
 msgid "Displays additional debug information"
 msgstr ""
 
-#: ../bin/soundconverter.py:124
+#: ../bin/soundconverter.py:126
 #, python-format
 msgid ""
 "Set the output filename suffix for batch mode.The default is %s . Note that "
@@ -371,11 +382,11 @@ msgid ""
 " the output MIME type."
 msgstr ""
 
-#: ../bin/soundconverter.py:128
+#: ../bin/soundconverter.py:130
 msgid "Force number of concurrent conversions."
 msgstr ""
 
-#: ../bin/soundconverter.py:130
+#: ../bin/soundconverter.py:132
 msgid "Shows GStreamer Options"
 msgstr ""
 
@@ -392,56 +403,44 @@ msgstr ""
 "Greška: %s\n"
 "%s\n"
 
-#: ../soundconverter/fileoperations.py:98
-#, fuzzy
-msgid "Cannot create folder!"
-msgstr "Ne mogu da napravim fasciklu „%s“."
-
-#. TODO: maybe we need a special case here. If dest folder is unwritable. Just stop.
-#. or an option to stop all processing.
-#: ../soundconverter/fileoperations.py:110
-msgid "Error while renaming file!"
-msgstr ""
-
-#: ../soundconverter/gstreamer.py:208
+#: ../soundconverter/gstreamer.py:211
 msgid "Plugin installation aborted."
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:566
+#: ../soundconverter/gstreamer.py:559
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Ne mogu da napravim fasciklu „%s“."
 
-#. pass
-#: ../soundconverter/gstreamer.py:607
+#: ../soundconverter/gstreamer.py:591
 msgid "GStreamer Error:"
 msgstr ""
 
-#: ../soundconverter/gstreamer.py:814
+#: ../soundconverter/gstreamer.py:800
 #, python-format
 msgid "Conversion done in %s"
 msgstr ""
 
-#: ../soundconverter/namegenerator.py:76
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "Nepoznat album"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "Nepoznat izvođač"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
-#: ../soundconverter/settings.py:47
+#: ../soundconverter/settings.py:46
 msgid ""
-"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
-"DiscTotal Ext"
+"Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
+"DiscNumber DiscTotal Ext"
 msgstr ""
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
 msgstr "Svi fajlovi"
 
-#: ../soundconverter/ui.py:91 ../soundconverter/ui.py:106
+#: ../soundconverter/ui.py:89 ../soundconverter/ui.py:104
 #, python-format
 msgid ""
 "\n"
@@ -449,81 +448,90 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: ../soundconverter/ui.py:310
-msgid "Adding files..."
+#: ../soundconverter/ui.py:200
+msgid "Scanning files..."
 msgstr ""
 
-#: ../soundconverter/ui.py:378
+#: ../soundconverter/ui.py:246
+#, fuzzy
+msgid "Adding Files..."
+msgstr "_Dodaj datoteku"
+
+#: ../soundconverter/ui.py:356
 msgid "Same as input, but replacing the suffix"
 msgstr "Isto kao i na ulazu, ali zameni sufiks"
 
-#: ../soundconverter/ui.py:380
+#: ../soundconverter/ui.py:358
 msgid "Same as input, but with an additional suffix"
 msgstr "Isto kao i na ulazu, ali sa dodatnim sifuksom"
 
-#: ../soundconverter/ui.py:381
+#: ../soundconverter/ui.py:359
 msgid "Track number - title"
 msgstr "Broj numere — naslov"
 
-#: ../soundconverter/ui.py:382
+#: ../soundconverter/ui.py:360
 msgid "Track title"
 msgstr "Naziv pesme"
 
-#: ../soundconverter/ui.py:383
+#: ../soundconverter/ui.py:361
 msgid "Artist - title"
 msgstr "Izvođač — naslov"
 
-#: ../soundconverter/ui.py:384
+#: ../soundconverter/ui.py:362
 msgid "Custom filename pattern"
 msgstr "Proizvoljan šablon imena datoteke"
 
-#: ../soundconverter/ui.py:389
+#: ../soundconverter/ui.py:367
 msgid "artist-album"
 msgstr "izvođač-album"
 
-#: ../soundconverter/ui.py:447
+#: ../soundconverter/ui.py:393
 msgid "Available patterns:"
 msgstr "Dostupni šabloni:"
 
-#: ../soundconverter/ui.py:644
+#: ../soundconverter/ui.py:577
 #, python-format
 msgid "Into folder %s"
 msgstr "U fasciklu %s"
 
-#: ../soundconverter/ui.py:724
+#: ../soundconverter/ui.py:657
 #, python-format
 msgid "Target bitrate: %s"
 msgstr "Izlazni bitski protok: %s"
 
-#: ../soundconverter/ui.py:1075
+#: ../soundconverter/ui.py:1002
 msgid "Open a file"
 msgstr "Otvori fajl"
 
-#: ../soundconverter/ui.py:1169
+#: ../soundconverter/ui.py:1096
 msgid "Add Folder..."
 msgstr "Dodaj fasciklu..."
 
-#: ../soundconverter/ui.py:1337
+#: ../soundconverter/ui.py:1262
 msgid "Preparing conversion..."
 msgstr "Priprema konvetovanja..."
 
-#: ../soundconverter/ui.py:1358
+#: ../soundconverter/ui.py:1283
 msgid "Converting"
 msgstr "Prekodiram"
 
-#: ../soundconverter/ui.py:1376
+#: ../soundconverter/ui.py:1301
 msgid "Canceled"
 msgstr "Prekinuto"
 
-#: ../soundconverter/ui.py:1449
+#: ../soundconverter/ui.py:1374 ../soundconverter/ui.py:1375
 msgid "Paused"
 msgstr "Pauzirano"
 
-#: ../soundconverter/ui.py:1467
+#: ../soundconverter/ui.py:1393
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d preostalo"
 
-#: ../soundconverter/ui.py:1473
+#: ../soundconverter/ui.py:1401
 msgid "Ready"
 msgstr "Spreman"
+
+#, fuzzy
+#~ msgid "Cannot create folder!"
+#~ msgstr "Ne mogu da napravim fasciklu „%s“."
