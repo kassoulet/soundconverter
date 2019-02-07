@@ -88,7 +88,7 @@ try:
             profile = description, extension, pipeline
             audio_profiles_list.append(profile)
             audio_profiles_dict[description] = profile
-except ImportError:
+except (ImportError, ValueError):
     pass
 
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
