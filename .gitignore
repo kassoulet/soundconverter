@@ -16,6 +16,12 @@ po/stamp-it
 po/.intltool-merge-cache
 data/soundconverter.desktop
 data/soundconverter.desktop.in
+INSTALL
+bin/soundconverter
+compile
+data/org.soundconverter.gschema.valid
+m4/
+py-compile
+
+# paths that don't exist (remove from .gitignore, what is this?)
 src/soundconverter
-
-
