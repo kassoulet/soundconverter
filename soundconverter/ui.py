@@ -39,7 +39,7 @@ from soundconverter.gstreamer import ConverterQueue
 from soundconverter.gstreamer import available_elements, TypeFinder, TagReader
 from soundconverter.gstreamer import audio_profiles_list, audio_profiles_dict
 from soundconverter.soundfile import SoundFile
-from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings
+from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.utils import log, debug, idle
@@ -500,23 +500,21 @@ class PreferencesDialog(GladeWindow):
 
         w = self.vorbis_quality
         quality = self.settings.get_double('vorbis-quality')
-        quality_setting = {0: 0, 0.2: 1, 0.4: 2, 0.6: 3, 0.8: 4, 1.0: 5}
+        quality_setting = get_quality('vorbis', quality, reverse=True)
         w.set_active(-1)
-        for k, v in quality_setting.items():
-            if abs(quality - k) < 0.01:
-                self.vorbis_quality.set_active(v)
+        self.vorbis_quality.set_active(quality_setting)
         if self.settings.get_boolean('vorbis-oga-extension'):
             self.vorbis_oga_extension.set_active(True)
 
         w = self.aac_quality
         quality = self.settings.get_int('aac-quality')
-        quality_setting = {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5}
-        w.set_active(quality_setting.get(quality, -1))
+        quality_setting = get_quality('aac', quality, reverse=True)
+        w.set_active(quality_setting)
 
         w = self.opus_quality
         quality = self.settings.get_int('opus-bitrate')
-        quality_setting = {48: 0, 64: 1, 96: 2, 128: 3, 160: 4, 192: 5}
-        w.set_active(quality_setting.get(quality, -1))
+        quality_setting = get_quality('opus', quality, reverse=True)
+        w.set_active(quality_setting)
 
         w = self.flac_compression
         quality = self.settings.get_int('flac-compression')
@@ -847,8 +845,7 @@ class PreferencesDialog(GladeWindow):
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return # just de-selectionning
-        quality = (0, 0.2, 0.4, 0.6, 0.8, 1.0)
-        fquality = quality[combobox.get_active()]
+        fquality = get_quality('vorbis', combobox.get_active())
         self.settings.set_double('vorbis-quality', fquality)
         self.hscale_vorbis_quality.set_value(fquality*10)
         self.update_example()
@@ -866,13 +863,11 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_aac_quality_changed(self, combobox):
-        quality = (64, 96, 128, 192, 256, 320)
-        self.settings.set_int('aac-quality', quality[combobox.get_active()])
+        self.settings.set_int('aac-quality', get_quality('aac', combobox.get_active()))
         self.update_example()
 
     def on_opus_quality_changed(self, combobox):
-        quality = (48, 64, 96, 128, 160, 192)
-        self.settings.set_int('opus-bitrate', quality[combobox.get_active()])
+        self.settings.set_int('opus-bitrate', get_quality('opus', combobox.get_active()))
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):
@@ -896,7 +891,6 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def change_mp3_mode(self, mode):
-
         keys = {'cbr': 0, 'abr': 1, 'vbr': 2}
         self.mp3_mode.set_active(keys[mode])
 
@@ -907,12 +901,6 @@ class PreferencesDialog(GladeWindow):
         }
         quality = self.settings.get_int(keys[mode])
 
-        quality_to_preset = {
-            'cbr': {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5},
-            'abr': {64: 0, 96: 1, 128: 2, 192: 3, 256: 4, 320: 5},
-            'vbr': {9: 0, 7: 1, 5: 2, 3: 3, 1: 4, 0: 5}, # inverted !
-        }
-
         range_ = {
             'cbr': 14,
             'abr': 14,
@@ -920,8 +908,7 @@ class PreferencesDialog(GladeWindow):
         }
         self.hscale_mp3.set_range(0, range_[mode])
 
-        if quality in quality_to_preset[mode]:
-            self.mp3_quality.set_active(quality_to_preset[mode][quality])
+        self.mp3_quality.set_active(get_quality('mp3', quality, mode, reverse=True))
         self.update_example()
 
     def on_mp3_mode_changed(self, combobox):
@@ -935,13 +922,9 @@ class PreferencesDialog(GladeWindow):
             'abr': 'mp3-abr-quality',
             'vbr': 'mp3-vbr-quality'
         }
-        quality = {
-            'cbr': (64, 96, 128, 192, 256, 320),
-            'abr': (64, 96, 128, 192, 256, 320),
-            'vbr': (9, 7, 5, 3, 1, 0),
-        }
         mode = self.settings.get_string('mp3-mode')
-        self.settings.set_int(keys[mode], quality[mode][combobox.get_active()])
+        
+        self.settings.set_int(keys[mode], get_quality('mp3', combobox.get_active(), mode))
         self.update_example()
 
     def on_hscale_mp3_value_changed(self, widget):
