@@ -1396,7 +1396,7 @@ NAME = VERSION = None
 win = None
 
 def gui_main(name, version, gladefile, input_files):
-    """input_files is an array of paths"""
+    """input_files is an array of string paths"""
 
     global NAME, VERSION
     NAME, VERSION = name, version

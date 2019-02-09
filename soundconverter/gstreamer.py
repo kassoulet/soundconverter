@@ -502,7 +502,7 @@ class Converter(Decoder):
 
     def __init__(self, sound_file, output_filename, output_type,
                  delete_original=False, output_resample=False,
-                 resample_rate=48000, force_mono=False):
+                 resample_rate=48000, force_mono=False, ignore_errors=False):
         Decoder.__init__(self, sound_file)
 
         self.output_filename = output_filename
@@ -521,6 +521,8 @@ class Converter(Decoder):
 
         self.overwrite = False
         self.delete_original = delete_original
+
+        self.ignore_errors = ignore_errors
 
         self.got_duration = False
 
@@ -587,9 +589,13 @@ class Converter(Decoder):
                 log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
 
     def on_error(self, error):
-        Pipeline.on_error(self, error)
-        show_error('<b>%s</b>' % _('GStreamer Error:'),
-                   '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display))
+        if self.ignore_errors:
+            self.error = error
+            log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+        else:
+            Pipeline.on_error(self, error)
+            show_error('<b>%s</b>' % _('GStreamer Error:'),
+                    '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display))
 
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality

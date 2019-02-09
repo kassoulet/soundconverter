@@ -50,7 +50,7 @@ def prepare_files_list(input_files):
     subdirectories = []
     parsed_files = []
     for input_path in input_files:
-
+        print('input_path:', input_path)
         # accept tilde (~) to point to home directories
         if input_path[0] == '~':
             input_path = os.getenv('HOME') + input_path[1:]
@@ -60,6 +60,12 @@ def prepare_files_list(input_files):
 
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
+
+            if input_path[-1] == os.sep:
+                input_path = input_path[:-1]
+                
+            parent = input_path[:input_path.rfind(os.sep)]
+
             # but only if -r option was provided
             if settings.get('recursive'):
                 for dirpath, _, filenames in os.walk(input_path):
@@ -68,9 +74,9 @@ def prepare_files_list(input_files):
                             dirpath += os.sep
                         parsed_files.append(dirpath + filename)
                         # if input_path is a/b/c/, filename is d.mp3
-                        # and dirpath is a/b/c/e/f/, then append e/f/
+                        # and dirpath is a/b/c/e/f/, then append c/e/f/
                         # to subdirectories
-                        subdir = os.path.relpath(dirpath, input_path) + os.sep
+                        subdir = os.path.relpath(dirpath, parent) + os.sep
                         if subdir == './':
                             subdir = ''
                         subdirectories.append(subdir)
@@ -159,7 +165,7 @@ def cli_convert_main(input_files):
             print('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
             continue
 
-        c = Converter(input_file, output_name, output_type)
+        c = Converter(input_file, output_name, output_type, ignore_errors=True)
 
         if 'quality' in settings:
             quality_setting = settings.get('quality')
@@ -169,6 +175,7 @@ def cli_convert_main(input_files):
             c.set_mp3_quality(get_quality('mp3', quality_setting))
 
         c.overwrite = True
+
         c.init()
         c.start()
         while c.running:
