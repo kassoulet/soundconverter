@@ -38,12 +38,16 @@ from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs
 
 def prepare_files_list(input_files):
     """takes in a list of paths and returns a list of all the files in those
-    paths. Also converts the paths to uris"""
+    paths. Also converts the paths to uris.
+
+    Also returns a list of relative directories. This is used to reconstruct
+    the directory structure in the output path if -o is provided."""
 
     # The GUI has its own way of going through subdirectories.
     # Provide similar functionality to the cli.
     # If one of the files is a directory, walk over the files in that
-    # and append each one to parsed_files.
+    # and append each one to parsed_files if -r is provided.
+    subdirectories = []
     parsed_files = []
     for input_path in input_files:
 
@@ -60,22 +64,29 @@ def prepare_files_list(input_files):
             if 'recursive' in settings and settings['recursive']:
                 for dirpath, _, filenames in os.walk(input_path):
                     for filename in filenames:
-                        if dirpath[-1] != '/':
-                            dirpath += '/'
+                        if dirpath[-1] != os.sep:
+                            dirpath += os.sep
                         parsed_files.append(dirpath + filename)
+                        # if input_path is a/b/c/, filename is d.mp3
+                        # and dirpath is a/b/c/e/f/, then append e/f/
+                        # to subdirectories
+                        subdir = os.path.relpath(dirpath, input_path) + os.sep
+                        if subdir == './':
+                            subdir = ''
+                        subdirectories.append(subdir)
             else:
                 # else it didn't go into any directory. provide some information about how to
                 print(input_path, 'is a directory. Use -r to go into all subdirectories.')
         # if not a file and not a dir it doesn't exist. skip
     parsed_files = list(map(filename_to_uri, parsed_files))
 
-    return parsed_files
+    return parsed_files, subdirectories
 
 
 def cli_tags_main(input_files):
     """input_files is an array of string paths"""
 
-    input_files = prepare_files_list(input_files)
+    input_files, _ = prepare_files_list(input_files)
     error.set_error_handler(error.ErrorPrinter())
     loop = GLib.MainLoop()
     context = loop.get_context()
@@ -114,7 +125,7 @@ class CliProgress:
 def cli_convert_main(input_files):
     """input_files is an array of string paths"""
 
-    input_files = prepare_files_list(input_files)
+    input_files, subdirectories = prepare_files_list(input_files)
 
     loop = GLib.MainLoop()
     context = loop.get_context()
@@ -129,13 +140,24 @@ def cli_convert_main(input_files):
     progress = CliProgress()
 
     queue = TaskQueue()
-    for input_file in input_files:
+    for i, input_file in enumerate(input_files):
+
         input_file = SoundFile(input_file)
-        output_name = generator.get_target_name(input_file)
+
+        if 'output-path' in settings:
+            filename = input_file.uri.split(os.sep)[-1]
+            output_name = settings['output-path'] + os.sep + subdirectories[i] + filename
+            output_name = filename_to_uri(output_name)
+            # afterwards set the correct file extension
+            if 'cli-output-suffix' in settings:
+                output_name = output_name[:output_name.rfind('.')] + settings['cli-output-suffix']
+        else:
+            output_name = filename_to_uri(input_file.uri)
+            output_name = generator.get_target_name(input_file)
         
         # skip existing output files if desired (-i cli argument)
         if 'ignore-existing' in settings and settings['ignore-existing'] and vfs_exists(output_name):
-            print('{}: skipped'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+            print('{}: already exists, skipping'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
             continue
 
         c = Converter(input_file, output_name, output_type)
