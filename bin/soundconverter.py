@@ -147,7 +147,11 @@ def parse_command_line():
     parser.add_option('-r', '--recursive', action="store_true", dest="recursive",
         help=_('Go recursively into subdirectories'))
     parser.add_option('-i', '--ignore', action="store_true", dest="ignore-existing",
-        help=_('Ignore files for which the target already exists instead of converting them again'))
+        help=_('Ignore files for which the target already exists instead '
+            'of converting them again'))
+    parser.add_option('-o', '--output', action="store", dest="output-path",
+        help=_('Put converted files into a different directory while maintaining '
+            'the original directory structure'))
 
     # not implemented yet
     # parser.add_option('--help-gst', action="store_true", dest="_unused",
