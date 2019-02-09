@@ -41,17 +41,17 @@ GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
 PACKAGE = NAME.lower()
 try: 
-    locale.setlocale(locale.LC_ALL,'')
-    locale.bindtextdomain(PACKAGE,'@datadir@/locale')
-    gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
+    locale.setlocale(locale.LC_ALL, '')
+    locale.bindtextdomain(PACKAGE, '@datadir@/locale')
+    gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale')
+    gettext.install(PACKAGE, localedir='@datadir@/locale')
     #from gettext import gettext as _
 except locale.Error:
     print('  cannot use system locale.')
-    locale.setlocale(locale.LC_ALL,'C')
+    locale.setlocale(locale.LC_ALL, 'C')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale')
+    gettext.install(PACKAGE, localedir='@datadir@/locale')
 
 def _add_soundconverter_path():
     global localedir
@@ -91,8 +91,8 @@ def check_mime_type(mime):
     if mime not in list(types.values()):
         print(('Cannot use "%s" mime type.' % mime))
         msg = 'Supported shortcuts and mime types:'
-        for k,v in sorted(types.items()):
-            msg += ' %s %s' % (k,v)
+        for k, v in sorted(types.items()):
+            msg += ' %s %s' % (k, v)
         print(msg)
         raise SystemExit
     return mime
@@ -196,7 +196,6 @@ except:
         settings['mode'] = 'batch'
 
 if settings['mode'] == 'gui':
-    files = list(map(filename_to_uri, files))
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
