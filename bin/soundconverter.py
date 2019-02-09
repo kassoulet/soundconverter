@@ -159,7 +159,7 @@ def parse_command_line():
             'the original directory structure'))
     parser.add_option('-Q', '--quality', action="store", type='int', dest="quality",
         metavar='NUM', help=_('Quality of the converted output file. Between 0 '
-            '(lowest) and 5 (highest)'))
+            '(lowest) and 5 (highest). Default is 3.'), default=3)
 
     # not implemented yet
     # parser.add_option('--help-gst', action="store_true", dest="_unused",
