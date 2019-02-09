@@ -160,6 +160,14 @@ def cli_convert_main(input_files):
             continue
 
         c = Converter(input_file, output_name, output_type)
+
+        if 'quality' in settings:
+            quality_setting = settings.get('quality')
+            c.set_vorbis_quality(get_quality('vorbis', quality_setting))
+            c.set_aac_quality(get_quality('aac', quality_setting))
+            c.set_opus_quality(get_quality('opus', quality_setting))
+            c.set_mp3_quality(get_quality('mp3', quality_setting))
+
         c.overwrite = True
         c.init()
         c.start()
