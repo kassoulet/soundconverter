@@ -118,7 +118,10 @@ class ModifiedOptionParser(OptionParser):
 def parse_command_line():
     parser = ModifiedOptionParser(epilog='\nExamples:\n'
         '  soundconverter -b [original file 1] [original file 2] -m mp3 -s .mp3\n'
-        '  soundconverter -b [original directory] -r -m audio/x-vorbis -s .opus\n')
+        '    Creates files with an .mp3 suffix in the same dirs as the input files.\n'
+        '  soundconverter -b [original dir] -r -m audio/x-vorbis -s .opus -o [output dir]\n'
+        '    Creates the original subdirectory structure in the output directory and\n'
+        '    stores the converted files in it.\n')
 
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
@@ -133,7 +136,9 @@ def parse_command_line():
     parser.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type for batch mode. The default '
             'is %s. Note that you probably want to set the output '
-            'suffix as well.') % settings['cli-output-type'])
+            'suffix as well. Supported shortcuts and mime types: aac '
+            'audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis '
+            'wav audio/x-wav') % settings['cli-output-type'])
     parser.add_option('-q', '--quiet', action="store_true", dest="quiet",
         help=_("Be quiet. Don't write normal output, only errors."))
     parser.add_option('-d', '--debug', action="store_true", dest="debug",
