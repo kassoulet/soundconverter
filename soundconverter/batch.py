@@ -33,7 +33,7 @@ from soundconverter.gstreamer import TagReader
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.gstreamer import Converter
-from soundconverter.fileoperations import unquote_filename, filename_to_uri
+from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs_exists
 
 
 def prepare_files_list(input_files):
@@ -58,7 +58,7 @@ def prepare_files_list(input_files):
         elif os.path.isdir(input_path):
             # but only if -r option was provided
             if 'recursive' in settings and settings['recursive']:
-                for dirpath, dirnames, filenames in os.walk(input_path):
+                for dirpath, _, filenames in os.walk(input_path):
                     for filename in filenames:
                         if dirpath[-1] != '/':
                             dirpath += '/'
@@ -132,6 +132,12 @@ def cli_convert_main(input_files):
     for input_file in input_files:
         input_file = SoundFile(input_file)
         output_name = generator.get_target_name(input_file)
+        
+        # skip existing output files if desired (-i cli argument)
+        if 'ignore-existing' in settings and settings['ignore-existing'] and vfs_exists(output_name):
+            print('{}: skipped'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+            continue
+
         c = Converter(input_file, output_name, output_type)
         c.overwrite = True
         c.init()

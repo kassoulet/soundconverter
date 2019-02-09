@@ -1413,10 +1413,14 @@ NAME = VERSION = None
 win = None
 
 def gui_main(name, version, gladefile, input_files):
+    """input_files is an array of paths"""
+
     global NAME, VERSION
     NAME, VERSION = name, version
     GLib.set_application_name(name)
     GLib.set_prgname(name)
+
+    input_files = list(map(filename_to_uri, input_files))
 
     builder = Gtk.Builder()
     builder.set_translation_domain(name.lower())
