@@ -71,6 +71,8 @@ class CliProgress:
 
 
 def cli_convert_main(input_files):
+    """input_files is an array of strings"""
+
     loop = GLib.MainLoop()
     context = loop.get_context()
     error.set_error_handler(error.ErrorPrinter())

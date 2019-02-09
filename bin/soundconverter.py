@@ -102,17 +102,33 @@ def mode_callback(option, opt, value, parser, **kwargs):
     setattr(parser.values, option.dest, kwargs[option.dest])
 
 
+class ModifiedOptionParser(OptionParser):
+    """
+    A Parser class that doesn't remove newlines on the epilog in order
+    to show usage examples https://stackoverflow.com/questions/1857346/
+    
+    See optparse.OptionParser for the original docstring
+    """
+    def format_epilog(self, formatter):
+        if self.epilog == None:
+            return ""
+        return self.epilog
+
+
 def parse_command_line():
-    parser = OptionParser()
+    parser = ModifiedOptionParser(epilog='\nExamples:\n'
+        '  soundconverter -b [original file 1] [original file 2] -m mp3 -s .mp3\n'
+        '  soundconverter -b [original directory] -m audio/x-vorbis -s .opus\n')
+
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
         help=_('Convert in batch mode, from command line, '
-            'without a graphical user\n interface. You '
+            'without a graphical user interface. You '
             'can use this from, say, shell scripts.'))
     parser.add_option('-t', '--tags', dest="mode", action='callback',
         callback=mode_callback,  callback_kwargs={'mode':'tags'},
         help=_('Show tags for input files instead of converting '
-            'them. This indicates \n command line batch mode '
+            'them. This indicates command line batch mode '
             'and disables the graphical user interface.'))
     parser.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type for batch mode. The default '
@@ -128,8 +144,11 @@ def parse_command_line():
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
     parser.add_option('-j', '--jobs', action='store', type='int', dest='forced-jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.'))
-    parser.add_option('--help-gst', action="store_true", dest="_unused",
-        help=_('Shows GStreamer Options'))
+
+    # not implemented yet
+    # parser.add_option('--help-gst', action="store_true", dest="_unused",
+    #     help=_('Shows GStreamer Options'))
+    
     return parser
 
 
@@ -165,7 +184,22 @@ from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
 
-files = list(map(filename_to_uri, files))
+
+# if one of the files is a directory, walk over the files in that
+# and append each one to parsed_files.
+parsed_files = []
+for input_path in files:
+    if os.path.isfile(input_path):
+        parsed_files.append(input_path)
+    elif os.path.isdir(input_path):
+        for file_root, d, filenames in os.walk(input_path):
+            for filename in filenames:
+                if file_root[-1] != '/':
+                    file_root += '/'
+                parsed_files.append(file_root + filename)
+    # if not a file and not a dir it doesn't exist. skip
+
+files = list(map(filename_to_uri, parsed_files))
 
 try:
     from soundconverter.ui import gui_main
