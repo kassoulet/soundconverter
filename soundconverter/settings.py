@@ -143,7 +143,7 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
     # return depending on function parameters
     if reverse:
         if type(value) == float:
-            # floats are inaccurate, search for closest value
+            # floats are inaccurate, search for close value
             for i, q in enumerate(qualities):
                 if abs(value - q) < 0.01:
                     return i
