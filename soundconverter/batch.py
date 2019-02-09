@@ -28,7 +28,7 @@ from gi.repository import GLib
 
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
-from soundconverter.settings import settings
+from soundconverter.settings import settings, get_quality
 from soundconverter.gstreamer import TagReader
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
@@ -61,7 +61,7 @@ def prepare_files_list(input_files):
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
             # but only if -r option was provided
-            if 'recursive' in settings and settings['recursive']:
+            if settings.get('recursive'):
                 for dirpath, _, filenames in os.walk(input_path):
                     for filename in filenames:
                         if dirpath[-1] != os.sep:
@@ -139,7 +139,6 @@ def cli_convert_main(input_files):
 
     progress = CliProgress()
 
-    queue = TaskQueue()
     for i, input_file in enumerate(input_files):
 
         input_file = SoundFile(input_file)
@@ -156,12 +155,8 @@ def cli_convert_main(input_files):
             output_name = generator.get_target_name(input_file)
         
         # skip existing output files if desired (-i cli argument)
-        if 'ignore-existing' in settings and settings['ignore-existing'] and vfs_exists(output_name):
+        if settings.get('ignore-existing') and vfs_exists(output_name):
             print('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
-            continue
-
-        if input_file.uri == output_name:
-            print('skipping \'{}\': output path is the same as the input path'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
             continue
 
         c = Converter(input_file, output_name, output_type)
@@ -179,10 +174,11 @@ def cli_convert_main(input_files):
             context.iteration(True)
         print()
 
-    previous_filename = None
     
     '''
+    queue = TaskQueue()
     queue.start()
+    previous_filename = None
     
     #running, progress = queue.get_progress(perfile)
     while queue.running:
