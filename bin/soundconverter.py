@@ -104,7 +104,7 @@ def mode_callback(option, opt, value, parser, **kwargs):
 
 class ModifiedOptionParser(OptionParser):
     """
-    A Parser class that doesn't remove newlines on the epilog in order
+    A OptionParser class that doesn't remove newlines on the epilog in order
     to show usage examples https://stackoverflow.com/questions/1857346/
     
     See optparse.OptionParser for the original docstring
@@ -118,7 +118,7 @@ class ModifiedOptionParser(OptionParser):
 def parse_command_line():
     parser = ModifiedOptionParser(epilog='\nExamples:\n'
         '  soundconverter -b [original file 1] [original file 2] -m mp3 -s .mp3\n'
-        '  soundconverter -b [original directory] -m audio/x-vorbis -s .opus\n')
+        '  soundconverter -b [original directory] -r -m audio/x-vorbis -s .opus\n')
 
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
@@ -144,6 +144,10 @@ def parse_command_line():
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
     parser.add_option('-j', '--jobs', action='store', type='int', dest='forced-jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.'))
+    parser.add_option('-r', '--recursive', action="store_true", dest="recursive",
+        help=_('Go recursively into subdirectories'))
+    parser.add_option('-i', '--ignore', action="store_true", dest="ignore-existing",
+        help=_('Ignore files for which the target already exists instead of converting them again'))
 
     # not implemented yet
     # parser.add_option('--help-gst', action="store_true", dest="_unused",
@@ -185,22 +189,6 @@ from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
 
 
-# if one of the files is a directory, walk over the files in that
-# and append each one to parsed_files.
-parsed_files = []
-for input_path in files:
-    if os.path.isfile(input_path):
-        parsed_files.append(input_path)
-    elif os.path.isdir(input_path):
-        for file_root, d, filenames in os.walk(input_path):
-            for filename in filenames:
-                if file_root[-1] != '/':
-                    file_root += '/'
-                parsed_files.append(file_root + filename)
-    # if not a file and not a dir it doesn't exist. skip
-
-files = list(map(filename_to_uri, parsed_files))
-
 try:
     from soundconverter.ui import gui_main
 except:
@@ -208,15 +196,15 @@ except:
         settings['mode'] = 'batch'
 
 if settings['mode'] == 'gui':
+    files = list(map(filename_to_uri, files))
     gui_main(NAME, VERSION, GLADEFILE, files)
-elif settings['mode'] == 'tags':
-    if not files:
-        print('nothing to do...')
-    cli_tags_main(files)
 else:
     if not files:
         print('nothing to do...')
-    cli_convert_main(files)
+    if settings['mode'] == 'tags':
+        cli_tags_main(files)
+    else:
+        cli_convert_main(files)
 
 
 
