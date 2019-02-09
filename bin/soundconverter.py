@@ -157,6 +157,9 @@ def parse_command_line():
     parser.add_option('-o', '--output', action="store", dest="output-path",
         help=_('Put converted files into a different directory while maintaining '
             'the original directory structure'))
+    parser.add_option('-Q', '--quality', action="store", type='int', dest="quality",
+        metavar='NUM', help=_('Quality of the converted output file. Between 0 '
+            '(lowest) and 5 (highest)'))
 
     # not implemented yet
     # parser.add_option('--help-gst', action="store_true", dest="_unused",
