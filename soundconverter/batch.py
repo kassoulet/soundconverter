@@ -20,6 +20,7 @@
 # USA
 
 
+import os
 import sys
 import gi
 import time
@@ -32,9 +33,49 @@ from soundconverter.gstreamer import TagReader
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.gstreamer import Converter
-from soundconverter.fileoperations import unquote_filename
+from soundconverter.fileoperations import unquote_filename, filename_to_uri
+
+
+def prepare_files_list(input_files):
+    """takes in a list of paths and returns a list of all the files in those
+    paths. Also converts the paths to uris"""
+
+    # The GUI has its own way of going through subdirectories.
+    # Provide similar functionality to the cli.
+    # If one of the files is a directory, walk over the files in that
+    # and append each one to parsed_files.
+    parsed_files = []
+    for input_path in input_files:
+
+        # accept tilde (~) to point to home directories
+        if input_path[0] == '~':
+            input_path = os.getenv('HOME') + input_path[1:]
+
+        if os.path.isfile(input_path):
+            parsed_files.append(input_path)
+
+        # walk over directories to add the files of all the subdirectories
+        elif os.path.isdir(input_path):
+            # but only if -r option was provided
+            if 'recursive' in settings and settings['recursive']:
+                for dirpath, dirnames, filenames in os.walk(input_path):
+                    for filename in filenames:
+                        if dirpath[-1] != '/':
+                            dirpath += '/'
+                        parsed_files.append(dirpath + filename)
+            else:
+                # else it didn't go into any directory. provide some information about how to
+                print(input_path, 'is a directory. Use -r to go into all subdirectories.')
+        # if not a file and not a dir it doesn't exist. skip
+    parsed_files = list(map(filename_to_uri, parsed_files))
+
+    return parsed_files
+
 
 def cli_tags_main(input_files):
+    """input_files is an array of string paths"""
+
+    input_files = prepare_files_list(input_files)
     error.set_error_handler(error.ErrorPrinter())
     loop = GLib.MainLoop()
     context = loop.get_context()
@@ -71,7 +112,9 @@ class CliProgress:
 
 
 def cli_convert_main(input_files):
-    """input_files is an array of strings"""
+    """input_files is an array of string paths"""
+
+    input_files = prepare_files_list(input_files)
 
     loop = GLib.MainLoop()
     context = loop.get_context()
