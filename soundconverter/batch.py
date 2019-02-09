@@ -157,7 +157,11 @@ def cli_convert_main(input_files):
         
         # skip existing output files if desired (-i cli argument)
         if 'ignore-existing' in settings and settings['ignore-existing'] and vfs_exists(output_name):
-            print('{}: already exists, skipping'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+            print('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+            continue
+
+        if input_file.uri == output_name:
+            print('skipping \'{}\': output path is the same as the input path'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
             continue
 
         c = Converter(input_file, output_name, output_type)
