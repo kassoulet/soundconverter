@@ -41,17 +41,17 @@ GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 
 PACKAGE = NAME.lower()
 try: 
-    locale.setlocale(locale.LC_ALL,'')
-    locale.bindtextdomain(PACKAGE,'@datadir@/locale')
-    gettext.bindtextdomain(PACKAGE,'@datadir@/locale')
+    locale.setlocale(locale.LC_ALL, '')
+    locale.bindtextdomain(PACKAGE, '@datadir@/locale')
+    gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale')
+    gettext.install(PACKAGE, localedir='@datadir@/locale')
     #from gettext import gettext as _
 except locale.Error:
     print('  cannot use system locale.')
-    locale.setlocale(locale.LC_ALL,'C')
+    locale.setlocale(locale.LC_ALL, 'C')
     gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE,localedir='@datadir@/locale')
+    gettext.install(PACKAGE, localedir='@datadir@/locale')
 
 def _add_soundconverter_path():
     global localedir
@@ -91,8 +91,8 @@ def check_mime_type(mime):
     if mime not in list(types.values()):
         print(('Cannot use "%s" mime type.' % mime))
         msg = 'Supported shortcuts and mime types:'
-        for k,v in sorted(types.items()):
-            msg += ' %s %s' % (k,v)
+        for k, v in sorted(types.items()):
+            msg += ' %s %s' % (k, v)
         print(msg)
         raise SystemExit
     return mime
@@ -102,22 +102,43 @@ def mode_callback(option, opt, value, parser, **kwargs):
     setattr(parser.values, option.dest, kwargs[option.dest])
 
 
+class ModifiedOptionParser(OptionParser):
+    """
+    A OptionParser class that doesn't remove newlines on the epilog in order
+    to show usage examples https://stackoverflow.com/questions/1857346/
+    
+    See optparse.OptionParser for the original docstring
+    """
+    def format_epilog(self, formatter):
+        if self.epilog == None:
+            return ""
+        return self.epilog
+
+
 def parse_command_line():
-    parser = OptionParser()
+    parser = ModifiedOptionParser(epilog='\nExamples:\n'
+        '  soundconverter -b [original file 1] [original file 2] -m mp3 -s .mp3\n'
+        '    Creates files with an .mp3 suffix in the same dirs as the input files.\n'
+        '  soundconverter -b [original dir] -r -m audio/x-vorbis -s .opus -o [output dir]\n'
+        '    Creates the original subdirectory structure in the output directory and\n'
+        '    stores the converted files in it.\n')
+
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
         help=_('Convert in batch mode, from command line, '
-            'without a graphical user\n interface. You '
+            'without a graphical user interface. You '
             'can use this from, say, shell scripts.'))
     parser.add_option('-t', '--tags', dest="mode", action='callback',
         callback=mode_callback,  callback_kwargs={'mode':'tags'},
         help=_('Show tags for input files instead of converting '
-            'them. This indicates \n command line batch mode '
+            'them. This indicates command line batch mode '
             'and disables the graphical user interface.'))
     parser.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type for batch mode. The default '
             'is %s. Note that you probably want to set the output '
-            'suffix as well.') % settings['cli-output-type'])
+            'suffix as well. Supported shortcuts and mime types: aac '
+            'audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis '
+            'wav audio/x-wav') % settings['cli-output-type'])
     parser.add_option('-q', '--quiet', action="store_true", dest="quiet",
         help=_("Be quiet. Don't write normal output, only errors."))
     parser.add_option('-d', '--debug', action="store_true", dest="debug",
@@ -128,8 +149,22 @@ def parse_command_line():
             'affect\n the output MIME type.') % settings['cli-output-suffix'])
     parser.add_option('-j', '--jobs', action='store', type='int', dest='forced-jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.'))
-    parser.add_option('--help-gst', action="store_true", dest="_unused",
-        help=_('Shows GStreamer Options'))
+    parser.add_option('-r', '--recursive', action="store_true", dest="recursive",
+        help=_('Go recursively into subdirectories'))
+    parser.add_option('-i', '--ignore', action="store_true", dest="ignore-existing",
+        help=_('Ignore files for which the target already exists instead '
+            'of converting them again'))
+    parser.add_option('-o', '--output', action="store", dest="output-path",
+        help=_('Put converted files into a different directory while maintaining '
+            'the original directory structure'))
+    parser.add_option('-Q', '--quality', action="store", type='int', dest="quality",
+        metavar='NUM', help=_('Quality of the converted output file. Between 0 '
+            '(lowest) and 5 (highest). Default is 3.'), default=3)
+
+    # not implemented yet
+    # parser.add_option('--help-gst', action="store_true", dest="_unused",
+    #     help=_('Shows GStreamer Options'))
+    
     return parser
 
 
@@ -165,7 +200,6 @@ from soundconverter.batch import cli_convert_main
 from soundconverter.batch import cli_tags_main
 from soundconverter.fileoperations import filename_to_uri
 
-files = list(map(filename_to_uri, files))
 
 try:
     from soundconverter.ui import gui_main
@@ -175,14 +209,13 @@ except:
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
-elif settings['mode'] == 'tags':
-    if not files:
-        print('nothing to do...')
-    cli_tags_main(files)
 else:
     if not files:
         print('nothing to do...')
-    cli_convert_main(files)
+    if settings['mode'] == 'tags':
+        cli_tags_main(files)
+    else:
+        cli_convert_main(files)
 
 
 

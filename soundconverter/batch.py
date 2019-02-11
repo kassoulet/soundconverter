@@ -20,6 +20,7 @@
 # USA
 
 
+import os
 import sys
 import gi
 import time
@@ -27,14 +28,71 @@ from gi.repository import GLib
 
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
-from soundconverter.settings import settings
+from soundconverter.settings import settings, get_quality
 from soundconverter.gstreamer import TagReader
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.gstreamer import Converter
-from soundconverter.fileoperations import unquote_filename
+from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs_exists
+
+
+def prepare_files_list(input_files):
+    """takes in a list of paths and returns a list of all the files in those
+    paths. Also converts the paths to uris.
+
+    Also returns a list of relative directories. This is used to reconstruct
+    the directory structure in the output path if -o is provided."""
+
+    # The GUI has its own way of going through subdirectories.
+    # Provide similar functionality to the cli.
+    # If one of the files is a directory, walk over the files in that
+    # and append each one to parsed_files if -r is provided.
+    subdirectories = []
+    parsed_files = []
+    for input_path in input_files:
+        print('input_path:', input_path)
+        # accept tilde (~) to point to home directories
+        if input_path[0] == '~':
+            input_path = os.getenv('HOME') + input_path[1:]
+
+        if os.path.isfile(input_path):
+            parsed_files.append(input_path)
+
+        # walk over directories to add the files of all the subdirectories
+        elif os.path.isdir(input_path):
+
+            if input_path[-1] == os.sep:
+                input_path = input_path[:-1]
+                
+            parent = input_path[:input_path.rfind(os.sep)]
+
+            # but only if -r option was provided
+            if settings.get('recursive'):
+                for dirpath, _, filenames in os.walk(input_path):
+                    for filename in filenames:
+                        if dirpath[-1] != os.sep:
+                            dirpath += os.sep
+                        parsed_files.append(dirpath + filename)
+                        # if input_path is a/b/c/, filename is d.mp3
+                        # and dirpath is a/b/c/e/f/, then append c/e/f/
+                        # to subdirectories
+                        subdir = os.path.relpath(dirpath, parent) + os.sep
+                        if subdir == './':
+                            subdir = ''
+                        subdirectories.append(subdir)
+            else:
+                # else it didn't go into any directory. provide some information about how to
+                print(input_path, 'is a directory. Use -r to go into all subdirectories.')
+        # if not a file and not a dir it doesn't exist. skip
+    parsed_files = list(map(filename_to_uri, parsed_files))
+
+    return parsed_files, subdirectories
+
 
 def cli_tags_main(input_files):
+    """input_files is an array of string paths"""
+
+    input_files, _ = prepare_files_list(input_files)
     error.set_error_handler(error.ErrorPrinter())
     loop = GLib.MainLoop()
     context = loop.get_context()
@@ -71,6 +129,10 @@ class CliProgress:
 
 
 def cli_convert_main(input_files):
+    """input_files is an array of string paths"""
+
+    input_files, subdirectories = prepare_files_list(input_files)
+
     loop = GLib.MainLoop()
     context = loop.get_context()
     error.set_error_handler(error.ErrorPrinter())
@@ -83,12 +145,37 @@ def cli_convert_main(input_files):
 
     progress = CliProgress()
 
-    queue = TaskQueue()
-    for input_file in input_files:
+    for i, input_file in enumerate(input_files):
+
         input_file = SoundFile(input_file)
-        output_name = generator.get_target_name(input_file)
-        c = Converter(input_file, output_name, output_type)
+
+        if 'output-path' in settings:
+            filename = input_file.uri.split(os.sep)[-1]
+            output_name = settings['output-path'] + os.sep + subdirectories[i] + filename
+            output_name = filename_to_uri(output_name)
+            # afterwards set the correct file extension
+            if 'cli-output-suffix' in settings:
+                output_name = output_name[:output_name.rfind('.')] + settings['cli-output-suffix']
+        else:
+            output_name = filename_to_uri(input_file.uri)
+            output_name = generator.get_target_name(input_file)
+        
+        # skip existing output files if desired (-i cli argument)
+        if settings.get('ignore-existing') and vfs_exists(output_name):
+            print('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+            continue
+
+        c = Converter(input_file, output_name, output_type, ignore_errors=True)
+
+        if 'quality' in settings:
+            quality_setting = settings.get('quality')
+            c.set_vorbis_quality(get_quality('vorbis', quality_setting))
+            c.set_aac_quality(get_quality('aac', quality_setting))
+            c.set_opus_quality(get_quality('opus', quality_setting))
+            c.set_mp3_quality(get_quality('mp3', quality_setting))
+
         c.overwrite = True
+
         c.init()
         c.start()
         while c.running:
@@ -102,10 +189,11 @@ def cli_convert_main(input_files):
             context.iteration(True)
         print()
 
-    previous_filename = None
     
     '''
+    queue = TaskQueue()
     queue.start()
+    previous_filename = None
     
     #running, progress = queue.get_progress(perfile)
     while queue.running:
