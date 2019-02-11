@@ -103,3 +103,50 @@ settings = {
     'cpu-count': cpu_count(),
     'forced-jobs': None,
 }
+
+
+# I moved this here so that both batch and ui have
+# access to the numbers of the quality settings.
+# Also to reduce redundancy of the hard-coded
+# quality tuples.
+def get_quality(ftype, value, mode='vbr', reverse=False):
+    """get quality from integers between 0 and 6
+    depending on target file type
+    
+    ftype of 'vorbis', 'aac', 'opus' or 'mp3',
+    value between 0 and 5,
+    mode one of 'cbr', 'abr' and 'vbr' for mp3
+
+    reverse is by default False. If True, this
+    function returns the original value-parameter
+    given a quality setting.
+    """
+
+    quality = {
+        'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+        'aac': (64, 96, 128, 192, 256, 320),
+        'opus': (48, 64, 96, 128, 160, 192),
+        'mp3': {
+            'cbr': (64, 96, 128, 192, 256, 320),
+            'abr': (64, 96, 128, 192, 256, 320),
+            'vbr': (9, 7, 5, 3, 1, 0), # inverted !
+        }
+    }
+
+    # get 6-tuple of qualities
+    qualities = None
+    if ftype == 'mp3':
+        qualities = quality[ftype][mode]
+    else:
+        qualities = quality[ftype]
+
+    # return depending on function parameters
+    if reverse:
+        if type(value) == float:
+            # floats are inaccurate, search for close value
+            for i, q in enumerate(qualities):
+                if abs(value - q) < 0.01:
+                    return i
+        return qualities.index(value)
+    else:
+        return qualities[value]
