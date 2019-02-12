@@ -348,7 +348,7 @@ class FileList:
                     if broken_audiofiles > 1:
                         s = 's'
                     show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
-                        'Check "Show Skipped" in the menu for more information.')
+                        'Check "Invalid Files" in the menu for more information.')
         else:
             # case 4: all files were successfully added. No error message
             pass
