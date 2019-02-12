@@ -25,19 +25,15 @@ from .settings import settings
 from gi.repository import GLib
 
 def log(*args):
-    """
-    Display a message.
-    Can be disabled with 'quiet' option
-    """
+    """ Display a message.
+    Can be disabled with 'quiet' option """
     if not settings['quiet']:
         print(( ' '.join([str(msg) for msg in args]) ))
 
 
 def debug(*args):
-    """
-    Display a debug message.
-    Only when activated by 'debug' option
-    """
+    """ Display a debug message.
+    Only when activated by 'debug' option """
     if settings['debug']:
         print(( ' '.join([str(msg) for msg in args]) ))
 
