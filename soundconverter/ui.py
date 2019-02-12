@@ -170,7 +170,7 @@ class FileList:
         self.waiting_files = []
         self.waiting_files_last = 0
 
-        self.brokenfilelist = []
+        self.invalid_files_list = []
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
@@ -208,6 +208,9 @@ class FileList:
         list. This can be useful when files of multiple types
         are inside a directory and only some of them should be
         converted. Default:None which accepts all types. """
+
+        if len(uris) == 0:
+            return
 
         start_t = time.time()
         files = []
@@ -248,6 +251,9 @@ class FileList:
                 files.append(uri)
 
         files = [f for f in files if not f.endswith('~SC~')]
+
+        if len(files) == 0:
+            show_error('No files found!', '')
 
         if not base:
             base = os.path.commonprefix(files)
@@ -299,33 +305,53 @@ class FileList:
         known_audio_types = ['.flac', '.mp3', '.aac',
             '.m4a', '.mpeg', '.opus', '.vorbis', '.ogg', '.wav']
 
+        # invalid_files is the number of files that are not
+        # added to the list in the current function call
+        invalid_files = 0
+        # out of those files, that many have an audio file extension
         broken_audiofiles = 0
+
         for f in files:
             sound_file = SoundFile(f, base)
-
             # create a list of human readable file paths
             # that were not added to the list
             if f not in self.good_files:
                 extension = os.path.splitext(f)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
-                self.brokenfilelist.append(self.format_cell(sound_file))
+                self.invalid_files_list.append(self.format_cell(sound_file))
+                invalid_files += 1
                 continue
-
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
             self.append_file(sound_file)
 
-        if len(self.brokenfilelist) > 0:
-            self.window.skipped_files_button.set_visible(True)
-            s = ''
-            if broken_audiofiles > 1:
-                s = 's'
-            show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
-                'Check "Show Skipped" in the menu for more information.')
+        if invalid_files > 0:
+            self.window.invalid_files_button.set_visible(True)
+            if len(files) == invalid_files == 1:
+                # case 1: the single file that should be added is not supported
+                show_error('The specified file is not supported!', 'Either because it is broken or not audio files.')
+
+            elif len(files) == invalid_files:
+                # case 2: all files that should be added cannot be added
+                show_error('All {} specified files are not supported!'.format(len(files)), 'Either because they are broken or not audio files.')
+
+            else:
+                # case 3: some files could not be added (that can already be because
+                # there is a single picture in a folder of hundreds of sound files).
+                # Show an error if this skipped file has a soundfile extension,
+                # otherwise don't bother the user.
+                log(invalid_files, 'of', len(files), 'files were not added to the list')
+                if broken_audiofiles > 0:
+                    s = ''
+                    if broken_audiofiles > 1:
+                        s = 's'
+                    show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
+                        'Check "Show Skipped" in the menu for more information.')
         else:
-            self.window.skipped_files_button.set_visible(False)
+            # case 4: all files were successfully added. No error message
+            pass
 
         self.window.set_status()
         self.window.progressbarstatus.hide()
@@ -1260,20 +1286,20 @@ class SoundConverterWindow(GladeWindow):
     def on_clearlist_activate(self, *args):
         self.filelist.model.clear()
         self.filelist.filelist.clear()
-        self.filelist.brokenfilelist = []
-        self.skipped_files_button.set_visible(False)
+        self.filelist.invalid_files_list = []
+        self.invalid_files_button.set_visible(False)
         self.set_sensitive()
         self.set_status()
 
-    def on_showskipped_activate(self, *args):
-        self.showskipped_dialog_label.set_label('Those are the files that could '
-            'not be added to the list due to\nnot containing audio data, being '
+    def on_showinvalid_activate(self, *args):
+        self.showinvalid_dialog_label.set_label('Those are the files that could '
+            'not be added to the list due to not\ncontaining audio data, being '
             'broken or being incompatible to gstreamer:')
         buffer = Gtk.TextBuffer()
-        buffer.set_text('\n'.join(self.filelist.brokenfilelist))
-        self.showskipped_dialog_list.set_buffer(buffer) 
-        self.showskipped_dialog.run()
-        self.showskipped_dialog.hide()
+        buffer.set_text('\n'.join(self.filelist.invalid_files_list))
+        self.showinvalid_dialog_list.set_buffer(buffer) 
+        self.showinvalid_dialog.run()
+        self.showinvalid_dialog.hide()
 
     def on_progress(self):
         if self.pulse_progress is not None: #

@@ -272,7 +272,7 @@ Gautier Portet</property>
                     <property name="ypad">6</property>
                     <property name="label">asdf</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="wrap">False</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
@@ -2133,12 +2133,12 @@ Gautier Portet</property>
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="skipped_files_button">
+          <object class="GtkModelButton" id="invalid_files_button">
             <property name="visible">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <property name="text" translatable="yes">Show Skipped</property>
-            <signal name="clicked" handler="on_showskipped_activate" swapped="no"/>
+            <property name="text" translatable="yes">Invalid Files</property>
+            <signal name="clicked" handler="on_showinvalid_activate" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -2766,9 +2766,9 @@ Gautier Portet</property>
       <action-widget response="-5">button6</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkDialog" id="showskipped_dialog">
+  <object class="GtkDialog" id="showinvalid_dialog">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Skipped Files</property>
+    <property name="title" translatable="yes">Invalid Files</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
     <property name="icon_name">soundconverter</property>
@@ -2778,20 +2778,20 @@ Gautier Portet</property>
       <placeholder/>
     </child>
     <child internal-child="vbox">
-      <object class="GtkBox" id="showskipped_dialog_vbox1">
+      <object class="GtkBox" id="showinvalid_dialog_vbox1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="margin">6</property>
         <property name="margin-top">0</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="showskipped_dialog-action_area">
+          <object class="GtkButtonBox" id="showinvalid_dialog-action_area">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <property name="halign">GTK_ALIGN_CENTER</property>
             <child>
-              <object class="GtkButton" id="showskipped_dialog_closebutton">
+              <object class="GtkButton" id="showinvalid_dialog_closebutton">
                 <property name="label">gtk-close</property>
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
@@ -2815,12 +2815,12 @@ Gautier Portet</property>
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="showskipped_dialog_vbox2">
+          <object class="GtkBox" id="showinvalid_dialog_vbox2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="showskipped_dialog_label">
+              <object class="GtkLabel" id="showinvalid_dialog_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="ypad">6</property>
@@ -2836,14 +2836,14 @@ Gautier Portet</property>
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="showskipped_dialog_scroll">
+              <object class="GtkScrolledWindow" id="showinvalid_dialog_scroll">
                 <property name="visible">True</property>
                 <property name="vexpand">True</property>
                 <property name="min-content-height">200</property>
                 <property name="margin_bottom">6</property>
                 <property name="margin_top">6</property>
                 <child>
-                  <object class="GtkTextView" id="showskipped_dialog_list">
+                  <object class="GtkTextView" id="showinvalid_dialog_list">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
@@ -2871,7 +2871,7 @@ Gautier Portet</property>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="-7">showskipped_dialog_closebutton</action-widget>
+      <action-widget response="-7">showinvalid_dialog_closebutton</action-widget>
     </action-widgets>
   </object>
 </interface>
