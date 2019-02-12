@@ -86,22 +86,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 Building and installation
 -------------------------
 
-To build from the latest source, use:
+To build from the latest source, use::
 
     git clone https://github.com/kassoulet/soundconverter.git
     ./autogen.sh
     make
     make install
 
-It is also available in the arch repositories:
+It is also available in the arch repositories::
 
     sudo pacman -S soundconverter
 
-As well as the debian repositories:
+As well as the debian repositories::
 
     sudo apt install soundconverter
 
 Testing
 -------
 
+To start unittests, use::
+
     make test
+    
