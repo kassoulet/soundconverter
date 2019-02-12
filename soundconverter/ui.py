@@ -212,7 +212,7 @@ class FileList:
         self.window.set_status(_('Scanning files...'))
         self.window.progressbarstatus.show()
         self.files_to_add = 0
-        GLib.timeout_add(100, self.update_progress)
+        self.window.progressbarstatus.set_fraction(0)
 
         for uri in uris:
             gtk_iteration()
@@ -257,9 +257,8 @@ class FileList:
             base += '/'
 
         scan_t = time.time()
-        log('analysing file extensions')
+        log('analysing file integrity')
         self.files_to_add = len(files)
-        self.window.set_status(_('Adding Files...'))
 
         # self.good_files will be populated
         # by the typefinder, which calls self.found_type.
@@ -276,19 +275,48 @@ class FileList:
         self.typefinders.queue_ended = self.typefinder_queue_ended
         self.typefinders.start()
 
+        self.window.set_status('{}'.format(_('Adding Files...')))
+
+        # show progress and enable gtk main loop iterations
+        # so that the ui stays responsive
+        self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
+        self.window.progressbarstatus.set_show_text(True)
         while(self.typefinders.running):
+            if self.typefinders.progress:
+                completed = int(self.typefinders.progress * len(files))
+                self.window.progressbarstatus.set_fraction(self.typefinders.progress)
+                self.window.progressbarstatus.set_text('{}/{}'.format(completed, len(files)))
             gtk_iteration()
             time.sleep(0.1)
+        self.window.progressbarstatus.set_show_text(False)
+
         log('adding: %d files' % len(files))
+
+        # see if one of the files with an audio extension
+        # was not readable
+        known_audio_types = ['.flac', '.mp3', '.aac',
+            '.m4a', '.mpeg', '.opus', '.vorbis', '.ogg', '.wav']
+
+        broken_audiofiles = 0
         for f in files:
-            if f not in self.good_files:
-                print('could not read', f)
-                continue
             sound_file = SoundFile(f, base)
+            extension = os.path.splitext(f)[1].lower()
+            if f not in self.good_files:
+                if extension in known_audio_types:
+                    broken_audiofiles += 1
+                continue
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
             self.append_file(sound_file)
+
+        if broken_audiofiles > 0:
+            s = ''
+            if broken_audiofiles > 1:
+                s = 's'
+            show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
+                'You can run soundconverter from a console\n'
+                'and check which ones in the output.')
 
         self.window.set_status()
         self.window.progressbarstatus.hide()

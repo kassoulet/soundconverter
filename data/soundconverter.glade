@@ -208,11 +208,14 @@ Gautier Portet</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
+        <property name="margin">6</property>
+        <property name="margin-top">0</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area6">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
+            <property name="halign">GTK_ALIGN_CENTER</property>
             <child>
               <object class="GtkButton" id="closebutton1">
                 <property name="label">gtk-close</property>
@@ -285,7 +288,7 @@ Gautier Portet</property>
                     <property name="ypad">6</property>
                     <property name="label">zxcv</property>
                     <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="wrap">False</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                   </object>
