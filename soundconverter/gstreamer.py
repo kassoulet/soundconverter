@@ -27,7 +27,7 @@ from gettext import gettext as _
 import gi
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
-from soundconverter.fileoperations import vfs_encode_filename, file_encode_filename
+from soundconverter.fileoperations import vfs_encode_filename
 from soundconverter.fileoperations import unquote_filename, vfs_unlink
 from soundconverter.fileoperations import vfs_rename
 from soundconverter.fileoperations import vfs_exists
@@ -144,7 +144,7 @@ if 'mp4mux' not in available_elements:
 
 
 class Pipeline(BackgroundTask):
-    """A background task for running a GstPipeline."""
+    """ A background task for running a GstPipeline. """
 
     def __init__(self):
         BackgroundTask.__init__(self)
@@ -304,7 +304,7 @@ class Pipeline(BackgroundTask):
 
     def get_position(self):
         return NotImplementedError
-        
+
     def query_duration(self):
         """
         Ask for the duration of the current pipeline.
@@ -337,7 +337,7 @@ class TypeFinder(Pipeline):
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
-    
+
     def pad_added(self, decoder, pad):
         """ called when a decoded pad is created """
         self.query_duration()
@@ -356,7 +356,7 @@ class TypeFinder(Pipeline):
             if fnmatch(self.sound_file.uri, t):
                 self.sound_file.mime_type = None
                 log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
-        
+
         return True
 
     def finished(self):
@@ -369,7 +369,7 @@ class TypeFinder(Pipeline):
 
 
 class Decoder(Pipeline):
-    """A GstPipeline background task that decodes data and finds tags."""
+    """ A GstPipeline background task that decodes data and finds tags. """
 
     def __init__(self, sound_file):
         Pipeline.__init__(self)
@@ -468,7 +468,7 @@ class Decoder(Pipeline):
 
 
 class TagReader(Decoder):
-    """A GstPipeline background task for finding meta tags in a file."""
+    """ A GstPipeline background task for finding meta tags in a file. """
 
     def __init__(self, sound_file):
         Decoder.__init__(self, sound_file)
@@ -498,7 +498,7 @@ class TagReader(Decoder):
 
 
 class Converter(Decoder):
-    """A background task for converting files to another format."""
+    """ A background task for converting files to another format. """
 
     def __init__(self, sound_file, output_filename, output_type,
                  delete_original=False, output_resample=False,
@@ -675,7 +675,7 @@ class Converter(Decoder):
 
 
 class ConverterQueue(TaskQueue):
-    """Background task for converting many files."""
+    """ Background task for converting many files. """
 
     def __init__(self, window):
         TaskQueue.__init__(self)
@@ -777,7 +777,7 @@ class ConverterQueue(TaskQueue):
         if duration:
             self.duration_processed += duration
 
-        # rename temporary file 
+        # rename temporary file
         newname = self.window.prefs.generate_filename(task.sound_file)
         debug(beautify_uri(task.output_filename), '->', beautify_uri(newname))
 
@@ -830,7 +830,7 @@ class ConverterQueue(TaskQueue):
         TaskQueue.abort(self)
         self.window.set_sensitive()
         self.reset_counters()
-    
+
     def start(self):
-        #self.waiting_tasks.sort(key=Converter.get_duration,reverse=True)
+        #self.waiting_tasks.sort(key=Converter.get_duration, reverse=True)
         TaskQueue.start(self)

@@ -37,11 +37,11 @@ from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs
 
 
 def prepare_files_list(input_files):
-    """takes in a list of paths and returns a list of all the files in those
-    paths. Also converts the paths to uris.
+    """ Takes in a list of paths and returns a list of all the files in those
+    paths. Also converts the paths to URIs.
 
     Also returns a list of relative directories. This is used to reconstruct
-    the directory structure in the output path if -o is provided."""
+    the directory structure in the output path if -o is provided. """
 
     # The GUI has its own way of going through subdirectories.
     # Provide similar functionality to the cli.
@@ -63,7 +63,7 @@ def prepare_files_list(input_files):
 
             if input_path[-1] == os.sep:
                 input_path = input_path[:-1]
-                
+
             parent = input_path[:input_path.rfind(os.sep)]
 
             # but only if -r option was provided
@@ -90,7 +90,14 @@ def prepare_files_list(input_files):
 
 
 def cli_tags_main(input_files):
-    """input_files is an array of string paths"""
+    """ This function displays all the tags of the
+    specified files in input_files in the console.
+
+    To go into subdirectories of paths provided,
+    the -r command line argument should be provided,
+    which is stored in the global 'settings' variable.
+
+    input_files is an array of string paths. """
 
     input_files, _ = prepare_files_list(input_files)
     error.set_error_handler(error.ErrorPrinter())
@@ -105,7 +112,7 @@ def cli_tags_main(input_files):
         while t.running:
             time.sleep(0.01)
             context.iteration(True)
-            
+
         if not settings['quiet']:
             for key in sorted(input_file.tags):
                 print(('     %s: %s' % (key, input_file.tags[key])))
@@ -117,6 +124,7 @@ class CliProgress:
         self.current_text = ''
 
     def show(self, new_text):
+        """ Update the progress in the console """
         if new_text != self.current_text:
             self.clear()
             sys.stdout.write(new_text)
@@ -124,12 +132,22 @@ class CliProgress:
             self.current_text = new_text
 
     def clear(self):
+        """ Reverts the previously written message.
+        Used in `show` """
         sys.stdout.write('\b \b' * len(self.current_text))
         sys.stdout.flush()
 
 
 def cli_convert_main(input_files):
-    """input_files is an array of string paths"""
+    """ This function starts the conversion of all
+    the files specified in input_files.
+
+    To control the conversion and the handling of
+    directories, command line arguments have to be
+    provided which are stored in the global 'settings'
+    variable.
+
+    input_files is an array of string paths. """
 
     input_files, subdirectories = prepare_files_list(input_files)
 
@@ -159,7 +177,7 @@ def cli_convert_main(input_files):
         else:
             output_name = filename_to_uri(input_file.uri)
             output_name = generator.get_target_name(input_file)
-        
+
         # skip existing output files if desired (-i cli argument)
         if settings.get('ignore-existing') and vfs_exists(output_name):
             print('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
@@ -189,12 +207,12 @@ def cli_convert_main(input_files):
             context.iteration(True)
         print()
 
-    
+
     '''
     queue = TaskQueue()
     queue.start()
     previous_filename = None
-    
+
     #running, progress = queue.get_progress(perfile)
     while queue.running:
         t = None #queue.get_current_task()

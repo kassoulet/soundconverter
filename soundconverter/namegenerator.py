@@ -31,7 +31,7 @@ from soundconverter.fileoperations import vfs_exists, filename_to_uri
 
 
 class TargetNameGenerator:
-    """Generator for creating the target name from an input name."""
+    """ Generator for creating the target name from an input name. """
 
     nice_chars = string.ascii_letters + string.digits + '.-_/'
 

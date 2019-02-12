@@ -37,7 +37,7 @@ try:
             n = Notify.Notification('SoundConverter', message)
             n.show()
         except:
-            pass 
+            pass
 
     if Notify.init('Basics'):
         notification = _notification
