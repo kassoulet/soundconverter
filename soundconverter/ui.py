@@ -81,7 +81,7 @@ class ErrorDialog:
         self.dialog.set_transient_for(builder.get_object('window'))
         self.primary = builder.get_object('primary_error_label')
         self.secondary = builder.get_object('secondary_error_label')
-
+    
     def show_error(self, primary, secondary):
         self.primary.set_markup(primary)
         self.secondary.set_markup(secondary)
@@ -169,6 +169,8 @@ class FileList:
 
         self.waiting_files = []
         self.waiting_files_last = 0
+
+        self.brokenfilelist = []
 
     def drag_data_received(self, widget, context, x, y, selection,
                              mime_id, time):
@@ -293,30 +295,37 @@ class FileList:
         log('adding: %d files' % len(files))
 
         # see if one of the files with an audio extension
-        # was not readable
+        # was not readable.
         known_audio_types = ['.flac', '.mp3', '.aac',
             '.m4a', '.mpeg', '.opus', '.vorbis', '.ogg', '.wav']
 
         broken_audiofiles = 0
         for f in files:
             sound_file = SoundFile(f, base)
-            extension = os.path.splitext(f)[1].lower()
+
+            # create a list of human readable file paths
+            # that were not added to the list
             if f not in self.good_files:
+                extension = os.path.splitext(f)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
+                self.brokenfilelist.append(self.format_cell(sound_file))
                 continue
+
             if sound_file.uri in self.filelist:
                 log('file already present: \'%s\'' % sound_file.uri)
                 continue
             self.append_file(sound_file)
 
-        if broken_audiofiles > 0:
+        if len(self.brokenfilelist) > 0:
+            self.window.skipped_files_button.set_visible(True)
             s = ''
             if broken_audiofiles > 1:
                 s = 's'
             show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
-                'You can run soundconverter from a console\n'
-                'and check which ones in the output.')
+                'Check "Show Skipped" in the menu for more information.')
+        else:
+            self.window.skipped_files_button.set_visible(False)
 
         self.window.set_status()
         self.window.progressbarstatus.hide()
@@ -1251,8 +1260,20 @@ class SoundConverterWindow(GladeWindow):
     def on_clearlist_activate(self, *args):
         self.filelist.model.clear()
         self.filelist.filelist.clear()
+        self.filelist.brokenfilelist = []
+        self.skipped_files_button.set_visible(False)
         self.set_sensitive()
         self.set_status()
+
+    def on_showskipped_activate(self, *args):
+        self.showskipped_dialog_label.set_label('Those are the files that could '
+            'not be added to the list due to\nnot containing audio data, being '
+            'broken or being incompatible to gstreamer:')
+        buffer = Gtk.TextBuffer()
+        buffer.set_text('\n'.join(self.filelist.brokenfilelist))
+        self.showskipped_dialog_list.set_buffer(buffer) 
+        self.showskipped_dialog.run()
+        self.showskipped_dialog.hide()
 
     def on_progress(self):
         if self.pulse_progress is not None: #
@@ -1461,7 +1482,7 @@ def gui_main(name, version, gladefile, input_files):
     win = SoundConverterWindow(builder)
     from . import error
     error.set_error_handler(ErrorDialog(builder))
-
+    
     #error_dialog = MsgAreaErrorDialog(builder)
     #error_dialog.msg_area = win.msg_area
     #error.set_error_handler(error_dialog)
