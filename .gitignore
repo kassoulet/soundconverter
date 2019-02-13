@@ -22,9 +22,4 @@ compile
 data/org.soundconverter.gschema.valid
 m4/
 py-compile
-
-# paths that don't exist (remove from .gitignore, what is this?)
-src/soundconverter
-
-# python
 __pycache__

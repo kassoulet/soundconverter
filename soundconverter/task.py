@@ -26,13 +26,13 @@ from gi.repository import GLib
 
 class BackgroundTask:
 
-    """A background task.
+    """ A background task.
 
     To use: derive a subclass and define the methods started, and
     finished. Then call the start() method when you want to start the task.
     You must call done() when the processing is finished.
     Call the abort() method if you want to stop the task before it finishes
-    normally."""
+    normally. """
 
     def __init__(self):
         self.running = False
@@ -40,55 +40,55 @@ class BackgroundTask:
         self.progress = None
 
     def start(self):
-        """Start running the task. Call started()."""
+        """ Start running the task. Call started(). """
         self.running = True
         self.run_start_time = time.time()
         self.emit('started')
 
     def add_listener(self, signal, listener):
-        """Add a custom listener to the given signal.
-        Signals are 'started' and 'finished'"""
+        """ Add a custom listener to the given signal.
+        Signals are 'started' and 'finished' """
         if signal not in self.listeners:
             self.listeners[signal] = []
         self.listeners[signal].append(listener)
 
     def emit(self, signal):
-        """Call the signal handlers.
+        """ Call the signal handlers.
         Callbacks are called as gtk idle funcs to be sure
-        they are in the main thread."""
+        they are in the main thread. """
         GLib.idle_add(getattr(self, signal))
         if signal in self.listeners:
             for listener in self.listeners[signal]:
                 GLib.idle_add(listener, self)
 
     def emit_sync(self, signal):
-        """Call the signal handlers.
-        Callbacks are called synchronously."""
+        """ Call the signal handlers.
+        Callbacks are called synchronously. """
         getattr(self, signal)()
         if signal in self.listeners:
             for listener in self.listeners[signal]:
                 listener(self)
 
     def done(self):
-        """Call to end normally the task."""
+        """ Call to end normally the task. """
         self.run_finish_time = time.time()
         if self.running:
             self.emit('finished')
             self.running = False
 
     def abort(self):
-        """Stop task processing. finished() is not called."""
+        """ Stop task processing. finished() is not called. """
         self.emit('aborted')
         self.running = False
 
     def aborted(self):
-        """Called when the task is aborted."""
+        """ Called when the task is aborted. """
         pass
 
     def started(self):
-        """Called when the task starts."""
+        """ Called when the task starts. """
         pass
 
     def finished(self):
-        """Clean up the task after all work has been done."""
+        """ Clean up the task after all work has been done. """
         pass
