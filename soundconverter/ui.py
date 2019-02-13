@@ -26,6 +26,7 @@ import time
 import sys
 import urllib.request, urllib.parse, urllib.error
 from gettext import gettext as _
+from gettext import ngettext
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -331,11 +332,13 @@ class FileList:
             self.window.invalid_files_button.set_visible(True)
             if len(files) == invalid_files == 1:
                 # case 1: the single file that should be added is not supported
-                show_error('The specified file is not supported!', 'Either because it is broken or not audio files.')
+                show_error(_('The specified file is not supported!'),
+                    _('Either because it is broken or not an audio file.'))
 
             elif len(files) == invalid_files:
                 # case 2: all files that should be added cannot be added
-                show_error('All {} specified files are not supported!'.format(len(files)), 'Either because they are broken or not audio files.')
+                show_error(_('All {} specified files are not supported!').format(len(files)),
+                    _('Either because they are broken or not audio files.'))
 
             else:
                 # case 3: some files could not be added (that can already be because
@@ -344,11 +347,9 @@ class FileList:
                 # otherwise don't bother the user.
                 log(invalid_files, 'of', len(files), 'files were not added to the list')
                 if broken_audiofiles > 0:
-                    s = ''
-                    if broken_audiofiles > 1:
-                        s = 's'
-                    show_error('{} audiofile{} could not be read by gstreamer!'.format(broken_audiofiles, s),
-                        'Check "Invalid Files" in the menu for more information.')
+                    show_error(ngettext('One audiofile could not be read by gstreamer!',
+                        '{} audiofiles could not be read by gstreamer!', broken_audiofiles).format(broken_audiofiles),
+                        _('Check "Invalid Files" in the menu for more information.'))
         else:
             # case 4: all files were successfully added. No error message
             pass
