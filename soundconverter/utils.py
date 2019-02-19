@@ -25,8 +25,8 @@ from .settings import settings
 from gi.repository import GLib
 
 def log(*args):
-    """ Display a message.
-    Can be disabled with 'quiet' option """
+    """ Display a message. Can be disabled
+    with the 'quiet' option (-q) """
     if not settings['quiet']:
         print(( ' '.join([str(msg) for msg in args]) ))
 
