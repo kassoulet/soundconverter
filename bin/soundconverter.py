@@ -37,7 +37,6 @@ LIBDIR = '@libdir@'
 DATADIR = '@datadir@'
 NAME = 'SoundConverter'
 VERSION = '@version@'
-print(( '%s %s' % (NAME, VERSION) ))
 GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 PACKAGE = NAME.lower()
 
@@ -79,21 +78,20 @@ def _check_libs():
         # force GIL creation - see https://bugzilla.gnome.org/show_bug.cgi?id=710447
         import threading
         threading.Thread(target=lambda: None).start()
-        GLib.threads_init()
+        # GLib.threads_init() # deprecated
         from gi.repository import Gst
         Gst.init(None)
         from gi.repository import Gtk, Gdk
     except (ImportError, ValueError) as error:
         print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
         sys.exit(1)
-    print(( '  using GTK version: %s' % Gtk._version))
-    print(( '  using Gstreamer version: %s' % (
-            '.'.join([str(s) for s in Gst.version()])) ))
+    # print(( '  using GTK version: %s' % Gtk._version))
+    # print(( '  using Gstreamer version: %s' % (
+    #         '.'.join([str(s) for s in Gst.version()])) ))
 
 _check_libs()
 
-from soundconverter.batch import cli_convert_main
-from soundconverter.batch import cli_tags_main
+from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
 
@@ -139,6 +137,11 @@ def parse_command_line():
     parser = ModifiedOptionParser(epilog='\nExample:\n'
         '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n')
 
+    parser.add_option('-c', '--check', dest='mode', action='callback',
+        callback=mode_callback, callback_kwargs={'mode':'check'},
+        help=_('Print which files cannot be read by gstreamer. '
+            'Useful before converting. This will disable the gui and '
+            'run in batch mode.'))
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
         help=_('Convert in batch mode, from command line, '
@@ -158,7 +161,7 @@ def parse_command_line():
 
     # batch mode settings
     batch_option_group = OptionGroup(parser, 'Batch Mode Options',
-                        'Those options will only have effect when the -b or -t '
+                        'Those options will only have effect when the -b, -c or -t '
                         'option is provided')
     batch_option_group.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type. The default '
@@ -206,8 +209,10 @@ for k in dir(options):
 
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
-if settings['forced-jobs']:
-    print(('  using %d thread(s)' % settings['forced-jobs']))
+if not settings.get('quiet'):
+    print(( '%s %s' % (NAME, VERSION) ))
+    if settings['forced-jobs']:
+        print(('Using %d thread(s)' % settings['forced-jobs']))
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
@@ -216,8 +221,10 @@ else:
         print('nothing to do...')
     if settings['mode'] == 'tags':
         cli_tags_main(files)
-    else:
-        cli_convert_main(files)
+    elif settings['mode'] == 'batch':
+        CLI_Convert(files)
+    elif settings['mode'] == 'check':
+        CLI_Check(files)
 
 
 

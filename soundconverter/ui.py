@@ -285,6 +285,7 @@ class FileList:
         self.typefinders.start()
 
         self.window.set_status('{}'.format(_('Adding Files...')))
+        log('adding: %d files' % len(files))
 
         # show progress and enable gtk main loop iterations
         # so that the ui stays responsive
@@ -296,10 +297,9 @@ class FileList:
                 self.window.progressbarstatus.set_fraction(self.typefinders.progress)
                 self.window.progressbarstatus.set_text('{}/{}'.format(completed, len(files)))
             gtk_iteration()
-            time.sleep(0.1)
+            # time.sleep(0.1) # slows everything down. why does the taskqueue depend
+            # on gtk_iteration being called like a maniac?
         self.window.progressbarstatus.set_show_text(False)
-
-        log('adding: %d files' % len(files))
 
         # see if one of the files with an audio extension
         # was not readable.
