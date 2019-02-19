@@ -313,7 +313,7 @@ class CLI_Check():
         context.iteration(True)
 
         if not silent:
-            log('\nBroken Files:')
+            log('\nNon-Audio Files:')
 
             for input_file in input_files:
                 if not input_file in self.good_files:
