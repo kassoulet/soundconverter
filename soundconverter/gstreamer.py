@@ -100,7 +100,6 @@ for element in required_elements:
 gstreamer_source = 'giosrc'
 gstreamer_sink = 'giosink'
 encode_filename = vfs_encode_filename
-print('  using gio')
 
 # used to dismiss codec installation if the user already canceled it
 user_canceled_codec_installation = False
@@ -306,9 +305,7 @@ class Pipeline(BackgroundTask):
         return NotImplementedError
 
     def query_duration(self):
-        """
-        Ask for the duration of the current pipeline.
-        """
+        """ Ask for the duration of the current pipeline. """
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
@@ -317,8 +314,9 @@ class Pipeline(BackgroundTask):
         except Gst.QueryError:
             self.sound_file.duration = None
 
+
 class TypeFinder(Pipeline):
-    def __init__(self, sound_file):
+    def __init__(self, sound_file, silent=False):
         Pipeline.__init__(self)
         self.sound_file = sound_file
 
@@ -330,10 +328,18 @@ class TypeFinder(Pipeline):
         # decodebin. we can't use our own typefind before decodebin anymore,
         # since its caps would've been the same as decodebin's sink caps.
         self.add_signal('typefind', 'have-type', self.have_type)
+        self.silent = silent
+
+    def log(self, *args):
+        """ the output of TypeFinder can be disabled either with
+        the -q command line option or by setting self.silent to
+        True """
+        if not self.silent:
+            log(*args)
 
     def on_error(self, error):
         self.error = error
-        log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+        self.log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
@@ -351,11 +357,11 @@ class TypeFinder(Pipeline):
             if t in mime_type:
                 self.sound_file.mime_type = mime_type
         if not self.sound_file.mime_type:
-            log('mime type skipped: %s' % mime_type)
+            self.log('mime type skipped: %s' % mime_type)
         for t in filename_blacklist:
             if fnmatch(self.sound_file.uri, t):
                 self.sound_file.mime_type = None
-                log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
+                self.log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
 
         return True
 
@@ -386,9 +392,7 @@ class Decoder(Pipeline):
         pass
 
     def query_position(self):
-        """
-        Ask for the stream position of the current pipeline.
-        """
+        """ Ask for the stream position of the current pipeline. """
         try:
             if self.pipeline:
                 self.position = max(0, self.pipeline.query_position(
@@ -397,9 +401,7 @@ class Decoder(Pipeline):
             self.position = 0
 
     def found_tag(self, decoder, something, taglist):
-        """
-        Called when the decoder reads a tag.
-        """
+        """ Called when the decoder reads a tag. """
         debug('found_tags:', self.sound_file.filename_for_display)
         taglist.foreach(self.append_tag, None)
 
