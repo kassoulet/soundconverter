@@ -1130,10 +1130,10 @@ class SoundConverterWindow(GladeWindow):
     """ Main application class. """
 
     sensitive_names = ['remove', 'clearlist',
-                       'toolbutton_clearlist', 'convert_button']
+                       'convert_button']
     unsensitive_when_converting = ['remove', 'clearlist', 'prefs_button',
             'toolbutton_addfile', 'toolbutton_addfolder', 'convert_button',
-            'toolbutton_clearlist', 'filelist', 'menubar']
+            'filelist', 'menubar']
 
     def __init__(self, builder):
         self.paused_time = 0
