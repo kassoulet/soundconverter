@@ -490,6 +490,13 @@ class PreferencesDialog(GladeWindow):
             w = self.into_selected_folder
         w.set_active(True)
 
+        self.target_folder_chooser = Gtk.FileChooserDialog(_('Add Folder...'),
+            self.dialog, Gtk.FileChooserAction.SELECT_FOLDER,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK))
+        self.target_folder_chooser.set_select_multiple(False)
+        self.target_folder_chooser.set_local_only(False)
+
         uri = filename_to_uri(urllib.parse.quote(self.settings.get_string('selected-folder'), safe='/:@'))
         self.target_folder_chooser.set_uri(uri)
         self.update_selected_folder()
@@ -1054,74 +1061,6 @@ class PreferencesDialog(GladeWindow):
         self.set_sensitive()
 
 
-class CustomFileChooser:
-    """ Custom file chooser """
-
-    def __init__(self, builder, parent):
-        """ Load glade object, create a combobox """
-
-        self.dlg = builder.get_object('custom_file_chooser')
-        self.dlg.set_title(_('Open a file'))
-        self.dlg.set_transient_for(parent)
-
-        # setup
-        self.fcw = builder.get_object('filechooserwidget')
-        self.fcw.set_local_only(False)
-        self.fcw.set_select_multiple(True)
-
-        self.pattern = []
-
-        # Create combobox model
-        self.combo = builder.get_object('filtercombo')
-        self.combo.connect('changed', self.on_combo_changed)
-        self.store = Gtk.ListStore(str)
-        self.combo.set_model(self.store)
-        combo_rend = Gtk.CellRendererText()
-        self.combo.pack_start(combo_rend, True)
-        self.combo.add_attribute(combo_rend, 'text', 0)
-
-        # TODO: get all (gstreamer) knew files
-        for name, pattern in filepattern:
-            self.add_pattern(name, pattern)
-        self.combo.set_active(0)
-
-    def add_pattern(self, name, pat):
-        """
-        Add a new pattern to the combobox.
-        @param name: The pattern name.
-        @type name: string
-        @param pat: the pattern
-        @type pat: string
-        """
-        self.pattern.append(pat)
-        self.store.append(['%s (%s)' % (name, pat)])
-
-    def filter_cb(self, info, pattern):
-        filename = info.display_name
-        return filename.lower().endswith(pattern[1:])
-
-    def on_combo_changed(self, w):
-        """ Callback for combobox 'changed' signal \n
-        Set a new filter for the filechooserwidget """
-        filefilter = Gtk.FileFilter()
-        active = self.combo.get_active()
-        if active:
-            filefilter.add_custom(Gtk.FileFilterFlags.DISPLAY_NAME, self.filter_cb,
-                                        self.pattern[self.combo.get_active()])
-        else:
-            filefilter.add_pattern('*.*')
-        self.fcw.set_filter(filefilter)
-
-    def __getattr__(self, attr):
-        """ Redirect all missing attributes/methods
-        to dialog. """
-        try:
-            # defaut to dialog attributes
-            return getattr(self.dlg, attr)
-        except AttributeError:
-            # fail back to inner file chooser widget
-            return getattr(self.fcw, attr)
-
 _old_progress = 0
 _old_total = 0
 
@@ -1141,7 +1080,6 @@ class SoundConverterWindow(GladeWindow):
 
         self.widget = builder.get_object('window')
         self.prefs = PreferencesDialog(builder, self.widget)
-        self.addchooser = CustomFileChooser(builder, self.widget)
         GladeWindow.connect_signals()
 
         self.filelist = FileList(self, builder)
@@ -1172,6 +1110,30 @@ class SoundConverterWindow(GladeWindow):
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
 
+        self.addchooser = Gtk.FileChooserDialog(_('Add Files...'),
+            self.widget, Gtk.FileChooserAction.OPEN,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK))
+        self.addchooser.set_select_multiple(True)
+        self.addchooser.set_local_only(False)
+
+        self.addfile_combo = Gtk.ComboBox()
+        self.addfile_store = Gtk.ListStore(str)
+        self.addfile_combo.set_model(self.addfile_store)
+        combo_rend = Gtk.CellRendererText()
+        self.addfile_combo.pack_start(combo_rend, True)
+        self.addfile_combo.add_attribute(combo_rend, 'text', 0)
+        self.addfile_combo.connect('changed', self.on_addfile_combo_changed)
+        
+        self.pattern = []
+        # TODO: get all (gstreamer) knew files
+        for files in filepattern:
+            self.pattern.append(files[1])
+            self.addfile_store.append(['%s (%s)' % (files[0], files[1])])
+
+        self.addfile_combo.set_active(0)
+        self.addchooser.set_extra_widget(self.addfile_combo)
+
         #self.aboutdialog.set_property('name', NAME)
         #self.aboutdialog.set_property('version', VERSION)
         #self.aboutdialog.set_transient_for(self.widget)
@@ -1186,25 +1148,6 @@ class SoundConverterWindow(GladeWindow):
 
         self.set_sensitive()
         self.set_status()
-
-
-        #msg = _('The output file <i>%s</i>\n exists already.\n '\
-        #            'Do you want to skip the file, overwrite it or'\
-        #            ' cancel the conversion?\n') % '/foo/bar/baz'
-        vbox = self.vbox_status
-        #self.msg_area = msg_area = MessageArea()
-        #msg_area.add_button('_Overwrite', 1)
-        #msg_area.add_button('_Skip', 2)
-        #msg_area.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CLOSE)
-        #checkbox = Gtk.CheckButton('Apply to _all queue')
-        #checkbox.show()
-        #msg_area.set_text_and_icon(Gtk.STOCK_DIALOG_ERROR, 'Access Denied',                                    msg, checkbox)
-
-        #msg_area.connect("response", self.OnMessageAreaReponse, msg_area)
-        #msg_area.connect("close", self.OnMessageAreaClose, msg_area)
-        #vbox.pack_start(msg_area, False, False)
-        #msg_area.show()
-
 
 
     # This bit of code constructs a list of methods for binding to Gtk+
@@ -1249,6 +1192,22 @@ class SoundConverterWindow(GladeWindow):
             self.filelist.add_uris(self.addchooser.get_uris())
             self.prefs.settings.set_string('last-used-folder', folder)
         self.set_sensitive()
+
+    def addfile_filter_cb(self, info, pattern):
+        filename = info.display_name
+        return filename.lower().endswith(pattern[1:])
+
+    def on_addfile_combo_changed(self, w):
+        """ Callback for combobox 'changed' signal \n
+        Set a new filter for the filechooserwidget """
+        filefilter = Gtk.FileFilter()
+        if self.addfile_combo.get_active():
+            filefilter.add_custom(Gtk.FileFilterFlags.DISPLAY_NAME,
+                                  self.addfile_filter_cb,
+                                  self.pattern[self.addfile_combo.get_active()])
+        else:
+            filefilter.add_pattern('*.*')
+        self.addchooser.set_filter(filefilter)
 
     def on_addfolder_activate(self, *args):
         last_folder = self.prefs.settings.get_string('last-used-folder')
