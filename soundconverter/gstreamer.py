@@ -417,7 +417,7 @@ class Decoder(Pipeline):
             'datetime',
             'year',
             'timestamp',
-            'disc-number',
+            'album-disc-number',
             'disc-count',
         )
         if tag not in tag_whitelist:

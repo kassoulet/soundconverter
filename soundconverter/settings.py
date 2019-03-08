@@ -56,7 +56,7 @@ patterns_formats = (
     '%(date)s',
     '%(year)s',
     '%(timestamp)s',
-    '%(disc-number)d',
+    '%(album-disc-number)d',
     '%(disc-count)d',
     '%(.target-ext)s',
 )
