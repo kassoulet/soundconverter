@@ -77,7 +77,7 @@ class TargetNameGenerator:
             'genre': '',
             'year': '',
             'date': '',
-            'disc-number': 0,
+            'album-disc-number': 0,
             'disc-count': 0,
         }
         for key in sound_file.tags:
