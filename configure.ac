@@ -1,7 +1,7 @@
 dnl -*- Mode: autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.68])
-AC_INIT([soundconverter], [3.0.1])
+AC_INIT([soundconverter], [3.0.2])
 AC_CONFIG_SRCDIR([bin/soundconverter.py])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
