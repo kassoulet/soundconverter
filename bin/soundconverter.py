@@ -67,6 +67,7 @@ soundconverter.NAME = NAME
 soundconverter.VERSION = VERSION
 soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.settings import settings
+from soundconverter.fileoperations import vfs_encode_filename
 
 def _check_libs():
     """ Tries to import Gst, Gtk and Gdk """
@@ -213,6 +214,8 @@ if not settings.get('quiet'):
     print(( '%s %s' % (NAME, VERSION) ))
     if settings['forced-jobs']:
         print(('Using %d thread(s)' % settings['forced-jobs']))
+
+files = [vfs_encode_filename(f) for f in  files]
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
