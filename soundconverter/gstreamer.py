@@ -24,7 +24,6 @@ import sys
 from urllib.parse import urlparse
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
 from soundconverter.fileoperations import vfs_encode_filename
@@ -67,6 +66,7 @@ audio_profiles_list = []
 audio_profiles_dict = {}
 
 try:
+    import gi
     gi.require_version('GConf', '2.0')
     from gi.repository import GConf
     _GCONF = GConf.Client.get_default()

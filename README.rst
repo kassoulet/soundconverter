@@ -89,9 +89,10 @@ Building and installation
 To build from the latest source, use::
 
     git clone https://github.com/kassoulet/soundconverter.git
+    cd soundconverter
     ./autogen.sh
     make
-    make install
+    sudo make install
 
 It is also available in the arch repositories::
 
