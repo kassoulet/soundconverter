@@ -49,8 +49,8 @@ except (ImportError, ValueError) as error:
     print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
     sys.exit(1)
 # remove gstreamer arguments so only gstreamer sees them.
-args = [a for a in sys.argv[1:] if '-gst' not in a]
-Gst.init([a for a in sys.argv[1:] if '-gst' in a])
+args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
+Gst.init([a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 try:
     locale.setlocale(locale.LC_ALL, '')
