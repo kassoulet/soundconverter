@@ -28,23 +28,17 @@ import urllib.request, urllib.parse, urllib.error
 from gettext import gettext as _
 from gettext import ngettext
 
-from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import Gio
-from gi.repository import Gdk
-from gi.repository import GLib
+from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
-from soundconverter.fileoperations import filename_to_uri, beautify_uri
-from soundconverter.fileoperations import unquote_filename, vfs_walk, vfs_exists
-from soundconverter.gstreamer import ConverterQueue
-from soundconverter.gstreamer import available_elements, TypeFinder, TagReader
-from soundconverter.gstreamer import audio_profiles_list, audio_profiles_dict
+from soundconverter.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
+from soundconverter.gstreamer import ConverterQueue, available_elements, \
+    TypeFinder, TagReader, audio_profiles_list, audio_profiles_dict
 from soundconverter.soundfile import SoundFile
 from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.utils import log, debug, idle
-from soundconverter.error import show_error
+from soundconverter.error import show_error, set_error_handler
 
 # Names of columns in the file list
 MODEL = [ GObject.TYPE_STRING,   # visible filename
@@ -63,7 +57,6 @@ COLUMNS = ['filename']
 def gtk_iteration():
     while Gtk.events_pending():
         Gtk.main_iteration()
-
 
 def gtk_sleep(duration):
     """ trigger a Gtk main_iteration every 10ms
@@ -1286,6 +1279,7 @@ class SoundConverterWindow(GladeWindow):
         return running
 
     def do_convert(self):
+        """ starts the conversion """
         self.pulse_progress = -1
         GLib.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion...'))
@@ -1439,7 +1433,9 @@ class SoundConverterWindow(GladeWindow):
 
 
 NAME = VERSION = None
-win = None
+# use a global array as pointer, so that the constructed
+# SoundConverterWindow can be accessed from unittests
+win = [None]
 
 def gui_main(name, version, gladefile, input_files):
     """ This is the main function for the gtk gui mode.
@@ -1464,15 +1460,18 @@ def gui_main(name, version, gladefile, input_files):
     builder.set_translation_domain(name.lower())
     builder.add_from_file(gladefile)
 
-    global win
-    win = SoundConverterWindow(builder)
-    from . import error
-    error.set_error_handler(ErrorDialog(builder))
-    
-    #error_dialog = MsgAreaErrorDialog(builder)
-    #error_dialog.msg_area = win.msg_area
-    #error.set_error_handler(error_dialog)
+    window = SoundConverterWindow(builder)
 
-    win.filelist.add_uris(input_files)
-    win.set_sensitive()
+    set_error_handler(ErrorDialog(builder))
+    
+    # error_dialog = MsgAreaErrorDialog(builder)
+    # error_dialog.msg_area = win.msg_area
+    # set_error_handler(error_dialog)
+
+    window.filelist.add_uris(input_files)
+    window.set_sensitive()
+
+    global win
+    win[0] = window
+
     Gtk.main()
