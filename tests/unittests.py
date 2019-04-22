@@ -2,14 +2,58 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from unittest.mock import patch
+import os
+import sys
+import shutil
 from urllib.parse import unquote
 import urllib.request, urllib.parse, urllib.error
-from soundconverter import *
+import time
 
+import gi
+gi.require_version('Gst', '1.0')
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gst, Gio, Gtk, GLib
+Gst.init([a for a in sys.argv[1:] if '-gst' in a])
+
+from soundconverter.settings import settings
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.soundfile import SoundFile
 from soundconverter.fileoperations import filename_to_uri
+from soundconverter.batch import prepare_files_list
+from soundconverter.ui import win, gtk_iteration
 
+from importlib.util import spec_from_loader, module_from_spec
+from importlib.machinery import SourceFileLoader 
+
+DEFAULT_SETTINGS = settings.copy()
+
+
+# tests will control gtk main iterations
+Gtk.main = gtk_iteration
+Gtk.main_quit = lambda: None
+
+def launch(argv=[]):
+    """ starts the soundconverter given the command
+    line argument array argv. Make sure to run the
+    make command first in your terminal. """
+    testargs = sys.argv.copy()[:2]
+    testargs += argv
+    with patch.object(sys, 'argv', testargs):
+        spec = spec_from_loader("launcher", SourceFileLoader("launcher", "bin/soundconverter"))
+        spec.loader.exec_module(module_from_spec(spec))
+
+def reset_settings():
+    """ resets the global settings to their initial state """
+    global settings
+    # convert to list otherwise del won't work
+    for key in list(settings.keys()):
+        if key in DEFAULT_SETTINGS:
+            settings[key] = DEFAULT_SETTINGS[key]
+        else:
+            del settings[key]
+    # batch tests assume that recursive is off by default:
+    assert ((not "recursive" in settings) or (not settings["recursive"]))
 
 def quote(ss):
     if isinstance(ss, str):
@@ -19,17 +63,149 @@ def quote(ss):
 
 class FilenameToUriTest(unittest.TestCase):
     def test(self):
-        for i in (
-                'foo',
-                '/foo',
-                'foo/bar',
-                '/foo/bar',
-                'http://example.com/foo'
-        ):
-            got = filename_to_uri(i)
-            self.assertTrue('://' in got)
+        for path in ('foo', '/foo', 'foo/bar', '/foo/bar'):
+            uri = filename_to_uri(path)
+            self.assertTrue(uri.startswith('file://'))
+            self.assertTrue(Gio.file_parse_name(path).get_uri() in uri)
+
+        for path in ('http://example.com/foo', ):
+            uri = filename_to_uri(path)
+            self.assertTrue(uri.startswith('http://'))
+            self.assertTrue(Gio.file_parse_name(path).get_uri() in uri)
+
+
+class PrepareFilesList(unittest.TestCase):
+    def tearDown(self):
+        reset_settings()
             
-        self.assertEqual(filename_to_uri(r'''/foo/bar-"'@#%&$"€'''), r'''file:///foo/bar-"'@%23%&$"€''')
+    def testNonRecursiveDirectory(self):
+        test = ["tests/testdata/empty/"]
+        # it should not find anything, as test is a directory
+        expectation = ([], [])
+        self.assertEqual(prepare_files_list(test), expectation)
+
+    def testRecursiveDirectory(self):
+        settings["recursive"] = True
+        test = ["tests/testdata/empty/", "tests/testdata/empty/b"]
+        expectation = ([
+            filename_to_uri(test[0] + "a"),
+            filename_to_uri(test[0] + "b/c"),
+            filename_to_uri(test[1] + "/c")
+        ], [
+            "empty/",
+            "empty/b/",
+            "b/"
+        ])
+        result = prepare_files_list(test)
+        for path in result[0]:
+            self.assertTrue(path.startswith('file://'))
+        self.assertEqual(result, expectation)
+
+    def testFile(self):
+        test = ["tests/testdata/empty/a"]
+        # it should not detect the name of the parent directory as
+        # it's only a single file
+        expectation = ([filename_to_uri(test[0])], [""])
+        result = prepare_files_list(test)
+        self.assertTrue(result[0][0].startswith('file://'))
+        self.assertEqual(result, expectation)
+
+
+class Batch(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        os.makedirs("tests/tmp", exist_ok=True)
+    def tearDown(self):
+        reset_settings()
+        if os.path.isdir("tests/tmp/"):
+            shutil.rmtree("tests/tmp")
+            
+    def testNonRecursiveWithFolder(self):
+        # it should exit with code 1, because no files are supplied
+        with self.assertRaises(SystemExit) as cm:
+            launch(["-b", "-q", "tests/testdata/empty"])
+        the_exception = cm.exception  
+        self.assertEqual(the_exception.code, 1)
+
+    def testRecursiveEmpty(self):
+        # it should exit with code 2, because files are found but they
+        # are not audiofiles
+        with self.assertRaises(SystemExit) as cm:
+            launch(["-b", "-r", "-q", "tests/testdata/empty"])
+        the_exception = cm.exception  
+        self.assertEqual(the_exception.code, 2)
+
+    def testRecursiveAudio(self):
+        # it should convert
+        launch([
+            "-b", "tests/testdata/audio",
+            "-r",
+            "-q",
+            "-o", "tests/tmp",
+            "-m", "mp3",
+            "-s", ".mp3"
+            ])
+        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/a.mp3"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.mp3"))
+
+    def testMultiplePaths(self):
+        # it should convert
+        launch([
+            "-b", "tests/testdata/audio", "tests/testdata/audio/a.wav", "tests/testdata/empty",
+            "-r",
+            "-q",
+            "-o", "tests/tmp",
+            "-m", "audio/x-m4a",
+            "-s", ".m4a"
+            ])
+        # The batch mode behaves like the cp command:
+        # - input is a folder, has to provide -r, output is a folder
+        # - input is a file, output is a file
+        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/a.m4a"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.m4a"))
+        self.assertTrue(os.path.isfile("tests/tmp/a.m4a"))
+
+
+class GUI(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        os.makedirs("tests/tmp", exist_ok=True)
+    def tearDown(self):
+        win[0].close()
+        reset_settings()
+        if os.path.isdir("tests/tmp/"):
+            shutil.rmtree("tests/tmp")
+
+    def testConversion(self):
+        launch(["-q", "tests/testdata/audio/a.wav", "tests/testdata/audio/", "tests/testdata/empty"])
+        window = win[0]
+
+        # check if directory is read correctly
+        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/b/c.mp3"]
+        self.assertCountEqual([filename_to_uri(path) for path in expectation], win[0].filelist.filelist)
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+        window.prefs.settings.set_boolean('create-subfolders', False)
+        window.prefs.settings.set_string('selected-folder', os.path.abspath("tests/tmp"))
+
+        # start conversion
+        window.on_convert_button_clicked()
+
+        # wait for the assertions until all files are converted
+        while window.converter.finished_tasks < len(expectation):
+            # as Gtk.main is replaced by gtk_iteration, the unittests
+            # are responsible about when soundconverter continues
+            # to work on the conversions and updating the gui
+            gtk_iteration()
+
+        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.opus"))
+        # no duplicates in the gui:
+        self.assertFalse(os.path.isfile("tests/tmp/a.opus"))
 
 
 class TargetNameGeneratorTestCases(unittest.TestCase):

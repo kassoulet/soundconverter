@@ -41,6 +41,18 @@ GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
 PACKAGE = NAME.lower()
 
 try:
+    import gi
+    gi.require_version('Gst', '1.0')
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gst, Gtk, GLib, Gdk
+except (ImportError, ValueError) as error:
+    print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
+    sys.exit(1)
+# remove gstreamer arguments so only gstreamer sees them.
+args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
+Gst.init([a for a in sys.argv[1:] if a.startswith('--gst-')])
+
+try:
     locale.setlocale(locale.LC_ALL, '')
     locale.bindtextdomain(PACKAGE, '@datadir@/locale')
     gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
@@ -61,42 +73,15 @@ def _add_soundconverter_path():
         sys.path.insert(0, root)
 
 _add_soundconverter_path()
-
 import soundconverter
 soundconverter.NAME = NAME
 soundconverter.VERSION = VERSION
 soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.settings import settings
 from soundconverter.fileoperations import vfs_encode_filename
-
-def _check_libs():
-    """ Tries to import Gst, Gtk and Gdk """
-    try:
-        import gi
-        gi.require_version('Gst', '1.0')
-        gi.require_version('Gtk', '3.0')
-        from gi.repository import GLib
-        # force GIL creation - see https://bugzilla.gnome.org/show_bug.cgi?id=710447
-        import threading
-        threading.Thread(target=lambda: None).start()
-        # GLib.threads_init() # deprecated
-        from gi.repository import Gst
-        Gst.init(None)
-        from gi.repository import Gtk, Gdk
-    except (ImportError, ValueError) as error:
-        print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
-        sys.exit(1)
-    # print(( '  using GTK version: %s' % Gtk._version))
-    # print(( '  using Gstreamer version: %s' % (
-    #         '.'.join([str(s) for s in Gst.version()])) ))
-
-_check_libs()
-
 from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
-
-
 
 # command line argument parsing, launch-mode
 
@@ -196,8 +181,6 @@ def parse_command_line():
     return parser
 
 parser = parse_command_line()
-# remove gstreamer arguments so only gstreamer sees them.
-args = [a for a in sys.argv[1:] if '-gst' not in a]
 
 options, files = parser.parse_args(args)
 
@@ -214,8 +197,6 @@ if not settings.get('quiet'):
     print(( '%s %s' % (NAME, VERSION) ))
     if settings['forced-jobs']:
         print(('Using %d thread(s)' % settings['forced-jobs']))
-
-files = [vfs_encode_filename(f) for f in  files]
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)

@@ -22,11 +22,9 @@
 
 import os
 import sys
-import gi
 import time
-from gi.repository import GLib
-from gi.repository import Gtk
 
+from gi.repository import Gtk, GLib
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
 from soundconverter.settings import settings, get_quality
@@ -40,7 +38,7 @@ from soundconverter.utils import log
 
 def prepare_files_list(input_files):
     """ Takes in a list of paths and returns a list of all the files in those
-    paths. Also converts the paths to URIs.
+    paths, converted to URIs.
 
     Also returns a list of relative directories. This is used to reconstruct
     the directory structure in the output path if -o is provided. """
@@ -79,19 +77,21 @@ def prepare_files_list(input_files):
                         parsed_files.append(dirpath + filename)
                         # if input_path is a/b/c/, filename is d.mp3
                         # and dirpath is a/b/c/e/f/, then append c/e/f/
-                        # to subdirectories
+                        # to subdirectories.
+                        # The root might be different for various files because
+                        # multiple paths can be provided in the args. Hence
+                        # this is needed.
                         subdir = os.path.relpath(dirpath, parent) + os.sep
                         if subdir == './':
                             subdir = ''
                         subdirectories.append(subdir)
             else:
                 # else it didn't go into any directory. provide some information about how to
-                print(input_path, 'is a directory. Use -r to go into all subdirectories.')
+                log(input_path, 'is a directory. Use -r to go into all subdirectories.')
         # if not a file and not a dir it doesn't exist. skip
     parsed_files = list(map(filename_to_uri, parsed_files))
 
     return parsed_files, subdirectories
-
 
 def cli_tags_main(input_files):
     """ This function displays all the tags of the
@@ -162,6 +162,7 @@ class CLI_Convert():
         # check which files should be converted. The result is
         # stored in file_checker.good_files
         log('\nchecking files and walking dirs in the specified paths...')
+
         file_checker = CLI_Check(input_files, silent=True)
 
         # CLI_Check will exit(1) if no input_files available
@@ -188,7 +189,7 @@ class CLI_Convert():
 
         log('\npreparing converters...')
         for i, input_file in enumerate(input_files):
-
+            
             if not input_file in file_checker.good_files:
                 log('skipping \'{}\': invalid soundfile'.format(unquote_filename(input_file.split(os.sep)[-1][-65:])))
                 continue
@@ -231,7 +232,7 @@ class CLI_Convert():
 
         if self.num_conversions == 0:
             log('\nnothing to do...')
-            exit(1)
+            exit(2)
 
         log('\nstarting conversion...')
         conversions.start()
@@ -252,8 +253,8 @@ class CLI_Convert():
 class CLI_Check():
 
     def __init__(self, input_files, silent=False):
-        """ This function displays all the tags of the
-        specified files in input_files in the console.
+        """ This class prints all the tags of the
+        specified files in input_files to the console.
 
         To go into subdirectories of paths provided,
         the -r command line argument should be provided,

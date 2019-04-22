@@ -23,3 +23,6 @@ data/org.soundconverter.gschema.valid
 m4/
 py-compile
 __pycache__
+
+# IDEs
+.vscode

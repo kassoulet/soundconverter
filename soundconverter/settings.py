@@ -119,7 +119,8 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
 
     reverse is by default False. If True, this
     function returns the original value-parameter
-    given a quality setting. """
+    given a quality setting. Value becomes the
+    input for the quality then. """
 
     quality = {
         'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
