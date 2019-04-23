@@ -172,6 +172,7 @@ class GUI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.makedirs("tests/tmp", exist_ok=True)
+        
     def tearDown(self):
         win[0].close()
         reset_settings()
@@ -189,6 +190,7 @@ class GUI(unittest.TestCase):
         # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
         window.prefs.settings.set_boolean('create-subfolders', False)
+        window.prefs.settings.set_boolean('same-folder-as-input', False)
         window.prefs.settings.set_string('selected-folder', os.path.abspath("tests/tmp"))
 
         # start conversion
