@@ -519,7 +519,7 @@ class PreferencesDialog(GladeWindow):
                     ('audio/mpeg'    , 'lamemp3enc'),
                     ('audio/x-flac'  , 'flacenc'),
                     ('audio/x-wav'   , 'wavenc'),
-                    ('audio/x-m4a'   , 'faac'),
+                    ('audio/x-m4a'   , 'faac,avenc_aac'),
                     ('audio/ogg; codecs=opus'   , 'opusenc'),
                     ('gst-profile'   , None),
                     ) # must be in same order in output_mime_type
@@ -558,10 +558,11 @@ class PreferencesDialog(GladeWindow):
         self.present_mime_types = []
         i = 0
         model = self.output_mime_type.get_model()
-        for b in widgets:
-            mime, encoder_name = b
+        for mime, encoder_name in widgets:
+            if not encoder_name:
+                continue
             # valid encoder?
-            encoder_present = encoder_name and encoder_name in available_elements
+            encoder_present = any(e in available_elements for e in encoder_name.split(','))
             # valid profile?
             profile_present = mime == 'gst-profile' and audio_profiles_list
             if encoder_present or profile_present:
