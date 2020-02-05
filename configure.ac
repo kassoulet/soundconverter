@@ -14,7 +14,7 @@ m4_define(required_gst_version, [1.0])
 dnl put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-ALL_LINGUAS="ar ast bg br ca cs da de el en_AU en_CA en_GB eo es et eu fa fi fr_CA fr_FR fr gl he hi hu it ja ko lt lv ml ms nb nl pl pt_BR pt ru sk sl sq sr@latin sr@Latn sr sv te tr uk vi zh_CN zh_TW"
+ALL_LINGUAS="ar ast bg br ca cs da de el en_AU en_CA en_GB eo es et eu fa fi fr_CA fr_FR fr gl he hi hu it ja ko lt lv ml ms nb nl pl pt_BR pt ro ru sk sl sq sr@latin sr@Latn sr sv te tr uk vi zh_CN zh_TW"
 
 GETTEXT_PACKAGE="soundconverter"
 AC_SUBST([GETTEXT_PACKAGE])
