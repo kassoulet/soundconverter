@@ -182,11 +182,13 @@ class GUI(unittest.TestCase):
             shutil.rmtree("tests/tmp")
 
     def testConversion(self):
-        launch(["-q", "tests/testdata/audio/a.wav", "tests/testdata/audio/", "tests/testdata/empty"])
+        launch(["-q", "tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav",
+                "tests/testdata/audio/", "tests/testdata/empty"])
         window = win[0]
 
         # check if directory is read correctly
-        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/b/c.mp3"]
+        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav", 
+                       "tests/testdata/audio/b/c.mp3"]
         self.assertCountEqual([filename_to_uri(path) for path in expectation], win[0].filelist.filelist)
 
         # setup for conversion
@@ -209,6 +211,7 @@ class GUI(unittest.TestCase):
 
         self.assertTrue(os.path.isdir("tests/tmp/audio/"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
+        self.assertTrue(os.path.isfile("tests/tmp/audio/strange_chars_.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.opus"))
         # no duplicates in the gui:
         self.assertFalse(os.path.isfile("tests/tmp/a.opus"))
