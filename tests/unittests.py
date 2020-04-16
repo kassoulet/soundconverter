@@ -171,6 +171,8 @@ class Batch(unittest.TestCase):
 class GUI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if os.path.isdir("tests/tmp/"):
+            shutil.rmtree("tests/tmp")
         os.makedirs("tests/tmp", exist_ok=True)
         
     def tearDown(self):
