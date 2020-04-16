@@ -33,8 +33,6 @@ from soundconverter.fileoperations import vfs_exists, filename_to_uri
 class TargetNameGenerator:
     """ Generator for creating the target name from an input name. """
 
-    nice_chars = string.ascii_letters + string.digits + '.-_/'
-
     def __init__(self):
         self.folder = None
         self.subfolders = ''
@@ -45,11 +43,19 @@ class TargetNameGenerator:
         self.max_tries = 2
         self.exists = vfs_exists
 
-    def _unicode_to_ascii(self, unicode_string):
+    @staticmethod
+    def _unicode_to_ascii(unicode_string):
         # thanks to
         # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
         return str(unicodedata.normalize('NFKD', unicode_string).encode(
             'ASCII', 'ignore'), 'ASCII')
+
+    @staticmethod
+    def safe_name(filename):
+        nice_chars = string.ascii_letters + string.digits + '.-_/'
+        filename = TargetNameGenerator._unicode_to_ascii(filename)
+        safe = ''.join([c if c in nice_chars else '_' for c in filename])
+        return safe
 
     def get_target_name(self, sound_file):
 
@@ -100,14 +106,7 @@ class TargetNameGenerator:
         result = pattern % d
 
         if self.replace_messy_chars:
-            result = self._unicode_to_ascii(result)
-            s = ''
-            for c in result:
-                if c not in self.nice_chars:
-                    s += '_'
-                else:
-                    s += c
-            result = s
+            result = self.safe_name(result)
 
         if self.folder is None:
             folder = root

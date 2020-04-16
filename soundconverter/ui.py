@@ -783,9 +783,11 @@ class PreferencesDialog(GladeWindow):
         folder, basename = os.path.split(soundfile.uri)
         if not self.settings.get_boolean('same-folder-as-input'):
             folder = self.settings.get_string('selected-folder')
-            folder = urllib.parse.quote(folder, safe='/:')
+            folder = urllib.parse.quote(folder, safe='/:@')
         while True:
             filename = folder + '/' + basename + '~' + str(random())[-6:] + '~SC~'
+            if self.settings.get_boolean('replace-messy-chars'):
+                filename = TargetNameGenerator.safe_name(filename)
             if not vfs_exists(filename):
                 return filename
 
