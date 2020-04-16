@@ -194,6 +194,8 @@ class GUI(unittest.TestCase):
         window.prefs.settings.set_boolean('create-subfolders', False)
         window.prefs.settings.set_boolean('same-folder-as-input', False)
         window.prefs.settings.set_string('selected-folder', os.path.abspath("tests/tmp"))
+        window.prefs.settings.set_int('name-pattern-index', 0)
+        window.prefs.settings.set_boolean('replace-messy-chars', True)
 
         # start conversion
         window.on_convert_button_clicked()
