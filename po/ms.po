@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "Penukar Bunyi"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Tambah Fail"
+msgstr "Tambah Fail"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Tambah _Folder"
+msgstr "Tambah Folder"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "Faili _lisamine"
+msgstr "Faili lisamine"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "_Kausta lisamine"
+msgstr "Kausta lisamine"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

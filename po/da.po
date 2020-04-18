@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Tilføj fil"
+msgstr "Tilføj fil"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Tilføj _mappe"
+msgstr "Tilføj mappe"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

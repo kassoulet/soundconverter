@@ -318,14 +318,12 @@ msgid "SoundConverter"
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "Ouzhpenn_añ ur restr"
+msgstr "Ouzhpennañ ur restr"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Ouzhpennañ un _teuliad"
+msgstr "Ouzhpennañ un teuliad"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

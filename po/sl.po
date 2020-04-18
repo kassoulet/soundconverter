@@ -321,14 +321,12 @@ msgid "SoundConverter"
 msgstr "Pretvornik zvoka"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Dodaj datoteko"
+msgstr "Dodaj datoteko"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Dodaj _mapo"
+msgstr "Dodaj mapo"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

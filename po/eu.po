@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "Soinu-bihurtzailea"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Gehitu fitxategia"
+msgstr "Gehitu fitxategia"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "_Gehitu karpeta"
+msgstr "Gehitu karpeta"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

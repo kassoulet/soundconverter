@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "Äänenmuunnin"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Lisää tiedosto"
+msgstr "Lisää tiedosto"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Lisää _kansio"
+msgstr "Lisää kansio"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

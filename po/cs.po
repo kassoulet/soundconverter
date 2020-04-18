@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "Převaděč zvuků"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "Přid_at soubor"
+msgstr "Přidat soubor"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Přidat _složku"
+msgstr "Přidat složku"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"
