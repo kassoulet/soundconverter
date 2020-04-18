@@ -316,14 +316,12 @@ msgid "SoundConverter"
 msgstr "Претварач звука"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "Додај _датотеку"
+msgstr "Додај датотеку"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Додај _фасциклу"
+msgstr "Додај фасциклу"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

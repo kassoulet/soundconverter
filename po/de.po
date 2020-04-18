@@ -330,15 +330,13 @@ msgstr "Klangumwandler"
 
 # # lines 51 279
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Datei hinzufügen"
+msgstr "Datei hinzufügen"
 
 # # lines 73 + 296
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "_Ordner hinzufügen"
+msgstr "Ordner hinzufügen"
 
 # # line 42
 #: ../data/soundconverter.glade.h:75

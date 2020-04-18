@@ -317,14 +317,12 @@ msgid "SoundConverter"
 msgstr "SoundConverter"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Engadir un ficheiro"
+msgstr "Engadir un ficheiro"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Engadir un _cartafol"
+msgstr "Engadir un cartafol"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"

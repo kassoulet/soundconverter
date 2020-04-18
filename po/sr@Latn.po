@@ -318,14 +318,12 @@ msgid "SoundConverter"
 msgstr "Prekodiranje Zvuka"
 
 #: ../data/soundconverter.glade.h:73
-#, fuzzy
 msgid "Add File"
-msgstr "_Dodaj datoteku"
+msgstr "Dodaj datoteku"
 
 #: ../data/soundconverter.glade.h:74
-#, fuzzy
 msgid "Add Folder"
-msgstr "Dodaj _fasciklu"
+msgstr "Dodaj fasciklu"
 
 #: ../data/soundconverter.glade.h:75
 msgid "_File"
