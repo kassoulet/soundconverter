@@ -126,11 +126,11 @@ def parse_command_line():
     parser.add_option('-c', '--check', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'check'},
         help=_('Print which files cannot be read by gstreamer. '
-            'Useful before converting. This will disable the gui and '
-            'run in batch mode.'))
+            'Useful before converting. This will disable the GUI and '
+            'run in batch mode, from the command line.'))
     parser.add_option('-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode':'batch'},
-        help=_('Convert in batch mode, from command line, '
+        help=_('Convert in batch mode, from the command line, '
             'without a graphical user interface. You '
             'can use this from, say, shell scripts.'))
     parser.add_option('-t', '--tags', dest="mode", action='callback',
@@ -151,10 +151,10 @@ def parse_command_line():
                         'option is provided')
     batch_option_group.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type. The default '
-            'is %s. Note that you probably want to set the output '
-            'suffix as well. Supported shortcuts and mime types: aac '
-            'audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis '
-            'wav audio/x-wav') % settings['cli-output-type'])
+            'is %s. Note that you will probably want to set the output '
+            'suffix as well. Supported MIME types: %s') % (settings['cli-output-type'], 
+            'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
+            'audio/x-wav (WAV)'))
     batch_option_group.add_option('-s', '--suffix', dest="cli-output-suffix",
         help=_('Set the output filename suffix. '
             'The default is %s. Note that the suffix does not '
@@ -202,7 +202,7 @@ if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
-        print('nothing to do...')
+        print('nothing to do…')
     if settings['mode'] == 'tags':
         cli_tags_main(files)
     elif settings['mode'] == 'batch':

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"POT-Creation-Date: 2020-04-30 13:26+0200\n"
 "PO-Revision-Date: 2015-03-01 08:33+0000\n"
 "Last-Translator: Åka Sikrom <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
@@ -175,7 +175,8 @@ msgid "Same folder as the input file"
 msgstr "Samme mappe som inndatafil"
 
 #: ../data/soundconverter.glade.h:38
-msgid "Choose..."
+#, fuzzy
+msgid "Choose…"
 msgstr "Velg …"
 
 #: ../data/soundconverter.glade.h:39
@@ -310,8 +311,8 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
-#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
 msgid "SoundConverter"
 msgstr "Lydkonvertering"
 
@@ -346,13 +347,13 @@ msgstr "_Hjelp"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the gui and run in batch mode."
+"This will disable the GUI and run in batch mode, from the command line."
 msgstr ""
 
 #: ../bin/soundconverter.py:133
 #, fuzzy
 msgid ""
-"Convert in batch mode, from command line, without a graphical user "
+"Convert in batch mode, from the command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
 "Konverter bunt fra kommandolinja, uten grafisk brukergrensesnitt.\n"
@@ -382,9 +383,8 @@ msgstr "Tving antall samtidige konverteringer."
 #: ../bin/soundconverter.py:153
 #, fuzzy, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you probably want to "
-"set the output suffix as well. Supported shortcuts and mime types: aac audio/"
-"x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav audio/x-wav"
+"Set the output MIME type. The default is %s. Note that you will probably "
+"want to set the output suffix as well. Supported MIME types: %s"
 msgstr ""
 "Velg MIME-type for utdata i buntmodus. Standardverdi er %s. Du bør også "
 "vurdere å velge utdata-suffiks."
@@ -439,25 +439,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "Installasjon av programtillegg avbrutt."
 
-#: ../soundconverter/gstreamer.py:563
+#: ../soundconverter/gstreamer.py:564
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Klarte ikke å opprette mappa «%s»."
 
-#: ../soundconverter/gstreamer.py:599
+#: ../soundconverter/gstreamer.py:600
 msgid "GStreamer Error:"
 msgstr "GStreamer-feil:"
 
-#: ../soundconverter/gstreamer.py:808
+#: ../soundconverter/gstreamer.py:810
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Konvertering fullført i løpet av %s"
 
-#: ../soundconverter/namegenerator.py:71
+#: ../soundconverter/namegenerator.py:77
 msgid "Unknown Album"
 msgstr "Ukjent album"
 
-#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
+#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
 msgid "Unknown Artist"
 msgstr "Ukjent artist"
 
@@ -484,12 +484,13 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-msgid "Scanning files..."
+msgid "Scanning files…"
 msgstr ""
 
 #: ../soundconverter/ui.py:280
-msgid "Adding Files..."
-msgstr ""
+#, fuzzy
+msgid "Adding Files…"
+msgstr "Legg til fil"
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
@@ -510,8 +511,8 @@ msgid "Either because they are broken or not audio files."
 msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audiofile could not be read by gstreamer!"
-msgid_plural "{} audiofiles could not be read by gstreamer!"
+msgid "One audio file could not be read by GStreamer!"
+msgid_plural "{} audio files could not be read by GStreamer!"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -551,9 +552,10 @@ msgstr "artist-album"
 msgid "Available patterns:"
 msgstr "Tilgjengelige mønstre:"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
-msgid "Add Folder..."
-msgstr "Legg til mappe …"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
+#, fuzzy
+msgid "Add Folder…"
+msgstr "Legg til mappe"
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -565,35 +567,43 @@ msgstr "I mappa %s"
 msgid "Target bitrate: %s"
 msgstr "Ønsket bitfrekvens: %s"
 
-#: ../soundconverter/ui.py:1107
+#: ../soundconverter/ui.py:1109
 #, fuzzy
-msgid "Add Files..."
-msgstr "Legg til mappe …"
+msgid "Add Files…"
+msgstr "Legg til fil"
 
-#: ../soundconverter/ui.py:1286
-msgid "Preparing conversion..."
+#: ../soundconverter/ui.py:1288
+#, fuzzy
+msgid "Preparing conversion…"
 msgstr "Forbereder konvertering …"
 
-#: ../soundconverter/ui.py:1307
+#: ../soundconverter/ui.py:1309
 msgid "Converting"
 msgstr "Konverterer"
 
-#: ../soundconverter/ui.py:1325
+#: ../soundconverter/ui.py:1327
 msgid "Canceled"
 msgstr "Avbrutt"
 
-#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
 msgid "Paused"
 msgstr "På pause"
 
-#: ../soundconverter/ui.py:1417
+#: ../soundconverter/ui.py:1419
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d gjenstår"
 
-#: ../soundconverter/ui.py:1425
+#: ../soundconverter/ui.py:1427
 msgid "Ready"
 msgstr "Klar"
+
+#~ msgid "Add Folder..."
+#~ msgstr "Legg til mappe …"
+
+#, fuzzy
+#~ msgid "Add Files..."
+#~ msgstr "Legg til mappe …"
 
 #~ msgid "dialog1"
 #~ msgstr "dialog1"
