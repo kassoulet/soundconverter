@@ -208,7 +208,7 @@ class FileList:
 
         start_t = time.time()
         files = []
-        self.window.set_status(_('Scanning files...'))
+        self.window.set_status(_('Scanning files…'))
         self.window.progressbarstatus.show()
         self.files_to_add = 0
         self.window.progressbarstatus.set_fraction(0)
@@ -277,7 +277,7 @@ class FileList:
         self.typefinders.queue_ended = self.typefinder_queue_ended
         self.typefinders.start()
 
-        self.window.set_status('{}'.format(_('Adding Files...')))
+        self.window.set_status('{}'.format(_('Adding Files…')))
         log('adding: %d files' % len(files))
 
         # show progress and enable gtk main loop iterations
@@ -340,8 +340,8 @@ class FileList:
                 # otherwise don't bother the user.
                 log(invalid_files, 'of', len(files), 'files were not added to the list')
                 if broken_audiofiles > 0:
-                    show_error(ngettext('One audiofile could not be read by gstreamer!',
-                        '{} audiofiles could not be read by gstreamer!', broken_audiofiles).format(broken_audiofiles),
+                    show_error(ngettext('One audio file could not be read by GStreamer!',
+                        '{} audio files could not be read by GStreamer!', broken_audiofiles).format(broken_audiofiles),
                         _('Check "Invalid Files" in the menu for more information.'))
         else:
             # case 4: all files were successfully added. No error message
@@ -371,7 +371,7 @@ class FileList:
         self.progress_column.set_visible(True)
         if progress is not None:
             if self.model[number][2] == 1.0:
-                return # already...
+                return # already…
             self.model[number][2] = progress * 100.0
         if text is not None:
             self.model[number][3] = text
@@ -483,7 +483,7 @@ class PreferencesDialog(GladeWindow):
             w = self.into_selected_folder
         w.set_active(True)
 
-        self.target_folder_chooser = Gtk.FileChooserDialog(_('Add Folder...'),
+        self.target_folder_chooser = Gtk.FileChooserDialog(_('Add Folder…'),
             self.dialog, Gtk.FileChooserAction.SELECT_FOLDER,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
             Gtk.ResponseType.OK))
@@ -1085,7 +1085,7 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog.message = builder.get_object('exists_message')
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
 
-        self.addfolderchooser = Gtk.FileChooserDialog(_('Add Folder...'),
+        self.addfolderchooser = Gtk.FileChooserDialog(_('Add Folder…'),
             self.widget, Gtk.FileChooserAction.SELECT_FOLDER,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
             Gtk.ResponseType.OK))
@@ -1106,7 +1106,7 @@ class SoundConverterWindow(GladeWindow):
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
 
-        self.addchooser = Gtk.FileChooserDialog(_('Add Files...'),
+        self.addchooser = Gtk.FileChooserDialog(_('Add Files…'),
             self.widget, Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
             Gtk.ResponseType.OK))
@@ -1160,12 +1160,12 @@ class SoundConverterWindow(GladeWindow):
         return widget
 
     def close(self, *args):
-        debug('closing...')
+        debug('closing…')
         self.filelist.abort()
         self.converter.abort()
         self.widget.hide()
         self.widget.destroy()
-        # wait one second...
+        # wait one second…
         # yes, this sucks badly, but signals can still be called by gstreamer
         # so wait a bit for things to calm down, and quit.
         gtk_sleep(1)
@@ -1285,7 +1285,7 @@ class SoundConverterWindow(GladeWindow):
         """ starts the conversion """
         self.pulse_progress = -1
         GLib.timeout_add(100, self.on_progress)
-        self.progressbar.set_text(_('Preparing conversion...'))
+        self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
         total = len(files)
         for i, sound_file in enumerate(files):

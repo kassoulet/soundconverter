@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Prekoder zvuka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"POT-Creation-Date: 2020-04-30 13:26+0200\n"
 "PO-Revision-Date: 2016-02-08 00:31+0000\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
@@ -175,7 +175,8 @@ msgid "Same folder as the input file"
 msgstr "У истој фасцикли улазне датотеке"
 
 #: ../data/soundconverter.glade.h:38
-msgid "Choose..."
+#, fuzzy
+msgid "Choose…"
 msgstr "Изабери..."
 
 #: ../data/soundconverter.glade.h:39
@@ -310,8 +311,8 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
-#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
 msgid "SoundConverter"
 msgstr "Претварач звука"
 
@@ -346,13 +347,13 @@ msgstr "По_моћ"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the gui and run in batch mode."
+"This will disable the GUI and run in batch mode, from the command line."
 msgstr ""
 
 #: ../bin/soundconverter.py:133
 #, fuzzy
 msgid ""
-"Convert in batch mode, from command line, without a graphical user "
+"Convert in batch mode, from the command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
 "Претвара у групном режиму, из линије наредби, без графичког корисничког "
@@ -383,9 +384,8 @@ msgstr "Присиљава број конкурентних претварањ�
 #: ../bin/soundconverter.py:153
 #, fuzzy, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you probably want to "
-"set the output suffix as well. Supported shortcuts and mime types: aac audio/"
-"x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav audio/x-wav"
+"Set the output MIME type. The default is %s. Note that you will probably "
+"want to set the output suffix as well. Supported MIME types: %s"
 msgstr ""
 "Поставља излазну МИМЕ врсту за групни режим. Основно је %s. Знајте да ћете "
 "највероватније желети да поставите излазни суфикс у сваком случају."
@@ -440,25 +440,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "Инсталирање прикључка је прекинуто."
 
-#: ../soundconverter/gstreamer.py:563
+#: ../soundconverter/gstreamer.py:564
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Не могу да направим фасциклу „%s“."
 
-#: ../soundconverter/gstreamer.py:599
+#: ../soundconverter/gstreamer.py:600
 msgid "GStreamer Error:"
 msgstr "Грешка Гстримера:"
 
-#: ../soundconverter/gstreamer.py:808
+#: ../soundconverter/gstreamer.py:810
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Претварање је обављено за %s"
 
-#: ../soundconverter/namegenerator.py:71
+#: ../soundconverter/namegenerator.py:77
 msgid "Unknown Album"
 msgstr "Непознат албум"
 
-#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
+#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
 msgid "Unknown Artist"
 msgstr "Непознат извођач"
 
@@ -485,12 +485,13 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-msgid "Scanning files..."
+msgid "Scanning files…"
 msgstr ""
 
 #: ../soundconverter/ui.py:280
-msgid "Adding Files..."
-msgstr ""
+#, fuzzy
+msgid "Adding Files…"
+msgstr "Додај датотеку"
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
@@ -511,8 +512,8 @@ msgid "Either because they are broken or not audio files."
 msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audiofile could not be read by gstreamer!"
-msgid_plural "{} audiofiles could not be read by gstreamer!"
+msgid "One audio file could not be read by GStreamer!"
+msgid_plural "{} audio files could not be read by GStreamer!"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -552,9 +553,10 @@ msgstr "извођач-албум"
 msgid "Available patterns:"
 msgstr "Доступни обрасци:"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
-msgid "Add Folder..."
-msgstr "Додајте фасциклу..."
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
+#, fuzzy
+msgid "Add Folder…"
+msgstr "Додај фасциклу"
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -566,35 +568,43 @@ msgstr "У фасциклу „%s“"
 msgid "Target bitrate: %s"
 msgstr "Циљни проток: %s"
 
-#: ../soundconverter/ui.py:1107
+#: ../soundconverter/ui.py:1109
 #, fuzzy
-msgid "Add Files..."
-msgstr "Додајте фасциклу..."
+msgid "Add Files…"
+msgstr "Додај датотеку"
 
-#: ../soundconverter/ui.py:1286
-msgid "Preparing conversion..."
+#: ../soundconverter/ui.py:1288
+#, fuzzy
+msgid "Preparing conversion…"
 msgstr "Припремам претварање..."
 
-#: ../soundconverter/ui.py:1307
+#: ../soundconverter/ui.py:1309
 msgid "Converting"
 msgstr "Претварам"
 
-#: ../soundconverter/ui.py:1325
+#: ../soundconverter/ui.py:1327
 msgid "Canceled"
 msgstr "Отказано"
 
-#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
 msgid "Paused"
 msgstr "Заустављено"
 
-#: ../soundconverter/ui.py:1417
+#: ../soundconverter/ui.py:1419
 #, python-format
 msgid "%d:%02d left"
 msgstr "преостало време: %d:%02d"
 
-#: ../soundconverter/ui.py:1425
+#: ../soundconverter/ui.py:1427
 msgid "Ready"
 msgstr "Спреман сам и чекам ♫ ♫"
+
+#~ msgid "Add Folder..."
+#~ msgstr "Додајте фасциклу..."
+
+#, fuzzy
+#~ msgid "Add Files..."
+#~ msgstr "Додајте фасциклу..."
 
 #~ msgid "dialog1"
 #~ msgstr "дијалог1"

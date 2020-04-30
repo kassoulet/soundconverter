@@ -161,7 +161,7 @@ class CLI_Convert():
 
         # check which files should be converted. The result is
         # stored in file_checker.good_files
-        log('\nchecking files and walking dirs in the specified paths...')
+        log('\nchecking files and walking dirs in the specified paths…')
 
         file_checker = CLI_Check(input_files, silent=True)
 
@@ -187,7 +187,7 @@ class CLI_Convert():
         self.started_tasks = 0
         self.num_conversions = 0
 
-        log('\npreparing converters...')
+        log('\npreparing converters…')
         for i, input_file in enumerate(input_files):
             
             if not input_file in file_checker.good_files:
@@ -231,10 +231,10 @@ class CLI_Convert():
             self.num_conversions += 1
 
         if self.num_conversions == 0:
-            log('\nnothing to do...')
+            log('\nnothing to do…')
             exit(2)
 
-        log('\nstarting conversion...')
+        log('\nstarting conversion…')
         conversions.start()
         while conversions.running:
             # calling this like crazy is the fastest way

@@ -397,6 +397,7 @@ class Decoder(Pipeline):
             if self.pipeline:
                 self.position = max(0, self.pipeline.query_position(
                     Gst.Format.TIME)[1] / Gst.SECOND)
+                print(self.pipeline.query_position(Gst.Format.TIME))
         except Gst.QueryError:
             self.position = 0
 
@@ -489,7 +490,7 @@ class TagReader(Decoder):
         prev, new, pending = message.parse_state_changed()
         if new == Gst.State.PLAYING and not self.tagread:
             self.tagread = True
-            debug('TagReading done...')
+            debug('TagReading done…')
             self.done()
 
     def finished(self):
@@ -755,6 +756,7 @@ class ConverterQueue(TaskQueue):
                     continue
                 taskprogress = task_position / task.sound_file.duration
                 taskprogress = min(max(taskprogress, 0.0), 1.0)
+                print(task_position, task.sound_file.duration)
                 prolist.append(taskprogress)
                 per_file_progress[task.sound_file] = taskprogress
         for task in self.waiting_tasks:
