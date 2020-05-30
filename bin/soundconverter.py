@@ -19,10 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-"""
-SoundConverter Launcher.
-"""
-
+"""SoundConverter Launcher."""
 
 # imports and package setup
 
@@ -67,8 +64,7 @@ except locale.Error:
 
 
 def _add_soundconverter_path():
-    """ Makes the soundconverter package importable, which
-    has been installed to LIBDIR during make install """
+    """Make the soundconverter package importable, which has been installed to LIBDIR during make install."""
     root = os.path.join(LIBDIR, 'soundconverter', 'python')
     if root not in sys.path:
         sys.path.insert(0, root)
@@ -109,12 +105,13 @@ def mode_callback(option, opt, value, parser, **kwargs):
 
 
 class ModifiedOptionParser(OptionParser):
-    """
-    A OptionParser class that doesn't remove newlines on the epilog in order
-    to show usage examples https://stackoverflow.com/questions/1857346/
+    """An OptionParser class that doesn't remove newlines on the epilog in order to show usage examples.
+    
+    https://stackoverflow.com/questions/1857346/
 
     See optparse.OptionParser for the original docstring
     """
+    
     def format_epilog(self, formatter):
         if self.epilog is None:
             return ""
@@ -122,9 +119,7 @@ class ModifiedOptionParser(OptionParser):
 
 
 def parse_command_line():
-    """ Creates and returns the OptionParser, which parse the
-    command line arguments and displays help with --help. """
-
+    """Create and return the OptionParser, which parse the command line arguments and displays help with --help."""
     parser = ModifiedOptionParser(
         epilog='\nExample:\n'
         '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n'

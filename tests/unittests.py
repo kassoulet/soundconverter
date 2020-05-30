@@ -37,9 +37,10 @@ Gtk.main_quit = lambda: None
 
 
 def launch(argv=[]):
-    """ starts the soundconverter given the command
-    line argument array argv. Make sure to run the
-    make command first in your terminal. """
+    """Start the soundconverter with the command line argument array argv.
+    
+    Make sure to run the `make` command first in your terminal.
+    """
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
@@ -48,7 +49,7 @@ def launch(argv=[]):
 
 
 def reset_settings():
-    """ resets the global settings to their initial state """
+    """Reset the global settings to their initial state."""
     global settings
     # convert to list otherwise del won't work
     for key in list(settings.keys()):
@@ -212,14 +213,14 @@ class GUI(unittest.TestCase):
         while window.converter.finished_tasks < len(expectation):
             # as Gtk.main is replaced by gtk_iteration, the unittests
             # are responsible about when soundconverter continues
-            # to work on the conversions and updating the gui
+            # to work on the conversions and updating the GUI
             gtk_iteration()
 
         self.assertTrue(os.path.isdir("tests/tmp/audio/"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/strange_chars_.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.opus"))
-        # no duplicates in the gui:
+        # no duplicates in the GUI:
         self.assertFalse(os.path.isfile("tests/tmp/a.opus"))
 
 
