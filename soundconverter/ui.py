@@ -298,7 +298,7 @@ class FileList:
                 self.window.progressbarstatus.set_fraction(self.typefinders.progress)
                 self.window.progressbarstatus.set_text('{}/{}'.format(completed, len(files)))
             gtk_iteration()
-            # time.sleep(0.1) # slows everything down. why does the taskqueue depend
+            # time.sleep(0.1)  # slows everything down. why does the taskqueue depend
             # on gtk_iteration being called like a maniac?
         self.window.progressbarstatus.set_show_text(False)
 
@@ -1076,15 +1076,20 @@ class PreferencesDialog(GladeWindow):
 _old_progress = 0
 _old_total = 0
 
+
 class SoundConverterWindow(GladeWindow):
 
     """ Main application class. """
 
-    sensitive_names = ['remove', 'clearlist',
-                       'convert_button']
-    unsensitive_when_converting = ['remove', 'clearlist', 'prefs_button',
-            'toolbutton_addfile', 'toolbutton_addfolder', 'convert_button',
-            'filelist', 'menubar']
+    sensitive_names = [
+        'remove', 'clearlist',
+        'convert_button'
+    ]
+    unsensitive_when_converting = [
+        'remove', 'clearlist', 'prefs_button',
+        'toolbutton_addfile', 'toolbutton_addfolder', 'convert_button',
+        'filelist', 'menubar'
+    ]
 
     def __init__(self, builder):
         self.paused_time = 0
@@ -1101,10 +1106,14 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog.message = builder.get_object('exists_message')
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
 
-        self.addfolderchooser = Gtk.FileChooserDialog(_('Add Folder…'),
+        self.addfolderchooser = Gtk.FileChooserDialog(
+            _('Add Folder…'),
             self.widget, Gtk.FileChooserAction.SELECT_FOLDER,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-            Gtk.ResponseType.OK))
+            (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
+                Gtk.ResponseType.OK
+            )
+        )
         self.addfolderchooser.set_select_multiple(True)
         self.addfolderchooser.set_local_only(False)
 
@@ -1122,10 +1131,14 @@ class SoundConverterWindow(GladeWindow):
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
 
-        self.addchooser = Gtk.FileChooserDialog(_('Add Files…'),
+        self.addchooser = Gtk.FileChooserDialog(
+            _('Add Files…'),
             self.widget, Gtk.FileChooserAction.OPEN,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-            Gtk.ResponseType.OK))
+            (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
+                Gtk.ResponseType.OK
+            )
+        )
         self.addchooser.set_select_multiple(True)
         self.addchooser.set_local_only(False)
 
@@ -1161,7 +1174,6 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
         self.set_status()
 
-
     # This bit of code constructs a list of methods for binding to Gtk+
     # signals. This way, we don't have to maintain a list manually,
     # saving editing effort. It's enough to add a method to the suitable
@@ -1172,7 +1184,7 @@ class SoundConverterWindow(GladeWindow):
         widget = self.builder.get_object(attribute)
         if widget is None:
             raise AttributeError('Widget \'%s\' not found' % attribute)
-        self.__dict__[attribute] = widget # cache result
+        self.__dict__[attribute] = widget  # cache result
         return widget
 
     def close(self, *args):
@@ -1264,9 +1276,11 @@ class SoundConverterWindow(GladeWindow):
         self.set_status()
 
     def on_showinvalid_activate(self, *args):
-        self.showinvalid_dialog_label.set_label('Those are the files that could '
+        self.showinvalid_dialog_label.set_label(
+            'Those are the files that could '
             'not be added to the list due to not\ncontaining audio data, being '
-            'broken or being incompatible to gstreamer:')
+            'broken or being incompatible to gstreamer:'
+        )
         buffer = Gtk.TextBuffer()
         buffer.set_text('\n'.join(self.filelist.invalid_files_list))
         self.showinvalid_dialog_list.set_buffer(buffer)
@@ -1274,11 +1288,11 @@ class SoundConverterWindow(GladeWindow):
         self.showinvalid_dialog.hide()
 
     def on_progress(self):
-        if self.pulse_progress is not None: #
-            if self.pulse_progress > 0: # still waiting for tags
+        if self.pulse_progress is not None:  #
+            if self.pulse_progress > 0:  # still waiting for tags
                 self.set_progress(self.pulse_progress, display_time=False)
                 return True
-            if self.pulse_progress == -1: # still waiting for add
+            if self.pulse_progress == -1:  # still waiting for add
                 self.set_progress()
                 return True
 
@@ -1377,11 +1391,10 @@ class SoundConverterWindow(GladeWindow):
         self.widget.set_sensitive(True)
         try:
             from gi.repository import Unity
-            launcher = Unity.LauncherEntry.get_for_desktop_id ("soundconverter.desktop")
+            launcher = Unity.LauncherEntry.get_for_desktop_id("soundconverter.desktop")
             launcher.set_property("progress_visible", False)
         except ImportError:
             pass
-
 
     def set_widget_sensitive(self, name, sensitivity):
         self.sensitive_widgets[name].set_sensitive(sensitivity)
@@ -1392,10 +1405,14 @@ class SoundConverterWindow(GladeWindow):
             self.set_widget_sensitive(w, not self.converter.running)
 
         if not self.converter.running:
-            self.set_widget_sensitive('remove',
-                self.filelist_selection.count_selected_rows() > 0)
-            self.set_widget_sensitive('convert_button',
-                                        self.filelist.is_nonempty())
+            self.set_widget_sensitive(
+                'remove',
+                self.filelist_selection.count_selected_rows() > 0
+            )
+            self.set_widget_sensitive(
+                'convert_button',
+                self.filelist.is_nonempty()
+            )
 
     def set_file_progress(self, sound_file, progress):
         row = sound_file.filelist_row
@@ -1455,6 +1472,7 @@ NAME = VERSION = None
 # use a global array as pointer, so that the constructed
 # SoundConverterWindow can be accessed from unittests
 win = [None]
+
 
 def gui_main(name, version, gladefile, input_files):
     """ This is the main function for the gtk gui mode.
