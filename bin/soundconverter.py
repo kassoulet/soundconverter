@@ -58,7 +58,7 @@ try:
     gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE, localedir='@datadir@/locale')
-    #from gettext import gettext as _
+    # rom gettext import gettext as _
 except locale.Error:
     print('  cannot use system locale.')
     locale.setlocale(locale.LC_ALL, 'C')
@@ -86,8 +86,10 @@ from soundconverter.ui import gui_main
 # command line argument parsing, launch-mode
 
 def check_mime_type(mime):
-    types = {'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav' : 'audio/x-wav',
-        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'}
+    types = {
+        'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav' : 'audio/x-wav',
+        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
+    }
     mime = types.get(mime, mime)
     if mime not in list(types.values()):
         print(('Cannot use "%s" mime type.' % mime))
@@ -152,7 +154,7 @@ def parse_command_line():
     batch_option_group.add_option('-m', '--mime-type', dest="cli-output-type",
         help=_('Set the output MIME type. The default '
             'is %s. Note that you will probably want to set the output '
-            'suffix as well. Supported MIME types: %s') % (settings['cli-output-type'], 
+            'suffix as well. Supported MIME types: %s') % (settings['cli-output-type'],
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
             'audio/x-wav (WAV)'))
     batch_option_group.add_option('-s', '--suffix', dest="cli-output-suffix",
@@ -194,7 +196,7 @@ for k in dir(options):
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 if not settings.get('quiet'):
-    print(( '%s %s' % (NAME, VERSION) ))
+    print(('%s %s' % (NAME, VERSION) ))
     if settings['forced-jobs']:
         print(('Using %d thread(s)' % settings['forced-jobs']))
 

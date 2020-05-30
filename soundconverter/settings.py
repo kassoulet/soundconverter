@@ -129,7 +129,7 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         'mp3': {
             'cbr': (64, 96, 128, 192, 256, 320),
             'abr': (64, 96, 128, 192, 256, 320),
-            'vbr': (9, 7, 5, 3, 1, 0), # inverted !
+            'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
         }
     }
 

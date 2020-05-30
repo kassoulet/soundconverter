@@ -23,6 +23,7 @@ import os
 import sys
 from urllib.parse import urlparse
 from gettext import gettext as _
+import traceback
 
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
@@ -39,7 +40,7 @@ from soundconverter.error import show_error
 
 try:
     from soundconverter.notify import notification
-except:
+except Exception:
     def notification(msg):
         pass
 
@@ -58,6 +59,7 @@ def gtk_sleep(duration):
     while time.time() < start + duration:
         time.sleep(0.010)
         gtk_iteration()
+
 
 # load gstreamer audio profiles
 _GCONF_PROFILE_PATH = "/system/gstreamer/1.0/audio/profiles/"
@@ -200,7 +202,7 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def install_plugin_cb(self, result):
-        return # XXX
+        return  # XXX
         if result in (Gst.pbutils.INSTALL_PLUGINS_SUCCESS,
                       Gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
             Gst.update_registry()
@@ -223,12 +225,12 @@ class Pipeline(BackgroundTask):
         self.on_message_(bus, message)
         return True
 
-    #@idle
+    # @idle
     def on_message(self, bus, message):
         import threading
 
         t = message.type
-        #print('ONMESSAGE', t, threading.currentThread())
+        # print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self.eos = True
@@ -238,7 +240,7 @@ class Pipeline(BackgroundTask):
             """ XXX elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
-            debug('missing plugin:', detail.split('|')[3] , self.sound_file.uri)
+            debug('missing plugin:', detail.split('|')[3], self.sound_file.uri)
             self.pipeline.set_state(Gst.State.NULL)
             if Gst.pbutils.install_plugins_installation_in_progress():
                 while Gst.pbutils.install_plugins_installation_in_progress():
@@ -397,7 +399,6 @@ class Decoder(Pipeline):
             if self.pipeline:
                 self.position = max(0, self.pipeline.query_position(
                     Gst.Format.TIME)[1] / Gst.SECOND)
-                print(self.pipeline.query_position(Gst.Format.TIME))
         except Gst.QueryError:
             self.position = 0
 
@@ -574,7 +575,7 @@ class Converter(Decoder):
         # remove partial file
         try:
             vfs_unlink(self.output_filename)
-        except:
+        except Exception:
             log('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
         return
 
@@ -597,8 +598,10 @@ class Converter(Decoder):
             log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
         else:
             Pipeline.on_error(self, error)
-            show_error('<b>%s</b>' % _('GStreamer Error:'),
-                    '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display))
+            show_error(
+                '<b>%s</b>' % _('GStreamer Error:'),
+                '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display)
+            )
 
     def set_vorbis_quality(self, quality):
         self.vorbis_quality = quality
@@ -629,9 +632,8 @@ class Converter(Decoder):
         return s
 
     def add_wav_encoder(self):
-        formats = {8:'U8', 16:'S16LE', 24:'S24LE', 32:'S32LE'}
-        return 'audioconvert ! audio/x-raw,format=%s ! wavenc' % (
-            formats[self.wav_sample_width])
+        formats = {8: 'U8', 16: 'S16LE', 24: 'S24LE', 32: 'S32LE'}
+        return 'audioconvert ! audio/x-raw,format=%s ! wavenc' % (formats[self.wav_sample_width])
 
     def add_oggvorbis_encoder(self):
         cmd = 'vorbisenc'
@@ -706,12 +708,13 @@ class ConverterQueue(TaskQueue):
         path = urlparse(output_filename)[2]
         path = unquote_filename(path)
 
-        c = Converter(sound_file, output_filename,
-                      self.window.prefs.settings.get_string('output-mime-type'),
-                      self.window.prefs.settings.get_boolean('delete-original'),
-                      self.window.prefs.settings.get_boolean('output-resample'),
-                      self.window.prefs.settings.get_int('resample-rate'),
-                      self.window.prefs.settings.get_boolean('force-mono'),
+        c = Converter(
+            sound_file, output_filename,
+            self.window.prefs.settings.get_string('output-mime-type'),
+            self.window.prefs.settings.get_boolean('delete-original'),
+            self.window.prefs.settings.get_boolean('output-resample'),
+            self.window.prefs.settings.get_int('resample-rate'),
+            self.window.prefs.settings.get_boolean('force-mono'),
         )
         c.set_vorbis_quality(self.window.prefs.settings.get_double('vorbis-quality'))
         c.set_aac_quality(self.window.prefs.settings.get_int('aac-quality'))
@@ -756,7 +759,6 @@ class ConverterQueue(TaskQueue):
                     continue
                 taskprogress = task_position / task.sound_file.duration
                 taskprogress = min(max(taskprogress, 0.0), 1.0)
-                print(task_position, task.sound_file.duration)
                 prolist.append(taskprogress)
                 per_file_progress[task.sound_file] = taskprogress
         for task in self.waiting_tasks:
@@ -774,6 +776,7 @@ class ConverterQueue(TaskQueue):
             if vfs_exists(task.output_filename):
                 vfs_unlink(task.output_filename)
             self.errors.append(task.error)
+            print('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
             self.error_count += 1
             return
 
@@ -794,10 +797,16 @@ class ConverterQueue(TaskQueue):
             newname = p % i
             i += 1
 
-        task.error = vfs_rename(task.output_filename, newname)
-        if task.error:
+        try:
+            vfs_rename(task.output_filename, newname)
+        except Exception:
             self.errors.append(task.error)
+            print('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
+            print(traceback.print_exc())
             self.error_count += 1
+            return
+
+        print('Converted %s' % beautify_uri(task.get_input_uri()))
 
     def finished(self):
         # This must be called with emit_async
@@ -812,7 +821,7 @@ class ConverterQueue(TaskQueue):
             msg += ', %d error(s)' % self.error_count
         self.window.set_status(msg)
         if not self.window.is_active():
-            notification(msg) # this must move
+            notification(msg)  # this must move
         self.reset_counters()
 
     def format_time(self, seconds):
@@ -836,5 +845,5 @@ class ConverterQueue(TaskQueue):
         self.reset_counters()
 
     def start(self):
-        #self.waiting_tasks.sort(key=Converter.get_duration, reverse=True)
+        # self.waiting_tasks.sort(key=Converter.get_duration, reverse=True)
         TaskQueue.start(self)

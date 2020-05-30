@@ -26,7 +26,6 @@ from soundconverter.utils import log
 
 
 class TaskQueue(BackgroundTask):
-
     """ A queue of tasks.
 
     A task queue is a queue of other tasks. If you need, for example, to
@@ -56,19 +55,19 @@ class TaskQueue(BackgroundTask):
     def add_task(self, task):
         """ Add a task to the queue. """
         self.waiting_tasks.append(task)
-        #if self.start_time and not self.running_tasks:
+        # if self.start_time and not self.running_tasks:
         if self.start_time:
             # add a task to a stalled taskqueue, shake it!
             self.start_next_task()
 
     def start_next_task(self):
-        if not self.waiting_tasks:
-            if not self.running_tasks:
+        if len(self.waiting_tasks) == 0:
+            if len(self.running_tasks) == 0:
                 self.done()
             return
 
         to_start = self.jobs - len(self.running_tasks)
-        for i in range(to_start):
+        for _ in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
             except IndexError:
@@ -84,7 +83,6 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """ BackgroundTask setup callback """
-        jobs = settings['jobs'] or settings['cpu-count']
         log('Queue start: %d tasks, %d thread(s).' % (
             len(self.waiting_tasks) + len(self.running_tasks), self.jobs))
         self.count = 0
@@ -95,8 +93,7 @@ class TaskQueue(BackgroundTask):
 
     def finished(self):
         """ BackgroundTask finish callback """
-        log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time,
-                self.count))
+        log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time, self.count))
         self.queue_ended()
         self.count = 0
         self.start_time = None

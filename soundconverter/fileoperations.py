@@ -20,12 +20,15 @@
 # USA
 
 import os
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import gi
 from gi.repository import Gio
 
 from soundconverter.utils import debug
 from soundconverter.error import show_error
+
 
 def unquote_filename(filename):
     return urllib.parse.unquote(str(filename))
@@ -53,15 +56,18 @@ def vfs_walk(uri):
             filelist.append(str(dirlist.get_child(file_info).get_uri()))
     return filelist
 
+
 def vfs_getparent(path):
     """ Get folder name. """
     gfile = Gio.file_parse_name(path)
     return gfile.get_parent()
 
+
 def vfs_unlink(filename):
     """ Delete a gnomevfs file. """
     gfile = Gio.file_parse_name(filename)
     return gfile.delete(None)
+
 
 def vfs_rename(original, newname):
     """ Rename a gnomevfs file """
@@ -73,9 +79,11 @@ def vfs_rename(original, newname):
         Gio.File.make_directory_with_parents(gfnew.get_parent(), None)
     gforiginal.move(gfnew, Gio.FileCopyFlags.NONE, None, None, None)
 
+
 def vfs_exists(filename):
     gfile = Gio.file_parse_name(filename)
     return gfile.query_exists(None)
+
 
 def filename_to_uri(filename):
     """ Convert a filename to a valid uri.
@@ -85,7 +93,7 @@ def filename_to_uri(filename):
         # convert local filename to uri
         filename = 'file://' + os.path.abspath(filename)
         for char in '#', '%':
-           filename = filename.replace(char, '%%%x' % ord(char))
+            filename = filename.replace(char, '%%%x' % ord(char))
     uri = Gio.file_parse_name(filename).get_uri()
     return uri
 
@@ -97,4 +105,4 @@ def vfs_encode_filename(filename):
 
 
 def file_encode_filename(filename):
-    return Gio.get_local_path_from_uri(filename).replace(' ', '\ ')
+    return Gio.get_local_path_from_uri(filename).replace(' ', r'\ ')

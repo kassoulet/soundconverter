@@ -22,7 +22,9 @@
 import string
 import time
 import os
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import unicodedata
 from gettext import gettext as _
 import gi

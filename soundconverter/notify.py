@@ -31,12 +31,11 @@ try:
     gi.require_version('Notify', '0.7')
     from gi.repository import Notify
 
-
     def _notification(message):
         try:
             n = Notify.Notification('SoundConverter', message)
             n.show()
-        except:
+        except Exception:
             pass
 
     if Notify.init('Basics'):

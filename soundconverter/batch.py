@@ -37,11 +37,10 @@ from soundconverter.utils import log
 
 
 def prepare_files_list(input_files):
-    """ Takes in a list of paths and returns a list of all the files in those
-    paths, converted to URIs.
+    """ Takes in a list of paths and returns a list of all the files in those paths, converted to URIs.
 
-    Also returns a list of relative directories. This is used to reconstruct
-    the directory structure in the output path if -o is provided. """
+    Also returns a list of relative directories. This is used to reconstruct the directory structure in
+    the output path if -o is provided. """
 
     # The GUI has its own way of going through subdirectories.
     # Provide similar functionality to the cli.
@@ -93,12 +92,11 @@ def prepare_files_list(input_files):
 
     return parsed_files, subdirectories
 
-def cli_tags_main(input_files):
-    """ This function displays all the tags of the
-    specified files in input_files in the console.
 
-    To go into subdirectories of paths provided,
-    the -r command line argument should be provided,
+def cli_tags_main(input_files):
+    """ This function displays all the tags of the specified files in input_files in the console.
+
+    To go into subdirectories of paths provided, the -r command line argument should be provided,
     which is stored in the global 'settings' variable.
 
     input_files is an array of string paths. """
@@ -130,8 +128,7 @@ class CliProgress:
         self.current_text = ''
 
     def show(self, *msgs):
-        """ Update the progress in the console.
-        Example: show(1, "%") """
+        """ Update the progress in the console. Example: show(1, "%") """
         new_text = ' '.join([str(msg) for msg in msgs])
         if new_text != self.current_text:
             self.clear()
@@ -140,8 +137,7 @@ class CliProgress:
             self.current_text = new_text
 
     def clear(self):
-        """ Reverts the previously written message.
-        Used in `show` """
+        """ Reverts the previously written message. Used in `show` """
         sys.stdout.write('\b \b' * len(self.current_text))
         sys.stdout.flush()
 
@@ -149,13 +145,10 @@ class CliProgress:
 class CLI_Convert():
 
     def __init__(self, input_files):
-        """ This function starts the conversion of all
-        the files specified in input_files.
+        """ This function starts the conversion of all the files specified in input_files.
 
-        To control the conversion and the handling of
-        directories, command line arguments have to be
-        provided which are stored in the global 'settings'
-        variable.
+        To control the conversion and the handling of directories, command line arguments have to be
+        provided which are stored in the global 'settings' variable.
 
         input_files is an array of string paths. """
 
@@ -189,8 +182,8 @@ class CLI_Convert():
 
         log('\npreparing converters…')
         for i, input_file in enumerate(input_files):
-            
-            if not input_file in file_checker.good_files:
+
+            if input_file not in file_checker.good_files:
                 log('skipping \'{}\': invalid soundfile'.format(unquote_filename(input_file.split(os.sep)[-1][-65:])))
                 continue
 
@@ -243,31 +236,26 @@ class CLI_Convert():
         # do another one to print the queue done message
         context.iteration(True)
 
-
     def progress(self, c):
         self.started_tasks += 1
         path = unquote_filename(beautify_uri(c.sound_file.uri))
         log('{}/{}: \'{}\''.format(self.started_tasks, self.num_conversions, path))
-        
+
 
 class CLI_Check():
 
     def __init__(self, input_files, silent=False):
-        """ This class prints all the tags of the
-        specified files in input_files to the console.
+        """ This class prints all the tags of the specified files in input_files to the console.
 
-        To go into subdirectories of paths provided,
-        the -r command line argument should be provided,
+        To go into subdirectories of paths provided, the -r command line argument should be provided,
         which is stored in the global 'settings' variable.
 
         input_files is an array of string paths.
-        
-        silent=True makes this print no output, no matter
-        the -q argument of soundconverter 
-        
-        It will exit the tool if input_files contains
-        no files (maybe because -r is missing and the
-        specified path is a dir) """
+
+        silent=True makes this print no output, no matter the -q argument of soundconverter
+
+        It will exit the tool if input_files contains no files
+        (maybe because -r is missing and the specified path is a dir) """
 
         input_files, subdirectories = prepare_files_list(input_files)
 
@@ -279,7 +267,7 @@ class CLI_Check():
         # provide this to other code that uses CLI_Check
         self.input_files = input_files
         self.subdirectories = subdirectories
-        
+
         error.set_error_handler(error.ErrorPrinter())
 
         typefinders = TaskQueue()
@@ -299,7 +287,7 @@ class CLI_Check():
 
         loop = GLib.MainLoop()
         context = loop.get_context()
-        
+
         while typefinders.running:
             if typefinders.progress and typefinders.progress - p > printstepsize:
                 p = typefinders.progress
@@ -317,11 +305,8 @@ class CLI_Check():
             log('\nNon-Audio Files:')
 
             for input_file in input_files:
-                if not input_file in self.good_files:
+                if input_file not in self.good_files:
                     print(unquote_filename(beautify_uri(input_file)))
-
 
     def found_type(self, sound_file, mime):
         self.good_files.append(sound_file.uri)
-
-
