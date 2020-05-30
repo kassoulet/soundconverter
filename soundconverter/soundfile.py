@@ -27,7 +27,7 @@ from soundconverter.fileoperations import unquote_filename
 
 
 class SoundFile:
-    """ Meta data information about a sound file (uri, tags). """
+    """Meta data information about a sound file (uri, tags)."""
 
     __slots__ = [
         'uri', 'base_path', 'filename', 'tags', 'tags_read',
@@ -35,13 +35,12 @@ class SoundFile:
     ]
 
     def __init__(self, uri, base_path=None):
-        """
-        Create a SoundFile object.
+        """Create a SoundFile object.
+
         if base_path is set, the uri is cut in two parts,
          - the base folder
          - the remaining folder+filename.
         """
-
         self.uri = uri
 
         if base_path:
@@ -60,8 +59,6 @@ class SoundFile:
 
     @property
     def filename_for_display(self):
-        """
-        Returns the filename in a suitable for display form.
-        """
+        """Return the filename in a suitable for display form."""
         return GLib.filename_display_name(
                 unquote_filename(self.filename))

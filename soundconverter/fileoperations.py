@@ -39,7 +39,7 @@ def beautify_uri(uri):
 
 
 def vfs_walk(uri):
-    """ similar to os.path.walk, but with Gio.
+    """Similar to os.path.walk, but with Gio.
 
     uri -- the base folder uri.
     return a list of uri.
@@ -58,19 +58,19 @@ def vfs_walk(uri):
 
 
 def vfs_getparent(path):
-    """ Get folder name. """
+    """Get folder name."""
     gfile = Gio.file_parse_name(path)
     return gfile.get_parent()
 
 
 def vfs_unlink(filename):
-    """ Delete a gnomevfs file. """
+    """Delete a gnomevfs file."""
     gfile = Gio.file_parse_name(filename)
     return gfile.delete(None)
 
 
 def vfs_rename(original, newname):
-    """ Rename a gnomevfs file """
+    """Rename a gnomevfs file."""
     gforiginal = Gio.file_parse_name(original)
     gfnew = Gio.file_parse_name(newname)
     debug('Creating folder \'%s\'?' % gfnew.get_parent().get_uri())
@@ -86,7 +86,8 @@ def vfs_exists(filename):
 
 
 def filename_to_uri(filename):
-    """ Convert a filename to a valid uri.
+    """Convert a filename to a valid uri.
+
     Filename can be a relative or absolute path, or an uri.
     """
     if '://' not in filename:

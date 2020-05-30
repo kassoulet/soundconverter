@@ -145,7 +145,7 @@ if 'mp4mux' not in available_elements:
 
 
 class Pipeline(BackgroundTask):
-    """ A background task for running a GstPipeline. """
+    """A background task for running a GstPipeline."""
 
     def __init__(self):
         BackgroundTask.__init__(self)
@@ -237,7 +237,7 @@ class Pipeline(BackgroundTask):
             self.error = error
             self.on_error(error)
             self.done()
-            """ XXX elif Gst.pbutils.is_missing_plugin_message(message):
+            """XXX elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
             debug('missing plugin:', detail.split('|')[3], self.sound_file.uri)
@@ -307,7 +307,7 @@ class Pipeline(BackgroundTask):
         return NotImplementedError
 
     def query_duration(self):
-        """ Ask for the duration of the current pipeline. """
+        """Ask for the duration of the current pipeline."""
         try:
             if not self.sound_file.duration and self.pipeline:
                 self.sound_file.duration = self.pipeline.query_duration(Gst.Format.TIME)[1] / Gst.SECOND
@@ -333,9 +333,10 @@ class TypeFinder(Pipeline):
         self.silent = silent
 
     def log(self, *args):
-        """ the output of TypeFinder can be disabled either with
-        the -q command line option or by setting self.silent to
-        True """
+        """Print a line to the console, but only when the TypeFinder itself is not set to silent.
+
+        It can also be disabled with the -q command line option.
+        """
         if not self.silent:
             log(*args)
 
@@ -347,7 +348,7 @@ class TypeFinder(Pipeline):
         self.found_type_hook = found_type_hook
 
     def pad_added(self, decoder, pad):
-        """ called when a decoded pad is created """
+        """Called when a decoded pad is created."""
         self.query_duration()
         self.done()
 
@@ -377,7 +378,7 @@ class TypeFinder(Pipeline):
 
 
 class Decoder(Pipeline):
-    """ A GstPipeline background task that decodes data and finds tags. """
+    """A GstPipeline background task that decodes data and finds tags."""
 
     def __init__(self, sound_file):
         Pipeline.__init__(self)
@@ -394,7 +395,7 @@ class Decoder(Pipeline):
         pass
 
     def query_position(self):
-        """ Ask for the stream position of the current pipeline. """
+        """Ask for the stream position of the current pipeline."""
         try:
             if self.pipeline:
                 self.position = max(0, self.pipeline.query_position(
@@ -403,7 +404,7 @@ class Decoder(Pipeline):
             self.position = 0
 
     def found_tag(self, decoder, something, taglist):
-        """ Called when the decoder reads a tag. """
+        """Called when the decoder reads a tag."""
         debug('found_tags:', self.sound_file.filename_for_display)
         taglist.foreach(self.append_tag, None)
 
@@ -448,7 +449,7 @@ class Decoder(Pipeline):
         self.sound_file.tags.update(tags)
 
     def pad_added(self, decoder, pad):
-        """ called when a decoded pad is created """
+        """Called when a decoded pad is created."""
         self.processing = True
         self.query_duration()
 
@@ -462,17 +463,17 @@ class Decoder(Pipeline):
         return self.sound_file.uri
 
     def get_duration(self):
-        """ return the total duration of the sound file """
+        """Return the total duration of the sound file."""
         return self.sound_file.duration
 
     def get_position(self):
-        """ return the current pipeline position in the stream """
+        """Return the current pipeline position in the stream."""
         self.query_position()
         return self.position
 
 
 class TagReader(Decoder):
-    """ A GstPipeline background task for finding meta tags in a file. """
+    """A GstPipeline background task for finding meta tags in a file."""
 
     def __init__(self, sound_file):
         Decoder.__init__(self, sound_file)
@@ -502,7 +503,7 @@ class TagReader(Decoder):
 
 
 class Converter(Decoder):
-    """ A background task for converting files to another format. """
+    """A background task for converting files to another format."""
 
     def __init__(self, sound_file, output_filename, output_type,
                  delete_original=False, output_resample=False,
@@ -680,7 +681,7 @@ class Converter(Decoder):
 
 
 class ConverterQueue(TaskQueue):
-    """ Background task for converting many files. """
+    """Background task for converting many files."""
 
     def __init__(self, window):
         TaskQueue.__init__(self)

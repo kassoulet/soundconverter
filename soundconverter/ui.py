@@ -63,9 +63,7 @@ def gtk_iteration():
 
 
 def gtk_sleep(duration):
-    """ trigger a Gtk main_iteration every 10ms
-    while the code sleeps for the value in seconds
-    provided in `duration` """
+    """Sleep while keeping the GUI responsive."""
     start = time.time()
     while time.time() < start + duration:
         time.sleep(0.01)
@@ -115,7 +113,7 @@ class MsgAreaErrorDialog_:
 
 
 class FileList:
-    """ List of files added by the user. """
+    """List of files added by the user."""
 
     # List of MIME types which we accept for drops.
     drop_mime_types = ['text/uri-list', 'text/plain', 'STRING']
@@ -197,8 +195,7 @@ class FileList:
 
     @idle
     def add_uris(self, uris, base=None, extensions=None):
-        """ adds URIs that should be converted to the list
-        in the gtk interface
+        """Add URIs that should be converted to the list in the GTK interface.
 
         uris is a list of string URIs, which are absolute paths
         starting with 'file://'
@@ -207,8 +204,8 @@ class FileList:
         in which case only files of this type are added to the
         list. This can be useful when files of multiple types
         are inside a directory and only some of them should be
-        converted. Default:None which accepts all types. """
-
+        converted. Default:None which accepts all types.
+        """
         if len(uris) == 0:
             return
 
@@ -288,7 +285,7 @@ class FileList:
         self.window.set_status('{}'.format(_('Adding Files…')))
         log('adding: %d files' % len(files))
 
-        # show progress and enable gtk main loop iterations
+        # show progress and enable GTK main loop iterations
         # so that the ui stays responsive
         self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
         self.window.progressbarstatus.set_show_text(True)
@@ -383,8 +380,7 @@ class FileList:
         self.typefinders.abort()
 
     def format_cell(self, sound_file):
-        """ Takes a SoundFile and returns
-        a human readable path to it. """
+        """Take a SoundFile and return a human readable path to it."""
         return GLib.markup_escape_text(unquote_filename(sound_file.filename))
 
     def set_row_progress(self, number, progress=None, text=None):
@@ -400,8 +396,7 @@ class FileList:
         self.progress_column.set_visible(False)
 
     def append_file(self, sound_file):
-        """ Adds a SoundFile object to the list
-        of files in the frontend. """
+        """Add a SoundFile object to the list of files in the GUI."""
         self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
@@ -426,14 +421,16 @@ class GladeWindow(object):
     builder = None
 
     def __init__(self, builder):
-        """ Init GladeWindow, stores the objects's potential callbacks for later.
-        You have to call connect_signals() when all descendants are ready. """
+        """Init GladeWindow, store the objects's potential callbacks for later.
+
+        You have to call connect_signals() when all descendants are ready.
+        """
         GladeWindow.builder = builder
         GladeWindow.callbacks.update(dict([[x, getattr(self, x)]
                                      for x in dir(self) if x.startswith('on_')]))
 
     def __getattr__(self, attribute):
-        """ Allow direct use of window widget. """
+        """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
             raise AttributeError('Widget \'%s\' not found' % attribute)
@@ -442,7 +439,7 @@ class GladeWindow(object):
 
     @staticmethod
     def connect_signals():
-        """ Connect all GladeWindow objects to theirs respective signals """
+        """Connect all GladeWindow objects to theirs respective signals."""
         GladeWindow.builder.connect_signals(GladeWindow.callbacks)
 
 
@@ -1078,8 +1075,7 @@ _old_total = 0
 
 
 class SoundConverterWindow(GladeWindow):
-
-    """ Main application class. """
+    """Main application class."""
 
     sensitive_names = [
         'remove', 'clearlist',
@@ -1180,7 +1176,7 @@ class SoundConverterWindow(GladeWindow):
     # class and give the same name in the .glade file.
 
     def __getattr__(self, attribute):
-        """ Allow direct use of window widget. """
+        """Allow direct use of window widget."""
         widget = self.builder.get_object(attribute)
         if widget is None:
             raise AttributeError('Widget \'%s\' not found' % attribute)
@@ -1222,8 +1218,7 @@ class SoundConverterWindow(GladeWindow):
         return filename.lower().endswith(pattern[1:])
 
     def on_addfile_combo_changed(self, w):
-        """ Callback for combobox 'changed' signal \n
-        Set a new filter for the filechooserwidget """
+        """Set a new filter for the filechooserwidget."""
         filefilter = Gtk.FileFilter()
         if self.addfile_combo.get_active():
             filefilter.add_custom(Gtk.FileFilterFlags.DISPLAY_NAME,
@@ -1312,7 +1307,7 @@ class SoundConverterWindow(GladeWindow):
         return running
 
     def do_convert(self):
-        """ starts the conversion """
+        """Start the conversion."""
         self.pulse_progress = -1
         GLib.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion…'))
@@ -1400,7 +1395,7 @@ class SoundConverterWindow(GladeWindow):
         self.sensitive_widgets[name].set_sensitive(sensitivity)
 
     def set_sensitive(self):
-        """ Update the sensitive state of UI for the current state """
+        """Update the sensitive state of UI for the current state."""
         for w in self.unsensitive_when_converting:
             self.set_widget_sensitive(w, not self.converter.running)
 
@@ -1475,7 +1470,7 @@ win = [None]
 
 
 def gui_main(name, version, gladefile, input_files):
-    """ This is the main function for the gtk gui mode.
+    """Launch the soundconverter in GTK GUI mode.
 
     The values for name, version and gladefile are
     determined during `make` and provided when this
@@ -1484,8 +1479,8 @@ def gui_main(name, version, gladefile, input_files):
     input_files is an array of string paths, read from
     the command line arguments. It can also be an empty
     array since the user interface provides the tools
-    for adding files. """
-
+    for adding files.
+    """
     global NAME, VERSION
     NAME, VERSION = name, version
     GLib.set_application_name(name)
