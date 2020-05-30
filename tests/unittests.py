@@ -24,7 +24,7 @@ from soundconverter.batch import prepare_files_list
 from soundconverter.ui import win, gtk_iteration
 
 from importlib.util import spec_from_loader, module_from_spec
-from importlib.machinery import SourceFileLoader 
+from importlib.machinery import SourceFileLoader
 
 DEFAULT_SETTINGS = settings.copy()
 
@@ -77,7 +77,7 @@ class FilenameToUriTest(unittest.TestCase):
 class PrepareFilesList(unittest.TestCase):
     def tearDown(self):
         reset_settings()
-            
+
     def testNonRecursiveDirectory(self):
         test = ["tests/testdata/empty/"]
         # it should not find anything, as test is a directory
@@ -119,12 +119,12 @@ class Batch(unittest.TestCase):
         reset_settings()
         if os.path.isdir("tests/tmp/"):
             shutil.rmtree("tests/tmp")
-            
+
     def testNonRecursiveWithFolder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as cm:
             launch(["-b", "-q", "tests/testdata/empty"])
-        the_exception = cm.exception  
+        the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
 
     def testRecursiveEmpty(self):
@@ -132,7 +132,7 @@ class Batch(unittest.TestCase):
         # are not audiofiles
         with self.assertRaises(SystemExit) as cm:
             launch(["-b", "-r", "-q", "tests/testdata/empty"])
-        the_exception = cm.exception  
+        the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
 
     def testRecursiveAudio(self):
@@ -174,7 +174,7 @@ class GUI(unittest.TestCase):
         if os.path.isdir("tests/tmp/"):
             shutil.rmtree("tests/tmp")
         os.makedirs("tests/tmp", exist_ok=True)
-        
+
     def tearDown(self):
         win[0].close()
         reset_settings()
@@ -187,7 +187,7 @@ class GUI(unittest.TestCase):
         window = win[0]
 
         # check if directory is read correctly
-        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav", 
+        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav",
                        "tests/testdata/audio/b/c.mp3"]
         self.assertCountEqual([filename_to_uri(path) for path in expectation], win[0].filelist.filelist)
 
@@ -285,7 +285,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def testURI(self):
         self.g.exists = self.always_exists
         self.g.suffix = ".ogg"
-        #self.g.folder = "/")
+        # self.g.folder = "/")
 
         self.s = SoundFile("ssh:user@server:port///path/to/file.flac")
         self.s.tags.update({
@@ -388,7 +388,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def testDisplay(self):
         self.g.exists = self.always_exists
         self.g.suffix = ".ogg"
-        #self.g.folder = "/")
+        # self.g.folder = "/")
 
         self.s = SoundFile("ssh:user@server:port///path/to/file.flac")
         self.assertEqual(self.s.filename_for_display,
@@ -459,7 +459,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
-        #self.g.basename = "%(title)s")
+        # self.g.basename = "%(title)s")
         self.assertEqual(self.g.get_target_name(self.s),
                              "/music/to/file.ogg")
 
