@@ -65,12 +65,14 @@ except locale.Error:
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE, localedir='@datadir@/locale')
 
+
 def _add_soundconverter_path():
     """ Makes the soundconverter package importable, which
     has been installed to LIBDIR during make install """
     root = os.path.join(LIBDIR, 'soundconverter', 'python')
-    if not root in sys.path:
+    if root not in sys.path:
         sys.path.insert(0, root)
+
 
 _add_soundconverter_path()
 import soundconverter
@@ -85,9 +87,10 @@ from soundconverter.ui import gui_main
 
 # command line argument parsing, launch-mode
 
+
 def check_mime_type(mime):
     types = {
-        'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav' : 'audio/x-wav',
+        'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
         'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
     }
     mime = types.get(mime, mime)
@@ -113,7 +116,7 @@ class ModifiedOptionParser(OptionParser):
     See optparse.OptionParser for the original docstring
     """
     def format_epilog(self, formatter):
-        if self.epilog == None:
+        if self.epilog is None:
             return ""
         return self.epilog
 
@@ -122,57 +125,104 @@ def parse_command_line():
     """ Creates and returns the OptionParser, which parse the
     command line arguments and displays help with --help. """
 
-    parser = ModifiedOptionParser(epilog='\nExample:\n'
-        '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n')
+    parser = ModifiedOptionParser(
+        epilog='\nExample:\n'
+        '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n'
+    )
 
-    parser.add_option('-c', '--check', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode':'check'},
-        help=_('Print which files cannot be read by gstreamer. '
+    parser.add_option(
+        '-c', '--check', dest='mode', action='callback',
+        callback=mode_callback, callback_kwargs={'mode': 'check'},
+        help=_(
+            'Print which files cannot be read by gstreamer. '
             'Useful before converting. This will disable the GUI and '
-            'run in batch mode, from the command line.'))
-    parser.add_option('-b', '--batch', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode':'batch'},
-        help=_('Convert in batch mode, from the command line, '
+            'run in batch mode, from the command line.'
+        )
+    )
+    parser.add_option(
+        '-b', '--batch', dest='mode', action='callback',
+        callback=mode_callback, callback_kwargs={'mode': 'batch'},
+        help=_(
+            'Convert in batch mode, from the command line, '
             'without a graphical user interface. You '
-            'can use this from, say, shell scripts.'))
-    parser.add_option('-t', '--tags', dest="mode", action='callback',
-        callback=mode_callback,  callback_kwargs={'mode':'tags'},
-        help=_('Show tags for input files instead of converting '
+            'can use this from, say, shell scripts.'
+        )
+    )
+    parser.add_option(
+        '-t', '--tags', dest="mode", action='callback',
+        callback=mode_callback,  callback_kwargs={'mode': 'tags'},
+        help=_(
+            'Show tags for input files instead of converting '
             'them. This indicates command line batch mode '
-            'and disables the graphical user interface.'))
-    parser.add_option('-q', '--quiet', action="store_true", dest="quiet",
-        help=_("Be quiet. Don't write normal output, only errors."))
-    parser.add_option('-d', '--debug', action="store_true", dest="debug",
-        help=_('Displays additional debug information'))
-    parser.add_option('-j', '--jobs', action='store', type='int', dest='forced-jobs',
-        metavar='NUM', help=_('Force number of concurrent conversions.'))
+            'and disables the graphical user interface.'
+        )
+    )
+    parser.add_option(
+        '-q', '--quiet', action="store_true", dest="quiet",
+        help=_("Be quiet. Don't write normal output, only errors.")
+    )
+    parser.add_option(
+        '-d', '--debug', action="store_true", dest="debug",
+        help=_('Displays additional debug information')
+    )
+    parser.add_option(
+        '-j', '--jobs', action='store', type='int', dest='forced-jobs',
+        metavar='NUM', help=_('Force number of concurrent conversions.')
+    )
 
     # batch mode settings
-    batch_option_group = OptionGroup(parser, 'Batch Mode Options',
-                        'Those options will only have effect when the -b, -c or -t '
-                        'option is provided')
-    batch_option_group.add_option('-m', '--mime-type', dest="cli-output-type",
-        help=_('Set the output MIME type. The default '
+    batch_option_group = OptionGroup(
+        parser, 'Batch Mode Options',
+        'Those options will only have effect when the -b, -c or -t '
+        'option is provided'
+    )
+    batch_option_group.add_option(
+        '-m', '--mime-type', dest="cli-output-type",
+        help=_(
+            'Set the output MIME type. The default '
             'is %s. Note that you will probably want to set the output '
-            'suffix as well. Supported MIME types: %s') % (settings['cli-output-type'],
+            'suffix as well. Supported MIME types: %s'
+        ) % (
+            settings['cli-output-type'],
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
-            'audio/x-wav (WAV)'))
-    batch_option_group.add_option('-s', '--suffix', dest="cli-output-suffix",
-        help=_('Set the output filename suffix. '
+            'audio/x-wav (WAV)'
+        )
+    )
+    batch_option_group.add_option(
+        '-s', '--suffix', dest="cli-output-suffix",
+        help=_(
+            'Set the output filename suffix. '
             'The default is %s. Note that the suffix does not '
-            'affect\n the output MIME type.') % settings['cli-output-suffix'])
-    batch_option_group.add_option('-r', '--recursive', action="store_true", dest="recursive",
-        help=_('Go recursively into subdirectories'))
-    batch_option_group.add_option('-i', '--ignore', action="store_true", dest="ignore-existing",
-        help=_('Ignore files for which the target already exists instead '
-            'of converting them again'))
-    batch_option_group.add_option('-o', '--output', action="store", dest="output-path",
-        help=_('Put converted files into a different directory while rebuilding '
+            'affect\n the output MIME type.'
+        ) % settings['cli-output-suffix']
+    )
+    batch_option_group.add_option(
+        '-r', '--recursive', action="store_true", dest="recursive",
+        help=_('Go recursively into subdirectories')
+    )
+    batch_option_group.add_option(
+        '-i', '--ignore', action="store_true", dest="ignore-existing",
+        help=_(
+            'Ignore files for which the target already exists instead '
+            'of converting them again'
+        )
+    )
+    batch_option_group.add_option(
+        '-o', '--output', action="store", dest="output-path",
+        help=_(
+            'Put converted files into a different directory while rebuilding '
             'the original directory structure. This includes the name of the original '
-            'directory.'))
-    batch_option_group.add_option('-Q', '--quality', action="store", type='int', dest="quality",
-        metavar='NUM', help=_('Quality of the converted output file. Between 0 '
-            '(lowest) and 5 (highest). Default is 3.'), default=3)
+            'directory.'
+        )
+    )
+    batch_option_group.add_option(
+        '-Q', '--quality', action="store", type='int', dest="quality",
+        metavar='NUM', help=_(
+                'Quality of the converted output file. Between 0 '
+                '(lowest) and 5 (highest). Default is 3.'
+            ),
+        default=3
+    )
 
     parser.add_option_group(batch_option_group)
 
@@ -181,6 +231,7 @@ def parse_command_line():
     #     help=_('Shows GStreamer Options'))
 
     return parser
+
 
 parser = parse_command_line()
 
@@ -196,7 +247,7 @@ for k in dir(options):
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
 if not settings.get('quiet'):
-    print(('%s %s' % (NAME, VERSION) ))
+    print(('%s %s' % (NAME, VERSION)))
     if settings['forced-jobs']:
         print(('Using %d thread(s)' % settings['forced-jobs']))
 
@@ -211,8 +262,3 @@ else:
         CLI_Convert(files)
     elif settings['mode'] == 'check':
         CLI_Check(files)
-
-
-
-
-
