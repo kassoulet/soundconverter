@@ -28,17 +28,18 @@ class ErrorPrinter:
     def show_error(self, primary, secondary):
         try:
             sys.stderr.write(_('\n\nError: %s\n%s\n') % (primary, secondary))
-        except:
+        except Exception:
             pass
         sys.exit(1)
 
 
 error_handler = ErrorPrinter()
 
+
 def set_error_handler(handler):
     global error_handler
     error_handler = handler
 
+
 def show_error(primary, secondary):
     error_handler.show_error(primary, secondary)
-
