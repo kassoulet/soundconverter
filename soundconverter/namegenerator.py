@@ -22,7 +22,9 @@
 import string
 import time
 import os
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import unicodedata
 from gettext import gettext as _
 import gi
@@ -31,7 +33,7 @@ from soundconverter.fileoperations import vfs_exists, filename_to_uri
 
 
 class TargetNameGenerator:
-    """ Generator for creating the target name from an input name. """
+    """Generator for creating the target name from an input name."""
 
     def __init__(self):
         self.folder = None

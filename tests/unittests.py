@@ -7,7 +7,9 @@ import os
 import sys
 import shutil
 from urllib.parse import unquote
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import time
 
 import gi
@@ -24,7 +26,7 @@ from soundconverter.batch import prepare_files_list
 from soundconverter.ui import win, gtk_iteration
 
 from importlib.util import spec_from_loader, module_from_spec
-from importlib.machinery import SourceFileLoader 
+from importlib.machinery import SourceFileLoader
 
 DEFAULT_SETTINGS = settings.copy()
 
@@ -33,18 +35,21 @@ DEFAULT_SETTINGS = settings.copy()
 Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
 
+
 def launch(argv=[]):
-    """ starts the soundconverter given the command
-    line argument array argv. Make sure to run the
-    make command first in your terminal. """
+    """Start the soundconverter with the command line argument array argv.
+    
+    Make sure to run the `make` command first in your terminal.
+    """
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
         spec = spec_from_loader("launcher", SourceFileLoader("launcher", "bin/soundconverter"))
         spec.loader.exec_module(module_from_spec(spec))
 
+
 def reset_settings():
-    """ resets the global settings to their initial state """
+    """Reset the global settings to their initial state."""
     global settings
     # convert to list otherwise del won't work
     for key in list(settings.keys()):
@@ -53,7 +58,8 @@ def reset_settings():
         else:
             del settings[key]
     # batch tests assume that recursive is off by default:
-    assert ((not "recursive" in settings) or (not settings["recursive"]))
+    assert (("recursive" not in settings) or (not settings["recursive"]))
+
 
 def quote(ss):
     if isinstance(ss, str):
@@ -77,7 +83,7 @@ class FilenameToUriTest(unittest.TestCase):
 class PrepareFilesList(unittest.TestCase):
     def tearDown(self):
         reset_settings()
-            
+
     def testNonRecursiveDirectory(self):
         test = ["tests/testdata/empty/"]
         # it should not find anything, as test is a directory
@@ -115,16 +121,17 @@ class Batch(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.makedirs("tests/tmp", exist_ok=True)
+
     def tearDown(self):
         reset_settings()
         if os.path.isdir("tests/tmp/"):
             shutil.rmtree("tests/tmp")
-            
+
     def testNonRecursiveWithFolder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as cm:
             launch(["-b", "-q", "tests/testdata/empty"])
-        the_exception = cm.exception  
+        the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
 
     def testRecursiveEmpty(self):
@@ -132,7 +139,7 @@ class Batch(unittest.TestCase):
         # are not audiofiles
         with self.assertRaises(SystemExit) as cm:
             launch(["-b", "-r", "-q", "tests/testdata/empty"])
-        the_exception = cm.exception  
+        the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
 
     def testRecursiveAudio(self):
@@ -174,7 +181,7 @@ class GUI(unittest.TestCase):
         if os.path.isdir("tests/tmp/"):
             shutil.rmtree("tests/tmp")
         os.makedirs("tests/tmp", exist_ok=True)
-        
+
     def tearDown(self):
         win[0].close()
         reset_settings()
@@ -187,7 +194,7 @@ class GUI(unittest.TestCase):
         window = win[0]
 
         # check if directory is read correctly
-        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav", 
+        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav",
                        "tests/testdata/audio/b/c.mp3"]
         self.assertCountEqual([filename_to_uri(path) for path in expectation], win[0].filelist.filelist)
 
@@ -206,14 +213,14 @@ class GUI(unittest.TestCase):
         while window.converter.finished_tasks < len(expectation):
             # as Gtk.main is replaced by gtk_iteration, the unittests
             # are responsible about when soundconverter continues
-            # to work on the conversions and updating the gui
+            # to work on the conversions and updating the GUI
             gtk_iteration()
 
         self.assertTrue(os.path.isdir("tests/tmp/audio/"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/strange_chars_.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.opus"))
-        # no duplicates in the gui:
+        # no duplicates in the GUI:
         self.assertFalse(os.path.isfile("tests/tmp/a.opus"))
 
 
@@ -244,8 +251,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
     def testSuffix(self):
         self.g.suffix = ".ogg"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/file.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/file.ogg"
+        )
 
     def testNoSuffix(self):
         try:
@@ -257,35 +266,43 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def testNoExtension(self):
         self.g.suffix = ".ogg"
         self.s = SoundFile("/path/to/file")
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/file.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/file.ogg"
+        )
 
     def testBasename(self):
         self.g.suffix = ".ogg"
         self.g.basename = "%(track-number)02d-%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/01-Hi_Ho.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/01-Hi_Ho.ogg"
+        )
 
     def testLocation(self):
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
         self.g.subfolders = "%(artist)s/%(album)s"
         self.g.basename = "%(track-number)02d-%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg"
+        )
 
     def testLocationEscape(self):
         self.s = SoundFile("/path/to/file with spaces")
         self.g.replace_messy_chars = False
         self.g.suffix = ".ogg"
         self.g.folder = "/mu sic"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/mu%20sic/file%20with%20spaces.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/mu%20sic/file%20with%20spaces.ogg"
+        )
 
     def testURI(self):
         self.g.exists = self.always_exists
         self.g.suffix = ".ogg"
-        #self.g.folder = "/")
+        # self.g.folder = "/")
 
         self.s = SoundFile("ssh:user@server:port///path/to/file.flac")
         self.s.tags.update({
@@ -295,8 +312,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "ssh:user@server:port///path/to/file.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "ssh:user@server:port///path/to/file.ogg"
+        )
 
     def testURILocalDestination(self):
         self.g.exists = self.always_exists
@@ -311,8 +330,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/music/file.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/music/file.ogg"
+        )
 
     def testURIDistantDestination(self):
         self.g.exists = self.always_exists
@@ -327,8 +348,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "ftp:user2@dest-server:another-port:/music/file.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "ftp:user2@dest-server:another-port:/music/file.ogg"
+        )
 
     def testURIUnicode(self):
         self.g.exists = self.always_exists
@@ -345,8 +368,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "ftp:user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "ftp:user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg"
+        )
 
     def testURIUnicode_utf8(self):
         self.g.exists = self.always_exists
@@ -354,8 +379,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.folder = "ftp:user2@dest-server:another-port:" + quote("/mûsîc/")
         self.g.replace_messy_chars = False
 
-        self.s = SoundFile("ssh:user@server:port" + quote(
-            "///path/to/file with strângë chàrs фズ.flac"))
+        self.s = SoundFile("ssh:user@server:port" + quote("///path/to/file with strângë chàrs фズ.flac"))
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -363,17 +387,17 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "ftp:user2@dest-server:another-port:" + quote(
-                                 "/mûsîc/file with strângë chàrs фズ.ogg"))
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "ftp:user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs фズ.ogg")
+        )
 
     def testURIUnicodeMessy(self):
         self.g.exists = self.always_exists
         self.g.suffix = ".ogg"
         self.g.folder = "ftp:user2@dest-server:another-port:" + quote("/mûsîc/")
 
-        self.s = SoundFile("ssh:user@server:port" + quote(
-            "///path/to/file with strângë chàrs.flac"))
+        self.s = SoundFile("ssh:user@server:port" + quote("///path/to/file with strângë chàrs.flac"))
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -381,39 +405,48 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "ftp:user2@dest-server:another-port:/" + quote(
-                                 "mûsîc") + "/file_with_strange_chars.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "ftp:user2@dest-server:another-port:/" + quote("mûsîc") + "/file_with_strange_chars.ogg"
+        )
 
     def testDisplay(self):
         self.g.exists = self.always_exists
         self.g.suffix = ".ogg"
-        #self.g.folder = "/")
+        # self.g.folder = "/")
 
         self.s = SoundFile("ssh:user@server:port///path/to/file.flac")
-        self.assertEqual(self.s.filename_for_display,
-                             "file.flac")
+        self.assertEqual(
+            self.s.filename_for_display,
+            "file.flac"
+        )
         self.s = SoundFile("ssh:user@server:port///path/to/fîlé.flac")
-        self.assertEqual(self.s.filename_for_display,
-                             "fîlé.flac")
+        self.assertEqual(
+            self.s.filename_for_display,
+            "fîlé.flac"
+        )
         self.s = SoundFile(
-            "ssh:user@server:port///path/to/fileфズ.flac")
+            "ssh:user@server:port///path/to/fileфズ.flac"
+        )
         self.assertEqual(self.s.filename_for_display, "fileфズ.flac")
 
     def test8bits(self):
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
         self.g.suffix = ".ogg"
         self.g.replace_messy_chars = False
-        self.assertEqual(self.g.get_target_name(self.s),
-                             quote("/path/to/file\xa0\xb0\xc0\xd0.ogg"))
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            quote("/path/to/file\xa0\xb0\xc0\xd0.ogg")
+        )
 
     def test8bits_messy(self):
         self.s = SoundFile(quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
         self.g.suffix = ".ogg"
         self.g.replace_messy_chars = True
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/file_A.ogg")
-
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/file_A.ogg"
+        )
 
     def test8bits_tags(self):
         self.g.replace_messy_chars = False
@@ -429,10 +462,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.folder = "/music"
         self.g.subfolders = "%(artist)s/%(album)s"
         self.g.basename = "%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             quote(
-                                 "/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"))
-
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg")
+        )
 
     def testRoot(self):
         self.s = SoundFile("/path/to/file.flac", "/path/")
@@ -444,9 +477,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.g.suffix = ".ogg"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/file.ogg")
-
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/file.ogg"
+        )
 
     def testRootPath(self):
         self.s = SoundFile("/path/to/file.flac", "/path/")
@@ -459,9 +493,11 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
-        #self.g.basename = "%(title)s")
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/music/to/file.ogg")
+        # self.g.basename = "%(title)s")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/music/to/file.ogg"
+        )
 
     def testRootCustomPattern(self):
         self.s = SoundFile("/path/to/file.flac", "/path/")
@@ -474,8 +510,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = ".ogg"
         self.g.basename = "%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/path/to/Hi_Ho.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/path/to/Hi_Ho.ogg"
+        )
 
     def testRootPathCustomPattern(self):
         self.s = SoundFile("/path/to/file.flac", "/path/")
@@ -489,8 +527,10 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.folder = "/music"
         self.g.basename = "%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             "/music/to/Hi_Ho.ogg")
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/music/to/Hi_Ho.ogg"
+        )
 
     def testQuote(self):
         self.s = SoundFile(quote("/path%'#/to/file%'#.flac"))
@@ -500,12 +540,16 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.replace_messy_chars = False
         self.g.suffix = ".ogg"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             quote("/path%'#/to/file%'#.ogg"))
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            quote("/path%'#/to/file%'#.ogg")
+        )
         self.g.subfolders = "%(artist)s"
         self.g.basename = "%(title)s"
-        self.assertEqual(self.g.get_target_name(self.s),
-                             quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg"))
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg")
+        )
 
 
 if __name__ == "__main__":

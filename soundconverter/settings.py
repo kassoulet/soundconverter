@@ -110,8 +110,7 @@ settings = {
 # Also to reduce redundancy of the hard-coded
 # quality tuples.
 def get_quality(ftype, value, mode='vbr', reverse=False):
-    """ get quality from integers between 0 and 6
-    depending on target file type
+    """Map an integer between 0 and 6 to a proper quality value depending on target file type.
 
     ftype of 'vorbis', 'aac', 'opus' or 'mp3',
     value between 0 and 5,
@@ -120,8 +119,8 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
     reverse is by default False. If True, this
     function returns the original value-parameter
     given a quality setting. Value becomes the
-    input for the quality then. """
-
+    input for the quality then.
+    """
     quality = {
         'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
         'aac': (64, 96, 128, 192, 256, 320),
@@ -129,7 +128,7 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         'mp3': {
             'cbr': (64, 96, 128, 192, 256, 320),
             'abr': (64, 96, 128, 192, 256, 320),
-            'vbr': (9, 7, 5, 3, 1, 0), # inverted !
+            'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
         }
     }
 
