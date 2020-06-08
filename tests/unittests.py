@@ -85,14 +85,14 @@ class PrepareFilesList(unittest.TestCase):
         reset_settings()
 
     def testNonRecursiveDirectory(self):
-        test = ["tests/testdata/empty/"]
+        test = ["tests/test data/empty/"]
         # it should not find anything, as test is a directory
         expectation = ([], [])
         self.assertEqual(prepare_files_list(test), expectation)
 
     def testRecursiveDirectory(self):
         settings["recursive"] = True
-        test = ["tests/testdata/empty/", "tests/testdata/empty/b"]
+        test = ["tests/test data/empty/", "tests/test data/empty/b"]
         expectation = ([
             filename_to_uri(test[0] + "a"),
             filename_to_uri(test[0] + "b/c"),
@@ -108,7 +108,7 @@ class PrepareFilesList(unittest.TestCase):
         self.assertEqual(result, expectation)
 
     def testFile(self):
-        test = ["tests/testdata/empty/a"]
+        test = ["tests/test data/empty/a"]
         # it should not detect the name of the parent directory as
         # it's only a single file
         expectation = ([filename_to_uri(test[0])], [""])
@@ -130,7 +130,7 @@ class Batch(unittest.TestCase):
     def testNonRecursiveWithFolder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as cm:
-            launch(["-b", "-q", "tests/testdata/empty"])
+            launch(["-b", "-q", "tests/test data/empty"])
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
 
@@ -138,14 +138,14 @@ class Batch(unittest.TestCase):
         # it should exit with code 2, because files are found but they
         # are not audiofiles
         with self.assertRaises(SystemExit) as cm:
-            launch(["-b", "-r", "-q", "tests/testdata/empty"])
+            launch(["-b", "-r", "-q", "tests/test data/empty"])
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
 
     def testRecursiveAudio(self):
         # it should convert
         launch([
-            "-b", "tests/testdata/audio",
+            "-b", "tests/test data/audio",
             "-r",
             "-q",
             "-o", "tests/tmp",
@@ -159,7 +159,7 @@ class Batch(unittest.TestCase):
     def testMultiplePaths(self):
         # it should convert
         launch([
-            "-b", "tests/testdata/audio", "tests/testdata/audio/a.wav", "tests/testdata/empty",
+            "-b", "tests/test data/audio", "tests/test data/audio/a.wav", "tests/test data/empty",
             "-r",
             "-q",
             "-o", "tests/tmp",
@@ -189,13 +189,13 @@ class GUI(unittest.TestCase):
             shutil.rmtree("tests/tmp")
 
     def testConversion(self):
-        launch(["-q", "tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav",
-                "tests/testdata/audio/", "tests/testdata/empty"])
+        launch(["-q", "tests/test data/audio/a.wav", "tests/test data/audio/strângë chàrs фズ.wav",
+                "tests/test data/audio/", "tests/test data/empty"])
         window = win[0]
 
         # check if directory is read correctly
-        expectation = ["tests/testdata/audio/a.wav", "tests/testdata/audio/strângë chàrs фズ.wav",
-                       "tests/testdata/audio/b/c.mp3"]
+        expectation = ["tests/test data/audio/a.wav", "tests/test data/audio/strângë chàrs фズ.wav",
+                       "tests/test data/audio/b/c.mp3"]
         self.assertCountEqual([filename_to_uri(path) for path in expectation], win[0].filelist.filelist)
 
         # setup for conversion
@@ -249,6 +249,49 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def always_exists(self, pathname):
         return True
 
+    def test_safe_name(self):
+        # 1. path doesn't exist at all
+        self.assertEqual(self.g.safe_name('/b az/quズx/foo.mp3'), '/b_az/qux/foo.mp3')
+        self.assertEqual(self.g.safe_name('/baズz/qux'), '/baz/qux')
+        self.assertEqual(self.g.safe_name('./ qux/foズo.mp3'), './_qux/foo.mp3')
+        self.assertEqual(self.g.safe_name('./qズux/'), './qux/')
+        self.assertEqual(self.g.safe_name('/ズfoo.mp3'), '/foo.mp3')
+        self.assertEqual(self.g.safe_name('fooズ.mp3'), 'foo.mp3')
+        self.assertEqual(self.g.safe_name('bla /foズo.mp3'), 'bla_/foo.mp3')
+        self.assertEqual(self.g.safe_name('blズa/'), 'bla/')
+        self.assertEqual(self.g.safe_name('ズbla'), 'bla')
+
+        # 2. the outer dir exists
+        self.assertEqual(self.g.safe_name('/home/qфux/foo.mp3'), '/home/qux/foo.mp3')
+        self.assertEqual(self.g.safe_name('./foфo.mp3'), './foo.mp3')
+        self.assertEqual(self.g.safe_name('./tests/asdf/fфoo.mp3'), './tests/asdf/foo.mp3')
+        self.assertEqual(self.g.safe_name('tests/asdf/fooф.mp3'), 'tests/asdf/foo.mp3')
+
+        # 3. all dirs exist (space of 'test data' will be kept)
+        original_name = os.getcwd() + '/tests/test data/audio/fâoo.mp3'
+        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/faoo.mp3')
+        self.assertEqual(self.g.safe_name('./tests/test data/fooâ.mp3'), './tests/test data/fooa.mp3')
+        self.assertEqual(self.g.safe_name('tests/test data/fфズ oo.mp3â'), 'tests/test data/f_oo.mp3a')
+        
+        # 4. the complete path exists
+        original_name = os.getcwd() + '/tests/test data/audio/a.wav'
+        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
+        self.assertEqual(self.g.safe_name('./tests/test data'), './tests/test data')
+        self.assertEqual(self.g.safe_name('tests/test data/'), 'tests/test data/')
+        
+        # 5. paths with special chars won't be transformed into existing paths to prevent overwriting of existing data
+        original_name = os.getcwd() + '/tests/test data/âuズdio/a.wav'
+        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio(3)/a.wav')
+
+        # 6. doesn't increment the filename. on_task_finished of gstreamer.py does that later
+        original_name = os.getcwd() + '/tests/test data/audio/â.wav'
+        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
+
+        # 7. doesn't change %20 spaces in URIs into _20, but rather into _ and keeps the URI scheme
+        original_name = 'foo://' + os.getcwd() + '/tests/test%20data/fo%20o.mp3'
+        expected_name = 'foo://' + os.getcwd() + '/tests/test%20data/fo_o.mp3'
+        self.assertEqual(self.g.safe_name(original_name), expected_name)
+
     def testSuffix(self):
         self.g.suffix = ".ogg"
         self.assertEqual(
@@ -274,8 +317,9 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def testBasename(self):
         self.g.suffix = ".ogg"
         self.g.basename = "%(track-number)02d-%(title)s"
+        target_name = self.g.get_target_name(self.s)
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            target_name,
             "/path/to/01-Hi_Ho.ogg"
         )
 
