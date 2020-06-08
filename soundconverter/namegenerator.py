@@ -21,6 +21,7 @@
 
 import string
 import time
+import re
 import os
 import urllib.request
 import urllib.parse
@@ -29,7 +30,7 @@ import unicodedata
 from gettext import gettext as _
 import gi
 from gi.repository import Gio
-from soundconverter.fileoperations import vfs_exists, filename_to_uri
+from soundconverter.fileoperations import vfs_exists, filename_to_uri, unquote_filename
 
 
 class TargetNameGenerator:
@@ -47,20 +48,64 @@ class TargetNameGenerator:
 
     @staticmethod
     def _unicode_to_ascii(unicode_string):
-        # thanks to
-        # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
-        return str(unicodedata.normalize('NFKD', unicode_string).encode(
-            'ASCII', 'ignore'), 'ASCII')
+        # thanks to http://code.activestate.com/recipes/251871/
+        return str(unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore'), 'ASCII')
 
     @staticmethod
     def safe_name(filename):
+        """Replace all characters that are not ascii, digits or '.' '-' '_' '/' with '_'.
+        
+        Will not be applied on the part of the path that already exists, as that part apparently is already safe
+
+        Parameters
+        ----------
+        path : string
+            Expects a path that ends in a filename. E.g. '/home/qux.mp3' instead of only '/home'
+            Can be an URI or a normal path
+        """
+        if len(filename) == 0:
+            raise ValueError('empty filename')
+
         nice_chars = string.ascii_letters + string.digits + '.-_/'
-        filename = TargetNameGenerator._unicode_to_ascii(filename)
-        safe = ''.join([c if c in nice_chars else '_' for c in filename])
+
+        scheme = ''
+        # don't break 'file://' and keep the original scheme
+        match = re.match(r'^([a-zA-Z]+://){0,1}(.+)', filename)
+        if match[1]:
+            # it's an URI!
+            scheme = match[1]
+            filename = match[2]
+            filename = unquote_filename(filename)
+
+        # figure out how much of the path already exists
+        # split into for example [/test', '/baz.flac'] or ['qux.mp3']
+        split = [s for s in re.split(r'((?:/|^)[^/]+)', filename) if s != '']
+        safe = ''
+        while len(split) > 0:
+            part = split.pop(0)
+            if os.path.exists(safe + part):
+                safe += part
+            else:
+                # put the remaining unknown non-existing path back together and make it safe
+                non_existing = TargetNameGenerator._unicode_to_ascii(part)
+                non_existing = ''.join([c if c in nice_chars else '_' for c in non_existing])
+                safe += non_existing
+                # when the path now suddenly exists, that means that e.g. /ho%me went /home, append a counter
+                # to make sure stuff is not overwritten. This does not apply to filenames because that is already
+                # separately handled in on_task_finished of gstreamer.py.
+                if len(split) > 0:
+                    if os.path.exists(safe):
+                        i = 2
+                        while os.path.exists('%s(%s)' % (safe, i)):
+                            i += 1
+                        safe = '%s(%s)' % (safe, i)
+
+        if match[1]:
+            safe = filename_to_uri(scheme + safe)
+
         return safe
 
     def get_target_name(self, sound_file):
-
         assert self.suffix, 'you just forgot to call set_target_suffix()'
 
         root, ext = os.path.splitext(urllib.parse.urlparse(sound_file.uri).path)
