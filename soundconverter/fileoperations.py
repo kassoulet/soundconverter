@@ -31,6 +31,10 @@ from soundconverter.error import show_error
 
 
 def unquote_filename(filename):
+    """Transform an URL encoded filename to a non-encoded one.
+
+    E.g. '%20' will be changed to ' '
+    """
     return urllib.parse.unquote(str(filename))
 
 

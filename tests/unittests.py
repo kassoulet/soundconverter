@@ -21,7 +21,7 @@ Gst.init([a for a in sys.argv[1:] if '-gst' in a])
 from soundconverter.settings import settings
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.soundfile import SoundFile
-from soundconverter.fileoperations import filename_to_uri
+from soundconverter.fileoperations import filename_to_uri, unquote_filename, beautify_uri
 from soundconverter.batch import prepare_files_list
 from soundconverter.ui import win, gtk_iteration
 
@@ -248,6 +248,12 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
     def always_exists(self, pathname):
         return True
+
+    def test_unquote_filename(self):
+        self.assertEqual(unquote_filename('file://baz%20qux'), 'file://baz qux')
+
+    def test_beautify_uri(self):
+        self.assertEqual(beautify_uri('file://baz%20qux'), 'baz qux')
 
     def test_safe_name(self):
         # 1. path doesn't exist at all
