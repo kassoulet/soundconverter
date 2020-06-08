@@ -93,7 +93,7 @@ class TargetNameGenerator:
                 safe += non_existing
                 break
 
-        if match[1]:
+        if scheme:
             safe = filename_to_uri(scheme + safe)
 
         return safe
