@@ -315,9 +315,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def testBasename(self):
         self.g.suffix = ".ogg"
         self.g.basename = "%(track-number)02d-%(title)s"
-        target_name = self.g.get_target_name(self.s)
         self.assertEqual(
-            target_name,
+            self.g.get_target_name(self.s),
             "/path/to/01-Hi_Ho.ogg"
         )
 
