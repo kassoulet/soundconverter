@@ -53,9 +53,11 @@ class TargetNameGenerator:
 
     @staticmethod
     def safe_name(filename):
-        """Replace all characters that are not ascii, digits or '.' '-' '_' '/' with '_'.
+        """Make a filename safe to use if it contains special characters than can make things break sometimes
         
-        Will not be applied on the part of the path that already exists, as that part apparently is already safe
+        Replace all characters that are not ascii, digits or '.' '-' '_' '/' with '_'. Umlaute will be changed
+        to their closest non-umlaut counterpart. Will not be applied on the part of the path that already exists,
+        as that part apparently is already safe.
 
         Parameters
         ----------
