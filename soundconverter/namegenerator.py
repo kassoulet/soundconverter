@@ -60,7 +60,6 @@ class TargetNameGenerator:
         Parameters
         ----------
         path : string
-            Expects a path that ends in a filename. E.g. '/home/qux.mp3' instead of only '/home'
             Can be an URI or a normal path
         """
         if len(filename) == 0:
