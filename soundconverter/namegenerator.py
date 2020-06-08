@@ -87,18 +87,10 @@ class TargetNameGenerator:
                 safe += part
             else:
                 # put the remaining unknown non-existing path back together and make it safe
-                non_existing = TargetNameGenerator._unicode_to_ascii(part)
+                non_existing = TargetNameGenerator._unicode_to_ascii(part + ''.join(split))
                 non_existing = ''.join([c if c in nice_chars else '_' for c in non_existing])
                 safe += non_existing
-                # when the path now suddenly exists, that means that e.g. /ho%me went /home, append a counter
-                # to make sure stuff is not overwritten. This does not apply to filenames because that is already
-                # separately handled in on_task_finished of gstreamer.py.
-                if len(split) > 0:
-                    if os.path.exists(safe):
-                        i = 2
-                        while os.path.exists('%s(%s)' % (safe, i)):
-                            i += 1
-                        safe = '%s(%s)' % (safe, i)
+                break
 
         if match[1]:
             safe = filename_to_uri(scheme + safe)
