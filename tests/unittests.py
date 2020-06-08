@@ -279,15 +279,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(self.g.safe_name('./tests/test data'), './tests/test data')
         self.assertEqual(self.g.safe_name('tests/test data/'), 'tests/test data/')
         
-        # 5. paths with special chars won't be transformed into existing paths to prevent overwriting of existing data
-        original_name = os.getcwd() + '/tests/test data/âuズdio/a.wav'
-        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio(3)/a.wav')
-
-        # 6. doesn't increment the filename. on_task_finished of gstreamer.py does that later
-        original_name = os.getcwd() + '/tests/test data/audio/â.wav'
+        # 5. paths with special chars can be transformed into existing paths.
+        # Doesn't increment the filename. on_task_finished of gstreamer.py does that later.
+        # To reuse paths that were generated from {artist} tags with special characters
+        original_name = os.getcwd() + '/tests/test data/âuズdio/â.wav'
         self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
 
-        # 7. doesn't change %20 spaces in URIs into _20, but rather into _ and keeps the URI scheme
+        # 6. doesn't change %20 spaces in URIs into _20, but rather into _ and keeps the URI scheme
         original_name = 'foo://' + os.getcwd() + '/tests/test%20data/fo%20o.mp3'
         expected_name = 'foo://' + os.getcwd() + '/tests/test%20data/fo_o.mp3'
         self.assertEqual(self.g.safe_name(original_name), expected_name)
