@@ -257,7 +257,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
     def test_safe_name(self):
         # 1. path doesn't exist at all
-        self.assertEqual(self.g.safe_name('/b az/quズx/foo.mp3'), '/b_az/qux/foo.mp3')
+        self.assertEqual(self.g.safe_name('/b äz/quズx/foo.mp3'), '/b_az/qux/foo.mp3')
         self.assertEqual(self.g.safe_name('/baズz/qux'), '/baz/qux')
         self.assertEqual(self.g.safe_name('./ qux/foズo.mp3'), './_qux/foo.mp3')
         self.assertEqual(self.g.safe_name('./qズux/'), './qux/')
@@ -265,7 +265,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(self.g.safe_name('fooズ.mp3'), 'foo.mp3')
         self.assertEqual(self.g.safe_name('bla /foズo.mp3'), 'bla_/foo.mp3')
         self.assertEqual(self.g.safe_name('blズa/'), 'bla/')
-        self.assertEqual(self.g.safe_name('ズbla'), 'bla')
+        self.assertEqual(self.g.safe_name('ズblä'), 'bla')
 
         # 2. the outer dir exists
         self.assertEqual(self.g.safe_name('/home/qфux/foo.mp3'), '/home/qux/foo.mp3')
