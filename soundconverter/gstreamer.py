@@ -600,8 +600,8 @@ class Converter(Decoder):
         else:
             Pipeline.on_error(self, error)
             show_error(
-                '<b>%s</b>' % _('GStreamer Error:'),
-                '%s\n<i>(%s)</i>' % (error, self.sound_file.filename_for_display)
+                '%s' % _('GStreamer Error:'),
+                '%s\n(%s)' % (error, self.sound_file.filename_for_display)
             )
 
     def set_vorbis_quality(self, quality):
@@ -792,7 +792,13 @@ class ConverterQueue(TaskQueue):
         # safe mode. generate a filename until we find a free one
         p, e = os.path.splitext(newname)
         p = p.replace('%', '%%')
-        p = p + ' (%d)' + e
+
+        space = ' '
+        if (self.window.prefs.settings.get_boolean('replace-messy-chars')):
+            space = '_'
+
+        p = p + space + '(%d)' + e
+
         i = 1
         while vfs_exists(newname):
             newname = p % i
@@ -807,7 +813,7 @@ class ConverterQueue(TaskQueue):
             self.error_count += 1
             return
 
-        print('Converted %s' % beautify_uri(task.get_input_uri()))
+        print('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
 
     def finished(self):
         # This must be called with emit_async

@@ -794,6 +794,7 @@ class PreferencesDialog(GladeWindow):
             return generator.get_target_name(sound_file)
 
     def generate_temp_filename(self, soundfile):
+        """Return a modified filename of the soundfile for which no conflicting file exists"""
         folder, basename = os.path.split(soundfile.uri)
         if not self.settings.get_boolean('same-folder-as-input'):
             folder = self.settings.get_string('selected-folder')
