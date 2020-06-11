@@ -90,6 +90,7 @@ To build from the latest source, use::
 
     git clone https://github.com/kassoulet/soundconverter.git
     cd soundconverter
+    git checkout py3k
     ./autogen.sh
     make
     sudo make install
