@@ -244,6 +244,7 @@ for k in dir(options):
 
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
+# now that the settings are populated, the verbosity can be determined:
 update_verbosity()
 
 if not settings.get('quiet'):
