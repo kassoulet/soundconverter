@@ -107,7 +107,7 @@ class MsgAreaErrorDialog_:
 
     def show_exception(self, exception):
         self.show(
-            '<b>%s</b>' % GLib.markup_escape_text(exception.primary),
+            '<b>{}</b>'.format(GLib.markup_escape_text(exception.primary)),
             exception.secondary
         )
 
@@ -228,7 +228,7 @@ class FileList:
                 return
             info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
             if info == Gio.FileType.DIRECTORY:
-                logger.info('walking: \'%s\'' % uri)
+                logger.info('walking: \'{}\''.format(uri))
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
@@ -283,7 +283,7 @@ class FileList:
         self.typefinders.start()
 
         self.window.set_status('{}'.format(_('Adding Files…')))
-        logger.info('adding: %d files' % len(files))
+        logger.info('adding: {} files'.format(len(files)))
 
         # show progress and enable GTK main loop iterations
         # so that the ui stays responsive
@@ -324,7 +324,7 @@ class FileList:
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
-                logger.info('file already present: \'%s\'' % sound_file.uri)
+                logger.info('file already present: \'{}\''.format(sound_file.uri))
                 continue
             self.append_file(sound_file)
 
@@ -349,7 +349,7 @@ class FileList:
                 # there is a single picture in a folder of hundreds of sound files).
                 # Show an error if this skipped file has a soundfile extension,
                 # otherwise don't bother the user.
-                logger.info('%d of %d files were not added to the list' % (invalid_files, len(files)), len(files))
+                logger.info('{} of {} files were not added to the list'.format(invalid_files, len(files)), len(files))
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
@@ -368,7 +368,7 @@ class FileList:
         self.window.progressbarstatus.hide()
         self.files_to_add = None
         end_t = time.time()
-        debug('Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
+        debug('Added {} files in %.2fs (scan %.2fs, add %.2fs)'.format(
             len(files), end_t - start_t, scan_t - start_t, end_t-scan_t))
 
     def typefinder_queue_ended(self):
@@ -433,7 +433,7 @@ class GladeWindow(object):
         """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError('Widget \'%s\' not found' % attribute)
+            raise AttributeError('Widget \'{}\' not found'.format(attribute))
         self.__dict__[attribute] = widget  # cache result
         return widget
 
@@ -547,7 +547,7 @@ class PreferencesDialog(GladeWindow):
         # desactivate output if encoder plugin is not present
         widget = self.output_mime_type
         model = widget.get_model()
-        assert len(model) == len(widgets), 'model:%d widgets:%d' % (len(model), len(widgets))
+        assert len(model) == len(widgets), 'model:{} widgets:{}'.format(len(model), len(widgets))
 
         if not self.gstprofile.get_model().get_n_columns():
             self.gstprofile.set_model(Gtk.ListStore(str))
@@ -561,7 +561,7 @@ class PreferencesDialog(GladeWindow):
         stored_profile = self.settings.get_string('audio-profile')
         for i, profile in enumerate(audio_profiles_list):
             description, extension, pipeline = profile
-            self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
+            self.gstprofile.get_model().append(['{} (.{})'.format(description, extension)])
             if description == stored_profile:
                 self.gstprofile.set_active(i)
                 found_profile = True
@@ -714,9 +714,9 @@ class PreferencesDialog(GladeWindow):
 
         if bitrate:
             if aprox:
-                return '~%d kbps' % bitrate
+                return '~{} kbps'.format(bitrate)
             else:
-                return '%d kbps' % bitrate
+                return '{} kbps'.format(bitrate)
         else:
             return 'N/A'
 
@@ -751,7 +751,7 @@ class PreferencesDialog(GladeWindow):
 
         self.example.set_markup(s)
 
-        markup = '<small>%s</small>' % (_('Target bitrate: %s') % self.get_bitrate_from_settings())
+        markup = '<small>{}</small>'.format(_('Target bitrate: %s') % self.get_bitrate_from_settings())
         self.aprox_bitrate.set_markup(markup)
 
     def get_output_suffix(self):
@@ -1123,7 +1123,7 @@ class SoundConverterWindow(GladeWindow):
 
         # TODO: get all (gstreamer) knew files
         for files in filepattern:
-            self.store.append(['%s (%s)' % (files[0], files[1])])
+            self.store.append(['{} ({})'.format(files[0], files[1])])
 
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
@@ -1151,7 +1151,7 @@ class SoundConverterWindow(GladeWindow):
         # TODO: get all (gstreamer) knew files
         for files in filepattern:
             self.pattern.append(files[1])
-            self.addfile_store.append(['%s (%s)' % (files[0], files[1])])
+            self.addfile_store.append(['{} ({})'.format(files[0], files[1])])
 
         self.addfile_combo.set_active(0)
         self.addchooser.set_extra_widget(self.addfile_combo)
@@ -1180,7 +1180,7 @@ class SoundConverterWindow(GladeWindow):
         """Allow direct use of window widget."""
         widget = self.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError('Widget \'%s\' not found' % attribute)
+            raise AttributeError('Widget \'{}\' not found'.format(attribute))
         self.__dict__[attribute] = widget  # cache result
         return widget
 
@@ -1427,7 +1427,7 @@ class SoundConverterWindow(GladeWindow):
 
         if self.converter.paused:
             self.progressbar.set_text(_('Paused'))
-            self.widget.set_title('%s - %s' % (_('SoundConverter'), _('Paused')))
+            self.widget.set_title('{} - {}'.format(_('SoundConverter'), _('Paused')))
             return
 
         fraction = min(max(fraction, 0.0), 1.0)
@@ -1449,7 +1449,7 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
             self.progress_time = time.time()
-            self.widget.set_title('%s - %s' % (_('SoundConverter'), remaining))
+            self.widget.set_title('{} - {}'.format(_('SoundConverter'), remaining))
 
     def set_status(self, text=None, ready=True):
         if not text:

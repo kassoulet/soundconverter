@@ -87,7 +87,7 @@ def prepare_files_list(input_files):
                         subdirectories.append(subdir)
             else:
                 # else it didn't go into any directory. provide some information about how to
-                logger.info('%s is a directory. Use -r to go into all subdirectories.' % input_path)
+                logger.info('{} is a directory. Use -r to go into all subdirectories.'.format(input_path))
         # if not a file and not a dir it doesn't exist. skip
     parsed_files = list(map(filename_to_uri, parsed_files))
 
@@ -116,7 +116,7 @@ def cli_tags_main(input_files):
         if len(input_file.tags) > 0:
             logger.info(unquote_filename(input_file.filename))
             for key in sorted(input_file.tags):
-                logger.info(('     %s: %s' % (key, input_file.tags[key])))
+                logger.info(('     {}: {}'.format(key, input_file.tags[key])))
         else:
             logger.info(unquote_filename(input_file.filename))
             logger.info(('     no tags found'))

@@ -43,7 +43,7 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
 except (ImportError, ValueError) as error:
-    print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
+    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
 
 # remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
@@ -94,10 +94,10 @@ def check_mime_type(mime):
     }
     mime = types.get(mime, mime)
     if mime not in list(types.values()):
-        logger.info(('Cannot use "%s" mime type.' % mime))
+        logger.info('Cannot use "{}" mime type.'.format(mime))
         msg = 'Supported shortcuts and mime types:'
         for k, v in sorted(types.items()):
-            msg += ' %s %s' % (k, v)
+            msg += ' {} {}'.format(k, v)
         logger.info(msg)
         raise SystemExit
     return mime
@@ -180,7 +180,7 @@ def parse_command_line():
             'Set the output MIME type. The default '
             'is %s. Note that you will probably want to set the output '
             'suffix as well. Supported MIME types: %s'
-        ) % (
+        ).format(
             settings['cli-output-type'],
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
             'audio/x-wav (WAV)'
@@ -192,7 +192,7 @@ def parse_command_line():
             'Set the output filename suffix. '
             'The default is %s. Note that the suffix does not '
             'affect\n the output MIME type.'
-        ) % settings['cli-output-suffix']
+        ).format(settings['cli-output-suffix'])
     )
     batch_option_group.add_option(
         '-r', '--recursive', action="store_true", dest="recursive",
@@ -247,9 +247,9 @@ settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 update_verbosity()
 
 if not settings.get('quiet'):
-    logger.info(('%s %s' % (NAME, VERSION)))
+    logger.info(('{} {}'.format(NAME, VERSION)))
     if settings['forced-jobs']:
-        logger.info(('Using %d thread(s)' % settings['forced-jobs']))
+        logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
