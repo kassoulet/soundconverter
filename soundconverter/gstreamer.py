@@ -335,13 +335,13 @@ class TypeFinder(Pipeline):
         self.add_signal('typefind', 'have-type', self.have_type)
         self.silent = silent
 
-    def log(self, *args):
+    def log(self, msg):
         """Print a line to the console, but only when the TypeFinder itself is not set to silent.
 
         It can also be disabled with the -q command line option.
         """
         if not self.silent:
-            logger.info(*args)
+            logger.info(msg)
 
     def on_error(self, error):
         self.error = error

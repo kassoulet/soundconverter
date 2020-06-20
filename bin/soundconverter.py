@@ -132,7 +132,7 @@ def parse_command_line():
         '-c', '--check', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode': 'check'},
         help=_(
-            'log which files cannot be read by gstreamer. '
+            'Log which files cannot be read by gstreamer. '
             'Useful before converting. This will disable the GUI and '
             'run in batch mode, from the command line.'
         )
