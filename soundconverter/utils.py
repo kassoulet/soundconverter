@@ -57,22 +57,6 @@ def update_verbosity():
         logger.setLevel(logging.INFO)
 
 
-def log(*args):
-    """Display a message.
-    
-    Can be disabled with the 'quiet' option (-q)
-    """
-    logger.info(' '.join([str(msg) for msg in args]))
-
-
-def debug(*args):
-    """Display a debug message.
-
-    Only when activated by the 'debug' option
-    """
-    logger.debug(' '.join([str(msg) for msg in args]))
-
-
 def idle(func):
     def callback(*args, **kwargs):
         GLib.idle_add(func, *args, **kwargs)

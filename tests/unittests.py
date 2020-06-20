@@ -18,6 +18,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gst, Gio, Gtk, GLib
 Gst.init([None] + [a for a in sys.argv[1:] if '-gst' in a])
 
+import inspect
 from soundconverter.settings import settings
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.soundfile import SoundFile
@@ -30,6 +31,16 @@ from importlib.machinery import SourceFileLoader
 
 DEFAULT_SETTINGS = settings.copy()
 
+gio_settings = Gio.Settings('org.soundconverter')
+
+gio_settings_original_mapping = {key: gio_settings.get_value(key) for key in gio_settings.keys()}
+
+gio_settings.set_boolean('delete-original', False)
+
+for key in gio_settings_original_mapping:
+    gio_settings.set_value(key, gio_settings_original_mapping[key])
+
+print(gio_settings.get_value('delete-original'))
 
 # tests will control gtk main iterations
 Gtk.main = gtk_iteration
@@ -41,6 +52,7 @@ def launch(argv=[]):
     
     Make sure to run the `make` command first in your terminal.
     """
+    exit()
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
@@ -173,9 +185,6 @@ class Batch(unittest.TestCase):
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.m4a"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.m4a"))
         self.assertTrue(os.path.isfile("tests/tmp/a.m4a"))
-
-    def testGstArgs(self):
-        
 
 
 class GUI(unittest.TestCase):

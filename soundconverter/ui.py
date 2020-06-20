@@ -39,7 +39,7 @@ from soundconverter.soundfile import SoundFile
 from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import logger, debug, idle
+from soundconverter.utils import logger, idle
 from soundconverter.error import show_error, set_error_handler
 
 # Names of columns in the file list
@@ -190,7 +190,7 @@ class FileList:
 
     def found_type(self, sound_file, mime):
         ext = os.path.splitext(sound_file.filename)[1]
-        debug('mime:', ext, mime)
+        logger.debug('mime: {} {}'.format(ext, mime))
         self.good_files.append(sound_file.uri)
 
     @idle
@@ -368,8 +368,9 @@ class FileList:
         self.window.progressbarstatus.hide()
         self.files_to_add = None
         end_t = time.time()
-        debug('Added {} files in %.2fs (scan %.2fs, add %.2fs)'.format(
-            len(files), end_t - start_t, scan_t - start_t, end_t-scan_t))
+        logger.debug('Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
+            len(files), end_t - start_t, scan_t - start_t, end_t-scan_t)
+        )
 
     def typefinder_queue_ended(self):
         if not self.waiting_files:
@@ -1185,7 +1186,7 @@ class SoundConverterWindow(GladeWindow):
         return widget
 
     def close(self, *args):
-        debug('closing…')
+        logger.debug('closing…')
         self.filelist.abort()
         self.converter.abort()
         self.widget.hide()
