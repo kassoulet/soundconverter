@@ -63,7 +63,7 @@ Testing
 
 To start unittests, use::
 
-    make test
+    make && make test
 
 Copyright and acknowledgements
 ------------------------------
