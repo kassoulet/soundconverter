@@ -22,7 +22,7 @@
 import time
 from soundconverter.task import BackgroundTask
 from soundconverter.settings import settings
-from soundconverter.utils import log
+from soundconverter.utils import logger
 
 
 class TaskQueue(BackgroundTask):
@@ -83,8 +83,8 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """BackgroundTask setup callback."""
-        log('Queue start: %d tasks, %d thread(s).' % (
-            len(self.waiting_tasks) + len(self.running_tasks), self.jobs))
+        num_tasks = len(self.waiting_tasks) + len(self.running_tasks)
+        logger.info('Queue start: %d tasks, %d thread(s).' % (num_tasks, self.jobs))
         self.count = 0
         self.paused = False
         self.finished_tasks = 0
@@ -93,7 +93,7 @@ class TaskQueue(BackgroundTask):
 
     def finished(self):
         """BackgroundTask finish callback."""
-        log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time, self.count))
+        logger.info('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time, self.count))
         self.queue_ended()
         self.count = 0
         self.start_time = None

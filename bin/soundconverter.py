@@ -82,7 +82,7 @@ from soundconverter.fileoperations import vfs_encode_filename
 from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
-from soundconverter.utils import log, update_verbosity
+from soundconverter.utils import logger, update_verbosity
 
 # command line argument parsing, launch-mode
 
@@ -94,11 +94,11 @@ def check_mime_type(mime):
     }
     mime = types.get(mime, mime)
     if mime not in list(types.values()):
-        log(('Cannot use "%s" mime type.' % mime))
+        logger.info(('Cannot use "%s" mime type.' % mime))
         msg = 'Supported shortcuts and mime types:'
         for k, v in sorted(types.items()):
             msg += ' %s %s' % (k, v)
-        log(msg)
+        logger.info(msg)
         raise SystemExit
     return mime
 
@@ -247,15 +247,15 @@ settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 update_verbosity()
 
 if not settings.get('quiet'):
-    log(('%s %s' % (NAME, VERSION)))
+    logger.info(('%s %s' % (NAME, VERSION)))
     if settings['forced-jobs']:
-        log(('Using %d thread(s)' % settings['forced-jobs']))
+        logger.info(('Using %d thread(s)' % settings['forced-jobs']))
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
-        log('nothing to do…')
+        logger.info('nothing to do…')
     if settings['mode'] == 'tags':
         cli_tags_main(files)
     elif settings['mode'] == 'batch':

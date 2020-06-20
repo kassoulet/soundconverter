@@ -39,7 +39,7 @@ from soundconverter.soundfile import SoundFile
 from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import log, debug, idle
+from soundconverter.utils import logger, debug, idle
 from soundconverter.error import show_error, set_error_handler
 
 # Names of columns in the file list
@@ -228,7 +228,7 @@ class FileList:
                 return
             info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
             if info == Gio.FileType.DIRECTORY:
-                log('walking: \'%s\'' % uri)
+                logger.info('walking: \'%s\'' % uri)
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
@@ -264,7 +264,7 @@ class FileList:
             base += '/'
 
         scan_t = time.time()
-        log('analysing file integrity')
+        logger.info('analysing file integrity')
         self.files_to_add = len(files)
 
         # self.good_files will be populated
@@ -283,7 +283,7 @@ class FileList:
         self.typefinders.start()
 
         self.window.set_status('{}'.format(_('Adding Files…')))
-        log('adding: %d files' % len(files))
+        logger.info('adding: %d files' % len(files))
 
         # show progress and enable GTK main loop iterations
         # so that the ui stays responsive
@@ -324,7 +324,7 @@ class FileList:
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
-                log('file already present: \'%s\'' % sound_file.uri)
+                logger.info('file already present: \'%s\'' % sound_file.uri)
                 continue
             self.append_file(sound_file)
 
@@ -349,7 +349,7 @@ class FileList:
                 # there is a single picture in a folder of hundreds of sound files).
                 # Show an error if this skipped file has a soundfile extension,
                 # otherwise don't bother the user.
-                log(invalid_files, 'of', len(files), 'files were not added to the list')
+                logger.info('%d of %d files were not added to the list' % (invalid_files, len(files)), len(files))
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
@@ -567,7 +567,7 @@ class PreferencesDialog(GladeWindow):
                 found_profile = True
         if not found_profile and stored_profile:
             # reset default output
-            log('Cannot find audio profile "%s", resetting to default output.'
+            logger.info('Cannot find audio profile "%s", resetting to default output.'
                 % stored_profile)
             self.settings.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
