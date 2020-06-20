@@ -468,7 +468,7 @@ class PreferencesDialog(GladeWindow):
     ]
 
     def __init__(self, builder, parent):
-        self.settings = Gio.Settings('org.soundconverter')
+        self.settings = Gio.Settings(schema='org.soundconverter')
         GladeWindow.__init__(self, builder)
 
         self.dialog = builder.get_object('prefsdialog')

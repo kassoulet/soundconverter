@@ -31,20 +31,12 @@ from importlib.machinery import SourceFileLoader
 
 DEFAULT_SETTINGS = settings.copy()
 
-gio_settings = Gio.Settings('org.soundconverter')
-
-gio_settings_original_mapping = {key: gio_settings.get_value(key) for key in gio_settings.keys()}
-
-gio_settings.set_boolean('delete-original', False)
-
-for key in gio_settings_original_mapping:
-    gio_settings.set_value(key, gio_settings_original_mapping[key])
-
-print(gio_settings.get_value('delete-original'))
-
 # tests will control gtk main iterations
 Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
+
+gio_settings = Gio.Settings(schema='org.soundconverter')
+gio_settings_original_mapping = {key: gio_settings.get_value(key) for key in gio_settings.keys()}
 
 
 def launch(argv=[]):
@@ -52,7 +44,6 @@ def launch(argv=[]):
     
     Make sure to run the `make` command first in your terminal.
     """
-    exit()
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
@@ -194,6 +185,14 @@ class GUI(unittest.TestCase):
             shutil.rmtree("tests/tmp")
         os.makedirs("tests/tmp", exist_ok=True)
 
+    @classmethod
+    def tearDownClass(cls):
+        """Restore the settings that can be configured over the UI to the users specified values."""
+        for key in gio_settings_original_mapping:
+            gio_settings.set_value(key, gio_settings_original_mapping[key])
+        # apparently set_value needs some time to get applied
+        time.sleep(0.1)
+
     def tearDown(self):
         win[0].close()
         reset_settings()
@@ -217,6 +216,7 @@ class GUI(unittest.TestCase):
         window.prefs.settings.set_string('selected-folder', os.path.abspath("tests/tmp"))
         window.prefs.settings.set_int('name-pattern-index', 0)
         window.prefs.settings.set_boolean('replace-messy-chars', True)
+        window.prefs.settings.set_boolean('delete-original', False)
 
         # start conversion
         window.on_convert_button_clicked()
