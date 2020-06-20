@@ -116,10 +116,10 @@ def cli_tags_main(input_files):
         if len(input_file.tags) > 0:
             logger.info(unquote_filename(input_file.filename))
             for key in sorted(input_file.tags):
-                logger.info(('     {}: {}'.format(key, input_file.tags[key])))
+                logger.info(('    {}: {}'.format(key, input_file.tags[key])))
         else:
             logger.info(unquote_filename(input_file.filename))
-            logger.info(('     no tags found'))
+            logger.info(('    no tags found'))
 
 
 class CliProgress:
