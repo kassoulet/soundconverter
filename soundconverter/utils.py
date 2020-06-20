@@ -35,8 +35,9 @@ class Formatter(logging.Formatter):
             color = {
                 logging.WARNING: 33,
                 logging.ERROR: 31,
+                logging.FATAL: 31,
                 logging.DEBUG: 36
-            }[record.levelno]
+            }.get(record.levelno, 0)
             self._style._fmt = '\033[{}m%(levelname)s\033[0m: %(msg)s'.format(color)
         return super().format(record)
 
