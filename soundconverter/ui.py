@@ -368,8 +368,10 @@ class FileList:
         self.window.progressbarstatus.hide()
         self.files_to_add = None
         end_t = time.time()
-        logger.debug('Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
-            len(files), end_t - start_t, scan_t - start_t, end_t-scan_t)
+        logger.debug(
+            'Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
+                len(files), end_t - start_t, scan_t - start_t, end_t - scan_t
+            )
         )
 
     def typefinder_queue_ended(self):

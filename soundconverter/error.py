@@ -26,7 +26,8 @@ import sys
 
 class ErrorPrinter:
     def show_error(self, primary, secondary):
-        logger.error(_('%s\n%s\n') % (primary, secondary))
+        logger.error(_('{}').format(primary))
+        logger.error(_('{}').format(secondary))
         sys.exit(1)
 
 
