@@ -96,7 +96,7 @@ except (ImportError, ValueError):
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not Gst.ElementFactory.find(element):
-        print(("required gstreamer element \'%s\' not found." % element))
+        log(("required gstreamer element \'%s\' not found." % element))
         sys.exit(1)
 
 gstreamer_source = 'giosrc'
@@ -129,13 +129,13 @@ for encoder, name, function in encoders:
     if have_it:
         available_elements.add(encoder)
     else:
-        print('  %s gstreamer element not found' % encoder)
+        log('  %s gstreamer element not found' % encoder)
     function += '_' + name
     functions[function] = functions.get(function) or have_it
 
 for function in sorted(functions):
     if not functions[function]:
-        print('  disabling %s output.' % function.split('_')[1])
+        log('  disabling %s output.' % function.split('_')[1])
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
@@ -230,7 +230,8 @@ class Pipeline(BackgroundTask):
         import threading
 
         t = message.type
-        # print('ONMESSAGE', t, threading.currentThread())
+        debug('received message of type "%s"' % t)
+        # log('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self.eos = True
@@ -263,10 +264,12 @@ class Pipeline(BackgroundTask):
         return True
 
     def play(self):
+        """Execute the gstreamer command"""
         if not self.parsed:
             command = ' ! '.join(self.command)
             debug('launching: \'%s\'' % command)
             try:
+                # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
                 assert not self.connected_signals
@@ -405,7 +408,7 @@ class Decoder(Pipeline):
 
     def found_tag(self, decoder, something, taglist):
         """Called when the decoder reads a tag."""
-        debug('found_tags:', self.sound_file.filename_for_display)
+        debug('found_tag:', self.sound_file.filename_for_display)
         taglist.foreach(self.append_tag, None)
 
     def append_tag(self, taglist, tag, unused_udata):
@@ -489,7 +492,7 @@ class TagReader(Decoder):
         self.found_tag_hook = found_tag_hook
 
     def on_state_changed(self, bus, message):
-        prev, new, pending = message.parse_state_changed()
+        new = message.parse_state_changed()
         if new == Gst.State.PLAYING and not self.tagread:
             self.tagread = True
             debug('TagReading done…')
@@ -777,7 +780,7 @@ class ConverterQueue(TaskQueue):
             if vfs_exists(task.output_filename):
                 vfs_unlink(task.output_filename)
             self.errors.append(task.error)
-            print('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
+            log('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
             self.error_count += 1
             return
 
@@ -787,6 +790,7 @@ class ConverterQueue(TaskQueue):
 
         # rename temporary file
         newname = self.window.prefs.generate_filename(task.sound_file)
+        log('newname', newname)
         debug(beautify_uri(task.output_filename), '->', beautify_uri(newname))
 
         # safe mode. generate a filename until we find a free one
@@ -808,12 +812,12 @@ class ConverterQueue(TaskQueue):
             vfs_rename(task.output_filename, newname)
         except Exception:
             self.errors.append(task.error)
-            print('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
-            print(traceback.print_exc())
+            log('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
+            log(traceback.print_exc())
             self.error_count += 1
             return
 
-        print('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
+        log('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
 
     def finished(self):
         # This must be called with emit_async

@@ -115,9 +115,9 @@ def cli_tags_main(input_files):
             context.iteration(True)
 
         if len(input_file.tags) > 0:
-            print(unquote_filename(input_file.filename))
+            log(unquote_filename(input_file.filename))
             for key in sorted(input_file.tags):
-                print(('     %s: %s' % (key, input_file.tags[key])))
+                log(('     %s: %s' % (key, input_file.tags[key])))
         else:
             log(unquote_filename(input_file.filename))
             log(('     no tags found'))
@@ -314,7 +314,7 @@ class CLI_Check():
 
             for input_file in input_files:
                 if input_file not in self.good_files:
-                    print(unquote_filename(beautify_uri(input_file)))
+                    log(unquote_filename(beautify_uri(input_file)))
 
     def found_type(self, sound_file, mime):
         self.good_files.append(sound_file.uri)

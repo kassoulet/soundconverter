@@ -34,7 +34,7 @@ from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
 from soundconverter.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
 from soundconverter.gstreamer import ConverterQueue, available_elements, \
-    TypeFinder, TagReader, audio_profiles_list, audio_profiles_dict
+    TypeFinder, audio_profiles_list, audio_profiles_dict
 from soundconverter.soundfile import SoundFile
 from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
 from soundconverter.namegenerator import TargetNameGenerator
