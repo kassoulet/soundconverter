@@ -16,7 +16,7 @@ import gi
 gi.require_version('Gst', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gst, Gio, Gtk, GLib
-Gst.init([a for a in sys.argv[1:] if '-gst' in a])
+Gst.init([None] + [a for a in sys.argv[1:] if '-gst' in a])
 
 from soundconverter.settings import settings
 from soundconverter.namegenerator import TargetNameGenerator
@@ -173,6 +173,9 @@ class Batch(unittest.TestCase):
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.m4a"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.m4a"))
         self.assertTrue(os.path.isfile("tests/tmp/a.m4a"))
+
+    def testGstArgs(self):
+        
 
 
 class GUI(unittest.TestCase):

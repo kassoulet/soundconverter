@@ -23,6 +23,38 @@
 
 from .settings import settings
 from gi.repository import GLib
+import logging
+
+
+class Formatter(logging.Formatter):
+    def format(self, record):
+        if record.levelno == logging.INFO:
+            self._style._fmt = '%(msg)s'
+        else:
+            # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit for those numbers
+            color = {
+                logging.WARNING: 33,
+                logging.ERROR: 31,
+                logging.DEBUG: 36
+            }[record.levelno]
+            self._style._fmt = '\033[{}m%(levelname)s\033[0m: %(msg)s'.format(color)
+        return super().format(record)
+
+
+logger = logging.getLogger()
+handler = logging.StreamHandler()
+handler.setFormatter(Formatter())
+logger.addHandler(handler)
+
+
+def update_verbosity():
+    """Set the logging verbosity according to the settings object."""
+    if settings['debug']:
+        logger.setLevel(logging.DEBUG)
+    elif settings['quiet']:
+        logger.setLevel(logging.WARNING)
+    else:
+        logger.setLevel(logging.INFO)
 
 
 def log(*args):
@@ -30,8 +62,7 @@ def log(*args):
     
     Can be disabled with the 'quiet' option (-q)
     """
-    if not settings['quiet']:
-        print((' '.join([str(msg) for msg in args])))
+    logger.info(' '.join([str(msg) for msg in args]))
 
 
 def debug(*args):
@@ -39,8 +70,7 @@ def debug(*args):
 
     Only when activated by the 'debug' option
     """
-    if settings['debug']:
-        print((' '.join([str(msg) for msg in args])))
+    logger.debug(' '.join([str(msg) for msg in args]))
 
 
 def idle(func):

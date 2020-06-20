@@ -27,6 +27,44 @@ Wave        yes
 MP3         yes
 ==========  ==========
 
+Building and installation
+-------------------------
+
+To build and run from the latest source, use::
+
+    git clone https://github.com/kassoulet/soundconverter.git
+    cd soundconverter
+    git checkout py3k
+    ./autogen.sh
+    make
+    sudo make install
+    soundconverter
+
+It is also available in the arch repositories::
+
+    sudo pacman -S soundconverter
+
+As well as the debian repositories::
+
+    sudo apt install soundconverter
+
+Help
+----
+
+For command line args, see
+
+    sounconverter --help
+    gst-launch-1.0 --help-gst
+
+and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
+
+Testing
+-------
+
+To start unittests, use::
+
+    make test
+
 Copyright and acknowledgements
 ------------------------------
 
@@ -82,31 +120,4 @@ Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
-Building and installation
--------------------------
-
-To build from the latest source, use::
-
-    git clone https://github.com/kassoulet/soundconverter.git
-    cd soundconverter
-    git checkout py3k
-    ./autogen.sh
-    make
-    sudo make install
-
-It is also available in the arch repositories::
-
-    sudo pacman -S soundconverter
-
-As well as the debian repositories::
-
-    sudo apt install soundconverter
-
-Testing
--------
-
-To start unittests, use::
-
-    make test
 

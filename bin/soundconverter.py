@@ -45,9 +45,11 @@ try:
 except (ImportError, ValueError) as error:
     print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
     sys.exit(1)
-# remove gstreamer arguments so only gstreamer sees them.
+
+# remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
+# and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
-Gst.init([a for a in sys.argv[1:] if a.startswith('--gst-')])
+Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 try:
     locale.setlocale(locale.LC_ALL, '')
@@ -57,7 +59,7 @@ try:
     gettext.install(PACKAGE, localedir='@datadir@/locale')
     # rom gettext import gettext as _
 except locale.Error:
-    print('  cannot use system locale.')
+    print('cannot use system locale.')
     locale.setlocale(locale.LC_ALL, 'C')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE, localedir='@datadir@/locale')
@@ -80,6 +82,7 @@ from soundconverter.fileoperations import vfs_encode_filename
 from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
+from soundconverter.utils import log, update_verbosity
 
 # command line argument parsing, launch-mode
 
@@ -91,11 +94,11 @@ def check_mime_type(mime):
     }
     mime = types.get(mime, mime)
     if mime not in list(types.values()):
-        print(('Cannot use "%s" mime type.' % mime))
+        log(('Cannot use "%s" mime type.' % mime))
         msg = 'Supported shortcuts and mime types:'
         for k, v in sorted(types.items()):
             msg += ' %s %s' % (k, v)
-        print(msg)
+        log(msg)
         raise SystemExit
     return mime
 
@@ -129,7 +132,7 @@ def parse_command_line():
         '-c', '--check', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode': 'check'},
         help=_(
-            'Print which files cannot be read by gstreamer. '
+            'log which files cannot be read by gstreamer. '
             'Useful before converting. This will disable the GUI and '
             'run in batch mode, from the command line.'
         )
@@ -241,16 +244,18 @@ for k in dir(options):
 
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
+update_verbosity()
+
 if not settings.get('quiet'):
-    print(('%s %s' % (NAME, VERSION)))
+    log(('%s %s' % (NAME, VERSION)))
     if settings['forced-jobs']:
-        print(('Using %d thread(s)' % settings['forced-jobs']))
+        log(('Using %d thread(s)' % settings['forced-jobs']))
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
-        print('nothing to do…')
+        log('nothing to do…')
     if settings['mode'] == 'tags':
         cli_tags_main(files)
     elif settings['mode'] == 'batch':
