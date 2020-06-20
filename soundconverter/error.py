@@ -20,16 +20,13 @@
 # USA
 
 from gettext import gettext as _
+from soundconverter.utils import logger
 import sys
 
 
 class ErrorPrinter:
-
     def show_error(self, primary, secondary):
-        try:
-            sys.stderr.write(_('\n\nError: %s\n%s\n') % (primary, secondary))
-        except Exception:
-            pass
+        logger.error(_('%s\n%s\n') % (primary, secondary))
         sys.exit(1)
 
 
@@ -37,6 +34,7 @@ error_handler = ErrorPrinter()
 
 
 def set_error_handler(handler):
+    """Overwrite the error handler to, for example, show errors in a gtk dialog instead of the console"""
     global error_handler
     error_handler = handler
 

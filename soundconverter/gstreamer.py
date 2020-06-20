@@ -34,7 +34,7 @@ from soundconverter.fileoperations import vfs_exists
 from soundconverter.fileoperations import beautify_uri
 from soundconverter.task import BackgroundTask
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import debug, log, idle
+from soundconverter.utils import logger, idle
 from soundconverter.settings import mime_whitelist, filename_blacklist
 from soundconverter.error import show_error
 
@@ -96,7 +96,7 @@ except (ImportError, ValueError):
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not Gst.ElementFactory.find(element):
-        log(("required gstreamer element \'%s\' not found." % element))
+        logger.info(("required gstreamer element \'%s\' not found." % element))
         sys.exit(1)
 
 gstreamer_source = 'giosrc'
@@ -129,13 +129,13 @@ for encoder, name, function in encoders:
     if have_it:
         available_elements.add(encoder)
     else:
-        log('  %s gstreamer element not found' % encoder)
+        logger.info('  %s gstreamer element not found' % encoder)
     function += '_' + name
     functions[function] = functions.get(function) or have_it
 
 for function in sorted(functions):
     if not functions[function]:
-        log('  disabling %s output.' % function.split('_')[1])
+        logger.info('  disabling %s output.' % function.split('_')[1])
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
@@ -182,7 +182,7 @@ class Pipeline(BackgroundTask):
 
     def toggle_pause(self, paused):
         if not self.pipeline:
-            debug('toggle_pause(): pipeline is None !')
+            logger.debug('toggle_pause(): pipeline is None !')
             return
 
         if paused:
@@ -219,7 +219,7 @@ class Pipeline(BackgroundTask):
 
     def on_error(self, error):
         self.error = error
-        log('error: %s (%s)' % (error, ' ! '.join(self.command)))
+        logger.error('%s (%s)' % (error, ' ! '.join(self.command)))
 
     def on_message_(self, bus, message):
         self.on_message_(bus, message)
@@ -230,8 +230,7 @@ class Pipeline(BackgroundTask):
         import threading
 
         t = message.type
-        debug('received message of type "%s"' % t)
-        # log('ONMESSAGE', t, threading.currentThread())
+        logger.debug('received message of type "%s"' % t)
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self.eos = True
@@ -241,7 +240,7 @@ class Pipeline(BackgroundTask):
             """XXX elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
-            debug('missing plugin:', detail.split('|')[3], self.sound_file.uri)
+            logger.debug('missing plugin: %s %s' % (detail.split('|')[3], self.sound_file.uri))
             self.pipeline.set_state(Gst.State.NULL)
             if Gst.pbutils.install_plugins_installation_in_progress():
                 while Gst.pbutils.install_plugins_installation_in_progress():
@@ -250,7 +249,7 @@ class Pipeline(BackgroundTask):
                 return
             if user_canceled_codec_installation:
                 self.error = 'Plugin installation cancelled'
-                debug(self.error)
+                logger.debug(self.error)
                 self.done()
                 return
             ctx = Gst.pbutils.InstallPluginsContext()
@@ -267,7 +266,7 @@ class Pipeline(BackgroundTask):
         """Execute the gstreamer command"""
         if not self.parsed:
             command = ' ! '.join(self.command)
-            debug('launching: \'%s\'' % command)
+            logger.debug('launching: \'%s\'' % command)
             try:
                 # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
                 self.pipeline = Gst.parse_launch(command)
@@ -298,7 +297,7 @@ class Pipeline(BackgroundTask):
 
     def stop_pipeline(self):
         if not self.pipeline:
-            debug('pipeline already stopped!')
+            logger.debug('pipeline already stopped!')
             return
         self.pipeline.set_state(Gst.State.NULL)
         bus = self.pipeline.get_bus()
@@ -341,7 +340,7 @@ class TypeFinder(Pipeline):
         It can also be disabled with the -q command line option.
         """
         if not self.silent:
-            log(*args)
+            logger.info(*args)
 
     def on_error(self, error):
         self.error = error
@@ -357,7 +356,7 @@ class TypeFinder(Pipeline):
 
     def have_type(self, typefind, probability, caps):
         mime_type = caps.to_string()
-        debug('have_type:', mime_type, self.sound_file.filename_for_display)
+        logger.debug('have_type: %s %s' % (mime_type, self.sound_file.filename_for_display))
         self.sound_file.mime_type = None
         for t in mime_whitelist:
             if t in mime_type:
@@ -408,7 +407,7 @@ class Decoder(Pipeline):
 
     def found_tag(self, decoder, something, taglist):
         """Called when the decoder reads a tag."""
-        debug('found_tag:', self.sound_file.filename_for_display)
+        logger.debug('found_tag: %s' % self.sound_file.filename_for_display)
         taglist.foreach(self.append_tag, None)
 
     def append_tag(self, taglist, tag, unused_udata):
@@ -448,7 +447,7 @@ class Decoder(Pipeline):
             tags['year'] = dt.get_year()
             tags['date'] = dt.to_iso8601_string()[:10]
 
-        debug('   ', tags)
+        logger.debug(tags)
         self.sound_file.tags.update(tags)
 
     def pad_added(self, decoder, pad):
@@ -495,7 +494,7 @@ class TagReader(Decoder):
         new = message.parse_state_changed()
         if new == Gst.State.PLAYING and not self.tagread:
             self.tagread = True
-            debug('TagReading done…')
+            logger.debug('TagReading done…')
             self.done()
 
     def finished(self):
@@ -564,7 +563,7 @@ class Converter(Decoder):
         gfile = Gio.file_parse_name(self.output_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
-            log('Creating folder: \'%s\'' % beautify_uri(dirname.get_uri()))
+            logger.info('Creating folder: \'%s\'' % beautify_uri(dirname.get_uri()))
             if not dirname.make_directory_with_parents():
                 show_error('Error', _("Cannot create \'%s\' folder.") % beautify_uri(dirname))
                 return
@@ -572,7 +571,7 @@ class Converter(Decoder):
         self.add_command('%s location="%s"' % (
             gstreamer_sink, encode_filename(self.output_filename)))
         if self.overwrite and vfs_exists(self.output_filename):
-            log('overwriting \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('overwriting \'%s\'' % beautify_uri(self.output_filename))
             vfs_unlink(self.output_filename)
 
     def aborted(self):
@@ -580,7 +579,7 @@ class Converter(Decoder):
         try:
             vfs_unlink(self.output_filename)
         except Exception:
-            log('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
         return
 
     def finished(self):
@@ -589,17 +588,17 @@ class Converter(Decoder):
         # Copy file permissions
         if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
                 Gio.file_parse_name(self.output_filename), Gio.FileCopyFlags.NONE, None):
-            log('Cannot set permission on \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('Cannot set permission on \'%s\'' % beautify_uri(self.output_filename))
 
         if self.delete_original and self.processing and not self.error:
-            log('deleting: \'%s\'' % self.sound_file.uri)
+            logger.info('deleting: \'%s\'' % self.sound_file.uri)
             if not vfs_unlink(self.sound_file.uri):
-                log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
+                logger.info('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
 
     def on_error(self, error):
         if self.ignore_errors:
             self.error = error
-            log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+            logger.info('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
         else:
             Pipeline.on_error(self, error)
             show_error(
@@ -776,11 +775,11 @@ class ConverterQueue(TaskQueue):
         task.sound_file.progress = 1.0
 
         if task.error:
-            debug('error in task, skipping rename:', task.output_filename)
+            logger.debug('error in task, skipping rename: %s' % task.output_filename)
             if vfs_exists(task.output_filename):
                 vfs_unlink(task.output_filename)
             self.errors.append(task.error)
-            log('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
+            logger.info('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
             self.error_count += 1
             return
 
@@ -790,8 +789,8 @@ class ConverterQueue(TaskQueue):
 
         # rename temporary file
         newname = self.window.prefs.generate_filename(task.sound_file)
-        log('newname', newname)
-        debug(beautify_uri(task.output_filename), '->', beautify_uri(newname))
+        logger.info('newname %s' % newname)
+        logger.debug('%s -> %s' % (beautify_uri(task.output_filename), beautify_uri(newname)))
 
         # safe mode. generate a filename until we find a free one
         p, e = os.path.splitext(newname)
@@ -812,12 +811,12 @@ class ConverterQueue(TaskQueue):
             vfs_rename(task.output_filename, newname)
         except Exception:
             self.errors.append(task.error)
-            log('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
-            log(traceback.print_exc())
+            logger.info('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
+            logger.info(traceback.print_exc())
             self.error_count += 1
             return
 
-        log('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
+        logger.info('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
 
     def finished(self):
         # This must be called with emit_async
