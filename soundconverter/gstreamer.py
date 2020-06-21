@@ -228,7 +228,6 @@ class Pipeline(BackgroundTask):
         import threading
 
         t = message.type
-        logger.debug('received message of type "{}"'.format(t))
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self.eos = True
