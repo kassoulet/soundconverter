@@ -21,78 +21,20 @@
 
 from gettext import gettext as _
 from multiprocessing import cpu_count
-
-# add here any format you want to be read
-mime_whitelist = (
-    'audio/',
-    'video/',
-    'application/ogg',
-    'application/x-id3',
-    'application/x-ape',
-    'application/vnd.rn-realmedia',
-    'application/x-pn-realaudio',
-    'application/x-shockwave-flash',
-    'application/x-3gp',
-)
-
-filename_blacklist = (
-    '*.iso',
-)
-
-# custom filename patterns
-english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
-
-# traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext')
-
-patterns_formats = (
-    '%(artist)s',
-    '%(album)s',
-    '%(album-artist)s',
-    '%(title)s',
-    '%(track-number)02d',
-    '%(track-count)02d',
-    '%(genre)s',
-    '%(date)s',
-    '%(year)s',
-    '%(timestamp)s',
-    '%(album-disc-number)d',
-    '%(album-disc-count)d',
-    '%(.target-ext)s',
-)
-
-# add english and locale
-custom_patterns = english_patterns + ' ' + locale_patterns
-# convert to list
-custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
-# and finally to dict, thus removing doubles
-custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
-
-locale_patterns_dict = dict(list(zip(
-    [p.lower() for p in english_patterns.split()],
-    ['{%s}' % p for p in locale_patterns.split()])))
-
-# add here the formats not containing tags
-# not to bother searching in them
-tag_blacklist = (
-    'audio/x-wav',
-)
+from gi.repository import Gio
 
 
-# Name and pattern for CustomFileChooser
-filepattern = (
-    (_('All files'), '*.*'),
-    ('MP3',          '*.mp3'),
-    ('Ogg Vorbis',   '*.ogg;*.oga'),
-    ('iTunes AAC ',  '*.m4a'),
-    ('Windows WAV',  '*.wav'),
-    ('AAC',          '*.aac'),
-    ('FLAC',         '*.flac'),
-    ('AC3',          '*.ac3')
-)
+"""Holds all the settings for both cli arguments as well as Gio settings (as configured in the UI)."""
 
 
-# application-wide settings
+# those settings may be remembered across restarts of soundconverter by default by using dconf.
+# Use get_gio_settings instead of importing this directly, because this object changes in tests
+_gio_settings = Gio.Settings(schema='org.soundconverter')
+
+
+# application-wide settings that need to be specified each time soundconverter starts over the command line.
+# This also contains all the batch mode settings.
+# May be populated with extra values that are derived from _gio_settings
 settings = {
     'mode': 'gui',
     'quiet': False,
@@ -105,47 +47,18 @@ settings = {
 }
 
 
-# I moved this here so that both batch and ui have
-# access to the numbers of the quality settings.
-# Also to reduce redundancy of the hard-coded
-# quality tuples.
-def get_quality(ftype, value, mode='vbr', reverse=False):
-    """Map an integer between 0 and 6 to a proper quality value depending on target file type.
-
-    ftype of 'vorbis', 'aac', 'opus' or 'mp3',
-    value between 0 and 5,
-    mode one of 'cbr', 'abr' and 'vbr' for mp3
-
-    reverse is by default False. If True, this
-    function returns the original value-parameter
-    given a quality setting. Value becomes the
-    input for the quality then.
+def set_gio_settings(settings):
+    """To overwrite the default Gio.Settings object to for example use a memory backend instead.
+    
+    Parameters
+    ----------
+    settings : Gio.Settings
+        You can get this by using for example Gio.new_with_backend or Gio.Settings
     """
-    quality = {
-        'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-        'aac': (64, 96, 128, 192, 256, 320),
-        'opus': (48, 64, 96, 128, 160, 192),
-        'mp3': {
-            'cbr': (64, 96, 128, 192, 256, 320),
-            'abr': (64, 96, 128, 192, 256, 320),
-            'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
-        }
-    }
+    global _gio_settings
+    _gio_settings = settings
 
-    # get 6-tuple of qualities
-    qualities = None
-    if ftype == 'mp3':
-        qualities = quality[ftype][mode]
-    else:
-        qualities = quality[ftype]
 
-    # return depending on function parameters
-    if reverse:
-        if type(value) == float:
-            # floats are inaccurate, search for close value
-            for i, q in enumerate(qualities):
-                if abs(value - q) < 0.01:
-                    return i
-        return qualities.index(value)
-    else:
-        return qualities[value]
+def get_gio_settings():
+    """Return the current Gio.Settings object"""
+    return _gio_settings

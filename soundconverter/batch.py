@@ -28,7 +28,8 @@ import time
 from gi.repository import Gtk, GLib
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
-from soundconverter.settings import settings, get_quality
+from soundconverter.settings import settings
+from soundconverter.formats import get_quality
 from soundconverter.gstreamer import TagReader, TypeFinder
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue

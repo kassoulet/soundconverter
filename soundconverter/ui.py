@@ -36,7 +36,9 @@ from soundconverter.fileoperations import filename_to_uri, beautify_uri, unquote
 from soundconverter.gstreamer import ConverterQueue, available_elements, \
     TypeFinder, audio_profiles_list, audio_profiles_dict
 from soundconverter.soundfile import SoundFile
-from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
+from soundconverter.settings import settings, get_gio_settings
+from soundconverter.formats import get_quality
+from soundconverter.formats import locale_patterns_dict, custom_patterns, filepattern
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.utils import logger, idle
@@ -470,7 +472,7 @@ class PreferencesDialog(GladeWindow):
     ]
 
     def __init__(self, builder, parent):
-        self.settings = Gio.Settings(schema='org.soundconverter')
+        self.settings = get_gio_settings()
         GladeWindow.__init__(self, builder)
 
         self.dialog = builder.get_object('prefsdialog')
@@ -669,7 +671,7 @@ class PreferencesDialog(GladeWindow):
 
         self.force_mono.set_active(self.settings.get_boolean('force-mono'))
 
-        self.jobs.set_active(self.settings.get_int('limit-jobs'))
+        self.jobs.set_active(self.settings.get_boolean('limit-jobs'))
         self.jobs_spinbutton.set_value(self.settings.get_int('number-of-jobs'))
 
         self.update_jobs()
@@ -827,7 +829,7 @@ class PreferencesDialog(GladeWindow):
             self.settings.get_string('output-mime-type') == 'audio/x-vorbis')
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
-            self.settings.get_int('limit-jobs'))
+            self.settings.get_boolean('limit-jobs'))
 
         if self.settings.get_string('output-mime-type') == 'gst-profile':
             self.sensitive_widgets['resample_hbox'].set_sensitive(False)
@@ -1058,7 +1060,7 @@ class PreferencesDialog(GladeWindow):
         self.resample_rate.set_sensitive(rstoggle.get_active())
 
     def on_jobs_toggled(self, jtoggle):
-        self.settings.set_int('limit-jobs', jtoggle.get_active())
+        self.settings.set_boolean('limit-jobs', jtoggle.get_active())
         self.jobs_spinbutton.set_sensitive(jtoggle.get_active())
         self.update_jobs()
 
@@ -1067,7 +1069,7 @@ class PreferencesDialog(GladeWindow):
         self.update_jobs()
 
     def update_jobs(self):
-        if self.settings.get_int('limit-jobs'):
+        if self.settings.get_boolean('limit-jobs'):
             settings['jobs'] = self.settings.get_int('number-of-jobs')
         else:
             settings['jobs'] = None

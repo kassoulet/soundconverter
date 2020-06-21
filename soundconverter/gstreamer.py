@@ -27,15 +27,13 @@ import traceback
 
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
-from soundconverter.fileoperations import vfs_encode_filename
-from soundconverter.fileoperations import unquote_filename, vfs_unlink
-from soundconverter.fileoperations import vfs_rename
-from soundconverter.fileoperations import vfs_exists
-from soundconverter.fileoperations import beautify_uri
+from soundconverter.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
+    vfs_exists, beautify_uri
 from soundconverter.task import BackgroundTask
 from soundconverter.queue import TaskQueue
 from soundconverter.utils import logger, idle
-from soundconverter.settings import mime_whitelist, filename_blacklist
+from soundconverter.settings import get_gio_settings
+from soundconverter.formats import mime_whitelist, filename_blacklist
 from soundconverter.error import show_error
 
 try:
@@ -713,29 +711,31 @@ class ConverterQueue(TaskQueue):
         path = urlparse(output_filename)[2]
         path = unquote_filename(path)
 
+        gio_settings = get_gio_settings()
+
         c = Converter(
             sound_file, output_filename,
-            self.window.prefs.settings.get_string('output-mime-type'),
-            self.window.prefs.settings.get_boolean('delete-original'),
-            self.window.prefs.settings.get_boolean('output-resample'),
-            self.window.prefs.settings.get_int('resample-rate'),
-            self.window.prefs.settings.get_boolean('force-mono'),
+            gio_settings.get_string('output-mime-type'),
+            gio_settings.get_boolean('delete-original'),
+            gio_settings.get_boolean('output-resample'),
+            gio_settings.get_int('resample-rate'),
+            gio_settings.get_boolean('force-mono'),
         )
-        c.set_vorbis_quality(self.window.prefs.settings.get_double('vorbis-quality'))
-        c.set_aac_quality(self.window.prefs.settings.get_int('aac-quality'))
-        c.set_opus_quality(self.window.prefs.settings.get_int('opus-bitrate'))
-        c.set_flac_compression(self.window.prefs.settings.get_int('flac-compression'))
-        c.set_wav_sample_width(self.window.prefs.settings.get_int('wav-sample-width'))
-        c.set_audio_profile(self.window.prefs.settings.get_string('audio-profile'))
+        c.set_vorbis_quality(gio_settings.get_double('vorbis-quality'))
+        c.set_aac_quality(gio_settings.get_int('aac-quality'))
+        c.set_opus_quality(gio_settings.get_int('opus-bitrate'))
+        c.set_flac_compression(gio_settings.get_int('flac-compression'))
+        c.set_wav_sample_width(gio_settings.get_int('wav-sample-width'))
+        c.set_audio_profile(gio_settings.get_string('audio-profile'))
 
         quality = {
             'cbr': 'mp3-cbr-quality',
             'abr': 'mp3-abr-quality',
             'vbr': 'mp3-vbr-quality'
         }
-        mode = self.window.prefs.settings.get_string('mp3-mode')
+        mode = gio_settings.get_string('mp3-mode')
         c.set_mp3_mode(mode)
-        c.set_mp3_quality(self.window.prefs.settings.get_int(quality[mode]))
+        c.set_mp3_quality(gio_settings.get_int(quality[mode]))
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
@@ -799,7 +799,7 @@ class ConverterQueue(TaskQueue):
         p = p.replace('%', '%%')
 
         space = ' '
-        if (self.window.prefs.settings.get_boolean('replace-messy-chars')):
+        if (get_gio_settings().get_boolean('replace-messy-chars')):
             space = '_'
 
         p = p + space + '(%d)' + e

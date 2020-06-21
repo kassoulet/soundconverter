@@ -29,7 +29,7 @@ import locale
 import gettext
 from optparse import OptionParser, OptionGroup
 
-# variables
+# variables, populated by make when installed to /usr/local/bin/soundconverter
 LIBDIR = '@libdir@'
 DATADIR = '@datadir@'
 NAME = 'SoundConverter'
@@ -78,25 +78,22 @@ soundconverter.NAME = NAME
 soundconverter.VERSION = VERSION
 soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.settings import settings
-from soundconverter.fileoperations import vfs_encode_filename
+from soundconverter.formats import get_mime_type, mime_types
+from soundconverter.fileoperations import vfs_encode_filename, filename_to_uri
 from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
-from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
 from soundconverter.utils import logger, update_verbosity
 
 # command line argument parsing, launch-mode
 
 
-def check_mime_type(mime):
-    types = {
-        'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
-        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
-    }
-    mime = types.get(mime, mime)
-    if mime not in list(types.values()):
+def check_mime_type(t):
+    """Exit soundconverter if the type is not supported"""
+    mime = get_mime_type(t)
+    if mime is None:
         logger.info('Cannot use "{}" mime type.'.format(mime))
         msg = 'Supported shortcuts and mime types:'
-        for k, v in sorted(types.items()):
+        for k, v in sorted(mime_types.items()):
             msg += ' {} {}'.format(k, v)
         logger.info(msg)
         raise SystemExit
@@ -223,10 +220,6 @@ def parse_command_line():
     )
 
     parser.add_option_group(batch_option_group)
-
-    # not implemented yet
-    # parser.add_option('--help-gst', action="store_true", dest="_unused",
-    #     help=_('Shows GStreamer Options'))
 
     return parser
 
