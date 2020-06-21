@@ -111,14 +111,17 @@ def get_mime_type(t):
 def get_quality(ftype, value, mode='vbr', reverse=False):
     """Map an integer between 0 and 6 to a proper quality value depending on target file type.
 
-    ftype of 'vorbis', 'aac', 'opus' or 'mp3',
-    value between 0 and 5,
-    mode one of 'cbr', 'abr' and 'vbr' for mp3
-
-    reverse is by default False. If True, this
-    function returns the original value-parameter
-    given a quality setting. Value becomes the
-    input for the quality then.
+    Parameters
+    ----------
+        ftype : string
+            'vorbis', 'aac', 'opus' or 'mp3',
+        value : number
+            between 0 and 5,
+        mode : string
+            one of 'cbr', 'abr' and 'vbr' for mp3
+        reverse : boolean
+            default False. If True, this function returns the original value-parameter
+            given a quality setting. Value becomes the input for the quality then.
     """
     quality = {
         'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
