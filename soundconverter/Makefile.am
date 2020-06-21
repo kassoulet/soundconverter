@@ -11,6 +11,7 @@ soundconverter_PYTHON = \
 	notify.py	\
 	queue.py	\
 	settings.py	\
+	formats.py	\
 	soundfile.py	\
 	task.py	\
 	ui.py	\

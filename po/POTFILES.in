@@ -10,6 +10,7 @@ soundconverter/namegenerator.py
 soundconverter/notify.py
 soundconverter/queue.py
 soundconverter/settings.py
+soundconverter/formats.py
 soundconverter/soundfile.py
 soundconverter/task.py
 soundconverter/ui.py
