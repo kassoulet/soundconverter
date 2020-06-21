@@ -129,7 +129,7 @@ class FileList:
 
         self.widget = builder.get_object('filelist')
         self.widget.props.fixed_height_mode = True
-        self.sortedmodel = Gtk.TreeModelSort(self.model)
+        self.sortedmodel = Gtk.TreeModelSort(model=self.model)
         self.widget.set_model(self.sortedmodel)
         self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -351,7 +351,7 @@ class FileList:
                 # there is a single picture in a folder of hundreds of sound files).
                 # Show an error if this skipped file has a soundfile extension,
                 # otherwise don't bother the user.
-                logger.info('{} of {} files were not added to the list'.format(invalid_files, len(files)), len(files))
+                logger.info('{} of {} files were not added to the list'.format(invalid_files, len(files)))
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
@@ -507,10 +507,14 @@ class PreferencesDialog(GladeWindow):
         w.set_active(True)
 
         self.target_folder_chooser = Gtk.FileChooserDialog(
-            _('Add Folder…'),
-            self.dialog, Gtk.FileChooserAction.SELECT_FOLDER,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+            title=_('Add Folder…'),
+            transient_for=self.dialog,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
+
+        self.target_folder_chooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.target_folder_chooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.target_folder_chooser.set_select_multiple(False)
         self.target_folder_chooser.set_local_only(False)
 
@@ -1109,13 +1113,14 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
 
         self.addfolderchooser = Gtk.FileChooserDialog(
-            _('Add Folder…'),
-            self.widget, Gtk.FileChooserAction.SELECT_FOLDER,
-            (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-                Gtk.ResponseType.OK
-            )
+            title=_('Add Folder…'),
+            transient_for=self.widget,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
+
+        self.addfolderchooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.addfolderchooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.addfolderchooser.set_select_multiple(True)
         self.addfolderchooser.set_local_only(False)
 
@@ -1134,13 +1139,14 @@ class SoundConverterWindow(GladeWindow):
         self.addfolderchooser.set_extra_widget(self.combo)
 
         self.addchooser = Gtk.FileChooserDialog(
-            _('Add Files…'),
-            self.widget, Gtk.FileChooserAction.OPEN,
-            (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-                Gtk.ResponseType.OK
-            )
+            title=_('Add Files…'),
+            transient_for=self.widget,
+            action=Gtk.FileChooserAction.OPEN
         )
+
+        self.addchooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.addchooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.addchooser.set_select_multiple(True)
         self.addchooser.set_local_only(False)
 
