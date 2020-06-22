@@ -34,12 +34,14 @@ from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
 from soundconverter.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
 from soundconverter.gstreamer import ConverterQueue, available_elements, \
-    TypeFinder, TagReader, audio_profiles_list, audio_profiles_dict
+    TypeFinder, audio_profiles_list, audio_profiles_dict
 from soundconverter.soundfile import SoundFile
-from soundconverter.settings import locale_patterns_dict, custom_patterns, filepattern, settings, get_quality
+from soundconverter.settings import settings, get_gio_settings
+from soundconverter.formats import get_quality
+from soundconverter.formats import locale_patterns_dict, custom_patterns, filepattern
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import log, debug, idle
+from soundconverter.utils import logger, idle
 from soundconverter.error import show_error, set_error_handler
 
 # Names of columns in the file list
@@ -107,7 +109,7 @@ class MsgAreaErrorDialog_:
 
     def show_exception(self, exception):
         self.show(
-            '<b>%s</b>' % GLib.markup_escape_text(exception.primary),
+            '<b>{}</b>'.format(GLib.markup_escape_text(exception.primary)),
             exception.secondary
         )
 
@@ -127,7 +129,7 @@ class FileList:
 
         self.widget = builder.get_object('filelist')
         self.widget.props.fixed_height_mode = True
-        self.sortedmodel = Gtk.TreeModelSort(self.model)
+        self.sortedmodel = Gtk.TreeModelSort(model=self.model)
         self.widget.set_model(self.sortedmodel)
         self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -190,7 +192,7 @@ class FileList:
 
     def found_type(self, sound_file, mime):
         ext = os.path.splitext(sound_file.filename)[1]
-        debug('mime:', ext, mime)
+        logger.debug('mime: {} {}'.format(ext, mime))
         self.good_files.append(sound_file.uri)
 
     @idle
@@ -228,7 +230,7 @@ class FileList:
                 return
             info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
             if info == Gio.FileType.DIRECTORY:
-                log('walking: \'%s\'' % uri)
+                logger.info('walking: \'{}\''.format(uri))
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
@@ -264,7 +266,7 @@ class FileList:
             base += '/'
 
         scan_t = time.time()
-        log('analysing file integrity')
+        logger.info('analysing file integrity')
         self.files_to_add = len(files)
 
         # self.good_files will be populated
@@ -283,7 +285,7 @@ class FileList:
         self.typefinders.start()
 
         self.window.set_status('{}'.format(_('Adding Files…')))
-        log('adding: %d files' % len(files))
+        logger.info('adding: {} files'.format(len(files)))
 
         # show progress and enable GTK main loop iterations
         # so that the ui stays responsive
@@ -324,7 +326,7 @@ class FileList:
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
-                log('file already present: \'%s\'' % sound_file.uri)
+                logger.info('file already present: \'{}\''.format(sound_file.uri))
                 continue
             self.append_file(sound_file)
 
@@ -349,7 +351,7 @@ class FileList:
                 # there is a single picture in a folder of hundreds of sound files).
                 # Show an error if this skipped file has a soundfile extension,
                 # otherwise don't bother the user.
-                log(invalid_files, 'of', len(files), 'files were not added to the list')
+                logger.info('{} of {} files were not added to the list'.format(invalid_files, len(files)))
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
@@ -368,8 +370,11 @@ class FileList:
         self.window.progressbarstatus.hide()
         self.files_to_add = None
         end_t = time.time()
-        debug('Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
-            len(files), end_t - start_t, scan_t - start_t, end_t-scan_t))
+        logger.debug(
+            'Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
+                len(files), end_t - start_t, scan_t - start_t, end_t - scan_t
+            )
+        )
 
     def typefinder_queue_ended(self):
         if not self.waiting_files:
@@ -433,7 +438,7 @@ class GladeWindow(object):
         """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError('Widget \'%s\' not found' % attribute)
+            raise AttributeError('Widget \'{}\' not found'.format(attribute))
         self.__dict__[attribute] = widget  # cache result
         return widget
 
@@ -467,7 +472,7 @@ class PreferencesDialog(GladeWindow):
     ]
 
     def __init__(self, builder, parent):
-        self.settings = Gio.Settings('org.soundconverter')
+        self.settings = get_gio_settings()
         GladeWindow.__init__(self, builder)
 
         self.dialog = builder.get_object('prefsdialog')
@@ -502,10 +507,14 @@ class PreferencesDialog(GladeWindow):
         w.set_active(True)
 
         self.target_folder_chooser = Gtk.FileChooserDialog(
-            _('Add Folder…'),
-            self.dialog, Gtk.FileChooserAction.SELECT_FOLDER,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+            title=_('Add Folder…'),
+            transient_for=self.dialog,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
+
+        self.target_folder_chooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.target_folder_chooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.target_folder_chooser.set_select_multiple(False)
         self.target_folder_chooser.set_local_only(False)
 
@@ -547,7 +556,7 @@ class PreferencesDialog(GladeWindow):
         # desactivate output if encoder plugin is not present
         widget = self.output_mime_type
         model = widget.get_model()
-        assert len(model) == len(widgets), 'model:%d widgets:%d' % (len(model), len(widgets))
+        assert len(model) == len(widgets), 'model:{} widgets:{}'.format(len(model), len(widgets))
 
         if not self.gstprofile.get_model().get_n_columns():
             self.gstprofile.set_model(Gtk.ListStore(str))
@@ -561,13 +570,13 @@ class PreferencesDialog(GladeWindow):
         stored_profile = self.settings.get_string('audio-profile')
         for i, profile in enumerate(audio_profiles_list):
             description, extension, pipeline = profile
-            self.gstprofile.get_model().append(['%s (.%s)' % (description, extension)])
+            self.gstprofile.get_model().append(['{} (.{})'.format(description, extension)])
             if description == stored_profile:
                 self.gstprofile.set_active(i)
                 found_profile = True
         if not found_profile and stored_profile:
             # reset default output
-            log('Cannot find audio profile "%s", resetting to default output.'
+            logger.info('Cannot find audio profile "%s", resetting to default output.'
                 % stored_profile)
             self.settings.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
@@ -666,7 +675,7 @@ class PreferencesDialog(GladeWindow):
 
         self.force_mono.set_active(self.settings.get_boolean('force-mono'))
 
-        self.jobs.set_active(self.settings.get_int('limit-jobs'))
+        self.jobs.set_active(self.settings.get_boolean('limit-jobs'))
         self.jobs_spinbutton.set_value(self.settings.get_int('number-of-jobs'))
 
         self.update_jobs()
@@ -714,9 +723,9 @@ class PreferencesDialog(GladeWindow):
 
         if bitrate:
             if aprox:
-                return '~%d kbps' % bitrate
+                return '~{} kbps'.format(bitrate)
             else:
-                return '%d kbps' % bitrate
+                return '{} kbps'.format(bitrate)
         else:
             return 'N/A'
 
@@ -751,7 +760,7 @@ class PreferencesDialog(GladeWindow):
 
         self.example.set_markup(s)
 
-        markup = '<small>%s</small>' % (_('Target bitrate: %s') % self.get_bitrate_from_settings())
+        markup = '<small>{}</small>'.format(_('Target bitrate: %s') % self.get_bitrate_from_settings())
         self.aprox_bitrate.set_markup(markup)
 
     def get_output_suffix(self):
@@ -824,7 +833,7 @@ class PreferencesDialog(GladeWindow):
             self.settings.get_string('output-mime-type') == 'audio/x-vorbis')
 
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
-            self.settings.get_int('limit-jobs'))
+            self.settings.get_boolean('limit-jobs'))
 
         if self.settings.get_string('output-mime-type') == 'gst-profile':
             self.sensitive_widgets['resample_hbox'].set_sensitive(False)
@@ -1055,7 +1064,7 @@ class PreferencesDialog(GladeWindow):
         self.resample_rate.set_sensitive(rstoggle.get_active())
 
     def on_jobs_toggled(self, jtoggle):
-        self.settings.set_int('limit-jobs', jtoggle.get_active())
+        self.settings.set_boolean('limit-jobs', jtoggle.get_active())
         self.jobs_spinbutton.set_sensitive(jtoggle.get_active())
         self.update_jobs()
 
@@ -1064,7 +1073,7 @@ class PreferencesDialog(GladeWindow):
         self.update_jobs()
 
     def update_jobs(self):
-        if self.settings.get_int('limit-jobs'):
+        if self.settings.get_boolean('limit-jobs'):
             settings['jobs'] = self.settings.get_int('number-of-jobs')
         else:
             settings['jobs'] = None
@@ -1104,13 +1113,14 @@ class SoundConverterWindow(GladeWindow):
         self.existsdialog.apply_to_all = builder.get_object('apply_to_all')
 
         self.addfolderchooser = Gtk.FileChooserDialog(
-            _('Add Folder…'),
-            self.widget, Gtk.FileChooserAction.SELECT_FOLDER,
-            (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-                Gtk.ResponseType.OK
-            )
+            title=_('Add Folder…'),
+            transient_for=self.widget,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
+
+        self.addfolderchooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.addfolderchooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.addfolderchooser.set_select_multiple(True)
         self.addfolderchooser.set_local_only(False)
 
@@ -1123,19 +1133,20 @@ class SoundConverterWindow(GladeWindow):
 
         # TODO: get all (gstreamer) knew files
         for files in filepattern:
-            self.store.append(['%s (%s)' % (files[0], files[1])])
+            self.store.append(['{} ({})'.format(files[0], files[1])])
 
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
 
         self.addchooser = Gtk.FileChooserDialog(
-            _('Add Files…'),
-            self.widget, Gtk.FileChooserAction.OPEN,
-            (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN,
-                Gtk.ResponseType.OK
-            )
+            title=_('Add Files…'),
+            transient_for=self.widget,
+            action=Gtk.FileChooserAction.OPEN
         )
+
+        self.addchooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        self.addchooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.addchooser.set_select_multiple(True)
         self.addchooser.set_local_only(False)
 
@@ -1151,7 +1162,7 @@ class SoundConverterWindow(GladeWindow):
         # TODO: get all (gstreamer) knew files
         for files in filepattern:
             self.pattern.append(files[1])
-            self.addfile_store.append(['%s (%s)' % (files[0], files[1])])
+            self.addfile_store.append(['{} ({})'.format(files[0], files[1])])
 
         self.addfile_combo.set_active(0)
         self.addchooser.set_extra_widget(self.addfile_combo)
@@ -1180,12 +1191,12 @@ class SoundConverterWindow(GladeWindow):
         """Allow direct use of window widget."""
         widget = self.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError('Widget \'%s\' not found' % attribute)
+            raise AttributeError('Widget \'{}\' not found'.format(attribute))
         self.__dict__[attribute] = widget  # cache result
         return widget
 
     def close(self, *args):
-        debug('closing…')
+        logger.debug('closing…')
         self.filelist.abort()
         self.converter.abort()
         self.widget.hide()
@@ -1427,7 +1438,7 @@ class SoundConverterWindow(GladeWindow):
 
         if self.converter.paused:
             self.progressbar.set_text(_('Paused'))
-            self.widget.set_title('%s - %s' % (_('SoundConverter'), _('Paused')))
+            self.widget.set_title('{} - {}'.format(_('SoundConverter'), _('Paused')))
             return
 
         fraction = min(max(fraction, 0.0), 1.0)
@@ -1449,7 +1460,7 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
             self.progress_time = time.time()
-            self.widget.set_title('%s - %s' % (_('SoundConverter'), remaining))
+            self.widget.set_title('{} - {}'.format(_('SoundConverter'), remaining))
 
     def set_status(self, text=None, ready=True):
         if not text:
