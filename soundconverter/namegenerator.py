@@ -157,6 +157,6 @@ class TargetNameGenerator:
             # we are creating folders using tags, disable basefolder handling
             basefolder = ''
 
-        result = os.path.join(folder, basefolder, urllib.parse.quote(result))
+        result = os.path.join(folder, urllib.parse.quote(basefolder), urllib.parse.quote(result))
 
         return result
