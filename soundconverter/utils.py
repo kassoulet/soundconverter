@@ -21,26 +21,41 @@
 
 # logging & debugging
 
-from .settings import settings
+from soundconverter.settings import settings
 from gi.repository import GLib
+import logging
 
 
-def log(*args):
-    """Display a message.
-    
-    Can be disabled with the 'quiet' option (-q)
-    """
-    if not settings['quiet']:
-        print((' '.join([str(msg) for msg in args])))
+class Formatter(logging.Formatter):
+    def format(self, record):
+        if record.levelno == logging.INFO:
+            self._style._fmt = '%(msg)s'
+        else:
+            # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit for those numbers
+            color = {
+                logging.WARNING: 33,
+                logging.ERROR: 31,
+                logging.FATAL: 31,
+                logging.DEBUG: 36
+            }.get(record.levelno, 0)
+            self._style._fmt = '\033[{}m%(levelname)s\033[0m: %(msg)s'.format(color)
+        return super().format(record)
 
 
-def debug(*args):
-    """Display a debug message.
+logger = logging.getLogger()
+handler = logging.StreamHandler()
+handler.setFormatter(Formatter())
+logger.addHandler(handler)
 
-    Only when activated by the 'debug' option
-    """
+
+def update_verbosity():
+    """Set the logging verbosity according to the settings object."""
     if settings['debug']:
-        print((' '.join([str(msg) for msg in args])))
+        logger.setLevel(logging.DEBUG)
+    elif settings['quiet']:
+        logger.setLevel(logging.WARNING)
+    else:
+        logger.setLevel(logging.INFO)
 
 
 def idle(func):

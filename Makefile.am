@@ -22,4 +22,4 @@ changelog:
 	cat ChangeLog.old >> ChangeLog
 
 test:
-	PYTHONPATH=. python3 tests/unittests.py 
+	PYTHONPATH=. python3 tests/test.py

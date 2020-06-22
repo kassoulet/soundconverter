@@ -29,7 +29,7 @@ import locale
 import gettext
 from optparse import OptionParser, OptionGroup
 
-# variables
+# variables, populated by make when installed to /usr/local/bin/soundconverter
 LIBDIR = '@libdir@'
 DATADIR = '@datadir@'
 NAME = 'SoundConverter'
@@ -43,11 +43,13 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
 except (ImportError, ValueError) as error:
-    print(('%s needs GTK >= 3.0 (Error: "%s")' % (NAME, error)))
+    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
-# remove gstreamer arguments so only gstreamer sees them.
+
+# remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
+# and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
-Gst.init([a for a in sys.argv[1:] if a.startswith('--gst-')])
+Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 try:
     locale.setlocale(locale.LC_ALL, '')
@@ -57,7 +59,7 @@ try:
     gettext.install(PACKAGE, localedir='@datadir@/locale')
     # rom gettext import gettext as _
 except locale.Error:
-    print('  cannot use system locale.')
+    print('cannot use system locale.')
     locale.setlocale(locale.LC_ALL, 'C')
     gettext.textdomain(PACKAGE)
     gettext.install(PACKAGE, localedir='@datadir@/locale')
@@ -76,26 +78,24 @@ soundconverter.NAME = NAME
 soundconverter.VERSION = VERSION
 soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.settings import settings
-from soundconverter.fileoperations import vfs_encode_filename
+from soundconverter.formats import get_mime_type, mime_types
+from soundconverter.fileoperations import vfs_encode_filename, filename_to_uri
 from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
-from soundconverter.fileoperations import filename_to_uri
 from soundconverter.ui import gui_main
+from soundconverter.utils import logger, update_verbosity
 
 # command line argument parsing, launch-mode
 
 
-def check_mime_type(mime):
-    types = {
-        'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
-        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
-    }
-    mime = types.get(mime, mime)
-    if mime not in list(types.values()):
-        print(('Cannot use "%s" mime type.' % mime))
+def check_mime_type(t):
+    """Exit soundconverter if the type is not supported"""
+    mime = get_mime_type(t)
+    if mime is None:
+        logger.info('Cannot use "{}" mime type.'.format(mime))
         msg = 'Supported shortcuts and mime types:'
-        for k, v in sorted(types.items()):
-            msg += ' %s %s' % (k, v)
-        print(msg)
+        for k, v in sorted(mime_types.items()):
+            msg += ' {} {}'.format(k, v)
+        logger.info(msg)
         raise SystemExit
     return mime
 
@@ -129,7 +129,7 @@ def parse_command_line():
         '-c', '--check', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode': 'check'},
         help=_(
-            'Print which files cannot be read by gstreamer. '
+            'Log which files cannot be read by gstreamer. '
             'Useful before converting. This will disable the GUI and '
             'run in batch mode, from the command line.'
         )
@@ -177,7 +177,7 @@ def parse_command_line():
             'Set the output MIME type. The default '
             'is %s. Note that you will probably want to set the output '
             'suffix as well. Supported MIME types: %s'
-        ) % (
+        ).format(
             settings['cli-output-type'],
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
             'audio/x-wav (WAV)'
@@ -189,7 +189,7 @@ def parse_command_line():
             'Set the output filename suffix. '
             'The default is %s. Note that the suffix does not '
             'affect\n the output MIME type.'
-        ) % settings['cli-output-suffix']
+        ).format(settings['cli-output-suffix'])
     )
     batch_option_group.add_option(
         '-r', '--recursive', action="store_true", dest="recursive",
@@ -221,10 +221,6 @@ def parse_command_line():
 
     parser.add_option_group(batch_option_group)
 
-    # not implemented yet
-    # parser.add_option('--help-gst', action="store_true", dest="_unused",
-    #     help=_('Shows GStreamer Options'))
-
     return parser
 
 
@@ -241,16 +237,19 @@ for k in dir(options):
 
 settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
 
+# now that the settings are populated, the verbosity can be determined:
+update_verbosity()
+
 if not settings.get('quiet'):
-    print(('%s %s' % (NAME, VERSION)))
+    logger.info(('{} {}'.format(NAME, VERSION)))
     if settings['forced-jobs']:
-        print(('Using %d thread(s)' % settings['forced-jobs']))
+        logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
 
 if settings['mode'] == 'gui':
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
-        print('nothing to do…')
+        logger.info('nothing to do…')
     if settings['mode'] == 'tags':
         cli_tags_main(files)
     elif settings['mode'] == 'batch':

@@ -28,13 +28,14 @@ import time
 from gi.repository import Gtk, GLib
 from soundconverter.soundfile import SoundFile
 from soundconverter import error
-from soundconverter.settings import settings, get_quality
+from soundconverter.settings import settings
+from soundconverter.formats import get_quality
 from soundconverter.gstreamer import TagReader, TypeFinder
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
 from soundconverter.gstreamer import Converter
 from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
-from soundconverter.utils import log
+from soundconverter.utils import logger
 
 
 def prepare_files_list(input_files):
@@ -87,7 +88,7 @@ def prepare_files_list(input_files):
                         subdirectories.append(subdir)
             else:
                 # else it didn't go into any directory. provide some information about how to
-                log(input_path, 'is a directory. Use -r to go into all subdirectories.')
+                logger.info('{} is a directory. Use -r to go into all subdirectories.'.format(input_path))
         # if not a file and not a dir it doesn't exist. skip
     parsed_files = list(map(filename_to_uri, parsed_files))
 
@@ -103,7 +104,6 @@ def cli_tags_main(input_files):
     input_files is an array of string paths.
     """
     input_files, _ = prepare_files_list(input_files)
-    error.set_error_handler(error.ErrorPrinter())
     loop = GLib.MainLoop()
     context = loop.get_context()
     for input_file in input_files:
@@ -115,12 +115,12 @@ def cli_tags_main(input_files):
             context.iteration(True)
 
         if len(input_file.tags) > 0:
-            print(unquote_filename(input_file.filename))
+            logger.info(unquote_filename(input_file.filename))
             for key in sorted(input_file.tags):
-                print(('     %s: %s' % (key, input_file.tags[key])))
+                logger.info(('    {}: {}'.format(key, input_file.tags[key])))
         else:
-            log(unquote_filename(input_file.filename))
-            log(('     no tags found'))
+            logger.info(unquote_filename(input_file.filename))
+            logger.info(('    no tags found'))
 
 
 class CliProgress:
@@ -161,7 +161,7 @@ class CLI_Convert():
         """
         # check which files should be converted. The result is
         # stored in file_checker.good_files
-        log('\nchecking files and walking dirs in the specified paths…')
+        logger.info('\nchecking files and walking dirs in the specified paths…')
 
         file_checker = CLI_Check(input_files, silent=True)
 
@@ -174,7 +174,6 @@ class CLI_Convert():
 
         loop = GLib.MainLoop()
         context = loop.get_context()
-        error.set_error_handler(error.ErrorPrinter())
 
         output_type = settings['cli-output-type']
         output_suffix = settings['cli-output-suffix']
@@ -187,11 +186,11 @@ class CLI_Convert():
         self.started_tasks = 0
         self.num_conversions = 0
 
-        log('\npreparing converters…')
+        logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
 
             if input_file not in file_checker.good_files:
-                log('skipping \'{}\': invalid soundfile'.format(unquote_filename(input_file.split(os.sep)[-1][-65:])))
+                logger.info('skipping \'{}\': invalid soundfile'.format(unquote_filename(input_file.split(os.sep)[-1][-65:])))
                 continue
 
             input_file = SoundFile(input_file)
@@ -209,7 +208,7 @@ class CLI_Convert():
 
             # skip existing output files if desired (-i cli argument)
             if settings.get('ignore-existing') and vfs_exists(output_name):
-                log('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+                logger.info('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
                 continue
 
             c = Converter(input_file, output_name, output_type)
@@ -231,10 +230,10 @@ class CLI_Convert():
             self.num_conversions += 1
 
         if self.num_conversions == 0:
-            log('\nnothing to do…')
+            logger.info('\nnothing to do…')
             exit(2)
 
-        log('\nstarting conversion…')
+        logger.info('\nstarting conversion…')
         conversions.start()
         while conversions.running:
             # calling this like crazy is the fastest way
@@ -247,7 +246,7 @@ class CLI_Convert():
         """Print the filename that is currently being converted and how many files are left."""
         self.started_tasks += 1
         path = unquote_filename(beautify_uri(c.sound_file.uri))
-        log('{}/{}: \'{}\''.format(self.started_tasks, self.num_conversions, path))
+        logger.info('{}/{}: \'{}\''.format(self.started_tasks, self.num_conversions, path))
 
 
 class CLI_Check():
@@ -275,8 +274,6 @@ class CLI_Check():
         # provide this to other code that uses CLI_Check
         self.input_files = input_files
         self.subdirectories = subdirectories
-
-        error.set_error_handler(error.ErrorPrinter())
 
         typefinders = TaskQueue()
 
@@ -310,11 +307,11 @@ class CLI_Check():
         context.iteration(True)
 
         if not silent:
-            log('\nNon-Audio Files:')
+            logger.info('\nNon-Audio Files:')
 
             for input_file in input_files:
                 if input_file not in self.good_files:
-                    print(unquote_filename(beautify_uri(input_file)))
+                    logger.info(unquote_filename(beautify_uri(input_file)))
 
     def found_type(self, sound_file, mime):
         self.good_files.append(sound_file.uri)

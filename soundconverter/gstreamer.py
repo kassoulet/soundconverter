@@ -27,15 +27,13 @@ import traceback
 
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
-from soundconverter.fileoperations import vfs_encode_filename
-from soundconverter.fileoperations import unquote_filename, vfs_unlink
-from soundconverter.fileoperations import vfs_rename
-from soundconverter.fileoperations import vfs_exists
-from soundconverter.fileoperations import beautify_uri
+from soundconverter.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
+    vfs_exists, beautify_uri
 from soundconverter.task import BackgroundTask
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import debug, log, idle
-from soundconverter.settings import mime_whitelist, filename_blacklist
+from soundconverter.utils import logger, idle
+from soundconverter.settings import get_gio_settings
+from soundconverter.formats import mime_whitelist, filename_blacklist
 from soundconverter.error import show_error
 
 try:
@@ -96,7 +94,7 @@ except (ImportError, ValueError):
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not Gst.ElementFactory.find(element):
-        print(("required gstreamer element \'%s\' not found." % element))
+        logger.info(("required gstreamer element \'%s\' not found." % element))
         sys.exit(1)
 
 gstreamer_source = 'giosrc'
@@ -129,13 +127,13 @@ for encoder, name, function in encoders:
     if have_it:
         available_elements.add(encoder)
     else:
-        print('  %s gstreamer element not found' % encoder)
+        logger.info('  {} gstreamer element not found'.format(encoder))
     function += '_' + name
     functions[function] = functions.get(function) or have_it
 
 for function in sorted(functions):
     if not functions[function]:
-        print('  disabling %s output.' % function.split('_')[1])
+        logger.info('  disabling {} output.'.format(function.split('_')[1]))
 
 if 'oggmux' not in available_elements:
     available_elements.discard('vorbisenc')
@@ -182,7 +180,7 @@ class Pipeline(BackgroundTask):
 
     def toggle_pause(self, paused):
         if not self.pipeline:
-            debug('toggle_pause(): pipeline is None !')
+            logger.debug('toggle_pause(): pipeline is None !')
             return
 
         if paused:
@@ -215,11 +213,11 @@ class Pipeline(BackgroundTask):
             self.done()
             return
         self.done()
-        show_error('Error', 'failed to install plugins: %s' % GLib.markup_escape_text(str(result)))
+        show_error('Error', 'failed to install plugins: {}'.format(GLib.markup_escape_text(str(result))))
 
     def on_error(self, error):
         self.error = error
-        log('error: %s (%s)' % (error, ' ! '.join(self.command)))
+        logger.error('{} ({})'.format(error, ' ! '.join(self.command)))
 
     def on_message_(self, bus, message):
         self.on_message_(bus, message)
@@ -230,7 +228,6 @@ class Pipeline(BackgroundTask):
         import threading
 
         t = message.type
-        # print('ONMESSAGE', t, threading.currentThread())
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self.eos = True
@@ -240,7 +237,7 @@ class Pipeline(BackgroundTask):
             """XXX elif Gst.pbutils.is_missing_plugin_message(message):
             global user_canceled_codec_installation
             detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
-            debug('missing plugin:', detail.split('|')[3], self.sound_file.uri)
+            logger.debug('missing plugin: {} {}'.format(detail.split('|')[3], self.sound_file.uri))
             self.pipeline.set_state(Gst.State.NULL)
             if Gst.pbutils.install_plugins_installation_in_progress():
                 while Gst.pbutils.install_plugins_installation_in_progress():
@@ -249,7 +246,7 @@ class Pipeline(BackgroundTask):
                 return
             if user_canceled_codec_installation:
                 self.error = 'Plugin installation cancelled'
-                debug(self.error)
+                logger.debug(self.error)
                 self.done()
                 return
             ctx = Gst.pbutils.InstallPluginsContext()
@@ -263,10 +260,12 @@ class Pipeline(BackgroundTask):
         return True
 
     def play(self):
+        """Execute the gstreamer command"""
         if not self.parsed:
             command = ' ! '.join(self.command)
-            debug('launching: \'%s\'' % command)
+            logger.debug('launching: \'{}\''.format(command))
             try:
+                # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
                 assert not self.connected_signals
@@ -295,7 +294,7 @@ class Pipeline(BackgroundTask):
 
     def stop_pipeline(self):
         if not self.pipeline:
-            debug('pipeline already stopped!')
+            logger.debug('pipeline already stopped!')
             return
         self.pipeline.set_state(Gst.State.NULL)
         bus = self.pipeline.get_bus()
@@ -322,8 +321,9 @@ class TypeFinder(Pipeline):
         Pipeline.__init__(self)
         self.sound_file = sound_file
 
-        command = '%s location="%s" ! decodebin name=decoder ! fakesink' % \
-                  (gstreamer_source, encode_filename(self.sound_file.uri))
+        command = '{} location="{}" ! decodebin name=decoder ! fakesink'.format(
+            gstreamer_source, encode_filename(self.sound_file.uri)
+        )
         self.add_command(command)
         self.add_signal('decoder', 'pad-added', self.pad_added)
         # 'typefind' is the name of the typefind element created inside
@@ -332,17 +332,17 @@ class TypeFinder(Pipeline):
         self.add_signal('typefind', 'have-type', self.have_type)
         self.silent = silent
 
-    def log(self, *args):
+    def log(self, msg):
         """Print a line to the console, but only when the TypeFinder itself is not set to silent.
 
         It can also be disabled with the -q command line option.
         """
         if not self.silent:
-            log(*args)
+            logger.info(msg)
 
     def on_error(self, error):
         self.error = error
-        self.log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+        self.log('ignored-error: {} ({})'.format(error, ' ! '.join(self.command)))
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
@@ -354,17 +354,17 @@ class TypeFinder(Pipeline):
 
     def have_type(self, typefind, probability, caps):
         mime_type = caps.to_string()
-        debug('have_type:', mime_type, self.sound_file.filename_for_display)
+        logger.debug('have_type: {} {}'.format(mime_type, self.sound_file.filename_for_display))
         self.sound_file.mime_type = None
         for t in mime_whitelist:
             if t in mime_type:
                 self.sound_file.mime_type = mime_type
         if not self.sound_file.mime_type:
-            self.log('mime type skipped: %s' % mime_type)
+            self.log('mime type skipped: {}'.format(mime_type))
         for t in filename_blacklist:
             if fnmatch(self.sound_file.uri, t):
                 self.sound_file.mime_type = None
-                self.log('filename blacklisted (%s): %s' % (t, self.sound_file.filename_for_display))
+                self.log('filename blacklisted ({}): {}'.format(t, self.sound_file.filename_for_display))
 
         return True
 
@@ -386,8 +386,9 @@ class Decoder(Pipeline):
         self.time = 0
         self.position = 0
 
-        command = '%s location="%s" name=src ! decodebin name=decoder' % \
-                  (gstreamer_source, encode_filename(self.sound_file.uri))
+        command = '{} location="{}" name=src ! decodebin name=decoder'.format(
+            gstreamer_source, encode_filename(self.sound_file.uri)
+        )
         self.add_command(command)
         self.add_signal('decoder', 'pad-added', self.pad_added)
 
@@ -405,7 +406,7 @@ class Decoder(Pipeline):
 
     def found_tag(self, decoder, something, taglist):
         """Called when the decoder reads a tag."""
-        debug('found_tags:', self.sound_file.filename_for_display)
+        logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
         taglist.foreach(self.append_tag, None)
 
     def append_tag(self, taglist, tag, unused_udata):
@@ -445,7 +446,7 @@ class Decoder(Pipeline):
             tags['year'] = dt.get_year()
             tags['date'] = dt.to_iso8601_string()[:10]
 
-        debug('   ', tags)
+        logger.debug('    {}'.format(tags))
         self.sound_file.tags.update(tags)
 
     def pad_added(self, decoder, pad):
@@ -489,10 +490,10 @@ class TagReader(Decoder):
         self.found_tag_hook = found_tag_hook
 
     def on_state_changed(self, bus, message):
-        prev, new, pending = message.parse_state_changed()
+        new = message.parse_state_changed()
         if new == Gst.State.PLAYING and not self.tagread:
             self.tagread = True
-            debug('TagReading done…')
+            logger.debug('TagReading done…')
             self.done()
 
     def finished(self):
@@ -547,7 +548,7 @@ class Converter(Decoder):
 
         # audio resampling support
         if self.output_resample:
-            self.add_command('audio/x-raw,rate=%d' % self.resample_rate)
+            self.add_command('audio/x-raw,rate={}'.format(self.resample_rate))
             self.add_command('audioconvert')
             self.add_command('audioresample')
 
@@ -561,15 +562,15 @@ class Converter(Decoder):
         gfile = Gio.file_parse_name(self.output_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
-            log('Creating folder: \'%s\'' % beautify_uri(dirname.get_uri()))
+            logger.info('Creating folder: \'{}\''.format(beautify_uri(dirname.get_uri())))
             if not dirname.make_directory_with_parents():
-                show_error('Error', _("Cannot create \'%s\' folder.") % beautify_uri(dirname))
+                show_error('Error', _("Cannot create \'{}\' folder.").format(beautify_uri(dirname)))
                 return
 
-        self.add_command('%s location="%s"' % (
+        self.add_command('{} location="{}"'.format(
             gstreamer_sink, encode_filename(self.output_filename)))
         if self.overwrite and vfs_exists(self.output_filename):
-            log('overwriting \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('overwriting \'{}\''.format(beautify_uri(self.output_filename)))
             vfs_unlink(self.output_filename)
 
     def aborted(self):
@@ -577,7 +578,7 @@ class Converter(Decoder):
         try:
             vfs_unlink(self.output_filename)
         except Exception:
-            log('cannot delete: \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('cannot delete: \'{}\''.format(beautify_uri(self.output_filename)))
         return
 
     def finished(self):
@@ -586,22 +587,22 @@ class Converter(Decoder):
         # Copy file permissions
         if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
                 Gio.file_parse_name(self.output_filename), Gio.FileCopyFlags.NONE, None):
-            log('Cannot set permission on \'%s\'' % beautify_uri(self.output_filename))
+            logger.info('Cannot set permission on \'{}\''.format(beautify_uri(self.output_filename)))
 
         if self.delete_original and self.processing and not self.error:
-            log('deleting: \'%s\'' % self.sound_file.uri)
+            logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
-                log('Cannot remove \'%s\'' % beautify_uri(self.output_filename))
+                logger.info('Cannot remove \'{}\''.format(beautify_uri(self.output_filename)))
 
     def on_error(self, error):
         if self.ignore_errors:
             self.error = error
-            log('ignored-error: %s (%s)' % (error, ' ! '.join(self.command)))
+            logger.info('ignored-error: {} ({})'.format(error, ' ! '.join(self.command)))
         else:
             Pipeline.on_error(self, error)
             show_error(
-                '%s' % _('GStreamer Error:'),
-                '%s\n(%s)' % (error, self.sound_file.filename_for_display)
+                '{}'.format(_('GStreamer Error:')),
+                '{}\n({})'.format(error, self.sound_file.filename_for_display)
             )
 
     def set_vorbis_quality(self, quality):
@@ -629,17 +630,17 @@ class Converter(Decoder):
         self.audio_profile = audio_profile
 
     def add_flac_encoder(self):
-        s = 'flacenc mid-side-stereo=true quality=%s' % self.flac_compression
+        s = 'flacenc mid-side-stereo=true quality={}'.format(self.flac_compression)
         return s
 
     def add_wav_encoder(self):
         formats = {8: 'U8', 16: 'S16LE', 24: 'S24LE', 32: 'S32LE'}
-        return 'audioconvert ! audio/x-raw,format=%s ! wavenc' % (formats[self.wav_sample_width])
+        return 'audioconvert ! audio/x-raw,format={} ! wavenc'.format(formats[self.wav_sample_width])
 
     def add_oggvorbis_encoder(self):
         cmd = 'vorbisenc'
         if self.vorbis_quality is not None:
-            cmd += ' quality=%s' % self.vorbis_quality
+            cmd += ' quality={}'.format(self.vorbis_quality)
         cmd += ' ! oggmux '
         return cmd
 
@@ -670,10 +671,10 @@ class Converter(Decoder):
 
     def add_aac_encoder(self):
         encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
-        return '%s bitrate=%s ! mp4mux' % (encoder, self.aac_quality * 1000)
+        return '{} bitrate={} ! mp4mux'.format(encoder, self.aac_quality * 1000)
 
     def add_opus_encoder(self):
-        return 'opusenc bitrate=%s bitrate-type=vbr bandwidth=auto ! oggmux' % (self.opus_quality * 1000)
+        return 'opusenc bitrate={} bitrate-type=vbr bandwidth=auto ! oggmux'.format(self.opus_quality * 1000)
 
     def add_audio_profile(self):
         pipeline = audio_profiles_dict[self.audio_profile][2]
@@ -709,29 +710,31 @@ class ConverterQueue(TaskQueue):
         path = urlparse(output_filename)[2]
         path = unquote_filename(path)
 
+        gio_settings = get_gio_settings()
+
         c = Converter(
             sound_file, output_filename,
-            self.window.prefs.settings.get_string('output-mime-type'),
-            self.window.prefs.settings.get_boolean('delete-original'),
-            self.window.prefs.settings.get_boolean('output-resample'),
-            self.window.prefs.settings.get_int('resample-rate'),
-            self.window.prefs.settings.get_boolean('force-mono'),
+            gio_settings.get_string('output-mime-type'),
+            gio_settings.get_boolean('delete-original'),
+            gio_settings.get_boolean('output-resample'),
+            gio_settings.get_int('resample-rate'),
+            gio_settings.get_boolean('force-mono'),
         )
-        c.set_vorbis_quality(self.window.prefs.settings.get_double('vorbis-quality'))
-        c.set_aac_quality(self.window.prefs.settings.get_int('aac-quality'))
-        c.set_opus_quality(self.window.prefs.settings.get_int('opus-bitrate'))
-        c.set_flac_compression(self.window.prefs.settings.get_int('flac-compression'))
-        c.set_wav_sample_width(self.window.prefs.settings.get_int('wav-sample-width'))
-        c.set_audio_profile(self.window.prefs.settings.get_string('audio-profile'))
+        c.set_vorbis_quality(gio_settings.get_double('vorbis-quality'))
+        c.set_aac_quality(gio_settings.get_int('aac-quality'))
+        c.set_opus_quality(gio_settings.get_int('opus-bitrate'))
+        c.set_flac_compression(gio_settings.get_int('flac-compression'))
+        c.set_wav_sample_width(gio_settings.get_int('wav-sample-width'))
+        c.set_audio_profile(gio_settings.get_string('audio-profile'))
 
         quality = {
             'cbr': 'mp3-cbr-quality',
             'abr': 'mp3-abr-quality',
             'vbr': 'mp3-vbr-quality'
         }
-        mode = self.window.prefs.settings.get_string('mp3-mode')
+        mode = gio_settings.get_string('mp3-mode')
         c.set_mp3_mode(mode)
-        c.set_mp3_quality(self.window.prefs.settings.get_int(quality[mode]))
+        c.set_mp3_quality(gio_settings.get_int(quality[mode]))
         c.init()
         c.add_listener('finished', self.on_task_finished)
         self.add_task(c)
@@ -773,11 +776,11 @@ class ConverterQueue(TaskQueue):
         task.sound_file.progress = 1.0
 
         if task.error:
-            debug('error in task, skipping rename:', task.output_filename)
+            logger.debug('error in task, skipping rename: {}'.format(task.output_filename))
             if vfs_exists(task.output_filename):
                 vfs_unlink(task.output_filename)
             self.errors.append(task.error)
-            print('Could not convert %s: %s' % (beautify_uri(task.get_input_uri()), task.error))
+            logger.info('Could not convert {}: {}'.format(beautify_uri(task.get_input_uri()), task.error))
             self.error_count += 1
             return
 
@@ -787,14 +790,15 @@ class ConverterQueue(TaskQueue):
 
         # rename temporary file
         newname = self.window.prefs.generate_filename(task.sound_file)
-        debug(beautify_uri(task.output_filename), '->', beautify_uri(newname))
+        logger.info('newname {}'.format(newname))
+        logger.debug('{} -> {}'.format(beautify_uri(task.output_filename), beautify_uri(newname)))
 
         # safe mode. generate a filename until we find a free one
         p, e = os.path.splitext(newname)
         p = p.replace('%', '%%')
 
         space = ' '
-        if (self.window.prefs.settings.get_boolean('replace-messy-chars')):
+        if (get_gio_settings().get_boolean('replace-messy-chars')):
             space = '_'
 
         p = p + space + '(%d)' + e
@@ -808,12 +812,12 @@ class ConverterQueue(TaskQueue):
             vfs_rename(task.output_filename, newname)
         except Exception:
             self.errors.append(task.error)
-            print('Could not rename %s to %s:' % (beautify_uri(task.output_filename), beautify_uri(newname)))
-            print(traceback.print_exc())
+            logger.info('Could not rename {} to {}:'.format(beautify_uri(task.output_filename), beautify_uri(newname)))
+            logger.info(traceback.print_exc())
             self.error_count += 1
             return
 
-        print('Converted %s to %s' % (beautify_uri(task.get_input_uri()), beautify_uri(newname)))
+        logger.info('Converted {} to {}'.format(beautify_uri(task.get_input_uri()), beautify_uri(newname)))
 
     def finished(self):
         # This must be called with emit_async
@@ -825,7 +829,7 @@ class ConverterQueue(TaskQueue):
         total_time = self.run_finish_time - self.run_start_time
         msg = _('Conversion done in %s') % self.format_time(total_time)
         if self.error_count:
-            msg += ', %d error(s)' % self.error_count
+            msg += ', {} error(s)'.format(self.error_count)
         self.window.set_status(msg)
         if not self.window.is_active():
             notification(msg)  # this must move
@@ -842,7 +846,7 @@ class ConverterQueue(TaskQueue):
             count = int(seconds / factor)
             seconds -= count * factor
             if count > 0 or (factor == 1 and not result):
-                result.append('%d %s' % (count, unity))
+                result.append('{} {}'.format(count, unity))
         assert seconds == 0
         return ' '.join(result)
 

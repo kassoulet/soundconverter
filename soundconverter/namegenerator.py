@@ -104,8 +104,7 @@ class TargetNameGenerator:
         root, ext = os.path.splitext(urllib.parse.urlparse(sound_file.uri).path)
 
         root = sound_file.base_path
-        basename, ext = os.path.splitext(
-            urllib.parse.unquote(sound_file.filename))
+        basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))
 
         # make sure basename contains only the filename
         basefolder, basename = os.path.split(basename)

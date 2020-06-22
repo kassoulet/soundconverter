@@ -22,7 +22,7 @@
 import time
 from soundconverter.task import BackgroundTask
 from soundconverter.settings import settings
-from soundconverter.utils import log
+from soundconverter.utils import logger
 
 
 class TaskQueue(BackgroundTask):
@@ -49,8 +49,10 @@ class TaskQueue(BackgroundTask):
         self.start_time = None
         self.count = 0
         self.paused = False
-        self.jobs = settings['forced-jobs'] or settings['jobs']
-        self.jobs = self.jobs or settings['cpu-count']
+
+    def get_num_jobs(self):
+        """Return the number of jobs that should be run in parallel."""
+        return settings['forced-jobs'] or settings['jobs'] or settings['cpu-count']
 
     def add_task(self, task):
         """Add a task to the queue."""
@@ -66,7 +68,7 @@ class TaskQueue(BackgroundTask):
                 self.done()
             return
 
-        to_start = self.jobs - len(self.running_tasks)
+        to_start = self.get_num_jobs() - len(self.running_tasks)
         for _ in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
@@ -83,8 +85,8 @@ class TaskQueue(BackgroundTask):
 
     def started(self):
         """BackgroundTask setup callback."""
-        log('Queue start: %d tasks, %d thread(s).' % (
-            len(self.waiting_tasks) + len(self.running_tasks), self.jobs))
+        num_tasks = len(self.waiting_tasks) + len(self.running_tasks)
+        logger.info('Queue start: {} tasks, {} thread(s).'.format(num_tasks, self.get_num_jobs()))
         self.count = 0
         self.paused = False
         self.finished_tasks = 0
@@ -93,7 +95,7 @@ class TaskQueue(BackgroundTask):
 
     def finished(self):
         """BackgroundTask finish callback."""
-        log('Queue done in %.3fs (%s tasks)' % (time.time() - self.start_time, self.count))
+        logger.info('Queue done in %.3fs (%d tasks)' % (time.time() - self.start_time, self.count))
         self.queue_ended()
         self.count = 0
         self.start_time = None
