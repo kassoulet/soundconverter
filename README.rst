@@ -51,7 +51,7 @@ As well as the debian repositories::
 Help
 ----
 
-For command line args, see
+For command line args, see::
 
     sounconverter --help
     gst-launch-1.0 --help-gst
