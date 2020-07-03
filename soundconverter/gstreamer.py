@@ -421,7 +421,8 @@ class Decoder(Pipeline):
 
     def append_tag(self, taglist, tag, unused_udata):
         if tag in self.sound_file.tags:
-            # Often, duplicate tag messages arrive for some reason.
+            # Duplicate tag messages may arrive (Which isn't unusual and also mentioned in the documentation)
+            # https://gstreamer.freedesktop.org/documentation/application-development/advanced/metadata.html
             # Ignore those and don't spam the console
             return
 
