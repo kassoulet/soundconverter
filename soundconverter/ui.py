@@ -291,7 +291,7 @@ class FileList:
         # so that the ui stays responsive
         self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
         self.window.progressbarstatus.set_show_text(True)
-        while(self.typefinders.running):
+        while self.typefinders.running:
             if self.typefinders.progress:
                 completed = int(self.typefinders.progress * len(files))
                 self.window.progressbarstatus.set_fraction(self.typefinders.progress)

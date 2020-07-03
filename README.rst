@@ -14,9 +14,8 @@ Supported audio formats
 -----------------------
 
 All file formats that GStreamer can read from should now be supported
-(thanks to the wonderful "decodebin" element). The output formats are
-more restricted, however, since there is no "encodebin" element to
-magically convert to any format we might want.
+(thanks to the wonderful "decodebin" element). The supported output
+formats are:
 
 ==========  ==========
 Type        Supported?
@@ -25,6 +24,7 @@ Ogg Vorbis  yes
 FLAC        yes
 Wave        yes
 MP3         yes
+M4A         yes
 ==========  ==========
 
 Building and installation

@@ -149,7 +149,7 @@ class Pipeline(BackgroundTask):
         BackgroundTask.__init__(self)
         self.pipeline = None
         self.sound_file = None
-        self.command = []
+        self.command = ''
         self.parsed = False
         self.signals = []
         self.processing = False
@@ -172,8 +172,13 @@ class Pipeline(BackgroundTask):
     def finished(self):
         self.cleanup()
 
-    def add_command(self, command):
-        self.command.append(command)
+    def add_command(self, command, sep='!'):
+        """A little helper to keep the code cleaner. Constructs a gstreamer pipeline, which is
+        most of the time multiple plugins separated by exclamation marks."""
+        if len(self.command) == 0:
+            self.command += '{}'.format(command)
+        else:
+            self.command += ' {} {}'.format(sep, command)
 
     def add_signal(self, name, signal, callback):
         self.signals.append((name, signal, callback,))
@@ -217,7 +222,7 @@ class Pipeline(BackgroundTask):
 
     def on_error(self, error):
         self.error = error
-        logger.error('{} ({})'.format(error, ' ! '.join(self.command)))
+        logger.error('{} ({})'.format(error, self.command))
 
     def on_message_(self, bus, message):
         self.on_message_(bus, message)
@@ -262,11 +267,10 @@ class Pipeline(BackgroundTask):
     def play(self):
         """Execute the gstreamer command"""
         if not self.parsed:
-            command = ' ! '.join(self.command)
-            logger.debug('launching: \'{}\''.format(command))
+            logger.debug('launching: \'{}\''.format(self.command))
             try:
                 # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
-                self.pipeline = Gst.parse_launch(command)
+                self.pipeline = Gst.parse_launch(self.command)
                 bus = self.pipeline.get_bus()
                 assert not self.connected_signals
                 self.connected_signals = []
@@ -321,10 +325,11 @@ class TypeFinder(Pipeline):
         Pipeline.__init__(self)
         self.sound_file = sound_file
 
-        command = '{} location="{}" ! decodebin name=decoder ! fakesink'.format(
-            gstreamer_source, encode_filename(self.sound_file.uri)
-        )
-        self.add_command(command)
+        encoded_filename = encode_filename(self.sound_file.uri)
+        self.add_command('{} location="{}"'.format(gstreamer_source, encoded_filename))
+        self.add_command('decodebin name=decoder')
+        self.add_command('fakesink')
+
         self.add_signal('decoder', 'pad-added', self.pad_added)
         # 'typefind' is the name of the typefind element created inside
         # decodebin. we can't use our own typefind before decodebin anymore,
@@ -342,7 +347,7 @@ class TypeFinder(Pipeline):
 
     def on_error(self, error):
         self.error = error
-        self.log('ignored-error: {} ({})'.format(error, ' ! '.join(self.command)))
+        self.log('ignored-error: {} ({})'.format(error, self.command))
 
     def set_found_type_hook(self, found_type_hook):
         self.found_type_hook = found_type_hook
@@ -386,11 +391,17 @@ class Decoder(Pipeline):
         self.time = 0
         self.position = 0
 
-        command = '{} location="{}" name=src ! decodebin name=decoder'.format(
-            gstreamer_source, encode_filename(self.sound_file.uri)
-        )
-        self.add_command(command)
+        encoded_filename = encode_filename(self.sound_file.uri)
+        self.add_command('{} location="{}" name=src'.format(gstreamer_source, encoded_filename))
+        self.add_command('decodebin name=decoder')
+
         self.add_signal('decoder', 'pad-added', self.pad_added)
+
+        # In order to possibly add more actions that should be performed along with writing
+        # the output to a file, enable branching.
+        # https://gstreamer.freedesktop.org/documentation/tutorials/basic/gstreamer-tools.html?gi-language=c#named-elements
+        self.add_command('tee name=t')
+        self.add_command('queue')
 
     def have_type(self, typefind, probability, caps):
         pass
@@ -568,10 +579,19 @@ class Converter(Decoder):
                 return
 
         self.add_command('{} location="{}"'.format(
-            gstreamer_sink, encode_filename(self.output_filename)))
+            gstreamer_sink, encode_filename(self.output_filename)
+        ))
         if self.overwrite and vfs_exists(self.output_filename):
             logger.info('overwriting \'{}\''.format(beautify_uri(self.output_filename)))
             vfs_unlink(self.output_filename)
+        
+        # mp4mux drops tag events/messages
+        # https://gitlab.freedesktop.org/gstreamer/gst-plugins-good/-/issues/759
+        # Here is another branch of the pipeline without muxer, so that tags arrive
+        # soundconverter no matter what the conversion pipeline does.
+        self.add_command('t.', sep='')
+        self.add_command('queue')
+        self.add_command('fakesink')
 
     def aborted(self):
         # remove partial file
@@ -597,7 +617,7 @@ class Converter(Decoder):
     def on_error(self, error):
         if self.ignore_errors:
             self.error = error
-            logger.info('ignored-error: {} ({})'.format(error, ' ! '.join(self.command)))
+            logger.info('ignored-error: {} ({})'.format(error, self.command))
         else:
             Pipeline.on_error(self, error)
             show_error(
