@@ -417,10 +417,19 @@ class Decoder(Pipeline):
 
     def found_tag(self, decoder, something, taglist):
         """Called when the decoder reads a tag."""
-        logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
         taglist.foreach(self.append_tag, None)
 
     def append_tag(self, taglist, tag, unused_udata):
+        if tag in self.sound_file.tags:
+            # Often, duplicate tag messages arrive for some reason.
+            # Ignore those and don't spam the console
+            return
+
+        if 'datetime' in tag:
+            if 'year' in self.sound_file.tags and 'date' in self.sound_file.tags:
+                return
+
+        # tags that we ignore are for example "audio-codec" and "bitrate"
         tag_whitelist = (
             'album-artist',
             'artist',
@@ -457,8 +466,10 @@ class Decoder(Pipeline):
             tags['year'] = dt.get_year()
             tags['date'] = dt.to_iso8601_string()[:10]
 
-        logger.debug('    {}'.format(tags))
+        logger.debug('Found tag for {}: {}'.format(self.sound_file.filename_for_display, tags))
         self.sound_file.tags.update(tags)
+
+        return True
 
     def pad_added(self, decoder, pad):
         """Called when a decoded pad is created."""
