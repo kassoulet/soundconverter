@@ -28,7 +28,7 @@ Gtk.main_quit = lambda: None
 import unittest
 from testcases.integration import *
 from testcases.names import *
-from testcases.format import *
+from testcases.formats import *
 
 if __name__ == "__main__":
     unittest.main()
