@@ -31,7 +31,7 @@ from soundconverter.fileoperations import vfs_encode_filename, unquote_filename,
     vfs_exists, beautify_uri
 from soundconverter.task import BackgroundTask
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import logger, idle
+from soundconverter.utils import logger
 from soundconverter.settings import get_gio_settings
 from soundconverter.formats import mime_whitelist, filename_blacklist
 from soundconverter.error import show_error
@@ -223,7 +223,6 @@ class Pipeline(BackgroundTask):
         self.on_message_(bus, message)
         return True
 
-    # @idle
     def on_message(self, bus, message):
         import threading
 

@@ -41,7 +41,7 @@ from soundconverter.formats import get_quality
 from soundconverter.formats import locale_patterns_dict, custom_patterns, filepattern
 from soundconverter.namegenerator import TargetNameGenerator
 from soundconverter.queue import TaskQueue
-from soundconverter.utils import logger, idle
+from soundconverter.utils import logger
 from soundconverter.error import show_error, set_error_handler
 
 # Names of columns in the file list
@@ -57,6 +57,12 @@ COLUMNS = ['filename']
 
 # VISIBLE_COLUMNS = ['filename']
 # ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
+
+
+def idle(func):
+    def callback(*args, **kwargs):
+        GLib.idle_add(func, *args, **kwargs)
+    return callback
 
 
 def gtk_iteration():
