@@ -26,16 +26,15 @@ import sys
 import time
 
 from gi.repository import Gtk, GLib
-from soundconverter.soundfile import SoundFile
-from soundconverter import error
-from soundconverter.settings import settings
-from soundconverter.formats import get_quality
-from soundconverter.gstreamer import TagReader, TypeFinder
-from soundconverter.namegenerator import TargetNameGenerator
-from soundconverter.queue import TaskQueue
-from soundconverter.gstreamer import Converter
-from soundconverter.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
-from soundconverter.utils import logger
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util import error
+from soundconverter.util.settings import settings
+from soundconverter.util.formats import get_quality
+from soundconverter.converter.gstreamer.gstreamer import TagReader, TypeFinder, Converter
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.queue import TaskQueue
+from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
+from soundconverter.util import logger
 
 
 def prepare_files_list(input_files):

@@ -7,5 +7,6 @@ setup(
         'It writes WAV, FLAC, MP3, and Ogg Vorbis files.'
     ),
     license='GPL-3.0',
-    packages=['soundconverter']
+    packages=['soundconverter'],
+    package_data={'soundconverter': ['data/*']},
 )

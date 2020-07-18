@@ -28,14 +28,14 @@ import sys
 import locale
 import gettext
 from optparse import OptionParser, OptionGroup
+import pkgutil
+from gettext import gettext as _
+import pkg_resources
 
-# variables, populated by make when installed to /usr/local/bin/soundconverter
-LIBDIR = '@libdir@'
-DATADIR = '@datadir@'
-NAME = 'SoundConverter'
-VERSION = '@version@'
-GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
-PACKAGE = NAME.lower()
+VERSION = pkg_resources.require('soundconverter')[0].version
+NAME = pkg_resources.require('soundconverter')[0].project_name
+SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+GLADEFILE = os.path.join(SOURCE_PATH, 'soundconverter/data/soundconverter.glade')
 
 try:
     import gi
@@ -43,7 +43,7 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
 except (ImportError, ValueError) as error:
-    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
+    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(error)))
     sys.exit(1)
 
 # remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
@@ -53,30 +53,10 @@ Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 try:
     locale.setlocale(locale.LC_ALL, '')
-    locale.bindtextdomain(PACKAGE, '@datadir@/locale')
-    gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
-    gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE, localedir='@datadir@/locale')
-    # rom gettext import gettext as _
 except locale.Error:
-    print('cannot use system locale.')
-    locale.setlocale(locale.LC_ALL, 'C')
-    gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE, localedir='@datadir@/locale')
+    pass
 
-
-def _add_soundconverter_path():
-    """Make the soundconverter package importable, which has been installed to LIBDIR during make install."""
-    root = os.path.join(LIBDIR, 'soundconverter', 'python')
-    if root not in sys.path:
-        sys.path.insert(0, root)
-
-
-_add_soundconverter_path()
 import soundconverter
-soundconverter.NAME = NAME
-soundconverter.VERSION = VERSION
-soundconverter.GLADEFILE = GLADEFILE
 from soundconverter.util.settings import settings
 from soundconverter.util.formats import get_mime_type, mime_types
 from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_uri

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from soundconverter.formats import get_mime_type, get_quality
+from soundconverter.util.formats import get_mime_type, get_quality
 
 
 class Format(unittest.TestCase):
