@@ -1,4 +1,4 @@
-# README for GNOME sound converter application
+# Soundconverter
 
 A simple sound converter application for the GNOME environment. It reads
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
@@ -12,9 +12,7 @@ performance, the command line tools are always going to be preferable.
 ## Supported audio formats
 
 All file formats that GStreamer can read from should now be supported
-(thanks to the wonderful "decodebin" element). The output formats are
-more restricted, however, since there is no "encodebin" element to
-magically convert to any format we might want.
+(thanks to the wonderful "decodebin" element)
 
 | Type       | Supported? |
 | ---------- | ---------- |
