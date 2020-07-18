@@ -77,12 +77,12 @@ import soundconverter
 soundconverter.NAME = NAME
 soundconverter.VERSION = VERSION
 soundconverter.GLADEFILE = GLADEFILE
-from soundconverter.settings import settings
-from soundconverter.formats import get_mime_type, mime_types
-from soundconverter.fileoperations import vfs_encode_filename, filename_to_uri
-from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
-from soundconverter.ui import gui_main
-from soundconverter.utils import logger, update_verbosity
+from soundconverter.util.settings import settings
+from soundconverter.util.formats import get_mime_type, mime_types
+from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_uri
+from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
+from soundconverter.interface.ui import gui_main
+from soundconverter.util.logger import logger, update_verbosity
 
 # command line argument parsing, launch-mode
 

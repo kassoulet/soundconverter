@@ -33,13 +33,13 @@ pip3 install .
 soundconverter
 ```
 
-It is also available in the arch repositories
+It is also available in the Arch repositories
 
 ```bash
 sudo pacman -S soundconverter
 ```
 
-As well as the debian repositories
+As well as the Ubuntu repositories
 
 ```bash
 sudo apt install soundconverter
