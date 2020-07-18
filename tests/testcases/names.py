@@ -12,10 +12,10 @@ import urllib.parse
 import urllib.error
 from gi.repository import Gst, Gio
 
-from soundconverter.settings import settings
-from soundconverter.namegenerator import TargetNameGenerator
-from soundconverter.soundfile import SoundFile
-from soundconverter.fileoperations import filename_to_uri, unquote_filename, beautify_uri
+from soundconverter.util.settings import settings
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.fileoperations import filename_to_uri, unquote_filename, beautify_uri
 from soundconverter.batch import prepare_files_list
 
 from util import reset_settings

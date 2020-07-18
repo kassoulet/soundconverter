@@ -15,9 +15,9 @@ from gi.repository import Gio, Gtk
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
-from soundconverter.settings import settings, get_gio_settings
-from soundconverter.soundfile import SoundFile
-from soundconverter.fileoperations import filename_to_uri
+from soundconverter.util.settings import settings, get_gio_settings
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.ui import win, gtk_iteration
 
 from util import reset_settings

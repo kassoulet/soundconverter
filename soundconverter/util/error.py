@@ -20,7 +20,7 @@
 # USA
 
 from gettext import gettext as _
-from soundconverter.utils import logger
+from soundconverter.util import logger
 import sys
 
 

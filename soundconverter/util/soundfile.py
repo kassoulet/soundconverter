@@ -23,7 +23,7 @@ import os
 import gi
 from gi.repository import GLib
 
-from soundconverter.fileoperations import unquote_filename
+from soundconverter.util.fileoperations import unquote_filename
 
 
 class SoundFile:

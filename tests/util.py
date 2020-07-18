@@ -4,7 +4,7 @@
 """utils used by tests"""
 
 
-from soundconverter.settings import settings
+from soundconverter.util.settings import settings
 
 
 DEFAULT_SETTINGS = settings.copy()
