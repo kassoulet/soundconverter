@@ -1,5 +1,4 @@
-README for GNOME sound converter application
-============================================
+# README for GNOME sound converter application
 
 A simple sound converter application for the GNOME environment. It reads
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
@@ -10,104 +9,74 @@ Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
 
-Supported audio formats
------------------------
+## Supported audio formats
 
 All file formats that GStreamer can read from should now be supported
 (thanks to the wonderful "decodebin" element). The output formats are
 more restricted, however, since there is no "encodebin" element to
 magically convert to any format we might want.
 
-==========  ==========
-Type        Supported?
-==========  ==========
-Ogg Vorbis  yes
-FLAC        yes
-Wave        yes
-MP3         yes
-==========  ==========
+| Type       | Supported? |
+| ---------- | ---------- |
+| Ogg Vorbis | yes        |
+| FLAC       | yes        |
+| Wave       | yes        |
+| MP3        | yes        |
 
-Building and installation
--------------------------
+## Building and installation
 
-To build and run from the latest source, use::
+To build and run from the latest source, use
 
-    git clone https://github.com/kassoulet/soundconverter.git
-    cd soundconverter
-    git checkout py3k
-    ./autogen.sh
-    make
-    sudo make install
-    soundconverter
+```bash
+git clone https://github.com/kassoulet/soundconverter.git
+cd soundconverter
+git checkout py3k
+./autogen.sh
+make
+sudo make install
+soundconverter
+```
 
-It is also available in the arch repositories::
+It is also available in the arch repositories
 
-    sudo pacman -S soundconverter
+```bash
+sudo pacman -S soundconverter
+```
 
-As well as the debian repositories::
+As well as the debian repositories
 
-    sudo apt install soundconverter
+```bash
+sudo apt install soundconverter
+```
 
-Help
-----
+## Help
 
-For command line args, see::
+For command line args, see
 
-    sounconverter --help
-    gst-launch-1.0 --help-gst
+```bash
+sounconverter --help
+gst-launch-1.0 --help-gst
+```
 
 and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
 
-Testing
--------
+## Testing
 
-To start unittests, use::
+To start unittests, use
 
-    make && make test
+```bash
+python3 tests/test.py
+```
 
-Copyright and acknowledgements
-------------------------------
+## Copyright and Acknowledgements
 
-| Copyright 2004 Lars Wirzenius
-| Copyright 2005-2017 Gautier Portet
-|
-| thanks to:
-| 	Guillaume Bedot
-| 	Dominik Zabłotny
-| 	Noa Resare
-| 	Nil Gradisnik
-| 	Elias Autio
-| 	Thom Pischke
-| 	Qball Cow
-| 	Janis Blechert
-| 	Brendan Martens
-| 	Jason Martens
-| 	Wouter Stomp
-| 	Joe Wrigley
-| 	Jonh Wendell
-| 	Regis Floret
-| 	Toni Fiz
-| 	Seketeli Apelete
-| 	Cristiano Canguçu
-| 	Adolfo González Blázquez
-| 	Marc E.
-| 	Tobias Kral
-| 	Hanno Böck
-| 	Pedro Alejandro López-Valencia
-| 	James Lee
-| 	Christopher Barrington-Leigh
-| 	Thomas Schwing
-| 	Remi Grolleau
-| 	Julien Gascard
-| 	Kamil Páral
-| 	Stefano Luciani
-| 	Martin Seifert
-| 	Claudio Saavedra
-| 	Ken Harris
-| 	Jon Arnold
-| 	Major Kong
-| 	Uwe Bugla
-|
+Copyright 2004 Lars Wirzenius
+
+Copyright 2005-2017 Gautier Portet
+
+Thanks to: Guillaume Bedot, Dominik Zabłotny, Noa Resare, Nil Gradisnik, Elias Autio, Thom Pischke, Qball Cow, Janis Blechert, Brendan Martens, Jason Martens, Wouter Stomp, Joe Wrigley, Jonh Wendell, Regis Floret, Toni Fiz, Seketeli Apelete, Cristiano Canguçu, Adolfo González Blázquez, Marc E., Tobias Kral, Hanno Böck, Pedro Alejandro López-Valencia, James Lee, Christopher Barrington-Leigh, Thomas Schwing, Remi Grolleau, Julien Gascard, Kamil Páral, Stefano Luciani, Martin Seifert, Claudio Saavedra, Ken Harris, Jon Arnold, Major Kong, Uwe Bugla
+
+
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; version 3 of the License.
