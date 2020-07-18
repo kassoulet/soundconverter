@@ -15,7 +15,7 @@ All file formats that GStreamer can read from should now be supported
 (thanks to the wonderful "decodebin" element)
 
 | Type       | Supported? |
-| ---------- | ---------- |
+| :--------- | :--------- |
 | Ogg Vorbis | yes        |
 | FLAC       | yes        |
 | Wave       | yes        |
