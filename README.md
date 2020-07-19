@@ -4,11 +4,12 @@
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
 Ogg Vorbis files.
 
-
 This application is somewhat less fast than various command line tools.
 Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
+
+![SoundConverter Logo](https://soundconverter.org/screenshot-converting.png)
 
 ## Supported audio formats
 
