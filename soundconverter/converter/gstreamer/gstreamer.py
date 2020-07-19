@@ -31,7 +31,7 @@ from soundconverter.util.fileoperations import vfs_encode_filename, unquote_file
     vfs_exists, beautify_uri
 from soundconverter.util.task import BackgroundTask
 from soundconverter.util.queue import TaskQueue
-from soundconverter.util import logger
+from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import mime_whitelist, filename_blacklist
 from soundconverter.util.error import show_error

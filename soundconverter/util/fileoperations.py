@@ -26,7 +26,7 @@ import urllib.error
 import gi
 from gi.repository import Gio
 
-from soundconverter.util import logger
+from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error
 
 

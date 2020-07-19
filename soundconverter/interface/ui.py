@@ -41,7 +41,7 @@ from soundconverter.util.formats import get_quality
 from soundconverter.util.formats import locale_patterns_dict, custom_patterns, filepattern
 from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
-from soundconverter.util import logger
+from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error, set_error_handler
 
 # Names of columns in the file list
