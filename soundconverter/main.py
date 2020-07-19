@@ -43,18 +43,13 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
 except (ImportError, ValueError) as error:
-    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(error)))
+    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
 
 # remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
 # and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
-
-try:
-    locale.setlocale(locale.LC_ALL, '')
-except locale.Error:
-    pass
 
 import soundconverter
 from soundconverter.util.settings import settings
@@ -63,8 +58,6 @@ from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_
 from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
-
-# command line argument parsing, launch-mode
 
 
 def check_mime_type(t):
