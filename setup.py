@@ -15,6 +15,10 @@ assert DistUtilsExtra.auto.__version__ >= '2.18', \
 # TODO figure out how to build a .deb from this
 # how to install the latest source globally? 
 
+# using DistUtilsExtra.auto.setup instead of setup from distutils.core will automatically
+# - install po files to /usr/share/locale*.mo,
+# - install .desktop files to /usr/share/applications
+# - install the py files 
 DistUtilsExtra.auto.setup(
     name='soundconverter',
     version='3.0.2',
@@ -23,11 +27,8 @@ DistUtilsExtra.auto.setup(
         'It writes WAV, FLAC, MP3, and Ogg Vorbis files.'
     ),
     license='GPL-3.0',
-    packages=['soundconverter'],
-
+    packages=['soundconverter']
     data_files=[
-        ('share/soundconverter/', ['data/soundconverter.glade']),
-        ('share/soundconverter/', ['data/soundconverter-logo.svg']),
         ('share/metainfo/', ['data/soundconverter.appdata.xml'])
     ],
 )
