@@ -1,10 +1,9 @@
 # SoundConverter
 
-![SoundConverter Logo](data/soundconverter.png)
-
-A simple sound converter application for the GNOME environment. It reads
+<img align="left" src="data/soundconverter.png"> A simple sound converter application for the GNOME environment. It reads
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
 Ogg Vorbis files.
+
 
 This application is somewhat less fast than various command line tools.
 Not a whole lot, however, and not enough to make me worry about
