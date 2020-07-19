@@ -39,12 +39,12 @@ VERSION = pkg_resources.require('soundconverter')[0].version
 NAME = pkg_resources.require('soundconverter')[0].project_name
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
 
-# if this file is in ~/.local, then make sure to use the proper prefix path for data
+# depending on where this file is installed to, make sure to use the proper prefix path for data
 # https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files
-if re.match(r'/home/[^/]+/\.local/', SOURCE_PATH):
-    DATA_PATH = site.USER_BASE
+if SOURCE_PATH.startswith(site.USER_BASE):
+    DATA_PATH = os.path.join(site.USER_BASE, 'soundconverter/data')
 elif SOURCE_PATH.startswith(sys.prefix):
-    DATA_PATH = sys.prefix
+    DATA_PATH = os.path.join(sys.prefix, 'soundconverter/data')
 else:
     DATA_PATH = os.path.join(SOURCE_PATH, 'data')
 
