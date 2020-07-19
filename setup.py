@@ -7,6 +7,7 @@ import DistUtilsExtra.auto
 # - install .desktop files to /usr/share/applications
 # - install all the py files to /usr/lib/python3.8/site-packages/soundconverter
 # - copy bin to /usr/bin
+# - copy the rest to /usr/share/soundconverter, like the .glade file
 DistUtilsExtra.auto.setup(
     name='soundconverter',
     version='3.0.2',
