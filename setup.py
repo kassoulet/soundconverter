@@ -16,8 +16,9 @@ setup(
     license='GPL-3.0',
     packages=['soundconverter'],
 
-    # TODO remove this before making a PR:
-    # this isn't used currently, but it would allow to read the
-    # contents of our data files: https://stackoverflow.com/a/5899643
-    package_data={'soundconverter': ['data/*']},
+    data_files=[
+        ('share/soundconverter/', ['data/soundconverter.glade']),
+        ('share/soundconverter/', ['data/soundconverter-logo.svg']),
+        ('share/metainfo/', ['data/soundconverter.appdata.xml'])
+    ],
 )

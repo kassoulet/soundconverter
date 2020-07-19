@@ -22,7 +22,7 @@
 import time
 from soundconverter.util.task import BackgroundTask
 from soundconverter.util.settings import settings
-from soundconverter.util import logger
+from soundconverter.util.logger import logger
 
 
 class TaskQueue(BackgroundTask):

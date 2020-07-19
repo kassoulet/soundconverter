@@ -34,7 +34,7 @@ from soundconverter.converter.gstreamer.gstreamer import TagReader, TypeFinder, 
 from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
-from soundconverter.util import logger
+from soundconverter.util.logger import logger
 
 
 def prepare_files_list(input_files):

@@ -24,6 +24,8 @@
 # imports and package setup
 
 import os
+import re
+import site
 import sys
 import locale
 import gettext
@@ -32,10 +34,19 @@ import pkgutil
 from gettext import gettext as _
 import pkg_resources
 
+# read values from setup.py
 VERSION = pkg_resources.require('soundconverter')[0].version
 NAME = pkg_resources.require('soundconverter')[0].project_name
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
-GLADEFILE = os.path.join(SOURCE_PATH, 'soundconverter/data/soundconverter.glade')
+
+# if this file is in ~/.local, then make sure to use the proper prefix path for data
+# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files
+if re.match(r'/home/[^/]+/\.local/', SOURCE_PATH):
+    DATA_PATH = site.USER_BASE
+elif SOURCE_PATH.startswith(sys.prefix):
+    DATA_PATH = sys.prefix
+else:
+    DATA_PATH = os.path.join(SOURCE_PATH, 'data')
 
 try:
     import gi
@@ -219,6 +230,7 @@ if not settings.get('quiet'):
         logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
 
 if settings['mode'] == 'gui':
+    GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
