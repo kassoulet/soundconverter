@@ -1,27 +1,15 @@
 # SoundConverter
 
-<img align="left" src="data/soundconverter.png"> A simple sound converter application for the GNOME environment. It reads
-anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
-Ogg Vorbis files.
+<img align="left" src="data/soundconverter.png"> A simple sound converter
+application for the GNOME environment. It reads anything the GStreamer library can
+read, and writes **Ogg Vorbis**, **FLAC**, **Wave**, **MP3** and **M4A** files.
 
 This application is somewhat less fast than various command line tools.
 Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
 
-![SoundConverter Logo](https://soundconverter.org/screenshot-converting.png)
-
-## Supported audio formats
-
-All file formats that GStreamer can read from should now be supported
-(thanks to the wonderful "decodebin" element)
-
-| Type       | Supported? |
-| :--------- | :--------- |
-| Ogg Vorbis | yes        |
-| FLAC       | yes        |
-| Wave       | yes        |
-| MP3        | yes        |
+![SoundConverter window](data/screenshot.png)
 
 ## Building and installation
 
