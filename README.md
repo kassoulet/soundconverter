@@ -1,4 +1,6 @@
-# Soundconverter
+# SoundConverter
+
+![SoundConverter Logo](data/soundconverter.png)
 
 A simple sound converter application for the GNOME environment. It reads
 anything the GStreamer library can read, and writes WAV, FLAC, MP3, and
@@ -29,7 +31,7 @@ To build and run from the latest source, use
 git clone https://github.com/kassoulet/soundconverter.git
 cd soundconverter
 git checkout py3k
-pip3 install .
+sudo python3 setup.py install
 soundconverter
 ```
 

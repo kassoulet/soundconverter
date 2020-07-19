@@ -1,4 +1,7 @@
 [encoding: UTF-8]
+
+bin/soundconverter
+
 data/soundconverter.desktop.in
 data/soundconverter.glade
 
@@ -18,5 +21,4 @@ soundconverter/interface/__init__.py
 soundconverter/interface/ui.py
 soundconverter/converter/gstreamer/gstreamer.py
 soundconverter/converter/__init__.py
-soundconverter/main.py
 soundconverter/__init__.py
