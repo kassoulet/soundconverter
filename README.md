@@ -9,9 +9,8 @@ Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
 
-
 <p align="center">
-<img src="data/screenshot.png" alt="SoundConverter Screenshot"/>
+    <img src="data/screenshot.png" alt="SoundConverter Screenshot"/>
 </p>
 
 ## Building and installation
@@ -54,6 +53,7 @@ and https://gstreamer.freedesktop.org/documentation/application-development/appe
 To start unittests, use
 
 ```bash
+sudo python3 setup.py install
 python3 tests/test.py
 ```
 

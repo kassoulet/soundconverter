@@ -18,7 +18,7 @@ from importlib.machinery import SourceFileLoader
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.fileoperations import filename_to_uri
-from soundconverter.ui import win, gtk_iteration
+from soundconverter.interface.ui import win, gtk_iteration
 
 from util import reset_settings
 
