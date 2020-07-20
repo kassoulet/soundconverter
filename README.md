@@ -25,17 +25,7 @@ sudo python3 setup.py install
 soundconverter
 ```
 
-It is also available in the Arch repositories
-
-```bash
-sudo pacman -S soundconverter
-```
-
-As well as the Ubuntu repositories
-
-```bash
-sudo apt install soundconverter
-```
+Ubuntu and Arch packages exist in the official repositories
 
 ## Help
 
