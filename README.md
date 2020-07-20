@@ -9,7 +9,7 @@ Not a whole lot, however, and not enough to make me worry about
 performance for the foreseeable future. If you want ultimate
 performance, the command line tools are always going to be preferable.
 
-![SoundConverter window](data/screenshot.png)
+<img align="center" src="data/screenshot.png" alt="SoundConverter Screenshot"/>
 
 ## Building and installation
 
