@@ -25,7 +25,7 @@ sudo python3 setup.py install
 soundconverter
 ```
 
-Ubuntu and Arch packages exist in the official repositories
+Ubuntu and Arch packages exist in the official repositories.
 
 ## Help
 
