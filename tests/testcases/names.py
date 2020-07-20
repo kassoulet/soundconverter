@@ -421,6 +421,18 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/Unknown_Genre/Hi_Ho.ogg"
         )
 
+    def testLeadingSlashPattern(self):
+        self.s = SoundFile("/path/#to/file.flac", "/path/")
+        self.s.tags.update({
+            "title": "Hi Ho"
+        })
+        self.g.suffix = ".ogg"
+        self.g.basename = "/home/foo/%(title)s"
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/home/foo/Hi_Ho.ogg"
+        )
+
     def testRootPathCustomPattern(self):
         self.s = SoundFile("/path/to/file.flac", "/path/")
         self.s.tags.update({

@@ -119,9 +119,9 @@ class TargetNameGenerator:
             'title': basename,
             'track-number': 0,
             'track-count': 0,
-            'genre': 'Unknown Genre',
-            'year': 'Unknown Year',
-            'date': 'Unknown Date',
+            'genre': _('Unknown Genre'),
+            'year': _('Unknown Year'),
+            'date': _('Unknown Date'),
             'album-disc-number': 0,
             'album-disc-count': 0,
         }
