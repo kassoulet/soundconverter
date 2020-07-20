@@ -30,7 +30,7 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util import error
 from soundconverter.util.settings import settings
 from soundconverter.util.formats import get_quality
-from soundconverter.converter.gstreamer.gstreamer import TagReader, TypeFinder, Converter
+from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
 from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
