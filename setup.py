@@ -1,8 +1,6 @@
-import sys
 import DistUtilsExtra.auto
 
-# using DistUtilsExtra.auto.setup instead of setup from distutils.core will automatically
-# assuming the prefix is /usr:
+# this will automatically, assuming that the prefix is /usr
 # - compile and install po files to /usr/share/locale*.mo,
 # - install .desktop files to /usr/share/applications
 # - install all the py files to /usr/lib/python3.8/site-packages/soundconverter
