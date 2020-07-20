@@ -141,7 +141,6 @@ class GUI(unittest.TestCase):
             # to work on the conversions and updating the GUI
             gtk_iteration()
 
-        print(os.getcwd())
         self.assertTrue(os.path.isdir("tests/tmp/audio/"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
         self.assertTrue(os.path.isfile("tests/tmp/audio/strange_chars_.opus"))
