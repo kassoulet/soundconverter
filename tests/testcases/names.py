@@ -12,11 +12,11 @@ import urllib.parse
 import urllib.error
 from gi.repository import Gst, Gio
 
-from soundconverter.settings import settings
-from soundconverter.namegenerator import TargetNameGenerator
-from soundconverter.soundfile import SoundFile
-from soundconverter.fileoperations import filename_to_uri, unquote_filename, beautify_uri
-from soundconverter.batch import prepare_files_list
+from soundconverter.util.settings import settings
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.fileoperations import filename_to_uri, unquote_filename, beautify_uri
+from soundconverter.interface.batch import prepare_files_list
 
 from util import reset_settings
 
@@ -385,7 +385,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
 
     def testRootPath(self):
-        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s = SoundFile("/path/#to/file.flac", "/path/")
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -398,23 +398,39 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # self.g.basename = "%(title)s")
         self.assertEqual(
             self.g.get_target_name(self.s),
-            "/music/to/file.ogg"
+            "/music/%23to/file.ogg"
         )
 
     def testRootCustomPattern(self):
-        self.s = SoundFile("/path/to/file.flac", "/path/")
+        self.s = SoundFile("/path/#to/file.flac", "/path/")
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
             "album": "IS: TOO",
             "track-number": 1,
-            "track-count": 11,
+            "track-count": 11
         })
         self.g.suffix = ".ogg"
-        self.g.basename = "%(title)s"
+        # make sure that a missing genre does not translate to '/filename',
+        # because then os.path.join would ignore anything before that and
+        # assume the directory should be a child of root.
+        self.g.basename = "%(genre)s/%(title)s"
         self.assertEqual(
             self.g.get_target_name(self.s),
-            "/path/to/Hi_Ho.ogg"
+            # basefolder handling is disabled when the pattern has a /
+            "/path/Unknown_Genre/Hi_Ho.ogg"
+        )
+
+    def testLeadingSlashPattern(self):
+        self.s = SoundFile("/path/#to/file.flac", "/path/")
+        self.s.tags.update({
+            "title": "Hi Ho"
+        })
+        self.g.suffix = ".ogg"
+        self.g.basename = "/home/foo/%(title)s"
+        self.assertEqual(
+            self.g.get_target_name(self.s),
+            "/home/foo/Hi_Ho.ogg"
         )
 
     def testRootPathCustomPattern(self):

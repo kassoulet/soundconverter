@@ -24,18 +24,32 @@
 # imports and package setup
 
 import os
+import re
+import site
 import sys
 import locale
 import gettext
 from optparse import OptionParser, OptionGroup
+import pkgutil
+from gettext import gettext as _
+import pkg_resources
 
-# variables, populated by make when installed to /usr/local/bin/soundconverter
-LIBDIR = '@libdir@'
-DATADIR = '@datadir@'
-NAME = 'SoundConverter'
-VERSION = '@version@'
-GLADEFILE = '@datadir@/soundconverter/soundconverter.glade'
-PACKAGE = NAME.lower()
+# read values from setup.py
+VERSION = pkg_resources.require('soundconverter')[0].version
+NAME = pkg_resources.require('soundconverter')[0].project_name
+SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+
+# depending on where this file is installed to, make sure to use the proper prefix path for data
+# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files
+if SOURCE_PATH.startswith(site.USER_BASE):
+    # /home
+    DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
+elif SOURCE_PATH.startswith(sys.prefix):
+    # /usr
+    DATA_PATH = os.path.join(sys.prefix, 'share/soundconverter')
+else:
+    # installed with -e, running from the cloned git source
+    DATA_PATH = os.path.join(SOURCE_PATH, 'data')
 
 try:
     import gi
@@ -51,40 +65,13 @@ except (ImportError, ValueError) as error:
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
-try:
-    locale.setlocale(locale.LC_ALL, '')
-    locale.bindtextdomain(PACKAGE, '@datadir@/locale')
-    gettext.bindtextdomain(PACKAGE, '@datadir@/locale')
-    gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE, localedir='@datadir@/locale')
-    # rom gettext import gettext as _
-except locale.Error:
-    print('cannot use system locale.')
-    locale.setlocale(locale.LC_ALL, 'C')
-    gettext.textdomain(PACKAGE)
-    gettext.install(PACKAGE, localedir='@datadir@/locale')
-
-
-def _add_soundconverter_path():
-    """Make the soundconverter package importable, which has been installed to LIBDIR during make install."""
-    root = os.path.join(LIBDIR, 'soundconverter', 'python')
-    if root not in sys.path:
-        sys.path.insert(0, root)
-
-
-_add_soundconverter_path()
 import soundconverter
-soundconverter.NAME = NAME
-soundconverter.VERSION = VERSION
-soundconverter.GLADEFILE = GLADEFILE
-from soundconverter.settings import settings
-from soundconverter.formats import get_mime_type, mime_types
-from soundconverter.fileoperations import vfs_encode_filename, filename_to_uri
-from soundconverter.batch import CLI_Convert, cli_tags_main, CLI_Check
-from soundconverter.ui import gui_main
-from soundconverter.utils import logger, update_verbosity
-
-# command line argument parsing, launch-mode
+from soundconverter.util.settings import settings
+from soundconverter.util.formats import get_mime_type, mime_types
+from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_uri
+from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
+from soundconverter.interface.ui import gui_main
+from soundconverter.util.logger import logger, update_verbosity
 
 
 def check_mime_type(t):
@@ -246,6 +233,7 @@ if not settings.get('quiet'):
         logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
 
 if settings['mode'] == 'gui':
+    GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:

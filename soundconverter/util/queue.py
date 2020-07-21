@@ -20,9 +20,9 @@
 # USA
 
 import time
-from soundconverter.task import BackgroundTask
-from soundconverter.settings import settings
-from soundconverter.utils import logger
+from soundconverter.util.task import BackgroundTask
+from soundconverter.util.settings import settings
+from soundconverter.util.logger import logger
 
 
 class TaskQueue(BackgroundTask):

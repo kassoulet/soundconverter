@@ -32,17 +32,17 @@ from gettext import ngettext
 
 from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
-from soundconverter.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
-from soundconverter.gstreamer import ConverterQueue, available_elements, \
+from soundconverter.util.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
+from soundconverter.converter.gstreamer import ConverterQueue, available_elements, \
     TypeFinder, audio_profiles_list, audio_profiles_dict
-from soundconverter.soundfile import SoundFile
-from soundconverter.settings import settings, get_gio_settings
-from soundconverter.formats import get_quality
-from soundconverter.formats import locale_patterns_dict, custom_patterns, filepattern
-from soundconverter.namegenerator import TargetNameGenerator
-from soundconverter.queue import TaskQueue
-from soundconverter.utils import logger, idle
-from soundconverter.error import show_error, set_error_handler
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.settings import settings, get_gio_settings
+from soundconverter.util.formats import get_quality
+from soundconverter.util.formats import locale_patterns_dict, custom_patterns, filepattern
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.queue import TaskQueue
+from soundconverter.util.logger import logger
+from soundconverter.util.error import show_error, set_error_handler
 
 # Names of columns in the file list
 MODEL = [
@@ -57,6 +57,12 @@ COLUMNS = ['filename']
 
 # VISIBLE_COLUMNS = ['filename']
 # ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
+
+
+def idle(func):
+    def callback(*args, **kwargs):
+        GLib.idle_add(func, *args, **kwargs)
+    return callback
 
 
 def gtk_iteration():
