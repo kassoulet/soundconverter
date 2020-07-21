@@ -36,12 +36,13 @@ class PostInstallation(DistUtilsExtra.auto.install_auto):
             self.prefix = ''
         
         print('self.prefix', self.prefix)
+        print('self.install_data', self.install_data)
 
         DistUtilsExtra.auto.install_auto.run(self)
 
         # after DistUtilsExtra automatically copied  data/org.soundconverter.gschema.xml
         # to /usr/share/glib-2.0/schemas/ it doesn't seem to compile them.
-        glib_schema_path = os.path.join(self.prefix, 'share/glib-2.0/schemas/')
+        glib_schema_path = os.path.join(self.install_data, 'share/glib-2.0/schemas/')
 
         print('glib_schema_path', glib_schema_path)
 
