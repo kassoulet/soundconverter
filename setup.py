@@ -30,7 +30,7 @@ import DistUtilsExtra.auto
 # - Copy the rest to /usr/share/soundconverter, like the .glade file
 # Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc)
 
-class PostInstallation(DistUtilsExtra.auto.install_auto):
+class Install(DistUtilsExtra.auto.install_auto):
     def run(self):
         DistUtilsExtra.auto.install_auto.run(self)
         # after DistUtilsExtra automatically copied data/org.soundconverter.gschema.xml
@@ -54,6 +54,6 @@ DistUtilsExtra.auto.setup(
         ('share/icons/hicolor/scalable/apps/', ['data/soundconverter.svg'])
     ],
     cmdclass={
-        'install': PostInstallation
+        'install': Install
     }
 )
