@@ -481,6 +481,18 @@ msgstr "Konvertierung nach %s abgeschlossen"
 msgid "Unknown Album"
 msgstr "Unbekanntes Album"
 
+#: ../soundconverter/namegenerator.py:122
+msgid "Unknown Genre"
+msgstr "Unbekanntes Genre"
+
+#: ../soundconverter/namegenerator.py:123
+msgid "Unknown Date"
+msgstr "Unbekanntes Datum"
+
+#: ../soundconverter/namegenerator.py:124
+msgid "Unknown Year"
+msgstr "Unbekanntes Jahr"
+
 #: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"

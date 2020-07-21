@@ -27,14 +27,14 @@ import traceback
 
 from gi.repository import Gst, Gtk, GLib, GObject, Gio
 
-from soundconverter.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
+from soundconverter.util.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
     vfs_exists, beautify_uri
-from soundconverter.task import BackgroundTask
-from soundconverter.queue import TaskQueue
-from soundconverter.utils import logger, idle
-from soundconverter.settings import get_gio_settings
-from soundconverter.formats import mime_whitelist, filename_blacklist
-from soundconverter.error import show_error
+from soundconverter.util.task import BackgroundTask
+from soundconverter.util.queue import TaskQueue
+from soundconverter.util.logger import logger
+from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.formats import mime_whitelist, filename_blacklist
+from soundconverter.util.error import show_error
 
 try:
     from soundconverter.notify import notification
@@ -223,7 +223,6 @@ class Pipeline(BackgroundTask):
         self.on_message_(bus, message)
         return True
 
-    # @idle
     def on_message(self, bus, message):
         import threading
 

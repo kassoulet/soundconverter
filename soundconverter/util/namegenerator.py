@@ -30,7 +30,7 @@ import unicodedata
 from gettext import gettext as _
 import gi
 from gi.repository import Gio
-from soundconverter.fileoperations import vfs_exists, filename_to_uri, unquote_filename
+from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, unquote_filename
 
 
 class TargetNameGenerator:
@@ -119,9 +119,9 @@ class TargetNameGenerator:
             'title': basename,
             'track-number': 0,
             'track-count': 0,
-            'genre': '',
-            'year': '',
-            'date': '',
+            'genre': _('Unknown Genre'),
+            'year': _('Unknown Year'),
+            'date': _('Unknown Date'),
             'album-disc-number': 0,
             'album-disc-count': 0,
         }

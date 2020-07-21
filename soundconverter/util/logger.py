@@ -21,7 +21,7 @@
 
 # logging & debugging
 
-from soundconverter.settings import settings
+from soundconverter.util.settings import settings
 from gi.repository import GLib
 import logging
 
@@ -56,9 +56,3 @@ def update_verbosity():
         logger.setLevel(logging.WARNING)
     else:
         logger.setLevel(logging.INFO)
-
-
-def idle(func):
-    def callback(*args, **kwargs):
-        GLib.idle_add(func, *args, **kwargs)
-    return callback

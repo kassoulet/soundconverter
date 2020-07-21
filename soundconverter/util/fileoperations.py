@@ -26,8 +26,8 @@ import urllib.error
 import gi
 from gi.repository import Gio
 
-from soundconverter.utils import logger
-from soundconverter.error import show_error
+from soundconverter.util.logger import logger
+from soundconverter.util.error import show_error
 
 
 def unquote_filename(filename):
