@@ -13,9 +13,11 @@ performance, the command line tools are always going to be preferable.
     <img src="data/screenshot.png" alt="SoundConverter Screenshot"/>
 </p>
 
-## Building and installation
+## Building and Installation
 
-To build and run from the latest source, use
+Ubuntu and Arch packages exist in the official repositories.
+
+Installing from source requires distutils-extra
 
 ```bash
 git clone https://github.com/kassoulet/soundconverter.git
@@ -24,8 +26,6 @@ git checkout py3k
 sudo python3 setup.py install
 soundconverter
 ```
-
-Ubuntu and Arch packages exist in the official repositories.
 
 ## Help
 
