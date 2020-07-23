@@ -581,8 +581,10 @@ class PreferencesDialog(GladeWindow):
                 found_profile = True
         if not found_profile and stored_profile:
             # reset default output
-            logger.info('Cannot find audio profile "%s", resetting to default output.'
-                % stored_profile)
+            logger.info(
+                'Cannot find audio profile "%s", resetting to default output.',
+                stored_profile
+            )
             self.settings.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
             self.settings.reset('output-mime-type')

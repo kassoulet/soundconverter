@@ -92,7 +92,7 @@ mime_types = {
 
 def get_mime_type(t):
     """Return the matching mime-type or None if it is not supported.
-    
+
     Parameters
     ----------
         t : string

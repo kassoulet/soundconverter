@@ -48,7 +48,7 @@ settings = {
 
 def set_gio_settings(settings):
     """To overwrite the default Gio.Settings object to for example use a memory backend instead.
-    
+
     Parameters
     ----------
     settings : Gio.Settings
