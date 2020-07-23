@@ -219,6 +219,7 @@ class Pipeline(BackgroundTask):
             self.on_error(error)
             self.done()
         elif t == Gst.MessageType.EOS:
+            print('Gst.MessageType.EOS')
             self.eos = True
             self.done()
         elif t == Gst.MessageType.TAG:

@@ -19,21 +19,22 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import unittest
-from soundconverter.util.formats import get_mime_type, get_quality
+from soundconverter.audio.task import Task
 
 
-class Format(unittest.TestCase):
-    def test_get_mime_type(self):
-        self.assertEqual(get_mime_type('mp3'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('audio/x-m4a'), 'audio/x-m4a')
+class Converter(Task):
+    def __init__(self, source_filename, target_filename, mime, quality):
+        """Create a converter that converts a single file."""
+        pass
 
-    def test_get_quality(self):
-        self.assertEqual(get_quality('mp3', 0, 'cbr'), 64)
-        self.assertEqual(get_quality('aac', 1, 'thetgdfgsfd'), 96)
-        self.assertEqual(get_quality('aac', 256, reverse=True), 4)
-        self.assertEqual(get_quality('mp3', 320, mode='abr', reverse=True), 5)
+    def progress(self):
+        """Fraction of how much of the task is completed."""
+        raise NotImplementedError()
 
+    def cancel(self):
+        """Stop execution of the task."""
+        raise NotImplementedError()
 
-if __name__ == "__main__":
-    unittest.main()
+    def run(self):
+        """Run the task"""
+        raise NotImplementedError()
