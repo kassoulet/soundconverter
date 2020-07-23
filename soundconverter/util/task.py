@@ -59,7 +59,10 @@ class BackgroundTask:
         Callbacks are called as GTK idle funcs to be sure
         they are in the main thread.
         """
+        # default listener
         GLib.idle_add(getattr(self, signal))
+
+        # additional user defined listeners:
         if signal in self.listeners:
             for listener in self.listeners[signal]:
                 GLib.idle_add(listener, self)
