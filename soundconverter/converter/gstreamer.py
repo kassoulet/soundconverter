@@ -200,20 +200,7 @@ class Pipeline(BackgroundTask):
         self.play()
 
     def install_plugin_cb(self, result):
-        return  # XXX
-        if result in (Gst.pbutils.INSTALL_PLUGINS_SUCCESS,
-                      Gst.pbutils.INSTALL_PLUGINS_PARTIAL_SUCCESS):
-            Gst.update_registry()
-            self.restart()
-            return
-        if result == Gst.pbutils.INSTALL_PLUGINS_USER_ABORT:
-            self.error = _('Plugin installation aborted.')
-            global user_canceled_codec_installation
-            user_canceled_codec_installation = True
-            self.done()
-            return
-        self.done()
-        show_error('Error', 'failed to install plugins: {}'.format(GLib.markup_escape_text(str(result))))
+        return
 
     def on_error(self, error):
         self.error = error
@@ -224,8 +211,6 @@ class Pipeline(BackgroundTask):
         return True
 
     def on_message(self, bus, message):
-        import threading
-
         t = message.type
         if t == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
@@ -233,24 +218,6 @@ class Pipeline(BackgroundTask):
             self.error = error
             self.on_error(error)
             self.done()
-            """XXX elif Gst.pbutils.is_missing_plugin_message(message):
-            global user_canceled_codec_installation
-            detail = Gst.pbutils.missing_plugin_message_get_installer_detail(message)
-            logger.debug('missing plugin: {} {}'.format(detail.split('|')[3], self.sound_file.uri))
-            self.pipeline.set_state(Gst.State.NULL)
-            if Gst.pbutils.install_plugins_installation_in_progress():
-                while Gst.pbutils.install_plugins_installation_in_progress():
-                    gtk_sleep(0.1)
-                self.restart()
-                return
-            if user_canceled_codec_installation:
-                self.error = 'Plugin installation cancelled'
-                logger.debug(self.error)
-                self.done()
-                return
-            ctx = Gst.pbutils.InstallPluginsContext()
-            Gst.pbutils.install_plugins_async([detail], ctx, self.install_plugin_cb)
-            """
         elif t == Gst.MessageType.EOS:
             self.eos = True
             self.done()

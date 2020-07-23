@@ -20,7 +20,6 @@
 # USA
 
 import time
-import gi
 from gi.repository import GLib
 
 

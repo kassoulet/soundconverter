@@ -23,11 +23,9 @@ import os
 import urllib.request
 import urllib.parse
 import urllib.error
-import gi
 from gi.repository import Gio
 
 from soundconverter.util.logger import logger
-from soundconverter.util.error import show_error
 
 
 def unquote_filename(filename):
@@ -52,7 +50,6 @@ def vfs_walk(uri):
     filelist = []
     dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
     for file_info in dirlist:
-        name = file_info.get_name()
         info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
         if info == Gio.FileType.DIRECTORY:
             filelist.extend(vfs_walk(dirlist.get_child(file_info).get_uri()))

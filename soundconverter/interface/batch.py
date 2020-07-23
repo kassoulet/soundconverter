@@ -25,9 +25,8 @@ import os
 import sys
 import time
 
-from gi.repository import Gtk, GLib
+from gi.repository import GLib
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util import error
 from soundconverter.util.settings import settings
 from soundconverter.util.formats import get_quality
 from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
