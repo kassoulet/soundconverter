@@ -20,8 +20,6 @@
 # USA
 
 from gettext import gettext as _
-from multiprocessing import cpu_count
-from gi.repository import Gio
 
 # add here any format you want to be read
 mime_whitelist = (

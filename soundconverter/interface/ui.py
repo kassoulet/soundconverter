@@ -20,7 +20,6 @@
 # USA
 
 import os
-from os.path import basename, dirname
 from random import random
 import time
 import sys

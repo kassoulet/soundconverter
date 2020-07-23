@@ -20,7 +20,6 @@
 # USA
 
 import os
-import gi
 from gi.repository import GLib
 
 from soundconverter.util.fileoperations import unquote_filename

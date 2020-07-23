@@ -28,8 +28,6 @@ import urllib.parse
 import urllib.error
 import unicodedata
 from gettext import gettext as _
-import gi
-from gi.repository import Gio
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, unquote_filename
 
 

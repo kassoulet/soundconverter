@@ -22,7 +22,6 @@
 # logging & debugging
 
 from soundconverter.util.settings import settings
-from gi.repository import GLib
 import logging
 
 
