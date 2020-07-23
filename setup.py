@@ -3,7 +3,7 @@
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
-# Copyright 2005-2017 Gautier Portet
+# Copyright 2005-2020 Gautier Portet
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class Install(DistUtilsExtra.auto.install_auto):
 
 DistUtilsExtra.auto.setup(
     name='soundconverter',
-    version='3.0.2',
+    version='3.1.0',
     description=(
         'A simple sound converter application for the GNOME environment. '
         'It writes WAV, FLAC, MP3, and Ogg Vorbis files.'
