@@ -25,7 +25,7 @@ from util import reset_settings
 
 def launch(argv=[]):
     """Start the soundconverter with the command line argument array argv.
-    
+
     Make sure to run the `make` command first in your terminal.
     """
     testargs = sys.argv.copy()[:2]

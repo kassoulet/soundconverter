@@ -130,7 +130,7 @@ class CliProgress:
 
     def show(self, *msgs):
         """Update the progress in the console.
-        
+
         Example: show(1, "%").
         """
         new_text = ' '.join([str(msg) for msg in msgs])
@@ -188,7 +188,8 @@ class CLI_Convert():
         for i, input_file in enumerate(input_files):
 
             if input_file not in file_checker.good_files:
-                logger.info('skipping \'{}\': invalid soundfile'.format(unquote_filename(input_file.split(os.sep)[-1][-65:])))
+                filename = unquote_filename(input_file.split(os.sep)[-1][-65:])
+                logger.info('skipping \'{}\': invalid soundfile'.format(filename))
                 continue
 
             input_file = SoundFile(input_file)
@@ -206,7 +207,8 @@ class CLI_Convert():
 
             # skip existing output files if desired (-i cli argument)
             if settings.get('ignore-existing') and vfs_exists(output_name):
-                logger.info('skipping \'{}\': already exists'.format(unquote_filename(output_name.split(os.sep)[-1][-65:])))
+                filename = unquote_filename(output_name.split(os.sep)[-1][-65:])
+                logger.info('skipping \'{}\': already exists'.format(filename))
                 continue
 
             c = Converter(input_file, output_name, output_type)

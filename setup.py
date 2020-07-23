@@ -30,6 +30,7 @@ import DistUtilsExtra.auto
 # - Copy the rest to /usr/share/soundconverter, like the .glade file
 # Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc)
 
+
 class Install(DistUtilsExtra.auto.install_auto):
     def run(self):
         DistUtilsExtra.auto.install_auto.run(self)
@@ -39,6 +40,7 @@ class Install(DistUtilsExtra.auto.install_auto):
         cmd = 'glib-compile-schemas {}'.format(glib_schema_path)
         print('running {}'.format(cmd))
         os.system(cmd)
+
 
 DistUtilsExtra.auto.setup(
     name='soundconverter',

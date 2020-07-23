@@ -133,13 +133,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/faoo.mp3')
         self.assertEqual(self.g.safe_name('./tests/test data/fooâ.mp3'), './tests/test data/fooa.mp3')
         self.assertEqual(self.g.safe_name('tests/test data/fфズ oo.mp3â'), 'tests/test data/f_oo.mp3a')
-        
+
         # 4. the complete path exists
         original_name = os.getcwd() + '/tests/test data/audio/a.wav'
         self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
         self.assertEqual(self.g.safe_name('./tests/test data'), './tests/test data')
         self.assertEqual(self.g.safe_name('tests/test data/'), 'tests/test data/')
-        
+
         # 5. paths with special chars can be transformed into existing paths.
         # Doesn't increment the filename. on_task_finished of gstreamer.py does that later.
         # To reuse paths that were generated from {artist} tags with special characters
