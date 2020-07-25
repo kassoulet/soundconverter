@@ -32,52 +32,71 @@ from util import reset_settings
 
 
 class SyncSleepTask(Task):
-    """Task that does nothing."""
+    """Task that does nothing.
+    
+    Multiple of those tasks can't run in parallel.
+    """
     def __init__(self):
         super().__init__()
 
     def progress(self):
         """Fraction of how much of the task is completed."""
-        # very useless example
-        return 0
+        # it's blocking anyways, so progress cannot be asked for
+        # until the end.
+        return 1
 
     def cancel(self):
-        """Stop execution of the task."""
         pass
 
     def run(self):
-        """Run the task"""
         time.sleep(0.1)
         self.callback()
 
+    def pause(self):
+        # cannot be paused
+        pass
+
+    def resume(self):
+        pass
+
 
 class AsyncSleepTask(Task):
-    """Task that does nothing as well, but this time asynchronously."""
+    """Task that does nothing as well, but this time asynchronously.
+    
+    Can run in parallel. This is just an example on how a Task might work.
+    """
     def __init__(self):
         self.progress = 0
+        self.paused = False
+        self.cancelled = False
+        self.resume_event = threading.Event()
         super().__init__()
 
     def progress(self):
         """Fraction of how much of the task is completed."""
         return self.progress
 
-    def cancel(self):
-        """Stop execution of the task."""
-        pass
-
     def async_stuff(self, bus):
         """Sleep for some time and emit an event for GLib."""
-        time.sleep(0.1)
-        self.progress = 0.33
-        time.sleep(0.1)
-        self.progress = 0.67
-        time.sleep(0.1)
-        self.progress = 1
+        # sleep for a total of 0.5s, simulate some sort of task that can
+        # be paused.
+        while self.progress < 1:
+            if self.paused:
+                # wait for the resume event
+                self.resume_event.wait()
+                self.resume_event.clear()
+
+            if self.cancelled:
+                # don't post the msg, because that would indicate success
+                return
+
+            time.sleep(0.1)
+            self.progress += 0.2
 
         # GLib has an event loop (possibly very similar to the one in node.js)
         # which, from my uneducated perspective, looks like it calls the
-        # functions of idle_add and bus.connect as soon as it can during some
-        # gtk main iterations.
+        # functions passed to idle_add and bus.connect as soon as it can
+        # during some gtk main iterations.
         # Trigger calling done during the next gtk iterations:
 
         # this is also what gstreamer pipelines emit when they are done
@@ -85,18 +104,31 @@ class AsyncSleepTask(Task):
         msg = Gst.Message.new_custom(msg_type, None, None)
         bus.post(msg)
 
-    def done(self, bus, message):
-        """Write down that it is finished and call the callback."""
-        self.running = False
-        self.callback()
+    def pause(self):
+        self.paused = True
+
+    def resume(self):
+        self.paused = False
+        self.resume_event.set()
+
+    def cancel(self):
+        self.cancelled = True
+        # make sure to not block cancelling because of the pause
+        self.resume()
 
     def run(self):
-        """Run the task"""
+        self.cancelled = False
         bus = Gst.Bus()
         bus.connect('message', self.done)
         bus.add_signal_watch()
         thread = threading.Thread(target=self.async_stuff, args=(bus,))
-        thread.run()
+        thread.start()
+        # don't do thread.join, because that would block the main thread
+
+    def done(self, bus, message):
+        """Write down that it is finished and call the callback."""
+        self.running = False
+        self.callback()
 
 
 class SyncSleepTaskTest(unittest.TestCase):
@@ -107,6 +139,121 @@ class SyncSleepTaskTest(unittest.TestCase):
         task.set_callback(done)
         task.run()
         done.assert_called_with(task)
+
+
+class AsyncMulticoreTaskQueueTest(unittest.TestCase):
+    """Example closest to the real world, should be tested well."""
+    def setUp(self):
+        self.num_tasks = 5
+        self.num_jobs = 2
+        settings['forced-jobs'] = self.num_jobs
+        q = TaskQueue()
+        for i in range(self.num_tasks):
+            q.add(AsyncSleepTask())
+            self.assertEqual(q.done, 0)
+            self.assertEqual(q.pending.qsize(), i + 1)
+            self.assertEqual(len(q.running), 0)
+        self.assertEqual(q.pending.qsize(), self.num_tasks)
+        self.q = q
+        
+    def tearDown(self):
+        self.q = None
+
+    def test_queue_multiple_async(self):
+        self.q.run()
+        self.assertEqual(self.q.done, 0)
+        # simultaneously running tasks are limited:
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        # in the ui, some gtk iterations are performed to keep the ui
+        # responsive while waiting for all tasks to finish.
+        loop = GLib.MainLoop()
+        context = loop.get_context()
+        # call functions that are added to the event loop
+        while self.q.done < self.num_tasks:
+            # since only two tasks can be done at a time, after an iteration
+            # new tasks are put into running state. So iteration has to be
+            # called multiple times
+            context.iteration(True)
+
+        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(self.q.pending.qsize(), 0)
+        self.assertEqual(len(self.q.running), 0)
+
+    def test_pause_resume(self):
+        self.q.run()
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        self.q.pause()
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        # after some time and running all accumulated glib events and stuff,
+        # no job should be finished due to them being paused
+        time.sleep(0.6)
+        loop = GLib.MainLoop()
+        context = loop.get_context()
+        context.iteration(False)
+
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        self.q.resume()
+        # even after resuming, time has to pass
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        # wait until the queue is completely done
+        while self.q.done < self.num_tasks:
+            # this blocks until bus.post(msg) is called:
+            context.iteration(True)
+
+        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(self.q.pending.qsize(), 0)
+        self.assertEqual(len(self.q.running), 0)
+
+    def test_cancel_run(self):
+        self.assertEqual(self.q.done, 0)
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks)
+        self.assertEqual(len(self.q.running), 0)
+
+        self.q.run()
+        self.assertEqual(self.q.done, 0)
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        self.q.cancel()
+        self.assertEqual(self.q.done, 0)
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks)
+        self.assertEqual(len(self.q.running), 0)
+
+        # after some time and running all accumulated glib events and stuff,
+        # no job should be finished due to them being not running anymore.
+        time.sleep(0.6)
+        loop = GLib.MainLoop()
+        context = loop.get_context()
+        context.iteration(False)
+
+        self.assertEqual(self.q.done, 0)
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks)
+        self.assertEqual(len(self.q.running), 0)
+
+        self.q.run()
+        # even after resuming, time has to pass
+        self.assertEqual(self.q.done, 0)
+        self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
+        self.assertEqual(len(self.q.running), self.num_jobs)
+
+        # wait until the queue is completely done
+        while self.q.done < self.num_tasks:
+            # this blocks until bus.post(msg) is called:
+            context.iteration(True)
+
+        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(self.q.pending.qsize(), 0)
+        self.assertEqual(len(self.q.running), 0)
 
 
 class TaskQueueTest(unittest.TestCase):
@@ -150,91 +297,14 @@ class TaskQueueTest(unittest.TestCase):
         context = loop.get_context()
         # call functions that are added to the event loop. In this case,
         # the listeners for messages from our AsyncSleepTask
-        context.iteration(True)
-        
-        self.assertEqual(q.done, 1)
-        self.assertEqual(q.pending.qsize(), 0)
-        self.assertEqual(len(q.running), 0)
-
-    def test_queue_multiple_async(self):
-        """Example that is closer to the real world."""
-        num_tasks = 5
-        num_jobs = 2
-
-        settings['forced-jobs'] = num_jobs
-        q = TaskQueue()
-
-        for i in range(num_tasks):
-            q.add(AsyncSleepTask())
-            self.assertEqual(q.done, 0)
-            self.assertEqual(q.pending.qsize(), i + 1)
-            self.assertEqual(len(q.running), 0)
-
-        self.assertEqual(q.pending.qsize(), num_tasks)
-
-        q.run()
-        self.assertEqual(q.done, 0)
-        # simultaneously running tasks are limited:
-        self.assertEqual(q.pending.qsize(), num_tasks - num_jobs)
-        self.assertEqual(len(q.running), num_jobs)
-
-        # in the ui, some gtk iterations are performed to keep the ui
-        # responsive while waiting for all tasks to finish.
-        loop = GLib.MainLoop()
-        context = loop.get_context()
-        # call functions that are added to the event loop
-        while q.done < num_tasks:
-            # since only two tasks can be done at a time, after an iteration
-            # new tasks are put into running state. So iteration has to be
-            # called multiple times
+        # wait until the queue is completely done
+        while q.done < 1:
+            # this blocks until bus.post(msg) is called:
             context.iteration(True)
-        
-        self.assertEqual(q.done, num_tasks)
-        self.assertEqual(q.pending.qsize(), 0)
-        self.assertEqual(len(q.running), 0)
 
-    def test_queue_multiple_mixed(self):
-        """Contains both synchronous and asynchronous tasks."""
-        settings['forced-jobs'] = 2
-        q = TaskQueue()
-
-        q.add(AsyncSleepTask()) # a
-        q.add(SyncSleepTask()) # b
-        q.add(AsyncSleepTask()) # c
-        q.add(SyncSleepTask()) # d
-        q.add(AsyncSleepTask()) # e
-
-        self.assertEqual(q.pending.qsize(), 5)
-
-        loop = GLib.MainLoop()
-        context = loop.get_context()
-
-        q.run()
-
-        # since b finishes synchronously, it already is done after .run()
-        # so 3 tasks are removed from the queue already
-        self.assertEqual(q.pending.qsize(), 2)
         self.assertEqual(q.done, 1)
-        self.assertEqual(len(q.running), 2) # two async tasks, a and c
-
-        # get the finish message from the running async tasks a and c now
-        context.iteration(True)
-        # d and e are added to the queue, d finishes immediately
         self.assertEqual(q.pending.qsize(), 0)
-        self.assertEqual(q.done, 4)
-        self.assertEqual(len(q.running), 1)
-
-        # get message from e
-        context.iteration(True)
-        self.assertEqual(q.pending.qsize(), 0)
-        self.assertEqual(q.done, 5)
         self.assertEqual(len(q.running), 0)
-
-    def test_pause(self):
-        raise NotImplementedError('TODO')
-
-    def test_cancel(self):
-        raise NotImplementedError('TODO')
 
 
 if __name__ == "__main__":
