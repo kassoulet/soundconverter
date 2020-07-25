@@ -80,6 +80,8 @@ class TaskQueue():
     def task_done(self, task):
         """One task is done, start another one.
         
+        This callback has to be called by the task, when the task is done.
+
         Parameters
         ----------
             task : Task
