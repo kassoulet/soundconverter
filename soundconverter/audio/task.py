@@ -22,13 +22,6 @@
 
 class Task():
     """Abstract class of a single task."""
-    def __init__(self):
-        """Create a Task. Call this in your derived class."""
-        # In order to keep __init__ args clean for use in derived classes
-        # and whatever they need in their constructor, set attributes in
-        # setters instead.
-        self.callback = lambda: None
-
     def progress(self):
         """Fraction of how much of the task is completed."""
         raise NotImplementedError()
@@ -65,7 +58,7 @@ class Task():
         Make sure to call self.callback() when done in your inheriting class.
         """
         def callback_wrapped():
-            # automatically provide self as argument.
+            # automatically provide self as argument, so that
             # it's only required to call callback() without any argument
             return callback(self)
         self.callback = callback_wrapped
