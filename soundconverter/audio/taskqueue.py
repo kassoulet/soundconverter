@@ -61,12 +61,13 @@ class TaskQueue():
     def cancel(self):
         """Stop all tasks."""
         for task in self.running:
-            self.running.remove(task)
             # by calling run it can be resumed, but cancelled tasks will start
             # from the beginning. The proper way would be to call pause and
             # resume for such a functionality though.
             self.pending.put(task)
             task.cancel()
+
+        self.running = []
 
     def get_num_jobs(self):
         """Return the number of jobs that should be run in parallel."""

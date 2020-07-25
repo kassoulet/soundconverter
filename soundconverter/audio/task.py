@@ -37,6 +37,14 @@ class Task():
         """Stop execution of the task."""
         raise NotImplementedError()
 
+    def pause(self):
+        """Stop execution of the task."""
+        raise NotImplementedError()
+
+    def resume(self):
+        """Stop execution of the task."""
+        raise NotImplementedError()
+
     def run(self, callback):
         """Run the task.
         
@@ -57,6 +65,7 @@ class Task():
         Make sure to call self.callback() when done in your inheriting class.
         """
         def callback_wrapped():
-            # automatically provide self as argument
+            # automatically provide self as argument.
+            # it's only required to call callback() without any argument
             return callback(self)
         self.callback = callback_wrapped
