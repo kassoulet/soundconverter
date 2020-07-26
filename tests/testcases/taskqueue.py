@@ -203,8 +203,6 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
     """Example closest to the real world, should be tested well."""
     def setUp(self):
         self.num_tasks = 5
-        self.num_jobs = 2
-        settings['forced-jobs'] = self.num_jobs
         q = TaskQueue()
         for i in range(self.num_tasks):
             q.add(AsyncSleepTask())
@@ -218,6 +216,9 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.q = None
 
     def test_queue_multiple_async(self):
+        self.num_jobs = 2
+        settings['forced-jobs'] = self.num_jobs
+
         self.q.run()
         self.assertEqual(self.q.done, 0)
         # simultaneously running tasks are limited:
@@ -240,6 +241,9 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), 0)
 
     def test_pause_resume(self):
+        self.num_jobs = 5
+        settings['forced-jobs'] = self.num_jobs
+
         self.q.run()
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
@@ -273,6 +277,12 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), 0)
 
     def test_cancel_run(self):
+        self.num_jobs = 5
+        settings['forced-jobs'] = self.num_jobs
+        
+        loop = GLib.MainLoop()
+        context = loop.get_context()
+
         self.assertEqual(self.q.done, 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
@@ -281,6 +291,9 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.done, 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
+
+        time.sleep(0.3)
+        context.iteration(False)
 
         self.q.cancel()
         self.assertEqual(self.q.done, 0)
@@ -288,10 +301,8 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), 0)
 
         # after some time and running all accumulated glib events and stuff,
-        # no job should be finished due to them being not running anymore.
+        # no job should be finished due to them not running anymore.
         time.sleep(0.6)
-        loop = GLib.MainLoop()
-        context = loop.get_context()
         context.iteration(False)
 
         self.assertEqual(self.q.done, 0)
@@ -299,15 +310,21 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), 0)
 
         self.q.run()
-        # even after resuming, time has to pass
+        # even after resuming, time has to pass, but the previous progress of
+        # 0.3 seconds should be reset.
+        time.sleep(0.3)
+        context.iteration(False)
         self.assertEqual(self.q.done, 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
-        # wait until the queue is completely done
-        while self.q.done < self.num_tasks:
-            # this blocks until bus.post(msg) is called:
-            context.iteration(True)
+        # only after some more time all are done, but don't sleep longer
+        # than 0.3 more seconds, because after 0.5s they should be done.
+        slept = 0 
+        while self.q.done < self.num_tasks and slept < 0.3:
+            time.sleep(0.1)
+            slept += 0.1
+            context.iteration(False)
 
         self.assertEqual(self.q.done, self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
