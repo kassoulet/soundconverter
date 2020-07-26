@@ -30,6 +30,7 @@ import unittest
 # from testcases.names import *
 # from testcases.format import *
 from testcases.taskqueue import *
+from testcases.converter import *
 
 if __name__ == "__main__":
     unittest.main()
