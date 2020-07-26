@@ -26,7 +26,7 @@ class Converter(Task):
     def __init__(self, source_filename, target_filename, mime, quality):
         """Create a converter that converts a single file."""
         pass
-
+        
     def progress(self):
         """Fraction of how much of the task is completed."""
         raise NotImplementedError()
@@ -35,6 +35,20 @@ class Converter(Task):
         """Stop execution of the task."""
         raise NotImplementedError()
 
-    def run(self):
-        """Run the task"""
+    def pause(self):
+        """Stop execution of the task."""
+        raise NotImplementedError()
+
+    def resume(self):
+        """Stop execution of the task."""
+        raise NotImplementedError()
+
+    def run(self, callback):
+        """Run the task.
+        
+        Parameters
+        ----------
+            callback : function
+                Call this when done
+        """
         raise NotImplementedError()
