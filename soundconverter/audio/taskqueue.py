@@ -19,19 +19,24 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import random
+import datetime
 from queue import Queue
+
 from soundconverter.util.settings import settings
-from soundconverter.util.logger import logger
 
 
-class TaskQueue():
+class TaskQueue:
     """Executes multiple tasks in parallel."""
     # for now sequential
     def __init__(self):
         self.pending = Queue()
         self.running = []
+
+        # statistics
         self.done = 0
+        self.duration_processed = 0
+        self.overwrite_action = None
+        self.errors = []
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -46,7 +51,9 @@ class TaskQueue():
 
     def get_progress(self):
         """Get the fraction of tasks that have been completed."""
-        return self.pending.qsize() / (self.done + self.pending.qsize())
+        running_progress = sum(task.get_progress() for task in self.running)
+        num_tasks = self.done + len(self.running) + self.pending.qsize()
+        return (running_progress + self.done) / num_tasks
 
     def pause(self):
         """Pause all tasks."""
@@ -79,7 +86,11 @@ class TaskQueue():
 
     def task_done(self, task):
         """One task is done, start another one.
-        
+
+        query : dict
+            the sample has to match
+
+
         This callback has to be called by the task, when the task is done.
 
         Parameters
@@ -89,7 +100,29 @@ class TaskQueue():
         """
         self.done += 1
         self.running.remove(task)
-        self.start_next()
+        if self.pending.qsize() > 0:
+            self.start_next()
+        else:
+            # all tasks done done
+            if self.running_tasks:
+                raise RuntimeError
+                
+            self.window.set_sensitive()
+            self.window.conversion_ended()
+
+            total_time = self.run_finish_time - self.run_start_time
+            total_time_format = str(datetime.timedelta(seconds=total_time))
+            msg = _('Tasks done in %s') % total_time_format
+
+            # TODO populate self.errors
+            if len(self.errors):
+                msg += ', {} error(s)'.format(len(self.errors))
+
+            self.window.set_status(msg)
+            if not self.window.is_active():
+                notification(msg)
+
+            self.reset_counters()
 
     def start_next(self):
         """Start the next task if available."""
