@@ -448,9 +448,9 @@ class Converter(Task):
         logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
         # TODO normal for loop?
         print('taglist', type(taglist))
-        taglist.foreach(self.append_tag, None)
+        taglist.foreach(self._append_tag, None)
 
-    def _found_tag(self, taglist, tag, unused_udata):
+    def _append_tag(self, taglist, tag, unused_udata):
         tag_whitelist = (
             'album-artist',
             'artist',
