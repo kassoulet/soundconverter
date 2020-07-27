@@ -39,28 +39,28 @@ from soundconverter.audio.profiles import audio_profiles_dict
 GSTREAMER_SOURCE = 'giosrc'
 GSTREAMER_SINK = 'giosink'
 
-encoders = (
-    ('flacenc', 'FLAC', 'flac-enc'),
-    ('wavenc', 'WAV', 'wav-enc'),
-    ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc'),
-    ('oggmux', 'Ogg Vorbis', 'vorbis-mux'),
-    ('id3mux', 'MP3 tags', 'mp3-id-tags'),
-    ('id3v2mux', 'MP3 tags', 'mp3-id-tags'),
-    ('xingmux', 'VBR tags', 'mp3-vbr-tags'),
-    ('lamemp3enc', 'MP3', 'mp3-enc'),
-    ('faac', 'AAC', 'aac-enc'),
-    ('avenc_aac', 'AAC', 'aac-enc'),
-    ('mp4mux', 'AAC', 'aac-mux'),
-    ('opusenc', 'Opus', 'opus-enc'),
-)
 
-available_elements = set()
-functions = dict()
-
-
-def get_available_elements():
+def find_available_elements():
     """Figure out which gstreamer pipeline plugins are available."""
-    # avoid polluting the namespace
+    # gst-plugins-good, gst-plugins-bad, etc. packages provide them
+    available_elements = set()
+    functions = dict()
+
+    encoders = (
+        ('flacenc', 'FLAC', 'flac-enc'),
+        ('wavenc', 'WAV', 'wav-enc'),
+        ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc'),
+        ('oggmux', 'Ogg Vorbis', 'vorbis-mux'),
+        ('id3mux', 'MP3 tags', 'mp3-id-tags'),
+        ('id3v2mux', 'MP3 tags', 'mp3-id-tags'),
+        ('xingmux', 'VBR tags', 'mp3-vbr-tags'),
+        ('lamemp3enc', 'MP3', 'mp3-enc'),
+        ('faac', 'AAC', 'aac-enc'),
+        ('avenc_aac', 'AAC', 'aac-enc'),
+        ('mp4mux', 'AAC', 'aac-mux'),
+        ('opusenc', 'Opus', 'opus-enc'),
+    )
+
     for encoder, name, function in encoders:
         have_it = bool(Gst.ElementFactory.find(encoder))
         if have_it:
@@ -80,8 +80,10 @@ def get_available_elements():
         available_elements.discard('faac')
         available_elements.discard('avenc_aac')
 
+    return available_elements, functions
 
-get_available_elements()
+
+available_elements, functions = find_available_elements()
 
 
 def create_flac_encoder():
@@ -277,9 +279,9 @@ class Converter(Task):
         self.pipeline.set_state(Gst.state.playing)
 
     def _conversion_done(self):
-        """Called by gstreamer when the conversion is done.
-
-        Renames the temporary file to the final file.
+        """Rename the temporary file to the final file.
+        
+        Should be called when the EOS message arrived.
         """
         task.sound_file.progress = 1.0
 
@@ -326,7 +328,7 @@ class Converter(Task):
         try:
             vfs_rename(self.output_filename, newname)
         except Exception as e:
-            self.error = e
+            self.error = str(e)
             logger.info('Could not rename {} to {}:'.format(
                 beautify_uri(self.output_filename), beautify_uri(newname)
             ))
@@ -390,7 +392,9 @@ class Converter(Task):
         }[self.output_type]()
         command.append(encoder)
 
-        # temporary output file
+        # temporary output file. Until the file is handled by gstreamer,
+        # its tags are unknown, so the correct output path cannot be
+        # constructed yet.
         gfile = Gio.file_parse_name(self.output_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
@@ -444,13 +448,24 @@ class Converter(Task):
             self.found_tag(self, '', message.parse_tag())
 
     def _found_tag(self, decoder, something, taglist):
-        """Called when the decoder reads a tag."""
-        logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
-        # TODO normal for loop?
+        """Called when the decoder reads a tag.
+        
+        TODO params
+        """
+        logger.debug(
+            'found_tag: {}'.format(self.sound_file.filename_for_display)
+        )
+
+        # TODO normal for loop possible?
+        # pasting _append_tag into it's inner scope?
         print('taglist', type(taglist))
         taglist.foreach(self._append_tag, None)
 
     def _append_tag(self, taglist, tag, unused_udata):
+        """TODO docstring
+        
+        TODO params
+        """
         tag_whitelist = (
             'album-artist',
             'artist',
@@ -465,6 +480,10 @@ class Converter(Task):
             'album-disc-number',
             'album-disc-count',
         )
+        # TODO tag whitelist needed? It's only for constructing the path
+        # anyway. Does the ui has some sort of list itself of which
+        # tags are legal? (redundant? or does it depend on the tag_whitelist
+        # around some corners?)
         if tag not in tag_whitelist:
             return
 
