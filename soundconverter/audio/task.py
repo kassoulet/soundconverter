@@ -22,20 +22,20 @@
 
 class Task():
     """Abstract class of a single task."""
-    def progress(self):
+    def get_progress(self):
         """Fraction of how much of the task is completed."""
         raise NotImplementedError()
 
     def cancel(self):
-        """Stop execution of the task."""
+        """Cancel the execution of the task."""
         raise NotImplementedError()
 
     def pause(self):
-        """Stop execution of the task."""
+        """Pause the execution of the task."""
         raise NotImplementedError()
 
     def resume(self):
-        """Stop execution of the task."""
+        """Resume the execution of the task after pausing."""
         raise NotImplementedError()
 
     def run(self, callback):
