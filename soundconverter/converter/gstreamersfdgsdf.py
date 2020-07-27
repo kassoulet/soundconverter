@@ -237,15 +237,6 @@ class Decoder(Pipeline):
     def have_type(self, typefind, probability, caps):
         pass
 
-    def query_position(self):
-        """Ask for the stream position of the current pipeline."""
-        try:
-            if self.pipeline:
-                self.position = max(0, self.pipeline.query_position(
-                    Gst.Format.TIME)[1] / Gst.SECOND)
-        except Gst.QueryError:
-            self.position = 0
-
     def pad_added(self, decoder, pad):
         """Called when a decoded pad is created."""
         self.processing = True
