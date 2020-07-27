@@ -30,6 +30,7 @@ from gi.repository import Gst, Gtk, GLib, GObject, Gio
 from soundconverter.util.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
     vfs_exists, beautify_uri
 from soundconverter.util.task import BackgroundTask
+from soundconverter.util.names import generate_temp_filename
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
@@ -668,7 +669,7 @@ class ConverterQueue(TaskQueue):
 
     def add(self, sound_file):
         # generate a temporary filename from source name and output suffix
-        output_filename = self.window.prefs.generate_temp_filename(sound_file)
+        output_filename = generate_temp_filename(sound_file)
 
         if vfs_exists(output_filename):
             # always overwrite temporary files

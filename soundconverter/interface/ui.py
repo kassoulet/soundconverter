@@ -38,7 +38,7 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality
 from soundconverter.util.formats import locale_patterns_dict, custom_patterns, filepattern
-from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.names import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error, set_error_handler
@@ -769,58 +769,6 @@ class PreferencesDialog(GladeWindow):
 
         markup = '<small>{}</small>'.format(_('Target bitrate: %s') % self.get_bitrate_from_settings())
         self.aprox_bitrate.set_markup(markup)
-
-    def get_output_suffix(self):
-        output_type = self.settings.get_string('output-mime-type')
-        profile = self.settings.get_string('audio-profile')
-        profile_ext = audio_profiles_dict[profile][1] if profile else ''
-        output_suffix = {
-                'audio/x-vorbis': '.ogg',
-                'audio/x-flac': '.flac',
-                'audio/x-wav': '.wav',
-                'audio/mpeg': '.mp3',
-                'audio/x-m4a': '.m4a',
-                'audio/ogg; codecs=opus': '.opus',
-                'gst-profile': '.' + profile_ext,
-        }.get(output_type, '.?')
-        if output_suffix == '.ogg' and self.settings.get_boolean('vorbis-oga-extension'):
-            output_suffix = '.oga'
-        return output_suffix
-
-    def generate_filename(self, sound_file, for_display=False):
-        generator = TargetNameGenerator()
-        generator.suffix = self.get_output_suffix()
-
-        if not self.settings.get_boolean('same-folder-as-input'):
-            folder = self.settings.get_string('selected-folder')
-            folder = urllib.parse.quote(folder, safe='/:@')
-            folder = filename_to_uri(folder)
-            generator.folder = folder
-
-            if self.settings.get_boolean('create-subfolders'):
-                generator.subfolders = self.get_subfolder_pattern()
-
-        generator.basename = self.get_basename_pattern()
-
-        if for_display:
-            generator.replace_messy_chars = False
-            return unquote_filename(generator.get_target_name(sound_file))
-        else:
-            generator.replace_messy_chars = self.settings.get_boolean('replace-messy-chars')
-            return generator.get_target_name(sound_file)
-
-    def generate_temp_filename(self, soundfile):
-        """Return a modified filename of the soundfile for which no conflicting file exists"""
-        folder, basename = os.path.split(soundfile.uri)
-        if not self.settings.get_boolean('same-folder-as-input'):
-            folder = self.settings.get_string('selected-folder')
-            folder = urllib.parse.quote(folder, safe='/:@')
-        while True:
-            filename = folder + '/' + basename + '~' + str(random())[-6:] + '~SC~'
-            if self.settings.get_boolean('replace-messy-chars'):
-                filename = TargetNameGenerator.safe_name(filename)
-            if not vfs_exists(filename):
-                return filename
 
     def process_custom_pattern(self, pattern):
         for k in custom_patterns:

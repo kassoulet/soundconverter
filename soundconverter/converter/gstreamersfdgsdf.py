@@ -59,38 +59,6 @@ def gtk_sleep(duration):
         gtk_iteration()
 
 
-# load gstreamer audio profiles
-_GCONF_PROFILE_PATH = "/system/gstreamer/1.0/audio/profiles/"
-_GCONF_PROFILE_LIST_PATH = "/system/gstreamer/1.0/audio/global/profile_list"
-audio_profiles_list = []
-audio_profiles_dict = {}
-
-try:
-    import gi
-    gi.require_version('GConf', '2.0')
-    from gi.repository import GConf
-    _GCONF = GConf.Client.get_default()
-    profiles = _GCONF.all_dirs(_GCONF_PROFILE_LIST_PATH)
-    for name in profiles:
-        if _GCONF.get_bool(_GCONF_PROFILE_PATH + name + "/active"):
-            # get profile
-            description = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/name")
-            extension = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/extension")
-            pipeline = _GCONF.get_string(_GCONF_PROFILE_PATH + name + "/pipeline")
-            # check profile validity
-            if not extension or not pipeline:
-                continue
-            if not description:
-                description = extension
-            if description in audio_profiles_dict:
-                continue
-                # store
-            profile = description, extension, pipeline
-            audio_profiles_list.append(profile)
-            audio_profiles_dict[description] = profile
-except (ImportError, ValueError):
-    pass
-
 required_elements = ('decodebin', 'fakesink', 'audioconvert', 'typefind', 'audiorate')
 for element in required_elements:
     if not Gst.ElementFactory.find(element):
@@ -278,51 +246,6 @@ class Decoder(Pipeline):
         except Gst.QueryError:
             self.position = 0
 
-    def found_tag(self, decoder, something, taglist):
-        """Called when the decoder reads a tag."""
-        logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
-        taglist.foreach(self.append_tag, None)
-
-    def append_tag(self, taglist, tag, unused_udata):
-        tag_whitelist = (
-            'album-artist',
-            'artist',
-            'album',
-            'title',
-            'track-number',
-            'track-count',
-            'genre',
-            'datetime',
-            'year',
-            'timestamp',
-            'album-disc-number',
-            'album-disc-count',
-        )
-        if tag not in tag_whitelist:
-            return
-
-        tag_type = Gst.tag_get_type(tag)
-        type_getters = {
-            GObject.TYPE_STRING: 'get_string',
-            GObject.TYPE_DOUBLE: 'get_double',
-            GObject.TYPE_FLOAT: 'get_float',
-            GObject.TYPE_INT: 'get_int',
-            GObject.TYPE_UINT: 'get_uint',
-        }
-
-        tags = {}
-        if tag_type in type_getters:
-            value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
-            tags[tag] = value
-
-        if 'datetime' in tag:
-            dt = taglist.get_date_time(tag)[1]
-            tags['year'] = dt.get_year()
-            tags['date'] = dt.to_iso8601_string()[:10]
-
-        logger.debug('    {}'.format(tags))
-        self.sound_file.tags.update(tags)
-
     def pad_added(self, decoder, pad):
         """Called when a decoded pad is created."""
         self.processing = True
@@ -336,10 +259,6 @@ class Decoder(Pipeline):
 
     def get_input_uri(self):
         return self.sound_file.uri
-
-    def get_duration(self):
-        """Return the total duration of the sound file."""
-        return self.sound_file.duration
 
     def get_position(self):
         """Return the current pipeline position in the stream."""
@@ -375,28 +294,6 @@ class TagReader(Decoder):
         self.sound_file.tags_read = True
         if self.found_tag_hook:
             GLib.idle_add(self.found_tag_hook, self)
-
-
-class Converter(Decoder):
-    """A background task for converting files to another format."""
-    def aborted(self):
-        # remove partial file
-        try:
-            vfs_unlink(self.output_filename)
-        except Exception:
-            logger.info('cannot delete: \'{}\''.format(beautify_uri(self.output_filename)))
-        return
-
-    def on_error(self, error):
-        if self.ignore_errors:
-            self.error = error
-            logger.info('ignored-error: {} ({})'.format(error, ' ! '.join(self.command)))
-        else:
-            Pipeline.on_error(self, error)
-            show_error(
-                '{}'.format(_('GStreamer Error:')),
-                '{}\n({})'.format(error, self.sound_file.filename_for_display)
-            )
 
 class ConverterQueue(TaskQueue):
     """Background task for converting many files."""

@@ -19,6 +19,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+"""Utils for generating names."""
+
 import string
 import time
 import re
@@ -28,7 +30,9 @@ import urllib.parse
 import urllib.error
 import unicodedata
 from gettext import gettext as _
-from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, unquote_filename
+from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
+    unquote_filename
+from soundconverter.util.settings import get_gio_settings
 
 
 class TargetNameGenerator:
@@ -157,3 +161,62 @@ class TargetNameGenerator:
         result = os.path.join(folder, urllib.parse.quote(basefolder), urllib.parse.quote(result))
 
         return result
+
+
+def generate_temp_filename(soundfile):
+    """Return a modified filename of the soundfile for which no conflicting file exists"""
+    gio_settings = get_gio_settings()
+    folder, basename = os.path.split(soundfile.uri)
+    if not gio_settings.get_boolean('same-folder-as-input'):
+        folder = gio_settings.get_string('selected-folder')
+        folder = urllib.parse.quote(folder, safe='/:@')
+    while True:
+        filename = folder + '/' + basename + '~' + str(random())[-6:] + '~SC~'
+        if gio_settings.get_boolean('replace-messy-chars'):
+            filename = TargetNameGenerator.safe_name(filename)
+        if not vfs_exists(filename):
+            return filename
+
+
+def get_output_suffix():
+    """Return the output file extension based on gio settings."""
+    settings = get_gio_settings()
+    output_type = settings.get_string('output-mime-type')
+    profile = settings.get_string('audio-profile')
+    profile_ext = audio_profiles_dict[profile][1] if profile else ''
+    output_suffix = {
+            'audio/x-vorbis': '.ogg',
+            'audio/x-flac': '.flac',
+            'audio/x-wav': '.wav',
+            'audio/mpeg': '.mp3',
+            'audio/x-m4a': '.m4a',
+            'audio/ogg; codecs=opus': '.opus',
+            'gst-profile': '.' + profile_ext,
+    }.get(output_type, '.?')
+    if output_suffix == '.ogg' and settings.get_boolean('vorbis-oga-extension'):
+        output_suffix = '.oga'
+    return output_suffix
+
+
+def generate_filename(sound_file, for_display=False):
+    settings = get_gio_settings()
+    generator = TargetNameGenerator()
+    generator.suffix = get_output_suffix()
+
+    if not settings.get_boolean('same-folder-as-input'):
+        folder = settings.get_string('selected-folder')
+        folder = urllib.parse.quote(folder, safe='/:@')
+        folder = filename_to_uri(folder)
+        generator.folder = folder
+
+        if settings.get_boolean('create-subfolders'):
+            generator.subfolders = self.get_subfolder_pattern()
+
+    generator.basename = self.get_basename_pattern()
+
+    if for_display:
+        generator.replace_messy_chars = False
+        return unquote_filename(generator.get_target_name(sound_file))
+    else:
+        generator.replace_messy_chars = settings.get_boolean('replace-messy-chars')
+        return generator.get_target_name(sound_file)

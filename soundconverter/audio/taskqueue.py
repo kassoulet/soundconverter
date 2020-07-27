@@ -31,12 +31,9 @@ class TaskQueue:
     def __init__(self):
         self.pending = Queue()
         self.running = []
-
-        # statistics
-        self.done = 0
+        self.done = []
         self.duration_processed = 0
         self.overwrite_action = None
-        self.errors = []
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -52,8 +49,8 @@ class TaskQueue:
     def get_progress(self):
         """Get the fraction of tasks that have been completed."""
         running_progress = sum(task.get_progress() for task in self.running)
-        num_tasks = self.done + len(self.running) + self.pending.qsize()
-        return (running_progress + self.done) / num_tasks
+        num_tasks = len(self.done) + len(self.running) + self.pending.qsize()
+        return (running_progress + len(self.done)) / num_tasks
 
     def pause(self):
         """Pause all tasks."""
@@ -98,7 +95,7 @@ class TaskQueue:
             task : Task
                 A completed task
         """
-        self.done += 1
+        self.done.append(task)
         self.running.remove(task)
         if self.pending.qsize() > 0:
             self.start_next()
@@ -114,9 +111,12 @@ class TaskQueue:
             total_time_format = str(datetime.timedelta(seconds=total_time))
             msg = _('Tasks done in %s') % total_time_format
 
-            # TODO populate self.errors
-            if len(self.errors):
-                msg += ', {} error(s)'.format(len(self.errors))
+            errors = [
+                task.error for error in self.done
+                if task.error is not None
+            ]
+            if len(errors) > 0:
+                msg += ', {} error(s)'.format(len(errors))
 
             self.window.set_status(msg)
             if not self.window.is_active():

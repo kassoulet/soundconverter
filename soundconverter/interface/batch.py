@@ -30,10 +30,14 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings
 from soundconverter.util.formats import get_quality
 from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
-from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.names import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
+
+
+# TODO use memory gio settings backend and overwrite values based on cli argv
+# for maximum compatibility and less complexity due to 2 different cases.
 
 
 def prepare_files_list(input_files):
@@ -174,6 +178,7 @@ class CLI_Convert():
         context = loop.get_context()
 
         output_type = settings['cli-output-type']
+        # TODO get_output_suffix
         output_suffix = settings['cli-output-suffix']
 
         generator = TargetNameGenerator()

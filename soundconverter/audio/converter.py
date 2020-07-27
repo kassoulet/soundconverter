@@ -21,29 +21,23 @@
 
 
 import os
-import sys
 import traceback
-import time
-from fnmatch import fnmatch
-from urllib.parse import urlparse
 from gettext import gettext as _
 
-from gi.repository import Gst, Gtk, GLib, GObject, Gio
+from gi.repository import Gst, GLib, Gio
 
-from soundconverter.util.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
-    vfs_exists, beautify_uri
-from soundconverter.util.task import BackgroundTask
-from soundconverter.util.queue import TaskQueue
+from soundconverter.util.fileoperations import vfs_encode_filename, \
+    vfs_unlink, vfs_rename, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.util.formats import mime_whitelist, filename_blacklist
 from soundconverter.util.error import show_error
+from soundconverter.util.names import generate_filename
 from soundconverter.audio.task import Task
-from soundconverter.interface.notify import notification
+from soundconverter.audio.profiles import audio_profiles_dict
 
 
-gstreamer_source = 'giosrc'
-gstreamer_sink = 'giosink'
+GSTREAMER_SOURCE = 'giosrc'
+GSTREAMER_SINK = 'giosink'
 
 encoders = (
     ('flacenc', 'FLAC', 'flac-enc'),
@@ -63,34 +57,42 @@ encoders = (
 available_elements = set()
 functions = dict()
 
-for encoder, name, function in encoders:
-    have_it = bool(Gst.ElementFactory.find(encoder))
-    if have_it:
-        available_elements.add(encoder)
-    else:
-        logger.info('  {} gstreamer element not found'.format(encoder))
-    function += '_' + name
-    functions[function] = functions.get(function) or have_it
 
-for function in sorted(functions):
-    if not functions[function]:
-        logger.info('  disabling {} output.'.format(function.split('_')[1]))
+def get_available_elements():
+    """Figure out which gstreamer pipeline plugins are available."""
+    # avoid polluting the namespace
+    for encoder, name, function in encoders:
+        have_it = bool(Gst.ElementFactory.find(encoder))
+        if have_it:
+            available_elements.add(encoder)
+        else:
+            logger.info('  {} gstreamer element not found'.format(encoder))
+        function += '_' + name
+        functions[function] = functions.get(function) or have_it
 
-if 'oggmux' not in available_elements:
-    available_elements.discard('vorbisenc')
-if 'mp4mux' not in available_elements:
-    available_elements.discard('faac')
-    available_elements.discard('avenc_aac')
+    for function in sorted(functions):
+        if not functions[function]:
+            logger.info('  disabling {} output.'.format(function.split('_')[1]))
+
+    if 'oggmux' not in available_elements:
+        available_elements.discard('vorbisenc')
+    if 'mp4mux' not in available_elements:
+        available_elements.discard('faac')
+        available_elements.discard('avenc_aac')
+
+
+get_available_elements()
 
 
 def create_flac_encoder():
-    flac_compression = gio_settings.get_int('flac-compression')
-    s = 'flacenc mid-side-stereo=true quality={}'.format(flac_compression)
-    return s
+    """Return an flac encoder for the gst pipeline string."""
+    flac_compression = get_gio_settings().get_int('flac-compression')
+    return 'flacenc mid-side-stereo=true quality={}'.format(flac_compression)
 
 
 def create_wav_encoder():
-    wav_sample_width = gio_settings.get_int('wav-sample-width')
+    """Return a wav encoder for the gst pipeline string."""
+    wav_sample_width = get_gio_settings().get_int('wav-sample-width')
     formats = {8: 'u8', 16: 's16le', 24: 's24le', 32: 's32le'}
     return 'audioconvert ! audio/x-raw,format={} ! wavenc'.format(
         formats[wav_sample_width]
@@ -98,8 +100,9 @@ def create_wav_encoder():
 
 
 def create_oggvorbis_encoder():
+    """Return an ogg encoder for the gst pipeline string."""
     cmd = 'vorbisenc'
-    vorbis_quality = gio_settings.get_double('vorbis-quality')
+    vorbis_quality = get_gio_settings().get_double('vorbis-quality')
     if vorbis_quality is not None:
         cmd += ' quality={}'.format(vorbis_quality)
     cmd += ' ! oggmux '
@@ -107,15 +110,16 @@ def create_oggvorbis_encoder():
 
 
 def create_mp3_encoder():
+    """Return an mp3 encoder for the gst pipeline string."""
     quality = {
         'cbr': 'mp3-cbr-quality',
         'abr': 'mp3-abr-quality',
         'vbr': 'mp3-vbr-quality'
     }
-    mode = gio_settings.get_string('mp3-mode')
+    mode = get_gio_settings().get_string('mp3-mode')
 
     mp3_mode = mode
-    mp3_quality = gio_settings.get_int(quality[mode])
+    mp3_quality = get_gio_settings().get_int(quality[mode])
 
     cmd = 'lamemp3enc encoding-engine-quality=2 '
 
@@ -143,13 +147,15 @@ def create_mp3_encoder():
 
 
 def create_aac_encoder():
-    aac_quality = gio_settings.get_int('aac-quality')
+    """Return an aac encoder for the gst pipeline string."""
+    aac_quality = get_gio_settings().get_int('aac-quality')
     encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
     return '{} bitrate={} ! mp4mux'.format(encoder, aac_quality * 1000)
 
 
 def create_opus_encoder():
-    opus_quality = gio_settings.get_int('opus-bitrate')
+    """Return an opus encoder for the gst pipeline string."""
+    opus_quality = get_gio_settings().get_int('opus-bitrate')
     return (
         'opusenc bitrate={} bitrate-type=vbr '
         'bandwidth=auto ! oggmux'
@@ -157,12 +163,15 @@ def create_opus_encoder():
 
 
 def create_audio_profile():
-    audio_profile = gio_settings.get_string('audio-profile')
+    """TODO."""
+    audio_profile = get_gio_settings().get_string('audio-profile')
     pipeline = audio_profiles_dict[audio_profile][2]
     return pipeline
 
 
 class Converter(Task):
+    """Completely handle the conversion of a single file."""
+
     def __init__(self, sound_file, output_filename, output_type,
                  delete_original=False, output_resample=False,
                  resample_rate=48000, force_mono=False, ignore_errors=False):
@@ -181,7 +190,7 @@ class Converter(Task):
 
         self.got_duration = False
 
-        self.command = []
+        self.command = None
 
         self.sound_file = sound_file
         self.time = 0
@@ -190,33 +199,38 @@ class Converter(Task):
         self.pipeline = None
         self.done = False
 
+    def _query_position(self):
+        """Ask for the stream position of the current pipeline."""
+        try:
+            if self.pipeline:
+                return max(
+                    0, self.pipeline.query_position(
+                        Gst.Format.TIME
+                    )[1] / Gst.SECOND
+                )
+        except Gst.QueryError:
+            return 0
+
     def get_progress(self):
         """Fraction of how much of the task is completed."""
-        if self.sound_file.duration is None:
-            duration = self.get_duration()
-
-        position = 0.0
-        prolist = [1] * self.finished_tasks
         if not self.done:
-            task_position = self.get_position()
-            position += task_position
-            per_file_progress[self.sound_file] = None
+            position = self._query_position()
             if self.sound_file.duration is None:
-                continue
-            taskprogress = task_position / self.sound_file.duration
-            taskprogress = min(max(taskprogress, 0.0), 1.0)
-            prolist.append(taskprogress)
-            per_file_progress[self.sound_file] = taskprogress
-        for self in self.waiting_tasks:
-            prolist.append(0.0)
-
-        progress = sum(prolist) / len(prolist) if prolist else 0
-        progress = min(max(progress, 0.0), 1.0)
-        return self.running or len(self.all_tasks), progress
+                return 0
+            progress = position / self.sound_file.duration
+            progress = min(max(progress, 0.0), 1.0)
+            return progress
+        else:
+            return 1
 
     def cancel(self):
         """Cancel execution of the task."""
-        raise NotImplementedError()
+        # remove partial file
+        try:
+            vfs_unlink(self.output_filename)
+        except Exception:
+            logger.info('cannot delete: \'{}\''.format(beautify_uri(self.output_filename)))
+        return
 
     def pause(self):
         """Pause execution of the task."""
@@ -232,35 +246,23 @@ class Converter(Task):
             return
         self.pipeline.set_state(Gst.State.PLAYING)
 
-    def _convert(self, command):
+    def _convert(self):
         """Run the gst pipeline that converts files.
-        
-        Parameters
-        ----------
-            command : string
-                gstreamer command
+
+        Handlers for messages sent from gst are added, which also triggers
+        renaming the file to it's final path.
         """
+        command = self.command
         if self.pipeline is None:
             logger.debug('launching: \'{}\''.format(command))
             try:
                 # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
-                # TODO connect is not documented. And what is get_by_name
-                bus.connect('finished', self._conversion_done)
 
-                # TODO connected_signals needed?
-                assert not self.connected_signals
-                self.connected_signals = []
-                # TODO needed for-loop?
-                # Or does calling bus.connect manually suffice?
-                for name, signal, callback in self.signals:
-                    if name:
-                        element = self.pipeline.get_by_name(name)
-                    else:
-                        element = bus
-                    sid = element.connect(signal, callback)
-                    self.connected_signals.append((element, sid,))
+                # TODO there once was connected_signals stuff
+                # TODO there once was
+                # `for name, signal, callback in self.signals:`
 
             except GLib.gerror as e:
                 show_error('gstreamer error when creating pipeline', str(e))
@@ -270,63 +272,69 @@ class Converter(Task):
                 return
 
             bus.add_signal_watch()
-            self.watch_id = bus.connect('message', self.on_message)
+            self.watch_id = bus.connect('message', self._on_message)
 
         self.pipeline.set_state(Gst.state.playing)
 
     def _conversion_done(self):
         """Called by gstreamer when the conversion is done.
-        
+
         Renames the temporary file to the final file.
         """
         task.sound_file.progress = 1.0
 
+        input_uri = self.sound_file.uri
+
         if self.error:
-            logger.debug('error in task, skipping rename: {}'.format(self.output_filename))
+            logger.debug('error in task, skipping rename: {}'.format(
+                self.output_filename
+            ))
+
             if vfs_exists(self.output_filename):
                 vfs_unlink(self.output_filename)
-            self.errors.append(self.error)
-            logger.info('Could not convert {}: {}'.format(beautify_uri(self.get_input_uri()), self.error))
-            self.error_count += 1
+
+            logger.info('Could not convert {}: {}'.format(
+                beautify_uri(input_uri), self.error
+            ))
+
             return
 
-        duration = self.get_duration()
+        duration = self.sound_file.duration
         if duration:
             self.duration_processed += duration
 
         # rename temporary file
-        newname = self.window.prefs.generate_filename(self.sound_file)
+        newname = generate_filename(self.sound_file)
         logger.info('newname {}'.format(newname))
         logger.debug('{} -> {}'.format(beautify_uri(self.output_filename), beautify_uri(newname)))
 
         # safe mode. generate a filename until we find a free one
-        p, e = os.path.splitext(newname)
-        p = p.replace('%', '%%')
+        path, path = os.path.splitext(newname)
+        path = path.replace('%', '%%')
 
         space = ' '
-        if (get_gio_settings().get_boolean('replace-messy-chars')):
+        if get_gio_settings().get_boolean('replace-messy-chars'):
             space = '_'
 
-        p = p + space + '(%d)' + e
+        path = path + space + '(%d)' + path
 
         i = 1
         while vfs_exists(newname):
-            newname = p % i
+            newname = path % i
             i += 1
 
         try:
             vfs_rename(self.output_filename, newname)
-        except Exception:
-            self.errors.append(self.error)
+        except Exception as e:
+            self.error = e
             logger.info('Could not rename {} to {}:'.format(
                 beautify_uri(self.output_filename), beautify_uri(newname)
             ))
             logger.info(traceback.print_exc())
-            self.error_count += 1
             return
 
         logger.info('Converted {} to {}'.format(
-            beautify_uri(self.get_input_uri()), beautify_uri(newname)
+            beautify_uri(input_uri), beautify_uri(newname)
         ))
         
         # Copy file permissions
@@ -334,7 +342,8 @@ class Converter(Task):
                 Gio.file_parse_name(self.output_filename), Gio.FileCopyFlags.NONE, None):
             logger.info('Cannot set permission on \'{}\''.format(beautify_uri(self.output_filename)))
 
-        if self.delete_original and self.processing and not self.error:
+        # TODO had `and self.processing and`
+        if self.delete_original and not self.error:
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
                 logger.info('Cannot remove \'{}\''.format(beautify_uri(self.output_filename)))
@@ -353,21 +362,21 @@ class Converter(Task):
         command = []
 
         # Add default decoding step that remains the same for all formats.
-        command.push(
+        command.append(
             '{} location="{}" name=src ! decodebin name=decoder'.format(
-                gstreamer_source, vfs_encode_filename(self.sound_file.uri)
+                GSTREAMER_SOURCE, vfs_encode_filename(self.sound_file.uri)
             )
         )
 
-        command.push('audiorate ! audioconvert ! audioresample')
+        command.append('audiorate ! audioconvert ! audioresample')
 
         # audio resampling support
         if self.output_resample:
-            command.push('audio/x-raw,rate={}'.format(self.resample_rate))
-            command.push('audioconvert ! audioresample')
+            command.append('audio/x-raw,rate={}'.format(self.resample_rate))
+            command.append('audioconvert ! audioresample')
 
         if self.force_mono:
-            command.push('audio/x-raw,channels=1 | audioconvert')
+            command.append('audio/x-raw,channels=1 ! audioconvert')
 
         # figure out the rest of the gst pipeline string
         encoder = {
@@ -379,19 +388,26 @@ class Converter(Task):
             'audio/ogg; codecs=opus': create_opus_encoder,
             'gst-profile': create_audio_profile,
         }[self.output_type]()
-        command.push(encoder)
+        command.append(encoder)
 
-        # output file
+        # temporary output file
         gfile = Gio.file_parse_name(self.output_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
-            logger.info('creating folder: \'{}\''.format(beautify_uri(dirname.get_uri())))
+            logger.info('creating folder: \'{}\''.format(
+                beautify_uri(dirname.get_uri())
+            ))
             if not dirname.make_directory_with_parents():
-                show_error('error', _("cannot create \'{}\' folder.").format(beautify_uri(dirname)))
+                show_error(
+                    'error',
+                    _('cannot create \'{}\' folder.').format(
+                        beautify_uri(dirname)
+                    )
+                )
                 return
 
-        command.push('{} location="{}"'.format(
-            gstreamer_sink, vfs_encode_filename(self.output_filename))
+        command.append('{} location="{}"'.format(
+            GSTREAMER_SINK, vfs_encode_filename(self.output_filename))
         )
 
         if self.overwrite and vfs_exists(self.output_filename):
@@ -399,4 +415,77 @@ class Converter(Task):
             vfs_unlink(self.output_filename)
 
         # preparation done, now convert
-        self._convert(command.join(' ! '))
+        self.command = ' ! '.join(command)
+        self._convert()
+
+    def _on_error(self, error):
+        """Log errors and write down that this Task failed.
+
+        The TaskQueue is interested in reading the error.
+        """
+        self.error = error
+        # TODO both logger.error and stderr in show_error?
+        logger.error('{} '.format(error, ' ! '.join(self.command)))
+        show_error(
+            '{}'.format(_('GStreamer Error:')),
+            '{}\n({})'.format(error, self.sound_file.filename_for_display)
+        )
+
+    def _on_message(self, bus, message):
+        """Handle message events sent by gstreamer."""
+        t = message.type
+        if t == Gst.MessageType.ERROR:
+            error, __ = message.parse_error()
+            self._on_error(error)
+        elif t == Gst.MessageType.EOS:
+            # Conversion done
+            self._conversion_done()
+        elif t == Gst.MessageType.TAG:
+            self.found_tag(self, '', message.parse_tag())
+
+    def _found_tag(self, decoder, something, taglist):
+        """Called when the decoder reads a tag."""
+        logger.debug('found_tag: {}'.format(self.sound_file.filename_for_display))
+        # TODO normal for loop?
+        print('taglist', type(taglist))
+        taglist.foreach(self.append_tag, None)
+
+    def _found_tag(self, taglist, tag, unused_udata):
+        tag_whitelist = (
+            'album-artist',
+            'artist',
+            'album',
+            'title',
+            'track-number',
+            'track-count',
+            'genre',
+            'datetime',
+            'year',
+            'timestamp',
+            'album-disc-number',
+            'album-disc-count',
+        )
+        if tag not in tag_whitelist:
+            return
+
+        tag_type = Gst.tag_get_type(tag)
+        type_getters = {
+            GObject.TYPE_STRING: 'get_string',
+            GObject.TYPE_DOUBLE: 'get_double',
+            GObject.TYPE_FLOAT: 'get_float',
+            GObject.TYPE_INT: 'get_int',
+            GObject.TYPE_UINT: 'get_uint',
+        }
+
+        tags = {}
+        if tag_type in type_getters:
+            value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
+            tags[tag] = value
+
+        if 'datetime' in tag:
+            dt = taglist.get_date_time(tag)[1]
+            tags['year'] = dt.get_year()
+            tags['date'] = dt.to_iso8601_string()[:10]
+
+        logger.debug('    {}'.format(tags))
+        self.sound_file.tags.update(tags)

@@ -74,13 +74,13 @@ locale_patterns_dict = dict(list(zip(
 # Name and pattern for CustomFileChooser
 filepattern = (
     (_('All files'), '*.*'),
-    ('MP3',          '*.mp3'),
-    ('Ogg Vorbis',   '*.ogg;*.oga'),
-    ('iTunes AAC ',  '*.m4a'),
-    ('Windows WAV',  '*.wav'),
-    ('AAC',          '*.aac'),
-    ('FLAC',         '*.flac'),
-    ('AC3',          '*.ac3')
+    ('MP3', '*.mp3'),
+    ('Ogg Vorbis', '*.ogg;*.oga'),
+    ('iTunes AAC ', '*.m4a'),
+    ('Windows WAV', '*.wav'),
+    ('AAC', '*.aac'),
+    ('FLAC', '*.flac'),
+    ('AC3', '*.ac3')
 )
 
 
