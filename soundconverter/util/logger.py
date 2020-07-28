@@ -30,7 +30,8 @@ class Formatter(logging.Formatter):
         if record.levelno == logging.INFO:
             self._style._fmt = '%(msg)s'
         else:
-            # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit for those numbers
+            # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+            # for those numbers
             color = {
                 logging.WARNING: 33,
                 logging.ERROR: 31,

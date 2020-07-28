@@ -20,6 +20,8 @@
 # USA
 
 import time
+from multiprocessing import cpu_count
+
 from soundconverter.util.task import BackgroundTask
 from soundconverter.util.settings import settings
 from soundconverter.util.logger import logger
@@ -52,7 +54,7 @@ class TaskQueue(BackgroundTask):
 
     def get_num_jobs(self):
         """Return the number of jobs that should be run in parallel."""
-        return settings['forced-jobs'] or settings['jobs'] or settings['cpu-count']
+        return settings['forced-jobs'] or settings['jobs'] or cpu_count()
 
     def add_task(self, task):
         """Add a task to the queue."""

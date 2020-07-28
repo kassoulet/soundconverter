@@ -233,7 +233,7 @@ class Pipeline(BackgroundTask):
             command = ' ! '.join(self.command)
             logger.debug('launching: \'{}\''.format(command))
             try:
-                # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html
+                # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html # noqa
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
                 assert not self.connected_signals
