@@ -24,7 +24,7 @@ import os
 import traceback
 from gettext import gettext as _
 
-from gi.repository import Gst, GLib, Gio
+from gi.repository import Gst, GLib, Gio, GObject
 
 from soundconverter.util.fileoperations import vfs_encode_filename, \
     vfs_unlink, vfs_rename, vfs_exists, beautify_uri
@@ -39,12 +39,14 @@ from soundconverter.audio.profiles import audio_profiles_dict
 GSTREAMER_SOURCE = 'giosrc'
 GSTREAMER_SINK = 'giosink'
 
+available_elements = set()
+functions = dict()
+
 
 def find_available_elements():
     """Figure out which gstreamer pipeline plugins are available."""
     # gst-plugins-good, gst-plugins-bad, etc. packages provide them
-    available_elements = set()
-    functions = dict()
+    global available_elements, functions
 
     encoders = (
         ('flacenc', 'FLAC', 'flac-enc'),
@@ -72,7 +74,9 @@ def find_available_elements():
 
     for function in sorted(functions):
         if not functions[function]:
-            logger.info('  disabling {} output.'.format(function.split('_')[1]))
+            logger.info('  disabling {} output.'.format(
+                function.split('_')[1]
+            ))
 
     if 'oggmux' not in available_elements:
         available_elements.discard('vorbisenc')
@@ -80,10 +84,8 @@ def find_available_elements():
         available_elements.discard('faac')
         available_elements.discard('avenc_aac')
 
-    return available_elements, functions
 
-
-available_elements, functions = find_available_elements()
+find_available_elements()
 
 
 def create_flac_encoder():
@@ -165,7 +167,7 @@ def create_opus_encoder():
 
 
 def create_audio_profile():
-    """TODO."""
+    """TODO docstring."""
     audio_profile = get_gio_settings().get_string('audio-profile')
     pipeline = audio_profiles_dict[audio_profile][2]
     return pipeline
@@ -174,44 +176,37 @@ def create_audio_profile():
 class Converter(Task):
     """Completely handle the conversion of a single file."""
 
-    def __init__(self, sound_file, output_filename, output_type,
-                 delete_original=False, output_resample=False,
-                 resample_rate=48000, force_mono=False, ignore_errors=False):
+    def __init__(self, sound_file, output_filename):
         """create a converter that converts a single file."""
-        self.output_filename = output_filename
-        self.output_type = output_type
-
-        self.output_resample = output_resample
-        self.resample_rate = resample_rate
-        self.force_mono = force_mono
-
-        self.overwrite = False
-        self.delete_original = delete_original
-
-        self.ignore_errors = ignore_errors
-
-        self.got_duration = False
-
-        self.command = None
-
+        # Configuration
+        # All relevant gio settings have to be copied and remembered, so that
+        # they don't suddenly change during the conversion
+        settings = get_gio_settings()
         self.sound_file = sound_file
-        self.time = 0
-        self.position = 0
+        self.output_filename = output_filename
+        self.output_mime_type = settings.get_string('output-mime-type')
+        self.output_resample = settings.get_boolean('output-resample')
+        self.resample_rate = settings.get_int('resample-rate')
+        self.force_mono = settings.get_boolean('force-mono')
+        self.replace_messy_chars = settings.get_boolean('replace-messy-chars')
+        self.delete_original = settings.get_boolean('delete-original')
+        self.overwrite = False
 
+        # State
+        self.command = None
         self.pipeline = None
         self.done = False
+        self.error = None
 
     def _query_position(self):
         """Ask for the stream position of the current pipeline."""
         try:
             if self.pipeline:
-                return max(
-                    0, self.pipeline.query_position(
-                        Gst.Format.TIME
-                    )[1] / Gst.SECOND
-                )
+                position = self.pipeline.query_position(Gst.Format.TIME)[1]
+                return max(0, position / Gst.SECOND)
         except Gst.QueryError:
-            return 0
+            pass
+        return 0
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
@@ -230,8 +225,11 @@ class Converter(Task):
         # remove partial file
         try:
             vfs_unlink(self.output_filename)
-        except Exception:
-            logger.info('cannot delete: \'{}\''.format(beautify_uri(self.output_filename)))
+        except Exception as e:
+            logger.error('cannot delete: \'{}\': {}'.format(
+                beautify_uri(self.output_filename),
+                str(e)
+            ))
         return
 
     def pause(self):
@@ -269,8 +267,7 @@ class Converter(Task):
             except GLib.gerror as e:
                 show_error('gstreamer error when creating pipeline', str(e))
                 self.error = str(e)
-                self.eos = True
-                self.done()
+                self._conversion_done()
                 return
 
             bus.add_signal_watch()
@@ -279,11 +276,12 @@ class Converter(Task):
         self.pipeline.set_state(Gst.state.playing)
 
     def _conversion_done(self):
-        """Rename the temporary file to the final file.
-        
-        Should be called when the EOS message arrived.
+        """Should be called when the EOS message arrived or on error.
+
+        Will clear the temporary data on error or move the temporary file
+        to the final path on success.
         """
-        task.sound_file.progress = 1.0
+        self.sound_file.progress = 1.0
 
         input_uri = self.sound_file.uri
 
@@ -291,35 +289,31 @@ class Converter(Task):
             logger.debug('error in task, skipping rename: {}'.format(
                 self.output_filename
             ))
-
             if vfs_exists(self.output_filename):
                 vfs_unlink(self.output_filename)
-
             logger.info('Could not convert {}: {}'.format(
                 beautify_uri(input_uri), self.error
             ))
-
             return
-
-        duration = self.sound_file.duration
-        if duration:
-            self.duration_processed += duration
 
         # rename temporary file
         newname = generate_filename(self.sound_file)
         logger.info('newname {}'.format(newname))
-        logger.debug('{} -> {}'.format(beautify_uri(self.output_filename), beautify_uri(newname)))
+        logger.debug('{} -> {}'.format(
+            beautify_uri(self.output_filename), beautify_uri(newname)
+        ))
 
         # safe mode. generate a filename until we find a free one
-        path, path = os.path.splitext(newname)
+        path, extension = os.path.splitext(newname)
         path = path.replace('%', '%%')
 
         space = ' '
-        if get_gio_settings().get_boolean('replace-messy-chars'):
+        if self.replace_messy_chars:
             space = '_'
 
-        path = path + space + '(%d)' + path
-
+        # If the file already exists, increment the filename so that nothing
+        # gets overwritten.
+        path = path + space + '(%d)' + extension
         i = 1
         while vfs_exists(newname):
             newname = path % i
@@ -338,17 +332,24 @@ class Converter(Task):
         logger.info('Converted {} to {}'.format(
             beautify_uri(input_uri), beautify_uri(newname)
         ))
-        
+
         # Copy file permissions
         if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
-                Gio.file_parse_name(self.output_filename), Gio.FileCopyFlags.NONE, None):
-            logger.info('Cannot set permission on \'{}\''.format(beautify_uri(self.output_filename)))
+                Gio.file_parse_name(self.output_filename),
+                Gio.FileCopyFlags.NONE,
+                None
+        ):
+            logger.info('Cannot set permission on \'{}\''.format(
+                beautify_uri(self.output_filename)
+            ))
 
         # TODO had `and self.processing and`
         if self.delete_original and not self.error:
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
-                logger.info('Cannot remove \'{}\''.format(beautify_uri(self.output_filename)))
+                logger.info('Cannot remove \'{}\''.format(
+                    beautify_uri(self.output_filename)
+                ))
 
         self.done = True
 
@@ -361,16 +362,10 @@ class Converter(Task):
                 call this when done
         """
         # construct a pipeline for conversion
-        command = []
-
         # Add default decoding step that remains the same for all formats.
-        command.append(
-            '{} location="{}" name=src ! decodebin name=decoder'.format(
-                GSTREAMER_SOURCE, vfs_encode_filename(self.sound_file.uri)
-            )
-        )
-
-        command.append('audiorate ! audioconvert ! audioresample')
+        command = ['{} location="{}" name=src ! decodebin name=decoder'.format(
+            GSTREAMER_SOURCE, vfs_encode_filename(self.sound_file.uri)
+        ), 'audiorate ! audioconvert ! audioresample']
 
         # audio resampling support
         if self.output_resample:
@@ -389,7 +384,7 @@ class Converter(Task):
             'audio/x-m4a': create_aac_encoder,
             'audio/ogg; codecs=opus': create_opus_encoder,
             'gst-profile': create_audio_profile,
-        }[self.output_type]()
+        }[self.output_mime_type]()
         command.append(encoder)
 
         # temporary output file. Until the file is handled by gstreamer,
@@ -415,7 +410,9 @@ class Converter(Task):
         )
 
         if self.overwrite and vfs_exists(self.output_filename):
-            logger.info('overwriting \'{}\''.format(beautify_uri(self.output_filename)))
+            logger.info('overwriting \'{}\''.format(
+                beautify_uri(self.output_filename)
+            ))
             vfs_unlink(self.output_filename)
 
         # preparation done, now convert
@@ -429,27 +426,29 @@ class Converter(Task):
         """
         self.error = error
         # TODO both logger.error and stderr in show_error?
-        logger.error('{} '.format(error, ' ! '.join(self.command)))
+        logger.error('{}\n({})'.format(error, ' ! '.join(self.command)))
         show_error(
             '{}'.format(_('GStreamer Error:')),
             '{}\n({})'.format(error, self.sound_file.filename_for_display)
         )
 
     def _on_message(self, bus, message):
-        """Handle message events sent by gstreamer."""
-        t = message.type
-        if t == Gst.MessageType.ERROR:
+        """Handle message events sent by gstreamer.
+
+        TODO params
+        """
+        if message.type == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
             self._on_error(error)
-        elif t == Gst.MessageType.EOS:
+        elif message.type == Gst.MessageType.EOS:
             # Conversion done
             self._conversion_done()
-        elif t == Gst.MessageType.TAG:
-            self.found_tag(self, '', message.parse_tag())
+        elif message.type == Gst.MessageType.TAG:
+            self._found_tag(self, '', message.parse_tag())
 
     def _found_tag(self, decoder, something, taglist):
         """Called when the decoder reads a tag.
-        
+
         TODO params
         """
         logger.debug(
@@ -462,8 +461,9 @@ class Converter(Task):
         taglist.foreach(self._append_tag, None)
 
     def _append_tag(self, taglist, tag, unused_udata):
-        """TODO docstring
-        
+        """Remember tags in order to construct the final output path
+        based on the filename pattern.
+
         TODO params
         """
         tag_whitelist = (
@@ -502,9 +502,9 @@ class Converter(Task):
             tags[tag] = value
 
         if 'datetime' in tag:
-            dt = taglist.get_date_time(tag)[1]
-            tags['year'] = dt.get_year()
-            tags['date'] = dt.to_iso8601_string()[:10]
+            datetime = taglist.get_date_time(tag)[1]
+            tags['year'] = datetime.get_year()
+            tags['date'] = datetime.to_iso8601_string()[:10]
 
         logger.debug('    {}'.format(tags))
         self.sound_file.tags.update(tags)
