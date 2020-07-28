@@ -39,8 +39,9 @@ VERSION = pkg_resources.require('soundconverter')[0].version
 NAME = pkg_resources.require('soundconverter')[0].project_name
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
 
-# depending on where this file is installed to, make sure to use the proper prefix path for data
-# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files
+# depending on where this file is installed to, make sure to use the proper
+# prefix path for data
+# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
 if SOURCE_PATH.startswith(site.USER_BASE):
     DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
 elif SOURCE_PATH.startswith('/usr/local/'):
@@ -60,15 +61,15 @@ except (ImportError, ValueError) as error:
     print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
 
-# remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
-# and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
+# remove gstreamer arguments so only gstreamer sees them.
+# See `gst-launch-1.0 --help-gst`and
+# https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html # noqa
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 import soundconverter
 from soundconverter.util.settings import settings
 from soundconverter.util.formats import get_mime_type, mime_types
-from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_uri
 from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
@@ -92,7 +93,8 @@ def mode_callback(option, opt, value, parser, **kwargs):
 
 
 class ModifiedOptionParser(OptionParser):
-    """An OptionParser class that doesn't remove newlines on the epilog in order to show usage examples.
+    """An OptionParser class that doesn't remove newlines on the epilog in
+    order to show usage examples.
     
     https://stackoverflow.com/questions/1857346/
 
@@ -106,10 +108,14 @@ class ModifiedOptionParser(OptionParser):
 
 
 def parse_command_line():
-    """Create and return the OptionParser, which parse the command line arguments and displays help with --help."""
+    """Create and return the OptionParser.
+
+    Parses the command line arguments and displays help with --help.
+    """
     parser = ModifiedOptionParser(
-        epilog='\nExample:\n'
-        '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n'
+        epilog='\nExample:\n  '
+        'soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o ' +
+        '[output dir] -Q 4\n'
     )
 
     parser.add_option(
@@ -166,8 +172,8 @@ def parse_command_line():
             'suffix as well. Supported MIME types: %s'
         ).format(
             settings['cli-output-type'],
-            'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
-            'audio/x-wav (WAV)'
+            'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3)'
+            'audio/x-vorbis (Vorbis) audio/x-wav (WAV)'
         )
     )
     batch_option_group.add_option(
@@ -193,8 +199,8 @@ def parse_command_line():
         '-o', '--output', action="store", dest="output-path",
         help=_(
             'Put converted files into a different directory while rebuilding '
-            'the original directory structure. This includes the name of the original '
-            'directory.'
+            'the original directory structure. This includes the name of the '
+            'original directory.'
         )
     )
     batch_option_group.add_option(

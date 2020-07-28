@@ -25,12 +25,12 @@ import os
 import sys
 import time
 
-from gi.repository import GLib
+from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings
+from soundconverter.util.settings import settings, set_gio_settings
 from soundconverter.util.formats import get_quality
 from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
-from soundconverter.util.names import TargetNameGenerator
+from soundconverter.util.names import TargetNameGenerator, get_output_suffix
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
@@ -40,10 +40,28 @@ from soundconverter.util.logger import logger
 # for maximum compatibility and less complexity due to 2 different cases.
 
 
-def prepare_files_list(input_files):
-    """Take in a list of paths and return a list of all the files in those paths, converted to URIs.
+def use_memory_gsettings():
+    """Use a Gio memory backend and write argv settings into it.
 
-    Also returns a list of relative directories. This is used to reconstruct the directory structure in
+    In order for the batch mode to work properly with functions that were
+    written for the ui, write argv into the gio settings, but provide a
+    temporary memory backend so that the ui keeps its settings.
+    """
+    backend = Gio.memory_settings_backend_new()
+    gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
+    set_gio_settings(gio_settings)
+
+    gio_settings.set_string('output-mime-type', settings['cli-output-type'])
+    gio_settings.set_integer('number-of-jobs', settings['forced-jobs'])
+    # TODO don't store those args in settings to avoid redundancy.
+    #  pass the argparse object to this
+
+
+def prepare_files_list(input_files):
+    """Create a list of all URIs in a list of paths.
+
+    Also returns a list of relative directories. This is used to reconstruct
+    the directory structure in
     the output path if -o is provided.
     """
     # The GUI has its own way of going through subdirectories.
@@ -89,8 +107,12 @@ def prepare_files_list(input_files):
                             subdir = ''
                         subdirectories.append(subdir)
             else:
-                # else it didn't go into any directory. provide some information about how to
-                logger.info('{} is a directory. Use -r to go into all subdirectories.'.format(input_path))
+                # else it didn't go into any directory.
+                # Provide some information about how to
+                logger.info(
+                    '{} is a directory. Use -r to go into all subdirectories.'
+                    .format(input_path)
+                )
         # if not a file and not a dir it doesn't exist. skip
     parsed_files = list(map(filename_to_uri, parsed_files))
 
@@ -98,10 +120,10 @@ def prepare_files_list(input_files):
 
 
 def cli_tags_main(input_files):
-    """Display all the tags of the specified files in input_files in the console.
+    """Display all the tags of the specified files in the console.
 
-    To go into subdirectories of paths provided, the -r command line argument should be provided,
-    which is stored in the global 'settings' variable.
+    To go into subdirectories of paths provided, the -r command line argument
+    should be provided, which is stored in the global 'settings' variable.
 
     input_files is an array of string paths.
     """
@@ -126,7 +148,10 @@ def cli_tags_main(input_files):
 
 
 class CliProgress:
-    """Class to overwrite a progress indication in the console without printing new lines."""
+    """Overwrite a progress indication in the console.
+
+    Won't print a new line.
+    """
 
     def __init__(self):
         """Initialize the class without printing anything yet."""
@@ -156,14 +181,17 @@ class CLI_Convert():
     def __init__(self, input_files):
         """Start the conversion of all the files specified in input_files.
 
-        To control the conversion and the handling of directories, command line arguments have to be
-        provided which are stored in the global 'settings' variable.
+        To control the conversion and the handling of directories, command
+        line arguments have to be provided which are stored in the global
+        'settings' variable.
 
         input_files is an array of string paths.
         """
         # check which files should be converted. The result is
         # stored in file_checker.good_files
-        logger.info('\nchecking files and walking dirs in the specified paths…')
+        logger.info(
+            '\nchecking files and walking dirs in the specified paths…'
+        )
 
         file_checker = CLI_Check(input_files, silent=True)
 
@@ -178,8 +206,8 @@ class CLI_Convert():
         context = loop.get_context()
 
         output_type = settings['cli-output-type']
-        # TODO get_output_suffix
-        output_suffix = settings['cli-output-suffix']
+        # TODO remove the output suffix from the cli options
+        output_suffix = get_output_suffix()
 
         generator = TargetNameGenerator()
         generator.suffix = output_suffix
@@ -248,7 +276,7 @@ class CLI_Convert():
         context.iteration(True)
 
     def print_progress(self, c):
-        """Print the filename that is currently being converted and how many files are left."""
+        """Print the current filename and how many files are left."""
         self.started_tasks += 1
         path = unquote_filename(beautify_uri(c.sound_file.uri))
         logger.info('{}/{}: \'{}\''.format(self.started_tasks, self.num_conversions, path))
@@ -257,14 +285,16 @@ class CLI_Convert():
 class CLI_Check():
 
     def __init__(self, input_files, silent=False):
-        """Print all the tags of the specified files in input_files to the console.
+        """Print all the tags of the specified files to the console.
 
-        To go into subdirectories of paths provided, the -r command line argument should be provided,
-        which is stored in the global 'settings' variable.
+        To go into subdirectories of paths provided, the -r command line
+        argument should be provided, which is stored in the global 'settings'
+        variable.
 
         input_files is an array of string paths.
 
-        silent=True makes this print no output, no matter the -q argument of soundconverter
+        silent=True makes this print no output, no matter the -q argument of
+        soundconverter
 
         It will exit the tool if input_files contains no files
         (maybe because -r is missing and the specified path is a dir)
@@ -293,16 +323,20 @@ class CLI_Check():
         typefinders.start()
         p = 0
         progress = CliProgress()
-        printstepsize = 100/len(input_files)
+
+        # delta progress at which when new progress should be printed
+        threshold = 100 / len(input_files)
 
         loop = GLib.MainLoop()
         context = loop.get_context()
 
+        # TODO why this and not CliProgress? difference?
         while typefinders.running:
-            if typefinders.progress and typefinders.progress - p > printstepsize:
-                p = typefinders.progress
-                if not settings.get('quiet'):
-                    progress.show('progress: ' + str(round(p*100)) + '%')
+            if not settings.get('quiet') and typefinders.progress:
+                delta = typefinders.progress - p
+                if delta > threshold:
+                    p = typefinders.progress
+                    progress.show('progress: ' + str(round(p * 100)) + '%')
             # main_iteration is needed for
             # the typefinder taskqueue to run
             # calling this like crazy is the fastest way

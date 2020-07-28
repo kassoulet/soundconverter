@@ -28,7 +28,7 @@ import DistUtilsExtra.auto
 # - Install all the py files to /usr/lib/python3.8/site-packages/soundconverter
 # - Copy bin to /usr/bin
 # - Copy the rest to /usr/share/soundconverter, like the .glade file
-# Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc)
+# Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc) # noqa
 
 
 class Install(DistUtilsExtra.auto.install_auto):

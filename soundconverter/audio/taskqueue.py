@@ -21,6 +21,7 @@
 
 import datetime
 from queue import Queue
+from multiprocessing import cpu_count
 
 from soundconverter.util.settings import settings
 
@@ -78,7 +79,7 @@ class TaskQueue:
         return (
             settings['forced-jobs'] or
             settings['jobs'] or
-            settings['cpu-count']
+            cpu_count()
         )
 
     def task_done(self, task):
