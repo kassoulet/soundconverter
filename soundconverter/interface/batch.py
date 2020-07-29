@@ -27,12 +27,14 @@ import time
 
 from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, set_gio_settings
+from soundconverter.util.settings import settings, set_gio_settings, \
+    get_gio_settings
 from soundconverter.util.formats import get_quality
 from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
 from soundconverter.util.names import TargetNameGenerator, get_output_suffix
 from soundconverter.util.queue import TaskQueue
-from soundconverter.util.fileoperations import unquote_filename, filename_to_uri, vfs_exists, beautify_uri
+from soundconverter.util.fileoperations import unquote_filename, \
+    filename_to_uri, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
 
 
