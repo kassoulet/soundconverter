@@ -95,8 +95,8 @@ def get_mime_type(t):
 
     Parameters
     ----------
-        t : string
-            extension-type (like 'mp3') or mime-type (like 'audio/x-m4a')
+    t : string
+        extension-type (like 'mp3') or mime-type (like 'audio/x-m4a')
     """
     if t not in mime_types.values():
         # possibly a file extension
@@ -111,15 +111,15 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
 
     Parameters
     ----------
-        ftype : string
-            'vorbis', 'aac', 'opus' or 'mp3',
-        value : number
-            between 0 and 5,
-        mode : string
-            one of 'cbr', 'abr' and 'vbr' for mp3
-        reverse : boolean
-            default False. If True, this function returns the original value-parameter
-            given a quality setting. Value becomes the input for the quality then.
+    ftype : string
+        'vorbis', 'aac', 'opus' or 'mp3',
+    value : number
+        between 0 and 5,
+    mode : string
+        one of 'cbr', 'abr' and 'vbr' for mp3
+    reverse : boolean
+        default False. If True, this function returns the original value-parameter
+        given a quality setting. Value becomes the input for the quality then.
     """
     quality = {
         'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),

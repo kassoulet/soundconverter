@@ -25,6 +25,7 @@ import string
 import time
 import re
 import os
+import random
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -33,6 +34,7 @@ from gettext import gettext as _
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
     unquote_filename
 from soundconverter.util.settings import get_gio_settings
+from soundconverter.audio.profiles import audio_profiles_dict
 
 
 class TargetNameGenerator:
@@ -55,15 +57,16 @@ class TargetNameGenerator:
 
     @staticmethod
     def safe_name(filename):
-        """Make a filename safe to use if it contains special characters than can make things break sometimes
+        """Make a filename without dangerous special characters.
 
-        Replace all characters that are not ascii, digits or '.' '-' '_' '/' with '_'. Umlaute will be changed
-        to their closest non-umlaut counterpart. Will not be applied on the part of the path that already exists,
-        as that part apparently is already safe.
+        Replace all characters that are not ascii, digits or '.' '-' '_' '/'
+        with '_'. Umlaute will be changed to their closest non-umlaut
+        counterpart. Will not be applied on the part of the path that already
+        exists, as that part apparently is already safe.
 
         Parameters
         ----------
-        path : string
+        filename : string
             Can be an URI or a normal path
         """
         if len(filename) == 0:
@@ -89,9 +92,14 @@ class TargetNameGenerator:
             if os.path.exists(safe + part):
                 safe += part
             else:
-                # put the remaining unknown non-existing path back together and make it safe
-                non_existing = TargetNameGenerator._unicode_to_ascii(part + ''.join(split))
-                non_existing = ''.join([c if c in nice_chars else '_' for c in non_existing])
+                # put the remaining unknown non-existing path back together
+                # and make it safe
+                non_existing = TargetNameGenerator._unicode_to_ascii(
+                    part + ''.join(split)
+                )
+                non_existing = ''.join([
+                    c if c in nice_chars else '_' for c in non_existing
+                ])
                 safe += non_existing
                 break
 
@@ -103,10 +111,9 @@ class TargetNameGenerator:
     def get_target_name(self, sound_file):
         assert self.suffix, 'you just forgot to call set_target_suffix()'
 
-        root, ext = os.path.splitext(urllib.parse.urlparse(sound_file.uri).path)
-
         root = sound_file.base_path
-        basename, ext = os.path.splitext(urllib.parse.unquote(sound_file.filename))
+        filename = sound_file.filename
+        basename, ext = os.path.splitext(urllib.parse.unquote(filename))
 
         # make sure basename contains only the filename
         basefolder, basename = os.path.split(basename)
@@ -158,13 +165,15 @@ class TargetNameGenerator:
             # we are creating folders using tags, disable basefolder handling
             basefolder = ''
 
-        result = os.path.join(folder, urllib.parse.quote(basefolder), urllib.parse.quote(result))
+        basefolder_quoted = urllib.parse.quote(basefolder)
+        result_quoted = urllib.parse.quote(result)
+        result = os.path.join(folder, basefolder_quoted, result_quoted)
 
         return result
 
 
 def generate_temp_filename(soundfile):
-    """Return a modified filename of the soundfile for which no conflicting file exists"""
+    """Generate a random filename that doesn't exist yet."""
     gio_settings = get_gio_settings()
     folder, basename = os.path.split(soundfile.uri)
     if not gio_settings.get_boolean('same-folder-as-input'):
@@ -198,7 +207,9 @@ def get_output_suffix():
     return output_suffix
 
 
-def generate_filename(sound_file, for_display=False):
+def generate_filename(
+    sound_file, basename_pattern, subfolder_pattern, for_display=False
+):
     settings = get_gio_settings()
     generator = TargetNameGenerator()
     generator.suffix = get_output_suffix()
@@ -210,9 +221,9 @@ def generate_filename(sound_file, for_display=False):
         generator.folder = folder
 
         if settings.get_boolean('create-subfolders'):
-            generator.subfolders = self.get_subfolder_pattern()
+            generator.subfolders = subfolder_pattern
 
-    generator.basename = self.get_basename_pattern()
+    generator.basename = basename_pattern
 
     if for_display:
         generator.replace_messy_chars = False

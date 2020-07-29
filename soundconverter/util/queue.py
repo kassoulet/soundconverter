@@ -23,7 +23,7 @@ import time
 from multiprocessing import cpu_count
 
 from soundconverter.util.task import BackgroundTask
-from soundconverter.util.settings import settings
+from soundconverter.util.settings import get_gio_settings, get_num_jobs
 from soundconverter.util.logger import logger
 
 
@@ -54,7 +54,7 @@ class TaskQueue(BackgroundTask):
 
     def get_num_jobs(self):
         """Return the number of jobs that should be run in parallel."""
-        return settings['forced-jobs'] or settings['jobs'] or cpu_count()
+        return get_gio_settings().get_integer('number-of-jobs') or cpu_count()
 
     def add_task(self, task):
         """Add a task to the queue."""
@@ -70,7 +70,7 @@ class TaskQueue(BackgroundTask):
                 self.done()
             return
 
-        to_start = self.get_num_jobs() - len(self.running_tasks)
+        to_start = get_num_jobs() - len(self.running_tasks)
         for _ in range(to_start):
             try:
                 task = self.waiting_tasks.pop(0)
