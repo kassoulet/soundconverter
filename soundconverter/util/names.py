@@ -25,7 +25,7 @@ import string
 import time
 import re
 import os
-import random
+from random import random
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -109,6 +109,7 @@ class TargetNameGenerator:
         return safe
 
     def get_target_name(self, sound_file):
+        """Fill tags into a filename pattern for sound_file."""
         assert self.suffix, 'you just forgot to call set_target_suffix()'
 
         root = sound_file.base_path
@@ -151,6 +152,7 @@ class TargetNameGenerator:
         d['timestamp'] = timestamp_string
 
         pattern = os.path.join(self.subfolders, self.basename + self.suffix)
+        # now fill the tags in the pattern with values:
         result = pattern % d
 
         if self.replace_messy_chars:
@@ -194,13 +196,13 @@ def get_output_suffix():
     profile = settings.get_string('audio-profile')
     profile_ext = audio_profiles_dict[profile][1] if profile else ''
     output_suffix = {
-            'audio/x-vorbis': '.ogg',
-            'audio/x-flac': '.flac',
-            'audio/x-wav': '.wav',
-            'audio/mpeg': '.mp3',
-            'audio/x-m4a': '.m4a',
-            'audio/ogg; codecs=opus': '.opus',
-            'gst-profile': '.' + profile_ext,
+        'audio/x-vorbis': '.ogg',
+        'audio/x-flac': '.flac',
+        'audio/x-wav': '.wav',
+        'audio/mpeg': '.mp3',
+        'audio/x-m4a': '.m4a',
+        'audio/ogg; codecs=opus': '.opus',
+        'gst-profile': '.' + profile_ext,
     }.get(output_type, '.?')
     if output_suffix == '.ogg' and settings.get_boolean('vorbis-oga-extension'):
         output_suffix = '.oga'
@@ -210,6 +212,16 @@ def get_output_suffix():
 def generate_filename(
     sound_file, basename_pattern, subfolder_pattern, for_display=False
 ):
+    """Generate a target filename based on patterns and settings.
+
+    Parameters
+    ----------
+    basename_pattern : string
+        For example '%(artist)s-%(title)s'
+    subfolder_pattern : string
+        For example '%(album-artist)s/%(album)s'
+    for_display : bool
+    """
     settings = get_gio_settings()
     generator = TargetNameGenerator()
     generator.suffix = get_output_suffix()

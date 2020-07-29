@@ -96,29 +96,6 @@ class ErrorDialog:
         self.dialog.hide()
 
 
-class MsgAreaErrorDialog_:
-
-    def __init__(self, builder):
-        self.dialog = builder.get_object('error_frame')
-        self.primary = builder.get_object('label_error')
-
-    def show_error(self, primary, secondary):
-        try:
-            sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
-        except Exception:
-            pass
-        # self.msg_area.set_text_and_icon(Gtk.STOCK_DIALOG_ERROR, primary, secondary)
-        # self.msg_area.show()
-        self.primary.set_text(primary)
-        self.dialog.show()
-
-    def show_exception(self, exception):
-        self.show(
-            '<b>{}</b>'.format(GLib.markup_escape_text(exception.primary)),
-            exception.secondary
-        )
-
-
 class FileList:
     """List of files added by the user."""
 

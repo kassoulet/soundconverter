@@ -184,6 +184,7 @@ class Converter(Task):
         settings = get_gio_settings()
         self.sound_file = sound_file
         self.output_filename = output_filename
+        self.temporary_filename = None
         self.output_mime_type = settings.get_string('output-mime-type')
         self.output_resample = settings.get_boolean('output-resample')
         self.resample_rate = settings.get_int('resample-rate')
@@ -224,10 +225,10 @@ class Converter(Task):
         """Cancel execution of the task."""
         # remove partial file
         try:
-            vfs_unlink(self.output_filename)
+            vfs_unlink(self.temporary_filename)
         except Exception as e:
             logger.error('cannot delete: \'{}\': {}'.format(
-                beautify_uri(self.output_filename),
+                beautify_uri(self.temporary_filename),
                 str(e)
             ))
         return
@@ -287,20 +288,22 @@ class Converter(Task):
 
         if self.error:
             logger.debug('error in task, skipping rename: {}'.format(
-                self.output_filename
+                self.temporary_filename
             ))
-            if vfs_exists(self.output_filename):
-                vfs_unlink(self.output_filename)
+            if vfs_exists(self.temporary_filename):
+                vfs_unlink(self.temporary_filename)
             logger.info('Could not convert {}: {}'.format(
                 beautify_uri(input_uri), self.error
             ))
             return
 
         # rename temporary file
-        newname = generate_filename(self.sound_file)
+        # TODO do that outside of converter:
+        #  newname = generate_filename(self.sound_file)
+        newname = self.output_filename
         logger.info('newname {}'.format(newname))
         logger.debug('{} -> {}'.format(
-            beautify_uri(self.output_filename), beautify_uri(newname)
+            beautify_uri(self.temporary_filename), beautify_uri(newname)
         ))
 
         # safe mode. generate a filename until we find a free one
@@ -320,11 +323,11 @@ class Converter(Task):
             i += 1
 
         try:
-            vfs_rename(self.output_filename, newname)
+            vfs_rename(self.temporary_filename, newname)
         except Exception as e:
             self.error = str(e)
             logger.info('Could not rename {} to {}:'.format(
-                beautify_uri(self.output_filename), beautify_uri(newname)
+                beautify_uri(self.temporary_filename), beautify_uri(newname)
             ))
             logger.info(traceback.print_exc())
             return
@@ -335,12 +338,12 @@ class Converter(Task):
 
         # Copy file permissions
         if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
-                Gio.file_parse_name(self.output_filename),
+                Gio.file_parse_name(self.temporary_filename),
                 Gio.FileCopyFlags.NONE,
                 None
         ):
             logger.info('Cannot set permission on \'{}\''.format(
-                beautify_uri(self.output_filename)
+                beautify_uri(self.temporary_filename)
             ))
 
         # TODO had `and self.processing and`
@@ -348,7 +351,7 @@ class Converter(Task):
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
                 logger.info('Cannot remove \'{}\''.format(
-                    beautify_uri(self.output_filename)
+                    beautify_uri(self.temporary_filename)
                 ))
 
         self.done = True
@@ -390,7 +393,7 @@ class Converter(Task):
         # temporary output file. Until the file is handled by gstreamer,
         # its tags are unknown, so the correct output path cannot be
         # constructed yet.
-        gfile = Gio.file_parse_name(self.output_filename)
+        gfile = Gio.file_parse_name(self.temporary_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
             logger.info('creating folder: \'{}\''.format(
@@ -406,14 +409,14 @@ class Converter(Task):
                 return
 
         command.append('{} location="{}"'.format(
-            GSTREAMER_SINK, vfs_encode_filename(self.output_filename))
+            GSTREAMER_SINK, vfs_encode_filename(self.temporary_filename))
         )
 
-        if self.overwrite and vfs_exists(self.output_filename):
+        if self.overwrite and vfs_exists(self.temporary_filename):
             logger.info('overwriting \'{}\''.format(
-                beautify_uri(self.output_filename)
+                beautify_uri(self.temporary_filename)
             ))
-            vfs_unlink(self.output_filename)
+            vfs_unlink(self.temporary_filename)
 
         # preparation done, now convert
         self.command = ' ! '.join(command)
