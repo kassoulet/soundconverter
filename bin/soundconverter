@@ -85,7 +85,6 @@ def check_mime_type(t):
             msg += ' {} {}'.format(k, v)
         logger.info(msg)
         raise SystemExit
-    return mime
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -165,13 +164,13 @@ def parse_command_line():
         'option is provided'
     )
     batch_option_group.add_option(
-        '-m', '--mime-type', dest="cli-output-type",
+        '-m', '--mime-type', dest="output-mime-type",
         help=_(
             'Set the output MIME type. The default '
             'is %s. Note that you will probably want to set the output '
             'suffix as well. Supported MIME types: %s'
         ).format(
-            settings['cli-output-type'],
+            get_gio_settings().get_string('output-mime-type'),
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3)'
             'audio/x-vorbis (Vorbis) audio/x-wav (WAV)'
         )
@@ -228,20 +227,19 @@ for k in dir(options):
         continue
     settings[k] = getattr(options, k)
 
-settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
-
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()
 
 if not settings.get('quiet'):
     logger.info(('{} {}'.format(NAME, VERSION)))
-    if settings['forced-jobs']:
-        logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
+    if get_gio_settings().get_integer('number-of-jobs'):
+        logger.info(('Using {} thread(s)'.format(get_gio_settings().get_integer('number-of-jobs'))))
 
 if settings['mode'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
+    check_mime_type(settings['output-mime-type'])
     if not files:
         logger.info('nothing to do…')
     if settings['mode'] == 'tags':

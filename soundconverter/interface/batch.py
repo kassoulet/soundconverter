@@ -45,13 +45,14 @@ def use_memory_gsettings():
 
     In order for the batch mode to work properly with functions that were
     written for the ui, write argv into the gio settings, but provide a
-    temporary memory backend so that the ui keeps its settings.
+    temporary memory backend so that the ui keeps its settings and cli
+    settings are thrown away at the end.
     """
     backend = Gio.memory_settings_backend_new()
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
-    gio_settings.set_string('output-mime-type', settings['cli-output-type'])
+    gio_settings.set_string('output-mime-type', settings['output-mime-type'])
     gio_settings.set_integer('number-of-jobs', settings['forced-jobs'])
     # TODO don't store those args in settings to avoid redundancy.
     #  pass the argparse object to this
@@ -205,7 +206,7 @@ class CLI_Convert():
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        output_type = settings['cli-output-type']
+        output_type = get_gio_settings().get_string('output-mime-type')
         # TODO remove the output suffix from the cli options
         output_suffix = get_output_suffix()
 

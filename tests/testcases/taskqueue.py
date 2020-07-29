@@ -217,7 +217,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_queue_multiple_async(self):
         self.num_jobs = 2
-        settings['forced-jobs'] = self.num_jobs
+        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
 
         self.q.run()
         self.assertEqual(self.q.done, 0)
@@ -242,7 +242,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_pause_resume(self):
         self.num_jobs = 5
-        settings['forced-jobs'] = self.num_jobs
+        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
 
         self.q.run()
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
@@ -278,7 +278,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_cancel_run(self):
         self.num_jobs = 5
-        settings['forced-jobs'] = self.num_jobs
+        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
         
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -337,7 +337,7 @@ class TaskQueueTest(unittest.TestCase):
 
     def test_queue_single(self):
         """A TaskQueue only consisting of synchronous tasks."""
-        settings['forced-jobs'] = 1
+        get_gio_settings().set_integer('number-of-jobs', 1)
         q = TaskQueue()
 
         q.add(SyncSleepTask())
@@ -353,7 +353,7 @@ class TaskQueueTest(unittest.TestCase):
         self.assertEqual(len(q.running), 0)
 
     def test_queue_single_async(self):
-        settings['forced-jobs'] = 1
+        get_gio_settings().set_integer('number-of-jobs', 1)
         q = TaskQueue()
 
         q.add(AsyncSleepTask())

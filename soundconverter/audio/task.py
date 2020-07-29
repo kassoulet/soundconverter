@@ -43,19 +43,20 @@ class Task():
         
         Parameters
         ----------
-            callback : function
-                Call this when done
+        callback : function
+            Call this when done
         """
         raise NotImplementedError()
 
-    # private
+    # don't overwrite
 
     def set_callback(self, callback):
-        """Callback to be used when the task finishes.
+        """For the Taskqueue to get notified when the Task is done.
 
         Don't overwrite this function.
 
-        Make sure to call self.callback() when done in your inheriting class.
+        Make sure to call self.callback() when your task that inherits from
+        Task is finished.
         """
         def callback_wrapped():
             # automatically provide self as argument, so that

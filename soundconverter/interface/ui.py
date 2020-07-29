@@ -20,7 +20,6 @@
 # USA
 
 import os
-from random import random
 import time
 import sys
 import urllib.request
@@ -31,14 +30,15 @@ from gettext import ngettext
 
 from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
-from soundconverter.util.fileoperations import filename_to_uri, beautify_uri, unquote_filename, vfs_walk, vfs_exists
-from soundconverter.converter.gstreamer import ConverterQueue, available_elements, \
-    TypeFinder, audio_profiles_list, audio_profiles_dict
+from soundconverter.util.fileoperations import filename_to_uri, \
+    beautify_uri, unquote_filename, vfs_walk
+from soundconverter.converter.gstreamer import ConverterQueue, \
+    available_elements, TypeFinder, audio_profiles_list
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.util.formats import get_quality
-from soundconverter.util.formats import locale_patterns_dict, custom_patterns, filepattern
-from soundconverter.util.names import TargetNameGenerator
+from soundconverter.util.formats import get_quality, locale_patterns_dict, \
+    custom_patterns, filepattern
+from soundconverter.util.names import generate_filename
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error, set_error_handler
@@ -742,8 +742,10 @@ class PreferencesDialog(GladeWindow):
         sound_file.tags.update({'album-disc-number': 2, 'album-disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
 
-        s = GLib.markup_escape_text(beautify_uri(
-                        self.generate_filename(sound_file, for_display=True)))
+        s = GLib.markup_escape_text(beautify_uri(generate_filename(
+            sound_file, self.get_basename_pattern(),
+            self.get_subfolder_pattern(), for_display=True
+        )))
         p = 0
         replaces = []
 
@@ -760,7 +762,7 @@ class PreferencesDialog(GladeWindow):
             else:
                 replace = tag.replace('{', '<span foreground=\'red\'><i>{').replace('}', '}</i></span>')
                 replaces.append([tag, replace])
-            p = b+1
+            p = b + 1
 
         for k, l in replaces:
             s = s.replace(k, l)
@@ -832,12 +834,6 @@ class PreferencesDialog(GladeWindow):
         self.settings.set_int('subfolder-pattern-index', combobox.get_active())
         self.update_example()
 
-    def get_subfolder_pattern(self):
-        index = self.settings.get_int('subfolder-pattern-index')
-        if index < 0 or index >= len(self.subfolder_patterns):
-            index = 0
-        return self.subfolder_patterns[index][0]
-
     def on_basename_pattern_changed(self, combobox):
         self.settings.set_int('name-pattern-index', combobox.get_active())
         if combobox.get_active() == len(self.basename_patterns)-1:
@@ -847,13 +843,22 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def get_basename_pattern(self):
+        """Get the selected string pattern to be used for filenames."""
         index = self.settings.get_int('name-pattern-index')
         if index < 0 or index >= len(self.basename_patterns):
             index = 0
-        if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
+        active_pattern_index = self.basename_pattern.get_active()
+        if active_pattern_index == len(self.basename_patterns) - 1:
             return self.process_custom_pattern(self.custom_filename.get_text())
         else:
             return self.basename_patterns[index][0]
+
+    def get_subfolder_pattern(self):
+        """Get the selected string pattern for subfolders."""
+        index = self.settings.get_int('subfolder-pattern-index')
+        if index < 0 or index >= len(self.subfolder_patterns):
+            index = 0
+        return self.subfolder_patterns[index][0]
 
     def on_custom_filename_changed(self, entry):
         self.settings.set_string('custom-filename-pattern', entry.get_text())
@@ -1028,6 +1033,7 @@ class PreferencesDialog(GladeWindow):
         self.update_jobs()
 
     def update_jobs(self):
+        # TODO do get_int instead of having redundancy
         if self.settings.get_boolean('limit-jobs'):
             settings['jobs'] = self.settings.get_int('number-of-jobs')
         else:
