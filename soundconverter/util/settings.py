@@ -68,7 +68,7 @@ def get_num_jobs():
     return (
         (
             _gio_settings.get_boolean('limit-jobs') and
-            _gio_settings.get_integer('number-of-jobs')
+            _gio_settings.get_int('number-of-jobs')
         ) or
         cpu_count()
     )

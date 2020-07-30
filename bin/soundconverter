@@ -232,8 +232,8 @@ update_verbosity()
 
 if not settings.get('quiet'):
     logger.info(('{} {}'.format(NAME, VERSION)))
-    if get_gio_settings().get_integer('number-of-jobs'):
-        logger.info(('Using {} thread(s)'.format(get_gio_settings().get_integer('number-of-jobs'))))
+    if get_gio_settings().get_int('number-of-jobs'):
+        logger.info(('Using {} thread(s)'.format(get_gio_settings().get_int('number-of-jobs'))))
 
 if settings['mode'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')

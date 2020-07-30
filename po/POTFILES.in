@@ -8,7 +8,7 @@ data/soundconverter.glade
 soundconverter/util/soundfile.py
 soundconverter/util/settings.py
 soundconverter/util/formats.py
-soundconverter/util/namegenerator.py
+soundconverter/util/names.py
 soundconverter/util/logger.py
 soundconverter/util/fileoperations.py
 soundconverter/util/task.py
