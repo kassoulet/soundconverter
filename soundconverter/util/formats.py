@@ -19,7 +19,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+import math
 from gettext import gettext as _
+
+from soundconverter.util.settings import get_gio_settings
 
 # add here any format you want to be read
 mime_whitelist = (
@@ -39,10 +42,12 @@ filename_blacklist = (
 )
 
 # custom filename patterns
-english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext'
+english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date ' \
+                   'Year Timestamp DiscNumber DiscTotal Ext'
 
 # traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal Ext')
+locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date '
+                    'Year Timestamp DiscNumber DiscTotal Ext')
 
 patterns_formats = (
     '%(artist)s',
@@ -85,7 +90,7 @@ filepattern = (
 
 
 mime_types = {
-    'vorbis': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
+    'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
     'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
 }
 
@@ -96,7 +101,7 @@ def get_mime_type(t):
     Parameters
     ----------
     t : string
-        extension-type (like 'mp3') or mime-type (like 'audio/x-m4a')
+        extension (like 'mp3')
     """
     if t not in mime_types.values():
         # possibly a file extension
@@ -106,34 +111,124 @@ def get_mime_type(t):
         return t
 
 
+def get_file_extension(mime):
+    """Return the matching file extension or None if it is not supported.
+
+    Parameters
+    ----------
+    mime : string
+        mime string (like 'audio/x-m4a')
+    """
+    if mime in mime_types:
+        # already an extension
+        return mime
+    else:
+        reversed = {mime: ext for ext, mime in mime_types.items()}
+        return reversed.get(mime, None)
+
+
+def get_quality_setting_name():
+    """Depending on the selected mime_type, get the gio settings name."""
+    settings = get_gio_settings()
+    mime_type = settings.get_string('output-mime-type')
+    if mime_type is 'audio/mpeg':
+        mode = settings.get_string('mp3-mode')
+        setting_name = {
+            'cbr': 'mp3-cbr-quality',
+            'abr': 'mp3-abr-quality',
+            'vbr': 'mp3-vbr-quality'
+        }[mode]
+    else:
+        setting_name = {
+            'audio/x-vorbis': 'vorbis-quality',
+            'audio/x-m4a': 'aac-quality',
+            'audio/ogg; codecs=opus': 'opus-bitrate',
+            'audio/x-flac': 'flac-compression',
+            'audio/x-wav': 'wav-sample-width'
+        }[mime_type]
+    return setting_name
+
+
+def get_bitrate_from_settings():
+    """Get a human readable bitrate from quality settings.
+
+    For example '~224 kbps'
+    """
+    settings = get_gio_settings()
+    mime_type = settings.get_string('output-mime-type')
+    mode = settings.get_string('mp3-mode')
+
+    bitrate = 0
+    approx = True
+
+    if mime_type == 'audio/x-vorbis':
+        quality = max(0, min(1, settings.get_double('vorbis-quality'))) * 10
+        quality = round(quality)
+        bitrates = (64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500)
+        bitrate = bitrates[quality]
+
+    elif mime_type == 'audio/x-m4a':
+        bitrate = settings.get_int('aac-quality')
+
+    elif mime_type == 'audio/ogg; codecs=opus':
+        bitrate = settings.get_int('opus-bitrate')
+
+    elif mime_type == 'audio/mpeg':
+        mp3_quality_setting_name = {
+            'cbr': 'mp3-cbr-quality',
+            'abr': 'mp3-abr-quality',
+            'vbr': 'mp3-vbr-quality'
+        }[mode]
+        setting = settings.get_int(mp3_quality_setting_name)
+        if mode == 'vbr':
+            # TODO check which values would be correct here
+            bitrates = (320, 256, 224, 192, 160, 128)
+            bitrate = bitrates[setting]
+        if mode == 'cbr':
+            approx = False
+            bitrate = setting
+        if mode == 'abr':
+            bitrate = setting
+
+    if bitrate:
+        if approx:
+            return '~{} kbps'.format(bitrate)
+        else:
+            return '{} kbps'.format(bitrate)
+    else:
+        return 'N/A'
+
+
 def get_quality(ftype, value, mode='vbr', reverse=False):
-    """Map an integer between 0 and 6 to a proper quality value depending on target file type.
+    """Map an integer between 0 and 5 to a proper quality/compression value.
 
     Parameters
     ----------
     ftype : string
-        'vorbis', 'aac', 'opus' or 'mp3',
+        'ogg', 'aac', 'opus', 'flac', 'wav' or 'mp3'
     value : number
-        between 0 and 5,
+        between 0 and 5, or 0 and 2 for flac and wav
     mode : string
         one of 'cbr', 'abr' and 'vbr' for mp3
     reverse : boolean
-        default False. If True, this function returns the original value-parameter
-        given a quality setting. Value becomes the input for the quality then.
+        default False. If True, this function returns the original
+        value-parameter given a quality setting. Value becomes the input for
+        the quality then.
     """
     quality = {
-        'vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+        'ogg': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
         'aac': (64, 96, 128, 192, 256, 320),
         'opus': (48, 64, 96, 128, 160, 192),
         'mp3': {
             'cbr': (64, 96, 128, 192, 256, 320),
             'abr': (64, 96, 128, 192, 256, 320),
             'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
-        }
+        },
+        'wav': (8, 16, 32),
+        'flac': (0, 5, 8)
     }
 
     # get 6-tuple of qualities
-    qualities = None
     if ftype == 'mp3':
         qualities = quality[ftype][mode]
     else:
@@ -148,4 +243,9 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
                     return i
         return qualities.index(value)
     else:
+        # normal index
+        if value > len(qualities) or value < 0:
+            raise ValueError('quality index {} out of range 0 - {}'.format(
+                value, len(qualities)
+            ))
         return qualities[value]

@@ -194,13 +194,19 @@ def parse_command_line():
             'original directory.'
         )
     )
+
     batch_option_group.add_option(
-        '-Q', '--quality', action="store", type='int', dest="quality",
+        '-Q', '--quality', action="store", type='float', dest="quality",
         metavar='NUM', help=_(
-                'Quality of the converted output file. Between 0 '
-                '(lowest) and 5 (highest). Default is 3.'
+                'Quality of the converted output file. Possible values: '
+                'vorbis: 0.0 - 1.0; '
+                'aac: - 320; '
+                'opus: - 192; '
+                'mp3: - 320; '
+                'wav: 8, 16, 32 (bitdepth); '
+                'flac: 0 - 8 (compression strength)'
             ),
-        default=3
+        default=None
     )
 
     parser.add_option_group(batch_option_group)

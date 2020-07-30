@@ -37,7 +37,7 @@ from soundconverter.converter.gstreamer import ConverterQueue, \
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
-    custom_patterns, filepattern
+    custom_patterns, filepattern, get_bitrate_from_settings
 from soundconverter.util.names import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
@@ -413,8 +413,9 @@ class GladeWindow(object):
         You have to call connect_signals() when all descendants are ready.
         """
         GladeWindow.builder = builder
-        GladeWindow.callbacks.update(dict([[x, getattr(self, x)]
-                                     for x in dir(self) if x.startswith('on_')]))
+        GladeWindow.callbacks.update(dict(
+            [[x, getattr(self, x)] for x in dir(self) if x.startswith('on_')]
+        ))
 
     def __getattr__(self, attribute):
         """Allow direct use of window widget."""
@@ -596,7 +597,7 @@ class PreferencesDialog(GladeWindow):
 
         w = self.vorbis_quality
         quality = self.settings.get_double('vorbis-quality')
-        quality_setting = get_quality('vorbis', quality, reverse=True)
+        quality_setting = get_quality('ogg', quality, reverse=True)
         w.set_active(-1)
         self.vorbis_quality.set_active(quality_setting)
         if self.settings.get_boolean('vorbis-oga-extension'):
@@ -614,13 +615,14 @@ class PreferencesDialog(GladeWindow):
 
         w = self.flac_compression
         quality = self.settings.get_int('flac-compression')
-        quality_setting = {0: 0, 5: 1, 8: 2}
-        w.set_active(quality_setting.get(quality, -1))
+        quality_setting = get_quality('flac', quality, reverse=True)
+        w.set_active(quality_setting)
 
         w = self.wav_sample_width
         quality = self.settings.get_int('wav-sample-width')
-        quality_setting = {8: 0, 16: 1, 32: 2}
-        w.set_active(quality_setting.get(quality, -1))
+        # TODO test sample width on output because get_quality is new here
+        quality_setting = get_quality('wav', quality, reverse=True)
+        w.set_active(quality_setting)
 
         self.mp3_quality = self.mp3_quality
         self.mp3_mode = self.mp3_mode
@@ -672,47 +674,6 @@ class PreferencesDialog(GladeWindow):
             beautify_uri(self.settings.get_string('selected-folder'))
         )
 
-    def get_bitrate_from_settings(self):
-        bitrate = 0
-        aprox = True
-        mode = self.settings.get_string('mp3-mode')
-
-        mime_type = self.settings.get_string('output-mime-type')
-
-        if mime_type == 'audio/x-vorbis':
-            quality = self.settings.get_double('vorbis-quality')*10
-            quality = int(quality)
-            bitrates = (64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500)
-            bitrate = bitrates[quality]
-
-        elif mime_type == 'audio/x-m4a':
-            bitrate = self.settings.get_int('aac-quality')
-
-        elif mime_type == 'audio/ogg; codecs=opus':
-            bitrate = self.settings.get_int('opus-bitrate')
-
-        elif mime_type == 'audio/mpeg':
-            quality = {
-                'cbr': 'mp3-cbr-quality',
-                'abr': 'mp3-abr-quality',
-                'vbr': 'mp3-vbr-quality'
-            }
-            bitrate = self.settings.get_int(quality[mode])
-            if mode == 'vbr':
-                # hum, not really, but who cares? :)
-                bitrates = (320, 256, 224, 192, 160, 128, 112, 96, 80, 64)
-                bitrate = bitrates[bitrate]
-            if mode == 'cbr':
-                aprox = False
-
-        if bitrate:
-            if aprox:
-                return '~{} kbps'.format(bitrate)
-            else:
-                return '{} kbps'.format(bitrate)
-        else:
-            return 'N/A'
-
     def update_example(self):
         sound_file = SoundFile('foo/bar.flac')
         sound_file.tags.update({'track-number': 1, 'track-count': 99})
@@ -720,6 +681,8 @@ class PreferencesDialog(GladeWindow):
         sound_file.tags.update(locale_patterns_dict)
 
         generator = TargetNameGenerator()
+
+        # TODO those variable names
         s = GLib.markup_escape_text(beautify_uri(generator.generate_filename(
             sound_file, self.get_basename_pattern(),
             self.get_subfolder_pattern(), for_display=True
@@ -747,8 +710,8 @@ class PreferencesDialog(GladeWindow):
 
         self.example.set_markup(s)
 
-        markup = '<small>{}</small>'.format(_('Target bitrate: %s') % self.get_bitrate_from_settings())
-        self.aprox_bitrate.set_markup(markup)
+        markup = '<small>{}</small>'.format(_('Target bitrate: %s') % get_bitrate_from_settings())
+        self.approx_bitrate.set_markup(markup)
 
     def process_custom_pattern(self, pattern):
         for k in custom_patterns:
@@ -850,13 +813,13 @@ class PreferencesDialog(GladeWindow):
         self.set_sensitive()
         self.update_example()
         tabs = {
-                        'audio/x-vorbis': 0,
-                        'audio/mpeg': 1,
-                        'audio/x-flac': 2,
-                        'audio/x-wav': 3,
-                        'audio/x-m4a': 4,
-                        'audio/ogg; codecs=opus': 5,
-                        'gst-profile': 6,
+            'audio/x-vorbis': 0,
+            'audio/mpeg': 1,
+            'audio/x-flac': 2,
+            'audio/x-wav': 3,
+            'audio/x-m4a': 4,
+            'audio/ogg; codecs=opus': 5,
+            'gst-profile': 6,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -892,16 +855,16 @@ class PreferencesDialog(GladeWindow):
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return  # just de-selectionning
-        fquality = get_quality('vorbis', combobox.get_active())
+        fquality = get_quality('ogg', combobox.get_active())
         self.settings.set_double('vorbis-quality', fquality)
-        self.hscale_vorbis_quality.set_value(fquality*10)
+        self.hscale_vorbis_quality.set_value(fquality * 10)
         self.update_example()
 
     def on_hscale_vorbis_quality_value_changed(self, hscale):
         fquality = hscale.get_value()
-        if abs(self.settings.get_double('vorbis-quality') - fquality/10.0) < 0.001:
+        if abs(self.settings.get_double('vorbis-quality') - fquality / 10.0) < 0.001:
             return  # already at right value
-        self.settings.set_double('vorbis-quality', fquality/10.0)
+        self.settings.set_double('vorbis-quality', fquality / 10.0)
         self.vorbis_quality.set_active(-1)
         self.update_example()
 
@@ -910,21 +873,23 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_aac_quality_changed(self, combobox):
-        self.settings.set_int('aac-quality', get_quality('aac', combobox.get_active()))
+        quality = get_quality('aac', combobox.get_active())
+        self.settings.set_int('aac-quality', quality)
         self.update_example()
 
     def on_opus_quality_changed(self, combobox):
-        self.settings.set_int('opus-bitrate', get_quality('opus', combobox.get_active()))
+        quality = get_quality('opus', combobox.get_active())
+        self.settings.set_int('opus-bitrate', quality)
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):
-        quality = (8, 16, 32)
-        self.settings.set_int('wav-sample-width', quality[combobox.get_active()])
+        quality = get_quality('wav', combobox.get_active())
+        self.settings.set_int('wav-sample-width', quality)
         self.update_example()
 
     def on_flac_compression_changed(self, combobox):
-        quality = (0, 5, 8)
-        self.settings.set_int('flac-compression', quality[combobox.get_active()])
+        quality = get_quality('flac', combobox.get_active())
+        self.settings.set_int('flac-compression', quality)
         self.update_example()
 
     def on_gstprofile_changed(self, combobox):

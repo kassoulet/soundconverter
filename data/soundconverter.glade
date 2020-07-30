@@ -1685,7 +1685,7 @@ Gautier Portet</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="aprox_bitrate">
+                          <object class="GtkLabel" id="approx_bitrate">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label">~xxx kbps</property>
