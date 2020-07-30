@@ -32,7 +32,7 @@ from gi.repository import Gst, Gtk, GLib, GObject, Gio
 from soundconverter.util.fileoperations import vfs_encode_filename, unquote_filename, vfs_unlink, vfs_rename, \
     vfs_exists, beautify_uri
 from soundconverter.util.task import BackgroundTask
-from soundconverter.util.names import TargetNameGenerator
+from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings

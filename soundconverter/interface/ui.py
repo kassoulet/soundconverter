@@ -38,7 +38,7 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern, get_bitrate_from_settings
-from soundconverter.util.names import TargetNameGenerator, \
+from soundconverter.util.namegenerator import TargetNameGenerator, \
     get_basename_pattern, get_subfolder_pattern
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger

@@ -30,7 +30,7 @@ import urllib.error
 from gi.repository import Gst, Gio
 
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.util.names import TargetNameGenerator, \
+from soundconverter.util.namegenerator import TargetNameGenerator, \
     get_subfolder_pattern, get_basename_pattern
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.fileoperations import filename_to_uri, \

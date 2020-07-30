@@ -33,7 +33,7 @@ from soundconverter.util.formats import get_quality_setting_name
 from soundconverter.converter.gstreamer import TagReader, TypeFinder
 from soundconverter.audio.converter import Converter
 from soundconverter.audio.taskqueue import TaskQueue
-from soundconverter.util.names import TargetNameGenerator
+from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue as OldTaskQueue
 from soundconverter.util.fileoperations import unquote_filename, \
     filename_to_uri, vfs_exists, beautify_uri
