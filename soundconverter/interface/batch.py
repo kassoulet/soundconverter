@@ -55,7 +55,7 @@ def use_memory_gsettings():
     set_gio_settings(gio_settings)
 
     gio_settings.set_string('output-mime-type', settings['output-mime-type'])
-    gio_settings.set_integer('number-of-jobs', settings['forced-jobs'])
+    gio_settings.set_int('number-of-jobs', settings['forced-jobs'])
     # TODO don't store those args in settings to avoid redundancy.
     #  pass the argparse object to this
 

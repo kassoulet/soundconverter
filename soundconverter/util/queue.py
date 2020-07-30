@@ -54,7 +54,7 @@ class TaskQueue(BackgroundTask):
 
     def get_num_jobs(self):
         """Return the number of jobs that should be run in parallel."""
-        return get_gio_settings().get_integer('number-of-jobs') or cpu_count()
+        return get_gio_settings().get_int('number-of-jobs') or cpu_count()
 
     def add_task(self, task):
         """Add a task to the queue."""

@@ -128,8 +128,8 @@ class TaskQueue:
         callback.
         """
         self.run_start_time = time.time()
-        jobs = get_num_jobs()
-        while self.pending.qsize() > 0 and len(self.running) < jobs:
+        num_jobs = get_num_jobs()
+        while self.pending.qsize() > 0 and len(self.running) < num_jobs:
             self.start_next()
 
     def set_on_task_done(self, on_queue_finished):

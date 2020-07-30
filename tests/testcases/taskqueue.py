@@ -27,7 +27,7 @@ from gi.repository import GLib, Gst
 
 from soundconverter.audio.taskqueue import TaskQueue
 from soundconverter.audio.task import Task
-from soundconverter.util.settings import settings
+from soundconverter.util.settings import get_gio_settings
 from util import reset_settings
 
 
@@ -202,11 +202,12 @@ class AsyncSleepTaskTest(unittest.TestCase):
 class AsyncMulticoreTaskQueueTest(unittest.TestCase):
     """Example closest to the real world, should be tested well."""
     def setUp(self):
+        get_gio_settings().set_boolean('limit-jobs', True)
         self.num_tasks = 5
         q = TaskQueue()
         for i in range(self.num_tasks):
             q.add(AsyncSleepTask())
-            self.assertEqual(q.done, 0)
+            self.assertEqual(len(q.done), 0)
             self.assertEqual(q.pending.qsize(), i + 1)
             self.assertEqual(len(q.running), 0)
         self.assertEqual(q.pending.qsize(), self.num_tasks)
@@ -217,10 +218,10 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_queue_multiple_async(self):
         self.num_jobs = 2
-        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
 
         self.q.run()
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         # simultaneously running tasks are limited:
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
@@ -230,19 +231,19 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         loop = GLib.MainLoop()
         context = loop.get_context()
         # call functions that are added to the event loop
-        while self.q.done < self.num_tasks:
+        while len(self.q.done) < self.num_tasks:
             # since only two tasks can be done at a time, after an iteration
             # new tasks are put into running state. So iteration has to be
             # called multiple times
             context.iteration(True)
 
-        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(len(self.q.done), self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
 
     def test_pause_resume(self):
         self.num_jobs = 5
-        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
 
         self.q.run()
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
@@ -268,27 +269,27 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), self.num_jobs)
 
         # wait until the queue is completely done
-        while self.q.done < self.num_tasks:
+        while len(self.q.done) < self.num_tasks:
             # this blocks until bus.post(msg) is called:
             context.iteration(True)
 
-        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(len(self.q.done), self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
 
     def test_cancel_run(self):
         self.num_jobs = 5
-        get_gio_settings().set_integer('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
         
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
 
         self.q.run()
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
@@ -296,7 +297,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         context.iteration(False)
 
         self.q.cancel()
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
 
@@ -305,7 +306,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         time.sleep(0.6)
         context.iteration(False)
 
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
 
@@ -314,19 +315,19 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         # 0.3 seconds should be reset.
         time.sleep(0.3)
         context.iteration(False)
-        self.assertEqual(self.q.done, 0)
+        self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
         # only after some more time all are done, but don't sleep longer
         # than 0.3 more seconds, because after 0.5s they should be done.
         slept = 0 
-        while self.q.done < self.num_tasks and slept < 0.3:
+        while len(self.q.done) < self.num_tasks and slept < 0.3:
             time.sleep(0.1)
             slept += 0.1
             context.iteration(False)
 
-        self.assertEqual(self.q.done, self.num_tasks)
+        self.assertEqual(len(self.q.done), self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
 
@@ -337,7 +338,8 @@ class TaskQueueTest(unittest.TestCase):
 
     def test_queue_single(self):
         """A TaskQueue only consisting of synchronous tasks."""
-        get_gio_settings().set_integer('number-of-jobs', 1)
+        get_gio_settings().set_boolean('limit-jobs', True)
+        get_gio_settings().set_int('number-of-jobs', 1)
         q = TaskQueue()
 
         q.add(SyncSleepTask())
@@ -353,16 +355,17 @@ class TaskQueueTest(unittest.TestCase):
         self.assertEqual(len(q.running), 0)
 
     def test_queue_single_async(self):
-        get_gio_settings().set_integer('number-of-jobs', 1)
+        get_gio_settings().set_boolean('limit-jobs', True)
+        get_gio_settings().set_int('number-of-jobs', 1)
         q = TaskQueue()
 
         q.add(AsyncSleepTask())
-        self.assertEqual(q.done, 0)
+        self.assertEqual(len(q.done), 0)
         self.assertEqual(q.pending.qsize(), 1)
         self.assertEqual(len(q.running), 0)
 
         q.run()
-        self.assertEqual(q.done, 0)
+        self.assertEqual(len(q.done), 0)
         self.assertEqual(q.pending.qsize(), 0)
         self.assertEqual(len(q.running), 1)
 
@@ -373,11 +376,11 @@ class TaskQueueTest(unittest.TestCase):
         # call functions that are added to the event loop. In this case,
         # the listeners for messages from our AsyncSleepTask
         # wait until the queue is completely done
-        while q.done < 1:
+        while len(q.done) < 1:
             # this blocks until bus.post(msg) is called:
             context.iteration(True)
 
-        self.assertEqual(q.done, 1)
+        self.assertEqual(len(q.done), 1)
         self.assertEqual(q.pending.qsize(), 0)
         self.assertEqual(len(q.running), 0)
 
