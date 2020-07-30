@@ -38,14 +38,8 @@ class Task():
         """Resume the execution of the task after pausing."""
         raise NotImplementedError()
 
-    def run(self, callback):
-        """Run the task.
-        
-        Parameters
-        ----------
-        callback : function
-            Call this when done
-        """
+    def run(self):
+        """Run the task."""
         raise NotImplementedError()
 
     # don't overwrite

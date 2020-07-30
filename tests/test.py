@@ -26,7 +26,7 @@ Gtk.main_quit = lambda: None
 
 # import all the tests and run them
 import unittest
-# from testcases.integration import *
+from testcases.integration import *
 from testcases.names import *
 from testcases.format import *
 from testcases.taskqueue import *

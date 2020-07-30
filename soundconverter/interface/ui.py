@@ -664,7 +664,6 @@ class PreferencesDialog(GladeWindow):
         self.jobs.set_active(self.settings.get_boolean('limit-jobs'))
         self.jobs_spinbutton.set_value(self.settings.get_int('number-of-jobs'))
 
-        self.update_jobs()
         self.update_example()
 
     def update_selected_folder(self):
@@ -784,7 +783,10 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def get_basename_pattern(self):
-        """Get the selected string pattern to be used for filenames."""
+        """Get the string pattern for filenames.
+
+        The target file extension should not be part of the pattern.
+        """
         index = self.settings.get_int('name-pattern-index')
         if index < 0 or index >= len(self.basename_patterns):
             index = 0
@@ -969,19 +971,9 @@ class PreferencesDialog(GladeWindow):
     def on_jobs_toggled(self, jtoggle):
         self.settings.set_boolean('limit-jobs', jtoggle.get_active())
         self.jobs_spinbutton.set_sensitive(jtoggle.get_active())
-        self.update_jobs()
 
     def on_jobs_spinbutton_value_changed(self, jspinbutton):
         self.settings.set_int('number-of-jobs', int(jspinbutton.get_value()))
-        self.update_jobs()
-
-    def update_jobs(self):
-        # TODO do get_int instead of having redundancy
-        if self.settings.get_boolean('limit-jobs'):
-            settings['jobs'] = self.settings.get_int('number-of-jobs')
-        else:
-            settings['jobs'] = None
-        self.set_sensitive()
 
 
 _old_progress = 0
