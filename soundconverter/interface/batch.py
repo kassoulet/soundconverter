@@ -29,7 +29,7 @@ from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
-from soundconverter.util.formats import get_quality
+from soundconverter.util.formats import get_quality, get_quality_setting_name
 from soundconverter.converter.gstreamer import TagReader, TypeFinder
 from soundconverter.audio.converter import Converter
 from soundconverter.util.names import TargetNameGenerator
@@ -248,10 +248,8 @@ class CLI_Convert():
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')
-                c.set_vorbis_quality(get_quality('vorbis', quality_setting))
-                c.set_aac_quality(get_quality('aac', quality_setting))
-                c.set_opus_quality(get_quality('opus', quality_setting))
-                c.set_mp3_quality(get_quality('mp3', quality_setting))
+                setting_name = get_quality_setting_name()
+                get_gio_settings().set_value(setting_name, quality_setting)
 
             c.overwrite = True
 

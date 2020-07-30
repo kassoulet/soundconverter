@@ -31,7 +31,7 @@ from soundconverter.util.fileoperations import vfs_encode_filename, \
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
-from soundconverter.util.names import generate_filename
+from soundconverter.util.names import TargetNameGenerator
 from soundconverter.audio.task import Task
 from soundconverter.audio.profiles import audio_profiles_dict
 
@@ -179,19 +179,20 @@ class Converter(Task):
     def __init__(self, sound_file, output_filename):
         """create a converter that converts a single file."""
         # Configuration
-        # All relevant gio settings have to be copied and remembered, so that
-        # they don't suddenly change during the conversion
-        settings = get_gio_settings()
         self.sound_file = sound_file
         self.output_filename = output_filename
         self.temporary_filename = None
+        self.overwrite = False
+
+        # All relevant gio settings have to be copied and remembered, so that
+        # they don't suddenly change during the conversion
+        settings = get_gio_settings()
         self.output_mime_type = settings.get_string('output-mime-type')
         self.output_resample = settings.get_boolean('output-resample')
         self.resample_rate = settings.get_int('resample-rate')
         self.force_mono = settings.get_boolean('force-mono')
         self.replace_messy_chars = settings.get_boolean('replace-messy-chars')
         self.delete_original = settings.get_boolean('delete-original')
-        self.overwrite = False
 
         # State
         self.command = None

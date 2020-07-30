@@ -47,11 +47,7 @@ class TargetNameGenerator:
     def __init__(self):
         self.folder = None
         self.subfolders = ''
-        self.basename = '%(.inputname)s'
-        self.ext = '%(.ext)s'
-        self.suffix = None
-        self.max_tries = 2
-        self.exists = vfs_exists
+        self.pattern = '%(.inputname)s'
 
         config = get_gio_settings()
         self.same_folder_as_input = config.get_boolean('same-folder-as-input')
@@ -65,7 +61,7 @@ class TargetNameGenerator:
         # figure out the file extension
         profile = self.audio_profile
         profile_ext = audio_profiles_dict[profile][1] if profile else ''
-        output_suffix = {
+        suffix = {
             'audio/x-vorbis': '.ogg',
             'audio/x-flac': '.flac',
             'audio/x-wav': '.wav',
@@ -74,9 +70,9 @@ class TargetNameGenerator:
             'audio/ogg; codecs=opus': '.opus',
             'gst-profile': '.' + profile_ext,
         }.get(self.output_mime_type, '.?')
-        if output_suffix == '.ogg' and self.vorbis_oga_extension:
-            output_suffix = '.oga'
-        self.output_suffix = output_suffix
+        if suffix == '.ogg' and self.vorbis_oga_extension:
+            suffix = '.oga'
+        self.suffix = suffix
 
     @staticmethod
     def _unicode_to_ascii(unicode_string):
@@ -141,19 +137,19 @@ class TargetNameGenerator:
         root = sound_file.base_path
         filename = sound_file.filename
         tags = sound_file.tags
-        basename, ext = os.path.splitext(urllib.parse.unquote(filename))
+        without_ext, ext = os.path.splitext(urllib.parse.unquote(filename))
 
         # make sure basename contains only the filename
-        basefolder, basename = os.path.split(basename)
+        basefolder, filename = os.path.split(without_ext)
 
         d = {
-            '.inputname': basename,
+            '.inputname': filename,
             '.ext': ext,
-            '.target-ext': self.output_suffix[1:],
+            '.target-ext': self.suffix[1:],
             'album': _('Unknown Album'),
             'artist': _('Unknown Artist'),
             'album-artist': _('Unknown Artist'),
-            'title': basename,
+            'title': filename,
             'track-number': 0,
             'track-count': 0,
             'genre': _('Unknown Genre'),
@@ -178,7 +174,7 @@ class TargetNameGenerator:
         timestamp_string = time.strftime('%Y%m%d_%H_%M_%S')
         d['timestamp'] = timestamp_string
 
-        pattern = os.path.join(self.subfolders, self.basename + self.suffix)
+        pattern = os.path.join(self.subfolders, self.pattern + self.suffix)
         # now fill the tags in the pattern with values:
         result = pattern % d
 
@@ -215,14 +211,14 @@ class TargetNameGenerator:
                 return filename
 
     def generate_filename(
-        self, sound_file, basename_pattern, subfolder_pattern,
+        self, sound_file, pattern, subfolder_pattern,
         for_display=False
     ):
         """Generate a target filename based on patterns and settings.
 
         Parameters
         ----------
-        basename_pattern : string
+        pattern : string
             For example '%(artist)s-%(title)s'
         subfolder_pattern : string
             For example '%(album-artist)s/%(album)s'
@@ -237,7 +233,7 @@ class TargetNameGenerator:
             if self.create_subfolders:
                 self.subfolders = subfolder_pattern
 
-        self.basename = basename_pattern
+        self.pattern = pattern
 
         target_name = self.get_target_name(sound_file, for_display)
         if for_display:
