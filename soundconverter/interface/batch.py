@@ -206,8 +206,8 @@ class CLI_Convert():
         context = loop.get_context()
 
         generator = TargetNameGenerator()
-        output_suffix = generator.output_suffix()
-        generator.suffix = output_suffix
+        suffix = generator.suffix()
+        generator.suffix = suffix
 
         conversions = TaskQueue()
 
@@ -230,9 +230,9 @@ class CLI_Convert():
                 output_name = filename_to_uri(output_name)
                 # afterwards set the correct file extension
                 if '.' in output_name:
-                    output_suffix = generator.output_suffix
+                    suffix = generator.suffix
                     without_suffix = output_name[:output_name.rfind('.')]
-                    output_name = without_suffix + output_suffix
+                    output_name = without_suffix + suffix
             else:
                 output_name = filename_to_uri(input_file.uri)
                 output_name = generator.get_target_name(input_file)
@@ -252,8 +252,6 @@ class CLI_Convert():
                 get_gio_settings().set_value(setting_name, quality_setting)
 
             c.overwrite = True
-
-            c.init()
 
             conversions.add_task(c)
 

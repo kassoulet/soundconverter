@@ -34,15 +34,19 @@ from gettext import gettext as _
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
     unquote_filename
 from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.formats import get_file_extension
 from soundconverter.audio.profiles import audio_profiles_dict
 
 
 class TargetNameGenerator:
     """Generator for creating the target name from an input name.
 
-    Create this class every time when conversion starts, because it remembers
-    all relevant settings to avoid affecting the name generation of a running
-    conversion by changing them in the ui.
+    Create this class every time when the queue for conversion starts,
+    because it remembers all relevant settings to avoid affecting the name
+    generation of a running conversion by changing them in the ui.
+
+    This class, once created, can create the names for all conversions in the
+    queue, there is no need to create one TargetNameGenerator per Converter.
     """
     def __init__(self):
         self.folder = None
@@ -59,19 +63,7 @@ class TargetNameGenerator:
         self.replace_messy_chars = config.get_boolean('replace-messy-chars')
 
         # figure out the file extension
-        profile = self.audio_profile
-        profile_ext = audio_profiles_dict[profile][1] if profile else ''
-        suffix = {
-            'audio/x-vorbis': '.ogg',
-            'audio/x-flac': '.flac',
-            'audio/x-wav': '.wav',
-            'audio/mpeg': '.mp3',
-            'audio/x-m4a': '.m4a',
-            'audio/ogg; codecs=opus': '.opus',
-            'gst-profile': '.' + profile_ext,
-        }.get(self.output_mime_type, '.?')
-        if suffix == '.ogg' and self.vorbis_oga_extension:
-            suffix = '.oga'
+        suffix = '.{}'.format(get_file_extension(self.output_mime_type))
         self.suffix = suffix
 
     @staticmethod
