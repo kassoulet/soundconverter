@@ -38,7 +38,8 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern, get_bitrate_from_settings
-from soundconverter.util.names import TargetNameGenerator
+from soundconverter.util.names import TargetNameGenerator, \
+    get_basename_pattern, get_subfolder_pattern
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error, set_error_handler
@@ -432,22 +433,6 @@ class GladeWindow(object):
 
 
 class PreferencesDialog(GladeWindow):
-
-    basename_patterns = [
-        ('%(.inputname)s', _('Same as input, but replacing the suffix')),
-        ('%(.inputname)s%(.ext)s', _('Same as input, but with an additional suffix')),
-        ('%(track-number)02d-%(title)s', _('Track number - title')),
-        ('%(title)s', _('Track title')),
-        ('%(artist)s-%(title)s', _('Artist - title')),
-        ('Custom', _('Custom filename pattern')),
-    ]
-
-    subfolder_patterns = [
-        ('%(album-artist)s/%(album)s', _('artist/album')),
-        ('%(album-artist)s-%(album)s', _('artist-album')),
-        ('%(album-artist)s - %(album)s', _('artist - album')),
-    ]
-
     sensitive_names = [
         'vorbis_quality', 'choose_folder', 'create_subfolders',
         'subfolder_pattern', 'jobs_spinbutton', 'resample_hbox',
@@ -639,8 +624,9 @@ class PreferencesDialog(GladeWindow):
             model.set(iter, 0, desc)
         w.set_active(active)
 
-        self.custom_filename.set_text(self.settings.get_string(
-                                                    'custom-filename-pattern'))
+        self.custom_filename.set_text(
+            self.settings.get_string('custom-filename-pattern')
+        )
         if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
             self.custom_filename_box.set_sensitive(True)
         else:
@@ -683,8 +669,8 @@ class PreferencesDialog(GladeWindow):
 
         # TODO those variable names
         s = GLib.markup_escape_text(beautify_uri(generator.generate_filename(
-            sound_file, self.get_basename_pattern(),
-            self.get_subfolder_pattern(), for_display=True
+            sound_file, get_basename_pattern(),
+            get_subfolder_pattern(), for_display=True
         )))
         p = 0
         replaces = []
@@ -781,27 +767,6 @@ class PreferencesDialog(GladeWindow):
         else:
             self.custom_filename_box.set_sensitive(False)
         self.update_example()
-
-    def get_basename_pattern(self):
-        """Get the string pattern for filenames.
-
-        The target file extension should not be part of the pattern.
-        """
-        index = self.settings.get_int('name-pattern-index')
-        if index < 0 or index >= len(self.basename_patterns):
-            index = 0
-        active_pattern_index = self.basename_pattern.get_active()
-        if active_pattern_index == len(self.basename_patterns) - 1:
-            return self.process_custom_pattern(self.custom_filename.get_text())
-        else:
-            return self.basename_patterns[index][0]
-
-    def get_subfolder_pattern(self):
-        """Get the selected string pattern for subfolders."""
-        index = self.settings.get_int('subfolder-pattern-index')
-        if index < 0 or index >= len(self.subfolder_patterns):
-            index = 0
-        return self.subfolder_patterns[index][0]
 
     def on_custom_filename_changed(self, entry):
         self.settings.set_string('custom-filename-pattern', entry.get_text())

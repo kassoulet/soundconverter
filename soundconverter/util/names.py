@@ -32,10 +32,57 @@ import urllib.error
 import unicodedata
 from gettext import gettext as _
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
-    unquote_filename
+    unquote_filename, split_URI
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
 from soundconverter.audio.profiles import audio_profiles_dict
+
+basename_patterns = [
+    ('%(.inputname)s', _('Same as input, but replacing the suffix')),
+    ('%(.inputname)s%(.ext)s', _('Same as input, but with an additional suffix')),
+    ('%(track-number)02d-%(title)s', _('Track number - title')),
+    ('%(title)s', _('Track title')),
+    ('%(artist)s-%(title)s', _('Artist - title')),
+    ('Custom', _('Custom filename pattern')),
+]
+
+subfolder_patterns = [
+    ('%(album-artist)s/%(album)s', _('artist/album')),
+    ('%(album-artist)s-%(album)s', _('artist-album')),
+    ('%(album-artist)s - %(album)s', _('artist - album')),
+]
+
+
+def get_basename_pattern():
+    """Get the currently selected or custom filename pattern.
+
+    For example '%(artist)s-%(title)s', without target extension.
+
+    A custom-filename-pattern can also serve the purpose of a subfolder-pattern
+    by having forward slashes.
+    """
+    settings = get_gio_settings()
+    index = settings.get_int('name-pattern-index')
+    if index >= len(basename_patterns):
+        index = 0
+    if index == len(basename_patterns) - 1:
+        return settings.get_string('custom-filename-pattern')
+    else:
+        # an index of -1 selects the last entry on purpose
+        return basename_patterns[index][0]
+
+
+def get_subfolder_pattern():
+    """Get the currently selected subfolder pattern.
+
+    For example '%(album-artist)s/%(album)s', to create those new
+    subfolders in the slected_folder based on tags.
+    """
+    settings = get_gio_settings()
+    index = settings.get_int('subfolder-pattern-index')
+    if index >= len(subfolder_patterns):
+        index = 0
+    return subfolder_patterns[index][0]
 
 
 class TargetNameGenerator:
@@ -48,32 +95,19 @@ class TargetNameGenerator:
     This class, once created, can create the names for all conversions in the
     queue, there is no need to create one TargetNameGenerator per Converter.
     """
-    def __init__(self, basename_pattern, subfolder_pattern):
-        """
-        Parameters
-        ----------
-        basename_pattern : string
-            For example '%(artist)s-%(title)s', without the target extension.
-        subfolder_pattern : string
-            For example '%(album-artist)s/%(album)s', to create those new
-            subfolders in the slected_folder based on tags.
-        """
-        # TODO keys in gio settings?
-        self.basename_pattern = basename_pattern
-        self.subfolder_pattern = subfolder_pattern
-
-        config = get_gio_settings()
-        self.same_folder_as_input = config.get_boolean('same-folder-as-input')
-        self.selected_folder = config.get_string('selected-folder')
-        self.output_mime_type = config.get_string('output-mime-type')
-        self.audio_profile = config.get_string('audio-profile')
-        self.vorbis_oga_extension = config.get_boolean('vorbis-oga-extension')
-        self.create_subfolders = config.get_boolean('create-subfolders')
-        self.replace_messy_chars = config.get_boolean('replace-messy-chars')
-
-        # figure out the file extension
-        suffix = '.{}'.format(get_file_extension(self.output_mime_type))
-        self.suffix = suffix
+    def __init__(self):
+        # remember settings from when TargetNameGenerator was created:
+        settings = get_gio_settings()
+        self.same_folder_as_input = settings.get_boolean('same-folder-as-input')
+        self.selected_folder = settings.get_string('selected-folder')
+        self.output_mime_type = settings.get_string('output-mime-type')
+        self.audio_profile = settings.get_string('audio-profile')
+        self.vorbis_oga_extension = settings.get_boolean('vorbis-oga-extension')
+        self.create_subfolders = settings.get_boolean('create-subfolders')
+        self.replace_messy_chars = settings.get_boolean('replace-messy-chars')
+        self.subfolder_pattern = get_subfolder_pattern()
+        self.basename_pattern = get_basename_pattern()
+        self.suffix = get_file_extension(self.output_mime_type)
 
     @staticmethod
     def _unicode_to_ascii(unicode_string):
@@ -81,7 +115,20 @@ class TargetNameGenerator:
         return str(unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore'), 'ASCII')
 
     @staticmethod
-    def safe_name(filename):
+    def safe_string(name):
+        """Replace all special characters in a string.
+
+        Replace all characters that are not ascii, digits or '.' '-' '_' '/'
+        with '_'. Umlaute will be changed to their closest non-umlaut
+        counterpart.
+        """
+        nice_chars = string.ascii_letters + string.digits + '.-_/'
+        return ''.join([
+            c if c in nice_chars else '_' for c in name
+        ])
+
+    @staticmethod
+    def safe_name(filename, safe_prefix=None):
         """Make a filename without dangerous special characters.
 
         Replace all characters that are not ascii, digits or '.' '-' '_' '/'
@@ -93,20 +140,34 @@ class TargetNameGenerator:
         ----------
         filename : string
             Can be an URI or a normal path
+        safe_prefix : string
+            Part of filename starting from the beginning of it that should be
+            considered safe already and not further modified. Can be None,
+            in which case URI parts are detected automatically and preserved.
         """
         if len(filename) == 0:
             raise ValueError('empty filename')
 
-        nice_chars = string.ascii_letters + string.digits + '.-_/'
+        if safe_prefix is None:
+            # the prefix of URIs can be detected automatically.
+            safe_prefix = ''
+            # don't break 'file:///' or 'ftp://a@b:1/ and keep the original scheme
+            # also see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Generic_syntax # noqa
+            match = split_URI(filename)
+            if match[1]:
+                # it's an URI!
+                safe_prefix = match[1]
+                filename = match[3]
+                filename = unquote_filename(filename)
+        else:
+            if not filename.startswith(safe_prefix):
+                raise ValueError(
+                    'filename {} has to start with safe_prefix {}'.format(
+                        filename, safe_prefix
+                    )
+                )
+            filename = filename[len(safe_prefix):]
 
-        scheme = ''
-        # don't break 'file://' and keep the original scheme
-        match = re.match(r'^([a-zA-Z]+://){0,1}(.+)', filename)
-        if match[1]:
-            # it's an URI!
-            scheme = match[1]
-            filename = match[2]
-            filename = unquote_filename(filename)
 
         # figure out how much of the path already exists
         # split into for example [/test', '/baz.flac'] or ['qux.mp3']
@@ -122,14 +183,14 @@ class TargetNameGenerator:
                 non_existing = TargetNameGenerator._unicode_to_ascii(
                     part + ''.join(split)
                 )
-                non_existing = ''.join([
-                    c if c in nice_chars else '_' for c in non_existing
-                ])
+                non_existing = TargetNameGenerator.safe_string(non_existing)
                 safe += non_existing
                 break
 
-        if scheme:
-            safe = filename_to_uri(scheme + safe)
+        if safe_prefix:
+            safe = safe_prefix + safe
+        if '://' in safe:
+            safe = filename_to_uri(safe)
 
         return safe
 
@@ -145,7 +206,7 @@ class TargetNameGenerator:
         """
         tags = sound_file.tags
 
-        _, filename = os.path.split(sound_file.uri)
+        filename = urllib.parse.unquote(os.path.split(sound_file.uri)[1])
         filename, ext = os.path.splitext(filename)
         d = {
             '.inputname': filename,
@@ -184,10 +245,6 @@ class TargetNameGenerator:
         # now fill the tags in the pattern with values:
         result = pattern % d
 
-        if self.replace_messy_chars:
-            result = self.safe_name(result)
-
-        result = urllib.parse.quote(result, safe='/:%@')
         return result
 
     def generate_temp_path(self, soundfile):
@@ -205,7 +262,9 @@ class TargetNameGenerator:
                 return filename
 
     def generate_target_path(self, sound_file, for_display=False):
-        """Generate a target filename based on patterns and settings.
+        """Generate a target filename in URI format based on the settings.
+
+        Patterns will be populated with tags.
 
         Parameters
         ----------
@@ -213,31 +272,35 @@ class TargetNameGenerator:
         for_display : bool
             Format it nicely in order to print it somewhere
         """
+        basename = self.fill_pattern(sound_file, self.basename_pattern)
+        subfolder = self.fill_pattern(sound_file, self.subfolder_pattern)
+
+        # the path all soundfiles will have in common
         if self.same_folder_as_input:
-            folder = sound_file.base_path
+            path = sound_file.base_path
         else:
-            folder = self.selected_folder
-            folder = urllib.parse.quote(folder, safe='/:@')
-            folder = filename_to_uri(folder)
+            path = self.selected_folder
+        # don't modify that one, becuase it has been selected by the user and
+        # already exists.
+        safe_prefix = path
 
-        # pattern contains the complete output path pattern that is yet to be
-        # filled with tags.
-        # TODO verify if that is proper usage of subfolder_pattern
+        # subfolders that change depending on the soundfile
         if self.create_subfolders:
-            pattern = '{}.{}'.format(
-                os.path.join(
-                    folder, self.subfolder_pattern, self.basename_pattern
-                ),
-                self.suffix
-            )
-        else:
-            pattern = '{}.{}'.format(
-                os.path.join(folder, self.basename_pattern),
-                self.suffix
-            )
+            path = os.path.join(path, subfolder)
+        if sound_file.subfolders is not None and '/' not in basename:
+            # use existing subfolders between base_path and the soundfile, but
+            # only if the basename_pattern does not create subfolders
+            path = os.path.join(path, sound_file.subfolders)
 
-        target_name = self.fill_pattern(sound_file, pattern)
+        # filename
+        # might actually contain further subfolders by specifying slashes
+        path = os.path.join(path, basename)
+        path = '{}.{}'.format(path, self.suffix)
+
+        if self.replace_messy_chars:
+            path = self.safe_name(path, safe_prefix)
+
         if for_display:
-            return unquote_filename(target_name)
+            return path
         else:
-            return target_name
+            return filename_to_uri(path)
