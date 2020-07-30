@@ -62,6 +62,8 @@ def use_memory_gsettings(options):
     gio_settings.set_string('output-mime-type', options['output-mime-type'])
     gio_settings.set_string('selected-folder', options['output-path'])
     gio_settings.set_boolean('same-folder-as-input', False)
+    # enable custom patterns
+    gio_settings.set_int('subfolder-pattern-index', -1)
 
 
 def prepare_files_list(input_files):

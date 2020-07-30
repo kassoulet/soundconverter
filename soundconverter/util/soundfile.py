@@ -30,21 +30,35 @@ class SoundFile:
 
     __slots__ = [
         'uri', 'base_path', 'filename', 'tags', 'tags_read',
-        'duration', 'mime_type', 'filelist_row', 'progress'
+        'duration', 'mime_type', 'filelist_row', 'progress',
+        'subfolders'
     ]
 
     def __init__(self, uri, base_path=None):
         """Create a SoundFile object.
 
-        if base_path is set, the uri is cut in two parts,
-         - the base folder
-         - the remaining folder+filename.
+        if base_path is set, the uri is cut in three parts,
+         - the base folder, which is a common folder of multiple soundfiles
+         - the remaining subfolders, which would be for example something
+           like artist/album in the existing folder structure. As long as
+           no subfolder pattern is provided, soundconverter will use those
+           subfolders in the output directory.
+         - the filename
         """
         self.uri = uri
+        self.subfolders = None
 
         if base_path:
+            if not uri.startswith(base_path):
+                raise ValueError(
+                    'uri {} needs to start with the base_path {}'.format(
+                        uri, base_path
+                    )
+                )
             self.base_path = base_path
-            self.filename = self.uri[len(self.base_path):]
+            subfolders, filename = os.path.split(uri[len(base_path):])
+            self.subfolders = subfolders
+            self.filename = filename
         else:
             self.base_path, self.filename = os.path.split(self.uri)
             self.base_path += '/'

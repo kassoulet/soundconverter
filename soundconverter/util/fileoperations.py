@@ -20,6 +20,7 @@
 # USA
 
 import os
+import re
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -86,19 +87,35 @@ def vfs_exists(filename):
     return gfile.query_exists(None)
 
 
+def split_URI(uri):
+    """Match a regex to the uri that results in:
+
+    [1]: scheme and authority (authority might be '')
+    [2]: only the authority (might be None)
+    [3]: filename
+    """
+    return re.match(r'^([a-zA-Z]+://([^/]+?/){0,1}){0,1}(.+)', uri)
+
+
 def filename_to_uri(filename):
     """Convert a filename to a valid uri.
 
     Filename can be a relative or absolute path, or an uri.
     """
-    if '://' not in filename:
-        # convert local filename to uri
-        filename = 'file://' + os.path.abspath(filename)
-        for char in '#', '%':
-            filename = filename.replace(char, '%%%x' % ord(char))
-    uri = Gio.file_parse_name(filename).get_uri()
+    match = split_URI(filename)
+    if match[1]:
+        # it's an URI! Don't quote the schema
+        # filename might have a schema but still contain characters that
+        # need to be quoted. e.g. a pattern contained file:// in front but
+        # inserting tags into it resulted in whitespaces.
+        filename = unquote_filename(match[3])
+        filename = urllib.parse.quote(filename)
+        uri = match[1] + filename
+    else:
+        # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
+        filename = unquote_filename(filename)
+        uri = 'file://' + urllib.parse.quote(filename)
     return uri
-
 
 # GStreamer gnomevfssrc helpers
 

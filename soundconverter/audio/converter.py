@@ -446,7 +446,7 @@ class Converter(Task):
         """
         self.error = error
         # TODO both logger.error and stderr in show_error?
-        logger.error('{}\n({})'.format(error, ' ! '.join(self.command)))
+        logger.error('{}\n({})'.format(error, self.command))
         show_error(
             '{}'.format(_('GStreamer Error:')),
             '{}\n({})'.format(error, self.sound_file.filename_for_display)

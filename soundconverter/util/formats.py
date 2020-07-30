@@ -147,7 +147,7 @@ def get_quality_setting_name():
     """Depending on the selected mime_type, get the gio settings name."""
     settings = get_gio_settings()
     mime_type = settings.get_string('output-mime-type')
-    if mime_type is 'audio/mpeg':
+    if mime_type == 'audio/mpeg':
         mode = settings.get_string('mp3-mode')
         setting_name = {
             'cbr': 'mp3-cbr-quality',
