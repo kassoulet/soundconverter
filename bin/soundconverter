@@ -67,8 +67,8 @@ except (ImportError, ValueError) as error:
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
-import soundconverter
-from soundconverter.util.settings import settings
+import soundconverter  # TODO i don't need that right?
+from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_mime_type, mime_types
 from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
 from soundconverter.interface.ui import gui_main
@@ -174,14 +174,6 @@ def parse_command_line():
             'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3)'
             'audio/x-vorbis (Vorbis) audio/x-wav (WAV)'
         )
-    )
-    batch_option_group.add_option(
-        '-s', '--suffix', dest="cli-output-suffix",
-        help=_(
-            'Set the output filename suffix. '
-            'The default is %s. Note that the suffix does not '
-            'affect\n the output MIME type.'
-        ).format(settings['cli-output-suffix'])
     )
     batch_option_group.add_option(
         '-r', '--recursive', action="store_true", dest="recursive",

@@ -38,17 +38,45 @@ from soundconverter.audio.profiles import audio_profiles_dict
 
 
 class TargetNameGenerator:
-    """Generator for creating the target name from an input name."""
+    """Generator for creating the target name from an input name.
 
+    Create this class every time when conversion starts, because it remembers
+    all relevant settings to avoid affecting the name generation of a running
+    conversion by changing them in the ui.
+    """
     def __init__(self):
         self.folder = None
         self.subfolders = ''
         self.basename = '%(.inputname)s'
         self.ext = '%(.ext)s'
         self.suffix = None
-        self.replace_messy_chars = False
         self.max_tries = 2
         self.exists = vfs_exists
+
+        config = get_gio_settings()
+        self.same_folder_as_input = config.get_boolean('same-folder-as-input')
+        self.selected_folder = config.get_string('selected-folder')
+        self.output_mime_type = config.get_string('output-mime-type')
+        self.audio_profile = config.get_string('audio-profile')
+        self.vorbis_oga_extension = config.get_boolean('vorbis-oga-extension')
+        self.create_subfolders = config.get_boolean('create-subfolders')
+        self.replace_messy_chars = config.get_boolean('replace-messy-chars')
+
+        # figure out the file extension
+        profile = self.audio_profile
+        profile_ext = audio_profiles_dict[profile][1] if profile else ''
+        output_suffix = {
+            'audio/x-vorbis': '.ogg',
+            'audio/x-flac': '.flac',
+            'audio/x-wav': '.wav',
+            'audio/mpeg': '.mp3',
+            'audio/x-m4a': '.m4a',
+            'audio/ogg; codecs=opus': '.opus',
+            'gst-profile': '.' + profile_ext,
+        }.get(self.output_mime_type, '.?')
+        if output_suffix == '.ogg' and self.vorbis_oga_extension:
+            output_suffix = '.oga'
+        self.output_suffix = output_suffix
 
     @staticmethod
     def _unicode_to_ascii(unicode_string):
@@ -108,12 +136,11 @@ class TargetNameGenerator:
 
         return safe
 
-    def get_target_name(self, sound_file):
+    def get_target_name(self, sound_file, for_display=False):
         """Fill tags into a filename pattern for sound_file."""
-        assert self.suffix, 'you just forgot to call set_target_suffix()'
-
         root = sound_file.base_path
         filename = sound_file.filename
+        tags = sound_file.tags
         basename, ext = os.path.splitext(urllib.parse.unquote(filename))
 
         # make sure basename contains only the filename
@@ -122,7 +149,7 @@ class TargetNameGenerator:
         d = {
             '.inputname': basename,
             '.ext': ext,
-            '.target-ext': self.suffix[1:],
+            '.target-ext': self.output_suffix[1:],
             'album': _('Unknown Album'),
             'artist': _('Unknown Artist'),
             'album-artist': _('Unknown Artist'),
@@ -135,16 +162,16 @@ class TargetNameGenerator:
             'album-disc-number': 0,
             'album-disc-count': 0,
         }
-        for key in sound_file.tags:
-            d[key] = sound_file.tags[key]
+        for key in tags:
+            d[key] = tags[key]
             if isinstance(d[key], str):
                 # take care of tags containing slashes
                 d[key] = d[key].replace('/', '-')
                 if key.endswith('-number'):
                     d[key] = int(d[key])
         # when artist set & album-artist not, use artist for album-artist
-        if 'artist' in sound_file.tags and 'album-artist' not in sound_file.tags:
-            d['album-artist'] = sound_file.tags['artist']
+        if 'artist' in tags and 'album-artist' not in tags:
+            d['album-artist'] = tags['artist']
 
         # add timestamp to substitution dict -- this could be split into more
         # entries for more fine-grained control over the string by the user...
@@ -155,7 +182,7 @@ class TargetNameGenerator:
         # now fill the tags in the pattern with values:
         result = pattern % d
 
-        if self.replace_messy_chars:
+        if not for_display and self.replace_messy_chars:
             result = self.safe_name(result)
 
         if self.folder is None:
@@ -173,73 +200,47 @@ class TargetNameGenerator:
 
         return result
 
+    def generate_temp_filename(self, soundfile):
+        """Generate a random filename that doesn't exist yet."""
+        folder, basename = os.path.split(soundfile.uri)
+        if not self.same_folder_as_input:
+            folder = self.selected_folder
+            folder = urllib.parse.quote(folder, safe='/:@')
+        while True:
+            rand = str(random())[-6:]
+            filename = folder + '/' + basename + '~' + rand + '~SC~'
+            if self.replace_messy_chars:
+                filename = TargetNameGenerator.safe_name(filename)
+            if not vfs_exists(filename):
+                return filename
 
-def generate_temp_filename(soundfile):
-    """Generate a random filename that doesn't exist yet."""
-    gio_settings = get_gio_settings()
-    folder, basename = os.path.split(soundfile.uri)
-    if not gio_settings.get_boolean('same-folder-as-input'):
-        folder = gio_settings.get_string('selected-folder')
-        folder = urllib.parse.quote(folder, safe='/:@')
-    while True:
-        filename = folder + '/' + basename + '~' + str(random())[-6:] + '~SC~'
-        if gio_settings.get_boolean('replace-messy-chars'):
-            filename = TargetNameGenerator.safe_name(filename)
-        if not vfs_exists(filename):
-            return filename
+    def generate_filename(
+        self, sound_file, basename_pattern, subfolder_pattern,
+        for_display=False
+    ):
+        """Generate a target filename based on patterns and settings.
 
+        Parameters
+        ----------
+        basename_pattern : string
+            For example '%(artist)s-%(title)s'
+        subfolder_pattern : string
+            For example '%(album-artist)s/%(album)s'
+        for_display : bool
+        """
+        if not self.same_folder_as_input:
+            folder = self.selected_folder
+            folder = urllib.parse.quote(folder, safe='/:@')
+            folder = filename_to_uri(folder)
+            self.folder = folder
 
-def get_output_suffix():
-    """Return the output file extension based on gio settings."""
-    settings = get_gio_settings()
-    output_type = settings.get_string('output-mime-type')
-    profile = settings.get_string('audio-profile')
-    profile_ext = audio_profiles_dict[profile][1] if profile else ''
-    output_suffix = {
-        'audio/x-vorbis': '.ogg',
-        'audio/x-flac': '.flac',
-        'audio/x-wav': '.wav',
-        'audio/mpeg': '.mp3',
-        'audio/x-m4a': '.m4a',
-        'audio/ogg; codecs=opus': '.opus',
-        'gst-profile': '.' + profile_ext,
-    }.get(output_type, '.?')
-    if output_suffix == '.ogg' and settings.get_boolean('vorbis-oga-extension'):
-        output_suffix = '.oga'
-    return output_suffix
+            if self.create_subfolders:
+                self.subfolders = subfolder_pattern
 
+        self.basename = basename_pattern
 
-def generate_filename(
-    sound_file, basename_pattern, subfolder_pattern, for_display=False
-):
-    """Generate a target filename based on patterns and settings.
-
-    Parameters
-    ----------
-    basename_pattern : string
-        For example '%(artist)s-%(title)s'
-    subfolder_pattern : string
-        For example '%(album-artist)s/%(album)s'
-    for_display : bool
-    """
-    settings = get_gio_settings()
-    generator = TargetNameGenerator()
-    generator.suffix = get_output_suffix()
-
-    if not settings.get_boolean('same-folder-as-input'):
-        folder = settings.get_string('selected-folder')
-        folder = urllib.parse.quote(folder, safe='/:@')
-        folder = filename_to_uri(folder)
-        generator.folder = folder
-
-        if settings.get_boolean('create-subfolders'):
-            generator.subfolders = subfolder_pattern
-
-    generator.basename = basename_pattern
-
-    if for_display:
-        generator.replace_messy_chars = False
-        return unquote_filename(generator.get_target_name(sound_file))
-    else:
-        generator.replace_messy_chars = settings.get_boolean('replace-messy-chars')
-        return generator.get_target_name(sound_file)
+        target_name = self.get_target_name(sound_file, for_display)
+        if for_display:
+            return unquote_filename(target_name)
+        else:
+            return target_name

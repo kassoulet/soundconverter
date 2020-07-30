@@ -30,16 +30,13 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
 from soundconverter.util.formats import get_quality
-from soundconverter.converter.gstreamer import TagReader, TypeFinder, Converter
-from soundconverter.util.names import TargetNameGenerator, get_output_suffix
+from soundconverter.converter.gstreamer import TagReader, TypeFinder
+from soundconverter.audio.converter import Converter
+from soundconverter.util.names import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.fileoperations import unquote_filename, \
     filename_to_uri, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
-
-
-# TODO use memory gio settings backend and overwrite values based on cli argv
-# for maximum compatibility and less complexity due to 2 different cases.
 
 
 def use_memory_gsettings():
@@ -208,11 +205,8 @@ class CLI_Convert():
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        output_type = get_gio_settings().get_string('output-mime-type')
-        # TODO remove the output suffix from the cli options
-        output_suffix = get_output_suffix()
-
         generator = TargetNameGenerator()
+        output_suffix = generator.output_suffix()
         generator.suffix = output_suffix
 
         conversions = TaskQueue()
@@ -222,7 +216,6 @@ class CLI_Convert():
 
         logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
-
             if input_file not in file_checker.good_files:
                 filename = unquote_filename(input_file.split(os.sep)[-1][-65:])
                 logger.info('skipping \'{}\': invalid soundfile'.format(filename))
@@ -230,13 +223,16 @@ class CLI_Convert():
 
             input_file = SoundFile(input_file)
 
+            # TODO use generate_filename instead or something
             if 'output-path' in settings:
                 filename = input_file.uri.split(os.sep)[-1]
                 output_name = settings['output-path'] + os.sep + subdirectories[i] + filename
                 output_name = filename_to_uri(output_name)
                 # afterwards set the correct file extension
-                if 'cli-output-suffix' in settings:
-                    output_name = output_name[:output_name.rfind('.')] + settings['cli-output-suffix']
+                if '.' in output_name:
+                    output_suffix = generator.output_suffix
+                    without_suffix = output_name[:output_name.rfind('.')]
+                    output_name = without_suffix + output_suffix
             else:
                 output_name = filename_to_uri(input_file.uri)
                 output_name = generator.get_target_name(input_file)
@@ -247,8 +243,8 @@ class CLI_Convert():
                 logger.info('skipping \'{}\': already exists'.format(filename))
                 continue
 
-            c = Converter(input_file, output_name, output_type)
-            c.add_listener('started', self.print_progress)
+            c = Converter(input_file, output_name)
+            # TODO c.add_listener('started', self.print_progress)
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')

@@ -38,7 +38,7 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern
-from soundconverter.util.names import generate_filename
+from soundconverter.util.names import TargetNameGenerator
 from soundconverter.util.queue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.util.error import show_error, set_error_handler
@@ -719,7 +719,8 @@ class PreferencesDialog(GladeWindow):
         sound_file.tags.update({'album-disc-number': 2, 'album-disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
 
-        s = GLib.markup_escape_text(beautify_uri(generate_filename(
+        generator = TargetNameGenerator()
+        s = GLib.markup_escape_text(beautify_uri(generator.generate_filename(
             sound_file, self.get_basename_pattern(),
             self.get_subfolder_pattern(), for_display=True
         )))
