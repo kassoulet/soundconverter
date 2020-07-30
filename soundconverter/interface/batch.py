@@ -29,17 +29,18 @@ from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
-from soundconverter.util.formats import get_quality, get_quality_setting_name
+from soundconverter.util.formats import get_quality_setting_name
 from soundconverter.converter.gstreamer import TagReader, TypeFinder
 from soundconverter.audio.converter import Converter
+from soundconverter.audio.taskqueue import TaskQueue
 from soundconverter.util.names import TargetNameGenerator
-from soundconverter.util.queue import TaskQueue
+from soundconverter.util.queue import TaskQueue as OldTaskQueue
 from soundconverter.util.fileoperations import unquote_filename, \
     filename_to_uri, vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
 
 
-def use_memory_gsettings():
+def use_memory_gsettings(options):
     """Use a Gio memory backend and write argv settings into it.
 
     In order for the batch mode to work properly with functions that were
@@ -51,10 +52,16 @@ def use_memory_gsettings():
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
-    gio_settings.set_string('output-mime-type', settings['output-mime-type'])
-    gio_settings.set_int('number-of-jobs', settings['forced-jobs'])
-    # TODO don't store those args in settings to avoid redundancy.
-    #  pass the argparse object to this
+    forced_jobs = options.get('forced-jobs', None)
+    if forced_jobs is not None:
+        gio_settings.set_boolean('limit-jobs', True)
+        gio_settings.set_int('number-of-jobs', options['forced-jobs'])
+    else:
+        gio_settings.set_boolean('limit-jobs', False)
+
+    gio_settings.set_string('output-mime-type', options['output-mime-type'])
+    gio_settings.set_string('selected-folder', options['output-path'])
+    gio_settings.set_boolean('same-folder-as-input', False)
 
 
 def prepare_files_list(input_files):
@@ -142,6 +149,7 @@ def cli_tags_main(input_files):
             logger.info(unquote_filename(input_file.filename))
             for key in sorted(input_file.tags):
                 logger.info(('    {}: {}'.format(key, input_file.tags[key])))
+
         else:
             logger.info(unquote_filename(input_file.filename))
             logger.info(('    no tags found'))
@@ -205,9 +213,9 @@ class CLI_Convert():
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        generator = TargetNameGenerator()
-        suffix = generator.suffix()
-        generator.suffix = suffix
+        name_generator = TargetNameGenerator()
+        suffix = name_generator.suffix
+        name_generator.suffix = suffix
 
         conversions = TaskQueue()
 
@@ -224,18 +232,14 @@ class CLI_Convert():
             input_file = SoundFile(input_file)
 
             # TODO use generate_filename instead or something
-            if 'output-path' in settings:
-                filename = input_file.uri.split(os.sep)[-1]
-                output_name = settings['output-path'] + os.sep + subdirectories[i] + filename
-                output_name = filename_to_uri(output_name)
-                # afterwards set the correct file extension
-                if '.' in output_name:
-                    suffix = generator.suffix
-                    without_suffix = output_name[:output_name.rfind('.')]
-                    output_name = without_suffix + suffix
-            else:
-                output_name = filename_to_uri(input_file.uri)
-                output_name = generator.get_target_name(input_file)
+            filename = input_file.uri.split(os.sep)[-1]
+            output_name = get_gio_settings().get_string('selected-folder') + os.sep + subdirectories[i] + filename
+            output_name = filename_to_uri(output_name)
+            # afterwards set the correct file extension
+            if '.' in output_name:
+                suffix = name_generator.suffix
+                without_suffix = output_name[:output_name.rfind('.')]
+                output_name = without_suffix + suffix
 
             # skip existing output files if desired (-i cli argument)
             if settings.get('ignore-existing') and vfs_exists(output_name):
@@ -243,7 +247,7 @@ class CLI_Convert():
                 logger.info('skipping \'{}\': already exists'.format(filename))
                 continue
 
-            c = Converter(input_file, output_name)
+            c = Converter(input_file, output_name, name_generator)
             # TODO c.add_listener('started', self.print_progress)
 
             if 'quality' in settings:
@@ -253,7 +257,7 @@ class CLI_Convert():
 
             c.overwrite = True
 
-            conversions.add_task(c)
+            conversions.add(c)
 
             self.num_conversions += 1
 
@@ -262,7 +266,7 @@ class CLI_Convert():
             exit(2)
 
         logger.info('\nstarting conversion…')
-        conversions.start()
+        conversions.run()
         while conversions.running:
             # calling this like crazy is the fastest way
             context.iteration(True)
@@ -274,7 +278,9 @@ class CLI_Convert():
         """Print the current filename and how many files are left."""
         self.started_tasks += 1
         path = unquote_filename(beautify_uri(c.sound_file.uri))
-        logger.info('{}/{}: \'{}\''.format(self.started_tasks, self.num_conversions, path))
+        logger.info('{}/{}: \'{}\''.format(
+            self.started_tasks, self.num_conversions, path)
+        )
 
 
 class CLI_Check():
@@ -305,7 +311,7 @@ class CLI_Check():
         self.input_files = input_files
         self.subdirectories = subdirectories
 
-        typefinders = TaskQueue()
+        typefinders = OldTaskQueue()
 
         self.good_files = []
 

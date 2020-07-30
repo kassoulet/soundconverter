@@ -31,7 +31,6 @@ from soundconverter.util.fileoperations import vfs_encode_filename, \
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
-from soundconverter.util.names import TargetNameGenerator
 from soundconverter.audio.task import Task
 from soundconverter.audio.profiles import audio_profiles_dict
 
@@ -176,13 +175,25 @@ def create_audio_profile():
 class Converter(Task):
     """Completely handle the conversion of a single file."""
 
-    def __init__(self, sound_file, output_filename):
-        """create a converter that converts a single file."""
+    def __init__(self, sound_file, output_filename, name_generator):
+        """create a converter that converts a single file.
+
+        Parameters
+        ----------
+        output_filename : string
+            Where to place the file. Can be a pattern like
+            %(album-artist)s/%(album)s
+        name_generator : TargetNameGenerator
+            TargetNameGenerator that creates filenames for all converters
+            of the current TaskQueue
+        """
+        print('CONVERTING TO', output_filename)
         # Configuration
         self.sound_file = sound_file
         self.output_filename = output_filename
         self.temporary_filename = None
         self.overwrite = False
+        self.name_generator = name_generator
 
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
@@ -275,7 +286,7 @@ class Converter(Task):
             bus.add_signal_watch()
             self.watch_id = bus.connect('message', self._on_message)
 
-        self.pipeline.set_state(Gst.state.playing)
+        self.pipeline.set_state(Gst.State.PLAYING)
 
     def _conversion_done(self):
         """Should be called when the EOS message arrived or on error.
@@ -287,15 +298,22 @@ class Converter(Task):
 
         input_uri = self.sound_file.uri
 
+        if not vfs_exists(self.temporary_filename):
+            self.error = 'Expected {} to exist after conversion.'.format(
+                self.temporary_filename
+            )
+            self.callback()
+            return
+
         if self.error:
             logger.debug('error in task, skipping rename: {}'.format(
                 self.temporary_filename
             ))
-            if vfs_exists(self.temporary_filename):
-                vfs_unlink(self.temporary_filename)
+            vfs_unlink(self.temporary_filename)
             logger.info('Could not convert {}: {}'.format(
                 beautify_uri(input_uri), self.error
             ))
+            self.callback()
             return
 
         # rename temporary file
@@ -307,7 +325,6 @@ class Converter(Task):
             beautify_uri(self.temporary_filename), beautify_uri(newname)
         ))
 
-        # safe mode. generate a filename until we find a free one
         path, extension = os.path.splitext(newname)
         path = path.replace('%', '%%')
 
@@ -315,15 +332,21 @@ class Converter(Task):
         if self.replace_messy_chars:
             space = '_'
 
-        # If the file already exists, increment the filename so that nothing
-        # gets overwritten.
-        path = path + space + '(%d)' + extension
-        i = 1
-        while vfs_exists(newname):
-            newname = path % i
-            i += 1
+        if not self.overwrite:
+            # If the file already exists, increment the filename so that
+            # nothing gets overwritten.
+            path = path + space + '(%d)' + extension
+            i = 1
+            while vfs_exists(newname):
+                newname = path % i
+                i += 1
 
         try:
+            if self.overwrite and vfs_exists(newname):
+                logger.info('overwriting \'{}\''.format(
+                    beautify_uri(newname)
+                ))
+                vfs_unlink(newname)
             vfs_rename(self.temporary_filename, newname)
         except Exception as e:
             self.error = str(e)
@@ -331,6 +354,7 @@ class Converter(Task):
                 beautify_uri(self.temporary_filename), beautify_uri(newname)
             ))
             logger.info(traceback.print_exc())
+            self.callback()
             return
 
         logger.info('Converted {} to {}'.format(
@@ -339,12 +363,12 @@ class Converter(Task):
 
         # Copy file permissions
         if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
-                Gio.file_parse_name(self.temporary_filename),
-                Gio.FileCopyFlags.NONE,
-                None
+            Gio.file_parse_name(newname),
+            Gio.FileCopyFlags.NONE,
+            None
         ):
             logger.info('Cannot set permission on \'{}\''.format(
-                beautify_uri(self.temporary_filename)
+                beautify_uri(newname)
             ))
 
         # TODO had `and self.processing and`
@@ -352,19 +376,14 @@ class Converter(Task):
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
                 logger.info('Cannot remove \'{}\''.format(
-                    beautify_uri(self.temporary_filename)
+                    beautify_uri(self.sound_file.uri)
                 ))
 
         self.done = True
+        self.callback()
 
-    def run(self, callback):
-        """Call this in order to run the whole Converter task.
-
-        parameters
-        ----------
-            callback : function
-                call this when done
-        """
+    def run(self):
+        """Call this in order to run the whole Converter task."""
         # construct a pipeline for conversion
         # Add default decoding step that remains the same for all formats.
         command = ['{} location="{}" name=src ! decodebin name=decoder'.format(
@@ -394,6 +413,9 @@ class Converter(Task):
         # temporary output file. Until the file is handled by gstreamer,
         # its tags are unknown, so the correct output path cannot be
         # constructed yet.
+        self.temporary_filename = self.name_generator.generate_temp_path(
+            self.sound_file
+        )
         gfile = Gio.file_parse_name(self.temporary_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
@@ -413,12 +435,6 @@ class Converter(Task):
             GSTREAMER_SINK, vfs_encode_filename(self.temporary_filename))
         )
 
-        if self.overwrite and vfs_exists(self.temporary_filename):
-            logger.info('overwriting \'{}\''.format(
-                beautify_uri(self.temporary_filename)
-            ))
-            vfs_unlink(self.temporary_filename)
-
         # preparation done, now convert
         self.command = ' ! '.join(command)
         self._convert()
@@ -436,10 +452,12 @@ class Converter(Task):
             '{}\n({})'.format(error, self.sound_file.filename_for_display)
         )
 
-    def _on_message(self, bus, message):
+    def _on_message(self, _, message):
         """Handle message events sent by gstreamer.
 
-        TODO params
+        Parameters
+        ----------
+        message : Gst.Message
         """
         if message.type == Gst.MessageType.ERROR:
             error, __ = message.parse_error()
@@ -448,27 +466,26 @@ class Converter(Task):
             # Conversion done
             self._conversion_done()
         elif message.type == Gst.MessageType.TAG:
-            self._found_tag(self, '', message.parse_tag())
+            self._found_tag(message.parse_tag())
 
-    def _found_tag(self, decoder, something, taglist):
+    def _found_tag(self, taglist):
         """Called when the decoder reads a tag.
 
-        TODO params
+        Parameters
+        ----------
+        taglist : Gst.TagList
         """
-        logger.debug(
-            'found_tag: {}'.format(self.sound_file.filename_for_display)
-        )
-
-        # TODO normal for loop possible?
-        # pasting _append_tag into it's inner scope?
-        print('taglist', type(taglist))
+        filename = self.sound_file.filename_for_display
+        logger.debug('found_tag: {}'.format(filename))
         taglist.foreach(self._append_tag, None)
 
-    def _append_tag(self, taglist, tag, unused_udata):
-        """Remember tags in order to construct the final output path
-        based on the filename pattern.
+    def _append_tag(self, taglist, tag, _):
+        """Write tags to the soundfile.
 
-        TODO params
+        Remember tags in order to construct the final output path based on the
+        filename pattern.
+
+        see https://lazka.github.io/pgi-docs/#Gst-1.0/callbacks.html#Gst.TagForeachFunc # noqa
         """
         tag_whitelist = (
             'album-artist',

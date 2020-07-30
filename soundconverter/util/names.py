@@ -48,10 +48,19 @@ class TargetNameGenerator:
     This class, once created, can create the names for all conversions in the
     queue, there is no need to create one TargetNameGenerator per Converter.
     """
-    def __init__(self):
-        self.folder = None
-        self.subfolders = ''
-        self.pattern = '%(.inputname)s'
+    def __init__(self, basename_pattern, subfolder_pattern):
+        """
+        Parameters
+        ----------
+        basename_pattern : string
+            For example '%(artist)s-%(title)s', without the target extension.
+        subfolder_pattern : string
+            For example '%(album-artist)s/%(album)s', to create those new
+            subfolders in the slected_folder based on tags.
+        """
+        # TODO keys in gio settings?
+        self.basename_pattern = basename_pattern
+        self.subfolder_pattern = subfolder_pattern
 
         config = get_gio_settings()
         self.same_folder_as_input = config.get_boolean('same-folder-as-input')
@@ -124,16 +133,20 @@ class TargetNameGenerator:
 
         return safe
 
-    def get_target_name(self, sound_file, for_display=False):
-        """Fill tags into a filename pattern for sound_file."""
-        root = sound_file.base_path
-        filename = sound_file.filename
+    def fill_pattern(self, sound_file, pattern):
+        """Fill tags into a filename pattern for sound_file.
+
+        Parameters
+        ----------
+        sound_file : SoundFile
+        pattern : string
+            complete pattern of the output path
+            For example '%(album-artist)s/%(album)s/%(title)s.ogg'
+        """
         tags = sound_file.tags
-        without_ext, ext = os.path.splitext(urllib.parse.unquote(filename))
 
-        # make sure basename contains only the filename
-        basefolder, filename = os.path.split(without_ext)
-
+        _, filename = os.path.split(sound_file.uri)
+        filename, ext = os.path.splitext(filename)
         d = {
             '.inputname': filename,
             '.ext': ext,
@@ -150,6 +163,7 @@ class TargetNameGenerator:
             'album-disc-number': 0,
             'album-disc-count': 0,
         }
+
         for key in tags:
             d[key] = tags[key]
             if isinstance(d[key], str):
@@ -157,6 +171,7 @@ class TargetNameGenerator:
                 d[key] = d[key].replace('/', '-')
                 if key.endswith('-number'):
                     d[key] = int(d[key])
+
         # when artist set & album-artist not, use artist for album-artist
         if 'artist' in tags and 'album-artist' not in tags:
             d['album-artist'] = tags['artist']
@@ -166,29 +181,16 @@ class TargetNameGenerator:
         timestamp_string = time.strftime('%Y%m%d_%H_%M_%S')
         d['timestamp'] = timestamp_string
 
-        pattern = os.path.join(self.subfolders, self.pattern + self.suffix)
         # now fill the tags in the pattern with values:
         result = pattern % d
 
-        if not for_display and self.replace_messy_chars:
+        if self.replace_messy_chars:
             result = self.safe_name(result)
 
-        if self.folder is None:
-            folder = root
-        else:
-            folder = urllib.parse.quote(self.folder, safe='/:%@')
-
-        if '/' in pattern:
-            # we are creating folders using tags, disable basefolder handling
-            basefolder = ''
-
-        basefolder_quoted = urllib.parse.quote(basefolder)
-        result_quoted = urllib.parse.quote(result)
-        result = os.path.join(folder, basefolder_quoted, result_quoted)
-
+        result = urllib.parse.quote(result, safe='/:%@')
         return result
 
-    def generate_temp_filename(self, soundfile):
+    def generate_temp_path(self, soundfile):
         """Generate a random filename that doesn't exist yet."""
         folder, basename = os.path.split(soundfile.uri)
         if not self.same_folder_as_input:
@@ -202,32 +204,39 @@ class TargetNameGenerator:
             if not vfs_exists(filename):
                 return filename
 
-    def generate_filename(
-        self, sound_file, pattern, subfolder_pattern,
-        for_display=False
-    ):
+    def generate_target_path(self, sound_file, for_display=False):
         """Generate a target filename based on patterns and settings.
 
         Parameters
         ----------
-        pattern : string
-            For example '%(artist)s-%(title)s'
-        subfolder_pattern : string
-            For example '%(album-artist)s/%(album)s'
+        sound_file : SoundFile
         for_display : bool
+            Format it nicely in order to print it somewhere
         """
-        if not self.same_folder_as_input:
+        if self.same_folder_as_input:
+            folder = sound_file.base_path
+        else:
             folder = self.selected_folder
             folder = urllib.parse.quote(folder, safe='/:@')
             folder = filename_to_uri(folder)
-            self.folder = folder
 
-            if self.create_subfolders:
-                self.subfolders = subfolder_pattern
+        # pattern contains the complete output path pattern that is yet to be
+        # filled with tags.
+        # TODO verify if that is proper usage of subfolder_pattern
+        if self.create_subfolders:
+            pattern = '{}.{}'.format(
+                os.path.join(
+                    folder, self.subfolder_pattern, self.basename_pattern
+                ),
+                self.suffix
+            )
+        else:
+            pattern = '{}.{}'.format(
+                os.path.join(folder, self.basename_pattern),
+                self.suffix
+            )
 
-        self.pattern = pattern
-
-        target_name = self.get_target_name(sound_file, for_display)
+        target_name = self.fill_pattern(sound_file, pattern)
         if for_display:
             return unquote_filename(target_name)
         else:

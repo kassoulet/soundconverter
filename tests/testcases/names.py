@@ -174,7 +174,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # figures out the suffix when created
         self.g = TargetNameGenerator()
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/path/to/file.ogg"
         )
 
@@ -184,7 +184,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g = TargetNameGenerator()
         self.s = SoundFile("/path/to/file")
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/path/to/file.aac"
         )
 
@@ -192,7 +192,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.pattern = "%(track-number)02d-%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/path/to/01-Hi_Ho.ogg"
         )
 
@@ -202,7 +202,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolders = "%(artist)s/%(album)s"
         self.g.pattern = "%(track-number)02d-%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg"
         )
 
@@ -212,7 +212,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.folder = "/mu sic"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/mu%20sic/file%20with%20spaces.ogg"
         )
 
@@ -230,7 +230,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "ssh:user@server:port///path/to/file.ogg"
         )
 
@@ -248,7 +248,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/music/file.ogg"
         )
 
@@ -266,7 +266,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "ftp:user2@dest-server:another-port:/music/file.ogg"
         )
 
@@ -286,7 +286,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "ftp:user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg"
         )
 
@@ -305,7 +305,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "ftp:user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs фズ.ogg")
         )
 
@@ -323,7 +323,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "ftp:user2@dest-server:another-port:/" + quote("mûsîc") + "/file_with_strange_chars.ogg"
         )
 
@@ -352,7 +352,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.replace_messy_chars = False
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             quote("/path/to/file\xa0\xb0\xc0\xd0.ogg")
         )
 
@@ -361,7 +361,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.replace_messy_chars = True
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/path/to/file_A.ogg"
         )
 
@@ -380,7 +380,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolders = "%(artist)s/%(album)s"
         self.g.pattern = "%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg")
         )
 
@@ -395,7 +395,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = ".ogg"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/path/to/file.ogg"
         )
 
@@ -412,7 +412,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.folder = "/music"
         # self.g.pattern = "%(title)s")
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/music/%23to/file.ogg"
         )
 
@@ -431,7 +431,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # assume the directory should be a child of root.
         self.g.pattern = "%(genre)s/%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             # basefolder handling is disabled when the pattern has a /
             "/path/Unknown_Genre/Hi_Ho.ogg"
         )
@@ -444,7 +444,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.suffix = ".ogg"
         self.g.pattern = "/home/foo/%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/home/foo/Hi_Ho.ogg"
         )
 
@@ -461,7 +461,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.folder = "/music"
         self.g.pattern = "%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             "/music/to/Hi_Ho.ogg"
         )
 
@@ -474,13 +474,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.replace_messy_chars = False
         self.g.suffix = ".ogg"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             quote("/path%'#/to/file%'#.ogg")
         )
         self.g.subfolders = "%(artist)s"
         self.g.pattern = "%(title)s"
         self.assertEqual(
-            self.g.get_target_name(self.s),
+            self.g.generate_target_path(self.s),
             quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg")
         )
 

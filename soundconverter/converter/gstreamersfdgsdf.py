@@ -142,7 +142,6 @@ class Pipeline(BackgroundTask):
             self.on_error(error)
             self.done()
         elif t == Gst.MessageType.EOS:
-            print('Gst.MessageType.EOS')
             self.eos = True
             self.done()
         elif t == Gst.MessageType.TAG:
@@ -299,7 +298,7 @@ class ConverterQueue(TaskQueue):
 
     def add(self, sound_file):
         # generate a temporary filename from source name and output suffix
-        output_filename = self.window.prefs.generate_temp_filename(sound_file)
+        output_filename = self.window.prefs.generate_temp_path(sound_file)
 
         if vfs_exists(output_filename):
             # always overwrite temporary files
