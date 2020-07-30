@@ -23,6 +23,7 @@ import math
 from gettext import gettext as _
 
 from soundconverter.util.settings import get_gio_settings
+from soundconverter.audio.profiles import audio_profiles_dict
 
 # add here any format you want to be read
 mime_whitelist = (
@@ -89,10 +90,17 @@ filepattern = (
 )
 
 
-mime_types = {
-    'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
-    'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
-}
+def get_mime_type_mapping():
+    """Return a mapping of file extension to mime type."""
+    profile = get_gio_settings().get_string('audio-profile')
+    mime_types = {
+        'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
+        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
+    }
+    if profile in audio_profiles_dict:
+        profile_ext = audio_profiles_dict[profile][1] if profile else ''
+        mime_types[profile_ext] = 'gst-profile'
+    return mime_types
 
 
 def get_mime_type(t):
@@ -103,6 +111,7 @@ def get_mime_type(t):
     t : string
         extension (like 'mp3')
     """
+    mime_types = get_mime_type_mapping()
     if t not in mime_types.values():
         # possibly a file extension
         return mime_types.get(t, None)
@@ -112,19 +121,26 @@ def get_mime_type(t):
 
 
 def get_file_extension(mime):
-    """Return the matching file extension or None if it is not supported.
+    """Return the matching file extension or '?' if it is not supported.
+
+    Examples: 'mp3', 'flac'.
 
     Parameters
     ----------
     mime : string
         mime string (like 'audio/x-m4a')
     """
+    mime_types = get_mime_type_mapping()
     if mime in mime_types:
         # already an extension
-        return mime
+        suffix = mime
+        if suffix == 'ogg':
+            if get_gio_settings().get_boolean('vorbis-oga-extension'):
+                suffix = 'oga'
+        return suffix
     else:
-        reversed = {mime: ext for ext, mime in mime_types.items()}
-        return reversed.get(mime, None)
+        mime2ext = {mime: ext for ext, mime in mime_types.items()}
+        return mime2ext.get(mime, '?')
 
 
 def get_quality_setting_name():
