@@ -326,7 +326,6 @@ class TargetNameGenerator:
             # .subfolders may have a structure of artist/album,
             # whereas basename might create a new structure of year/artist
             subfolder = os.path.join(sound_file.subfolders)
-        print(id(sound_file), 'subfolder', subfolder, sound_file.subfolders)
         return subfolder
 
     def _get_common_target_uri(self, sound_file):
@@ -359,7 +358,6 @@ class TargetNameGenerator:
         for_display : bool
             Format it nicely in order to print it somewhere
         """
-        print('generate_target_path')
         # the beginning of the uri that all soundfiles will have in common
         # does not need to be processed in safe_name.
         parent_uri = self._get_common_target_uri(sound_file)

@@ -134,7 +134,7 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
 
     def testCheck(self):
-        # it should start and not raise exceptions
+        # it should run and not raise exceptions
         launch([
             '-c',
             'tests/test data/',
@@ -142,7 +142,7 @@ class BatchIntegration(unittest.TestCase):
         ])
 
     def testTags(self):
-        # it should start and not raise exceptions
+        # it should run and not raise exceptions
         launch([
             '-t',
             'tests/test data/',

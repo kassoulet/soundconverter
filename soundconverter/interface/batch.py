@@ -190,8 +190,6 @@ class CLIConvert:
         # all files in input_files and also figure out which files can be
         # converted.
         file_checker = CLICheck(input_files)
-        input_files = file_checker.input_files
-        subdirectories = file_checker.subdirectories
 
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -207,19 +205,14 @@ class CLIConvert:
 
         logger.info('\npreparing converters…')
         audio_uris = file_checker.get_audio_uris()
-        for input_file, subdirectory in zip(input_files, subdirectories):
-            if input_file not in audio_uris:
-                filename = beautify_uri(input_file)
+        for discoverer in file_checker.discoverers:
+            sound_file = discoverer.sound_file
+            if sound_file.uri not in audio_uris:
+                filename = beautify_uri(sound_file.uri)
                 logger.info(
                     'skipping \'{}\': not an audiofile'.format(filename)
                 )
                 continue
-
-            sound_file = SoundFile(input_file)
-            # by storing it in subfolders, the original subfolder structure
-            # (relative to the directory that was provided as input in the
-            # cli) can be restored in the target dir:
-            sound_file.subfolders = subdirectory
 
             output_uri = name_generator.generate_target_path(sound_file)
 
@@ -295,13 +288,13 @@ class CLICheck:
             # "use -r to go into subdirectories"
             exit(1)
 
-        # provide this to other code that uses CLICheck
-        self.input_files = input_files
-        self.subdirectories = subdirectories
-
         typefinders = TaskQueue()
-        for input_file in input_files:
+        for subdirectory, input_file in zip(subdirectories, input_files):
             sound_file = SoundFile(input_file)
+            # by storing it in subfolders, the original subfolder structure
+            # (relative to the directory that was provided as input in the
+            # cli) can be restored in the target dir:
+            sound_file.subfolders = subdirectory
             typefinders.add(Discoverer(sound_file))
         typefinders.run()
 

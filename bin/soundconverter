@@ -112,9 +112,10 @@ def parse_command_line():
         '-b', '--batch', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode': 'batch'},
         help=_(
-            'Convert in batch mode, from the command line, '
-            'without a graphical user interface. You '
-            'can use this from, say, shell scripts.'
+            'Convert in batch mode, from the command line, without '
+            'a graphical user interface. You can use this from, '
+            'say, shell scripts. If the output file (with the same extension) '
+            'already exists, it will be overwritten.'
         )
     )
     parser.add_option(
