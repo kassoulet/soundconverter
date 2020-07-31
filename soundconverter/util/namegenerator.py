@@ -35,7 +35,7 @@ from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
     unquote_filename, split_URI, is_URI, beautify_uri
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
-from soundconverter.audio.profiles import audio_profiles_dict
+from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 basename_patterns = [
     ('%(.inputname)s', _('Same as input, but replacing the suffix')),
@@ -362,8 +362,6 @@ class TargetNameGenerator:
         subfolder = self._get_target_subfolder(sound_file)
         # filename, also changes depending on the soundfile
         filename = self._get_target_filename(sound_file)
-
-        print(parent_uri, subfolder, filename)
 
         # put together
         if subfolder is not None:

@@ -31,8 +31,8 @@ from soundconverter.util.fileoperations import vfs_encode_filename, \
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
-from soundconverter.audio.task import Task
-from soundconverter.audio.profiles import audio_profiles_dict
+from soundconverter.gstreamer.task import Task
+from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 
 GSTREAMER_SOURCE = 'giosrc'
@@ -329,7 +329,6 @@ class Converter(Task):
         # TODO do that outside of converter:
         #  newname = generate_filename(self.sound_file)
         newname = self.output_filename
-        logger.info('newname {}'.format(newname))
         logger.debug('{} -> {}'.format(
             beautify_uri(self.temporary_filename), beautify_uri(newname)
         ))
@@ -368,7 +367,7 @@ class Converter(Task):
 
         assert vfs_exists(newname)
 
-        logger.info('Converted {} to {}'.format(
+        logger.info("Converted '{}' to '{}'".format(
             beautify_uri(input_uri), beautify_uri(newname)
         ))
 
@@ -378,7 +377,7 @@ class Converter(Task):
             Gio.FileCopyFlags.NONE,
             None
         ):
-            logger.info('Cannot set permission on \'{}\''.format(
+            logger.info("Cannot set permission on '{}'".format(
                 beautify_uri(newname)
             ))
 
@@ -456,7 +455,6 @@ class Converter(Task):
         The TaskQueue is interested in reading the error.
         """
         self.error = error
-        # TODO both logger.error and stderr in show_error?
         logger.error('{}\n({})'.format(error, self.command))
         show_error(
             error,

@@ -37,6 +37,7 @@ class TaskQueue:
         self.running = []
         self.done = []
         self.duration_processed = 0
+        self.finished = False
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -115,6 +116,7 @@ class TaskQueue:
             if not self.window.is_active():
                 notification(msg)"""
 
+            self.finished = True
             if self.on_queue_finished is not None:
                 self.on_queue_finished(self)
 
@@ -136,6 +138,6 @@ class TaskQueue:
         while self.pending.qsize() > 0 and len(self.running) < num_jobs:
             self.start_next()
 
-    def set_on_task_done(self, on_queue_finished):
+    def set_on_queue_finished(self, on_queue_finished):
         """Add a custom function to be used when the queue finishes."""
         self.on_queue_finished = on_queue_finished

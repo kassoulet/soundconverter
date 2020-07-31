@@ -19,6 +19,4 @@ soundconverter/interface/batch.py
 soundconverter/interface/notify.py
 soundconverter/interface/__init__.py
 soundconverter/interface/ui.py
-soundconverter/converter/gstreamer.py
-soundconverter/converter/__init__.py
 soundconverter/__init__.py

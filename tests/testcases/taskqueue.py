@@ -25,8 +25,8 @@ import threading
 from unittest.mock import Mock
 from gi.repository import GLib, Gst
 
-from soundconverter.audio.taskqueue import TaskQueue
-from soundconverter.audio.task import Task
+from soundconverter.gstreamer.taskqueue import TaskQueue
+from soundconverter.gstreamer.task import Task
 from soundconverter.util.settings import get_gio_settings
 from util import reset_settings
 

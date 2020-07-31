@@ -23,7 +23,7 @@ import math
 from gettext import gettext as _
 
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.audio.profiles import audio_profiles_dict
+from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 # add here any format you want to be read
 mime_whitelist = (
