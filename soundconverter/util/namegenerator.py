@@ -62,9 +62,11 @@ def get_basename_pattern():
     by having forward slashes.
     """
     settings = get_gio_settings()
+
     index = settings.get_int('name-pattern-index')
     if index >= len(basename_patterns):
         index = 0
+
     if index == len(basename_patterns) - 1:
         return settings.get_string('custom-filename-pattern')
     else:
@@ -171,14 +173,11 @@ class TargetNameGenerator:
         """
         if len(child) == 0:
             raise ValueError('empty filename')
-
         if is_URI(child):
             raise ValueError(
-                'expected child "{}" to be a child path, not an URI'.format(
-                    child
-                )
+                'expected child "{}" to be a child path, '.format(child) +
+                'not an URI'
             )
-
         if parent is not None and child.startswith(parent):
             raise ValueError(
                 'wrong usage. Child "{}" should be the child '.format(child) +

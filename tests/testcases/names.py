@@ -106,11 +106,11 @@ class Patterns(unittest.TestCase):
     def testBasenamePattern(self):
         gio_settings = get_gio_settings()
 
-        gio_settings.set_int('subfolder-pattern-index', 2)
+        gio_settings.set_int('name-pattern-index', 2)
         pattern = get_basename_pattern()
         self.assertEqual(pattern, '%(track-number)02d-%(title)s')
 
-        gio_settings.set_int('subfolder-pattern-index', 5)
+        gio_settings.set_int('name-pattern-index', 5)
         gio_settings.set_string('custom-filename-pattern', 'test')
         pattern = get_basename_pattern()
         self.assertEqual(pattern, 'test')
@@ -118,6 +118,9 @@ class Patterns(unittest.TestCase):
 
 class TargetNameGeneratorTestCases(unittest.TestCase):
     def setUp(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('name-pattern-index', 0)
+        gio_settings.set_int('subfolder-pattern-index', 0)
         self.g = TargetNameGenerator()
         self.g.replace_messy_chars = True
         self.g.create_subfolders = True
