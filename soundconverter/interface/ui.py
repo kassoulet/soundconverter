@@ -668,10 +668,9 @@ class PreferencesDialog(GladeWindow):
         generator = TargetNameGenerator()
 
         # TODO those variable names
-        s = GLib.markup_escape_text(beautify_uri(generator.generate_filename(
-            sound_file, get_basename_pattern(),
-            get_subfolder_pattern(), for_display=True
-        )))
+        s = GLib.markup_escape_text(beautify_uri(
+            generator.generate_target_path(sound_file, for_display=True)
+        ))
         p = 0
         replaces = []
 

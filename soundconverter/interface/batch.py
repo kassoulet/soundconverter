@@ -29,7 +29,8 @@ from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
-from soundconverter.util.formats import get_quality_setting_name
+from soundconverter.util.formats import get_quality_setting_name, \
+    get_mime_type, get_mime_type_mapping
 from soundconverter.converter.gstreamer import TagReader, TypeFinder
 from soundconverter.audio.converter import Converter
 from soundconverter.audio.taskqueue import TaskQueue
@@ -60,10 +61,30 @@ def use_memory_gsettings(options):
         gio_settings.set_boolean('limit-jobs', False)
 
     gio_settings.set_string('output-mime-type', options['output-mime-type'])
-    gio_settings.set_string('selected-folder', options['output-path'])
+    gio_settings.set_string('selected-folder', filename_to_uri(options['output-path']))
     gio_settings.set_boolean('same-folder-as-input', False)
     # enable custom patterns
     gio_settings.set_int('subfolder-pattern-index', -1)
+
+
+def validate_args(options):
+    """Check if required command line args are provided."""
+    mime = options['output-mime-type']
+    if mime is None:
+        logger.error('mime type argument -m is required')
+        raise SystemExit
+    mime = get_mime_type(mime)
+    if mime is None:
+        logger.error('Cannot use "{}" mime type.'.format(mime))
+        msg = 'Supported shortcuts and mime types:'
+        for k, v in sorted(get_mime_type_mapping().items()):
+            msg += ' {} {}'.format(k, v)
+        logger.info(msg)
+        raise SystemExit
+
+    if options['output-path'] is None:
+        logger.error('output path argument -o is required')
+        raise SystemExit
 
 
 def prepare_files_list(input_files):
@@ -72,6 +93,11 @@ def prepare_files_list(input_files):
     Also returns a list of relative directories. This is used to reconstruct
     the directory structure in
     the output path if -o is provided.
+
+    Parameters
+    ----------
+    input_files : string[]
+        Array of paths
     """
     # The GUI has its own way of going through subdirectories.
     # Provide similar functionality to the cli.
@@ -123,6 +149,7 @@ def prepare_files_list(input_files):
                     .format(input_path)
                 )
         # if not a file and not a dir it doesn't exist. skip
+
     parsed_files = list(map(filename_to_uri, parsed_files))
 
     return parsed_files, subdirectories
@@ -226,10 +253,12 @@ class CLI_Convert():
 
         logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
-            if input_file not in file_checker.good_files:
+            """if input_file not in file_checker.good_files:
                 filename = unquote_filename(input_file.split(os.sep)[-1][-65:])
                 logger.info('skipping \'{}\': invalid soundfile'.format(filename))
-                continue
+                print('skip invalid')
+                continue"""
+            print('input_file', i, input_file)
 
             input_file = SoundFile(input_file)
 
@@ -247,8 +276,10 @@ class CLI_Convert():
             if settings.get('ignore-existing') and vfs_exists(output_name):
                 filename = unquote_filename(output_name.split(os.sep)[-1][-65:])
                 logger.info('skipping \'{}\': already exists'.format(filename))
+                print('skip exist')
                 continue
 
+            print('input', input_file.uri, 'output', output_name)
             c = Converter(input_file, output_name, name_generator)
             # TODO c.add_listener('started', self.print_progress)
 
@@ -262,8 +293,10 @@ class CLI_Convert():
             conversions.add(c)
 
             self.num_conversions += 1
+            print('self.num_conversions', self.num_conversions)
 
         if self.num_conversions == 0:
+            print('nothing to do…')
             logger.info('\nnothing to do…')
             exit(2)
 

@@ -187,7 +187,6 @@ class Converter(Task):
             TargetNameGenerator that creates filenames for all converters
             of the current TaskQueue
         """
-        print('CONVERTING TO', output_filename)
         # Configuration
         self.sound_file = sound_file
         self.output_filename = output_filename
@@ -243,6 +242,7 @@ class Converter(Task):
                 beautify_uri(self.temporary_filename),
                 str(e)
             ))
+        self._stop_pipeline()
         return
 
     def pause(self):
@@ -258,6 +258,16 @@ class Converter(Task):
             logger.debug('resume(): pipeline is None!')
             return
         self.pipeline.set_state(Gst.State.PLAYING)
+
+    def _stop_pipeline(self):
+        if not self.pipeline:
+            logger.debug('pipeline already stopped!')
+            return
+        self.pipeline.set_state(Gst.State.NULL)
+        bus = self.pipeline.get_bus()
+        bus.disconnect(self.watch_id)
+        bus.remove_signal_watch()
+        self.pipeline = None
 
     def _convert(self):
         """Run the gst pipeline that converts files.
@@ -279,8 +289,7 @@ class Converter(Task):
 
             except GLib.gerror as e:
                 show_error('gstreamer error when creating pipeline', str(e))
-                self.error = str(e)
-                self._conversion_done()
+                self._on_error(str(e))
                 return
 
             bus.add_signal_watch()
@@ -448,9 +457,11 @@ class Converter(Task):
         # TODO both logger.error and stderr in show_error?
         logger.error('{}\n({})'.format(error, self.command))
         show_error(
-            '{}'.format(_('GStreamer Error:')),
-            '{}\n({})'.format(error, self.sound_file.filename_for_display)
+            error,
+            self.command
         )
+        self._stop_pipeline()
+        self.callback()
 
     def _on_message(self, _, message):
         """Handle message events sent by gstreamer.
