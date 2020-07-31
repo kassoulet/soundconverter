@@ -226,7 +226,7 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         between 0 and 5, or 0 and 2 for flac and wav
     mode : string
         one of 'cbr', 'abr' and 'vbr' for mp3
-    reverse : boolean
+    reverse : bool
         default False. If True, this function returns the original
         value-parameter given a quality setting. Value becomes the input for
         the quality then.

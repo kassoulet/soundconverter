@@ -24,13 +24,9 @@
 # imports and package setup
 
 import os
-import re
 import site
 import sys
-import locale
-import gettext
 from optparse import OptionParser, OptionGroup
-import pkgutil
 from gettext import gettext as _
 import pkg_resources
 
@@ -67,9 +63,8 @@ except (ImportError, ValueError) as error:
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
-import soundconverter  # TODO i don't need that right?
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.interface.batch import CLIConvert, cli_tags_main, \
+from soundconverter.interface.batch import CLIConvert, \
     CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
@@ -228,8 +223,11 @@ else:
     if not files:
         logger.info('nothing to do…')
     if settings['mode'] == 'tags':
-        cli_tags_main(files)
+        CLICheck(
+            files, print_readable=True, print_tags=True,
+            print_not_readable=True
+        )
     elif settings['mode'] == 'batch':
         CLIConvert(files)
     elif settings['mode'] == 'check':
-        CLICheck(files)
+        CLICheck(files, print_readable=True)

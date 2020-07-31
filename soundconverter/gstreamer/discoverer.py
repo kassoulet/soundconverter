@@ -19,9 +19,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-from gi.repository import GstPbutils
+from gi.repository import Gst, GObject, GstPbutils
 
 from soundconverter.gstreamer.task import Task
+
+type_getters = {
+    GObject.TYPE_STRING: 'get_string',
+    GObject.TYPE_DOUBLE: 'get_double',
+    GObject.TYPE_FLOAT: 'get_float',
+    GObject.TYPE_INT: 'get_int',
+    GObject.TYPE_UINT: 'get_uint',
+}
 
 
 class Discoverer(Task):
@@ -53,8 +61,25 @@ class Discoverer(Task):
         # fast task, don't care
         pass
 
+    def _add_tag(self, taglist, tag):
+        """Convert the taglist to a dict one by one."""
+        tag_type = Gst.tag_get_type(tag)
+
+        if tag_type in type_getters:
+            getter = getattr(taglist, type_getters[tag_type])
+            value = str(getter(tag)[1])
+            self.sound_file.tags[tag] = value
+
+        if 'datetime' in tag:
+            dt = taglist.get_date_time(tag)[1]
+            self.sound_file.tags['year'] = dt.get_year()
+            self.sound_file.tags['date'] = dt.to_iso8601_string()[:10]
+
     def _discovered(self, _, info, error):
+        """The uri has been processed."""
         if error is None:
+            taglist = info.get_tags()
+            taglist.foreach(self._add_tag)
             self.tags = info.get_tags()
             self.readable = True
             self.callback()
