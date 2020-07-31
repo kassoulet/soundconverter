@@ -366,6 +366,8 @@ class Converter(Task):
             self.callback()
             return
 
+        assert vfs_exists(newname)
+
         logger.info('Converted {} to {}'.format(
             beautify_uri(input_uri), beautify_uri(newname)
         ))

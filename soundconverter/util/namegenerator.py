@@ -307,7 +307,7 @@ class TargetNameGenerator:
             if not vfs_exists(filename):
                 return filename
 
-    def get_target_subfolder(self, sound_file):
+    def _get_target_subfolder(self, sound_file):
         """Get subfolders that should be created for the target file.
 
         They may also already exist, for example because a previous conversion
@@ -325,7 +325,7 @@ class TargetNameGenerator:
             subfolder = os.path.join(sound_file.subfolders)
         return subfolder
 
-    def get_common_target_uri(self, sound_file):
+    def _get_common_target_uri(self, sound_file):
         """Get the directory into which all files are converted."""
         if self.same_folder_as_input:
             parent = sound_file.base_path
@@ -334,7 +334,7 @@ class TargetNameGenerator:
         # ensure it is an URI, possibly adding file://
         return filename_to_uri(parent)
 
-    def get_target_filename(self, sound_file):
+    def _get_target_filename(self, sound_file):
         """Get the output filename for the soundfile."""
         # note, that basename_pattern might actually contain subfolders, so
         # it's not always only a basename.
@@ -357,11 +357,13 @@ class TargetNameGenerator:
         """
         # the beginning of the uri that all soundfiles will have in common
         # does not need to be processed in safe_name.
-        parent_uri = self.get_common_target_uri(sound_file)
+        parent_uri = self._get_common_target_uri(sound_file)
         # custom subfolders and such, changes depending on the soundfile
-        subfolder = self.get_target_subfolder(sound_file)
+        subfolder = self._get_target_subfolder(sound_file)
         # filename, also changes depending on the soundfile
-        filename = self.get_target_filename(sound_file)
+        filename = self._get_target_filename(sound_file)
+
+        print(parent_uri, subfolder, filename)
 
         # put together
         if subfolder is not None:

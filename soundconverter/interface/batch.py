@@ -53,6 +53,7 @@ def use_memory_gsettings(options):
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
+    # the number of jobs is only applied, when limit-jobs is true
     forced_jobs = options.get('forced-jobs', None)
     if forced_jobs is not None:
         gio_settings.set_boolean('limit-jobs', True)
@@ -60,18 +61,27 @@ def use_memory_gsettings(options):
     else:
         gio_settings.set_boolean('limit-jobs', False)
 
-    gio_settings.set_string('output-mime-type', options['output-mime-type'])
-    gio_settings.set_string('selected-folder', filename_to_uri(options['output-path']))
+    mime_type = get_mime_type(options['format'])
+    gio_settings.set_string('output-mime-type', mime_type)
+
+    output_path = filename_to_uri(options['output-path'])
+    gio_settings.set_string('selected-folder', output_path)
+
     gio_settings.set_boolean('same-folder-as-input', False)
-    # enable custom patterns
+
+    # enable custom patterns by setting the index to the last entry
     gio_settings.set_int('subfolder-pattern-index', -1)
 
 
 def validate_args(options):
     """Check if required command line args are provided."""
-    mime = options['output-mime-type']
+    if options['output-path'] is None:
+        logger.error('output path argument -o is required')
+        raise SystemExit
+
+    mime = options['format']
     if mime is None:
-        logger.error('mime type argument -m is required')
+        logger.error('format argument -f is required')
         raise SystemExit
     mime = get_mime_type(mime)
     if mime is None:
@@ -80,10 +90,6 @@ def validate_args(options):
         for k, v in sorted(get_mime_type_mapping().items()):
             msg += ' {} {}'.format(k, v)
         logger.info(msg)
-        raise SystemExit
-
-    if options['output-path'] is None:
-        logger.error('output path argument -o is required')
         raise SystemExit
 
 
@@ -144,7 +150,7 @@ def prepare_files_list(input_files):
             else:
                 # else it didn't go into any directory.
                 # Provide some information about how to
-                logger.info(
+                logger.error(
                     '{} is a directory. Use -r to go into all subdirectories.'
                     .format(input_path)
                 )
@@ -253,34 +259,19 @@ class CLI_Convert():
 
         logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
+            # TODO:
             """if input_file not in file_checker.good_files:
                 filename = unquote_filename(input_file.split(os.sep)[-1][-65:])
                 logger.info('skipping \'{}\': invalid soundfile'.format(filename))
                 print('skip invalid')
                 continue"""
-            print('input_file', i, input_file)
 
             input_file = SoundFile(input_file)
 
-            # TODO use generate_filename instead or something
-            filename = input_file.uri.split(os.sep)[-1]
-            output_name = get_gio_settings().get_string('selected-folder') + os.sep + subdirectories[i] + filename
-            output_name = filename_to_uri(output_name)
-            # afterwards set the correct file extension
-            if '.' in output_name:
-                suffix = name_generator.suffix
-                without_suffix = output_name[:output_name.rfind('.')]
-                output_name = without_suffix + suffix
+            output_uri = name_generator.generate_target_path(input_file)
 
-            # skip existing output files if desired (-i cli argument)
-            if settings.get('ignore-existing') and vfs_exists(output_name):
-                filename = unquote_filename(output_name.split(os.sep)[-1][-65:])
-                logger.info('skipping \'{}\': already exists'.format(filename))
-                print('skip exist')
-                continue
-
-            print('input', input_file.uri, 'output', output_name)
-            c = Converter(input_file, output_name, name_generator)
+            print('input', input_file.uri, 'output', output_uri)
+            c = Converter(input_file, output_uri, name_generator)
             # TODO c.add_listener('started', self.print_progress)
 
             if 'quality' in settings:
