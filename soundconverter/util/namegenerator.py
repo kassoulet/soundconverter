@@ -32,7 +32,7 @@ import urllib.error
 import unicodedata
 from gettext import gettext as _
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
-    unquote_filename, split_URI
+    unquote_filename, split_URI, is_URI, beautify_uri
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
 from soundconverter.audio.profiles import audio_profiles_dict
@@ -109,6 +109,23 @@ class TargetNameGenerator:
         self.basename_pattern = get_basename_pattern()
         self.suffix = get_file_extension(self.output_mime_type)
 
+        # Enforcing such rules helps to avoid undefined and untested
+        # behaviour of functions.
+
+        # If you wish to provide an uri scheme like ftp:// it should be in
+        # the selected_folder instead.
+        if is_URI(self.basename_pattern) or is_URI(self.subfolder_pattern):
+            raise ValueError(
+                'patterns should be patterns, not complete URIs.'
+            )
+
+        if not self.same_folder_as_input and not is_URI(self.selected_folder):
+            raise ValueError(
+                'your selected folder {} should be in URI format.'.format(
+                    self.selected_folder
+                )
+            )
+
     @staticmethod
     def _unicode_to_ascii(unicode_string):
         # thanks to http://code.activestate.com/recipes/251871/
@@ -121,15 +138,20 @@ class TargetNameGenerator:
         Replace all characters that are not ascii, digits or '.' '-' '_' '/'
         with '_'. Umlaute will be changed to their closest non-umlaut
         counterpart.
+
+        Will not break URI schemes.
         """
+        scheme, name = split_URI(name)
         nice_chars = string.ascii_letters + string.digits + '.-_/'
-        return ''.join([
+        return (scheme or '') + ''.join([
             c if c in nice_chars else '_' for c in name
         ])
 
     @staticmethod
-    def safe_name(filename, safe_prefix=None):
+    def safe_name(child, parent=None):
         """Make a filename without dangerous special characters.
+
+        Returns an absolute path.
 
         Replace all characters that are not ascii, digits or '.' '-' '_' '/'
         with '_'. Umlaute will be changed to their closest non-umlaut
@@ -138,59 +160,77 @@ class TargetNameGenerator:
 
         Parameters
         ----------
-        filename : string
-            Can be an URI or a normal path
-        safe_prefix : string
+        child : string
+            Part of the path that needs to be modified to be safe. If it
+            starts with a leading '/', it is considered absolute and will
+            only keep the parents URI scheme
+        parent : string
             Part of filename starting from the beginning of it that should be
-            considered safe already and not further modified. Can be None,
-            in which case URI parts are detected automatically and preserved.
+            considered safe already and not further modified. May contain
+            URI parts such as 'file://'.
         """
-        if len(filename) == 0:
+        if len(child) == 0:
             raise ValueError('empty filename')
 
-        if safe_prefix is None:
-            # the prefix of URIs can be detected automatically.
-            safe_prefix = ''
-            # don't break 'file:///' or 'ftp://a@b:1/ and keep the original scheme
-            # also see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Generic_syntax # noqa
-            match = split_URI(filename)
-            if match[1]:
-                # it's an URI!
-                safe_prefix = match[1]
-                filename = match[3]
-                filename = unquote_filename(filename)
-        else:
-            if not filename.startswith(safe_prefix):
-                raise ValueError(
-                    'filename {} has to start with safe_prefix {}'.format(
-                        filename, safe_prefix
-                    )
+        if is_URI(child):
+            raise ValueError(
+                'expected child "{}" to be a child path, not an URI'.format(
+                    child
                 )
-            filename = filename[len(safe_prefix):]
+            )
 
+        if parent is not None and child.startswith(parent):
+            raise ValueError(
+                'wrong usage. Child "{}" should be the child '.format(child) +
+                'of parent "{}", not the whole path'.format(child)
+            )
+
+        if child.startswith('/'):
+            # child is absolute. keep only the uri scheme of parent
+            parent = split_URI(parent or '')[0] or ''
+        else:
+            # make sure it can be added with the child, since os.path.join
+            # cannot be used on uris (file:/// is not an absolute url for os),
+            # by adding a trailing forward slash.
+            if parent is None:
+                parent = os.path.realpath('.') + '/'
+            if not parent.endswith('/'):
+                parent = parent + '/'
+
+        # those are not needed and make problems in os.path.join.
+        # os.path.realpath cannot be used to resolve dots because it destroys
+        # the uri scheme.
+        if child.startswith('./'):
+            child = child[2:]
+        if child.startswith('.'):
+            child = child[1:]
 
         # figure out how much of the path already exists
         # split into for example [/test', '/baz.flac'] or ['qux.mp3']
-        split = [s for s in re.split(r'((?:/|^)[^/]+)', filename) if s != '']
+        split = [s for s in re.split(r'((?:/|^)[^/]+)', child) if s != '']
         safe = ''
         while len(split) > 0:
             part = split.pop(0)
-            if os.path.exists(safe + part):
+            if vfs_exists(parent + safe + part):
                 safe += part
             else:
                 # put the remaining unknown non-existing path back together
                 # and make it safe
-                non_existing = TargetNameGenerator._unicode_to_ascii(
-                    part + ''.join(split)
-                )
-                non_existing = TargetNameGenerator.safe_string(non_existing)
-                safe += non_existing
+                rest = part + ''.join(split)
+
+                # the path is in uri format, so before applying safe_string,
+                # unquote it.
+                # otherwise '%20' becomes '_20' when it should be '_'
+                rest = urllib.parse.unquote(rest)
+                rest = TargetNameGenerator._unicode_to_ascii(rest)
+                rest = TargetNameGenerator.safe_string(rest)
+                # quoting it back to URI escape strings is not needed, because
+                # _ is not a critical character.
+                safe += rest
                 break
 
-        if safe_prefix:
-            safe = safe_prefix + safe
-        if '://' in safe:
-            safe = filename_to_uri(safe)
+        if parent:
+            safe = parent + safe
 
         return safe
 
@@ -201,13 +241,17 @@ class TargetNameGenerator:
         ----------
         sound_file : SoundFile
         pattern : string
-            complete pattern of the output path
-            For example '%(album-artist)s/%(album)s/%(title)s.ogg'
+            For example '%(album-artist)s/%(album)s/%(title)s'
         """
         tags = sound_file.tags
 
-        filename = urllib.parse.unquote(os.path.split(sound_file.uri)[1])
+        # the pattern might be in an URI
+        uri_prefix, pattern = split_URI(pattern)
+
+        filename = beautify_uri(sound_file.uri)
+        filename = os.path.basename(filename)
         filename, ext = os.path.splitext(filename)
+        assert '/' not in filename
         d = {
             '.inputname': filename,
             '.ext': ext,
@@ -245,6 +289,9 @@ class TargetNameGenerator:
         # now fill the tags in the pattern with values:
         result = pattern % d
 
+        if uri_prefix is not None:
+            result = filename_to_uri(result, uri_prefix)
+
         return result
 
     def generate_temp_path(self, soundfile):
@@ -261,6 +308,43 @@ class TargetNameGenerator:
             if not vfs_exists(filename):
                 return filename
 
+    def get_target_subfolder(self, sound_file):
+        """Get subfolders that should be created for the target file.
+
+        They may also already exist, for example because a previous conversion
+        created them.
+        """
+        subfolder = None
+        if self.create_subfolders:
+            subfolder = self.fill_pattern(sound_file, self.subfolder_pattern)
+        elif sound_file.subfolders is not None and '/' not in self.basename_pattern:
+            # use existing subfolders between base_path and the soundfile, but
+            # only if the basename_pattern does not create subfolders.
+            # For example:
+            # .subfolders may have a structure of artist/album,
+            # whereas basename might create a new structure of year/artist
+            subfolder = os.path.join(sound_file.subfolders)
+        return subfolder
+
+    def get_common_target_uri(self, sound_file):
+        """Get the directory into which all files are converted."""
+        if self.same_folder_as_input:
+            parent = sound_file.base_path
+        else:
+            parent = self.selected_folder
+        # ensure it is an URI, possibly adding file://
+        return filename_to_uri(parent)
+
+    def get_target_filename(self, sound_file):
+        """Get the output filename for the soundfile."""
+        # note, that basename_pattern might actually contain subfolders, so
+        # it's not always only a basename.
+        # It's the deepest part of the target path though.
+        return '{}.{}'.format(
+            self.fill_pattern(sound_file, self.basename_pattern),
+            self.suffix
+        )
+
     def generate_target_path(self, sound_file, for_display=False):
         """Generate a target filename in URI format based on the settings.
 
@@ -272,35 +356,29 @@ class TargetNameGenerator:
         for_display : bool
             Format it nicely in order to print it somewhere
         """
-        basename = self.fill_pattern(sound_file, self.basename_pattern)
-        subfolder = self.fill_pattern(sound_file, self.subfolder_pattern)
+        # the beginning of the uri that all soundfiles will have in common
+        # does not need to be processed in safe_name.
+        parent_uri = self.get_common_target_uri(sound_file)
+        # custom subfolders and such, changes depending on the soundfile
+        subfolder = self.get_target_subfolder(sound_file)
+        # filename, also changes depending on the soundfile
+        filename = self.get_target_filename(sound_file)
 
-        # the path all soundfiles will have in common
-        if self.same_folder_as_input:
-            path = sound_file.base_path
+        # put together
+        if subfolder is not None:
+            child = os.path.join(subfolder, filename)
         else:
-            path = self.selected_folder
-        # don't modify that one, becuase it has been selected by the user and
-        # already exists.
-        safe_prefix = path
+            child = filename
+        # child should be quoted to form a proper URI together with parent
+        child = urllib.parse.quote(child)
 
-        # subfolders that change depending on the soundfile
-        if self.create_subfolders:
-            path = os.path.join(path, subfolder)
-        if sound_file.subfolders is not None and '/' not in basename:
-            # use existing subfolders between base_path and the soundfile, but
-            # only if the basename_pattern does not create subfolders
-            path = os.path.join(path, sound_file.subfolders)
-
-        # filename
-        # might actually contain further subfolders by specifying slashes
-        path = os.path.join(path, basename)
-        path = '{}.{}'.format(path, self.suffix)
-
+        # subfolder and basename need to be cleaned
         if self.replace_messy_chars:
-            path = self.safe_name(path, safe_prefix)
+            path = self.safe_name(child, parent_uri)
+        else:
+            path = os.path.join(parent_uri, child)
 
         if for_display:
-            return path
+            return beautify_uri(path)
         else:
-            return filename_to_uri(path)
+            return path

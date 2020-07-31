@@ -38,7 +38,19 @@ def unquote_filename(filename):
 
 
 def beautify_uri(uri):
-    return unquote_filename(uri).split('file://')[-1]
+    """Convert an URI to a normal path.
+
+    Also returns the prefix, for example 'file://'"""
+    match = split_URI(uri)
+    if match[0] is not None:
+        # take the path part from the uri
+        path = match[1]
+        path = unquote_filename(path)
+    else:
+        # no uri, take as is, return any existing %20 strings without
+        # modifying them.
+        path = uri
+    return path
 
 
 def vfs_walk(uri):
@@ -46,7 +58,6 @@ def vfs_walk(uri):
 
     uri -- the base folder uri.
     return a list of uri.
-
     """
     filelist = []
     dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
@@ -83,6 +94,10 @@ def vfs_rename(original, newname):
 
 
 def vfs_exists(filename):
+    """Check if file or URI exists."""
+    if not is_URI(filename):
+        # gio does not support relative path syntax
+        filename = os.path.realpath(filename)
     gfile = Gio.file_parse_name(filename)
     return gfile.query_exists(None)
 
@@ -90,31 +105,44 @@ def vfs_exists(filename):
 def split_URI(uri):
     """Match a regex to the uri that results in:
 
-    [1]: scheme and authority (authority might be '')
-    [2]: only the authority (might be None)
-    [3]: filename
+    [0]: scheme and authority, might be None if not an uri
+    [1]: filename
     """
-    return re.match(r'^([a-zA-Z]+://([^/]+?/){0,1}){0,1}(.+)', uri)
+    match = re.match(r'^([a-zA-Z]+://([^/]+?/){0,1}){0,1}(.*)', uri)
+    if match is None:
+        # not an uri
+        return None, uri
+    return match[1], match[3]
 
 
-def filename_to_uri(filename):
+def is_URI(uri):
+    return split_URI(uri)[0] is not None
+
+
+def filename_to_uri(filename, prefix='file://'):
     """Convert a filename to a valid uri.
 
-    Filename can be a relative or absolute path, or an uri.
+    Parameters
+    ----------
+    filename : string
+        Filename can be a relative or absolute path, or an uri.
+    prefix : string
+        for example 'file://'
     """
     match = split_URI(filename)
-    if match[1]:
+    if match[0]:
         # it's an URI! Don't quote the schema
         # filename might have a schema but still contain characters that
         # need to be quoted. e.g. a pattern contained file:// in front but
         # inserting tags into it resulted in whitespaces.
-        filename = unquote_filename(match[3])
-        filename = urllib.parse.quote(filename)
-        uri = match[1] + filename
-    else:
         # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
-        filename = unquote_filename(filename)
-        uri = 'file://' + urllib.parse.quote(filename)
+        filename = unquote_filename(match[1])
+        filename = urllib.parse.quote(filename)
+        uri = match[0] + filename
+    else:
+        # it's a normal path. If it happens to contain %25, it might be
+        # part of the album name or something. ' %20' should become '%20%2520'
+        uri = prefix + urllib.parse.quote(filename)
     return uri
 
 # GStreamer gnomevfssrc helpers

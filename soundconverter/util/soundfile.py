@@ -22,7 +22,9 @@
 import os
 from gi.repository import GLib
 
-from soundconverter.util.fileoperations import unquote_filename
+from soundconverter.util.fileoperations import unquote_filename, is_URI, \
+    filename_to_uri, split_URI
+from soundconverter.util.logger import logger
 
 
 class SoundFile:
@@ -39,19 +41,31 @@ class SoundFile:
 
         if base_path is set, the uri is cut in three parts,
          - the base folder, which is a common folder of multiple soundfiles
+           (.base_path)
          - the remaining subfolders, which would be for example something
            like artist/album in the existing folder structure. As long as
            no subfolder pattern is provided, soundconverter will use those
-           subfolders in the output directory.
-         - the filename
+           subfolders in the output directory. (in .subfolders)
+         - the filename (in .filename)
         """
+        # enforcing an uri format reduced the nightmare of handling 2
+        # different path formats in generate_target_path
+        if not is_URI(uri):
+            raise ValueError('uri was not an uri: {}!'.format(
+                uri
+            ))
+        if base_path is not None and not is_URI(base_path):
+            raise ValueError('base_path was not an uri: {}!'.format(
+                base_path
+            ))
+
         self.uri = uri
         self.subfolders = None
 
         if base_path:
             if not uri.startswith(base_path):
                 raise ValueError(
-                    'uri {} needs to start with the base_path {}'.format(
+                    'uri {} needs to start with the base_path {}!'.format(
                         uri, base_path
                     )
                 )
