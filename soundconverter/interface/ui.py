@@ -32,8 +32,6 @@ from gi.repository import GObject, Gtk, Gio, Gdk, GLib
 
 from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
-from soundconverter.converter.gstreamer import ConverterQueue, \
-    available_elements, TypeFinder, audio_profiles_list
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \

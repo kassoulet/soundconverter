@@ -31,7 +31,6 @@ from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
 from soundconverter.util.formats import get_quality_setting_name, \
     get_mime_type, get_mime_type_mapping
-from soundconverter.converter.gstreamer import TagReader
 from soundconverter.gstreamer.converter import Converter
 from soundconverter.gstreamer.discoverer import Discoverer
 from soundconverter.gstreamer.taskqueue import TaskQueue
@@ -161,63 +160,6 @@ def prepare_files_list(input_files):
     return parsed_files, subdirectories
 
 
-def cli_tags_main(input_files):
-    """Display all the tags of the specified files in the console.
-
-    To go into subdirectories of paths provided, the -r command line argument
-    should be provided, which is stored in the global 'settings' variable.
-
-    input_files is an array of string paths.
-    """
-    input_files, _ = prepare_files_list(input_files)
-    loop = GLib.MainLoop()
-    context = loop.get_context()
-    for input_file in input_files:
-        input_file = SoundFile(input_file)
-        t = TagReader(input_file)
-        t.start()
-        while t.running:
-            time.sleep(0.01)
-            context.iteration(True)
-
-        if len(input_file.tags) > 0:
-            logger.info(unquote_filename(input_file.filename))
-            for key in sorted(input_file.tags):
-                logger.info(('    {}: {}'.format(key, input_file.tags[key])))
-
-        else:
-            logger.info(unquote_filename(input_file.filename))
-            logger.info(('    no tags found'))
-
-
-class CliProgress:
-    """Overwrite a progress indication in the console.
-
-    Won't print a new line.
-    """
-
-    def __init__(self):
-        """Initialize the class without printing anything yet."""
-        self.current_text = ''
-
-    def show(self, *msgs):
-        """Update the progress in the console.
-
-        Example: show(1, "%").
-        """
-        new_text = ' '.join([str(msg) for msg in msgs])
-        if new_text != self.current_text:
-            self.clear()
-            sys.stdout.write(new_text)
-            sys.stdout.flush()
-            self.current_text = new_text
-
-    def clear(self):
-        """Revert the previously written message. Used in `show`."""
-        sys.stdout.write('\b \b' * len(self.current_text))
-        sys.stdout.flush()
-
-
 class CLIConvert:
     """Main class that runs the conversion."""
 
@@ -230,15 +172,14 @@ class CLIConvert:
 
         input_files is an array of string paths.
         """
-        # check which files should be converted. The result is
-        # stored in file_checker.good_files
         logger.info(
             '\nchecking files and walking dirs in the specified paths…'
         )
 
         # CLICheck will exit(1) if no input_files available and resolve
-        # all files in input_files
-        file_checker = CLICheck(input_files, silent=True)
+        # all files in input_files and also figure out which files can be
+        # converted.
+        file_checker = CLICheck(input_files)
         input_files = file_checker.input_files
 
         loop = GLib.MainLoop()
@@ -255,7 +196,7 @@ class CLIConvert:
 
         logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
-            if input_file not in file_checker.good_files:
+            if input_file not in file_checker.get_audio_uris():
                 filename = beautify_uri(input_file)
                 logger.info(
                     'skipping \'{}\': not an audiofile'.format(filename)
@@ -267,7 +208,6 @@ class CLIConvert:
             output_uri = name_generator.generate_target_path(input_file)
 
             c = Converter(input_file, output_uri, name_generator)
-            # TODO c.add_listener('started', self.print_progress)
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')
@@ -305,21 +245,33 @@ class CLIConvert:
 class CLICheck:
     """Print all the tags of the specified files to the console."""
 
-    def __init__(self, input_files, silent=False):
+    def __init__(
+            self, input_files, print_readable=False, print_tags=False,
+            print_not_readable=False
+    ):
         """Print all the tags of the specified files to the console.
 
         To go into subdirectories of paths provided, the -r command line
         argument should be provided, which is stored in the global 'settings'
         variable.
 
-        input_files is an array of string paths.
-
-        silent=True makes this print no output, no matter the -q argument of
-        soundconverter
-
-        It will exit the tool if input_files contains no files
+        It will exit soundconverter if input_files contains no files
         (maybe because -r is missing and the specified path is a dir)
+
+        Parameters
+        ----------
+        input_files : string[]
+            an array of string paths.
+        print_readable : bool
+            if False, will print nothing at all
+        print_tags : bool
+            if True, will print tags
+        print_not_readable : bool
+            if True, will also print when a file is not an audiofile
         """
+        self.print_tags = print_tags
+        self.print_not_readable = print_not_readable
+
         input_files, subdirectories = prepare_files_list(input_files)
 
         if len(input_files) == 0:
@@ -339,31 +291,37 @@ class CLICheck:
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        # delta progress at which when new progress should be printed
-        progress = CliProgress()
-        threshold = 100 / len(input_files)
-        p = 0
         while not typefinders.finished:
-            if not settings.get('quiet'):
-                delta = typefinders.get_progress() - p
-                if delta > threshold:
-                    p = typefinders.get_progress()
-                    progress.show('progress: ' + str(round(p * 100)) + '%')
             # main_iteration is needed for the typefinder taskqueue to run
             # calling this like crazy is the fastest way
             context.iteration(True)
 
-        # do another one to print the queue done message
-        context.iteration(True)
+        self.discoverers = typefinders.done
 
-        self.good_files = [
-            discoverer.sound_file.uri for discoverer in typefinders.done
+        if print_readable:
+            for discoverer in self.discoverers:
+                sound_file = discoverer.sound_file
+                if sound_file.readable:
+                    self.print(sound_file)
+                elif self.print_not_readable:
+                    logger.info('{} is not an audiofile'.format(
+                        unquote_filename(beautify_uri(sound_file.uri)))
+                    )
+
+    def get_audio_uris(self):
+        """Get a list of all SoundFile objects that can be converted."""
+        return [
+            discoverer.sound_file.uri for discoverer in self.discoverers
             if discoverer.readable
         ]
 
-        if not silent:
-            logger.info('\nNon-Audio Files:')
+    def print(self, sound_file):
+        """Print tags of a file, or write that it doesn't have tags."""
+        logger.info(unquote_filename(sound_file.filename))
 
-            for input_file in input_files:
-                if input_file not in self.good_files:
-                    logger.info(unquote_filename(beautify_uri(input_file)))
+        if self.print_tags:
+            if len(sound_file.tags) > 0:
+                for key in sorted(sound_file.tags):
+                    logger.info(('    {}: {}'.format(key, sound_file.tags[key])))
+            else:
+                logger.info(('    no tags found'))
