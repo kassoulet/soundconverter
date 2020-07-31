@@ -45,7 +45,8 @@ def launch(argv=[]):
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
-        spec = spec_from_loader("launcher", SourceFileLoader("launcher", "bin/soundconverter"))
+        loader = SourceFileLoader('launcher', 'bin/soundconverter')
+        spec = spec_from_loader('launcher', loader)
         spec.loader.exec_module(module_from_spec(spec))
 
 
@@ -58,19 +59,29 @@ def quote(ss):
 class BatchIntegration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        os.makedirs("tests/tmp", exist_ok=True)
+        os.makedirs('tests/tmp', exist_ok=True)
 
     def tearDown(self):
         reset_settings()
-        if os.path.isdir("tests/tmp/"):
-            shutil.rmtree("tests/tmp")
+        if os.path.isdir('tests/tmp/'):
+            shutil.rmtree('tests/tmp')
+
+    def testSingleFile(self):
+        # it should convert
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp',
+            '-f', 'm4a'
+        ])
+        self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
 
     def testNonRecursiveWithFolder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as ctx:
             launch([
-                "-b", "tests/test data/empty", "-m", "audio/mpeg",
-                "-o", "tmp"
+                '-b', 'tests/test data/empty', '-f', 'audio/mpeg',
+                '-o', 'tmp'
             ])
         exit_code = ctx.exception.code
         self.assertEqual(exit_code, 1)
@@ -80,8 +91,8 @@ class BatchIntegration(unittest.TestCase):
         # are not audiofiles
         with self.assertRaises(SystemExit) as cm:
             launch([
-                "-b", "-r", "tests/test data/empty", "-m", "audio/mpeg",
-                "-o", "tmp"
+                '-b', '-r', 'tests/test data/empty', '-f', 'audio/mpeg',
+                '-o', 'tmp'
             ])
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
@@ -89,62 +100,62 @@ class BatchIntegration(unittest.TestCase):
     def testRecursiveAudio(self):
         # it should convert
         launch([
-            "-b", "tests/test data/audio",
-            "-r",
-            "-o", "tests/tmp",
-            "-m", "audio/mpeg"
+            '-b', 'tests/test data/audio',
+            '-r',
+            '-o', 'tests/tmp',
+            '-f', 'audio/mpeg'
             ])
-        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/a.mp3"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.mp3"))
+        self.assertTrue(os.path.isdir('tests/tmp/audio/'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/a.mp3'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.mp3'))
 
     def testMultiplePaths(self):
         # it should convert
         launch([
-            "-b",
-            "tests/test data/audio",
-            "tests/test data/audio/a.wav",
-            "tests/test data/empty",
-            "-r",
-            "-o", "tests/tmp",
-            "-m", "audio/x-m4a"
+            '-b',
+            'tests/test data/audio',
+            'tests/test data/audio/a.wav',
+            'tests/test data/empty',
+            '-r',
+            '-o', 'tests/tmp',
+            '-f', 'audio/x-m4a'
             ])
         # The batch mode behaves like the cp command:
         # - input is a folder, has to provide -r, output is a folder
         # - input is a file, output is a file
-        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/a.m4a"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.m4a"))
-        self.assertTrue(os.path.isfile("tests/tmp/a.m4a"))
+        self.assertTrue(os.path.isdir('tests/tmp/audio/'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/a.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
 
 
 class GUI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if os.path.isdir("tests/tmp/"):
-            shutil.rmtree("tests/tmp")
-        os.makedirs("tests/tmp", exist_ok=True)
+        if os.path.isdir('tests/tmp/'):
+            shutil.rmtree('tests/tmp')
+        os.makedirs('tests/tmp', exist_ok=True)
 
     def tearDown(self):
         win[0].close()
         reset_settings()
-        if os.path.isdir("tests/tmp/"):
-            shutil.rmtree("tests/tmp")
+        if os.path.isdir('tests/tmp/'):
+            shutil.rmtree('tests/tmp')
 
     def testConversion(self):
         launch([
-            "tests/test data/audio/a.wav",
-            "tests/test data/audio/strângë chàrs фズ.wav",
-            "tests/test data/audio/",
-            "tests/test data/empty"
+            'tests/test data/audio/a.wav',
+            'tests/test data/audio/strângë chàrs фズ.wav',
+            'tests/test data/audio/',
+            'tests/test data/empty'
         ])
         window = win[0]
 
         # check if directory is read correctly
         expected_filelist = [
-            "tests/test data/audio/a.wav",
-            "tests/test data/audio/strângë chàrs фズ.wav",
-            "tests/test data/audio/b/c.mp3"
+            'tests/test data/audio/a.wav',
+            'tests/test data/audio/strângë chàrs фズ.wav',
+            'tests/test data/audio/b/c.mp3'
         ]
         self.assertCountEqual(
             [filename_to_uri(path) for path in expected_filelist],
@@ -156,7 +167,7 @@ class GUI(unittest.TestCase):
         settings = get_gio_settings()
         settings.set_boolean('create-subfolders', False)
         settings.set_boolean('same-folder-as-input', False)
-        settings.set_string('selected-folder', os.path.abspath("tests/tmp"))
+        settings.set_string('selected-folder', os.path.abspath('tests/tmp'))
         settings.set_int('name-pattern-index', 0)
         settings.set_boolean('replace-messy-chars', True)
         settings.set_boolean('delete-original', False)
@@ -171,13 +182,13 @@ class GUI(unittest.TestCase):
             # to work on the conversions and updating the GUI
             gtk_iteration()
 
-        self.assertTrue(os.path.isdir("tests/tmp/audio/"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/a.opus"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/strange_chars_.opus"))
-        self.assertTrue(os.path.isfile("tests/tmp/audio/b/c.opus"))
+        self.assertTrue(os.path.isdir('tests/tmp/audio/'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/a.opus'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/strange_chars_.opus'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.opus'))
         # no duplicates in the GUI:
-        self.assertFalse(os.path.isfile("tests/tmp/a.opus"))
+        self.assertFalse(os.path.isfile('tests/tmp/a.opus'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

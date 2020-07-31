@@ -95,7 +95,7 @@ def get_mime_type_mapping():
     profile = get_gio_settings().get_string('audio-profile')
     mime_types = {
         'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
-        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a'
+        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a', 'm4a': 'audio/x-m4a'
     }
     if profile in audio_profiles_dict:
         profile_ext = audio_profiles_dict[profile][1] if profile else ''

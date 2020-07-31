@@ -152,15 +152,15 @@ def parse_command_line():
         'option is provided'
     )
     batch_option_group.add_option(
-        '-m', '--mime-type', dest="output-mime-type",
+        '-f', '--format', dest="format", metavar='NAME',
         help=_(
-            'Set the output MIME type. The default '
-            'is {}. Note that you will probably want to set the output '
-            'suffix as well. Supported MIME types: {}'
+            'Set the output MIME type or file extension. The default '
+            'is {}. Supported values: {}'
         ).format(
             get_gio_settings().get_string('output-mime-type'),
-            'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3)'
-            'audio/x-vorbis (Vorbis) audio/x-wav (WAV)'
+            '"audio/x-m4a" ("aac" or "m4a"), "audio/x-flac" ("flac"), '
+            '"audio/mpeg" ("mp3"), "audio/x-vorbis" ("ogg"), '
+            '"audio/ogg; codecs=opus" ("opus"), "audio/x-wav" ("wav")'
         )
     )
     batch_option_group.add_option(
@@ -175,7 +175,7 @@ def parse_command_line():
         )
     )
     batch_option_group.add_option(
-        '-o', '--output', action="store", dest="output-path",
+        '-o', '--output', action="store", dest="output-path", metavar='PATH',
         help=_(
             'Put converted files into a different directory while rebuilding '
             'the original directory structure. This includes the name of the '
@@ -222,10 +222,6 @@ if settings['mode'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
-    if 'output-mime-type' not in options:
-        parser.error('-m output-mime-type argument is required')
-    if 'output-path' not in options:
-        parser.error('-o output-path argument is required')
     # now store the rest of the CLI args in the gio settings
     validate_args(options)
     use_memory_gsettings(options)
