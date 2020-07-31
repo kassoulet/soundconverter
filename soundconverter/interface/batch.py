@@ -31,13 +31,13 @@ from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
 from soundconverter.util.formats import get_quality_setting_name, \
     get_mime_type, get_mime_type_mapping
-from soundconverter.converter.gstreamer import TagReader, TypeFinder
-from soundconverter.audio.converter import Converter
-from soundconverter.audio.taskqueue import TaskQueue
+from soundconverter.converter.gstreamer import TagReader
+from soundconverter.gstreamer.converter import Converter
+from soundconverter.gstreamer.discoverer import Discoverer
+from soundconverter.gstreamer.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.queue import TaskQueue as OldTaskQueue
 from soundconverter.util.fileoperations import unquote_filename, \
-    filename_to_uri, vfs_exists, beautify_uri
+    filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
 
 
@@ -218,7 +218,7 @@ class CliProgress:
         sys.stdout.flush()
 
 
-class CLI_Convert():
+class CLIConvert:
     """Main class that runs the conversion."""
 
     def __init__(self, input_files):
@@ -236,14 +236,10 @@ class CLI_Convert():
             '\nchecking files and walking dirs in the specified paths…'
         )
 
-        file_checker = CLI_Check(input_files, silent=True)
-
-        # CLI_Check will exit(1) if no input_files available
-
-        # input_files, subdirectories = prepare_files_list(input_files)
-        # edit: handled by CLI_Check now
+        # CLICheck will exit(1) if no input_files available and resolve
+        # all files in input_files
+        file_checker = CLICheck(input_files, silent=True)
         input_files = file_checker.input_files
-        subdirectories = file_checker.subdirectories
 
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -259,18 +255,17 @@ class CLI_Convert():
 
         logger.info('\npreparing converters…')
         for i, input_file in enumerate(input_files):
-            # TODO:
-            """if input_file not in file_checker.good_files:
-                filename = unquote_filename(input_file.split(os.sep)[-1][-65:])
-                logger.info('skipping \'{}\': invalid soundfile'.format(filename))
-                print('skip invalid')
-                continue"""
+            if input_file not in file_checker.good_files:
+                filename = beautify_uri(input_file)
+                logger.info(
+                    'skipping \'{}\': not an audiofile'.format(filename)
+                )
+                continue
 
             input_file = SoundFile(input_file)
 
             output_uri = name_generator.generate_target_path(input_file)
 
-            print('input', input_file.uri, 'output', output_uri)
             c = Converter(input_file, output_uri, name_generator)
             # TODO c.add_listener('started', self.print_progress)
 
@@ -284,17 +279,15 @@ class CLI_Convert():
             conversions.add(c)
 
             self.num_conversions += 1
-            print('self.num_conversions', self.num_conversions)
 
         if self.num_conversions == 0:
-            print('nothing to do…')
             logger.info('\nnothing to do…')
             exit(2)
 
         logger.info('\nstarting conversion…')
         conversions.run()
         while conversions.running:
-            # calling this like crazy is the fastest way
+            # make the eventloop of glibs async stuff run until finished:
             context.iteration(True)
 
         # do another one to print the queue done message
@@ -309,7 +302,8 @@ class CLI_Convert():
         )
 
 
-class CLI_Check():
+class CLICheck:
+    """Print all the tags of the specified files to the console."""
 
     def __init__(self, input_files, silent=False):
         """Print all the tags of the specified files to the console.
@@ -333,44 +327,39 @@ class CLI_Check():
             # "use -r to go into subdirectories"
             exit(1)
 
-        # provide this to other code that uses CLI_Check
+        # provide this to other code that uses CLICheck
         self.input_files = input_files
         self.subdirectories = subdirectories
 
-        typefinders = OldTaskQueue()
-
-        self.good_files = []
-
+        typefinders = TaskQueue()
         for input_file in input_files:
-            sound_file = SoundFile(input_file)
-            typefinder = TypeFinder(sound_file, silent=True)
-            typefinder.set_found_type_hook(self.found_type)
-            typefinders.add_task(typefinder)
-
-        typefinders.start()
-        p = 0
-        progress = CliProgress()
-
-        # delta progress at which when new progress should be printed
-        threshold = 100 / len(input_files)
+            typefinders.add(Discoverer(SoundFile(input_file)))
+        typefinders.run()
 
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        # TODO why this and not CliProgress? difference?
-        while typefinders.running:
-            if not settings.get('quiet') and typefinders.progress:
-                delta = typefinders.progress - p
+        # delta progress at which when new progress should be printed
+        progress = CliProgress()
+        threshold = 100 / len(input_files)
+        p = 0
+        while not typefinders.finished:
+            if not settings.get('quiet'):
+                delta = typefinders.get_progress() - p
                 if delta > threshold:
-                    p = typefinders.progress
+                    p = typefinders.get_progress()
                     progress.show('progress: ' + str(round(p * 100)) + '%')
-            # main_iteration is needed for
-            # the typefinder taskqueue to run
+            # main_iteration is needed for the typefinder taskqueue to run
             # calling this like crazy is the fastest way
             context.iteration(True)
 
         # do another one to print the queue done message
         context.iteration(True)
+
+        self.good_files = [
+            discoverer.sound_file.uri for discoverer in typefinders.done
+            if discoverer.readable
+        ]
 
         if not silent:
             logger.info('\nNon-Audio Files:')
@@ -378,6 +367,3 @@ class CLI_Check():
             for input_file in input_files:
                 if input_file not in self.good_files:
                     logger.info(unquote_filename(beautify_uri(input_file)))
-
-    def found_type(self, sound_file, mime):
-        self.good_files.append(sound_file.uri)

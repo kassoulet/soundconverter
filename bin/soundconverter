@@ -69,8 +69,8 @@ Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 import soundconverter  # TODO i don't need that right?
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.interface.batch import CLI_Convert, cli_tags_main, \
-    CLI_Check, use_memory_gsettings, validate_args
+from soundconverter.interface.batch import CLIConvert, cli_tags_main, \
+    CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
 
@@ -230,6 +230,6 @@ else:
     if settings['mode'] == 'tags':
         cli_tags_main(files)
     elif settings['mode'] == 'batch':
-        CLI_Convert(files)
+        CLIConvert(files)
     elif settings['mode'] == 'check':
-        CLI_Check(files)
+        CLICheck(files)
