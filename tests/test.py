@@ -13,7 +13,7 @@ from gi.repository import Gst, Gio, Gtk, GLib
 Gst.init([None] + [a for a in sys.argv[1:] if '-gst' in a])
 
 from soundconverter.util.settings import set_gio_settings
-from soundconverter.interface.ui import win, gtk_iteration
+from soundconverter.interface.ui import gtk_iteration
 
 # don't overwrite the users settings during tests
 backend = Gio.memory_settings_backend_new()
@@ -26,11 +26,11 @@ Gtk.main_quit = lambda: None
 
 # import all the tests and run them
 import unittest
-from testcases.integration import *
+# from testcases.integration import *
 from testcases.names import *
 from testcases.format import *
 from testcases.taskqueue import *
-from testcases.converter import *
+# from testcases.converter import *
 
 if __name__ == "__main__":
     unittest.main()
