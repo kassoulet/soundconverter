@@ -19,24 +19,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import sys
-from gettext import gettext as _
-
-from soundconverter.util.logger import logger
-
 
 class ErrorPrinter:
     def show_error(self, primary, secondary):
-        logger.error(_('{}').format(primary))
-        logger.error(_('{}').format(secondary))
-        sys.exit(1)
+        pass
 
 
 error_handler = ErrorPrinter()
 
 
 def set_error_handler(handler):
-    """Overwrite the error handler to, for example, show errors in a gtk dialog instead of the console"""
+    """Add a function to show errors on the UI."""
     global error_handler
     error_handler = handler
 

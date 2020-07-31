@@ -90,7 +90,7 @@ class AsyncSleepTask(Task):
                 # don't post the msg, because that would indicate success
                 return
 
-            time.sleep(0.05)
+            time.sleep(0.025)
             self.progress += 0.1
 
         # GLib has an event loop (possibly very similar to the one in node.js)
@@ -153,17 +153,17 @@ class AsyncSleepTaskTest(unittest.TestCase):
         task.set_callback(done)
 
         task.run()
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
 
         task.pause()
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
 
         task.resume()
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_called_with(task)
 
@@ -176,25 +176,25 @@ class AsyncSleepTaskTest(unittest.TestCase):
         task.set_callback(done)
 
         task.run()
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
 
         task.cancel()
         done.assert_not_called()
         
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
 
         task.run()
         done.assert_not_called()
 
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
 
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         done.assert_called_with(task)
 
@@ -255,7 +255,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
         # after some time and running all accumulated glib events and stuff,
         # no job should be finished due to them being paused
-        time.sleep(0.6)
+        time.sleep(0.3)
         loop = GLib.MainLoop()
         context = loop.get_context()
         context.iteration(False)
@@ -293,7 +293,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
 
         self.q.cancel()
@@ -303,7 +303,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
         # after some time and running all accumulated glib events and stuff,
         # no job should be finished due to them not running anymore.
-        time.sleep(0.6)
+        time.sleep(0.3)
         context.iteration(False)
 
         self.assertEqual(len(self.q.done), 0)
@@ -313,7 +313,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.q.run()
         # even after resuming, time has to pass, but the previous progress of
         # 0.3 seconds should be reset.
-        time.sleep(0.3)
+        time.sleep(0.15)
         context.iteration(False)
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
@@ -322,9 +322,9 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         # only after some more time all are done, but don't sleep longer
         # than 0.3 more seconds, because after 0.5s they should be done.
         slept = 0 
-        while len(self.q.done) < self.num_tasks and slept < 0.3:
-            time.sleep(0.1)
-            slept += 0.1
+        while len(self.q.done) < self.num_tasks and slept < 0.15:
+            time.sleep(0.05)
+            slept += 0.05
             context.iteration(False)
 
         self.assertEqual(len(self.q.done), self.num_tasks)

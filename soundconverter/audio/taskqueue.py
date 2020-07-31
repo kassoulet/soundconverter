@@ -23,6 +23,7 @@ import time
 from queue import Queue
 
 from soundconverter.util.settings import get_num_jobs
+from soundconverter.util.logger import logger
 
 
 class TaskQueue:
@@ -86,11 +87,14 @@ class TaskQueue:
             A completed task
         """
         self.done.append(task)
-        self.running.remove(task)
+        if task not in self.running:
+            logger.warning('tried to remove task that was already removed')
+        else:
+            self.running.remove(task)
         if self.pending.qsize() > 0:
             self.start_next()
         elif len(self.running) == 0:
-            # TODO add all of this to a callback added in ui:
+            # TODO add all of this to a callback (on_queue_finished) added in ui:
             # all tasks done done
 
             """self.window.set_sensitive()

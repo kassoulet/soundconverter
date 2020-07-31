@@ -69,23 +69,10 @@ Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 import soundconverter  # TODO i don't need that right?
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.util.formats import get_mime_type, get_mime_type_mapping
 from soundconverter.interface.batch import CLI_Convert, cli_tags_main, \
-    CLI_Check, use_memory_gsettings
+    CLI_Check, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
-
-
-def check_mime_type(t):
-    """Exit soundconverter if the type is not supported"""
-    mime = get_mime_type(t)
-    if mime is None:
-        logger.info('Cannot use "{}" mime type.'.format(mime))
-        msg = 'Supported shortcuts and mime types:'
-        for k, v in sorted(get_mime_type_mapping().items()):
-            msg += ' {} {}'.format(k, v)
-        logger.info(msg)
-        raise SystemExit
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -114,8 +101,8 @@ def parse_command_line():
     """
     parser = ModifiedOptionParser(
         epilog='\nExample:\n  '
-        'soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o ' +
-        '[output dir] -Q 4\n'
+        'soundconverter -b [file] [dir] -r -m mp3 -o ' +
+        '[output dir] -Q 320\n'
     )
 
     parser.add_option(
@@ -239,8 +226,8 @@ else:
         parser.error('-m output-mime-type argument is required')
     if 'output-path' not in options:
         parser.error('-o output-path argument is required')
-    check_mime_type(options['output-mime-type'])
     # now store the rest of the CLI args in the gio settings
+    validate_args(options)
     use_memory_gsettings(options)
     if not files:
         logger.info('nothing to do…')

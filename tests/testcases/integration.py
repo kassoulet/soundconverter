@@ -55,7 +55,7 @@ def quote(ss):
     return urllib.parse.quote(ss)
 
 
-class Batch(unittest.TestCase):
+class BatchIntegration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.makedirs("tests/tmp", exist_ok=True)
@@ -69,7 +69,8 @@ class Batch(unittest.TestCase):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as ctx:
             launch([
-                "-b", "-q", "tests/test data/empty", "-m", "audio/mpeg"
+                "-b", "tests/test data/empty", "-m", "audio/mpeg",
+                "-o", "tmp"
             ])
         exit_code = ctx.exception.code
         self.assertEqual(exit_code, 1)
@@ -79,7 +80,8 @@ class Batch(unittest.TestCase):
         # are not audiofiles
         with self.assertRaises(SystemExit) as cm:
             launch([
-                "-b", "-r", "-q", "tests/test data/empty", "-m", "audio/mpeg"
+                "-b", "-r", "tests/test data/empty", "-m", "audio/mpeg",
+                "-o", "tmp"
             ])
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
@@ -89,7 +91,6 @@ class Batch(unittest.TestCase):
         launch([
             "-b", "tests/test data/audio",
             "-r",
-            "-q",
             "-o", "tests/tmp",
             "-m", "audio/mpeg"
             ])
@@ -105,7 +106,6 @@ class Batch(unittest.TestCase):
             "tests/test data/audio/a.wav",
             "tests/test data/empty",
             "-r",
-            "-q",
             "-o", "tests/tmp",
             "-m", "audio/x-m4a"
             ])

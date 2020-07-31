@@ -140,6 +140,8 @@ def filename_to_uri(filename, prefix='file://'):
         filename = urllib.parse.quote(filename)
         uri = match[0] + filename
     else:
+        # convert to absolute path
+        filename = os.path.realpath(filename)
         # it's a normal path. If it happens to contain %25, it might be
         # part of the album name or something. ' %20' should become '%20%2520'
         uri = prefix + urllib.parse.quote(filename)
