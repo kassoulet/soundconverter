@@ -61,19 +61,11 @@ class Discoverer(Task):
         # fast task, don't care
         pass
 
-    def _add_tag(self, taglist, tag):
-        """Convert the taglist to a dict one by one."""
-        tag_type = Gst.tag_get_type(tag)
-
-        if tag_type in type_getters:
-            getter = getattr(taglist, type_getters[tag_type])
-            value = str(getter(tag)[1])
-            self.sound_file.tags[tag] = value
-
-        if 'datetime' in tag:
-            dt = taglist.get_date_time(tag)[1]
-            self.sound_file.tags['year'] = dt.get_year()
-            self.sound_file.tags['date'] = dt.to_iso8601_string()[:10]
+    def run(self):
+        discoverer = GstPbutils.Discoverer()
+        discoverer.connect('discovered', self._discovered)
+        discoverer.start()
+        discoverer.discover_uri_async(self.sound_file.uri)
 
     def _discovered(self, _, info, error):
         """The uri has been processed."""
@@ -87,8 +79,16 @@ class Discoverer(Task):
             self.readable = False
             self.callback()
 
-    def run(self):
-        discoverer = GstPbutils.Discoverer()
-        discoverer.connect('discovered', self._discovered)
-        discoverer.start()
-        discoverer.discover_uri_async(self.sound_file.uri)
+    def _add_tag(self, taglist, tag):
+        """Convert the taglist to a dict one by one."""
+        tag_type = Gst.tag_get_type(tag)
+
+        if tag_type in type_getters:
+            getter = getattr(taglist, type_getters[tag_type])
+            value = str(getter(tag)[1])
+            self.sound_file.tags[tag] = value
+
+        if 'datetime' in tag:
+            dt = taglist.get_date_time(tag)[1]
+            self.sound_file.tags['year'] = dt.get_year()
+            self.sound_file.tags['date'] = dt.to_iso8601_string()[:10]

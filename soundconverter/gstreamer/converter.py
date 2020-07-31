@@ -319,7 +319,7 @@ class Converter(Task):
                 self.temporary_filename
             ))
             vfs_unlink(self.temporary_filename)
-            logger.info('Could not convert {}: {}'.format(
+            logger.info('could not convert {}: {}'.format(
                 beautify_uri(input_uri), self.error
             ))
             self.callback()
@@ -358,7 +358,7 @@ class Converter(Task):
             vfs_rename(self.temporary_filename, newname)
         except Exception as e:
             self.error = str(e)
-            logger.info('Could not rename {} to {}:'.format(
+            logger.info('could not rename {} to {}:'.format(
                 beautify_uri(self.temporary_filename), beautify_uri(newname)
             ))
             logger.info(traceback.print_exc())
@@ -367,7 +367,7 @@ class Converter(Task):
 
         assert vfs_exists(newname)
 
-        logger.info("Converted '{}' to '{}'".format(
+        logger.info("converted '{}' to '{}'".format(
             beautify_uri(input_uri), beautify_uri(newname)
         ))
 
@@ -385,7 +385,7 @@ class Converter(Task):
         if self.delete_original and not self.error:
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
-                logger.info('Cannot remove \'{}\''.format(
+                logger.info('cannot remove \'{}\''.format(
                     beautify_uri(self.sound_file.uri)
                 ))
 

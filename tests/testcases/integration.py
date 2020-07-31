@@ -41,7 +41,10 @@ from util import reset_settings
 
 
 def launch(argv=[]):
-    """Start the soundconverter with the command line argument array argv."""
+    """Start the soundconverter with the command line argument array argv.
+
+    Is synchronous, so after that you can start checking conversion results.
+    """
     testargs = sys.argv.copy()[:2]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
@@ -88,7 +91,7 @@ class BatchIntegration(unittest.TestCase):
 
     def testRecursiveEmpty(self):
         # it should exit with code 2, because files are found but they
-        # are not audiofiles
+        # are not audio files
         with self.assertRaises(SystemExit) as cm:
             launch([
                 '-b', '-r', 'tests/test data/empty', '-f', 'audio/mpeg',
@@ -104,7 +107,7 @@ class BatchIntegration(unittest.TestCase):
             '-r',
             '-o', 'tests/tmp',
             '-f', 'audio/mpeg'
-            ])
+        ])
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.mp3'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.mp3'))
@@ -119,14 +122,32 @@ class BatchIntegration(unittest.TestCase):
             '-r',
             '-o', 'tests/tmp',
             '-f', 'audio/x-m4a'
-            ])
+        ])
         # The batch mode behaves like the cp command:
         # - input is a folder, has to provide -r, output is a folder
         # - input is a file, output is a file
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.m4a'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.m4a'))
+        # a.wav was provided twice, so here is it again but this time without
+        # subfolder, just like the input.
         self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
+
+    def testCheck(self):
+        # it should start and not raise exceptions
+        launch([
+            '-c',
+            'tests/test data/',
+            '-r'
+        ])
+
+    def testTags(self):
+        # it should start and not raise exceptions
+        launch([
+            '-t',
+            'tests/test data/',
+            '-r'
+        ])
 
 
 class GUI(unittest.TestCase):

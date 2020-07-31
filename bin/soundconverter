@@ -50,6 +50,7 @@ else:
 
 try:
     import gi
+    gi.require_version('GstPbutils', '1.0')
     gi.require_version('Gst', '1.0')
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
@@ -104,9 +105,7 @@ def parse_command_line():
         '-c', '--check', dest='mode', action='callback',
         callback=mode_callback, callback_kwargs={'mode': 'check'},
         help=_(
-            'Log which files cannot be read by gstreamer. '
-            'Useful before converting. This will disable the GUI and '
-            'run in batch mode, from the command line.'
+            'Print all audio files in the specified directories'
         )
     )
     parser.add_option(

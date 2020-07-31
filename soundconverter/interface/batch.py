@@ -22,8 +22,6 @@
 """Batch mode to run soundconverter in a console."""
 
 import os
-import sys
-import time
 
 from gi.repository import GLib, Gio
 from soundconverter.util.soundfile import SoundFile
@@ -52,44 +50,56 @@ def use_memory_gsettings(options):
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
-    # the number of jobs is only applied, when limit-jobs is true
-    forced_jobs = options.get('forced-jobs', None)
-    if forced_jobs is not None:
-        gio_settings.set_boolean('limit-jobs', True)
-        gio_settings.set_int('number-of-jobs', options['forced-jobs'])
+    # no pattern based subfolders supported yet. Use the subfolders relative
+    # to the input directory instead
+    gio_settings.set_boolean('create-subfolders', False)
+
+    if options['mode'] == 'batch':
+        # the number of jobs is only applied, when limit-jobs is true
+        forced_jobs = options.get('forced-jobs', None)
+        if forced_jobs is not None:
+            gio_settings.set_boolean('limit-jobs', True)
+            gio_settings.set_int('number-of-jobs', options['forced-jobs'])
+        else:
+            gio_settings.set_boolean('limit-jobs', False)
+
+        mime_type = get_mime_type(options['format'])
+        gio_settings.set_string('output-mime-type', mime_type)
+
+        output_path = filename_to_uri(options['output-path'])
+        gio_settings.set_string('selected-folder', output_path)
+
+        gio_settings.set_boolean('same-folder-as-input', False)
+
+        # enable custom patterns by setting the index to the last entry
+        gio_settings.set_int('subfolder-pattern-index', -1)
     else:
-        gio_settings.set_boolean('limit-jobs', False)
-
-    mime_type = get_mime_type(options['format'])
-    gio_settings.set_string('output-mime-type', mime_type)
-
-    output_path = filename_to_uri(options['output-path'])
-    gio_settings.set_string('selected-folder', output_path)
-
-    gio_settings.set_boolean('same-folder-as-input', False)
-
-    # enable custom patterns by setting the index to the last entry
-    gio_settings.set_int('subfolder-pattern-index', -1)
+        # --tags and --check
+        gio_settings.set_boolean('limit-jobs', True)
+        gio_settings.set_int('number-of-jobs', 1)
 
 
 def validate_args(options):
     """Check if required command line args are provided."""
-    if options['output-path'] is None:
-        logger.error('output path argument -o is required')
-        raise SystemExit
+    if options['mode'] == 'batch':
+        # not needed for --check and --tags
 
-    mime = options['format']
-    if mime is None:
-        logger.error('format argument -f is required')
-        raise SystemExit
-    mime = get_mime_type(mime)
-    if mime is None:
-        logger.error('Cannot use "{}" mime type.'.format(mime))
-        msg = 'Supported shortcuts and mime types:'
-        for k, v in sorted(get_mime_type_mapping().items()):
-            msg += ' {} {}'.format(k, v)
-        logger.info(msg)
-        raise SystemExit
+        if options['output-path'] is None:
+            logger.error('output path argument -o is required')
+            raise SystemExit
+
+        mime = options['format']
+        if mime is None:
+            logger.error('format argument -f is required')
+            raise SystemExit
+        mime = get_mime_type(mime)
+        if mime is None:
+            logger.error('cannot use "{}" mime type.'.format(mime))
+            msg = 'Supported shortcuts and mime types:'
+            for k, v in sorted(get_mime_type_mapping().items()):
+                msg += ' {} {}'.format(k, v)
+            logger.info(msg)
+            raise SystemExit
 
 
 def prepare_files_list(input_files):
@@ -181,6 +191,7 @@ class CLIConvert:
         # converted.
         file_checker = CLICheck(input_files)
         input_files = file_checker.input_files
+        subdirectories = file_checker.subdirectories
 
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -195,19 +206,24 @@ class CLIConvert:
         self.num_conversions = 0
 
         logger.info('\npreparing converters…')
-        for i, input_file in enumerate(input_files):
-            if input_file not in file_checker.get_audio_uris():
+        audio_uris = file_checker.get_audio_uris()
+        for input_file, subdirectory in zip(input_files, subdirectories):
+            if input_file not in audio_uris:
                 filename = beautify_uri(input_file)
                 logger.info(
                     'skipping \'{}\': not an audiofile'.format(filename)
                 )
                 continue
 
-            input_file = SoundFile(input_file)
+            sound_file = SoundFile(input_file)
+            # by storing it in subfolders, the original subfolder structure
+            # (relative to the directory that was provided as input in the
+            # cli) can be restored in the target dir:
+            sound_file.subfolders = subdirectory
 
-            output_uri = name_generator.generate_target_path(input_file)
+            output_uri = name_generator.generate_target_path(sound_file)
 
-            c = Converter(input_file, output_uri, name_generator)
+            c = Converter(sound_file, output_uri, name_generator)
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')
@@ -285,7 +301,8 @@ class CLICheck:
 
         typefinders = TaskQueue()
         for input_file in input_files:
-            typefinders.add(Discoverer(SoundFile(input_file)))
+            sound_file = SoundFile(input_file)
+            typefinders.add(Discoverer(sound_file))
         typefinders.run()
 
         loop = GLib.MainLoop()
@@ -301,15 +318,15 @@ class CLICheck:
         if print_readable:
             for discoverer in self.discoverers:
                 sound_file = discoverer.sound_file
-                if sound_file.readable:
+                if discoverer.readable:
                     self.print(sound_file)
                 elif self.print_not_readable:
                     logger.info('{} is not an audiofile'.format(
-                        unquote_filename(beautify_uri(sound_file.uri)))
+                        beautify_uri(sound_file.uri))
                     )
 
     def get_audio_uris(self):
-        """Get a list of all SoundFile objects that can be converted."""
+        """Get a list of all SoundFile uris that can be converted."""
         return [
             discoverer.sound_file.uri for discoverer in self.discoverers
             if discoverer.readable
@@ -317,11 +334,12 @@ class CLICheck:
 
     def print(self, sound_file):
         """Print tags of a file, or write that it doesn't have tags."""
-        logger.info(unquote_filename(sound_file.filename))
+        logger.info(beautify_uri(sound_file.uri))
 
         if self.print_tags:
             if len(sound_file.tags) > 0:
                 for key in sorted(sound_file.tags):
-                    logger.info(('    {}: {}'.format(key, sound_file.tags[key])))
+                    value = sound_file.tags[key]
+                    logger.info(('    {}: {}'.format(key, value)))
             else:
                 logger.info(('    no tags found'))

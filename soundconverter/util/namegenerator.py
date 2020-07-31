@@ -310,19 +310,23 @@ class TargetNameGenerator:
     def _get_target_subfolder(self, sound_file):
         """Get subfolders that should be created for the target file.
 
-        They may also already exist, for example because a previous conversion
-        created them.
+        Might be None. They may also already exist, for example because a
+        previous conversion created them.
         """
+        basename_pattern = self.basename_pattern
+        subfolder_pattern = self.subfolder_pattern
+
         subfolder = None
         if self.create_subfolders:
-            subfolder = self.fill_pattern(sound_file, self.subfolder_pattern)
-        elif sound_file.subfolders is not None and '/' not in self.basename_pattern:
+            subfolder = self.fill_pattern(sound_file, subfolder_pattern)
+        elif sound_file.subfolders is not None and '/' not in basename_pattern:
             # use existing subfolders between base_path and the soundfile, but
             # only if the basename_pattern does not create subfolders.
             # For example:
             # .subfolders may have a structure of artist/album,
             # whereas basename might create a new structure of year/artist
             subfolder = os.path.join(sound_file.subfolders)
+        print(id(sound_file), 'subfolder', subfolder, sound_file.subfolders)
         return subfolder
 
     def _get_common_target_uri(self, sound_file):
@@ -355,6 +359,7 @@ class TargetNameGenerator:
         for_display : bool
             Format it nicely in order to print it somewhere
         """
+        print('generate_target_path')
         # the beginning of the uri that all soundfiles will have in common
         # does not need to be processed in safe_name.
         parent_uri = self._get_common_target_uri(sound_file)
