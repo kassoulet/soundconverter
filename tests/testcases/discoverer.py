@@ -33,6 +33,7 @@ class DiscovererTest(unittest.TestCase):
     def test_read_tags(self):
         c_mp3 = 'file://' + os.path.realpath('tests/test%20data/audio/b/c.mp3')
         discoverer = Discoverer(SoundFile(c_mp3))
+        discoverer.set_callback(lambda _: None)
         discoverer.run()
         # should be asynchronous, nothing done yet
         self.assertEqual(discoverer.readable, None)
@@ -50,6 +51,7 @@ class DiscovererTest(unittest.TestCase):
     def test_not_audio(self):
         c_mp3 = 'file://' + os.path.realpath('tests/test%20data/empty/a')
         discoverer = Discoverer(SoundFile(c_mp3))
+        discoverer.set_callback(lambda _: None)
         discoverer.run()
         # should be asynchronous, nothing done yet
         self.assertEqual(discoverer.readable, None)

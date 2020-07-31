@@ -237,7 +237,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.s = SoundFile("file:///path/to/file")
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
-            "/path/to/file.aac"
+            "/path/to/file.m4a"
         )
 
     def testBasename(self):
