@@ -121,11 +121,11 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         gio_settings = get_gio_settings()
         gio_settings.set_int('name-pattern-index', 0)
         gio_settings.set_int('subfolder-pattern-index', 0)
+        gio_settings.set_boolean('same-folder-as-input', False)
+        gio_settings.set_string('selected-folder', 'file:///test/')
+        gio_settings.set_boolean('create-subfolders', True)
+        gio_settings.set_boolean('replace-messy-chars', True)
         self.g = TargetNameGenerator()
-        self.g.replace_messy_chars = True
-        self.g.create_subfolders = True
-        self.g.same_folder_as_input = False
-        self.g.selected_folder = None
 
         self.s = SoundFile("file:///path/to/file.flac")
         self.s.tags.update({
@@ -227,6 +227,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # figures out the suffix when created
         self.g = TargetNameGenerator()
         self.g.same_folder_as_input = True
+        self.g.create_subfolders = False
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/path/to/file.ogg"
@@ -238,6 +239,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g = TargetNameGenerator()
         self.s = SoundFile("file:///path/to/file")
         self.g.same_folder_as_input = True
+        self.g.create_subfolders = False
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/path/to/file.m4a"

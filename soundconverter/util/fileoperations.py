@@ -86,7 +86,6 @@ def vfs_rename(original, newname):
     """Rename a gnomevfs file."""
     gforiginal = Gio.file_parse_name(original)
     gfnew = Gio.file_parse_name(newname)
-    logger.debug('Creating folder \'{}\'?'.format(gfnew.get_parent().get_uri()))
     if not gfnew.get_parent().query_exists(None):
         logger.debug('Creating folder: \'{}\''.format(gfnew.get_parent().get_uri()))
         Gio.File.make_directory_with_parents(gfnew.get_parent(), None)

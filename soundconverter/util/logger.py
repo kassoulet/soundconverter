@@ -27,7 +27,8 @@ import logging
 
 class Formatter(logging.Formatter):
     def format(self, record):
-        if record.levelno == logging.INFO:
+        if record.levelno == logging.INFO and not settings['debug']:
+            # if not launched with --debug, then don't print "INFO:"
             self._style._fmt = '%(msg)s'
         else:
             # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
@@ -36,7 +37,8 @@ class Formatter(logging.Formatter):
                 logging.WARNING: 33,
                 logging.ERROR: 31,
                 logging.FATAL: 31,
-                logging.DEBUG: 36
+                logging.DEBUG: 36,
+                logging.INFO: 32,
             }.get(record.levelno, 0)
             self._style._fmt = (
                 '\033[{}m%(levelname)s\033[0m: '

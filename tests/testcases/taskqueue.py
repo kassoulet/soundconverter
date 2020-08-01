@@ -25,7 +25,7 @@ import threading
 from unittest.mock import Mock
 from gi.repository import GLib, Gst
 
-from soundconverter.util.taskqueue import TaskQueue
+from soundconverter.util.taskqueue import TaskQueue, Timer
 from soundconverter.util.task import Task
 from soundconverter.util.settings import get_gio_settings
 from util import reset_settings
@@ -78,7 +78,7 @@ class AsyncSleepTask(Task):
 
     def async_stuff(self, bus):
         """Sleep for some time and emit an event for GLib."""
-        # sleep for a total of 0.5s, simulate some sort of task that can
+        # sleep for a total of 0.25s, simulate some sort of task that can
         # be paused.
         while self.progress < 1:
             if self.paused:
@@ -256,6 +256,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
         self.assertEqual(len(self.q.done), 0)
+        self.assertEqual(self.q.get_duration(), 0)
 
         self.q.run()
         self.assertFalse(self.q.paused)
@@ -263,12 +264,15 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.running), self.num_jobs)
 
         time.sleep(0.1)
+        self.assertGreater(self.q.get_duration(), 0.08)
         self.assertGreater(self.q.get_progress(), 0)
         self.assertLess(self.q.get_progress(), 1)
         self.assertGreater(self.q.running[0].get_progress(), 0)
         self.assertLess(self.q.running[0].get_progress(), 1)
         self.assertGreater(self.q.running[0].get_progress(), 0)
         self.assertLess(self.q.running[0].get_progress(), 1)
+
+        duration_before = self.q.get_duration()
 
         self.q.pause()
         self.assertTrue(self.q.paused)
@@ -289,7 +293,12 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
+        # possibly some miniscule time passes until the pause time is
+        # stored in self.q, so allow for some small difference
+        self.assertLess(abs(duration_before - self.q.get_duration()), 0.001)
+
         self.q.resume()
+        self.assertLess(abs(duration_before - self.q.get_duration()), 0.001)
         self.assertFalse(self.q.paused)
         # even after resuming, time has to pass
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
@@ -311,7 +320,12 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.get_progress(), 1)
         self.assertEqual(self.q.done[0].get_progress(), 1)
 
+        duration = self.q.get_duration()
+        time.sleep(0.05)
+        self.assertLess(abs(self.q.get_duration() - duration), 0.001)
+
     def test_cancel_run(self):
+        # all tasks are running at once
         self.num_jobs = 5
         get_gio_settings().set_int('number-of-jobs', self.num_jobs)
         
@@ -321,6 +335,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
+        self.assertEqual(self.q.get_duration(), 0)
 
         self.q.run()
         self.assertEqual(len(self.q.done), 0)
@@ -330,10 +345,12 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.get_progress(), 0)
         time.sleep(0.15)
         context.iteration(False)
+        self.assertGreater(self.q.get_duration(), 0.1)
         self.assertGreater(self.q.get_progress(), 0)
         self.assertLess(self.q.get_progress(), 1)
 
         self.q.cancel()
+        self.assertEqual(self.q.get_duration(), 0)
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
@@ -344,6 +361,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         time.sleep(0.3)
         context.iteration(False)
 
+        self.assertEqual(self.q.get_duration(), 0)
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
@@ -354,6 +372,8 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         # 0.3 seconds should be reset.
         time.sleep(0.15)
         context.iteration(False)
+
+        self.assertGreater(self.q.get_duration(), 0.1)
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
@@ -361,7 +381,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertLess(self.q.get_progress(), 1)
 
         # only after some more time all are done, but don't sleep longer
-        # than 0.3 more seconds, because after 0.5s they should be done.
+        # than 0.15 more seconds, because after 0.25s they should be done.
         slept = 0 
         while len(self.q.done) < self.num_tasks and slept < 0.15:
             time.sleep(0.05)
@@ -372,6 +392,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
         self.assertEqual(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_duration(), 0.2)
 
 
 class TaskQueueTest(unittest.TestCase):
@@ -405,6 +426,7 @@ class TaskQueueTest(unittest.TestCase):
         self.assertEqual(len(q.done), 0)
         self.assertEqual(q.pending.qsize(), 1)
         self.assertEqual(len(q.running), 0)
+        self.assertEqual(q.get_duration(), 0)
 
         q.run()
         self.assertEqual(len(q.done), 0)
@@ -425,6 +447,34 @@ class TaskQueueTest(unittest.TestCase):
         self.assertEqual(len(q.done), 1)
         self.assertEqual(q.pending.qsize(), 0)
         self.assertEqual(len(q.running), 0)
+        self.assertGreater(q.get_duration(), 0.2)
+
+
+class TestTimer(unittest.TestCase):
+    def test(self):
+        timer = Timer()
+        time.sleep(0.01)
+        self.assertEqual(timer.get_duration(), 0)
+        timer.start()
+        self.assertLess(timer.get_duration(), 0.001)
+        time.sleep(0.01)
+        self.assertLess(timer.get_duration(), 0.011)
+        timer.pause()
+        time.sleep(0.01)
+        self.assertLess(timer.get_duration(), 0.011)
+        timer.resume()
+        time.sleep(0.01)
+        self.assertLess(timer.get_duration(), 0.021)
+        timer.pause()
+        time.sleep(0.01)
+        timer.resume()
+        self.assertLess(timer.get_duration(), 0.021)
+        timer.reset()
+        time.sleep(0.01)
+        self.assertEqual(timer.get_duration(), 0)
+        timer.start()
+        time.sleep(0.01)
+        self.assertLess(timer.get_duration(), 0.011)
 
 
 if __name__ == "__main__":

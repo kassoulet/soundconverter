@@ -29,16 +29,15 @@ from soundconverter.util.logger import logger
 class TaskQueue:
     """Executes multiple tasks in parallel."""
     def __init__(self):
-        self.on_queue_finished = None
-        self.run_start_time = None
+        self._on_queue_finished = None
 
         # state
         self.pending = Queue()
         self.running = []
         self.done = []
-        self.duration_processed = 0
         self.finished = False
         self.paused = False
+        self._timer = Timer()
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -56,17 +55,19 @@ class TaskQueue:
         running_progress = sum(task.get_progress() for task in self.running)
         num_tasks = len(self.done) + len(self.running) + self.pending.qsize()
         if num_tasks == 0:
-            return 0  # TODO or 1?
+            return None
         return (running_progress + len(self.done)) / num_tasks
 
     def pause(self):
         """Pause all tasks."""
+        self._timer.pause()
+        self.paused = True
         for task in self.running:
             task.pause()
-        self.paused = True
 
     def resume(self):
         """Resume all tasks after the queue has been paused."""
+        self._timer.resume()
         for task in self.running:
             task.resume()
         self.paused = False
@@ -79,7 +80,7 @@ class TaskQueue:
             # resume for such a functionality though.
             self.pending.put(task)
             task.cancel()
-
+        self._timer.reset()
         self.running = []
 
     def task_done(self, task):
@@ -101,8 +102,9 @@ class TaskQueue:
             self.start_next()
         elif len(self.running) == 0:
             self.finished = True
-            if self.on_queue_finished is not None:
-                self.on_queue_finished(self)
+            self._timer.stop()
+            if self._on_queue_finished is not None:
+                self._on_queue_finished(self)
 
     def start_next(self):
         """Start the next task if available."""
@@ -117,11 +119,60 @@ class TaskQueue:
         Finished tasks will trigger running the next task over the task_done
         callback.
         """
-        self.run_start_time = time.time()
+        self._timer.start()
         num_jobs = get_num_jobs()
         while self.pending.qsize() > 0 and len(self.running) < num_jobs:
             self.start_next()
 
     def set_on_queue_finished(self, on_queue_finished):
         """Add a custom function to be used when the queue finishes."""
-        self.on_queue_finished = on_queue_finished
+        self._on_queue_finished = on_queue_finished
+        
+    def get_duration(self):
+        return self._timer.get_duration()
+
+
+class Timer:
+    """Time how long the TaskQueue took."""
+    # separate class because I would like to not pollute the TaskQueue
+    # with a bunch of timing variables
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.run_start_time = None
+        self.pause_duration = 0
+        self.pause_time = None
+        self.finished_time = None
+
+    def stop(self):
+        self.finished_time = time.time()
+
+    def start(self):
+        self.run_start_time = time.time()
+
+    def pause(self):
+        self.pause_time = time.time()
+
+    def resume(self):
+        self.pause_duration += time.time() - self.pause_time
+        self.pause_time = None
+
+    def get_duration(self):
+        """Get for how many seconds the queue has been actively running.
+
+        The time spent while being paused is not included.
+        """
+        if self.run_start_time is None:
+            return 0
+        if self.pause_time is not None:
+            # still being paused
+            pause_duration = time.time() - self.pause_time
+        else:
+            pause_duration = self.pause_duration
+        if self.finished_time is None:
+            # still running
+            finished_time = time.time()
+        else:
+            finished_time = self.finished_time
+        return finished_time - self.run_start_time - pause_duration
