@@ -22,6 +22,7 @@
 import os
 import time
 import sys
+import datetime
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -37,10 +38,14 @@ from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern, get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
-    get_basename_pattern, get_subfolder_pattern
-from soundconverter.util.queue import TaskQueue
+    subfolder_patterns, basename_patterns
+from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.logger import logger
+from soundconverter.gstreamer.discoverer import Discoverer
+from soundconverter.gstreamer.converter import Converter, available_elements
 from soundconverter.util.error import show_error, set_error_handler
+from soundconverter.gstreamer.profiles import audio_profiles_list
+from soundconverter.interface.notify import notification
 
 # Names of columns in the file list
 MODEL = [
@@ -103,7 +108,7 @@ class FileList:
 
     def __init__(self, window, builder):
         self.window = window
-        self.typefinders = TaskQueue()
+        self.discoverers = TaskQueue()
         self.filelist = set()
 
         self.model = Gtk.ListStore(*MODEL)
@@ -149,10 +154,8 @@ class FileList:
 
         self.window.progressbarstatus.hide()
 
-        self.waiting_files = []
-        self.waiting_files_last = 0
-
         self.invalid_files_list = []
+        self.good_uris = []
 
     def drag_data_received(self, widget, context, x, y, selection, mime_id, time):
         widget.stop_emission('drag-data-received')
@@ -170,11 +173,6 @@ class FileList:
             self.window.progressbarstatus.pulse()
             return True
         return False
-
-    def found_type(self, sound_file, mime):
-        ext = os.path.splitext(sound_file.filename)[1]
-        logger.debug('mime: {} {}'.format(ext, mime))
-        self.good_files.append(sound_file.uri)
 
     @idle
     def add_uris(self, uris, base=None, extensions=None):
@@ -250,20 +248,19 @@ class FileList:
         logger.info('analysing file integrity')
         self.files_to_add = len(files)
 
-        # self.good_files will be populated
-        # by the typefinder, which calls self.found_type.
+        # self.good_uris will be populated
+        # by the discoverer.
         # It is a list of uris and only contains those files
-        # for which the mime type could be figured out
-        self.good_files = []
+        # that can be handled by gstreamer
+        self.good_uris = []
 
         for f in files:
             sound_file = SoundFile(f, base)
-            typefinder = TypeFinder(sound_file)
-            typefinder.set_found_type_hook(self.found_type)
-            self.typefinders.add_task(typefinder)
+            discoverer = Discoverer(sound_file)
+            self.discoverers.add(discoverer)
 
-        self.typefinders.queue_ended = self.typefinder_queue_ended
-        self.typefinders.start()
+        self.discoverers.set_on_queue_finished(self.discoverer_queue_ended)
+        self.discoverers.run()
 
         self.window.set_status('{}'.format(_('Adding Files…')))
         logger.info('adding: {} files'.format(len(files)))
@@ -272,10 +269,11 @@ class FileList:
         # so that the ui stays responsive
         self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
         self.window.progressbarstatus.set_show_text(True)
-        while(self.typefinders.running):
-            if self.typefinders.progress:
-                completed = int(self.typefinders.progress * len(files))
-                self.window.progressbarstatus.set_fraction(self.typefinders.progress)
+        while self.discoverers.running:
+            progress = self.discoverers.get_progress()
+            if progress:
+                completed = int(progress * len(files))
+                self.window.progressbarstatus.set_fraction(progress)
                 self.window.progressbarstatus.set_text('{}/{}'.format(completed, len(files)))
             gtk_iteration()
             # time.sleep(0.1)  # slows everything down. why does the taskqueue depend
@@ -299,7 +297,7 @@ class FileList:
             sound_file = SoundFile(f, base)
             # create a list of human readable file paths
             # that were not added to the list
-            if f not in self.good_files:
+            if f not in self.good_uris:
                 extension = os.path.splitext(f)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
@@ -357,32 +355,56 @@ class FileList:
             )
         )
 
-    def typefinder_queue_ended(self):
-        if not self.waiting_files:
-            self.window.set_status()
-            self.window.progressbarstatus.hide()
+    def discoverer_queue_ended(self, queue):
+        # all tasks done done
+        self.window.set_sensitive()
+        self.window.conversion_ended()
 
-    def abort(self):
-        self.typefinders.abort()
+        total_time = time.time() - queue.run_start_time
+        total_time_format = str(datetime.timedelta(seconds=total_time))
+        msg = _('Tasks done in %s') % total_time_format
+
+        errors = [
+            task.error for task in queue.done
+            if task.error is not None
+        ]
+        if len(errors) > 0:
+            msg += ', {} error(s)'.format(len(errors))
+
+        self.window.set_status(msg)
+        if not self.window.is_active():
+            notification(msg)
+
+        readable = [task for task in self.discoverers.done if task.readable]
+        self.good_uris = [task.sound_file.uri for task in readable]
+        self.window.set_status()
+        self.window.progressbarstatus.hide()
+
+    def cancel(self):
+        self.discoverers.cancel()
 
     def format_cell(self, sound_file):
         """Take a SoundFile and return a human readable path to it."""
         return GLib.markup_escape_text(unquote_filename(sound_file.filename))
 
-    def set_row_progress(self, number, progress=None, text=None):
+    def set_row_progress(self, number, progress):
+        """Update the progress bar of a single row/file."""
         self.progress_column.set_visible(True)
-        if progress is not None:
-            if self.model[number][2] == 1.0:
-                return  # already...
-            self.model[number][2] = progress * 100.0
-        if text is not None:
-            self.model[number][3] = text
+        if self.model[number][2] == 1.0:
+            return
+        self.model[number][2] = progress * 100.0
 
     def hide_row_progress(self):
         self.progress_column.set_visible(False)
 
     def append_file(self, sound_file):
-        """Add a SoundFile object to the list of files in the GUI."""
+        """Add a valid SoundFile object to the list of files in the GUI.
+
+        Parameters
+        ----------
+        sound_file : SoundFile
+            This soundfile is expected to be readable by gstreamer
+        """
         self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
                            sound_file.uri])
         self.filelist.add(sound_file.uri)
@@ -463,7 +485,6 @@ class PreferencesDialog(GladeWindow):
         # self.resample_rate.connect('changed', self._on_resample_rate_changed)
 
     def set_widget_initial_values(self, builder):
-
         self.quality_tabs.set_show_tabs(False)
 
         if self.settings.get_boolean('same-folder-as-input'):
@@ -495,7 +516,7 @@ class PreferencesDialog(GladeWindow):
         active = self.settings.get_int('subfolder-pattern-index')
         model = w.get_model()
         model.clear()
-        for pattern, desc in self.subfolder_patterns:
+        for pattern, desc in subfolder_patterns:
             i = model.append()
             model.set(i, 0, desc)
         w.set_active(active)
@@ -617,7 +638,7 @@ class PreferencesDialog(GladeWindow):
         active = self.settings.get_int('name-pattern-index')
         model = w.get_model()
         model.clear()
-        for pattern, desc in self.basename_patterns:
+        for pattern, desc in basename_patterns:
             iter = model.append()
             model.set(iter, 0, desc)
         w.set_active(active)
@@ -625,7 +646,7 @@ class PreferencesDialog(GladeWindow):
         self.custom_filename.set_text(
             self.settings.get_string('custom-filename-pattern')
         )
-        if self.basename_pattern.get_active() == len(self.basename_patterns)-1:
+        if self.basename_pattern.get_active() == len(basename_patterns)-1:
             self.custom_filename_box.set_sensitive(True)
         else:
             self.custom_filename_box.set_sensitive(False)
@@ -658,7 +679,7 @@ class PreferencesDialog(GladeWindow):
         )
 
     def update_example(self):
-        sound_file = SoundFile('foo/bar.flac')
+        sound_file = SoundFile('file:///foo/bar.flac')
         sound_file.tags.update({'track-number': 1, 'track-count': 99})
         sound_file.tags.update({'album-disc-number': 2, 'album-disc-count': 9})
         sound_file.tags.update(locale_patterns_dict)
@@ -759,7 +780,7 @@ class PreferencesDialog(GladeWindow):
 
     def on_basename_pattern_changed(self, combobox):
         self.settings.set_int('name-pattern-index', combobox.get_active())
-        if combobox.get_active() == len(self.basename_patterns)-1:
+        if combobox.get_active() == len(basename_patterns)-1:
             self.custom_filename_box.set_sensitive(True)
         else:
             self.custom_filename_box.set_sensitive(False)
@@ -1029,7 +1050,7 @@ class SoundConverterWindow(GladeWindow):
         # self.aboutdialog.set_property('version', VERSION)
         # self.aboutdialog.set_transient_for(self.widget)
 
-        self.converter = ConverterQueue(self)
+        self.converter_queue = TaskQueue()
 
         self.sensitive_widgets = {}
         for name in self.sensitive_names:
@@ -1055,8 +1076,8 @@ class SoundConverterWindow(GladeWindow):
 
     def close(self, *args):
         logger.debug('closing…')
-        self.filelist.abort()
-        self.converter.abort()
+        self.filelist.cancel()
+        self.converter_queue.cancel()
         self.widget.hide()
         self.widget.destroy()
         # wait one second…
@@ -1153,7 +1174,9 @@ class SoundConverterWindow(GladeWindow):
         self.showinvalid_dialog.hide()
 
     def on_progress(self):
-        if self.pulse_progress is not None:  #
+        """Refresh the progress bars of all running tasks."""
+        # TODO remove that block?
+        if self.pulse_progress is not None:
             if self.pulse_progress > 0:  # still waiting for tags
                 self.set_progress(self.pulse_progress, display_time=False)
                 return True
@@ -1161,23 +1184,22 @@ class SoundConverterWindow(GladeWindow):
                 self.set_progress()
                 return True
 
-        perfile = {}
-        for s in self.filelist.get_files():
-            perfile[s] = None
-        running, progress = self.converter.get_progress(perfile)
-        if running is True:
-            self.set_progress(progress)
-            for sound_file, taskprogress in perfile.items():
-                if taskprogress is None and sound_file.progress:
-                    self.set_file_progress(sound_file, 1.0)
-                    sound_file.progress = None
-                if taskprogress is not None and taskprogress > 0.0:
-                    sound_file.progress = taskprogress
-                    self.set_file_progress(sound_file, taskprogress)
-        return running
+        progress = self.converter_queue.get_progress()
+        self.set_progress(progress)
+
+        # TODO set progress to 0 for not running tasks? Maybe not here but
+        #  when the lits is created?
+        for converter in self.converter_queue.running:
+            sound_file = converter.sound_file
+            file_progress = converter.get_progress()
+            self.set_file_progress(sound_file, file_progress)
+        for converter in self.converter_queue.done:
+            sound_file = converter.sound_file
+            self.set_file_progress(sound_file, 1)
 
     def do_convert(self):
         """Start the conversion."""
+        name_generator = TargetNameGenerator()
         self.pulse_progress = -1
         GLib.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion…'))
@@ -1185,13 +1207,13 @@ class SoundConverterWindow(GladeWindow):
         total = len(files)
         for i, sound_file in enumerate(files):
             gtk_iteration()
-            self.pulse_progress = i/total  # TODO: still needed?
-            sound_file.progress = None
-            self.converter.add(sound_file)
+            self.pulse_progress = i / total  # TODO: still needed?
+            # sound_file.progress = None  # TODO removed progress from sound_file
+            self.converter_queue.add(Converter(sound_file, name_generator))
         # all was OK
         self.set_status()
         self.pulse_progress = None
-        self.converter.start()
+        self.converter_queue.run()
         self.set_sensitive()
 
     def on_convert_button_clicked(self, *args):
@@ -1210,15 +1232,15 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def on_button_pause_clicked(self, *args):
-        self.converter.toggle_pause(not self.converter.paused)
-
-        if self.converter.paused:
+        if self.converter_queue.paused:
+            self.converter_queue.resume()
             self.current_pause_start = time.time()
         else:
+            self.converter_queue.pause()
             self.paused_time += time.time() - self.current_pause_start
 
     def on_button_cancel_clicked(self, *args):
-        self.converter.abort()
+        self.converter_queue.cancel()
         self.set_status(_('Canceled'))
         self.set_sensitive()
         self.conversion_ended()
@@ -1267,9 +1289,9 @@ class SoundConverterWindow(GladeWindow):
     def set_sensitive(self):
         """Update the sensitive state of UI for the current state."""
         for w in self.unsensitive_when_converting:
-            self.set_widget_sensitive(w, not self.converter.running)
+            self.set_widget_sensitive(w, not self.converter_queue.running)
 
-        if not self.converter.running:
+        if not self.converter_queue.running:
             self.set_widget_sensitive(
                 'remove',
                 self.filelist_selection.count_selected_rows() > 0
@@ -1280,10 +1302,13 @@ class SoundConverterWindow(GladeWindow):
             )
 
     def set_file_progress(self, sound_file, progress):
+        """Show the progress bar of a single file in the UI."""
         row = sound_file.filelist_row
         self.filelist.set_row_progress(row, progress)
 
     def set_progress(self, fraction=None, display_time=True):
+        converter_queue = self.converter_queue
+
         if not fraction:
             if fraction is None:
                 self.progressbar.pulse()
@@ -1294,17 +1319,17 @@ class SoundConverterWindow(GladeWindow):
             self.filelist.hide_row_progress()
             return
 
-        if self.converter.paused:
+        if converter_queue.paused:
             self.progressbar.set_text(_('Paused'))
-            self.widget.set_title('{} - {}'.format(_('SoundConverter'), _('Paused')))
+            title = '{} - {}'.format(_('SoundConverter'), _('Paused'))
+            self.widget.set_title(title)
             return
 
         fraction = min(max(fraction, 0.0), 1.0)
         self.progressbar.set_fraction(fraction)
 
         if display_time:
-            t = time.time() - self.converter.run_start_time - \
-                              self.paused_time
+            t = time.time() - converter_queue.run_start_time - self.paused_time
             if t < 1:
                 # wait a bit not to display crap
                 self.progressbar.pulse()
@@ -1318,7 +1343,8 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
             self.progress_time = time.time()
-            self.widget.set_title('{} - {}'.format(_('SoundConverter'), remaining))
+            title = '{} - {}'.format(_('SoundConverter'), remaining)
+            self.widget.set_title(title)
 
     def set_status(self, text=None, ready=True):
         if not text:
@@ -1365,10 +1391,6 @@ def gui_main(name, version, gladefile, input_files):
     window = SoundConverterWindow(builder)
 
     set_error_handler(ErrorDialog(builder))
-
-    # error_dialog = MsgAreaErrorDialog(builder)
-    # error_dialog.msg_area = win.msg_area
-    # set_error_handler(error_dialog)
 
     window.filelist.add_uris(input_files)
     window.set_sensitive()

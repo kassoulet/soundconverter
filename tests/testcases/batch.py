@@ -43,14 +43,21 @@ class BatchUtils(unittest.TestCase):
         settings['recursive'] = False
         parsed_files, subdirectories = prepare_files_list(['tests/test data/audio/b/'])
         self.assertEqual(len(parsed_files), 0)
+        self.assertEqual(len(subdirectories), 0)
 
     def test_prepare_files_list_multiple(self):
         settings['recursive'] = True
         parsed_files, subdirectories = prepare_files_list(['tests/test data/audio/'])
+
         self.assertEqual(len(parsed_files), 3)
         self.assertIn('file://' + os.path.realpath('tests/test%20data/audio/b/c.mp3'), parsed_files)
         self.assertIn('file://' + os.path.realpath('tests/test%20data/audio/a.wav'), parsed_files)
         self.assertIn('file://' + urllib.parse.quote(os.path.realpath('tests/test data/audio/strângë chàrs фズ.wav')), parsed_files)
+
+        self.assertEqual(len(subdirectories), 3)
+        self.assertIn('audio/b/', subdirectories)
+        self.assertIn('audio/', subdirectories)
+        self.assertIn('audio/', subdirectories)
 
 
 if __name__ == "__main__":

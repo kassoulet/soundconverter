@@ -31,7 +31,7 @@ from soundconverter.util.formats import get_quality_setting_name, \
     get_mime_type, get_mime_type_mapping
 from soundconverter.gstreamer.converter import Converter
 from soundconverter.gstreamer.discoverer import Discoverer
-from soundconverter.gstreamer.taskqueue import TaskQueue
+from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.fileoperations import unquote_filename, \
     filename_to_uri, beautify_uri
@@ -106,8 +106,17 @@ def prepare_files_list(input_files):
     """Create a list of all URIs in a list of paths.
 
     Also returns a list of relative directories. This is used to reconstruct
-    the directory structure in
-    the output path if -o is provided.
+    the directory structure in the output path.
+
+    If input_files is ['/a/b', '/c']
+    and files are found at ['file:///a/b/d.mp3', '[file:///c/e/f/g.mp3'],
+    subdirectories will be ['', 'e/f']
+
+    If input_path is a/b/c/ anad the file is at a/b/c/e/f/d.mp3,
+    the subdirectries entry will be subdirectories c/e/f/.
+
+    Subdirectories might be different for various files because
+    multiple paths can be provided in the args.
 
     Parameters
     ----------
@@ -115,7 +124,7 @@ def prepare_files_list(input_files):
         Array of paths
     """
     # The GUI has its own way of going through subdirectories.
-    # Provide similar functionality to the cli.
+
     # If one of the files is a directory, walk over the files in that
     # and append each one to parsed_files if -r is provided.
     subdirectories = []
@@ -145,13 +154,8 @@ def prepare_files_list(input_files):
                     for filename in filenames:
                         if dirpath[-1] != os.sep:
                             dirpath += os.sep
+                        # dirpath: for example a/b/c/e/f/
                         parsed_files.append(dirpath + filename)
-                        # if input_path is a/b/c/, filename is d.mp3
-                        # and dirpath is a/b/c/e/f/, then append c/e/f/
-                        # to subdirectories.
-                        # The root might be different for various files because
-                        # multiple paths can be provided in the args. Hence
-                        # this is needed.
                         subdir = os.path.relpath(dirpath, parent) + os.sep
                         if subdir == './':
                             subdir = ''
@@ -214,9 +218,7 @@ class CLIConvert:
                 )
                 continue
 
-            output_uri = name_generator.generate_target_path(sound_file)
-
-            c = Converter(sound_file, output_uri, name_generator)
+            c = Converter(sound_file, name_generator)
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')
@@ -288,25 +290,25 @@ class CLICheck:
             # "use -r to go into subdirectories"
             exit(1)
 
-        typefinders = TaskQueue()
+        discoverers = TaskQueue()
         for subdirectory, input_file in zip(subdirectories, input_files):
             sound_file = SoundFile(input_file)
             # by storing it in subfolders, the original subfolder structure
             # (relative to the directory that was provided as input in the
             # cli) can be restored in the target dir:
             sound_file.subfolders = subdirectory
-            typefinders.add(Discoverer(sound_file))
-        typefinders.run()
+            discoverers.add(Discoverer(sound_file))
+        discoverers.run()
 
         loop = GLib.MainLoop()
         context = loop.get_context()
 
-        while not typefinders.finished:
+        while not discoverers.finished:
             # main_iteration is needed for the typefinder taskqueue to run
             # calling this like crazy is the fastest way
             context.iteration(True)
 
-        self.discoverers = typefinders.done
+        self.discoverers = discoverers.done
 
         if print_readable:
             for discoverer in self.discoverers:
