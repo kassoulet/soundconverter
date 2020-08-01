@@ -360,7 +360,7 @@ class FileList:
         self.window.set_sensitive()
         self.window.conversion_ended()
 
-        total_time = time.time() - queue.run_start_time
+        total_time = queue.get_duration()
         total_time_format = str(datetime.timedelta(seconds=total_time))
         msg = _('Tasks done in %s') % total_time_format
 
@@ -392,6 +392,7 @@ class FileList:
         self.progress_column.set_visible(True)
         if self.model[number][2] == 1.0:
             return
+
         self.model[number][2] = progress * 100.0
 
     def hide_row_progress(self):
@@ -977,7 +978,6 @@ class SoundConverterWindow(GladeWindow):
     ]
 
     def __init__(self, builder):
-        self.paused_time = 0
         GladeWindow.__init__(self, builder)
 
         self.widget = builder.get_object('window')
@@ -1050,7 +1050,7 @@ class SoundConverterWindow(GladeWindow):
         # self.aboutdialog.set_property('version', VERSION)
         # self.aboutdialog.set_transient_for(self.widget)
 
-        self.converter_queue = TaskQueue()
+        self.converter_queue = None
 
         self.sensitive_widgets = {}
         for name in self.sensitive_names:
@@ -1175,44 +1175,39 @@ class SoundConverterWindow(GladeWindow):
 
     def on_progress(self):
         """Refresh the progress bars of all running tasks."""
-        # TODO remove that block?
-        if self.pulse_progress is not None:
-            if self.pulse_progress > 0:  # still waiting for tags
-                self.set_progress(self.pulse_progress, display_time=False)
-                return True
-            if self.pulse_progress == -1:  # still waiting for add
-                self.set_progress()
-                return True
+        paused = self.converter_queue.paused
+        running = len(self.converter_queue.running) > 0
+        if not paused and running:
+            progress = self.converter_queue.get_progress()
+            self.set_progress(progress)
 
-        progress = self.converter_queue.get_progress()
-        self.set_progress(progress)
+            for converter in self.converter_queue.running:
+                sound_file = converter.sound_file
+                file_progress = converter.get_progress()
+                self.set_file_progress(sound_file, file_progress)
+            for converter in self.converter_queue.done:
+                sound_file = converter.sound_file
+                self.set_file_progress(sound_file, 1)
 
-        # TODO set progress to 0 for not running tasks? Maybe not here but
-        #  when the lits is created?
-        for converter in self.converter_queue.running:
-            sound_file = converter.sound_file
-            file_progress = converter.get_progress()
-            self.set_file_progress(sound_file, file_progress)
-        for converter in self.converter_queue.done:
-            sound_file = converter.sound_file
-            self.set_file_progress(sound_file, 1)
+        if not paused and not running:
+            self.filelist.hide_row_progress()
+            return False
+
+        # return True to keep the GLib timeout running
+        return True
 
     def do_convert(self):
         """Start the conversion."""
         name_generator = TargetNameGenerator()
-        self.pulse_progress = -1
         GLib.timeout_add(100, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
-        total = len(files)
+        self.converter_queue = TaskQueue()
         for i, sound_file in enumerate(files):
             gtk_iteration()
-            self.pulse_progress = i / total  # TODO: still needed?
-            # sound_file.progress = None  # TODO removed progress from sound_file
             self.converter_queue.add(Converter(sound_file, name_generator))
         # all was OK
         self.set_status()
-        self.pulse_progress = None
         self.converter_queue.run()
         self.set_sensitive()
 
@@ -1221,7 +1216,6 @@ class SoundConverterWindow(GladeWindow):
         self.set_progress(0)
         self.progress_frame.show()
         self.status_frame.hide()
-        self.progress_time = time.time()
         self.set_progress()
         self.set_status(_('Converting'))
         for soundfile in self.filelist.get_files():
@@ -1234,10 +1228,8 @@ class SoundConverterWindow(GladeWindow):
     def on_button_pause_clicked(self, *args):
         if self.converter_queue.paused:
             self.converter_queue.resume()
-            self.current_pause_start = time.time()
         else:
             self.converter_queue.pause()
-            self.paused_time += time.time() - self.current_pause_start
 
     def on_button_cancel_clicked(self, *args):
         self.converter_queue.cancel()
@@ -1271,7 +1263,6 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
 
     def conversion_ended(self):
-        self.pulse_progress = False
         self.progress_frame.hide()
         self.filelist.hide_row_progress()
         self.status_frame.show()
@@ -1286,12 +1277,17 @@ class SoundConverterWindow(GladeWindow):
     def set_widget_sensitive(self, name, sensitivity):
         self.sensitive_widgets[name].set_sensitive(sensitivity)
 
+    def is_running(self):
+        """Is a conversion (both paused and running) currently going on?"""
+        queue = self.converter_queue
+        return queue is not None and queue.running
+
     def set_sensitive(self):
         """Update the sensitive state of UI for the current state."""
         for w in self.unsensitive_when_converting:
-            self.set_widget_sensitive(w, not self.converter_queue.running)
+            self.set_widget_sensitive(w, not self.is_running())
 
-        if not self.converter_queue.running:
+        if not self.is_running():
             self.set_widget_sensitive(
                 'remove',
                 self.filelist_selection.count_selected_rows() > 0
@@ -1306,14 +1302,14 @@ class SoundConverterWindow(GladeWindow):
         row = sound_file.filelist_row
         self.filelist.set_row_progress(row, progress)
 
-    def set_progress(self, fraction=None, display_time=True):
+    def set_progress(self, progress=None, display_time=True):
         converter_queue = self.converter_queue
 
-        if not fraction:
-            if fraction is None:
+        if not progress:
+            if progress is None:
                 self.progressbar.pulse()
             else:
-                self.progressbar.set_fraction(0)
+                self.progressbar.set_progress(0)
                 self.progressbar.set_text('')
             self.progressfile.set_markup('')
             self.filelist.hide_row_progress()
@@ -1325,24 +1321,23 @@ class SoundConverterWindow(GladeWindow):
             self.widget.set_title(title)
             return
 
-        fraction = min(max(fraction, 0.0), 1.0)
-        self.progressbar.set_fraction(fraction)
+        progress = min(max(progress, 0.0), 1.0)
+        self.progressbar.set_fraction(progress)
 
         if display_time:
-            t = time.time() - converter_queue.run_start_time - self.paused_time
-            if t < 1:
+            duration = converter_queue.get_duration()
+            if duration < 1:
                 # wait a bit not to display crap
                 self.progressbar.pulse()
                 return
 
-            r = (t / fraction - t)
-            s = max(r % 60, 1)
-            m = r / 60
+            remaining = (duration / progress - duration)
+            seconds = max(remaining % 60, 1)
+            minutes = remaining / 60
 
-            remaining = _('%d:%02d left') % (m, s)
+            remaining = _('%d:%02d left') % (minutes, seconds)
             self.progressbar.set_text(remaining)
             self.progressbar.set_show_text(True)
-            self.progress_time = time.time()
             title = '{} - {}'.format(_('SoundConverter'), remaining)
             self.widget.set_title(title)
 

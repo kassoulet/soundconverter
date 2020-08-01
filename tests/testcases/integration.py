@@ -25,6 +25,7 @@
 import unittest
 from unittest.mock import patch
 import os
+import time
 import sys
 import shutil
 import urllib.parse
@@ -44,7 +45,8 @@ from util import reset_settings
 def launch(argv=[]):
     """Start the soundconverter with the command line argument array argv.
 
-    Is synchronous, so after that you can start checking conversion results.
+    The batch mode is synchronous (for some unknown reason), so after that
+    you can start checking conversion results.
     """
     testargs = sys.argv.copy()[:1]
     testargs += argv
@@ -185,7 +187,8 @@ class BatchIntegration(unittest.TestCase):
 class GUI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # reset quality settings
+        # reset quality settings, since they may be invalid for the ui mode
+        # (e.g. an aribtrary mp3 quality of 200 does not exist for the ui)
         gio_settings = get_gio_settings()
         gio_settings.set_int('mp3-abr-quality', get_quality('mp3', -1, 'abr'))
         gio_settings.set_int('mp3-vbr-quality', get_quality('mp3', -1, 'vbr'))
@@ -193,6 +196,15 @@ class GUI(unittest.TestCase):
         gio_settings.set_int('opus-bitrate', get_quality('opus', -1))
         gio_settings.set_int('aac-quality', get_quality('aac', -1))
         gio_settings.set_double('vorbis-quality', get_quality('ogg', -1))
+
+        # conversion setup
+        gio_settings.set_boolean('create-subfolders', False)
+        gio_settings.set_boolean('same-folder-as-input', False)
+        selected_folder = filename_to_uri('tests/tmp')
+        gio_settings.set_string('selected-folder', selected_folder)
+        gio_settings.set_int('name-pattern-index', 0)
+        gio_settings.set_boolean('replace-messy-chars', True)
+        gio_settings.set_boolean('delete-original', False)
 
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
@@ -223,32 +235,40 @@ class GUI(unittest.TestCase):
             'tests/test data/audio/strângë chàrs фズ.wav',
             'tests/test data/audio/b/c.mp3'
         ]
+        uris = [filename_to_uri(path) for path in expected_filelist]
         self.assertCountEqual(
-            [filename_to_uri(path) for path in expected_filelist],
+            uris,
             win[0].filelist.filelist
         )
+        for uri in uris:
+            self.assertIn(uri, win[0].filelist.filelist)
 
         # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
-        gio_settings.set_boolean('create-subfolders', False)
-        gio_settings.set_boolean('same-folder-as-input', False)
-        selected_folder = filename_to_uri('tests/tmp')
-        gio_settings.set_string('selected-folder', selected_folder)
-        gio_settings.set_int('name-pattern-index', 0)
-        gio_settings.set_boolean('replace-messy-chars', True)
-        gio_settings.set_boolean('delete-original', False)
 
         # start conversion
         window.on_convert_button_clicked()
 
         # wait for the assertions until all files are converted
-        converter_queue = window.converter_queue
-        while not converter_queue.finished:
+        queue = window.converter_queue
+        converter = queue.running[0]
+        sound_file = queue.running[0].sound_file
+        while not queue.finished:
             # as Gtk.main is replaced by gtk_iteration, the unittests
             # are responsible about when soundconverter continues
             # to work on the conversions and updating the GUI
             gtk_iteration()
-        self.assertEqual(len(converter_queue.done), len(expected_filelist))
+            print(
+                window.filelist.model[sound_file.filelist_row][2],
+                converter.get_progress()
+            )
+
+        duration = queue.get_duration()
+        time.sleep(0.05)
+        # The duration may not increase by 0.05 seconds, because it's finished
+        self.assertLess(abs(queue.get_duration() - duration), 0.001)
+
+        self.assertEqual(len(queue.done), len(expected_filelist))
 
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.opus'))
@@ -256,6 +276,79 @@ class GUI(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.opus'))
         # no duplicates in the GUI:
         self.assertFalse(os.path.isfile('tests/tmp/a.opus'))
+
+    def testPauseResume(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+
+        launch([
+            'tests/test data/audio/a.wav'
+        ])
+        self.assertEqual(settings['mode'], 'gui')
+        window = win[0]
+
+        expected_filelist = [
+            'tests/test data/audio/a.wav'
+        ]
+        self.assertCountEqual(
+            [filename_to_uri(path) for path in expected_filelist],
+            win[0].filelist.filelist
+        )
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+
+        # start conversion
+        window.on_convert_button_clicked()
+        queue = window.converter_queue
+        converter = queue.running[0]
+        sound_file = queue.running[0].sound_file
+        self.assertEqual(len(queue.running), 1)
+        self.assertEqual(len(queue.done), 0)
+        self.assertEqual(queue.pending.qsize(), 0)
+        gtk_iteration()
+
+        window.on_button_pause_clicked()  # pause
+
+        duration = queue.get_duration()
+        # my computer needs ~0.03 seconds to convert it. So sleep some
+        # significantly longer time than that to make sure pause actually
+        # pauses the conversion.
+        time.sleep(0.5)
+        gtk_iteration()
+        self.assertEqual(len(queue.running), 1)
+        self.assertEqual(len(queue.done), 0)
+        self.assertEqual(queue.pending.qsize(), 0)
+        self.assertLess(abs(queue.get_duration() - duration), 0.001)
+        self.assertFalse(os.path.isfile('tests/tmp/a.opus'))
+
+        window.on_button_pause_clicked()  # resume
+
+        start = time.time()
+        while not queue.finished:
+            gtk_iteration()
+            print(
+                window.filelist.model[sound_file.filelist_row][2],
+                converter.get_progress()
+            )
+        if time.time() - start > 0.4:
+            print(
+                'The test may not work as intended because the conversion'
+                'may take longer than the pause duration.'
+            )
+
+        self.assertEqual(len(queue.running), 0)
+        self.assertEqual(len(queue.done), 1)
+        self.assertEqual(queue.pending.qsize(), 0)
+        self.assertGreater(queue.get_duration(), duration)
+        self.assertEqual(queue.get_progress(), 1)
+
+        converter_queue = window.converter_queue
+        self.assertEqual(len(converter_queue.done), len(expected_filelist))
+
+        self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
+
+        self.assertEqual(window.filelist.model[sound_file.filelist_row][2], 1)
 
 
 if __name__ == '__main__':

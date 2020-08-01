@@ -33,6 +33,7 @@ from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
 from soundconverter.util.task import Task
 from soundconverter.gstreamer.profiles import audio_profiles_dict
+from soundconverter.gstreamer.discoverer import type_getters
 
 
 GSTREAMER_SOURCE = 'giosrc'
@@ -210,19 +211,37 @@ class Converter(Task):
         """Ask for the stream position of the current pipeline."""
         try:
             if self.pipeline:
+                # during Gst.State.PAUSED it returns super small numbers,
+                # so take care
                 position = self.pipeline.query_position(Gst.Format.TIME)[1]
                 return max(0, position / Gst.SECOND)
         except Gst.QueryError:
             pass
         return 0
 
+    def _query_duration(self):
+        """Ask for the duration of the current pipeline."""
+        try:
+            pipeline = self.pipeline
+            if not self.sound_file.duration and pipeline:
+                duration = pipeline.query_duration(Gst.Format.TIME)[1]
+                seconds = duration / Gst.SECOND
+                self.sound_file.duration = seconds
+                if self.sound_file.duration <= 0:
+                    self.sound_file.duration = None
+            else:
+                return self.sound_file.duration
+        except Gst.QueryError:
+            self.sound_file.duration = None
+
     def get_progress(self):
         """Fraction of how much of the task is completed."""
         if not self.done:
             position = self._query_position()
-            if self.sound_file.duration is None:
+            duration = self._query_duration()
+            if duration is None:
                 return 0
-            progress = position / self.sound_file.duration
+            progress = position / duration
             progress = min(max(progress, 0.0), 1.0)
             return progress
         else:
@@ -480,8 +499,17 @@ class Converter(Task):
         taglist : Gst.TagList
         """
         filename = self.sound_file.filename_for_display
-        logger.debug('found_tag: {}'.format(filename))
+        tags_before = self.sound_file.tags.copy()
         taglist.foreach(self._append_tag, None)
+        filename_logged = False
+        for key, value in self.sound_file.tags.items():
+            if tags_before.get(key, None) != value:
+                # if any tag changed or was added, log it
+                if not filename_logged:
+                    # log the filename, but not once per tag
+                    logger.debug('found tag: {}'.format(filename))
+                filename_logged = True
+                logger.debug('    {}: {}'.format(key, value))
 
     def _append_tag(self, taglist, tag, _):
         """Write tags to the soundfile.
@@ -489,6 +517,12 @@ class Converter(Task):
         Remember them in order to construct the final output path based on the
         filename pattern.
         """
+        if tag in self.sound_file.tags:
+            # Duplicate tag messages may arrive. Ignore those, don't spam logs
+            # (Which isn't unusual and also mentioned in the documentation:)
+            # https://gstreamer.freedesktop.org/documentation/application-development/advanced/metadata.html # noqa
+            return
+
         tag_whitelist = (
             'album-artist',
             'artist',
@@ -511,13 +545,6 @@ class Converter(Task):
             return
 
         tag_type = Gst.tag_get_type(tag)
-        type_getters = {
-            GObject.TYPE_STRING: 'get_string',
-            GObject.TYPE_DOUBLE: 'get_double',
-            GObject.TYPE_FLOAT: 'get_float',
-            GObject.TYPE_INT: 'get_int',
-            GObject.TYPE_UINT: 'get_uint',
-        }
 
         tags = {}
         if tag_type in type_getters:
@@ -529,5 +556,4 @@ class Converter(Task):
             tags['year'] = datetime.get_year()
             tags['date'] = datetime.to_iso8601_string()[:10]
 
-        logger.debug('    {}'.format(tags))
         self.sound_file.tags.update(tags)
