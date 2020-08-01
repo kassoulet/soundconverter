@@ -125,6 +125,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.replace_messy_chars = True
         self.g.create_subfolders = True
         self.g.same_folder_as_input = False
+        self.g.selected_folder = None
 
         self.s = SoundFile("file:///path/to/file.flac")
         self.s.tags.update({
@@ -225,6 +226,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         get_gio_settings().set_string('output-mime-type', 'audio/x-vorbis')
         # figures out the suffix when created
         self.g = TargetNameGenerator()
+        self.g.same_folder_as_input = True
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/path/to/file.ogg"
@@ -235,6 +237,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # figures out the suffix when created
         self.g = TargetNameGenerator()
         self.s = SoundFile("file:///path/to/file")
+        self.g.same_folder_as_input = True
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/path/to/file.m4a"
@@ -269,6 +272,56 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(
             self.g.generate_target_path(self.s),
             "file:///mu%20sic/file%20with%20spaces.ogg"
+        )
+
+    def testBasenameWithSpaces(self):
+        uri = 'file:///spa%20ce/sub%20folder/foo.mp3'
+        self.s = SoundFile(uri, 'file:///spa%20ce/')
+        self.g.replace_messy_chars = False
+        self.g.suffix = "ogg"
+        self.g.create_subfolders = False
+        self.g.same_folder_as_input = True
+        self.assertEqual(
+            self.g.generate_target_path(self.s),
+            "file:///spa%20ce/sub%20folder/foo.ogg"
+        )
+
+    def testBasenameWithSpacesMessy(self):
+        uri = 'file:///spa%20ce/sub%20folder/foo.mp3'
+        self.s = SoundFile(uri, 'file:///spa%20ce/')
+        self.g.replace_messy_chars = True
+        self.g.suffix = "ogg"
+        self.g.create_subfolders = False
+        self.g.same_folder_as_input = True
+        self.assertEqual(
+            self.g.generate_target_path(self.s),
+            "file:///spa%20ce/sub_folder/foo.ogg"
+        )
+
+    def testBasenameWithSpacesExisting(self):
+        base_path = 'file:///' + os.getcwd() + '/tests/test%20data'
+        uri = base_path + '/audio/a.wav'
+        self.s = SoundFile(uri, base_path)
+        self.g.replace_messy_chars = False
+        self.g.suffix = "ogg"
+        self.g.create_subfolders = False
+        self.g.same_folder_as_input = True
+        self.assertEqual(
+            self.g.generate_target_path(self.s),
+            base_path + '/audio/a.ogg'
+        )
+
+    def testBasenameWithSpacesExistingMessy(self):
+        base_path = 'file:///' + os.getcwd() + '/tests/test%20data'
+        uri = base_path + '/audio/a.wav'
+        self.s = SoundFile(uri, base_path)
+        self.g.replace_messy_chars = True
+        self.g.suffix = "ogg"
+        self.g.create_subfolders = False
+        self.g.same_folder_as_input = True
+        self.assertEqual(
+            self.g.generate_target_path(self.s),
+            base_path + '/audio/a.ogg'
         )
 
     def testURI(self):
@@ -555,6 +608,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = "ogg"
         self.g.basename_pattern = "/home/foo/%(title)s"
+        self.g.selected_folder = "/"
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/home/foo/Hi_Ho.ogg"
@@ -600,6 +654,74 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             self.g.generate_target_path(self.s, False),
             'file://' + quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg")
         )
+
+    # temporary filename generation
+
+    def testTemporary1(self):
+        self.s = SoundFile('file:///foo/bar.mp3')
+        self.g.same_folder_as_input = False
+        self.g.replace_messy_chars = True
+        self.g.selected_folder = 'file:///music'
+        temp_path = self.g.generate_temp_path(self.s)
+        expected = 'file:///music/bar.mp3_'
+        self.assertTrue(
+            temp_path.startswith(expected),
+            'expected {} to start with {}'.format(temp_path, expected)
+        )
+        self.assertTrue(temp_path.endswith('_SC_'))
+
+    def testTemporary2(self):
+        self.s = SoundFile('file:///foo/bar.mp3', 'file:///')
+        # base_path 'file:///' will be ignored
+        self.g.same_folder_as_input = False
+        self.g.replace_messy_chars = False
+        self.g.selected_folder = 'file:///music'
+        temp_path = self.g.generate_temp_path(self.s)
+        expected = 'file:///music/bar.mp3~'
+        self.assertTrue(
+            temp_path.startswith(expected),
+            'expected {} to start with {}'.format(temp_path, expected)
+        )
+        self.assertTrue(temp_path.endswith('~SC~'))
+
+    def testTemporary3(self):
+        self.s = SoundFile('file:///foo/bar.mp3')
+        self.g.same_folder_as_input = True
+        self.g.replace_messy_chars = True
+        self.g.selected_folder = 'file:///etfdzhdrudf'
+        temp_path = self.g.generate_temp_path(self.s)
+        expected = 'file:///foo/bar.mp3_'
+        self.assertTrue(
+            temp_path.startswith(expected),
+            'expected {} to start with {}'.format(temp_path, expected)
+        )
+        self.assertTrue(temp_path.endswith('_SC_'))
+
+    def testTemporary4(self):
+        self.s = SoundFile('file:///foo/bar.mp3')
+        self.g.same_folder_as_input = True
+        self.g.replace_messy_chars = False
+        self.g.selected_folder = 'file:///etfdzhdrudf'
+        temp_path = self.g.generate_temp_path(self.s)
+        expected = 'file:///foo/bar.mp3~'
+        self.assertTrue(
+            temp_path.startswith(expected),
+            'expected {} to start with {}'.format(temp_path, expected)
+        )
+        self.assertTrue(temp_path.endswith('~SC~'))
+
+    def testTemporary5(self):
+        self.s = SoundFile('file:///foo/test/bar.mp3', 'file:///foo/')
+        self.g.same_folder_as_input = True
+        self.g.replace_messy_chars = False
+        self.g.selected_folder = 'file:///etfdzhdrudf'
+        temp_path = self.g.generate_temp_path(self.s)
+        expected = 'file:///foo/bar.mp3~'
+        self.assertTrue(
+            temp_path.startswith(expected),
+            'expected {} to start with {}'.format(temp_path, expected)
+        )
+        self.assertTrue(temp_path.endswith('~SC~'))
 
 
 if __name__ == "__main__":

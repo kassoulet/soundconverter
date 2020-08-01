@@ -71,7 +71,7 @@ class SoundFile:
                 )
             self.base_path = base_path
             subfolders, filename = os.path.split(uri[len(base_path):])
-            self.subfolders = subfolders
+            self.subfolders = unquote_filename(subfolders)
             self.filename = filename
         else:
             self.base_path, self.filename = os.path.split(self.uri)

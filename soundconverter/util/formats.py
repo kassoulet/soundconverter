@@ -23,6 +23,7 @@ import math
 from gettext import gettext as _
 
 from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.logger import logger
 from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 # add here any format you want to be read
@@ -95,7 +96,8 @@ def get_mime_type_mapping():
     profile = get_gio_settings().get_string('audio-profile')
     mime_types = {
         'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
-        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a', 'm4a': 'audio/x-m4a'
+        'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a', 'm4a': 'audio/x-m4a',
+        'opus': 'audio/ogg; codecs=opus'
     }
     if profile in audio_profiles_dict:
         profile_ext = audio_profiles_dict[profile][1] if profile else ''
@@ -223,7 +225,8 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
     ftype : string
         'ogg', 'aac', 'opus', 'flac', 'wav' or 'mp3'
     value : number
-        between 0 and 5, or 0 and 2 for flac and wav
+        between 0 and 5, or 0 and 2 for flac and wav. -1 indexes the highest
+        quality.
     mode : string
         one of 'cbr', 'abr' and 'vbr' for mp3
     reverse : bool
@@ -231,6 +234,9 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         value-parameter given a quality setting. Value becomes the input for
         the quality then.
     """
+    if ftype == 'm4a':
+        ftype = 'aac'
+
     quality = {
         'ogg': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
         'aac': (64, 96, 128, 192, 256, 320),
@@ -257,11 +263,26 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
             for i, q in enumerate(qualities):
                 if abs(value - q) < 0.01:
                     return i
-        return qualities.index(value)
+        if value in qualities:
+            return qualities.index(value)
+        else:
+            # might be some custom value set e.g. in batch mode.
+            # the reverse mode is only interesting for the ui though, because
+            # it has predefined qualities as opposed to batch. So this is
+            # either a setting leaking from some tests or the batch mode
+            # persisted something.
+            if ftype == 'mp3':
+                ftype_mode = '{} {}'.format(ftype, mode)
+            else:
+                ftype_mode = ftype
+            logger.warn(
+                'tried to index unknow {} quality {}'.format(ftype_mode, value)
+            )
+            return None
     else:
         # normal index
-        if value > len(qualities) or value < 0:
-            raise ValueError('quality index {} out of range 0 - {}'.format(
+        if value > len(qualities):
+            raise ValueError('quality index {} has to be < {}'.format(
                 value, len(qualities)
             ))
         return qualities[value]

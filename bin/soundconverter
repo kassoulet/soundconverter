@@ -129,11 +129,13 @@ def parse_command_line():
     )
     parser.add_option(
         '-q', '--quiet', action="store_true", dest="quiet",
-        help=_("Be quiet. Don't write normal output, only errors.")
+        help=_("Be quiet. Don't write normal output, only errors."),
+        default=False
     )
     parser.add_option(
         '-d', '--debug', action="store_true", dest="debug",
-        help=_('Displays additional debug information')
+        help=_('Displays additional debug information'),
+        default=False
     )
     parser.add_option(
         '-j', '--jobs', action='store', type='int', dest='forced-jobs',
@@ -160,7 +162,8 @@ def parse_command_line():
     )
     batch_option_group.add_option(
         '-r', '--recursive', action="store_true", dest="recursive",
-        help=_('Go recursively into subdirectories')
+        help=_('Go recursively into subdirectories'),
+        default=False
     )
     batch_option_group.add_option(
         '-i', '--ignore', action="store_true", dest="ignore-existing",
@@ -202,10 +205,10 @@ parser = parse_command_line()
 options, files = parser.parse_args(args)
 options = vars(options)
 # the only cli args that are not available over gio settings.
-settings['mode'] = options.get('mode', 'gui')
-settings['quiet'] = options.get('quiet', False)
-settings['debug'] = options.get('debug', False)
-settings['recursive'] = options.get('recursive', False)
+settings['mode'] = options['mode'] or 'gui'
+settings['quiet'] = options['quiet']
+settings['debug'] = options['debug']
+settings['recursive'] = options['recursive']
 
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()

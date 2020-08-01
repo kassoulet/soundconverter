@@ -21,7 +21,7 @@
 
 from gi.repository import Gst, GObject, GstPbutils
 
-from soundconverter.gstreamer.task import Task
+from soundconverter.util.task import Task
 
 type_getters = {
     GObject.TYPE_STRING: 'get_string',
@@ -33,13 +33,14 @@ type_getters = {
 
 
 class Discoverer(Task):
-    """Find type and tags of a sound_file if possible."""
+    """Find type and tags of a SoundFile if possible."""
 
     def __init__(self, sound_file):
-        """Find type and tags of a sound_file if possible."""
+        """Find type and tags of a SoundFile if possible."""
         self.sound_file = sound_file
         self.readable = None
         self.tags = None
+        self.error = None
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
@@ -69,6 +70,7 @@ class Discoverer(Task):
 
     def _discovered(self, _, info, error):
         """The uri has been processed."""
+        self.error = error
         if error is None:
             taglist = info.get_tags()
             taglist.foreach(self._add_tag)

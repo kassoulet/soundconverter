@@ -108,6 +108,9 @@ def split_URI(uri):
     [0]: scheme and authority, might be None if not an uri
     [1]: filename
     """
+    if type(uri) != str:
+        raise ValueError('cannot split {} {}'.format(type(uri), uri))
+
     match = re.match(r'^([a-zA-Z]+://([^/]+?/){0,1}){0,1}(.*)', uri)
     if match is None:
         # not an uri

@@ -112,20 +112,18 @@ class TargetNameGenerator:
         self.suffix = get_file_extension(self.output_mime_type)
 
         # Enforcing such rules helps to avoid undefined and untested
-        # behaviour of functions.
-
-        # If you wish to provide an uri scheme like ftp:// it should be in
-        # the selected_folder instead.
-        if is_URI(self.basename_pattern) or is_URI(self.subfolder_pattern):
-            raise ValueError(
-                'patterns should be patterns, not complete URIs.'
-            )
-
+        # behaviour of functions and to reduce their complexity.
         if not self.same_folder_as_input and not is_URI(self.selected_folder):
             raise ValueError(
                 'your selected folder {} should be in URI format.'.format(
                     self.selected_folder
                 )
+            )
+        # If you wish to provide an uri scheme like ftp:// it should be in
+        # the selected_folder instead.
+        if is_URI(self.basename_pattern) or is_URI(self.subfolder_pattern):
+            raise ValueError(
+                'patterns should be patterns, not complete URIs.'
             )
 
     @staticmethod
@@ -234,18 +232,16 @@ class TargetNameGenerator:
         return safe
 
     def fill_pattern(self, sound_file, pattern):
-        """Fill tags into a filename pattern for sound_file.
+        """Fill tags into a filename pattern for a SoundFile.
 
         Parameters
         ----------
         sound_file : SoundFile
         pattern : string
-            For example '%(album-artist)s/%(album)s/%(title)s'
+            For example '%(album-artist)s/%(album)s/%(title)s'. Should not
+            be an URI
         """
         tags = sound_file.tags
-
-        # the pattern might be in an URI
-        uri_prefix, pattern = split_URI(pattern)
 
         filename = beautify_uri(sound_file.uri)
         filename = os.path.basename(filename)
@@ -288,24 +284,21 @@ class TargetNameGenerator:
         # now fill the tags in the pattern with values:
         result = pattern % d
 
-        if uri_prefix is not None:
-            result = filename_to_uri(result, uri_prefix)
-
         return result
 
-    def generate_temp_path(self, soundfile):
+    def generate_temp_path(self, sound_file):
         """Generate a random filename that doesn't exist yet."""
-        folder, basename = os.path.split(soundfile.uri)
-        if not self.same_folder_as_input:
-            folder = self.selected_folder
-            folder = urllib.parse.quote(folder, safe='/:@')
+        folder, basename = os.path.split(sound_file.uri)
+        parent_uri = self._get_common_target_uri(sound_file)
         while True:
             rand = str(random())[-6:]
-            filename = folder + '/' + basename + '~' + rand + '~SC~'
             if self.replace_messy_chars:
-                filename = TargetNameGenerator.safe_name(filename)
-            if not vfs_exists(filename):
-                return filename
+                filename = basename + '~' + rand + '~SC~'
+                final_uri = TargetNameGenerator.safe_name(filename, parent_uri)
+            else:
+                final_uri = parent_uri + basename + '~' + rand + '~SC~'
+            if not vfs_exists(final_uri):
+                return final_uri
 
     def _get_target_subfolder(self, sound_file):
         """Get subfolders that should be created for the target file.
@@ -323,17 +316,23 @@ class TargetNameGenerator:
             # use existing subfolders between base_path and the soundfile, but
             # only if the basename_pattern does not create subfolders.
             # For example:
-            # .subfolders may have a structure of artist/album,
+            # .subfolders may have an existing structure of artist/album,
             # whereas basename might create a new structure of year/artist
-            subfolder = os.path.join(sound_file.subfolders)
+            print('sound_file.subfolders', sound_file.subfolders)
+            subfolder = sound_file.subfolders
         return subfolder
 
     def _get_common_target_uri(self, sound_file):
-        """Get the directory into which all files are converted."""
+        """Get the directory into which all files are converted.
+
+        Ends with '/'
+        """
         if self.same_folder_as_input:
             parent = sound_file.base_path
         else:
             parent = self.selected_folder
+        if not parent.endswith('/'):
+            parent += '/'
         # ensure it is an URI, possibly adding file://
         return filename_to_uri(parent)
 
@@ -373,6 +372,10 @@ class TargetNameGenerator:
             child = filename
         # child should be quoted to form a proper URI together with parent
         child = urllib.parse.quote(child)
+
+        if child.startswith('/'):
+            # os.path.join will omit parent_uri otherwise
+            child = child[1:]
 
         # subfolder and basename need to be cleaned
         if self.replace_messy_chars:

@@ -38,6 +38,7 @@ class TaskQueue:
         self.done = []
         self.duration_processed = 0
         self.finished = False
+        self.paused = False
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -54,17 +55,21 @@ class TaskQueue:
         """Get the fraction of tasks that have been completed."""
         running_progress = sum(task.get_progress() for task in self.running)
         num_tasks = len(self.done) + len(self.running) + self.pending.qsize()
+        if num_tasks == 0:
+            return 0  # TODO or 1?
         return (running_progress + len(self.done)) / num_tasks
 
     def pause(self):
         """Pause all tasks."""
         for task in self.running:
             task.pause()
+        self.paused = True
 
     def resume(self):
         """Resume all tasks after the queue has been paused."""
         for task in self.running:
             task.resume()
+        self.paused = False
 
     def cancel(self):
         """Stop all tasks."""
@@ -95,27 +100,6 @@ class TaskQueue:
         if self.pending.qsize() > 0:
             self.start_next()
         elif len(self.running) == 0:
-            # TODO add all of this to a callback (on_queue_finished) added in ui:
-            # all tasks done done
-
-            """self.window.set_sensitive()
-            self.window.conversion_ended()
-
-            total_time = time.time() - self.run_start_time
-            total_time_format = str(datetime.timedelta(seconds=total_time))
-            msg = _('Tasks done in %s') % total_time_format
-
-            errors = [
-                task.error for task in self.done
-                if task.error is not None
-            ]
-            if len(errors) > 0:
-                msg += ', {} error(s)'.format(len(errors))
-
-            self.window.set_status(msg)
-            if not self.window.is_active():
-                notification(msg)"""
-
             self.finished = True
             if self.on_queue_finished is not None:
                 self.on_queue_finished(self)

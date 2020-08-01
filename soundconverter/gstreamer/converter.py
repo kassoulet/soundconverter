@@ -31,7 +31,7 @@ from soundconverter.util.fileoperations import vfs_encode_filename, \
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
-from soundconverter.gstreamer.task import Task
+from soundconverter.util.task import Task
 from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 
@@ -175,21 +175,17 @@ def create_audio_profile():
 class Converter(Task):
     """Completely handle the conversion of a single file."""
 
-    def __init__(self, sound_file, output_filename, name_generator):
+    def __init__(self, sound_file, name_generator):
         """create a converter that converts a single file.
 
         Parameters
         ----------
-        output_filename : string
-            Where to place the file. Can be a pattern like
-            %(album-artist)s/%(album)s
         name_generator : TargetNameGenerator
             TargetNameGenerator that creates filenames for all converters
             of the current TaskQueue
         """
         # Configuration
         self.sound_file = sound_file
-        self.output_filename = output_filename
         self.temporary_filename = None
         self.overwrite = False
         self.name_generator = name_generator
@@ -234,16 +230,7 @@ class Converter(Task):
 
     def cancel(self):
         """Cancel execution of the task."""
-        # remove partial file
-        try:
-            vfs_unlink(self.temporary_filename)
-        except Exception as e:
-            logger.error('cannot delete: \'{}\': {}'.format(
-                beautify_uri(self.temporary_filename),
-                str(e)
-            ))
         self._stop_pipeline()
-        return
 
     def pause(self):
         """Pause execution of the task."""
@@ -260,6 +247,15 @@ class Converter(Task):
         self.pipeline.set_state(Gst.State.PLAYING)
 
     def _stop_pipeline(self):
+        # remove partial file
+        if self.temporary_filename is not None:
+            try:
+                vfs_unlink(self.temporary_filename)
+            except Exception as e:
+                logger.error('cannot delete: \'{}\': {}'.format(
+                    beautify_uri(self.temporary_filename),
+                    str(e)
+                ))
         if not self.pipeline:
             logger.debug('pipeline already stopped!')
             return
@@ -279,7 +275,6 @@ class Converter(Task):
         if self.pipeline is None:
             logger.debug('launching: \'{}\''.format(command))
             try:
-                # see https://gstreamer.freedesktop.org/documentation/tools/gst-launch.html # noqa
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
 
@@ -326,9 +321,7 @@ class Converter(Task):
             return
 
         # rename temporary file
-        # TODO do that outside of converter:
-        #  newname = generate_filename(self.sound_file)
-        newname = self.output_filename
+        newname = self.name_generator.generate_target_path(self.sound_file)
         logger.debug('{} -> {}'.format(
             beautify_uri(self.temporary_filename), beautify_uri(newname)
         ))
@@ -493,10 +486,8 @@ class Converter(Task):
     def _append_tag(self, taglist, tag, _):
         """Write tags to the soundfile.
 
-        Remember tags in order to construct the final output path based on the
+        Remember them in order to construct the final output path based on the
         filename pattern.
-
-        see https://lazka.github.io/pgi-docs/#Gst-1.0/callbacks.html#Gst.TagForeachFunc # noqa
         """
         tag_whitelist = (
             'album-artist',
