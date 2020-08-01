@@ -364,11 +364,6 @@ class TargetNameGenerator:
         # filename, also changes depending on the soundfile
         filename = self._get_target_filename(sound_file)
 
-        print()
-        print()
-        print('filename', filename)
-        print('subfolder', subfolder)
-
         # put together
         if subfolder is not None:
             child = os.path.join(subfolder, filename)

@@ -185,8 +185,7 @@ class BatchIntegration(unittest.TestCase):
 
 
 class GUI(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         # reset quality settings, since they may be invalid for the ui mode
         # (e.g. an aribtrary mp3 quality of 200 does not exist for the ui)
         gio_settings = get_gio_settings()
@@ -388,12 +387,8 @@ class GUI(unittest.TestCase):
         # start conversion
         window.on_convert_button_clicked()
 
-        # wait for the assertions until all files are converted
         queue = window.converter_queue
         while not queue.finished:
-            # as Gtk.main is replaced by gtk_iteration, the unittests
-            # are responsible about when soundconverter continues
-            # to work on the conversions and updating the GUI
             gtk_iteration()
 
         self.assertTrue(os.path.isdir('tests/tmp/'))
@@ -408,6 +403,29 @@ class GUI(unittest.TestCase):
             'tests/tmp/test_artist/test_album/c/f o.opus'
         ))
 
+    def testNonOverwriting(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+
+        launch([
+            'tests/test data/audio/a.wav'
+        ])
+        self.assertEqual(settings['mode'], 'gui')
+        window = win[0]
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+
+        # create a few duplicates
+        for _ in range(3):
+            window.on_convert_button_clicked()
+            queue = window.converter_queue
+            while not queue.finished:
+                gtk_iteration()
+
+        self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
+        self.assertTrue(os.path.isfile('tests/tmp/a_(1).opus'))
+        self.assertTrue(os.path.isfile('tests/tmp/a_(2).opus'))
 
 if __name__ == '__main__':
     unittest.main()
