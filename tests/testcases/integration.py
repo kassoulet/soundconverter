@@ -307,12 +307,10 @@ class GUI(unittest.TestCase):
         # start conversion
         window.on_convert_button_clicked()
         queue = window.converter_queue
-        converter = queue.running[0]
-        sound_file = queue.running[0].sound_file
         self.assertEqual(len(queue.running), 1)
         self.assertEqual(len(queue.done), 0)
         self.assertEqual(queue.pending.qsize(), 0)
-        gtk_iteration()
+        Gtk.main_iteration()
 
         window.on_button_pause_clicked()  # pause
 
@@ -426,6 +424,7 @@ class GUI(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(1).opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(2).opus'))
+
 
 if __name__ == '__main__':
     unittest.main()

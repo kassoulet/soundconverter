@@ -22,6 +22,7 @@
 from gi.repository import Gst, GObject, GstPbutils
 
 from soundconverter.util.task import Task
+from soundconverter.util.logger import logger
 
 type_getters = {
     GObject.TYPE_STRING: 'get_string',
@@ -39,7 +40,6 @@ class Discoverer(Task):
         """Find type and tags of a SoundFile if possible."""
         self.sound_file = sound_file
         self.readable = None
-        self.tags = None
         self.error = None
 
     def get_progress(self):
@@ -74,7 +74,12 @@ class Discoverer(Task):
         if error is None:
             taglist = info.get_tags()
             taglist.foreach(self._add_tag)
-            self.tags = info.get_tags()
+
+            filename = self.sound_file.filename_for_display
+            logger.debug('found tag: {}'.format(filename))
+            for tag, value in self.sound_file.tags.items():
+                logger.debug('    {}: {}'.format(tag, value))
+
             self.readable = True
             self.callback()
         else:
@@ -83,6 +88,7 @@ class Discoverer(Task):
 
     def _add_tag(self, taglist, tag):
         """Convert the taglist to a dict one by one."""
+        # only really needed to construct output paths
         tag_type = Gst.tag_get_type(tag)
 
         if tag_type in type_getters:
