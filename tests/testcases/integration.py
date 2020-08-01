@@ -251,8 +251,6 @@ class GUI(unittest.TestCase):
 
         # wait for the assertions until all files are converted
         queue = window.converter_queue
-        converter = queue.running[0]
-        sound_file = queue.running[0].sound_file
         while not queue.finished:
             # as Gtk.main is replaced by gtk_iteration, the unittests
             # are responsible about when soundconverter continues
@@ -266,12 +264,23 @@ class GUI(unittest.TestCase):
 
         self.assertEqual(len(queue.done), len(expected_filelist))
 
+        # 'tests/test data/empty' causes the commonprefix to be everything
+        # up to 'audio', hence an 'audio' folder is created
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/strange_chars_.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.opus'))
         # no duplicates in the GUI:
         self.assertFalse(os.path.isfile('tests/tmp/a.opus'))
+
+        errors = sum([1 for task in queue.done if task.error])
+        self.assertEqual(errors, 0)
+        self.assertNotIn('error', window.statustext.get_text())
+        self.assertFalse(window.filelist.progress_column.get_visible())
+
+        self.assertEqual(len(window.filelist.invalid_files_list), 2)
+        self.assertIn('empty/a', window.filelist.invalid_files_list)
+        self.assertIn('empty/b/c', window.filelist.invalid_files_list)
 
     def testPauseResume(self):
         gio_settings = get_gio_settings()
@@ -281,6 +290,8 @@ class GUI(unittest.TestCase):
             'tests/test data/audio/a.wav'
         ])
         self.assertEqual(settings['mode'], 'gui')
+        self.assertEqual(settings['debug'], False)
+
         window = win[0]
 
         expected_filelist = [
@@ -312,6 +323,7 @@ class GUI(unittest.TestCase):
         # pauses the conversion.
         time.sleep(0.5)
         gtk_iteration()
+        self.assertTrue(window.filelist.progress_column.get_visible())
         self.assertEqual(len(queue.running), 1)
         self.assertEqual(len(queue.done), 0)
         self.assertEqual(queue.pending.qsize(), 0)
@@ -339,6 +351,62 @@ class GUI(unittest.TestCase):
         self.assertEqual(len(converter_queue.done), len(expected_filelist))
 
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
+
+        errors = sum([1 for task in converter_queue.done if task.error])
+        self.assertEqual(errors, 0)
+        self.assertNotIn('error', window.statustext.get_text())
+        self.assertFalse(window.filelist.progress_column.get_visible())
+        self.assertEqual(len(window.filelist.invalid_files_list), 0)
+
+    def testConversionPattern(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+
+        gio_settings.set_int('name-pattern-index', -1)
+        filename_pattern = '%(.inputname)s/f o'
+        gio_settings.set_string('custom-filename-pattern', filename_pattern)
+
+        gio_settings.set_boolean('create-subfolders', True)
+        gio_settings.set_int('subfolder-pattern-index', 0)
+
+        gio_settings.set_boolean('replace-messy-chars', False)
+
+        launch([
+            'tests/test data/audio/a.wav',
+            'tests/test data/audio/strângë chàrs фズ.wav',
+            'tests/test data/audio/',
+            'tests/test data/empty',
+            '--debug'
+        ])
+        self.assertEqual(settings['debug'], True)
+
+        window = win[0]
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+
+        # start conversion
+        window.on_convert_button_clicked()
+
+        # wait for the assertions until all files are converted
+        queue = window.converter_queue
+        while not queue.finished:
+            # as Gtk.main is replaced by gtk_iteration, the unittests
+            # are responsible about when soundconverter continues
+            # to work on the conversions and updating the GUI
+            gtk_iteration()
+
+        self.assertTrue(os.path.isdir('tests/tmp/'))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/Unknown Artist/Unknown Album/a/f o.opus'
+        ))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/Unknown Artist/Unknown Album/strângë chàrs '
+            'фズ/f o.opus'
+        ))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/test_artist/test_album/c/f o.opus'
+        ))
 
 
 if __name__ == '__main__':
