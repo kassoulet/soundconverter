@@ -318,7 +318,6 @@ class TargetNameGenerator:
             # For example:
             # .subfolders may have an existing structure of artist/album,
             # whereas basename might create a new structure of year/artist
-            print('sound_file.subfolders', sound_file.subfolders)
             subfolder = sound_file.subfolders
         return subfolder
 
