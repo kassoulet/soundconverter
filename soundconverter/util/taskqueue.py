@@ -127,8 +127,12 @@ class TaskQueue:
     def set_on_queue_finished(self, on_queue_finished):
         """Add a custom function to be used when the queue finishes."""
         self._on_queue_finished = on_queue_finished
-        
+
     def get_duration(self):
+        """Get for how many seconds the queue has been actively running.
+
+        The time spent while being paused is not included.
+        """
         return self._timer.get_duration()
 
 

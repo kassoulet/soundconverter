@@ -1203,6 +1203,7 @@ class SoundConverterWindow(GladeWindow):
         self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
+        self.converter_queue.set_on_queue_finished(self.on_queue_finished)
         for i, sound_file in enumerate(files):
             gtk_iteration()
             self.converter_queue.add(Converter(sound_file, name_generator))
@@ -1262,11 +1263,47 @@ class SoundConverterWindow(GladeWindow):
     def selection_changed(self, *args):
         self.set_sensitive()
 
-    def conversion_ended(self):
+    def on_queue_finished(self, queue):
+        """Should be called when all conversions are completed."""
+        total_time = self.converter_queue.get_duration()
+        msg = _('Conversion done in %s') % self.format_time(total_time)
+        error_count = len([
+            task for task in self.converter_queue.done
+            if not task.error
+        ])
+        if error_count > 0:
+            msg += ', {} error(s)'.format(error_count)
+
+        self.conversion_ended(msg)
+
+    def format_time(self, seconds):
+        units = [(86400, 'd'),
+                 (3600, 'h'),
+                 (60, 'm'),
+                 (1, 's')]
+        seconds = round(seconds)
+        result = []
+        for factor, unity in units:
+            count = int(seconds / factor)
+            seconds -= count * factor
+            if count > 0 or (factor == 1 and not result):
+                result.append('{} {}'.format(count, unity))
+        assert seconds == 0
+        return ' '.join(result)
+
+    def conversion_ended(self, msg=None):
+        """Reset the window.
+
+        Parameters
+        ----------
+        msg : string
+            If set, will display this on the bottom left.
+        """
         self.progress_frame.hide()
         self.filelist.hide_row_progress()
         self.status_frame.show()
         self.widget.set_sensitive(True)
+        self.set_status(msg)
         try:
             from gi.repository import Unity
             launcher = Unity.LauncherEntry.get_for_desktop_id("soundconverter.desktop")
@@ -1309,7 +1346,7 @@ class SoundConverterWindow(GladeWindow):
             if progress is None:
                 self.progressbar.pulse()
             else:
-                self.progressbar.set_progress(0)
+                self.progressbar.set_fraction(0)
                 self.progressbar.set_text('')
             self.progressfile.set_markup('')
             self.filelist.hide_row_progress()
