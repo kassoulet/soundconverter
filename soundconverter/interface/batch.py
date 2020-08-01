@@ -308,7 +308,7 @@ class CLICheck:
             # calling this like crazy is the fastest way
             context.iteration(True)
 
-        self.discoverers = discoverers.done
+        self.discoverers = discoverers.all_tasks
 
         if print_readable:
             for discoverer in self.discoverers:

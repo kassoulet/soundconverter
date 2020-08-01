@@ -32,6 +32,7 @@ class TaskQueue:
         self._on_queue_finished = None
 
         # state
+        self.all_tasks = []
         self.pending = Queue()
         self.running = []
         self.done = []
@@ -48,6 +49,7 @@ class TaskQueue:
             Any object inheriting from Task
         """
         task.set_callback(self.task_done)
+        self.all_tasks.append(task)
         self.pending.put(task)
 
     def get_progress(self):

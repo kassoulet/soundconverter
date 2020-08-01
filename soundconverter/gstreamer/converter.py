@@ -517,6 +517,7 @@ class Converter(Task):
         Remember them in order to construct the final output path based on the
         filename pattern.
         """
+        # TODO needed when sound_files from the initial discovery are kept?
         if tag in self.sound_file.tags:
             # Duplicate tag messages may arrive. Ignore those, don't spam logs
             # (Which isn't unusual and also mentioned in the documentation:)

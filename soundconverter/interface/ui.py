@@ -166,6 +166,7 @@ class FileList:
             context.finish(True, False, time)
 
     def get_files(self):
+        """Return all valid SoundFile objects."""
         return [i[1] for i in self.sortedmodel]
 
     def update_progress(self):
@@ -293,15 +294,20 @@ class FileList:
         # out of those files, that many have an audio file extension
         broken_audiofiles = 0
 
-        for f in files:
-            sound_file = SoundFile(f, base)
+        for discoverer in self.discoverers.all_tasks:
+            sound_file = discoverer.sound_file
             # create a list of human readable file paths
             # that were not added to the list
-            if f not in self.good_uris:
+            if sound_file.uri not in self.good_uris:
                 extension = os.path.splitext(f)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
-                self.invalid_files_list.append(self.format_cell(sound_file))
+
+                subfolders = sound_file.subfolders
+                filename = sound_file.filename
+                relative_path = os.path.join(subfolders, filename)
+
+                self.invalid_files_list.append(relative_path)
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
@@ -406,8 +412,9 @@ class FileList:
         sound_file : SoundFile
             This soundfile is expected to be readable by gstreamer
         """
-        self.model.append([self.format_cell(sound_file), sound_file, 0.0, '',
-                           sound_file.uri])
+        self.model.append([
+            self.format_cell(sound_file), sound_file, 0.0, '', sound_file.uri
+        ])
         self.filelist.add(sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
@@ -1077,7 +1084,8 @@ class SoundConverterWindow(GladeWindow):
     def close(self, *args):
         logger.debug('closing…')
         self.filelist.cancel()
-        self.converter_queue.cancel()
+        if self.converter_queue is not None:
+            self.converter_queue.cancel()
         self.widget.hide()
         self.widget.destroy()
         # wait one second…
@@ -1164,8 +1172,8 @@ class SoundConverterWindow(GladeWindow):
     def on_showinvalid_activate(self, *args):
         self.showinvalid_dialog_label.set_label(
             'Those are the files that could '
-            'not be added to the list due to not\ncontaining audio data, being '
-            'broken or being incompatible to gstreamer:'
+            'not be added to the list due to not\ncontaining audio data, '
+            'being broken or being incompatible to gstreamer:'
         )
         buffer = Gtk.TextBuffer()
         buffer.set_text('\n'.join(self.filelist.invalid_files_list))
@@ -1269,7 +1277,7 @@ class SoundConverterWindow(GladeWindow):
         msg = _('Conversion done in %s') % self.format_time(total_time)
         error_count = len([
             task for task in queue.done
-            if not task.error
+            if task.error
         ])
         if error_count > 0:
             msg += ', {} error(s)'.format(error_count)

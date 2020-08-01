@@ -64,10 +64,10 @@ def get_basename_pattern():
     settings = get_gio_settings()
 
     index = settings.get_int('name-pattern-index')
-    if index >= len(basename_patterns):
+    if index >= len(basename_patterns) or index < -1:
         index = 0
 
-    if index == len(basename_patterns) - 1:
+    if index == -1 or index == len(basename_patterns) - 1:
         return settings.get_string('custom-filename-pattern')
     else:
         # an index of -1 selects the last entry on purpose
@@ -82,7 +82,7 @@ def get_subfolder_pattern():
     """
     settings = get_gio_settings()
     index = settings.get_int('subfolder-pattern-index')
-    if index >= len(subfolder_patterns):
+    if index >= len(subfolder_patterns) or index < -1:
         index = 0
     return subfolder_patterns[index][0]
 
@@ -363,6 +363,11 @@ class TargetNameGenerator:
         subfolder = self._get_target_subfolder(sound_file)
         # filename, also changes depending on the soundfile
         filename = self._get_target_filename(sound_file)
+
+        print()
+        print()
+        print('filename', filename)
+        print('subfolder', subfolder)
 
         # put together
         if subfolder is not None:

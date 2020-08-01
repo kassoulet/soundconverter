@@ -2595,7 +2595,6 @@ Gautier Portet</property>
           <object class="GtkButtonBox" id="showinvalid_dialog-action_area">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">center</property>
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="showinvalid_dialog_closebutton">
@@ -2625,6 +2624,7 @@ Gautier Portet</property>
           <object class="GtkBox" id="showinvalid_dialog_vbox2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="border_width">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="showinvalid_dialog_label">
@@ -2652,6 +2652,7 @@ Gautier Portet</property>
                   <object class="GtkTextView" id="showinvalid_dialog_list">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="border_width">12</property>
                     <property name="editable">False</property>
                   </object>
                 </child>
