@@ -432,9 +432,8 @@ class Converter(Task):
         }[self.output_mime_type]()
         command.append(encoder)
 
-        # temporary output file. Until the file is handled by gstreamer,
-        # its tags are unknown, so the correct output path cannot be
-        # constructed yet.
+        # temporary output file, in order to easily remove it without
+        # any overwritten file and therefore caused damage in the target dir.
         self.temporary_filename = self.name_generator.generate_temp_path(
             self.sound_file
         )
@@ -488,73 +487,3 @@ class Converter(Task):
         elif message.type == Gst.MessageType.EOS:
             # Conversion done
             self._conversion_done()
-        elif message.type == Gst.MessageType.TAG:
-            self._found_tag(message.parse_tag())
-
-    def _found_tag(self, taglist):
-        """Called when the decoder reads a tag.
-
-        Parameters
-        ----------
-        taglist : Gst.TagList
-        """
-        filename = self.sound_file.filename_for_display
-        tags_before = self.sound_file.tags.copy()
-        taglist.foreach(self._append_tag, None)
-        filename_logged = False
-        for key, value in self.sound_file.tags.items():
-            if tags_before.get(key, None) != value:
-                # if any tag changed or was added, log it
-                if not filename_logged:
-                    # log the filename, but not once per tag
-                    logger.debug('found tag: {}'.format(filename))
-                filename_logged = True
-                logger.debug('    {}: {}'.format(key, value))
-
-    def _append_tag(self, taglist, tag, _):
-        """Write tags to the soundfile.
-
-        Remember them in order to construct the final output path based on the
-        filename pattern.
-        """
-        # TODO needed when sound_files from the initial discovery are kept?
-        if tag in self.sound_file.tags:
-            # Duplicate tag messages may arrive. Ignore those, don't spam logs
-            # (Which isn't unusual and also mentioned in the documentation:)
-            # https://gstreamer.freedesktop.org/documentation/application-development/advanced/metadata.html # noqa
-            return
-
-        tag_whitelist = (
-            'album-artist',
-            'artist',
-            'album',
-            'title',
-            'track-number',
-            'track-count',
-            'genre',
-            'datetime',
-            'year',
-            'timestamp',
-            'album-disc-number',
-            'album-disc-count',
-        )
-        # TODO tag whitelist needed? It's only for constructing the path
-        # anyway. Does the ui has some sort of list itself of which
-        # tags are legal? (redundant? or does it depend on the tag_whitelist
-        # around some corners?)
-        if tag not in tag_whitelist:
-            return
-
-        tag_type = Gst.tag_get_type(tag)
-
-        tags = {}
-        if tag_type in type_getters:
-            value = str(getattr(taglist, type_getters[tag_type])(tag)[1])
-            tags[tag] = value
-
-        if 'datetime' in tag:
-            datetime = taglist.get_date_time(tag)[1]
-            tags['year'] = datetime.get_year()
-            tags['date'] = datetime.to_iso8601_string()[:10]
-
-        self.sound_file.tags.update(tags)

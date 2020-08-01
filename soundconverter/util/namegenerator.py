@@ -237,6 +237,8 @@ class TargetNameGenerator:
         Parameters
         ----------
         sound_file : SoundFile
+            The soundfile has to have tags, which can be done with the
+            discoverer task.
         pattern : string
             For example '%(album-artist)s/%(album)s/%(title)s'. Should not
             be an URI
