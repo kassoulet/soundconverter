@@ -258,10 +258,6 @@ class GUI(unittest.TestCase):
             # are responsible about when soundconverter continues
             # to work on the conversions and updating the GUI
             gtk_iteration()
-            print(
-                window.filelist.model[sound_file.filelist_row][2],
-                converter.get_progress()
-            )
 
         duration = queue.get_duration()
         time.sleep(0.05)
@@ -327,10 +323,6 @@ class GUI(unittest.TestCase):
         start = time.time()
         while not queue.finished:
             gtk_iteration()
-            print(
-                window.filelist.model[sound_file.filelist_row][2],
-                converter.get_progress()
-            )
         if time.time() - start > 0.4:
             print(
                 'The test may not work as intended because the conversion'
@@ -347,8 +339,6 @@ class GUI(unittest.TestCase):
         self.assertEqual(len(converter_queue.done), len(expected_filelist))
 
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
-
-        self.assertEqual(window.filelist.model[sound_file.filelist_row][2], 1)
 
 
 if __name__ == '__main__':

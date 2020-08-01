@@ -1265,10 +1265,10 @@ class SoundConverterWindow(GladeWindow):
 
     def on_queue_finished(self, queue):
         """Should be called when all conversions are completed."""
-        total_time = self.converter_queue.get_duration()
+        total_time = queue.get_duration()
         msg = _('Conversion done in %s') % self.format_time(total_time)
         error_count = len([
-            task for task in self.converter_queue.done
+            task for task in queue.done
             if not task.error
         ])
         if error_count > 0:
