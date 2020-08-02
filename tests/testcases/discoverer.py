@@ -51,6 +51,7 @@ class DiscovererTest(unittest.TestCase):
 
         sound_file = discoverer.sound_files[0]
         self.assertTrue(sound_file.readable)
+        self.assertLess(abs(sound_file.duration - 1.04), 0.01)
         self.assertEqual(sound_file.tags['artist'], 'test_artist')
         self.assertEqual(sound_file.tags['album'], 'test_album')
 
@@ -82,14 +83,17 @@ class DiscovererTest(unittest.TestCase):
         self.assertTrue(sound_files[0].readable)
         self.assertEqual(sound_files[0].tags['artist'], 'test_artist')
         self.assertEqual(sound_files[0].tags['album'], 'test_album')
+        self.assertLess(abs(sound_files[0].duration - 1.04), 0.01)
 
         self.assertFalse(sound_files[1].readable)
         self.assertEqual(len(sound_files[1].tags), 0)
+        self.assertIsNone(sound_files[1].duration)
 
         self.assertTrue(sound_files[2].readable)
         # 'container-format' happens to be read from wav files, but there is
         # no special need in having it. can be used for tests though
         self.assertEqual(sound_files[2].tags['container-format'], 'WAV')
+        self.assertLess(abs(sound_files[2].duration - 1.00), 0.01)
 
     def test_not_audio(self):
         c_mp3 = 'file://' + os.path.realpath('tests/test%20data/empty/a')
@@ -109,6 +113,7 @@ class DiscovererTest(unittest.TestCase):
         done.assert_called_with(discoverer)
 
         sound_file = discoverer.sound_files[0]
+        self.assertIsNone(sound_file.duration)
         self.assertFalse(sound_file.readable)
         self.assertEqual(len(sound_file.tags), 0)
 

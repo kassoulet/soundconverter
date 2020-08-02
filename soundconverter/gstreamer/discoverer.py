@@ -26,7 +26,6 @@ from gi.repository import Gst, GObject, GstPbutils, GLib
 from soundconverter.util.task import Task
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_num_jobs
-from soundconverter.util.soundfile import  SoundFile
 
 type_getters = {
     GObject.TYPE_STRING: 'get_string',
@@ -70,20 +69,18 @@ class DiscovererThread(Thread):
         self.bus = bus
 
     def run(self):
-        """Run the Thread.
-
-        This is the fastest way I could figure out. discover_uri_async
-        was not faster than discover_uri, and the UI only stayed responsive
-        as long as only 1 discover_uri_async job was running at a time.
-        Maybe it was a bit too much for the GLib event loop, who knows.
-        Running multiple discover_uri_async jobs at a time also didn't improve
-        the performance. By using threads with synchronous discovery, I could
-        get a very responsive UI while spawning 12 Threads with a drastic
-        ~5-times performance increase for 360 files.
-
-        I couldn't get it to work with the multiprocessing module though,
-        because the discover_uri function would hang.
-        """
+        """Run the Thread."""
+        # This is the fastest way I could figure out. discover_uri_async
+        # was not faster than discover_uri, and the UI only stayed responsive
+        # as long as only 1 discover_uri_async job was running at a time.
+        # Maybe it was a bit too much for the GLib event loop, who knows.
+        # Running multiple discover_uri_async jobs at a time also didn't
+        # improve the performance. By using threads with synchronous
+        # discovery, I could get a very responsive UI while spawning 12
+        # Threads with a drastic ~5-times performance increase for ~360
+        # files.
+        # I couldn't get it to work with the multiprocessing module though,
+        # because the discover_uri function would hang.
         for sound_file in self.sound_files:
             try:
                 discoverer = GstPbutils.Discoverer()
@@ -100,6 +97,7 @@ class DiscovererThread(Thread):
                 # over a bus or queue, but rather can be written into the
                 # sound_file
                 sound_file.readable = True
+                sound_file.duration = info.get_duration() / Gst.SECOND
             except GLib.Error:
                 sound_file.readable = False
 
@@ -122,9 +120,9 @@ class DiscovererThread(Thread):
             sound_file.tags[tag] = value
 
         if 'datetime' in tag:
-            dt = taglist.get_date_time(tag)[1]
-            sound_file.tags['year'] = dt.get_year()
-            sound_file.tags['date'] = dt.to_iso8601_string()[:10]
+            date_time = taglist.get_date_time(tag)[1]
+            sound_file.tags['year'] = date_time.get_year()
+            sound_file.tags['date'] = date_time.to_iso8601_string()[:10]
 
 
 class Discoverer(Task):
@@ -167,7 +165,7 @@ class Discoverer(Task):
         thread = DiscovererThread(self.sound_files, bus)
         thread.start()
 
-    def _on_message(self, bus, message):
+    def _on_message(self, _, message):
         """Write down that it is finished and call the callback."""
         if message.type == Gst.MessageType.EOS:
             self.running = False

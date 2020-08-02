@@ -32,10 +32,9 @@ import urllib.error
 import unicodedata
 from gettext import gettext as _
 from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
-    unquote_filename, split_URI, is_URI, beautify_uri
+    split_uri, is_uri, beautify_uri
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
-from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 basename_patterns = [
     ('%(.inputname)s', _('Same as input, but replacing the suffix')),
@@ -113,7 +112,7 @@ class TargetNameGenerator:
 
         # Enforcing such rules helps to avoid undefined and untested
         # behaviour of functions and to reduce their complexity.
-        if not self.same_folder_as_input and not is_URI(self.selected_folder):
+        if not self.same_folder_as_input and not is_uri(self.selected_folder):
             raise ValueError(
                 'your selected folder {} should be in URI format.'.format(
                     self.selected_folder
@@ -121,7 +120,7 @@ class TargetNameGenerator:
             )
         # If you wish to provide an uri scheme like ftp:// it should be in
         # the selected_folder instead.
-        if is_URI(self.basename_pattern) or is_URI(self.subfolder_pattern):
+        if is_uri(self.basename_pattern) or is_uri(self.subfolder_pattern):
             raise ValueError(
                 'patterns should be patterns, not complete URIs.'
             )
@@ -141,7 +140,7 @@ class TargetNameGenerator:
 
         Will not break URI schemes.
         """
-        scheme, name = split_URI(name)
+        scheme, name = split_uri(name)
         nice_chars = string.ascii_letters + string.digits + '.-_/'
         return (scheme or '') + ''.join([
             c if c in nice_chars else '_' for c in name
@@ -171,7 +170,7 @@ class TargetNameGenerator:
         """
         if len(child) == 0:
             raise ValueError('empty filename')
-        if is_URI(child):
+        if is_uri(child):
             raise ValueError(
                 'expected child "{}" to be a child path, '.format(child) +
                 'not an URI'
@@ -184,7 +183,7 @@ class TargetNameGenerator:
 
         if child.startswith('/'):
             # child is absolute. keep only the uri scheme of parent
-            parent = split_URI(parent or '')[0] or ''
+            parent = split_uri(parent or '')[0] or ''
         else:
             # make sure it can be added with the child, since os.path.join
             # cannot be used on uris (file:/// is not an absolute url for os),
@@ -249,7 +248,7 @@ class TargetNameGenerator:
         filename = os.path.basename(filename)
         filename, ext = os.path.splitext(filename)
         assert '/' not in filename
-        d = {
+        mapping = {
             '.inputname': filename,
             '.ext': ext,
             '.target-ext': self.suffix[1:],
@@ -267,30 +266,30 @@ class TargetNameGenerator:
         }
 
         for key in tags:
-            d[key] = tags[key]
-            if isinstance(d[key], str):
+            mapping[key] = tags[key]
+            if isinstance(mapping[key], str):
                 # take care of tags containing slashes
-                d[key] = d[key].replace('/', '-')
+                mapping[key] = mapping[key].replace('/', '-')
                 if key.endswith('-number'):
-                    d[key] = int(d[key])
+                    mapping[key] = int(mapping[key])
 
         # when artist set & album-artist not, use artist for album-artist
         if 'artist' in tags and 'album-artist' not in tags:
-            d['album-artist'] = tags['artist']
+            mapping['album-artist'] = tags['artist']
 
         # add timestamp to substitution dict -- this could be split into more
         # entries for more fine-grained control over the string by the user...
         timestamp_string = time.strftime('%Y%m%d_%H_%M_%S')
-        d['timestamp'] = timestamp_string
+        mapping['timestamp'] = timestamp_string
 
         # now fill the tags in the pattern with values:
-        result = pattern % d
+        result = pattern % mapping
 
         return result
 
     def generate_temp_path(self, sound_file):
         """Generate a random filename that doesn't exist yet."""
-        folder, basename = os.path.split(sound_file.uri)
+        basename = os.path.split(sound_file.uri)[1]
         parent_uri = self._get_common_target_uri(sound_file)
         while True:
             rand = str(random())[-6:]

@@ -33,8 +33,7 @@ try:
 
     def _notification(message):
         try:
-            n = Notify.Notification('SoundConverter', message)
-            n.show()
+            Notify.Notification('SoundConverter', message).show()
         except Exception:
             pass
 

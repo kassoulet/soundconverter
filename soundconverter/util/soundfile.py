@@ -22,9 +22,7 @@
 import os
 from gi.repository import GLib
 
-from soundconverter.util.fileoperations import unquote_filename, is_URI, \
-    filename_to_uri, split_URI
-from soundconverter.util.logger import logger
+from soundconverter.util.fileoperations import unquote_filename, is_uri
 
 
 class SoundFile:
@@ -32,7 +30,7 @@ class SoundFile:
 
     __slots__ = [
         'uri', 'base_path', 'filename', 'tags', 'filelist_row', 'subfolders',
-        'readable'
+        'readable', 'duration'
     ]
 
     def __init__(self, uri, base_path=None):
@@ -49,11 +47,11 @@ class SoundFile:
         """
         # enforcing an uri format reduced the nightmare of handling 2
         # different path formats in generate_target_path
-        if not is_URI(uri):
+        if not is_uri(uri):
             raise ValueError('uri was not an uri: {}!'.format(
                 uri
             ))
-        if base_path is not None and not is_URI(base_path):
+        if base_path is not None and not is_uri(base_path):
             raise ValueError('base_path was not an uri: {}!'.format(
                 base_path
             ))
@@ -76,12 +74,16 @@ class SoundFile:
             self.base_path, self.filename = os.path.split(self.uri)
             self.base_path += '/'
 
-        self.tags = {}
         self.filelist_row = None
-        self.readable = False  # has yet to be figured out
+
+        # properties of valid audio are yet to be figured out in a Discoverer
+        self.tags = {}
+        self.readable = False
+        self.duration = None
 
     @property
     def filename_for_display(self):
         """Return the filename in a form suitable for displaying it."""
         return GLib.filename_display_name(
-                unquote_filename(self.filename))
+            unquote_filename(self.filename)
+        )

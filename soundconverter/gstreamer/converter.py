@@ -24,7 +24,7 @@ import os
 import traceback
 from gettext import gettext as _
 
-from gi.repository import Gst, GLib, Gio, GObject
+from gi.repository import Gst, GLib, Gio
 
 from soundconverter.util.fileoperations import vfs_encode_filename, \
     vfs_unlink, vfs_rename, vfs_exists, beautify_uri
@@ -33,7 +33,6 @@ from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
 from soundconverter.util.task import Task
 from soundconverter.gstreamer.profiles import audio_profiles_dict
-from soundconverter.gstreamer.discoverer import type_getters
 
 
 GSTREAMER_SOURCE = 'giosrc'
@@ -216,23 +215,11 @@ class Converter(Task):
             return max(0, position / Gst.SECOND)
         return 0
 
-    def _query_duration(self):
-        """Ask for the duration of the current pipeline."""
-        pipeline = self.pipeline
-        if not self.sound_file.duration and pipeline:
-            duration = pipeline.query_duration(Gst.Format.TIME)[1]
-            seconds = duration / Gst.SECOND
-            self.sound_file.duration = seconds
-            if self.sound_file.duration <= 0:
-                self.sound_file.duration = None
-        else:
-            return self.sound_file.duration
-
     def get_progress(self):
         """Fraction of how much of the task is completed."""
         if not self.done:
             position = self._query_position()
-            duration = self._query_duration()
+            duration = self.sound_file.duration
             if duration is None:
                 return 0
             progress = position / duration
@@ -372,11 +359,9 @@ class Converter(Task):
         ))
 
         # Copy file permissions
-        if not Gio.file_parse_name(self.sound_file.uri).copy_attributes(
-            Gio.file_parse_name(newname),
-            Gio.FileCopyFlags.NONE,
-            None
-        ):
+        source = Gio.file_parse_name(self.sound_file.uri)
+        destination = Gio.file_parse_name(newname)
+        if not source.copy_attributes(destination, Gio.FileCopyFlags.NONE):
             logger.info("Cannot set permission on '{}'".format(
                 beautify_uri(newname)
             ))
@@ -440,8 +425,8 @@ class Converter(Task):
                 return
 
         command.append('{} location="{}"'.format(
-            GSTREAMER_SINK, vfs_encode_filename(self.temporary_filename))
-        )
+            GSTREAMER_SINK, vfs_encode_filename(self.temporary_filename)
+        ))
 
         # preparation done, now convert
         self.command = ' ! '.join(command)

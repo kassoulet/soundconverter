@@ -63,13 +63,13 @@ class PrepareFilesList(unittest.TestCase):
     def tearDown(self):
         reset_settings()
 
-    def testNonRecursiveDirectory(self):
+    def test_non_recursive_directory(self):
         test = ["tests/test data/empty/"]
         # it should not find anything, as test is a directory
         expectation = ([], [])
         self.assertEqual(prepare_files_list(test), expectation)
 
-    def testRecursiveDirectory(self):
+    def test_recursive_directory(self):
         settings["recursive"] = True
         test = ["tests/test data/empty/", "tests/test data/empty/b"]
         expectation = ([
@@ -86,7 +86,7 @@ class PrepareFilesList(unittest.TestCase):
             self.assertTrue(path.startswith('file://'))
         self.assertEqual(result, expectation)
 
-    def testFile(self):
+    def test_file(self):
         test = ["tests/test data/empty/a"]
         # it should not detect the name of the parent directory as
         # it's only a single file
@@ -97,13 +97,13 @@ class PrepareFilesList(unittest.TestCase):
 
 
 class Patterns(unittest.TestCase):
-    def testSubfolderPattern(self):
+    def test_subfolder_pattern(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int('subfolder-pattern-index', 1)
         pattern = get_subfolder_pattern()
         self.assertEqual(pattern, '%(album-artist)s-%(album)s')
 
-    def testBasenamePattern(self):
+    def test_basename_pattern(self):
         gio_settings = get_gio_settings()
 
         gio_settings.set_int('name-pattern-index', 2)
@@ -156,73 +156,143 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # the "test data" folder has the space in it on purpose for this spec
 
         # 1. path doesn't exist at all
-        self.assertEqual(self.g.safe_name('/b äz/quズx/foo.mp3'), '/b_az/qux/foo.mp3')
-        self.assertEqual(self.g.safe_name('/baズz/qux'), '/baz/qux')
-        self.assertEqual(self.g.safe_name('./ qux/foズo.mp3'), os.getcwd() + '/_qux/foo.mp3')
-        self.assertEqual(self.g.safe_name('./qズux/'), os.getcwd() + '/qux/')
-        self.assertEqual(self.g.safe_name('/ズfoo.mp3'), '/foo.mp3')
-        self.assertEqual(self.g.safe_name('fooズ.mp3'), os.getcwd() + '/foo.mp3')
-        self.assertEqual(self.g.safe_name('bla /foズo.mp3'), os.getcwd() + '/bla_/foo.mp3')
-        self.assertEqual(self.g.safe_name('blズa/'), os.getcwd() + '/bla/')
-        self.assertEqual(self.g.safe_name('ズblä'), os.getcwd() + '/bla')
+        self.assertEqual(
+            self.g.safe_name('/b äz/quズx/foo.mp3'),
+            '/b_az/qux/foo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('/baズz/qux'),
+            '/baz/qux'
+        )
+        self.assertEqual(
+            self.g.safe_name('./ qux/foズo.mp3'),
+            os.getcwd() + '/_qux/foo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('./qズux/'),
+            os.getcwd() + '/qux/'
+        )
+        self.assertEqual(
+            self.g.safe_name('/ズfoo.mp3'),
+            '/foo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('fooズ.mp3'),
+            os.getcwd() + '/foo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('bla /foズo.mp3'),
+            os.getcwd() + '/bla_/foo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('blズa/'),
+            os.getcwd() + '/bla/'
+        )
+        self.assertEqual(
+            self.g.safe_name('ズblä'),
+            os.getcwd() + '/bla'
+        )
 
         # 2. the outer dir exists
-        self.assertEqual(self.g.safe_name('/home/qфux/foo.mp3'), '/home/qux/foo.mp3')
-        self.assertEqual(self.g.safe_name('./foфo.mp3'), os.getcwd() + '/foo.mp3')
-        self.assertEqual(self.g.safe_name('./tests/asdf/fфoo.mp3'), os.getcwd() + '/tests/asdf/foo.mp3')
-        self.assertEqual(self.g.safe_name('tests/asdf/fooф.mp3'), os.getcwd() + '/tests/asdf/foo.mp3')
+        self.assertEqual(
+            self.g.safe_name('/home/qфux/foo.mp3'),
+            '/home/qux/foo.mp3')
+        self.assertEqual(
+            self.g.safe_name('./foфo.mp3'),
+            os.getcwd() + '/foo.mp3')
+        self.assertEqual(
+            self.g.safe_name('./tests/asdf/fфoo.mp3'),
+            os.getcwd() + '/tests/asdf/foo.mp3')
+        self.assertEqual(
+            self.g.safe_name('tests/asdf/fooф.mp3'),
+            os.getcwd() + '/tests/asdf/foo.mp3')
 
         # 3. all dirs exist (space of 'test data' will be kept)
         original_name = os.getcwd() + '/tests/test data/audio/fâoo.mp3'
-        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/faoo.mp3')
-        self.assertEqual(self.g.safe_name('./tests/test data/fooâ.mp3'), os.getcwd() + '/tests/test data/fooa.mp3')
-        self.assertEqual(self.g.safe_name('tests/test data/fфズ oo.mp3â'), os.getcwd() + '/tests/test data/f_oo.mp3a')
+        self.assertEqual(
+            self.g.safe_name(original_name),
+            os.getcwd() + '/tests/test data/audio/faoo.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('./tests/test data/fooâ.mp3'),
+            os.getcwd() + '/tests/test data/fooa.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('tests/test data/fфズ oo.mp3â'),
+            os.getcwd() + '/tests/test data/f_oo.mp3a'
+        )
 
         # 4. the complete path exists
         original_name = os.getcwd() + '/tests/test data/audio/a.wav'
-        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
-        self.assertEqual(self.g.safe_name('./tests/test data'), os.getcwd() + '/tests/test data')
-        self.assertEqual(self.g.safe_name('tests/test data/'), os.getcwd() + '/tests/test data/')
+        self.assertEqual(
+            self.g.safe_name(original_name),
+            os.getcwd() + '/tests/test data/audio/a.wav'
+        )
+        self.assertEqual(
+            self.g.safe_name('./tests/test data'),
+            os.getcwd() + '/tests/test data'
+        )
+        self.assertEqual(
+            self.g.safe_name('tests/test data/'),
+            os.getcwd() + '/tests/test data/'
+        )
 
         # 5. paths with special chars can be transformed into existing paths.
-        # Doesn't increment the filename. on_task_finished of gstreamer.py does that later.
-        # To reuse paths that were generated from {artist} tags with special characters
+        # Doesn't increment the filename. on_task_finished of gstreamer.py
+        # does that later. To reuse paths that were generated from {artist}
+        # tags with special characters
         original_name = os.getcwd() + '/tests/test data/âuズdio/â.wav'
-        self.assertEqual(self.g.safe_name(original_name), os.getcwd() + '/tests/test data/audio/a.wav')
+        self.assertEqual(
+            self.g.safe_name(original_name),
+            os.getcwd() + '/tests/test data/audio/a.wav'
+        )
 
         # 6. doesn't change %20 spaces in URIs into _20, but rather into _
         # and keeps the URI scheme.
         # test%20data exists (test data), so it keeps the %20, because the
         # output should be an uri as well, just like the input.
         original_name = os.getcwd() + '/tests/test%20data/fo%20o.mp3'
-        expected_name = 'file://' + os.getcwd() + '/tests/test%20data/fo_o.mp3'
-        self.assertEqual(self.g.safe_name(original_name, 'file://'), expected_name)
+        self.assertEqual(
+            self.g.safe_name(original_name, 'file://'),
+            'file://' + os.getcwd() + '/tests/test%20data/fo_o.mp3'
+        )
 
         # 7. any path added as safe_prefix is not modified
-        expected_name = 'ab cd/fo_o.mp3'
-        self.assertEqual(self.g.safe_name('fo o.mp3', 'ab cd'), expected_name)
-        expected_name = 'fфズ/fo_o.mp3'
-        self.assertEqual(self.g.safe_name('fo o.mp3', 'fфズ'), expected_name)
-        original_name = 'audio/a.wav'
-        expected_name = os.getcwd() + '/tests/test data/audio/a.wav'
-        self.assertEqual(self.g.safe_name(original_name, os.getcwd() + '/tests/test data'), expected_name)
+        self.assertEqual(
+            self.g.safe_name('fo o.mp3', 'ab cd'),
+            'ab cd/fo_o.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('fo o.mp3', 'fфズ'),
+            'fфズ/fo_o.mp3'
+        )
+        self.assertEqual(
+            self.g.safe_name('audio/a.wav', os.getcwd() + '/tests/test data'),
+            os.getcwd() + '/tests/test data/audio/a.wav'
+        )
 
         # 8. absolute paths only keep the parents uri scheme
-        expected_name = 'file:///fo_o.mp3'
-        self.assertEqual(self.g.safe_name('/fo o.mp3', 'file:///fфズ'), expected_name)
+        self.assertEqual(
+            self.g.safe_name('/fo o.mp3', 'file:///fфズ'),
+            'file:///fo_o.mp3'
+        )
 
         # 8. weird URI schema means that 'test data' is probably not our
         # existing folder. Should be file:// for that and gio needs to be able
         # to check if it exists.
         original_name = 'tests/test%20data/fo%20o.mp3'
-        expected_name = 'foo://' + os.getcwd() + '/tests/test_data/fo_o.mp3'
-        self.assertEqual(self.g.safe_name(original_name, 'foo://' + os.getcwd()), expected_name)
+        self.assertEqual(
+            self.g.safe_name(original_name, 'foo://' + os.getcwd()),
+            'foo://' + os.getcwd() + '/tests/test_data/fo_o.mp3'
+        )
         # don't break uri authorities
         original_name = 'tests/test%20data/fo%20o.mp3'
-        expected_name = 'foo://foo@bar:1234/tests/test_data/fo_o.mp3'
-        self.assertEqual(self.g.safe_name(original_name, 'foo://foo@bar:1234/'), expected_name)
+        self.assertEqual(
+            self.g.safe_name(original_name, 'foo://foo@bar:1234/'),
+            'foo://foo@bar:1234/tests/test_data/fo_o.mp3'
+        )
 
-    def testSuffix(self):
+    def test_suffix(self):
         get_gio_settings().set_string('output-mime-type', 'audio/x-vorbis')
         # figures out the suffix when created
         self.g = TargetNameGenerator()
@@ -233,7 +303,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/to/file.ogg"
         )
 
-    def testNoExtension(self):
+    def test_no_extension(self):
         get_gio_settings().set_string('output-mime-type', 'audio/x-m4a')
         # figures out the suffix when created
         self.g = TargetNameGenerator()
@@ -245,7 +315,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/to/file.m4a"
         )
 
-    def testBasename(self):
+    def test_basename(self):
         self.g.suffix = "ogg"
         self.g.basename_pattern = "%(track-number)02d-%(title)s"
         self.g.create_subfolders = False
@@ -255,7 +325,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/to/01-Hi_Ho.ogg"
         )
 
-    def testLocation(self):
+    def test_location(self):
         self.g.suffix = "ogg"
         self.g.selected_folder = "file:///music"
         self.g.subfolder_pattern = "%(artist)s/%(album)s"
@@ -265,7 +335,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg"
         )
 
-    def testLocationEscape(self):
+    def test_location_escape(self):
         self.s = SoundFile("file:///path/to/file with spaces")
         self.g.replace_messy_chars = False
         self.g.suffix = "ogg"
@@ -276,7 +346,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "file:///mu%20sic/file%20with%20spaces.ogg"
         )
 
-    def testBasenameWithSpaces(self):
+    def test_basename_with_spaces(self):
         uri = 'file:///spa%20ce/sub%20folder/foo.mp3'
         self.s = SoundFile(uri, 'file:///spa%20ce/')
         self.g.replace_messy_chars = False
@@ -288,7 +358,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "file:///spa%20ce/sub%20folder/foo.ogg"
         )
 
-    def testBasenameWithSpacesMessy(self):
+    def test_basename_with_spaces_messy(self):
         uri = 'file:///spa%20ce/sub%20folder/foo.mp3'
         self.s = SoundFile(uri, 'file:///spa%20ce/')
         self.g.replace_messy_chars = True
@@ -300,7 +370,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "file:///spa%20ce/sub_folder/foo.ogg"
         )
 
-    def testBasenameWithSpacesExisting(self):
+    def test_basename_with_spaces_existing(self):
         base_path = 'file:///' + os.getcwd() + '/tests/test%20data'
         uri = base_path + '/audio/a.wav'
         self.s = SoundFile(uri, base_path)
@@ -313,7 +383,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             base_path + '/audio/a.ogg'
         )
 
-    def testBasenameWithSpacesExistingMessy(self):
+    def test_basename_with_spaces_existing_messy(self):
         base_path = 'file:///' + os.getcwd() + '/tests/test%20data'
         uri = base_path + '/audio/a.wav'
         self.s = SoundFile(uri, base_path)
@@ -326,7 +396,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             base_path + '/audio/a.ogg'
         )
 
-    def testURI(self):
+    def test_uri(self):
         self.g.suffix = "ogg"
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
@@ -363,7 +433,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "file:///music/file.ogg"
         )
 
-    def testURIDistantDestination(self):
+    def test_uri_distant_destination(self):
         self.g.suffix = "ogg"
         self.g.selected_folder = "ftp://user2@dest-server:another-port:/music/"
         self.g.create_subfolders = False
@@ -401,7 +471,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/music /Foo Bar/IS: TOO/%25.ogg"
         )
 
-    def testUriLikePathsMessy(self):
+    def test_uri_like_paths_messy(self):
         self.g.suffix = "ogg"
         self.g.selected_folder = "file:///music%20"
         self.g.same_folder_as_input = False
@@ -421,14 +491,19 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/music /Foo_Bar/IS__TOO/_25.ogg"
         )
 
-    def testURIUnicode(self):
+    def test_uri_unicode(self):
         self.g.suffix = "ogg"
-        self.g.selected_folder = "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        self.g.selected_folder = (
+                "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        )
         self.g.replace_messy_chars = False
         self.g.create_subfolders = False
 
-        self.s = SoundFile("ssh://user@server:port" + quote(
-            "/path/to/file with \u041d chars.flac"))
+        self.s = SoundFile(
+            "ssh://user@server:port" + quote(
+                "/path/to/file with \u041d chars.flac"
+            )
+        )
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -438,15 +513,22 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.assertEqual(
             self.g.generate_target_path(self.s),
-            "ftp://user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file%20with%20%D0%9D%20chars.ogg"
+            "ftp://user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file"
+            "%20with%20%D0%9D%20chars.ogg"
         )
 
     def testURIUnicode_utf8(self):
         self.g.suffix = "ogg"
-        self.g.selected_folder = "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        self.g.selected_folder = (
+                "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        )
         self.g.replace_messy_chars = False
 
-        self.s = SoundFile("ssh://user@server:port" + quote("/path/to/file with strângë chàrs фズ.flac"))
+        self.s = SoundFile(
+            "ssh://user@server:port" + quote(
+                "/path/to/file with strângë chàrs фズ.flac"
+            )
+        )
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -458,14 +540,20 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = False
         self.assertEqual(
             self.g.generate_target_path(self.s),
-            "ftp://user2@dest-server:another-port:" + quote("/mûsîc/file with strângë chàrs фズ.ogg")
+            "ftp://user2@dest-server:another-port:" +
+            quote("/mûsîc/file with strângë chàrs фズ.ogg")
         )
 
-    def testURIUnicodeMessy(self):
+    def test_uri_unicode_messy(self):
         self.g.suffix = "ogg"
-        self.g.selected_folder = "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        self.g.selected_folder = (
+                "ftp://user2@dest-server:another-port:" + quote("/mûsîc/")
+        )
 
-        self.s = SoundFile("ssh://user@server:port" + quote("/path/to/file with strângë chàrs.flac"))
+        self.s = SoundFile(
+            "ssh://user@server:port" +
+            quote("/path/to/file with strângë chàrs.flac")
+        )
         self.s.tags.update({
             "artist": "Foo Bar",
             "title": "Hi Ho",
@@ -478,7 +566,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = False
         self.assertEqual(
             self.g.generate_target_path(self.s),
-            "ftp://user2@dest-server:another-port:/" + quote("mûsîc") + "/file_with_strange_chars.ogg"
+            "ftp://user2@dest-server:another-port:/" +
+            quote("mûsîc") + "/file_with_strange_chars.ogg"
         )
 
     def testDisplay(self):
@@ -500,7 +589,9 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(self.s.filename_for_display, "fileфズ.flac")
 
     def test8bits(self):
-        self.s = SoundFile('file://' + quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
+        self.s = SoundFile(
+                'file://' + quote("/path/to/file\xa0\xb0\xc0\xd0.flac")
+        )
         self.g.suffix = "ogg"
         self.g.replace_messy_chars = False
         self.g.create_subfolders = False
@@ -511,7 +602,9 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
 
     def test8bits_messy(self):
-        self.s = SoundFile('file://' + quote("/path/to/file\xa0\xb0\xc0\xd0.flac"))
+        self.s = SoundFile(
+            'file://' + quote("/path/to/file\xa0\xb0\xc0\xd0.flac")
+        )
         self.g.suffix = "ogg"
         self.g.replace_messy_chars = True
         self.g.create_subfolders = False
@@ -537,10 +630,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.basename_pattern = "%(title)s"
         self.assertEqual(
             self.g.generate_target_path(self.s, False),
-            'file://' + quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg")
+            'file://' + quote(
+                "/music/\xa0\xb0\xc0\xd0/\xa2\xb2"
+                "\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"
+            )
         )
 
-    def testRoot(self):
+    def test_root(self):
         self.s = SoundFile("file:///path/to/file.flac", "file:///path/")
         self.s.tags.update({
             "artist": "Foo Bar",
@@ -557,7 +653,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/to/file.ogg"
         )
 
-    def testRootPath(self):
+    def test_root_path(self):
         self.s = SoundFile("file:///path/#to/file.flac", "file:///path/")
         self.s.tags.update({
             "artist": "Foo Bar",
@@ -578,7 +674,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "file:///music/%23to/file.ogg"
         )
 
-    def testRootCustomPattern(self):
+    def test_root_custom_pattern(self):
         self.s = SoundFile("file:///path/#to/file.flac", "file:///path/")
         self.s.tags.update({
             "artist": "Foo Bar",
@@ -603,7 +699,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/Unknown_Genre/Hi_Ho.ogg"
         )
 
-    def testLeadingSlashPattern(self):
+    def test_leading_slash_pattern(self):
         self.s = SoundFile("file:///path/#to/file.flac", "file:///path/")
         self.s.tags.update({
             "title": "Hi Ho"
@@ -616,7 +712,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/home/foo/Hi_Ho.ogg"
         )
 
-    def testRootPathCustomPattern(self):
+    def test_root_path_custom_pattern(self):
         self.s = SoundFile("file:///path/to/file.flac", "file:///path/")
         self.s.tags.update({
             "artist": "Foo Bar",
@@ -635,7 +731,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/music/to/Hi_Ho.ogg"
         )
 
-    def testQuote(self):
+    def test_quote(self):
         self.s = SoundFile('file://' + quote("/path%'#/to/file%'#.flac"))
         self.s.tags.update({
             "artist": "Foo%'#Bar",
@@ -659,7 +755,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
     # temporary filename generation
 
-    def testTemporary1(self):
+    def test_temporary1(self):
         self.s = SoundFile('file:///foo/bar.mp3')
         self.g.same_folder_as_input = False
         self.g.replace_messy_chars = True
@@ -672,7 +768,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
         self.assertTrue(temp_path.endswith('_SC_'))
 
-    def testTemporary2(self):
+    def test_temporary2(self):
         self.s = SoundFile('file:///foo/bar.mp3', 'file:///')
         # base_path 'file:///' will be ignored
         self.g.same_folder_as_input = False
@@ -686,7 +782,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
         self.assertTrue(temp_path.endswith('~SC~'))
 
-    def testTemporary3(self):
+    def test_temporary3(self):
         self.s = SoundFile('file:///foo/bar.mp3')
         self.g.same_folder_as_input = True
         self.g.replace_messy_chars = True
@@ -699,7 +795,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
         self.assertTrue(temp_path.endswith('_SC_'))
 
-    def testTemporary4(self):
+    def test_temporary4(self):
         self.s = SoundFile('file:///foo/bar.mp3')
         self.g.same_folder_as_input = True
         self.g.replace_messy_chars = False
@@ -712,7 +808,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
         self.assertTrue(temp_path.endswith('~SC~'))
 
-    def testTemporary5(self):
+    def test_temporary5(self):
         self.s = SoundFile('file:///foo/test/bar.mp3', 'file:///foo/')
         self.g.same_folder_as_input = True
         self.g.replace_messy_chars = False
