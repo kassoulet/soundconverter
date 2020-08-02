@@ -31,9 +31,8 @@ class SoundFile:
     """Meta data information about a sound file (uri, tags)."""
 
     __slots__ = [
-        'uri', 'base_path', 'filename', 'tags', 'tags_read',
-        'duration', 'mime_type', 'filelist_row', 'progress',
-        'subfolders'
+        'uri', 'base_path', 'filename', 'tags', 'filelist_row', 'subfolders',
+        'readable'
     ]
 
     def __init__(self, uri, base_path=None):
@@ -78,14 +77,11 @@ class SoundFile:
             self.base_path += '/'
 
         self.tags = {}
-        self.tags_read = False
-        self.duration = None
-        self.mime_type = None
         self.filelist_row = None
-        self.progress = None
+        self.readable = False  # has yet to be figured out
 
     @property
     def filename_for_display(self):
-        """Return the filename in a suitable for display form."""
+        """Return the filename in a form suitable for displaying it."""
         return GLib.filename_display_name(
                 unquote_filename(self.filename))

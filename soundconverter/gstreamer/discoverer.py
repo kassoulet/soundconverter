@@ -19,10 +19,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-from gi.repository import Gst, GObject, GstPbutils
+from threading import Thread
+
+from gi.repository import Gst, GObject, GstPbutils, GLib
 
 from soundconverter.util.task import Task
 from soundconverter.util.logger import logger
+from soundconverter.util.settings import get_num_jobs
+from soundconverter.util.soundfile import  SoundFile
 
 type_getters = {
     GObject.TYPE_STRING: 'get_string',
@@ -33,60 +37,71 @@ type_getters = {
 }
 
 
-class Discoverer(Task):
-    """Find type and tags of a SoundFile if possible."""
+def add_discoverers(task_queue, sound_files):
+    """Fill a TaskQueue with Discoverer tasks for optimized discovery."""
+    chunk = []
+    chunksize = len(sound_files) / get_num_jobs()
+    for sound_file in sound_files:
+        chunk.append(sound_file)
+        if len(chunk) >= chunksize:
+            discoverer = Discoverer(chunk)
+            task_queue.add(discoverer)
+            chunk = []
+    if len(chunk) > 0:
+        discoverer = Discoverer(chunk)
+        task_queue.add(discoverer)
 
-    def __init__(self, sound_file):
-        """Find type and tags of a SoundFile if possible."""
-        self.sound_file = sound_file
-        self.readable = None
-        self.error = None
 
-    def get_progress(self):
-        """Fraction of how much of the task is completed."""
-        # fast task, don't care
-        return 1
-
-    def cancel(self):
-        """Cancel execution of the task."""
-        # fast task, don't care
-        pass
-
-    def pause(self):
-        """Pause execution of the task."""
-        # fast task, don't care
-        pass
-
-    def resume(self):
-        """Resume execution of the task."""
-        # fast task, don't care
-        pass
+class DiscovererThread(Thread):
+    """Discover if multiple SoundFiles can be read and their tags."""
+    def __init__(self, sound_files, bus):
+        super().__init__()
+        self.sound_files = sound_files
+        self.bus = bus
 
     def run(self):
-        discoverer = GstPbutils.Discoverer()
-        discoverer.connect('discovered', self._discovered)
-        discoverer.start()
-        discoverer.discover_uri_async(self.sound_file.uri)
+        """Run the Thread.
 
-    def _discovered(self, _, info, error):
-        """The uri has been processed."""
-        self.error = error
-        if error is None:
-            taglist = info.get_tags()
-            taglist.foreach(self._add_tag)
+        This is the fastest way I could figure out. discover_uri_async
+        was not faster than discover_uri, and the UI only stayed responsive
+        as long as only 1 discover_uri_async job was running at a time.
+        Maybe it was a bit too much for the GLib event loop, who knows.
+        Running multiple discover_uri_async jobs at a time also didn't improve
+        the performance. By using threads with synchronous discovery, I could
+        get a very responsive UI while spawning 12 Threads with a drastic
+        ~5-times performance increase for 360 files.
 
-            filename = self.sound_file.filename_for_display
-            logger.debug('found tag: {}'.format(filename))
-            for tag, value in self.sound_file.tags.items():
-                logger.debug('    {}: {}'.format(tag, value))
+        I couldn't get it to work with the multiprocessing module though,
+        because the discover_uri function would hang.
+        """
+        for sound_file in self.sound_files:
+            try:
+                discoverer = GstPbutils.Discoverer()
+                info = discoverer.discover_uri(sound_file.uri)
+                taglist = info.get_tags()
+                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
-            self.readable = True
-            self.callback()
-        else:
-            self.readable = False
-            self.callback()
+                filename = sound_file.filename_for_display
+                logger.debug('found tag: {}'.format(filename))
+                for tag, value in sound_file.tags.items():
+                    logger.debug('    {}: {}'.format(tag, value))
 
-    def _add_tag(self, taglist, tag):
+                # since threads share memory, this doesn't have to be sent
+                # over a bus or queue, but rather can be written into the
+                # sound_file
+                sound_file.readable = True
+            except GLib.Error:
+                sound_file.readable = False
+
+            msg_type = Gst.MessageType(Gst.MessageType.PROGRESS)
+            msg = Gst.Message.new_custom(msg_type, None, None)
+            self.bus.post(msg)
+
+        msg_type = Gst.MessageType(Gst.MessageType.EOS)
+        msg = Gst.Message.new_custom(msg_type, None, None)
+        self.bus.post(msg)
+
+    def _add_tag(self, taglist, tag, sound_file):
         """Convert the taglist to a dict one by one."""
         # only really needed to construct output paths
         tag_type = Gst.tag_get_type(tag)
@@ -94,9 +109,58 @@ class Discoverer(Task):
         if tag_type in type_getters:
             getter = getattr(taglist, type_getters[tag_type])
             value = str(getter(tag)[1])
-            self.sound_file.tags[tag] = value
+            sound_file.tags[tag] = value
 
         if 'datetime' in tag:
             dt = taglist.get_date_time(tag)[1]
-            self.sound_file.tags['year'] = dt.get_year()
-            self.sound_file.tags['date'] = dt.to_iso8601_string()[:10]
+            sound_file.tags['year'] = dt.get_year()
+            sound_file.tags['date'] = dt.to_iso8601_string()[:10]
+
+
+class Discoverer(Task):
+    """Find type and tags of a SoundFile if possible."""
+
+    def __init__(self, sound_files):
+        """Find type and tags of a SoundFile if possible."""
+        self.sound_files = sound_files
+        self.error = None
+        self.running = False
+        self.callback = lambda: None
+        self.discovered = 0
+        self.queue = None
+
+    def get_progress(self):
+        """Fraction of how much of the task is completed."""
+        # fast task, don't care
+        return self.discovered / len(self.sound_files)
+
+    def cancel(self):
+        """Cancel execution of the task."""
+        # TODO
+        pass
+
+    def pause(self):
+        """Pause execution of the task."""
+        # TODO
+        pass
+
+    def resume(self):
+        """Resume execution of the task."""
+        # TODO
+        pass
+
+    def run(self):
+        self.running = True
+        bus = Gst.Bus()
+        bus.connect('message', self.done)
+        bus.add_signal_watch()
+        thread = DiscovererThread(self.sound_files, bus)
+        thread.start()
+
+    def done(self, bus, message):
+        """Write down that it is finished and call the callback."""
+        if message.type == Gst.MessageType.EOS:
+            self.running = False
+            self.callback()
+        else:
+            self.discovered += 1
