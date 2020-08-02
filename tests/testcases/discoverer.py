@@ -39,9 +39,9 @@ class DiscovererTest(unittest.TestCase):
         self.assertEqual(discoverer.readable, None)
         self.assertEqual(len(discoverer.sound_file.tags), 0)
 
+        loop = GLib.MainLoop()
+        context = loop.get_context()
         while discoverer.readable is None:
-            loop = GLib.MainLoop()
-            context = loop.get_context()
             context.iteration(True)
 
         self.assertTrue(discoverer.readable)

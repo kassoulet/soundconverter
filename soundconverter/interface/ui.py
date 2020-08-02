@@ -29,19 +29,20 @@ import urllib.error
 from gettext import gettext as _
 from gettext import ngettext
 
-from gi.repository import GObject, Gtk, Gio, Gdk, GLib
+from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
 
 from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, get_gio_settings
+from soundconverter.util.settings import settings, get_gio_settings, \
+    get_num_jobs
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern, get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
     subfolder_patterns, basename_patterns
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.logger import logger
-from soundconverter.gstreamer.discoverer import Discoverer
+from soundconverter.gstreamer.discoverer import add_discoverers
 from soundconverter.gstreamer.converter import Converter, available_elements
 from soundconverter.util.error import show_error, set_error_handler
 from soundconverter.gstreamer.profiles import audio_profiles_list
@@ -69,8 +70,11 @@ def idle(func):
 
 
 def gtk_iteration():
-    while Gtk.events_pending():
+    """Keeps the UI and event loops for gst going."""
+    while True:
         Gtk.main_iteration()
+        if not Gtk.events_pending():
+            break
 
 
 def gtk_sleep(duration):
@@ -82,7 +86,6 @@ def gtk_sleep(duration):
 
 
 class ErrorDialog:
-
     def __init__(self, builder):
         self.dialog = builder.get_object('error_dialog')
         self.dialog.set_transient_for(builder.get_object('window'))
@@ -108,7 +111,7 @@ class FileList:
 
     def __init__(self, window, builder):
         self.window = window
-        self.discoverers = TaskQueue()
+        self.discoverers = None
         self.filelist = set()
 
         self.model = Gtk.ListStore(*MODEL)
@@ -131,23 +134,24 @@ class FileList:
         self.widget.connect('drag-data-received', self.drag_data_received)
 
         renderer = Gtk.CellRendererProgress()
-        column = Gtk.TreeViewColumn('progress',
-                                    renderer,
-                                    value=2,
-                                    text=3,
-                                    )
+        column = Gtk.TreeViewColumn(
+            'progress',
+            renderer,
+            value=2,
+            text=3,
+        )
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         self.widget.append_column(column)
         self.progress_column = column
         self.progress_column.set_visible(False)
 
         renderer = Gtk.CellRendererText()
-        from gi.repository import Pango
         renderer.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
-        column = Gtk.TreeViewColumn('Filename',
-                                    renderer,
-                                    markup=0,
-                                    )
+        column = Gtk.TreeViewColumn(
+            'Filename',
+            renderer,
+            markup=0,
+        )
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.set_expand(True)
         self.widget.append_column(column)
@@ -255,10 +259,13 @@ class FileList:
         # that can be handled by gstreamer
         self.good_uris = []
 
+        self.discoverers = TaskQueue()
+        sound_files = []
         for f in files:
             sound_file = SoundFile(f, base)
-            discoverer = Discoverer(sound_file)
-            self.discoverers.add(discoverer)
+            sound_files.append(sound_file)
+
+        add_discoverers(self.discoverers, sound_files)
 
         self.discoverers.set_on_queue_finished(self.discoverer_queue_ended)
         self.discoverers.run()
@@ -270,15 +277,20 @@ class FileList:
         # so that the ui stays responsive
         self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
         self.window.progressbarstatus.set_show_text(True)
+
         while self.discoverers.running:
             progress = self.discoverers.get_progress()
             if progress:
                 completed = int(progress * len(files))
                 self.window.progressbarstatus.set_fraction(progress)
-                self.window.progressbarstatus.set_text('{}/{}'.format(completed, len(files)))
+                self.window.progressbarstatus.set_text(
+                    '{}/{}'.format(completed, len(files))
+                )
             gtk_iteration()
-            # time.sleep(0.1)  # slows everything down. why does the taskqueue depend
-            # on gtk_iteration being called like a maniac?
+        logger.info('Discovered {} files in {} s'.format(
+            len(files), round(self.discoverers.get_duration(), 1)
+        ))
+
         self.window.progressbarstatus.set_show_text(False)
 
         # see if one of the files with an audio extension
@@ -294,11 +306,14 @@ class FileList:
         # out of those files, that many have an audio file extension
         broken_audiofiles = 0
 
+        sound_files = []
         for discoverer in self.discoverers.all_tasks:
-            sound_file = discoverer.sound_file
+            sound_files += discoverer.sound_files
+
+        for sound_file in sound_files:
             # create a list of human readable file paths
             # that were not added to the list
-            if sound_file.uri not in self.good_uris:
+            if not sound_file.readable:
                 extension = os.path.splitext(f)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
@@ -381,8 +396,13 @@ class FileList:
         if not self.window.is_active():
             notification(msg)
 
-        readable = [task for task in self.discoverers.done if task.readable]
-        self.good_uris = [task.sound_file.uri for task in readable]
+        readable = []
+        for discoverer in self.discoverers.all_tasks:
+            for sound_file in discoverer.sound_files:
+                if sound_file.readable:
+                    readable.append(sound_file)
+
+        self.good_uris = [sound_file.uri for sound_file in readable]
         self.window.set_status()
         self.window.progressbarstatus.hide()
 
@@ -1086,6 +1106,8 @@ class SoundConverterWindow(GladeWindow):
         self.filelist.cancel()
         if self.converter_queue is not None:
             self.converter_queue.cancel()
+        if self.filelist.discoverers is not None:
+            self.filelist.discoverers.cancel()
         self.widget.hide()
         self.widget.destroy()
         # wait one second…

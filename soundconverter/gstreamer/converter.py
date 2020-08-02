@@ -297,10 +297,6 @@ class Converter(Task):
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
 
-                # TODO there once was connected_signals stuff
-                # TODO there once was
-                # `for name, signal, callback in self.signals:`
-
             except GLib.gerror as e:
                 show_error('gstreamer error when creating pipeline', str(e))
                 self._on_error(str(e))
@@ -317,8 +313,6 @@ class Converter(Task):
         Will clear the temporary data on error or move the temporary file
         to the final path on success.
         """
-        self.sound_file.progress = 1.0
-
         input_uri = self.sound_file.uri
 
         if not vfs_exists(self.temporary_filename):
@@ -393,7 +387,6 @@ class Converter(Task):
                 beautify_uri(newname)
             ))
 
-        # TODO had `and self.processing and`
         if self.delete_original and not self.error:
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):

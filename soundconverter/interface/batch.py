@@ -309,11 +309,13 @@ class CLICheck:
             context.iteration(True)
 
         self.discoverers = discoverers.all_tasks
+        sound_files = []
+        for discoverer in self.discoverers:
+            sound_files += discoverer.sound_files
 
         if print_readable:
-            for discoverer in self.discoverers:
-                sound_file = discoverer.sound_file
-                if discoverer.readable:
+            for sound_file in sound_files:
+                if sound_file.readable:
                     self.print(sound_file)
                 elif self.print_not_readable:
                     logger.info('{} is not an audiofile'.format(
