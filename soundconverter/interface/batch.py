@@ -89,16 +89,17 @@ def validate_args(options):
             logger.error('output path argument -o is required')
             raise SystemExit
 
-        mime = options['format']
-        if mime is None:
+        # target_format might be a mime type or a file extension
+        target_format = options['format']
+        if target_format is None:
             logger.error('format argument -f is required')
             raise SystemExit
-        mime = get_mime_type(mime)
-        if mime is None:
-            logger.error('cannot use "{}" mime type.'.format(mime))
+        target_format = get_mime_type(target_format)
+        if target_format is None:
+            logger.error('cannot use "{}" mime type.'.format(target_format))
             msg = 'Supported shortcuts and mime types:'
-            for k, v in sorted(get_mime_type_mapping().items()):
-                msg += ' {} {}'.format(k, v)
+            for ext, mime in sorted(get_mime_type_mapping().items()):
+                msg += ' {} {}'.format(ext, mime)
             logger.info(msg)
             raise SystemExit
 
@@ -218,16 +219,16 @@ class CLIConvert:
                 )
                 continue
 
-            c = Converter(sound_file, name_generator)
+            converter = Converter(sound_file, name_generator)
 
             if 'quality' in settings:
                 quality_setting = settings.get('quality')
                 setting_name = get_quality_setting_name()
                 get_gio_settings().set_value(setting_name, quality_setting)
 
-            c.overwrite = True
+            converter.overwrite = True
 
-            conversions.add(c)
+            conversions.add(converter)
 
             self.num_conversions += 1
 
@@ -244,13 +245,13 @@ class CLIConvert:
         # do another one to print the queue done message
         context.iteration(True)
 
-    def print_progress(self, c):
+    def print_progress(self, converter):
         """Print the current filename and how many files are left."""
         self.started_tasks += 1
-        path = unquote_filename(beautify_uri(c.sound_file.uri))
+        path = unquote_filename(beautify_uri(converter.sound_file.uri))
         logger.info('{}/{}: \'{}\''.format(
-            self.started_tasks, self.num_conversions, path)
-        )
+            self.started_tasks, self.num_conversions, path
+        ))
 
 
 class CLICheck:
@@ -322,8 +323,8 @@ class CLICheck:
                     self.print(sound_file)
                 elif self.print_not_readable:
                     logger.info('{} is not an audiofile'.format(
-                        beautify_uri(sound_file.uri))
-                    )
+                        beautify_uri(sound_file.uri)
+                    ))
 
     def get_sound_files(self):
         """Get all SoundFiles."""

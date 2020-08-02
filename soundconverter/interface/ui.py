@@ -34,8 +34,7 @@ from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
 from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, get_gio_settings, \
-    get_num_jobs
+from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_quality, locale_patterns_dict, \
     custom_patterns, filepattern, get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
@@ -135,11 +134,12 @@ class FileList:
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.widget.drag_dest_set(
-            Gtk.DestDefaults.ALL,
-            [],
-            Gdk.DragAction.COPY
+            Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY
         )
-        targets = [(accepted, 0, i) for i, accepted in enumerate(self.drop_mime_types)]
+        targets = [
+            (accepted, 0, i) for i, accepted
+            in enumerate(self.drop_mime_types)
+        ]
         self.widget.drag_dest_set_target_list(targets)
 
         self.widget.connect('drag-data-received', self.drag_data_received)
@@ -209,6 +209,9 @@ class FileList:
         start_t = time.time()
         files = []
         self.window.set_status(_('Scanning files…'))
+        # for whichever reason, that set_status needs some more iterations
+        # to show up:
+        gtk_iteration(True)
         self.window.progressbarstatus.show()
         self.files_to_add = 0
         self.window.progressbarstatus.set_fraction(0)
@@ -239,10 +242,10 @@ class FileList:
 
                 accepted = []
                 if extensions:
-                    for f in filelist:
+                    for filename in filelist:
                         for extension in extensions:
-                            if f.lower().endswith(extension):
-                                accepted.append(f)
+                            if filename.lower().endswith(extension):
+                                accepted.append(filename)
                     filelist = accepted
                 files.extend(filelist)
             else:
@@ -274,8 +277,8 @@ class FileList:
 
         self.discoverers = TaskQueue()
         sound_files = []
-        for f in files:
-            sound_file = SoundFile(f, base)
+        for filename in files:
+            sound_file = SoundFile(filename, base)
             sound_files.append(sound_file)
 
         add_discoverers(self.discoverers, sound_files)
@@ -327,19 +330,22 @@ class FileList:
             # create a list of human readable file paths
             # that were not added to the list
             if not sound_file.readable:
-                extension = os.path.splitext(f)[1].lower()
+                filename = sound_file.filename
+
+                extension = os.path.splitext(filename)[1].lower()
                 if extension in known_audio_types:
                     broken_audiofiles += 1
 
                 subfolders = sound_file.subfolders
-                filename = sound_file.filename
                 relative_path = os.path.join(subfolders, filename)
 
                 self.invalid_files_list.append(relative_path)
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
-                logger.info('file already present: \'{}\''.format(sound_file.uri))
+                logger.info('file already present: \'{}\''.format(
+                    sound_file.uri
+                ))
                 continue
             self.append_file(sound_file)
 
@@ -355,24 +361,32 @@ class FileList:
             elif len(files) == invalid_files:
                 # case 2: all files that should be added cannot be added
                 show_error(
-                    _('All {} specified files are not supported!').format(len(files)),
+                    _('All {} specified files are not supported!').format(
+                        len(files)
+                    ),
                     _('Either because they are broken or not audio files.')
                 )
 
             else:
-                # case 3: some files could not be added (that can already be because
-                # there is a single picture in a folder of hundreds of sound files).
-                # Show an error if this skipped file has a soundfile extension,
-                # otherwise don't bother the user.
-                logger.info('{} of {} files were not added to the list'.format(invalid_files, len(files)))
+                # case 3: some files could not be added (that can already be
+                # because there is a single picture in a folder of hundreds
+                # of sound files). Show an error if this skipped file has a
+                # soundfile extension, otherwise don't bother the user.
+                logger.info(
+                    '{} of {} files were not added to the list'.format(
+                        invalid_files, len(files)
+                    )
+                )
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
                             'One audio file could not be read by GStreamer!',
-                            '{} audio files could not be read by GStreamer!', broken_audiofiles
+                            '{} audio files could not be read by GStreamer!',
+                            broken_audiofiles
                         ).format(broken_audiofiles),
                         _(
-                            'Check "Invalid Files" in the menu for more information.'
+                            'Check "Invalid Files" in the menu for more'
+                            'information.'
                         )
                     )
         else:
@@ -516,7 +530,7 @@ class PreferencesDialog(GladeWindow):
         for name in self.sensitive_names:
             self.sensitive_widgets[name] = builder.get_object(name)
             assert self.sensitive_widgets[name] is not None
-        self.set_widget_initial_values(builder)
+        self.set_widget_initial_values()
         self.set_sensitive()
 
         tip = [_('Available patterns:')]
@@ -524,16 +538,14 @@ class PreferencesDialog(GladeWindow):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
 
-        # self.resample_rate.connect('changed', self._on_resample_rate_changed)
-
-    def set_widget_initial_values(self, builder):
+    def set_widget_initial_values(self):
         self.quality_tabs.set_show_tabs(False)
 
         if self.settings.get_boolean('same-folder-as-input'):
-            w = self.same_folder_as_input
+            widget = self.same_folder_as_input
         else:
-            w = self.into_selected_folder
-        w.set_active(True)
+            widget = self.into_selected_folder
+        widget.set_active(True)
 
         self.target_folder_chooser = Gtk.FileChooserDialog(
             title=_('Add Folder…'),
@@ -541,31 +553,37 @@ class PreferencesDialog(GladeWindow):
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
 
-        self.target_folder_chooser.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
-        self.target_folder_chooser.add_button(Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+        self.target_folder_chooser.add_button(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL
+        )
+        self.target_folder_chooser.add_button(
+            Gtk.STOCK_OPEN, Gtk.ResponseType.OK
+        )
 
         self.target_folder_chooser.set_select_multiple(False)
         self.target_folder_chooser.set_local_only(False)
 
-        uri = filename_to_uri(urllib.parse.quote(self.settings.get_string('selected-folder'), safe='/:@'))
+        uri = filename_to_uri(urllib.parse.quote(
+            self.settings.get_string('selected-folder'), safe='/:@'
+        ))
         self.target_folder_chooser.set_uri(uri)
         self.update_selected_folder()
 
-        w = self.create_subfolders
-        w.set_active(self.settings.get_boolean('create-subfolders'))
+        widget = self.create_subfolders
+        widget.set_active(self.settings.get_boolean('create-subfolders'))
 
-        w = self.subfolder_pattern
+        widget = self.subfolder_pattern
         active = self.settings.get_int('subfolder-pattern-index')
-        model = w.get_model()
+        model = widget.get_model()
         model.clear()
         for pattern, desc in subfolder_patterns:
             i = model.append()
             model.set(i, 0, desc)
-        w.set_active(active)
+        widget.set_active(active)
 
         if self.settings.get_boolean('replace-messy-chars'):
-            w = self.replace_messy_chars
-            w.set_active(True)
+            widget = self.replace_messy_chars
+            widget.set_active(True)
 
         if self.settings.get_boolean('delete-original'):
             self.delete_original.set_active(True)
@@ -638,37 +656,37 @@ class PreferencesDialog(GladeWindow):
 
         # display information about mp3 encoding
         if 'lamemp3enc' not in available_elements:
-            w = self.lame_absent
-            w.show()
+            widget = self.lame_absent
+            widget.show()
 
-        w = self.vorbis_quality
+        widget = self.vorbis_quality
         quality = self.settings.get_double('vorbis-quality')
         quality_setting = get_quality('ogg', quality, reverse=True)
-        w.set_active(-1)
+        widget.set_active(-1)
         self.vorbis_quality.set_active(quality_setting)
         if self.settings.get_boolean('vorbis-oga-extension'):
             self.vorbis_oga_extension.set_active(True)
 
-        w = self.aac_quality
+        widget = self.aac_quality
         quality = self.settings.get_int('aac-quality')
         quality_setting = get_quality('aac', quality, reverse=True)
-        w.set_active(quality_setting)
+        widget.set_active(quality_setting)
 
-        w = self.opus_quality
+        widget = self.opus_quality
         quality = self.settings.get_int('opus-bitrate')
         quality_setting = get_quality('opus', quality, reverse=True)
-        w.set_active(quality_setting)
+        widget.set_active(quality_setting)
 
-        w = self.flac_compression
+        widget = self.flac_compression
         quality = self.settings.get_int('flac-compression')
         quality_setting = get_quality('flac', quality, reverse=True)
-        w.set_active(quality_setting)
+        widget.set_active(quality_setting)
 
-        w = self.wav_sample_width
+        widget = self.wav_sample_width
         quality = self.settings.get_int('wav-sample-width')
         # TODO test sample width on output because get_quality is new here
         quality_setting = get_quality('wav', quality, reverse=True)
-        w.set_active(quality_setting)
+        widget.set_active(quality_setting)
 
         self.mp3_quality = self.mp3_quality
         self.mp3_mode = self.mp3_mode
@@ -676,14 +694,14 @@ class PreferencesDialog(GladeWindow):
         mode = self.settings.get_string('mp3-mode')
         self.change_mp3_mode(mode)
 
-        w = self.basename_pattern
+        widget = self.basename_pattern
         active = self.settings.get_int('name-pattern-index')
-        model = w.get_model()
+        model = widget.get_model()
         model.clear()
         for pattern, desc in basename_patterns:
             iter = model.append()
             model.set(iter, 0, desc)
-        w.set_active(active)
+        widget.set_active(active)
 
         self.custom_filename.set_text(
             self.settings.get_string('custom-filename-pattern')
@@ -693,7 +711,8 @@ class PreferencesDialog(GladeWindow):
         else:
             self.custom_filename_box.set_sensitive(False)
 
-        self.resample_toggle.set_active(self.settings.get_boolean('output-resample'))
+        output_resample = self.settings.get_boolean('output-resample')
+        self.resample_toggle.set_active(output_resample)
 
         cell = Gtk.CellRendererText()
         self.resample_rate.pack_start(cell, True)
@@ -728,34 +747,46 @@ class PreferencesDialog(GladeWindow):
 
         generator = TargetNameGenerator()
 
-        # TODO those variable names
-        s = GLib.markup_escape_text(beautify_uri(
+        example_path = GLib.markup_escape_text(
             generator.generate_target_path(sound_file, for_display=True)
-        ))
-        p = 0
+        )
+        position = 0
         replaces = []
 
-        while 1:
-            b = s.find('{', p)
-            if b == -1:
+        while True:
+            beginning = example_path.find('{', position)
+            if beginning == -1:
                 break
-            e = s.find('}', b)
+            end = example_path.find('}', beginning)
 
-            tag = s[b:e+1]
-            if tag.lower() in [v.lower() for v in list(locale_patterns_dict.values())]:
-                replace = tag.replace('{', '<b>{').replace('}', '}</b>')
-                replaces.append([tag, replace])
+            tag = example_path[beginning:end+1]
+            available_tags = [
+                v.lower() for v in list(locale_patterns_dict.values())
+            ]
+            if tag.lower() in available_tags:
+                bold_tag = tag.replace(
+                    '{', '<b>{'
+                ).replace(
+                    '}', '}</b>'
+                )
+                replaces.append([tag, bold_tag])
             else:
-                replace = tag.replace('{', '<span foreground=\'red\'><i>{').replace('}', '}</i></span>')
-                replaces.append([tag, replace])
-            p = b + 1
+                red_tag = tag.replace(
+                    '{', '<span foreground=\'red\'><i>{'
+                ).replace(
+                    '}', '}</i></span>'
+                )
+                replaces.append([tag, red_tag])
+            position = beginning + 1
 
-        for k, l in replaces:
-            s = s.replace(k, l)
+        for tag, formatted in replaces:
+            example_path = example_path.replace(tag, formatted)
 
-        self.example.set_markup(s)
+        self.example.set_markup(example_path)
 
-        markup = '<small>{}</small>'.format(_('Target bitrate: %s') % get_bitrate_from_settings())
+        markup = '<small>{}</small>'.format(
+            _('Target bitrate: %s') % get_bitrate_from_settings()
+        )
         self.approx_bitrate.set_markup(markup)
 
     def process_custom_pattern(self, pattern):
@@ -808,7 +839,8 @@ class PreferencesDialog(GladeWindow):
         self.target_folder_chooser.hide()
         if ret == Gtk.ResponseType.OK:
             if folder:
-                self.settings.set_string('selected-folder', urllib.parse.unquote(folder))
+                folder = urllib.parse.unquote(folder)
+                self.settings.set_string('selected-folder', folder)
                 self.update_selected_folder()
                 self.update_example()
 
@@ -889,7 +921,8 @@ class PreferencesDialog(GladeWindow):
 
     def on_hscale_vorbis_quality_value_changed(self, hscale):
         fquality = hscale.get_value()
-        if abs(self.settings.get_double('vorbis-quality') - fquality / 10.0) < 0.001:
+        vorbis_quality = self.settings.get_double('vorbis-quality')
+        if abs(vorbis_quality - fquality / 10.0) < 0.001:
             return  # already at right value
         self.settings.set_double('vorbis-quality', fquality / 10.0)
         self.vorbis_quality.set_active(-1)
@@ -921,7 +954,7 @@ class PreferencesDialog(GladeWindow):
 
     def on_gstprofile_changed(self, combobox):
         profile = audio_profiles_list[combobox.get_active()]
-        description, extension, pipeline = profile
+        description = profile[0]
         self.settings.set_string('audio-profile', description)
         self.update_example()
 
@@ -947,7 +980,8 @@ class PreferencesDialog(GladeWindow):
         }
         self.hscale_mp3.set_range(0, range_[mode])
 
-        self.mp3_quality.set_active(get_quality('mp3', quality, mode, reverse=True))
+        index = get_quality('mp3', quality, mode, reverse=True)
+        self.mp3_quality.set_active(index)
         self.update_example()
 
     def on_mp3_mode_changed(self, combobox):
@@ -963,7 +997,8 @@ class PreferencesDialog(GladeWindow):
         }
         mode = self.settings.get_string('mp3-mode')
 
-        self.settings.set_int(keys[mode], get_quality('mp3', combobox.get_active(), mode))
+        bitrate = get_quality('mp3', combobox.get_active(), mode)
+        self.settings.set_int(keys[mode], bitrate)
         self.update_example()
 
     def on_hscale_mp3_value_changed(self, widget):
@@ -980,7 +1015,8 @@ class PreferencesDialog(GladeWindow):
                     128, 160, 192, 224, 256, 320),
             'vbr': (9, 8, 7, 6, 5, 4, 3, 2, 1, 0),
         }
-        self.settings.set_int(keys[mode], quality[mode][int(widget.get_value())])
+        index = int(widget.get_value())
+        self.settings.set_int(keys[mode], quality[mode][index])
         self.mp3_quality.set_active(-1)
         self.update_example()
 
@@ -1154,9 +1190,11 @@ class SoundConverterWindow(GladeWindow):
         """Set a new filter for the filechooserwidget."""
         filefilter = Gtk.FileFilter()
         if self.addfile_combo.get_active():
-            filefilter.add_custom(Gtk.FileFilterFlags.DISPLAY_NAME,
-                                  self.addfile_filter_cb,
-                                  self.pattern[self.addfile_combo.get_active()])
+            filefilter.add_custom(
+                Gtk.FileFilterFlags.DISPLAY_NAME,
+                self.addfile_filter_cb,
+                self.pattern[self.addfile_combo.get_active()]
+            )
         else:
             filefilter.add_pattern('*.*')
         self.addchooser.set_filter(filefilter)
@@ -1241,7 +1279,8 @@ class SoundConverterWindow(GladeWindow):
     def do_convert(self):
         """Start the conversion."""
         name_generator = TargetNameGenerator()
-        GLib.timeout_add(100, self.on_progress)
+        # refresh progress with 30fps
+        GLib.timeout_add(1000 / 30, self.on_progress)
         self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
@@ -1348,7 +1387,8 @@ class SoundConverterWindow(GladeWindow):
         self.set_status(msg)
         try:
             from gi.repository import Unity
-            launcher = Unity.LauncherEntry.get_for_desktop_id("soundconverter.desktop")
+            name = "soundconverter.desktop"
+            launcher = Unity.LauncherEntry.get_for_desktop_id(name)
             launcher.set_property("progress_visible", False)
         except ImportError:
             pass
@@ -1427,7 +1467,7 @@ class SoundConverterWindow(GladeWindow):
             self.widget.set_title(_('SoundConverter'))
         self.statustext.set_markup(text)
         self.set_sensitive()
-        gtk_iteration()
+        gtk_iteration(True)
 
     def is_active(self):
         return self.widget.is_active()

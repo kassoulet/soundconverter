@@ -72,7 +72,7 @@ class BatchIntegration(unittest.TestCase):
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
 
-    def testSingleFile(self):
+    def test_single_file(self):
         # it should convert
         launch([
             '-b',
@@ -86,7 +86,7 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings['recursive'], False)
         self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
 
-    def testNonRecursiveWithFolder(self):
+    def test_non_recursive_with_folder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as ctx:
             launch([
@@ -100,7 +100,7 @@ class BatchIntegration(unittest.TestCase):
         exit_code = ctx.exception.code
         self.assertEqual(exit_code, 1)
 
-    def testRecursiveEmpty(self):
+    def test_recursive_empty(self):
         # it should exit with code 2, because files are found but they
         # are not audio files
         with self.assertRaises(SystemExit) as cm:
@@ -116,7 +116,7 @@ class BatchIntegration(unittest.TestCase):
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 2)
 
-    def testRecursiveAudio(self):
+    def test_recursive_audio(self):
         # it should convert
         launch([
             '-b', 'tests/test data/audio',
@@ -133,7 +133,7 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.mp3'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.mp3'))
 
-    def testMultiplePaths(self):
+    def test_multiple_paths(self):
         # it should convert
         launch([
             '-b',
@@ -159,7 +159,7 @@ class BatchIntegration(unittest.TestCase):
         # subfolder, just like the input.
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
-    def testCheck(self):
+    def test_check(self):
         # it should run and not raise exceptions
         launch([
             '-c',
@@ -171,7 +171,7 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
 
-    def testTags(self):
+    def test_tags(self):
         # it should run and not raise exceptions
         launch([
             '-t',
@@ -215,7 +215,7 @@ class GUI(unittest.TestCase):
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
 
-    def testConversion(self):
+    def test_conversion(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
 
@@ -256,6 +256,17 @@ class GUI(unittest.TestCase):
             # to work on the conversions and updating the GUI
             gtk_iteration()
 
+        self.assertEqual(len(queue.all_tasks), 3)
+        self.assertTrue(queue.all_tasks[0].done)
+        self.assertTrue(queue.all_tasks[1].done)
+        self.assertTrue(queue.all_tasks[2].done)
+        self.assertEqual(queue.all_tasks[0].get_progress(), 1)
+        self.assertEqual(queue.all_tasks[1].get_progress(), 1)
+        self.assertEqual(queue.all_tasks[2].get_progress(), 1)
+        self.assertIsNotNone(queue.all_tasks[0].sound_file.duration)
+        self.assertIsNotNone(queue.all_tasks[1].sound_file.duration)
+        self.assertIsNotNone(queue.all_tasks[2].sound_file.duration)
+
         duration = queue.get_duration()
         time.sleep(0.05)
         # The duration may not increase by 0.05 seconds, because it's finished
@@ -281,7 +292,7 @@ class GUI(unittest.TestCase):
         self.assertIn('empty/a', window.filelist.invalid_files_list)
         self.assertIn('empty/b/c', window.filelist.invalid_files_list)
 
-    def testPauseResume(self):
+    def test_pause_resume(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
 
@@ -355,7 +366,7 @@ class GUI(unittest.TestCase):
         self.assertFalse(window.filelist.progress_column.get_visible())
         self.assertEqual(len(window.filelist.invalid_files_list), 0)
 
-    def testConversionPattern(self):
+    def test_conversion_pattern(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int('aac-quality', get_quality('aac', 3))
 
@@ -403,7 +414,7 @@ class GUI(unittest.TestCase):
             'tests/tmp/test_artist/test_album/c/f o.m4a'
         ))
 
-    def testNonOverwriting(self):
+    def test_non_overwriting(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
 

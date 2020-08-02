@@ -19,7 +19,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import math
 from gettext import gettext as _
 
 from soundconverter.util.settings import get_gio_settings
@@ -76,7 +75,8 @@ custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
 
 locale_patterns_dict = dict(list(zip(
     [p.lower() for p in english_patterns.split()],
-    ['{%s}' % p for p in locale_patterns.split()])))
+    ['{%s}' % p for p in locale_patterns.split()]
+)))
 
 # Name and pattern for CustomFileChooser
 filepattern = (
@@ -105,21 +105,21 @@ def get_mime_type_mapping():
     return mime_types
 
 
-def get_mime_type(t):
+def get_mime_type(extension):
     """Return the matching mime-type or None if it is not supported.
 
     Parameters
     ----------
-    t : string
-        extension (like 'mp3')
+    extension : string
+        for example 'mp3'
     """
     mime_types = get_mime_type_mapping()
-    if t not in mime_types.values():
+    if extension not in mime_types.values():
         # possibly a file extension
-        return mime_types.get(t, None)
+        return mime_types.get(extension, None)
     else:
         # already a mime string
-        return t
+        return extension
 
 
 def get_file_extension(mime):
@@ -237,7 +237,8 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
     if ftype == 'm4a':
         ftype = 'aac'
 
-    quality = {
+    # get 6-tuple of qualities
+    qualities = {
         'ogg': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
         'aac': (64, 96, 128, 192, 256, 320),
         'opus': (48, 64, 96, 128, 160, 192),
@@ -248,20 +249,17 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         },
         'wav': (8, 16, 32),
         'flac': (0, 5, 8)
-    }
+    }[ftype]
 
-    # get 6-tuple of qualities
     if ftype == 'mp3':
-        qualities = quality[ftype][mode]
-    else:
-        qualities = quality[ftype]
+        qualities = qualities[mode]
 
     # return depending on function parameters
     if reverse:
         if type(value) == float:
             # floats are inaccurate, search for close value
-            for i, q in enumerate(qualities):
-                if abs(value - q) < 0.01:
+            for i, quality in enumerate(qualities):
+                if abs(value - quality) < 0.01:
                     return i
         if value in qualities:
             return qualities.index(value)

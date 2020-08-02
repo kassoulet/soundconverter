@@ -41,7 +41,7 @@ def beautify_uri(uri):
     """Convert an URI to a normal path.
 
     Also returns the prefix, for example 'file://'"""
-    match = split_URI(uri)
+    match = split_uri(uri)
     if match[0] is not None:
         # take the path part from the uri
         path = match[1]
@@ -94,14 +94,14 @@ def vfs_rename(original, newname):
 
 def vfs_exists(filename):
     """Check if file or URI exists."""
-    if not is_URI(filename):
+    if not is_uri(filename):
         # gio does not support relative path syntax
         filename = os.path.realpath(filename)
     gfile = Gio.file_parse_name(filename)
     return gfile.query_exists(None)
 
 
-def split_URI(uri):
+def split_uri(uri):
     """Match a regex to the uri that results in:
 
     [0]: scheme and authority, might be None if not an uri
@@ -117,8 +117,8 @@ def split_URI(uri):
     return match[1], match[3]
 
 
-def is_URI(uri):
-    return split_URI(uri)[0] is not None
+def is_uri(uri):
+    return split_uri(uri)[0] is not None
 
 
 def filename_to_uri(filename, prefix='file://'):
@@ -131,7 +131,7 @@ def filename_to_uri(filename, prefix='file://'):
     prefix : string
         for example 'file://'
     """
-    match = split_URI(filename)
+    match = split_uri(filename)
     if match[0]:
         # it's an URI! Don't quote the schema
         # filename might have a schema but still contain characters that
