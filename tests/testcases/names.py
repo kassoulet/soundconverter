@@ -31,7 +31,7 @@ from gi.repository import Gst, Gio
 
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
-    get_subfolder_pattern, get_basename_pattern
+    get_subfolder_pattern, get_basename_pattern, process_custom_pattern
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.fileoperations import filename_to_uri, \
     unquote_filename, beautify_uri
@@ -114,6 +114,13 @@ class Patterns(unittest.TestCase):
         gio_settings.set_string('custom-filename-pattern', 'test')
         pattern = get_basename_pattern()
         self.assertEqual(pattern, 'test')
+
+    def test_process_custom_pattern(self):
+        pattern_in = '{Artist}/{Album} foo/{Track}'
+        pattern_out = process_custom_pattern(pattern_in)
+        self.assertEqual(
+            pattern_out, '%(artist)s/%(album)s foo/%(track-number)02d'
+        )
 
 
 class TargetNameGeneratorTestCases(unittest.TestCase):

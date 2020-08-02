@@ -371,7 +371,7 @@ class GUI(unittest.TestCase):
         gio_settings.set_int('aac-quality', get_quality('aac', 3))
 
         gio_settings.set_int('name-pattern-index', -1)
-        filename_pattern = '%(.inputname)s/f o'
+        filename_pattern = '{Title}/f o'
         gio_settings.set_string('custom-filename-pattern', filename_pattern)
 
         gio_settings.set_boolean('create-subfolders', True)

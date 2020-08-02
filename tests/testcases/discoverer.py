@@ -25,7 +25,7 @@ from unittest.mock import Mock
 
 from gi.repository import GLib
 
-from soundconverter.gstreamer.discoverer import Discoverer
+from soundconverter.gstreamer.discoverer import Discoverer, is_denylisted
 from soundconverter.util.soundfile import SoundFile
 
 
@@ -97,7 +97,8 @@ class DiscovererTest(unittest.TestCase):
 
     def test_not_audio(self):
         c_mp3 = 'file://' + os.path.realpath('tests/test%20data/empty/a')
-        discoverer = Discoverer([SoundFile(c_mp3)])
+        a_iso = 'file://' + os.path.realpath('tests/test%20data/a.iso')
+        discoverer = Discoverer([SoundFile(c_mp3), SoundFile(a_iso)])
         discoverer.set_callback(lambda _: None)
         discoverer.run()
 
@@ -113,6 +114,12 @@ class DiscovererTest(unittest.TestCase):
         done.assert_called_with(discoverer)
 
         sound_file = discoverer.sound_files[0]
+        self.assertIsNone(sound_file.duration)
+        self.assertFalse(sound_file.readable)
+        self.assertEqual(len(sound_file.tags), 0)
+
+        sound_file = discoverer.sound_files[1]
+        self.assertEqual(is_denylisted(sound_file), '*.iso')
         self.assertIsNone(sound_file.duration)
         self.assertFalse(sound_file.readable)
         self.assertEqual(len(sound_file.tags), 0)

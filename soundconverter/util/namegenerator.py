@@ -51,6 +51,63 @@ subfolder_patterns = [
     ('%(album-artist)s - %(album)s', _('artist - album')),
 ]
 
+# custom filename patterns
+english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date ' \
+                   'Year Timestamp DiscNumber DiscTotal Ext'
+
+# traductors: These are the custom filename patterns. Only if it makes sense.
+locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date '
+                    'Year Timestamp DiscNumber DiscTotal Ext')
+
+patterns_formats = (
+    '%(artist)s',
+    '%(album)s',
+    '%(album-artist)s',
+    '%(title)s',
+    '%(track-number)02d',
+    '%(track-count)02d',
+    '%(genre)s',
+    '%(date)s',
+    '%(year)s',
+    '%(timestamp)s',
+    '%(album-disc-number)d',
+    '%(album-disc-count)d',
+    '%(.target-ext)s',
+)
+
+# Name and pattern for CustomFileChooser
+filepattern = (
+    (_('All files'), '*.*'),
+    ('MP3', '*.mp3'),
+    ('Ogg Vorbis', '*.ogg;*.oga'),
+    ('iTunes AAC ', '*.m4a'),
+    ('Windows WAV', '*.wav'),
+    ('AAC', '*.aac'),
+    ('FLAC', '*.flac'),
+    ('AC3', '*.ac3')
+)
+
+# Example: { 'artist': '{Artist}' }
+locale_patterns_dict = dict(list(zip(
+    [p.lower() for p in english_patterns.split()],
+    ['{%s}' % p for p in locale_patterns.split()]
+)))
+
+# add english and locale
+custom_patterns = english_patterns + ' ' + locale_patterns
+# convert to list
+custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
+# and finally to dict, thus removing doubles.
+# Example: { '{Artist}': '%(artist)s' }
+custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
+
+
+def process_custom_pattern(pattern):
+    """Convert '{tag}' to '%(tag)s' in the pattern."""
+    for curly_format, percent_format in custom_patterns.items():
+        pattern = pattern.replace(curly_format, percent_format)
+    return pattern
+
 
 def get_basename_pattern():
     """Get the currently selected or custom filename pattern.
@@ -67,7 +124,8 @@ def get_basename_pattern():
         index = 0
 
     if index == -1 or index == len(basename_patterns) - 1:
-        return settings.get_string('custom-filename-pattern')
+        pattern = settings.get_string('custom-filename-pattern')
+        return process_custom_pattern(pattern)
     else:
         # an index of -1 selects the last entry on purpose
         return basename_patterns[index][0]
