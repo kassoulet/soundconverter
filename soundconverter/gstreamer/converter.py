@@ -209,30 +209,24 @@ class Converter(Task):
 
     def _query_position(self):
         """Ask for the stream position of the current pipeline."""
-        try:
-            if self.pipeline:
-                # during Gst.State.PAUSED it returns super small numbers,
-                # so take care
-                position = self.pipeline.query_position(Gst.Format.TIME)[1]
-                return max(0, position / Gst.SECOND)
-        except Gst.QueryError:
-            pass
+        if self.pipeline:
+            # during Gst.State.PAUSED it returns super small numbers,
+            # so take care
+            position = self.pipeline.query_position(Gst.Format.TIME)[1]
+            return max(0, position / Gst.SECOND)
         return 0
 
     def _query_duration(self):
         """Ask for the duration of the current pipeline."""
-        try:
-            pipeline = self.pipeline
-            if not self.sound_file.duration and pipeline:
-                duration = pipeline.query_duration(Gst.Format.TIME)[1]
-                seconds = duration / Gst.SECOND
-                self.sound_file.duration = seconds
-                if self.sound_file.duration <= 0:
-                    self.sound_file.duration = None
-            else:
-                return self.sound_file.duration
-        except Gst.QueryError:
-            self.sound_file.duration = None
+        pipeline = self.pipeline
+        if not self.sound_file.duration and pipeline:
+            duration = pipeline.query_duration(Gst.Format.TIME)[1]
+            seconds = duration / Gst.SECOND
+            self.sound_file.duration = seconds
+            if self.sound_file.duration <= 0:
+                self.sound_file.duration = None
+        else:
+            return self.sound_file.duration
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
