@@ -69,12 +69,23 @@ def idle(func):
     return callback
 
 
-def gtk_iteration():
-    """Keeps the UI and event loops for gst going."""
-    while True:
-        Gtk.main_iteration()
-        if not Gtk.events_pending():
-            break
+def gtk_iteration(blocking=False):
+    """Keeps the UI and event loops for gst going.
+
+    Paramters
+    ---------
+    blocking : bool
+        If True, will call main_iteration even if no events are pending,
+        which will wait until an event is available.
+    """
+    if blocking:
+        while True:
+            Gtk.main_iteration()
+            if not Gtk.events_pending():
+                break
+    else:
+        while Gtk.events_pending():
+            Gtk.main_iteration()
 
 
 def gtk_sleep(duration):
@@ -212,7 +223,9 @@ class FileList:
                     'Use SoundJuicer Audio CD Extractor instead.'
                 )
                 return
-            info = Gio.file_parse_name(uri).query_file_type(Gio.FileMonitorFlags.NONE, None)
+            info = Gio.file_parse_name(uri).query_file_type(
+                Gio.FileMonitorFlags.NONE, None
+            )
             if info == Gio.FileType.DIRECTORY:
                 logger.info('walking: \'{}\''.format(uri))
                 if len(uris) == 1:
@@ -407,7 +420,8 @@ class FileList:
         self.window.progressbarstatus.hide()
 
     def cancel(self):
-        self.discoverers.cancel()
+        if self.discoverers is not None:
+            self.discoverers.cancel()
 
     def format_cell(self, sound_file):
         """Take a SoundFile and return a human readable path to it."""
@@ -1037,7 +1051,6 @@ class SoundConverterWindow(GladeWindow):
         self.combo.pack_start(combo_rend, True)
         self.combo.add_attribute(combo_rend, 'text', 0)
 
-        # TODO: get all (gstreamer) knew files
         for files in filepattern:
             self.store.append(['{} ({})'.format(files[0], files[1])])
 
@@ -1065,7 +1078,6 @@ class SoundConverterWindow(GladeWindow):
         self.addfile_combo.connect('changed', self.on_addfile_combo_changed)
 
         self.pattern = []
-        # TODO: get all (gstreamer) knew files
         for files in filepattern:
             self.pattern.append(files[1])
             self.addfile_store.append(['{} ({})'.format(files[0], files[1])])

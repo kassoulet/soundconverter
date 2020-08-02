@@ -357,7 +357,7 @@ class GUI(unittest.TestCase):
 
     def testConversionPattern(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+        gio_settings.set_int('aac-quality', get_quality('aac', 3))
 
         gio_settings.set_int('name-pattern-index', -1)
         filename_pattern = '%(.inputname)s/f o'
@@ -379,8 +379,10 @@ class GUI(unittest.TestCase):
 
         window = win[0]
 
-        # setup for conversion
-        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+        # setup for conversion. mp4mux was not sending tag messages, so
+        # make sure that tags from the discovery are properly used in the
+        # conversion
+        window.prefs.change_mime_type('audio/x-m4a')
 
         # start conversion
         window.on_convert_button_clicked()
@@ -391,14 +393,14 @@ class GUI(unittest.TestCase):
 
         self.assertTrue(os.path.isdir('tests/tmp/'))
         self.assertTrue(os.path.isfile(
-            'tests/tmp/Unknown Artist/Unknown Album/a/f o.opus'
+            'tests/tmp/Unknown Artist/Unknown Album/a/f o.m4a'
         ))
         self.assertTrue(os.path.isfile(
             'tests/tmp/Unknown Artist/Unknown Album/strângë chàrs '
-            'фズ/f o.opus'
+            'фズ/f o.m4a'
         ))
         self.assertTrue(os.path.isfile(
-            'tests/tmp/test_artist/test_album/c/f o.opus'
+            'tests/tmp/test_artist/test_album/c/f o.m4a'
         ))
 
     def testNonOverwriting(self):

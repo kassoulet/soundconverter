@@ -52,6 +52,16 @@ def add_discoverers(task_queue, sound_files):
         task_queue.add(discoverer)
 
 
+def get_sound_files(task_queue):
+    """Get all SoundFiles of discoverer tasks in a TaskQueue"""
+    sound_files = []
+    for task in task_queue:
+        if type(task) == Discoverer:
+            for sound_file in task.sound_files:
+                sound_files.append(sound_file)
+    return sound_files
+
+
 class DiscovererThread(Thread):
     """Discover if multiple SoundFiles can be read and their tags."""
     def __init__(self, sound_files, bus):
@@ -152,12 +162,12 @@ class Discoverer(Task):
     def run(self):
         self.running = True
         bus = Gst.Bus()
-        bus.connect('message', self.done)
+        bus.connect('message', self._on_message)
         bus.add_signal_watch()
         thread = DiscovererThread(self.sound_files, bus)
         thread.start()
 
-    def done(self, bus, message):
+    def _on_message(self, bus, message):
         """Write down that it is finished and call the callback."""
         if message.type == Gst.MessageType.EOS:
             self.running = False

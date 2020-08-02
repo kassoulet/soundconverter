@@ -30,7 +30,8 @@ from soundconverter.util.settings import settings, set_gio_settings, \
 from soundconverter.util.formats import get_quality_setting_name, \
     get_mime_type, get_mime_type_mapping
 from soundconverter.gstreamer.converter import Converter
-from soundconverter.gstreamer.discoverer import Discoverer
+from soundconverter.gstreamer.discoverer import add_discoverers, \
+    get_sound_files
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.fileoperations import unquote_filename, \
@@ -208,10 +209,9 @@ class CLIConvert:
         self.num_conversions = 0
 
         logger.info('\npreparing converters…')
-        audio_uris = file_checker.get_audio_uris()
-        for discoverer in file_checker.discoverers:
-            sound_file = discoverer.sound_file
-            if sound_file.uri not in audio_uris:
+        sound_files = file_checker.get_sound_files()
+        for sound_file in sound_files:
+            if not sound_file.readable:
                 filename = beautify_uri(sound_file.uri)
                 logger.info(
                     'skipping \'{}\': not an audiofile'.format(filename)
@@ -291,13 +291,16 @@ class CLICheck:
             exit(1)
 
         discoverers = TaskQueue()
+        sound_files = []
         for subdirectory, input_file in zip(subdirectories, input_files):
             sound_file = SoundFile(input_file)
             # by storing it in subfolders, the original subfolder structure
             # (relative to the directory that was provided as input in the
-            # cli) can be restored in the target dir:
+            # cli) can be restored in the target dir
             sound_file.subfolders = subdirectory
-            discoverers.add(Discoverer(sound_file))
+            sound_files.append(sound_file)
+
+        add_discoverers(discoverers, sound_files)
         discoverers.run()
 
         loop = GLib.MainLoop()
@@ -322,12 +325,9 @@ class CLICheck:
                         beautify_uri(sound_file.uri))
                     )
 
-    def get_audio_uris(self):
-        """Get a list of all SoundFile uris that can be converted."""
-        return [
-            discoverer.sound_file.uri for discoverer in self.discoverers
-            if discoverer.readable
-        ]
+    def get_sound_files(self):
+        """Get all SoundFiles."""
+        return get_sound_files(self.discoverers)
 
     def print(self, sound_file):
         """Print tags of a file, or write that it doesn't have tags."""
