@@ -733,7 +733,6 @@ Gautier Portet</property>
                             <property name="right_attach">2</property>
                             <property name="top_attach">2</property>
                             <property name="bottom_attach">3</property>
-                            <property name="x_options"/>
                             <property name="y_options"/>
                           </packing>
                         </child>
@@ -787,6 +786,7 @@ Gautier Portet</property>
                                       <object class="GtkLabel" id="label19">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <property name="margin_start">5</property>
                                         <property name="label" translatable="yes">Choose…</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -806,7 +806,6 @@ Gautier Portet</property>
                             <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
-                            <property name="x_options"/>
                             <property name="y_options"/>
                           </packing>
                         </child>
@@ -830,7 +829,6 @@ Gautier Portet</property>
                           <packing>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
-                            <property name="x_options"/>
                             <property name="y_options"/>
                           </packing>
                         </child>
@@ -849,9 +847,7 @@ Gautier Portet</property>
                           <packing>
                             <property name="top_attach">2</property>
                             <property name="bottom_attach">3</property>
-                            <property name="x_options">GTK_FILL</property>
                             <property name="y_options"/>
-                            <property name="x_padding">12</property>
                           </packing>
                         </child>
                         <child>
@@ -881,6 +877,7 @@ Gautier Portet</property>
                   <object class="GtkLabel" id="label16">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;Where to place results?&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -1041,6 +1038,8 @@ Gautier Portet</property>
                   <object class="GtkLabel" id="label17">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">24</property>
+                    <property name="margin_bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;How to name files?&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -1705,6 +1704,8 @@ Gautier Portet</property>
                   <object class="GtkLabel" id="label18">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">24</property>
+                    <property name="margin_bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;Type of result?&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -1853,17 +1854,6 @@ Gautier Portet</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label112">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
               </packing>
             </child>
             <child>

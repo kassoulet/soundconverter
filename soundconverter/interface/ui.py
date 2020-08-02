@@ -35,10 +35,10 @@ from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.util.formats import get_quality, locale_patterns_dict, \
-    custom_patterns, filepattern, get_bitrate_from_settings
+from soundconverter.util.formats import get_quality, get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
-    subfolder_patterns, basename_patterns
+    subfolder_patterns, basename_patterns, locale_patterns_dict, \
+    filepattern
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.logger import logger
 from soundconverter.gstreamer.discoverer import add_discoverers
@@ -740,12 +740,18 @@ class PreferencesDialog(GladeWindow):
         )
 
     def update_example(self):
+        """Refresh the example in the settings dialog."""
         sound_file = SoundFile('file:///foo/bar.flac')
-        sound_file.tags.update({'track-number': 1, 'track-count': 99})
-        sound_file.tags.update({'album-disc-number': 2, 'album-disc-count': 9})
+        sound_file.tags.update({
+            'track-number': 1,
+            'track-count': 99,
+            'album-disc-number': 2,
+            'album-disc-count': 9
+        })
         sound_file.tags.update(locale_patterns_dict)
 
         generator = TargetNameGenerator()
+        generator.replace_messy_chars = False
 
         example_path = GLib.markup_escape_text(
             generator.generate_target_path(sound_file, for_display=True)
@@ -788,11 +794,6 @@ class PreferencesDialog(GladeWindow):
             _('Target bitrate: %s') % get_bitrate_from_settings()
         )
         self.approx_bitrate.set_markup(markup)
-
-    def process_custom_pattern(self, pattern):
-        for k in custom_patterns:
-            pattern = pattern.replace(k, custom_patterns[k])
-        return pattern
 
     def set_sensitive(self):
         for widget in list(self.sensitive_widgets.values()):

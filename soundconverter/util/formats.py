@@ -25,69 +25,9 @@ from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.logger import logger
 from soundconverter.gstreamer.profiles import audio_profiles_dict
 
-# add here any format you want to be read
-mime_whitelist = (
-    'audio/',
-    'video/',
-    'application/ogg',
-    'application/x-id3',
-    'application/x-ape',
-    'application/vnd.rn-realmedia',
-    'application/x-pn-realaudio',
-    'application/x-shockwave-flash',
-    'application/x-3gp',
-)
 
-filename_blacklist = (
+filename_denylist = (
     '*.iso',
-)
-
-# custom filename patterns
-english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date ' \
-                   'Year Timestamp DiscNumber DiscTotal Ext'
-
-# traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date '
-                    'Year Timestamp DiscNumber DiscTotal Ext')
-
-patterns_formats = (
-    '%(artist)s',
-    '%(album)s',
-    '%(album-artist)s',
-    '%(title)s',
-    '%(track-number)02d',
-    '%(track-count)02d',
-    '%(genre)s',
-    '%(date)s',
-    '%(year)s',
-    '%(timestamp)s',
-    '%(album-disc-number)d',
-    '%(album-disc-count)d',
-    '%(.target-ext)s',
-)
-
-# add english and locale
-custom_patterns = english_patterns + ' ' + locale_patterns
-# convert to list
-custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
-# and finally to dict, thus removing doubles
-custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
-
-locale_patterns_dict = dict(list(zip(
-    [p.lower() for p in english_patterns.split()],
-    ['{%s}' % p for p in locale_patterns.split()]
-)))
-
-# Name and pattern for CustomFileChooser
-filepattern = (
-    (_('All files'), '*.*'),
-    ('MP3', '*.mp3'),
-    ('Ogg Vorbis', '*.ogg;*.oga'),
-    ('iTunes AAC ', '*.m4a'),
-    ('Windows WAV', '*.wav'),
-    ('AAC', '*.aac'),
-    ('FLAC', '*.flac'),
-    ('AC3', '*.ac3')
 )
 
 
