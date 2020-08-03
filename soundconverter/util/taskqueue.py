@@ -54,7 +54,11 @@ class TaskQueue:
         self.pending.put(task)
 
     def get_progress(self, only_running=False):
-        """Get the fraction of tasks that have been completed."""
+        """Get the fraction of tasks that have been completed.
+
+        returns a tuple of (total progress, task progress)
+        with "task progress" being a list of (task, progress, weight) tuples.
+        """
         # some tasks may take longer, in order to communicate that they
         # provide a weight attribute.
         if len(self.all_tasks) == 0:
@@ -62,11 +66,16 @@ class TaskQueue:
         total_weight = 0
         total_progress = 0
         tasks = self.running if only_running else self.all_tasks
+
+        task_progress = []
+
         for task in tasks:
             progress, weight = task.get_progress()
             total_progress += progress * weight
             total_weight += weight
-        return total_progress / total_weight
+            task_progress.append((task, progress, weight))
+
+        return total_progress / total_weight, task_progress
 
     def pause(self):
         """Pause all tasks."""
@@ -152,10 +161,15 @@ class TaskQueue:
 
     def get_remaining(self):
         """Calculate how many seconds are left until the queue is done."""
+        if len(self.running) == 0:
+            # cannot be estimated yet
+            return None
+
         total_duration = 0
         total_remaining_weight = 0
         total_processed_weight = 0
 
+        max_remaining_weight = -1
         for task in self.all_tasks:
             # duration is the time the timer has been running, not the
             # audio duration.
@@ -168,6 +182,7 @@ class TaskQueue:
             # be anything as long as all tasks have the same unit of weight.
             progress, weight = task.get_progress()
             remaining_weight = (1 - progress) * weight
+            max_remaining_weight = max(remaining_weight, max_remaining_weight)
             total_remaining_weight += remaining_weight
             processed_weight = progress * weight
             total_processed_weight += processed_weight
@@ -185,18 +200,12 @@ class TaskQueue:
         remaining_weight_per_p = total_remaining_weight / len(self.running)
         remaining_duration = speed * remaining_weight_per_p
 
-        # if the max_remaining time exceeds the time of the,
+        # if the max_remaining time exceeds the time of the
         # remaining_duration which especially happens when the conversion
         # comes to an end while one very large file is being converted,
         # take that one.
-        max_remaining = -1
-        for task in self.running:
-            progress, weight = task.get_progress()
-            remaining_weight = (1 - progress) * weight
-            remaining = speed * remaining_weight
-            max_remaining = max(remaining, max_remaining, remaining_duration)
-
-        if max_remaining != -1:
+        if max_remaining_weight != -1:
+            max_remaining = speed * max_remaining_weight
             remaining = max(max_remaining, remaining_duration)
         else:
             remaining = remaining_duration

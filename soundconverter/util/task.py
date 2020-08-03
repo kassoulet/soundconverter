@@ -22,6 +22,7 @@
 
 class Task:
     """Abstract class of a single task."""
+    # avoid storing a variable called timer in your inheriting class
     def get_progress(self):
         """Fraction of how much of the task is completed.
 
