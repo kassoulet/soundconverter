@@ -130,7 +130,9 @@ class DiscovererThread(Thread):
             # sound_file
             sound_file.readable = True
             sound_file.duration = info.get_duration() / Gst.SECOND
-        except GLib.Error:
+        except Exception as e:
+            if type(e) is not GLib.Error:
+                logger.error(str(e))
             sound_file.readable = False
 
     def _add_tag(self, taglist, tag, sound_file):
