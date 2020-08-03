@@ -40,6 +40,9 @@ class TaskQueue:
         self.paused = False
         self._timer = Timer()
 
+        # stats
+        self.previous_remaining_time = []
+
     def add(self, task):
         """Add a task to the queue that will be executed later.
 
@@ -49,28 +52,38 @@ class TaskQueue:
             Any object inheriting from Task
         """
         task.set_callback(self.task_done)
+        task.timer = Timer()
         self.all_tasks.append(task)
         self.pending.put(task)
 
-    def get_progress(self):
+    def get_progress(self, only_running=False):
         """Get the fraction of tasks that have been completed."""
-        running_progress = sum(task.get_progress() for task in self.running)
-        num_tasks = len(self.done) + len(self.running) + self.pending.qsize()
-        if num_tasks == 0:
+        # some tasks may take longer, in order to communicate that they
+        # provide a weight attribute.
+        if len(self.all_tasks) == 0:
             return None
-        return (running_progress + len(self.done)) / num_tasks
+        total_weight = 0
+        total_progress = 0
+        tasks = self.running if only_running else self.all_tasks
+        for task in tasks:
+            progress, weight = task.get_progress()
+            total_progress += progress * weight
+            total_weight += weight
+        return total_progress / total_weight
 
     def pause(self):
         """Pause all tasks."""
         self._timer.pause()
         self.paused = True
         for task in self.running:
+            task.timer.pause()
             task.pause()
 
     def resume(self):
         """Resume all tasks after the queue has been paused."""
         self._timer.resume()
         for task in self.running:
+            task.timer.resume()
             task.resume()
         self.paused = False
 
@@ -81,6 +94,7 @@ class TaskQueue:
             # from the beginning. The proper way would be to call pause and
             # resume for such a functionality though.
             self.pending.put(task)
+            task.timer.stop()
             task.cancel()
         self._timer.reset()
         self.running = []
@@ -96,6 +110,7 @@ class TaskQueue:
             A completed task
         """
         self.done.append(task)
+        task.timer.stop()
         if task not in self.running:
             logger.warning('tried to remove task that was already removed')
         else:
@@ -113,6 +128,7 @@ class TaskQueue:
         if self.pending.qsize() > 0:
             task = self.pending.get()
             self.running.append(task)
+            task.timer.start()
             task.run()
 
     def run(self):
@@ -136,6 +152,67 @@ class TaskQueue:
         The time spent while being paused is not included.
         """
         return self._timer.get_duration()
+
+    def get_remaining(self):
+        """Calculate how many seconds are left until the queue is done."""
+        total_duration = 0
+        total_remaining_weight = 0
+        total_processed_weight = 0
+
+        for task in self.all_tasks:
+            # duration is the time the timer has been running, not the
+            # audio duration.
+            duration = task.timer.get_duration()
+            # total_duration would be 12s if 12 tasks run for 1s
+            total_duration += duration
+
+            # weight is actually the audio duration, but it's unit is going
+            # to be canceled in the remaining_duration calculation. It could
+            # be anything as long as all tasks have the same unit of weight.
+            progress, weight = task.get_progress()
+            remaining_weight = (1 - progress) * weight
+            total_remaining_weight += remaining_weight
+            processed_weight = progress * weight
+            total_processed_weight += processed_weight
+
+        if total_processed_weight == 0:
+            # cannot be calculated yet
+            return None
+
+        # how many seconds per weight. This remains pretty stable, even when
+        # less processes are running in parallel, because total_duration
+        # is the sum of all task durations and not the queues duration.
+        speed = total_duration / total_processed_weight
+
+        # how many weight left per process
+        remaining_weight_per_p = total_remaining_weight / len(self.running)
+        remaining_duration = speed * remaining_weight_per_p
+
+        # if the max_remaining time exceeds the time of the,
+        # remaining_duration which especially happens when the conversion
+        # comes to an end while one very large file is being converted,
+        # take that one.
+        max_remaining = -1
+        for task in self.running:
+            progress, weight = task.get_progress()
+            remaining_weight = (1 - progress) * weight
+            remaining = speed * remaining_weight
+            max_remaining = max(remaining, max_remaining, remaining_duration)
+
+        if max_remaining != -1:
+            remaining = max(max_remaining, remaining_duration)
+        else:
+            remaining = remaining_duration
+
+        # apply window smoothing to avoid jumping times
+        self.previous_remaining_time.append(remaining)
+        if len(self.previous_remaining_time) > 4:
+            self.previous_remaining_time.pop(0)
+        remaining = (
+                sum(self.previous_remaining_time) /
+                len(self.previous_remaining_time)
+        )
+        return remaining
 
 
 class Timer:

@@ -43,7 +43,7 @@ class SyncSleepTask(Task):
         """Fraction of how much of the task is completed."""
         # it's blocking anyways, so progress cannot be asked for
         # until the end.
-        return 1
+        return 1, 1
 
     def cancel(self):
         pass
@@ -74,23 +74,23 @@ class AsyncSleepTask(Task):
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
-        return self.progress
+        return self.progress, 1
 
     def async_stuff(self, bus):
         """Sleep for some time and emit an event for GLib."""
         # sleep for a total of 0.25s, simulate some sort of task that can
         # be paused.
+        self.progress = 0
         while self.progress < 1:
             if self.paused:
                 # wait for the resume event
                 self.resume_event.wait()
                 self.resume_event.clear()
-
-            if self.cancelled:
-                # don't post the msg, because that would indicate success
-                return
-
             time.sleep(0.025)
+            if self.cancelled:
+                # don't post the msg to the bus,
+                # because that would indicate success
+                return
             self.progress += 0.1
         self.progress = 1
 
@@ -150,29 +150,29 @@ class AsyncSleepTaskTest(unittest.TestCase):
         context = loop.get_context()
 
         task = AsyncSleepTask()
-        self.assertEqual(task.get_progress(), 0)
+        self.assertEqual(task.get_progress()[0], 0)
         done = Mock()
         task.set_callback(done)
 
         task.run()
         time.sleep(0.15)
         context.iteration(False)
-        self.assertGreater(task.get_progress(), 0)
-        self.assertLess(task.get_progress(), 1)
+        self.assertGreater(task.get_progress()[0], 0)
+        self.assertLess(task.get_progress()[0], 1)
         done.assert_not_called()
 
         task.pause()
         time.sleep(0.15)
         context.iteration(False)
-        self.assertGreater(task.get_progress(), 0)
-        self.assertLess(task.get_progress(), 1)
+        self.assertGreater(task.get_progress()[0], 0)
+        self.assertLess(task.get_progress()[0], 1)
         done.assert_not_called()
 
         task.resume()
         time.sleep(0.15)
         context.iteration(False)
         done.assert_called_with(task)
-        self.assertEqual(task.get_progress(), 1)
+        self.assertEqual(task.get_progress()[0], 1)
 
     def test_cancel_run(self):
         loop = GLib.MainLoop()
@@ -267,10 +267,10 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertGreater(self.q.get_duration(), 0.08)
         self.assertGreater(self.q.get_progress(), 0)
         self.assertLess(self.q.get_progress(), 1)
-        self.assertGreater(self.q.running[0].get_progress(), 0)
-        self.assertLess(self.q.running[0].get_progress(), 1)
-        self.assertGreater(self.q.running[0].get_progress(), 0)
-        self.assertLess(self.q.running[0].get_progress(), 1)
+        self.assertGreater(self.q.running[0].get_progress()[0], 0)
+        self.assertLess(self.q.running[0].get_progress()[0], 1)
+        self.assertGreater(self.q.running[0].get_progress()[0], 0)
+        self.assertLess(self.q.running[0].get_progress()[0], 1)
 
         duration_before = self.q.get_duration()
 
@@ -287,8 +287,8 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         context.iteration(False)
         self.assertGreater(self.q.get_progress(), 0)
         self.assertLess(self.q.get_progress(), 1)
-        self.assertGreater(self.q.running[0].get_progress(), 0)
-        self.assertLess(self.q.running[0].get_progress(), 1)
+        self.assertGreater(self.q.running[0].get_progress()[0], 0)
+        self.assertLess(self.q.running[0].get_progress()[0], 1)
 
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
@@ -306,8 +306,8 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
         self.assertGreater(self.q.get_progress(), 0)
         self.assertLess(self.q.get_progress(), 1)
-        self.assertGreater(self.q.running[0].get_progress(), 0)
-        self.assertLess(self.q.running[0].get_progress(), 1)
+        self.assertGreater(self.q.running[0].get_progress()[0], 0)
+        self.assertLess(self.q.running[0].get_progress()[0], 1)
 
         # wait until the queue is completely done
         while len(self.q.done) < self.num_tasks:
@@ -318,7 +318,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
         self.assertEqual(self.q.get_progress(), 1)
-        self.assertEqual(self.q.done[0].get_progress(), 1)
+        self.assertEqual(self.q.done[0].get_progress()[0], 1)
 
         duration = self.q.get_duration()
         time.sleep(0.05)

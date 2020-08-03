@@ -65,7 +65,7 @@ args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
 
 from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.interface.batch import CLIConvert, \
+from soundconverter.interface.batch import batch_main, \
     CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
@@ -231,6 +231,6 @@ else:
             print_not_readable=True
         )
     elif settings['mode'] == 'batch':
-        CLIConvert(files)
+        batch_main(files)
     elif settings['mode'] == 'check':
         CLICheck(files, print_readable=True)

@@ -217,16 +217,16 @@ class Converter(Task):
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
+        duration = self.sound_file.duration
         if not self.done:
             position = self._query_position()
-            duration = self.sound_file.duration
             if duration is None:
                 return 0
             progress = position / duration
             progress = min(max(progress, 0.0), 1.0)
-            return progress
+            return progress, duration
         else:
-            return 1
+            return 1, duration
 
     def cancel(self):
         """Cancel execution of the task."""

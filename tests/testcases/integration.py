@@ -38,6 +38,7 @@ from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.formats import get_quality
 from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.interface.ui import win, gtk_iteration
+from soundconverter.interface.batch import cli_convert
 
 from util import reset_settings
 
@@ -159,6 +160,14 @@ class BatchIntegration(unittest.TestCase):
         # subfolder, just like the input.
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
+        # since the converison is done, the remaining time should stay
+        # constant
+        conversion_queue = cli_convert[0].conversions
+        remaining_before = conversion_queue.get_remaining()
+        time.sleep(0.01)
+        remaining_after = conversion_queue.get_remaining()
+        self.assertEqual(remaining_before, remaining_after)
+
     def test_check(self):
         # it should run and not raise exceptions
         launch([
@@ -260,9 +269,9 @@ class GUI(unittest.TestCase):
         self.assertTrue(queue.all_tasks[0].done)
         self.assertTrue(queue.all_tasks[1].done)
         self.assertTrue(queue.all_tasks[2].done)
-        self.assertEqual(queue.all_tasks[0].get_progress(), 1)
-        self.assertEqual(queue.all_tasks[1].get_progress(), 1)
-        self.assertEqual(queue.all_tasks[2].get_progress(), 1)
+        self.assertEqual(queue.all_tasks[0].get_progress()[0], 1)
+        self.assertEqual(queue.all_tasks[1].get_progress()[0], 1)
+        self.assertEqual(queue.all_tasks[2].get_progress()[0], 1)
         self.assertIsNotNone(queue.all_tasks[0].sound_file.duration)
         self.assertIsNotNone(queue.all_tasks[1].sound_file.duration)
         self.assertIsNotNone(queue.all_tasks[2].sound_file.duration)
