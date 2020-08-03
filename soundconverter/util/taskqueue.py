@@ -40,9 +40,6 @@ class TaskQueue:
         self.paused = False
         self._timer = Timer()
 
-        # stats
-        self.previous_remaining_time = []
-
     def add(self, task):
         """Add a task to the queue that will be executed later.
 
@@ -204,14 +201,6 @@ class TaskQueue:
         else:
             remaining = remaining_duration
 
-        # apply window smoothing to avoid jumping times
-        self.previous_remaining_time.append(remaining)
-        if len(self.previous_remaining_time) > 4:
-            self.previous_remaining_time.pop(0)
-        remaining = (
-                sum(self.previous_remaining_time) /
-                len(self.previous_remaining_time)
-        )
         return remaining
 
 
