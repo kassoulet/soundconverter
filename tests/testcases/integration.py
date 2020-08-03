@@ -272,6 +272,16 @@ class GUI(unittest.TestCase):
         self.assertEqual(queue.all_tasks[0].get_progress()[0], 1)
         self.assertEqual(queue.all_tasks[1].get_progress()[0], 1)
         self.assertEqual(queue.all_tasks[2].get_progress()[0], 1)
+
+        # (total_progress, [(sound_file, progress, weight), ...])
+        self.assertEqual(queue.get_progress()[0], 1)
+        self.assertEqual(queue.get_progress()[1][0][1], 1)
+        self.assertEqual(queue.get_progress()[1][1][1], 1)
+        self.assertEqual(queue.get_progress()[1][2][1], 1)
+        self.assertIs(queue.get_progress()[1][0][0], queue.all_tasks[0])
+        self.assertIs(queue.get_progress()[1][1][0], queue.all_tasks[1])
+        self.assertIs(queue.get_progress()[1][2][0], queue.all_tasks[2])
+
         self.assertIsNotNone(queue.all_tasks[0].sound_file.duration)
         self.assertIsNotNone(queue.all_tasks[1].sound_file.duration)
         self.assertIsNotNone(queue.all_tasks[2].sound_file.duration)
@@ -362,7 +372,7 @@ class GUI(unittest.TestCase):
         self.assertEqual(len(queue.done), 1)
         self.assertEqual(queue.pending.qsize(), 0)
         self.assertGreater(queue.get_duration(), duration)
-        self.assertEqual(queue.get_progress(), 1)
+        self.assertEqual(queue.get_progress()[0], 1)
 
         converter_queue = window.converter_queue
         self.assertEqual(len(converter_queue.done), len(expected_filelist))

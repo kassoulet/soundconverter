@@ -184,12 +184,6 @@ class FileList:
         """Return all valid SoundFile objects."""
         return [i[1] for i in self.sortedmodel]
 
-    def update_progress(self):
-        if self.files_to_add is not None:
-            self.window.progressbarstatus.pulse()
-            return True
-        return False
-
     @idle
     def add_uris(self, uris, base=None, extensions=None):
         """Add URIs that should be converted to the list in the GTK interface.
@@ -295,7 +289,7 @@ class FileList:
         self.window.progressbarstatus.set_show_text(True)
 
         while self.discoverers.running:
-            progress = self.discoverers.get_progress()
+            progress = self.discoverers.get_progress()[0]
             if progress:
                 completed = int(progress * len(files))
                 self.window.progressbarstatus.set_fraction(progress)
@@ -1137,6 +1131,8 @@ class SoundConverterWindow(GladeWindow):
         self.set_sensitive()
         self.set_status()
 
+        self.smoothing = None
+
     # This bit of code constructs a list of methods for binding to Gtk+
     # signals. This way, we don't have to maintain a list manually,
     # saving editing effort. It's enough to add a method to the suitable
@@ -1254,43 +1250,9 @@ class SoundConverterWindow(GladeWindow):
         self.showinvalid_dialog.run()
         self.showinvalid_dialog.hide()
 
-    def on_progress(self):
-        """Refresh the progress bars of all running tasks."""
-        paused = self.converter_queue.paused
-        running = len(self.converter_queue.running) > 0
-        if not paused and running:
-            for converter in self.converter_queue.running:
-                sound_file = converter.sound_file
-                file_progress = converter.get_progress()[0]
-                self.set_file_progress(sound_file, file_progress)
-            for converter in self.converter_queue.done:
-                sound_file = converter.sound_file
-                self.set_file_progress(sound_file, 1)
-
-        if not paused and not running:
-            self.filelist.hide_row_progress()
-            return False
-
-        # return True to keep the GLib timeout running
-        return True
-
-    def refresh_remaining_time(self):
-        paused = self.converter_queue.paused
-        running = len(self.converter_queue.running) > 0
-        if not paused and running:
-            progress = self.converter_queue.get_progress()
-            self.set_progress(progress)
-        return not paused or not running
-
     def do_convert(self):
         """Start the conversion."""
         name_generator = TargetNameGenerator()
-        # refresh progress with 30fps
-        GLib.timeout_add(1000 / 30, self.on_progress)
-        # calculating the remaining time is somewhat complex, I don't want to
-        # spam that calculation as much.
-        GLib.timeout_add(100, self.refresh_remaining_time)
-        self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
         self.converter_queue.set_on_queue_finished(self.on_queue_finished)
@@ -1300,14 +1262,96 @@ class SoundConverterWindow(GladeWindow):
         # all was OK
         self.set_status()
         self.converter_queue.run()
+
+        # try to make the progress bars look smooth by calling this often
+        self.update_progress()
+        GLib.timeout_add(1000 / 20, self.update_progress)
+
+        # since the remining time shows only seconds, there is no need to
+        # call it more often than once per second
+        self.update_remaining()
+        GLib.timeout_add(1000, self.update_remaining)
+
         self.set_sensitive()
+
+    def update_remaining(self):
+        """Refresh the remaining time in the title bar and bottom left.
+
+        Can be used in GLib.timeout_add.
+        """
+        paused = self.converter_queue.paused
+        running = len(self.converter_queue.running) > 0
+
+        if not running:
+            # conversion done
+            self.filelist.hide_row_progress()
+            return False
+
+        if not paused and running:
+            converter_queue = self.converter_queue
+
+            if converter_queue is None:
+                self.progressfile.set_markup('')
+                self.filelist.hide_row_progress()
+                self.progressbar.set_show_text(False)
+                return
+
+            if converter_queue.paused:
+                self.progressbar.set_text(_('Paused'))
+                title = '{} - {}'.format(_('SoundConverter'), _('Paused'))
+                self.widget.set_title(title)
+                return
+
+            # how long it has already been running
+            duration = converter_queue.get_duration()
+            if duration < 1:
+                # wait a bit not to display crap
+                self.progressbar.set_text(_('Estimating…'))
+                self.progressbar.set_show_text(True)
+                return
+
+            # remainign duration
+            remaining = converter_queue.get_remaining()
+            if remaining is not None:
+                seconds = max(remaining % 60, 1)
+                minutes = remaining / 60
+                remaining = _('%d:%02d left') % (minutes, seconds)
+                self.progressbar.set_text(remaining)
+                self.progressbar.set_show_text(True)
+                title = '{} - {}'.format(_('SoundConverter'), remaining)
+                self.widget.set_title(title)
+
+        # return True to keep the GLib timeout running
+        return True
+
+    def update_progress(self):
+        """Refresh all progress bars, including the total progress.
+
+        Can be used in GLib.timeout_add.
+        """
+        paused = self.converter_queue.paused
+        running = len(self.converter_queue.running) > 0
+
+        if not running:
+            # conversion done
+            self.filelist.hide_row_progress()
+            return False
+
+        if not paused and running:
+            # if paused, don't refresh the progress
+            total_progress, task_progress = self.converter_queue.get_progress()
+            self.progressbar.set_fraction(total_progress)
+
+            for task, progress, weight in task_progress:
+                self.set_file_progress(task.sound_file, progress)
+
+        # return True to keep the GLib timeout running
+        return True
 
     def on_convert_button_clicked(self, *args):
         # reset and show progress bar
-        self.set_progress(0)
         self.progress_frame.show()
         self.status_frame.hide()
-        self.set_progress()
         self.set_status(_('Converting'))
         for soundfile in self.filelist.get_files():
             self.set_file_progress(soundfile, 0.0)
@@ -1396,6 +1440,8 @@ class SoundConverterWindow(GladeWindow):
         self.status_frame.show()
         self.widget.set_sensitive(True)
         self.set_status(msg)
+        if self.smoothing is not None:
+            self.smoothing.stop()
         try:
             from gi.repository import Unity
             name = "soundconverter.desktop"
@@ -1431,47 +1477,6 @@ class SoundConverterWindow(GladeWindow):
         """Show the progress bar of a single file in the UI."""
         row = sound_file.filelist_row
         self.filelist.set_row_progress(row, progress)
-
-    def set_progress(self, progress=None, display_time=True):
-        """Refresh the total progress and remaining time."""
-        converter_queue = self.converter_queue
-
-        if not progress:
-            if progress is None:
-                self.progressbar.pulse()
-            else:
-                self.progressbar.set_fraction(0)
-                self.progressbar.set_text('')
-            self.progressfile.set_markup('')
-            self.filelist.hide_row_progress()
-            return
-
-        if converter_queue.paused:
-            self.progressbar.set_text(_('Paused'))
-            title = '{} - {}'.format(_('SoundConverter'), _('Paused'))
-            self.widget.set_title(title)
-            return
-
-        progress = min(max(progress, 0.0), 1.0)
-        self.progressbar.set_fraction(progress)
-
-        if display_time:
-            duration = converter_queue.get_duration()
-            if duration < 1:
-                # wait a bit not to display crap
-                self.progressbar.pulse()
-                return
-
-            # remaining = (duration / progress - duration)
-            remaining = converter_queue.get_remaining()
-            seconds = max(remaining % 60, 1)
-            minutes = remaining / 60
-
-            remaining = _('%d:%02d left') % (minutes, seconds)
-            self.progressbar.set_text(remaining)
-            self.progressbar.set_show_text(True)
-            title = '{} - {}'.format(_('SoundConverter'), remaining)
-            self.widget.set_title(title)
 
     def set_status(self, text=None, ready=True):
         if not text:

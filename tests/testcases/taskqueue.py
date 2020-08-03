@@ -252,7 +252,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.num_jobs = 5
         get_gio_settings().set_int('number-of-jobs', self.num_jobs)
 
-        self.assertEqual(self.q.get_progress(), 0)
+        self.assertEqual(self.q.get_progress()[0], 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
         self.assertEqual(len(self.q.done), 0)
@@ -265,12 +265,13 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
         time.sleep(0.1)
         self.assertGreater(self.q.get_duration(), 0.08)
-        self.assertGreater(self.q.get_progress(), 0)
-        self.assertLess(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_progress()[0], 0)
+        self.assertLess(self.q.get_progress()[0], 1)
         self.assertGreater(self.q.running[0].get_progress()[0], 0)
         self.assertLess(self.q.running[0].get_progress()[0], 1)
         self.assertGreater(self.q.running[0].get_progress()[0], 0)
         self.assertLess(self.q.running[0].get_progress()[0], 1)
+        self.assertEqual(len(self.q.get_progress()[1]), self.num_tasks)
 
         duration_before = self.q.get_duration()
 
@@ -285,10 +286,11 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         loop = GLib.MainLoop()
         context = loop.get_context()
         context.iteration(False)
-        self.assertGreater(self.q.get_progress(), 0)
-        self.assertLess(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_progress()[0], 0)
+        self.assertLess(self.q.get_progress()[0], 1)
         self.assertGreater(self.q.running[0].get_progress()[0], 0)
         self.assertLess(self.q.running[0].get_progress()[0], 1)
+        self.assertEqual(len(self.q.get_progress()[1]), self.num_tasks)
 
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
@@ -304,10 +306,11 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
-        self.assertGreater(self.q.get_progress(), 0)
-        self.assertLess(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_progress()[0], 0)
+        self.assertLess(self.q.get_progress()[0], 1)
         self.assertGreater(self.q.running[0].get_progress()[0], 0)
         self.assertLess(self.q.running[0].get_progress()[0], 1)
+        self.assertEqual(len(self.q.get_progress()[1]), self.num_tasks)
 
         # wait until the queue is completely done
         while len(self.q.done) < self.num_tasks:
@@ -317,12 +320,13 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.done), self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
-        self.assertEqual(self.q.get_progress(), 1)
+        self.assertEqual(self.q.get_progress()[0], 1)
         self.assertEqual(self.q.done[0].get_progress()[0], 1)
 
         duration = self.q.get_duration()
         time.sleep(0.05)
         self.assertLess(abs(self.q.get_duration() - duration), 0.001)
+        self.assertEqual(len(self.q.get_progress()[1]), self.num_tasks)
 
     def test_cancel_run(self):
         # all tasks are running at once
@@ -342,19 +346,19 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
 
-        self.assertEqual(self.q.get_progress(), 0)
+        self.assertEqual(self.q.get_progress()[0], 0)
         time.sleep(0.15)
         context.iteration(False)
         self.assertGreater(self.q.get_duration(), 0.1)
-        self.assertGreater(self.q.get_progress(), 0)
-        self.assertLess(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_progress()[0], 0)
+        self.assertLess(self.q.get_progress()[0], 1)
 
         self.q.cancel()
         self.assertEqual(self.q.get_duration(), 0)
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
-        self.assertEqual(self.q.get_progress(), 0)
+        self.assertEqual(self.q.get_progress()[0], 0)
 
         # after some time and running all accumulated glib events and stuff,
         # no job should be finished due to them not running anymore.
@@ -365,7 +369,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
         self.assertEqual(len(self.q.running), 0)
-        self.assertEqual(self.q.get_progress(), 0)
+        self.assertEqual(self.q.get_progress()[0], 0)
 
         self.q.run()
         # even after resuming, time has to pass, but the previous progress of
@@ -377,8 +381,8 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.done), 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks - self.num_jobs)
         self.assertEqual(len(self.q.running), self.num_jobs)
-        self.assertGreater(self.q.get_progress(), 0)
-        self.assertLess(self.q.get_progress(), 1)
+        self.assertGreater(self.q.get_progress()[0], 0)
+        self.assertLess(self.q.get_progress()[0], 1)
 
         # only after some more time all are done, but don't sleep longer
         # than 0.15 more seconds, because after 0.25s they should be done.
@@ -391,7 +395,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         self.assertEqual(len(self.q.done), self.num_tasks)
         self.assertEqual(self.q.pending.qsize(), 0)
         self.assertEqual(len(self.q.running), 0)
-        self.assertEqual(self.q.get_progress(), 1)
+        self.assertEqual(self.q.get_progress()[0], 1)
         self.assertGreater(self.q.get_duration(), 0.2)
 
 
