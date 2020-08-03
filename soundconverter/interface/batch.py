@@ -38,6 +38,15 @@ from soundconverter.util.fileoperations import unquote_filename, \
     filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
 
+cli_convert = [None]
+
+
+def batch_main(files):
+    global cli_convert
+    # works like a pointer, so that it can be accessed in tests,
+    # just like in ui.py
+    cli_convert[0] = CLIConvert(files)
+
 
 def use_memory_gsettings(options):
     """Use a Gio memory backend and write argv settings into it.
@@ -237,6 +246,7 @@ class CLIConvert:
             exit(2)
 
         logger.info('\nstarting conversion…')
+        self.conversions = conversions
         conversions.run()
         while conversions.running:
             # make the eventloop of glibs async stuff run until finished:

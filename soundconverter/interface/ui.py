@@ -404,7 +404,7 @@ class FileList:
         )
 
     def discoverer_queue_ended(self, queue):
-        # all tasks done done
+        # all tasks done
         self.window.set_sensitive()
         self.window.conversion_ended()
 
@@ -1259,12 +1259,9 @@ class SoundConverterWindow(GladeWindow):
         paused = self.converter_queue.paused
         running = len(self.converter_queue.running) > 0
         if not paused and running:
-            progress = self.converter_queue.get_progress()
-            self.set_progress(progress)
-
             for converter in self.converter_queue.running:
                 sound_file = converter.sound_file
-                file_progress = converter.get_progress()
+                file_progress = converter.get_progress()[0]
                 self.set_file_progress(sound_file, file_progress)
             for converter in self.converter_queue.done:
                 sound_file = converter.sound_file
@@ -1277,11 +1274,22 @@ class SoundConverterWindow(GladeWindow):
         # return True to keep the GLib timeout running
         return True
 
+    def refresh_remaining_time(self):
+        paused = self.converter_queue.paused
+        running = len(self.converter_queue.running) > 0
+        if not paused and running:
+            progress = self.converter_queue.get_progress()
+            self.set_progress(progress)
+        return not paused or not running
+
     def do_convert(self):
         """Start the conversion."""
         name_generator = TargetNameGenerator()
         # refresh progress with 30fps
         GLib.timeout_add(1000 / 30, self.on_progress)
+        # calculating the remaining time is somewhat complex, I don't want to
+        # spam that calculation as much.
+        GLib.timeout_add(100, self.refresh_remaining_time)
         self.progressbar.set_text(_('Preparing conversion…'))
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
@@ -1356,6 +1364,8 @@ class SoundConverterWindow(GladeWindow):
         if error_count > 0:
             msg += ', {} error(s)'.format(error_count)
 
+        logger.info(msg)
+
         self.conversion_ended(msg)
 
     def format_time(self, seconds):
@@ -1423,6 +1433,7 @@ class SoundConverterWindow(GladeWindow):
         self.filelist.set_row_progress(row, progress)
 
     def set_progress(self, progress=None, display_time=True):
+        """Refresh the total progress and remaining time."""
         converter_queue = self.converter_queue
 
         if not progress:
@@ -1451,7 +1462,8 @@ class SoundConverterWindow(GladeWindow):
                 self.progressbar.pulse()
                 return
 
-            remaining = (duration / progress - duration)
+            # remaining = (duration / progress - duration)
+            remaining = converter_queue.get_remaining()
             seconds = max(remaining % 60, 1)
             minutes = remaining / 60
 

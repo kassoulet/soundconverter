@@ -163,8 +163,7 @@ class Discoverer(Task):
 
     def get_progress(self):
         """Fraction of how much of the task is completed."""
-        # fast task, don't care
-        return self.discovered / len(self.sound_files)
+        return self.discovered / len(self.sound_files), 1
 
     def cancel(self):
         """Cancel execution of the task."""

@@ -20,10 +20,16 @@
 # USA
 
 
-class Task():
+class Task:
     """Abstract class of a single task."""
     def get_progress(self):
-        """Fraction of how much of the task is completed."""
+        """Fraction of how much of the task is completed.
+
+        Returns a tuple of (progress, weight), because some tasks may
+        take longer than others (because it processes more audio), which
+        cannot be reflected by the progress alone. The weight might
+        correspond to the length of the audio files for example.
+        """
         raise NotImplementedError()
 
     def cancel(self):
