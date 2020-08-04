@@ -297,7 +297,7 @@ class FileList:
                     '{}/{}'.format(completed, len(files))
                 )
             gtk_iteration()
-        logger.info('Discovered {} files in {} s'.format(
+        logger.info('Discovered {} audiofiles in {} s'.format(
             len(files), round(self.discoverers.get_duration(), 1)
         ))
 
@@ -524,6 +524,9 @@ class PreferencesDialog(GladeWindow):
         for name in self.sensitive_names:
             self.sensitive_widgets[name] = builder.get_object(name)
             assert self.sensitive_widgets[name] is not None
+
+        self.encoders = None
+
         self.set_widget_initial_values()
         self.set_sensitive()
 
@@ -582,9 +585,9 @@ class PreferencesDialog(GladeWindow):
         if self.settings.get_boolean('delete-original'):
             self.delete_original.set_active(True)
 
-        mime_type = self.settings.get_string('output-mime-type')
+        current_mime_type = self.settings.get_string('output-mime-type')
 
-        widgets = (
+        encoders = (
             ('audio/x-vorbis', 'vorbisenc'),
             ('audio/mpeg', 'lamemp3enc'),
             ('audio/x-flac', 'flacenc'),
@@ -592,12 +595,13 @@ class PreferencesDialog(GladeWindow):
             ('audio/x-m4a', 'faac,avenc_aac'),
             ('audio/ogg; codecs=opus', 'opusenc'),
             ('gst-profile', None),
-        )  # must be in same order in output_mime_type
+        )  # must be in same order as the output_mime_type GtkComboBox
+        self.encoders = encoders
 
         # desactivate output if encoder plugin is not present
         widget = self.output_mime_type
         model = widget.get_model()
-        assert len(model) == len(widgets), 'model:{} widgets:{}'.format(len(model), len(widgets))
+        assert len(model) == len(encoders), 'model:{} widgets:{}'.format(len(model), len(encoders))
 
         if not self.gstprofile.get_model().get_n_columns():
             self.gstprofile.set_model(Gtk.ListStore(str))
@@ -624,12 +628,12 @@ class PreferencesDialog(GladeWindow):
             self.settings.set_string('audio-profile', '')
             self.gstprofile.set_active(0)
             self.settings.reset('output-mime-type')
-            mime_type = self.settings.get_string('output-mime-type')
+            current_mime_type = self.settings.get_string('output-mime-type')
 
         self.present_mime_types = []
         i = 0
         model = self.output_mime_type.get_model()
-        for mime, encoder_name in widgets:
+        for mime, encoder_name in encoders:
             if not encoder_name:
                 continue
             # valid encoder?
@@ -644,9 +648,9 @@ class PreferencesDialog(GladeWindow):
                 # remove it.
                 del model[i]
         for i, mime in enumerate(self.present_mime_types):
-            if mime_type == mime:
+            if current_mime_type == mime:
                 widget.set_active(i)
-        self.change_mime_type(mime_type)
+        self.change_mime_type(current_mime_type)
 
         # display information about mp3 encoding
         if 'lamemp3enc' not in available_elements:
@@ -878,9 +882,11 @@ class PreferencesDialog(GladeWindow):
         self.quality_tabs.set_current_page(tabs[mime_type])
 
     def on_output_mime_type_changed(self, combo):
-        self.change_mime_type(
-            self.present_mime_types[combo.get_active()]
-        )
+        """Called when the format is changed on the UI."""
+        format_index = combo.get_active()
+        mime = self.encoders[format_index][0]
+        if mime in self.present_mime_types:
+            self.change_mime_type(mime)
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
