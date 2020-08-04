@@ -911,16 +911,6 @@ class PreferencesDialog(GladeWindow):
             return  # just de-selectionning
         fquality = get_quality('ogg', combobox.get_active())
         self.settings.set_double('vorbis-quality', fquality)
-        self.hscale_vorbis_quality.set_value(fquality * 10)
-        self.update_example()
-
-    def on_hscale_vorbis_quality_value_changed(self, hscale):
-        fquality = hscale.get_value()
-        vorbis_quality = self.settings.get_double('vorbis-quality')
-        if abs(vorbis_quality - fquality / 10.0) < 0.001:
-            return  # already at right value
-        self.settings.set_double('vorbis-quality', fquality / 10.0)
-        self.vorbis_quality.set_active(-1)
         self.update_example()
 
     def on_vorbis_oga_extension_toggled(self, toggle):
@@ -973,7 +963,6 @@ class PreferencesDialog(GladeWindow):
             'abr': 14,
             'vbr': 10,
         }
-        self.hscale_mp3.set_range(0, range_[mode])
 
         index = get_quality('mp3', quality, mode, reverse=True)
         self.mp3_quality.set_active(index)
@@ -994,25 +983,6 @@ class PreferencesDialog(GladeWindow):
 
         bitrate = get_quality('mp3', combobox.get_active(), mode)
         self.settings.set_int(keys[mode], bitrate)
-        self.update_example()
-
-    def on_hscale_mp3_value_changed(self, widget):
-        mode = self.settings.get_string('mp3-mode')
-        keys = {
-            'cbr': 'mp3-cbr-quality',
-            'abr': 'mp3-abr-quality',
-            'vbr': 'mp3-vbr-quality'
-        }
-        quality = {
-            'cbr': (32, 40, 48, 56, 64, 80, 96, 112,
-                    128, 160, 192, 224, 256, 320),
-            'abr': (32, 40, 48, 56, 64, 80, 96, 112,
-                    128, 160, 192, 224, 256, 320),
-            'vbr': (9, 8, 7, 6, 5, 4, 3, 2, 1, 0),
-        }
-        index = int(widget.get_value())
-        self.settings.set_int(keys[mode], quality[mode][index])
-        self.mp3_quality.set_active(-1)
         self.update_example()
 
     def on_resample_rate_changed(self, combobox):
@@ -1130,8 +1100,6 @@ class SoundConverterWindow(GladeWindow):
 
         self.set_sensitive()
         self.set_status()
-
-        self.smoothing = None
 
     # This bit of code constructs a list of methods for binding to Gtk+
     # signals. This way, we don't have to maintain a list manually,
@@ -1342,7 +1310,7 @@ class SoundConverterWindow(GladeWindow):
             total_progress, task_progress = self.converter_queue.get_progress()
             self.progressbar.set_fraction(total_progress)
 
-            for task, progress, weight in task_progress:
+            for task, progress in task_progress:
                 self.set_file_progress(task.sound_file, progress)
 
         # return True to keep the GLib timeout running
@@ -1440,8 +1408,6 @@ class SoundConverterWindow(GladeWindow):
         self.status_frame.show()
         self.widget.set_sensitive(True)
         self.set_status(msg)
-        if self.smoothing is not None:
-            self.smoothing.stop()
         try:
             from gi.repository import Unity
             name = "soundconverter.desktop"
