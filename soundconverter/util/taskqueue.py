@@ -57,7 +57,7 @@ class TaskQueue:
         """Get the fraction of tasks that have been completed.
 
         returns a tuple of (total progress, task progress)
-        with "task progress" being a list of (task, progress, weight) tuples.
+        with "task progress" being a list of (task, progress) tuples.
         """
         # some tasks may take longer, in order to communicate that they
         # provide a weight attribute.
@@ -73,7 +73,7 @@ class TaskQueue:
             progress, weight = task.get_progress()
             total_progress += progress * weight
             total_weight += weight
-            task_progress.append((task, progress, weight))
+            task_progress.append((task, progress))
 
         return total_progress / total_weight, task_progress
 

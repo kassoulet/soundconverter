@@ -273,7 +273,7 @@ class GUI(unittest.TestCase):
         self.assertEqual(queue.all_tasks[1].get_progress()[0], 1)
         self.assertEqual(queue.all_tasks[2].get_progress()[0], 1)
 
-        # (total_progress, [(sound_file, progress, weight), ...])
+        # (total_progress, [(sound_file, progress), ...])
         self.assertEqual(queue.get_progress()[0], 1)
         self.assertEqual(queue.get_progress()[1][0][1], 1)
         self.assertEqual(queue.get_progress()[1][1][1], 1)
