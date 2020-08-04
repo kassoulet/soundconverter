@@ -44,13 +44,15 @@ def add_discoverers(task_queue, sound_files):
     chunksize = len(sound_files) / get_num_jobs()
     for sound_file in sound_files:
         chunk.append(sound_file)
-        if len(chunk) >= chunksize:
+        if len(chunk) >= chunksize or sound_file is sound_files[-1]:
             discoverer = Discoverer(chunk)
             task_queue.add(discoverer)
             chunk = []
+
     if len(chunk) > 0:
-        discoverer = Discoverer(chunk)
-        task_queue.add(discoverer)
+        raise AssertionError(
+            'All chunks should have been added to discoverers'
+        )
 
 
 def get_sound_files(task_queue):
@@ -163,23 +165,26 @@ class Discoverer(Task):
         self.discovered = 0
         self.queue = None
 
+        self.bus = None
+        self.thread = None
+
     def get_progress(self):
         """Fraction of how much of the task is completed."""
         return self.discovered / len(self.sound_files), 1
 
     def cancel(self):
         """Cancel execution of the task."""
-        # TODO
+        # fast task, use case doesn't exist
         pass
 
     def pause(self):
         """Pause execution of the task."""
-        # TODO
+        # fast task, use case doesn't exist
         pass
 
     def resume(self):
         """Resume execution of the task."""
-        # TODO
+        # fast task, use case doesn't exist
         pass
 
     def run(self):
@@ -189,6 +194,8 @@ class Discoverer(Task):
         bus.add_signal_watch()
         thread = DiscovererThread(self.sound_files, bus)
         thread.start()
+        self.bus = bus
+        self.thread = thread
 
     def _on_message(self, _, message):
         """Write down that it is finished and call the callback."""

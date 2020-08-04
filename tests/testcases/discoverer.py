@@ -21,12 +21,63 @@
 
 import os
 import unittest
+import time
 from unittest.mock import Mock
 
 from gi.repository import GLib
 
-from soundconverter.gstreamer.discoverer import Discoverer, is_denylisted
+from soundconverter.gstreamer.discoverer import Discoverer, is_denylisted, \
+    add_discoverers
+from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.settings import get_gio_settings
+from soundconverter.interface.ui import gtk_iteration
+
+
+class DiscovererQueueTest(unittest.TestCase):
+    def setUp(self):
+        self.gio_settings = get_gio_settings()
+        queue = TaskQueue()
+        parent = 'file://' + os.getcwd()
+        sound_files = [
+            SoundFile(parent + '/tests/test%20data/audio/b/c.mp3'),
+            SoundFile(parent + '/tests/test%20data/audio/a.wav'),
+            SoundFile(parent + '/tests/test%20data/audio/strângë chàrs фズ.wav'),
+            SoundFile(parent + '/tests/test%20data/empty/a'),
+            SoundFile(parent + '/tests/test%20data/empty/b/c')
+        ]
+        self.queue = queue
+        self.sound_files = sound_files
+
+    def test_add_discoverers(self):
+        sound_files = self.sound_files
+        queue = self.queue
+        self.gio_settings.set_boolean('limit-jobs', True)
+        self.gio_settings.set_int('number-of-jobs', 2)
+        add_discoverers(queue, sound_files)
+
+        self.assertEqual(len(queue.all_tasks), 2)
+        self.assertEqual(len(queue.running), 0)
+
+        for sound_file in sound_files:
+            self.assertFalse(sound_file.readable)
+
+        queue.run()
+        self.assertEqual(len(queue.running), 2)
+        # add_discoverers creates only one task per job, each task handles
+        # multiple sound_files, as opposed to the converter, which only
+        # works on a single sound_file.
+        self.assertEqual(len(queue.all_tasks), 2)
+
+        while len(queue.done) < 2:
+            time.sleep(0.01)
+            gtk_iteration()
+
+        self.assertTrue(sound_files[0].readable)
+        self.assertTrue(sound_files[1].readable)
+        self.assertTrue(sound_files[2].readable)
+        self.assertFalse(sound_files[3].readable)
+        self.assertFalse(sound_files[4].readable)
 
 
 class DiscovererTest(unittest.TestCase):
