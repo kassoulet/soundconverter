@@ -19,8 +19,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-from gettext import gettext as _
-
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.logger import logger
 from soundconverter.gstreamer.profiles import audio_profiles_dict
