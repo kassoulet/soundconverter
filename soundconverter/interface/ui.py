@@ -28,7 +28,6 @@ import urllib.parse
 import urllib.error
 from gettext import gettext as _
 from gettext import ngettext
-import traceback
 
 from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
 
@@ -48,6 +47,7 @@ from soundconverter.gstreamer.converter import Converter, available_elements
 from soundconverter.util.error import show_error, set_error_handler
 from soundconverter.gstreamer.profiles import audio_profiles_list
 from soundconverter.interface.notify import notification
+from soundconverter.util.formatting import format_time
 
 # Names of columns in the file list
 MODEL = [
@@ -416,8 +416,7 @@ class FileList:
         self.window.conversion_ended()
 
         total_time = queue.get_duration()
-        total_time_format = str(datetime.timedelta(seconds=total_time))
-        msg = _('Tasks done in %s') % total_time_format
+        msg = _('Tasks done in %s') % format_time(total_time)
 
         errors = [
             task.error for task in queue.done
@@ -1260,7 +1259,10 @@ class SoundConverterWindow(GladeWindow):
         self.converter_queue.set_on_queue_finished(self.on_queue_finished)
         for i, sound_file in enumerate(files):
             gtk_iteration()
-            self.converter_queue.add(Converter(sound_file, name_generator))
+            self.converter_queue.add(Converter(
+                sound_file,
+                name_generator
+            ))
         # all was OK
         self.set_status()
         self.converter_queue.run()
@@ -1402,7 +1404,7 @@ class SoundConverterWindow(GladeWindow):
     def on_queue_finished(self, queue):
         """Should be called when all conversions are completed."""
         total_time = queue.get_duration()
-        msg = _('Conversion done in %s') % self.format_time(total_time)
+        msg = _('Conversion done in %s') % format_time(total_time)
         error_count = len([
             task for task in queue.done
             if task.error
@@ -1413,21 +1415,6 @@ class SoundConverterWindow(GladeWindow):
         logger.info(msg)
 
         self.conversion_ended(msg)
-
-    def format_time(self, seconds):
-        units = [(86400, 'd'),
-                 (3600, 'h'),
-                 (60, 'm'),
-                 (1, 's')]
-        seconds = round(seconds)
-        result = []
-        for factor, unity in units:
-            count = int(seconds / factor)
-            seconds -= count * factor
-            if count > 0 or (factor == 1 and not result):
-                result.append('{} {}'.format(count, unity))
-        assert seconds == 0
-        return ' '.join(result)
 
     def conversion_ended(self, msg=None):
         """Reset the window.

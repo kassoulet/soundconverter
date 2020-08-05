@@ -13,6 +13,7 @@ soundconverter/util/logger.py
 soundconverter/util/fileoperations.py
 soundconverter/util/task.py
 soundconverter/util/taskqueue.py
+soundconverter/util/formatting.py
 soundconverter/util/error.py
 soundconverter/util/__init__.py
 soundconverter/gstreamer/__init__.py
