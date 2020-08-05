@@ -44,7 +44,7 @@ from soundconverter.gstreamer.converter import available_elements
 from util import reset_settings
 
 
-def launch(argv=[]):
+def launch(argv=[], bin_path='bin/soundconverter'):
     """Start the soundconverter with the command line argument array argv.
 
     The batch mode is synchronous since it iterates the loop itself until
@@ -53,7 +53,7 @@ def launch(argv=[]):
     testargs = sys.argv.copy()[:1]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
-        loader = SourceFileLoader('launcher', 'bin/soundconverter')
+        loader = SourceFileLoader('launcher', bin_path)
         spec = spec_from_loader('launcher', loader)
         spec.loader.exec_module(module_from_spec(spec))
 
@@ -64,12 +64,17 @@ def quote(ss):
     return urllib.parse.quote(ss)
 
 
+cwd = os.getcwd()
+
+
 class BatchIntegration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.makedirs('tests/tmp', exist_ok=True)
 
     def tearDown(self):
+        # tests may change the cwd
+        os.chdir(cwd)
         reset_settings()
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
@@ -137,6 +142,7 @@ class BatchIntegration(unittest.TestCase):
 
     def test_multiple_paths(self):
         # it should convert
+        print(os.getcwd())
         launch([
             '-b',
             'tests/test data/audio',
@@ -192,6 +198,22 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings['quiet'], False)
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
+
+    def test_single_subdir_input(self):
+        os.chdir('tests')
+        # at some point this did not work, keep this spec even if it doesn't
+        # appear to add value over test_recursive_audio
+        launch([
+            '-b',
+            'test data', '-r',
+            '-Q', '320',
+            '-f', 'mp3',
+            '-o', 'tmp'
+        ], '../bin/soundconverter')
+        # the input directory is part of the output
+        self.assertTrue(os.path.isdir('tmp/test data/audio/'))
+        self.assertTrue(os.path.isfile('tmp/test data/audio/a.mp3'))
+        self.assertTrue(os.path.isfile('tmp/test data/audio/b/c.mp3'))
 
 
 class GUI(unittest.TestCase):
@@ -466,12 +488,14 @@ class GUI(unittest.TestCase):
         # format row on the ui should still properly match to the right
         # encoder.
         mime_to_delete, encoder_to_delete = encoders[1]
-        mime_to_select = encoders[2][0]
-        # that one is currently (and will most likely stay) lamemp3enc
-        # test doesn't support multiple options like in m4a (faac,avenc_aac)
+        selected_index = 2
+        mime_to_select = encoders[selected_index][0]
+        # index 1 is currently (and will most likely stay) lamemp3enc.
+        # Test doesn't support multiple options like in m4a (faac,avenc_aac)
+        # currently. If needed rewrite this.
         self.assertNotIn(',', encoder_to_delete)
-        # this should trigger deleting the mp3 element from the dropdown
-        # in set_widget_initial_values
+        # This should trigger deleting the mp3 element from the dropdown
+        # in set_widget_initial_values:
         available_elements.remove(encoder_to_delete)
 
         launch()
@@ -484,11 +508,10 @@ class GUI(unittest.TestCase):
                     'Expected {} to be missing'.format(extension_to_delete)
                 )
 
-        window.prefs.output_mime_type.set_active(2)
+        window.prefs.output_mime_type.set_active(selected_index)
 
-        # the dropdown element should basically just be hidden, indexes
-        # should all map to each other properly without having to modify
-        # `encoders`.
+        # indexes should all map to each other properly without having to
+        # modify `encoders`.
         self.assertEqual(
             gio_settings.get_string('output-mime-type'),
             mime_to_select

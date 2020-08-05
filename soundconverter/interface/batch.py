@@ -119,12 +119,12 @@ def prepare_files_list(input_files):
     Also returns a list of relative directories. This is used to reconstruct
     the directory structure in the output path.
 
+    If input_path is a/b/c/ and the file is at a/b/c/e/f/d.mp3,
+    the subdirectries entry will be subdirectories c/e/f/.
+
     If input_files is ['/a/b', '/c']
     and files are found at ['file:///a/b/d.mp3', '[file:///c/e/f/g.mp3'],
-    subdirectories will be ['', 'e/f']
-
-    If input_path is a/b/c/ anad the file is at a/b/c/e/f/d.mp3,
-    the subdirectries entry will be subdirectories c/e/f/.
+    subdirectories will be ['b/d', 'c/e/f']
 
     Subdirectories might be different for various files because
     multiple paths can be provided in the args.
@@ -132,7 +132,7 @@ def prepare_files_list(input_files):
     Parameters
     ----------
     input_files : string[]
-        Array of paths
+        Array of paths (not uris)
     """
     # The GUI has its own way of going through subdirectories.
 
@@ -141,9 +141,8 @@ def prepare_files_list(input_files):
     subdirectories = []
     parsed_files = []
     for input_path in input_files:
-        # accept tilde (~) to point to home directories
-        if input_path[0] == '~':
-            input_path = os.getenv('HOME') + input_path[1:]
+        # accept tilde (~) to point to home directories, get absolute path
+        input_path = os.path.realpath(os.path.expanduser(input_path))
 
         if os.path.isfile(input_path):
             # for every appended file, also append to
@@ -153,11 +152,13 @@ def prepare_files_list(input_files):
 
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
-
             if input_path[-1] == os.sep:
                 input_path = input_path[:-1]
 
-            parent = input_path[:input_path.rfind(os.sep)]
+            if input_path.rfind(os.sep) != -1:
+                parent = input_path[:input_path.rfind(os.sep)]
+            else:
+                parent = input_path
 
             # but only if -r option was provided
             if settings.get('recursive'):
@@ -171,6 +172,7 @@ def prepare_files_list(input_files):
                         if subdir == './':
                             subdir = ''
                         subdirectories.append(subdir)
+                        print(f'{dirpath=} {parent=} {subdir=}')
             else:
                 # else it didn't go into any directory.
                 # Provide some information about how to
@@ -303,12 +305,16 @@ class CLICheck:
 
         discoverers = TaskQueue()
         sound_files = []
+        print('cli check')
         for subdirectory, input_file in zip(subdirectories, input_files):
+            print('')
+            print('input_file', input_file)
             sound_file = SoundFile(input_file)
             # by storing it in subfolders, the original subfolder structure
             # (relative to the directory that was provided as input in the
             # cli) can be restored in the target dir
             sound_file.subfolders = subdirectory
+            print('subdirectory', subdirectory, os.getcwd())
             sound_files.append(sound_file)
 
         add_discoverers(discoverers, sound_files)
