@@ -655,11 +655,7 @@ class PreferencesDialog(GladeWindow):
                     self.present_mime_types.append(mime)
                     i += 1
                 else:
-                    # TODO write better error message for missing gst-profile
-                    #  support
-                    logger.error(
-                        'something profile idk TODO'
-                    )
+                    logger.debug('No gstreamer profile available')
                     # remove it from the ui
                     del model[i]
             else:
@@ -676,9 +672,6 @@ class PreferencesDialog(GladeWindow):
                         '{}/{} is not supported, a gstreamer plugins package '
                         'is possibly missing.'.format(mime, encoder_name)
                     )
-                    # TODO remove some other model and then check the index
-                    #  that on_output_mime_type_changed gets. Does it skip
-                    #  an index or do they move to fill the gap of i?
                     del model[i]
 
         for i, mime in enumerate(self.present_mime_types):
@@ -901,6 +894,7 @@ class PreferencesDialog(GladeWindow):
         self.settings.set_boolean('replace-messy-chars', button.get_active())
 
     def change_mime_type(self, mime_type):
+        """Show the correct quality tab based on the selected format."""
         self.settings.set_string('output-mime-type', mime_type)
         self.set_sensitive()
         self.update_example()
