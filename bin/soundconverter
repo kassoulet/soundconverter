@@ -97,7 +97,7 @@ def parse_command_line():
     """
     parser = ModifiedOptionParser(
         epilog='\nExample:\n  '
-        'soundconverter -b [file] [dir] -r -m mp3 -o ' +
+        'soundconverter -b [file] [dir] -r -f mp3 -o ' +
         '[output dir] -Q 320\n'
     )
 
@@ -114,8 +114,8 @@ def parse_command_line():
         help=_(
             'Convert in batch mode, from the command line, without '
             'a graphical user interface. You can use this from, '
-            'say, shell scripts. If the output file (with the same extension) '
-            'already exists, it will be overwritten.'
+            'say, shell scripts. CAUTION: If the output file (with the '
+            'same extension) already exists, it will be overwritten!'
         )
     )
     parser.add_option(
