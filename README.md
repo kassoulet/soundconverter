@@ -13,6 +13,10 @@ performance, the command line tools are always going to be preferable.
     <img src="data/screenshot.png" alt="SoundConverter Screenshot"/>
 </p>
 
+<p align="center">
+    <img src="data/screenshot_batch.png" alt="SoundConverter Screenshot"/>
+</p>
+
 ## Building and Installation
 
 Ubuntu and Arch packages exist in the official repositories.
