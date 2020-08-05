@@ -29,16 +29,17 @@ import time
 import sys
 import shutil
 import urllib.parse
+import collections
 from gi.repository import Gio, Gtk
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
 from soundconverter.util.settings import get_gio_settings, settings
-from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.formats import get_quality
+from soundconverter.util.formats import get_quality, get_file_extension
 from soundconverter.util.fileoperations import filename_to_uri
-from soundconverter.interface.ui import win, gtk_iteration
+from soundconverter.interface.ui import win, gtk_iteration, encoders
 from soundconverter.interface.batch import cli_convert
+from soundconverter.gstreamer.converter import available_elements
 
 from util import reset_settings
 
@@ -46,8 +47,8 @@ from util import reset_settings
 def launch(argv=[]):
     """Start the soundconverter with the command line argument array argv.
 
-    The batch mode is synchronous (for some unknown reason), so after that
-    you can start checking conversion results.
+    The batch mode is synchronous since it iterates the loop itself until
+    finished.
     """
     testargs = sys.argv.copy()[:1]
     testargs += argv
@@ -456,6 +457,42 @@ class GUI(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(1).opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(2).opus'))
+
+    def test_missing_plugin(self):
+        gio_settings = get_gio_settings()
+
+        # delete the second element in the list of available encoders,
+        # in order to test how the higher indexes behave. Selecting any
+        # format row on the ui should still properly match to the right
+        # encoder.
+        mime_to_delete, encoder_to_delete = encoders[1]
+        mime_to_select = encoders[2][0]
+        # that one is currently (and will most likely stay) lamemp3enc
+        # test doesn't support multiple options like in m4a (faac,avenc_aac)
+        self.assertNotIn(',', encoder_to_delete)
+        # this should trigger deleting the mp3 element from the dropdown
+        # in set_widget_initial_values
+        available_elements.remove(encoder_to_delete)
+
+        launch()
+        window = win[0]
+
+        extension_to_delete = get_file_extension(mime_to_delete).lower()
+        for row in window.prefs.liststore8:
+            if extension_to_delete in row[0].lower():
+                raise AssertionError(
+                    'Expected {} to be missing'.format(extension_to_delete)
+                )
+
+        window.prefs.output_mime_type.set_active(2)
+
+        # the dropdown element should basically just be hidden, indexes
+        # should all map to each other properly without having to modify
+        # `encoders`.
+        self.assertEqual(
+            gio_settings.get_string('output-mime-type'),
+            mime_to_select
+        )
 
 
 if __name__ == '__main__':

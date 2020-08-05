@@ -21,7 +21,7 @@ backend = Gio.memory_settings_backend_new()
 gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
 set_gio_settings(gio_settings)
 
-# tests will control gtk main iterations
+# tests will control gtk main iterations for the ui
 Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
 

@@ -28,6 +28,7 @@ import urllib.parse
 import urllib.error
 from gettext import gettext as _
 from gettext import ngettext
+import traceback
 
 from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
 
@@ -35,7 +36,8 @@ from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.util.formats import get_quality, get_bitrate_from_settings
+from soundconverter.util.formats import get_quality, \
+    get_bitrate_from_settings, get_file_extension
 from soundconverter.util.namegenerator import TargetNameGenerator, \
     subfolder_patterns, basename_patterns, locale_patterns_dict, \
     filepattern
@@ -60,6 +62,17 @@ COLUMNS = ['filename']
 
 # VISIBLE_COLUMNS = ['filename']
 # ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
+
+
+encoders = (
+    ('audio/x-vorbis', 'vorbisenc'),
+    ('audio/mpeg', 'lamemp3enc'),
+    ('audio/x-flac', 'flacenc'),
+    ('audio/x-wav', 'wavenc'),
+    ('audio/x-m4a', 'faac,avenc_aac'),
+    ('audio/ogg; codecs=opus', 'opusenc'),
+    ('gst-profile', None),
+)  # must be in same order as the output_mime_type GtkComboBox
 
 
 def idle(func):
@@ -513,6 +526,15 @@ class PreferencesDialog(GladeWindow):
         self.settings = get_gio_settings()
         GladeWindow.__init__(self, builder)
 
+        # encoders should be in the same order as in the glade file
+        for i, encoder in enumerate(encoders):
+            if encoder[0] == 'gst-profile':
+                continue
+            extension = get_file_extension(encoder[0])
+            ui_row_text = self.liststore8[i][0]
+            # the extension should be part of the row with the correct index
+            assert extension.lower() in ui_row_text.lower()
+
         self.dialog = builder.get_object('prefsdialog')
         self.dialog.set_transient_for(parent)
         self.example = builder.get_object('example_filename')
@@ -526,6 +548,7 @@ class PreferencesDialog(GladeWindow):
             assert self.sensitive_widgets[name] is not None
 
         self.encoders = None
+        self.present_mime_types = []
 
         self.set_widget_initial_values()
         self.set_sensitive()
@@ -587,21 +610,12 @@ class PreferencesDialog(GladeWindow):
 
         current_mime_type = self.settings.get_string('output-mime-type')
 
-        encoders = (
-            ('audio/x-vorbis', 'vorbisenc'),
-            ('audio/mpeg', 'lamemp3enc'),
-            ('audio/x-flac', 'flacenc'),
-            ('audio/x-wav', 'wavenc'),
-            ('audio/x-m4a', 'faac,avenc_aac'),
-            ('audio/ogg; codecs=opus', 'opusenc'),
-            ('gst-profile', None),
-        )  # must be in same order as the output_mime_type GtkComboBox
-        self.encoders = encoders
-
-        # desactivate output if encoder plugin is not present
+        # deactivate output if encoder plugin is not present
         widget = self.output_mime_type
         model = widget.get_model()
-        assert len(model) == len(encoders), 'model:{} widgets:{}'.format(len(model), len(encoders))
+        assert len(model) == len(encoders), 'model:{} widgets:{}'.format(
+            len(model), len(encoders)
+        )
 
         if not self.gstprofile.get_model().get_n_columns():
             self.gstprofile.set_model(Gtk.ListStore(str))
@@ -610,12 +624,13 @@ class PreferencesDialog(GladeWindow):
             self.gstprofile.add_attribute(cell, 'text', 0)
             self.gstprofile.set_active(0)
 
-        # check if we can found the stored audio profile
+        # check if we can find the stored audio profile
         found_profile = False
         stored_profile = self.settings.get_string('audio-profile')
         for i, profile in enumerate(audio_profiles_list):
             description, extension, pipeline = profile
-            self.gstprofile.get_model().append(['{} (.{})'.format(description, extension)])
+            text = '{} (.{})'.format(description, extension)
+            self.gstprofile.get_model().append([text])
             if description == stored_profile:
                 self.gstprofile.set_active(i)
                 found_profile = True
@@ -630,23 +645,42 @@ class PreferencesDialog(GladeWindow):
             self.settings.reset('output-mime-type')
             current_mime_type = self.settings.get_string('output-mime-type')
 
-        self.present_mime_types = []
         i = 0
         model = self.output_mime_type.get_model()
         for mime, encoder_name in encoders:
-            if not encoder_name:
-                continue
-            # valid encoder?
-            encoder_present = any(e in available_elements for e in encoder_name.split(','))
-            # valid profile?
-            profile_present = mime == 'gst-profile' and audio_profiles_list
-            if encoder_present or profile_present:
-                # add to supported outputs
-                self.present_mime_types.append(mime)
-                i += 1
+            if mime == 'gst-profile':
+                # is a profile set?
+                if len(audio_profiles_list) > 0:
+                    # add to supported outputs
+                    self.present_mime_types.append(mime)
+                    i += 1
+                else:
+                    # TODO write better error message for missing gst-profile
+                    #  support
+                    logger.error(
+                        'something profile idk TODO'
+                    )
+                    # remove it from the ui
+                    del model[i]
             else:
-                # remove it.
-                del model[i]
+                # valid default output?
+                encoder_present = any(
+                    e in available_elements for e in encoder_name.split(',')
+                )
+                if encoder_present:
+                    # add to supported outputs
+                    self.present_mime_types.append(mime)
+                    i += 1
+                else:
+                    logger.error(
+                        '{}/{} is not supported, a gstreamer plugins package '
+                        'is possibly missing.'.format(mime, encoder_name)
+                    )
+                    # TODO remove some other model and then check the index
+                    #  that on_output_mime_type_changed gets. Does it skip
+                    #  an index or do they move to fill the gap of i?
+                    del model[i]
+
         for i, mime in enumerate(self.present_mime_types):
             if current_mime_type == mime:
                 widget.set_active(i)
@@ -884,7 +918,7 @@ class PreferencesDialog(GladeWindow):
     def on_output_mime_type_changed(self, combo):
         """Called when the format is changed on the UI."""
         format_index = combo.get_active()
-        mime = self.encoders[format_index][0]
+        mime = encoders[format_index][0]
         if mime in self.present_mime_types:
             self.change_mime_type(mime)
 
