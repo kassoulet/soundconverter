@@ -142,7 +142,6 @@ class BatchIntegration(unittest.TestCase):
 
     def test_multiple_paths(self):
         # it should convert
-        print(os.getcwd())
         launch([
             '-b',
             'tests/test data/audio',

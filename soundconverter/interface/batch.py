@@ -24,6 +24,7 @@
 import os
 
 from gi.repository import GLib, Gio
+
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings, \
     get_gio_settings
@@ -34,9 +35,9 @@ from soundconverter.gstreamer.discoverer import add_discoverers, \
     get_sound_files
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.fileoperations import unquote_filename, \
-    filename_to_uri, beautify_uri
+from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
+from soundconverter.util.formatting import format_time
 
 cli_convert = [None]
 
@@ -172,7 +173,6 @@ def prepare_files_list(input_files):
                         if subdir == './':
                             subdir = ''
                         subdirectories.append(subdir)
-                        print(f'{dirpath=} {parent=} {subdir=}')
             else:
                 # else it didn't go into any directory.
                 # Provide some information about how to
@@ -200,7 +200,7 @@ class CLIConvert:
         input_files is an array of string paths.
         """
         logger.info(
-            '\nchecking files and walking dirs in the specified paths…'
+            'checking files and walking dirs in the specified paths…'
         )
 
         # CLICheck will exit(1) if no input_files available and resolve
@@ -220,7 +220,6 @@ class CLIConvert:
         self.started_tasks = 0
         self.num_conversions = 0
 
-        logger.info('\npreparing converters…')
         sound_files = file_checker.get_sound_files()
         for sound_file in sound_files:
             if not sound_file.readable:
@@ -244,10 +243,12 @@ class CLIConvert:
             self.num_conversions += 1
 
         if self.num_conversions == 0:
-            logger.info('\nnothing to do…')
+            logger.info('nothing to do…')
             exit(2)
 
-        logger.info('\nstarting conversion…')
+        logger.info('starting conversion of {} files…'.format(
+            len(sound_files)
+        ))
         self.conversions = conversions
         conversions.run()
         while conversions.running:
@@ -257,12 +258,10 @@ class CLIConvert:
         # do another one to print the queue done message
         context.iteration(True)
 
-    def print_progress(self, converter):
-        """Print the current filename and how many files are left."""
-        self.started_tasks += 1
-        path = unquote_filename(beautify_uri(converter.sound_file.uri))
-        logger.info('{}/{}: \'{}\''.format(
-            self.started_tasks, self.num_conversions, path
+        total_time = conversions.get_duration()
+        logger.info('converted {} files in {}'.format(
+            len(sound_files),
+            format_time(total_time)
         ))
 
 
@@ -305,16 +304,12 @@ class CLICheck:
 
         discoverers = TaskQueue()
         sound_files = []
-        print('cli check')
         for subdirectory, input_file in zip(subdirectories, input_files):
-            print('')
-            print('input_file', input_file)
             sound_file = SoundFile(input_file)
             # by storing it in subfolders, the original subfolder structure
             # (relative to the directory that was provided as input in the
             # cli) can be restored in the target dir
             sound_file.subfolders = subdirectory
-            print('subdirectory', subdirectory, os.getcwd())
             sound_files.append(sound_file)
 
         add_discoverers(discoverers, sound_files)
