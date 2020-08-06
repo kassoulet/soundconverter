@@ -26,10 +26,9 @@ import os
 from gi.repository import GLib, Gio
 
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, set_gio_settings, \
-    get_gio_settings
+from soundconverter.util.settings import settings, set_gio_settings
 from soundconverter.util.formats import get_quality_setting_name, \
-    get_mime_type, get_mime_type_mapping
+    get_mime_type, get_mime_type_mapping, get_default_quality
 from soundconverter.gstreamer.converter import Converter
 from soundconverter.gstreamer.discoverer import add_discoverers, \
     get_sound_files
@@ -57,6 +56,9 @@ def use_memory_gsettings(options):
     temporary memory backend so that the ui keeps its settings and cli
     settings are thrown away at the end.
     """
+    if options.get('mode') == 'gui':
+        raise AssertionError('should not be used with the gui mode')
+
     backend = Gio.memory_settings_backend_new()
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
@@ -65,7 +67,7 @@ def use_memory_gsettings(options):
     # to the input directory instead
     gio_settings.set_boolean('create-subfolders', False)
 
-    if options['mode'] == 'batch':
+    if options.get('mode') == 'batch':
         # the number of jobs is only applied, when limit-jobs is true
         forced_jobs = options.get('forced-jobs', None)
         if forced_jobs is not None:
@@ -74,16 +76,42 @@ def use_memory_gsettings(options):
         else:
             gio_settings.set_boolean('limit-jobs', False)
 
-        mime_type = get_mime_type(options['format'])
+        format_options = options['format'].split()
+        mime_type = get_mime_type(format_options[0])
+
+        # in case of for example 'mp3 abr'
+        if len(format_options) == 2 and mime_type == 'audio/mpeg':
+            gio_settings.set_string('mp3-mode', format_options[1])
+
         gio_settings.set_string('output-mime-type', mime_type)
 
-        output_path = filename_to_uri(options['output-path'])
+        output_path = filename_to_uri(options.get('output-path'))
         gio_settings.set_string('selected-folder', output_path)
 
         gio_settings.set_boolean('same-folder-as-input', False)
 
         # enable custom patterns by setting the index to the last entry
         gio_settings.set_int('subfolder-pattern-index', -1)
+
+        quality_setting = options.get('quality')
+        if quality_setting is None:
+            quality_setting = get_default_quality(mime_type)
+
+        setting_name = get_quality_setting_name()
+        # here is the very long and incredible way to set a variable as gio
+        # settings value with the correct type as defined in the schema:
+        type_string = gio_settings \
+            .props \
+            .settings_schema \
+            .get_key(setting_name) \
+            .get_value_type() \
+            .dup_string()
+        variant = GLib.Variant(type_string, float(quality_setting))
+        gio_settings.set_value(
+            setting_name,
+            variant
+        )
+
     else:
         # --tags and --check
         gio_settings.set_boolean('limit-jobs', True)
@@ -91,27 +119,82 @@ def use_memory_gsettings(options):
 
 
 def validate_args(options):
-    """Check if required command line args are provided."""
-    if options['mode'] == 'batch':
-        # not needed for --check and --tags
+    """Check if required command line args are provided.
 
-        if options['output-path'] is None:
+    Will log usage mistakes to the console.
+    """
+    mode = options.get('mode', 'gui')
+    if mode not in ['gui', 'check', 'tags']:
+        # not needed for --check and --tags
+        if not options.get('output-path'):
             logger.error('output path argument -o is required')
-            raise SystemExit
+            return False
 
         # target_format might be a mime type or a file extension
-        target_format = options['format']
+        target_format = options.get('format')
         if target_format is None:
             logger.error('format argument -f is required')
             raise SystemExit
-        target_format = get_mime_type(target_format)
-        if target_format is None:
+        mime_type = get_mime_type(target_format)
+        if mime_type is None:
             logger.error('cannot use "{}" mime type.'.format(target_format))
             msg = 'Supported shortcuts and mime types:'
             for ext, mime in sorted(get_mime_type_mapping().items()):
                 msg += ' {} {}'.format(ext, mime)
-            logger.info(msg)
-            raise SystemExit
+            logger.error(msg)
+            return False
+
+        # validate if the quality setting makes sense
+        quality = options.get('quality')
+
+        if quality is not None:
+            # optional; otherwise default quality values will be used
+            if mime_type == 'audio/mpeg':
+                if 'cbr' in target_format or 'abr' in target_format:
+                    if quality > 320 or quality < 64:
+                        logger.error(
+                            'mp3 cbr/abr bitrate should be between 64 and 320'
+                        )
+                        return False
+                else:
+                    if quality > 9 or quality < 0:
+                        logger.error(
+                            'mp3 vbr quality should be between 9 (low) and '
+                            '0 (hight)'
+                        )
+                        return False
+
+            elif mime_type == 'audio/x-vorbis':
+                if quality < 0 or quality > 1:
+                    logger.error('ogg quality should be between 0.0 and 1.0')
+                    return False
+
+            elif mime_type == 'audio/x-m4a':
+                if quality < 0 or quality > 400:
+                    logger.error('m4a bitrate should be between 0 and 400')
+                    return False
+
+            elif mime_type == 'audio/x-flac':
+                if quality < 0 or quality > 8:
+                    logger.error(
+                        'flac compression strength should be between 0 and 8'
+                    )
+                    return False
+
+            elif mime_type == 'audio/x-wav':
+                if quality not in [8, 16, 24, 32]:
+                    logger.error(
+                        'wav sample width has to be one of 8, 16, 24 or 32'
+                    )
+                    return False
+
+            elif mime_type == 'audio/ogg; codecs=opus':
+                # source: https://wiki.hydrogenaud.io/index.php?title=Opus
+                if quality < 6 or quality > 510:
+                    logger.error('opus bitrate should be between 6 and 510')
+                    return False
+
+    return True
 
 
 def prepare_files_list(input_files):
@@ -231,11 +314,6 @@ class CLIConvert:
 
             converter = Converter(sound_file, name_generator)
 
-            if 'quality' in settings:
-                quality_setting = settings.get('quality')
-                setting_name = get_quality_setting_name()
-                get_gio_settings().set_value(setting_name, quality_setting)
-
             converter.overwrite = True
 
             conversions.add(converter)
@@ -269,8 +347,7 @@ class CLICheck:
     """Print all the tags of the specified files to the console."""
 
     def __init__(
-            self, input_files, print_readable=False, print_tags=False,
-            print_not_readable=False
+            self, input_files, verbose=False
     ):
         """Print all the tags of the specified files to the console.
 
@@ -285,15 +362,9 @@ class CLICheck:
         ----------
         input_files : string[]
             an array of string paths.
-        print_readable : bool
-            if False, will print nothing at all
-        print_tags : bool
-            if True, will print tags
-        print_not_readable : bool
-            if True, will also print when a file is not an audiofile
+        verbose : bool
+            if True, will print tags, readable and non readable paths
         """
-        self.print_tags = print_tags
-        self.print_not_readable = print_not_readable
 
         input_files, subdirectories = prepare_files_list(input_files)
 
@@ -328,11 +399,11 @@ class CLICheck:
         for discoverer in self.discoverers:
             sound_files += discoverer.sound_files
 
-        if print_readable:
+        if verbose:
             for sound_file in sound_files:
                 if sound_file.readable:
                     self.print(sound_file)
-                elif self.print_not_readable:
+                else:
                     logger.info('{} is not an audiofile'.format(
                         beautify_uri(sound_file.uri)
                     ))
@@ -345,10 +416,9 @@ class CLICheck:
         """Print tags of a file, or write that it doesn't have tags."""
         logger.info(beautify_uri(sound_file.uri))
 
-        if self.print_tags:
-            if len(sound_file.tags) > 0:
-                for key in sorted(sound_file.tags):
-                    value = sound_file.tags[key]
-                    logger.info(('    {}: {}'.format(key, value)))
-            else:
-                logger.info(('    no tags found'))
+        if len(sound_file.tags) > 0:
+            for key in sorted(sound_file.tags):
+                value = sound_file.tags[key]
+                logger.info(('    {}: {}'.format(key, value)))
+        else:
+            logger.info(('    no tags found'))

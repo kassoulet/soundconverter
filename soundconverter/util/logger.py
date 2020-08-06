@@ -57,7 +57,5 @@ def update_verbosity():
     """Set the logging verbosity according to the settings object."""
     if settings['debug']:
         logger.setLevel(logging.DEBUG)
-    elif settings['quiet']:
-        logger.setLevel(logging.WARNING)
     else:
         logger.setLevel(logging.INFO)

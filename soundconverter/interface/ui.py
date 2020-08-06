@@ -685,7 +685,7 @@ class PreferencesDialog(GladeWindow):
 
         widget = self.vorbis_quality
         quality = self.settings.get_double('vorbis-quality')
-        quality_setting = get_quality('ogg', quality, reverse=True)
+        quality_setting = get_quality('audio/x-vorbis', quality, reverse=True)
         widget.set_active(-1)
         self.vorbis_quality.set_active(quality_setting)
         if self.settings.get_boolean('vorbis-oga-extension'):
@@ -693,23 +693,23 @@ class PreferencesDialog(GladeWindow):
 
         widget = self.aac_quality
         quality = self.settings.get_int('aac-quality')
-        quality_setting = get_quality('aac', quality, reverse=True)
+        quality_setting = get_quality('audio/x-m4a', quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.opus_quality
         quality = self.settings.get_int('opus-bitrate')
-        quality_setting = get_quality('opus', quality, reverse=True)
+        quality_setting = get_quality('audio/ogg; codecs=opus', quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.flac_compression
         quality = self.settings.get_int('flac-compression')
-        quality_setting = get_quality('flac', quality, reverse=True)
+        quality_setting = get_quality('audio/x-flac', quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.wav_sample_width
         quality = self.settings.get_int('wav-sample-width')
         # TODO test sample width on output because get_quality is new here
-        quality_setting = get_quality('wav', quality, reverse=True)
+        quality_setting = get_quality('audio/x-wav', quality, reverse=True)
         widget.set_active(quality_setting)
 
         self.mp3_quality = self.mp3_quality
@@ -942,7 +942,7 @@ class PreferencesDialog(GladeWindow):
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return  # just de-selectionning
-        fquality = get_quality('ogg', combobox.get_active())
+        fquality = get_quality('audio/x-vorbis', combobox.get_active())
         self.settings.set_double('vorbis-quality', fquality)
         self.update_example()
 
@@ -951,22 +951,22 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_aac_quality_changed(self, combobox):
-        quality = get_quality('aac', combobox.get_active())
+        quality = get_quality('audio/x-m4a', combobox.get_active())
         self.settings.set_int('aac-quality', quality)
         self.update_example()
 
     def on_opus_quality_changed(self, combobox):
-        quality = get_quality('opus', combobox.get_active())
+        quality = get_quality('audio/ogg; codecs=opus', combobox.get_active())
         self.settings.set_int('opus-bitrate', quality)
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):
-        quality = get_quality('wav', combobox.get_active())
+        quality = get_quality('audio/x-wav', combobox.get_active())
         self.settings.set_int('wav-sample-width', quality)
         self.update_example()
 
     def on_flac_compression_changed(self, combobox):
-        quality = get_quality('flac', combobox.get_active())
+        quality = get_quality('audio/x-flac', combobox.get_active())
         self.settings.set_int('flac-compression', quality)
         self.update_example()
 
@@ -991,13 +991,7 @@ class PreferencesDialog(GladeWindow):
         }
         quality = self.settings.get_int(keys[mode])
 
-        range_ = {
-            'cbr': 14,
-            'abr': 14,
-            'vbr': 10,
-        }
-
-        index = get_quality('mp3', quality, mode, reverse=True)
+        index = get_quality('audio/mpeg', quality, mode, reverse=True)
         self.mp3_quality.set_active(index)
         self.update_example()
 
@@ -1014,7 +1008,7 @@ class PreferencesDialog(GladeWindow):
         }
         mode = self.settings.get_string('mp3-mode')
 
-        bitrate = get_quality('mp3', combobox.get_active(), mode)
+        bitrate = get_quality('audio/mpeg', combobox.get_active(), mode)
         self.settings.set_int(keys[mode], bitrate)
         self.update_example()
 
