@@ -36,10 +36,16 @@ class Format(unittest.TestCase):
         # Use bitrates that are not part of the indexing triggered by the ui,
         # to ensure the code is flexible for custom bitrates (such as set in
         # the batch mode)
+        get_gio_settings().set_string('output-mime-type', 'audio/mpeg')
         get_gio_settings().set_int('mp3-abr-quality', 200)
         get_gio_settings().set_string('mp3-mode', 'abr')
-        get_gio_settings().set_string('output-mime-type', 'audio/mpeg')
         self.assertEqual(get_bitrate_from_settings(), '~200 kbps')
+        get_gio_settings().set_int('mp3-vbr-quality', 200)
+        get_gio_settings().set_string('mp3-mode', 'vbr')
+        self.assertEqual(get_bitrate_from_settings(), 'N/A')
+        get_gio_settings().set_int('mp3-cbr-quality', 200)
+        get_gio_settings().set_string('mp3-mode', 'cbr')
+        self.assertEqual(get_bitrate_from_settings(), '200 kbps')
 
         get_gio_settings().set_string('output-mime-type', 'audio/ogg; codecs=opus')
         get_gio_settings().set_int('opus-bitrate', 123)
@@ -61,7 +67,30 @@ class Format(unittest.TestCase):
         self.assertEqual(get_bitrate_from_settings(), 'N/A')
 
         get_gio_settings().set_string('output-mime-type', 'audio/x-wav')
-        self.assertEqual(get_bitrate_from_settings(), 'N/A')
+        get_gio_settings().set_boolean('output-resample', False)
+        rate = 705.6
+        self.assertEqual(
+            get_bitrate_from_settings(),
+            '{} kbps'.format(rate)
+        )
+        get_gio_settings().set_boolean('output-resample', True)
+        get_gio_settings().set_int('resample-rate', 44100)
+        get_gio_settings().set_int('wav-sample-width', 16)
+        self.assertEqual(
+            get_bitrate_from_settings(),
+            '{} kbps'.format(rate)
+        )
+        get_gio_settings().set_int('wav-sample-width', 32)
+        self.assertEqual(
+            get_bitrate_from_settings(),
+            '{} kbps'.format(rate * 2)
+        )
+        get_gio_settings().set_int('wav-sample-width', 8)
+        get_gio_settings().set_int('resample-rate', 128000)
+        self.assertEqual(
+            get_bitrate_from_settings(),
+            '{} kbps'.format(rate / 44.1 * 128 / 2)
+        )
 
     def test_get_file_extension(self):
         self.assertEqual(get_file_extension('audio/x-flac'), 'flac')

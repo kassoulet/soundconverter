@@ -19,6 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.logger import logger
 from soundconverter.gstreamer.profiles import audio_profiles_dict
@@ -110,6 +111,7 @@ def get_bitrate_from_settings():
 
     For example '~224 kbps'
     """
+
     settings = get_gio_settings()
     mime_type = settings.get_string('output-mime-type')
     mode = settings.get_string('mp3-mode')
@@ -137,14 +139,26 @@ def get_bitrate_from_settings():
         }[mode]
         setting = settings.get_int(mp3_quality_setting_name)
         if mode == 'vbr':
-            # TODO check which values would be correct here
-            bitrates = (320, 256, 224, 192, 160, 128)
-            bitrate = bitrates[setting]
+            # depends on the input audio
+            return 'N/A'
         if mode == 'cbr':
             approx = False
             bitrate = setting
         if mode == 'abr':
             bitrate = setting
+
+    elif mime_type == 'audio/x-wav':
+        approx = False
+        output_resample = settings.get_boolean('output-resample')
+        resample_rate = settings.get_int('resample-rate')
+        sample_width = settings.get_int('wav-sample-width')
+        if output_resample:
+            bitrate = sample_width * resample_rate / 1000
+        else:
+            # the actual bitrate will depend on the input audio, which
+            # cannot be known in the settings menu beforehand. Assume 44100
+            # which is the most common.
+            bitrate = sample_width * 44100 / 1000
 
     if bitrate:
         if approx:
