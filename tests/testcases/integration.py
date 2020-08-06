@@ -107,14 +107,23 @@ class BatchIntegration(unittest.TestCase):
         size_64 = os.path.getsize('tests/tmp/64/a.m4a')
         self.assertLess(size_64, size_320)
 
-    def get_bitrate(self, path):
-        """Read the bitrate from a file. Only works with constant bitrates."""
+    def discover(self, path):
+        """Run a Discoverer task on the path and return the sound_file.
+
+        Get discovered info with `sound_file.info`, `sound_file.tags` and
+        `sound_file.duration`.
+        """
         sound_file = SoundFile(filename_to_uri(path))
         discoverer = Discoverer([sound_file])
         discoverer.run()
         while discoverer.discovered != 1:
             gtk_iteration(True)
-        return sound_file.info.get_audio_streams()[0].get_bitrate()
+        return sound_file
+
+    def get_bitrate(self, path):
+        """Read the bitrate from a file. Only works with constant bitrates."""
+        sound_file = self.discover(path)
+        return sound_file.info.get_audio_streams()[0].get_bitrate() / 1000
 
     def test_vbr(self):
         launch([
@@ -190,7 +199,7 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/a.mp3'))
         self.assertEqual(
             self.get_bitrate('tests/tmp/a.mp3'),
-            256000
+            256
         )
 
     def test_non_recursive_with_folder(self):
@@ -230,6 +239,7 @@ class BatchIntegration(unittest.TestCase):
             '-r',
             '-o', 'tests/tmp',
             '-f', 'wav',
+            '-q', 24
         ])
         self.assertEqual(settings['mode'], 'batch')
         self.assertEqual(settings['debug'], False)
@@ -237,6 +247,14 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/a.wav'))
         self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.wav'))
+
+        # mono
+        bitrate = self.get_bitrate('tests/tmp/audio/b/c.wav')
+        self.assertEqual(bitrate, 44100 * 24 / 1000)
+
+        # stereo
+        bitrate = self.get_bitrate('tests/tmp/audio/a.wav')
+        self.assertEqual(bitrate, 44100 * 24 / 1000 * 2)
 
     def test_multiple_paths(self):
         # it should convert
