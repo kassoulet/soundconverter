@@ -37,9 +37,11 @@ from importlib.machinery import SourceFileLoader
 from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.formats import get_quality, get_file_extension
 from soundconverter.util.fileoperations import filename_to_uri
+from soundconverter.util.soundfile import SoundFile
 from soundconverter.interface.ui import win, gtk_iteration, encoders
 from soundconverter.interface.batch import cli_convert
 from soundconverter.gstreamer.converter import available_elements
+from soundconverter.gstreamer.discoverer import Discoverer
 
 from util import reset_settings
 
@@ -50,6 +52,7 @@ def launch(argv=[], bin_path='bin/soundconverter'):
     The batch mode is synchronous since it iterates the loop itself until
     finished.
     """
+    argv = [str(a) for a in argv]
     testargs = sys.argv.copy()[:1]
     testargs += argv
     with patch.object(sys, 'argv', testargs):
@@ -79,29 +82,126 @@ class BatchIntegration(unittest.TestCase):
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
 
-    def test_single_file(self):
+    def test_single_file_m4a(self):
         # it should convert
         launch([
             '-b',
             'tests/test data/audio/a.wav',
-            '-o', 'tests/tmp',
-            '-f', 'm4a'
+            '-o', 'tests/tmp/64',
+            '-f', 'm4a',
+            '-q', '64'
+        ])
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp/320',
+            '-f', 'm4a',
+            '-q', '320'
         ])
         self.assertEqual(settings['mode'], 'batch')
-        self.assertEqual(settings['quiet'], False)
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
-        self.assertTrue(os.path.isfile('tests/tmp/a.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/320/a.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/64/a.m4a'))
+        size_320 = os.path.getsize('tests/tmp/320/a.m4a')
+        size_64 = os.path.getsize('tests/tmp/64/a.m4a')
+        self.assertLess(size_64, size_320)
+
+    def get_bitrate(self, path):
+        """Read the bitrate from a file. Only works with constant bitrates."""
+        sound_file = SoundFile(filename_to_uri(path))
+        discoverer = Discoverer([sound_file])
+        discoverer.run()
+        while discoverer.discovered != 1:
+            gtk_iteration(True)
+        return sound_file.info.get_audio_streams()[0].get_bitrate()
+
+    def test_vbr(self):
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp/8',
+            '-f', 'mp3 vbr',
+            '-q', 8  # smaller
+        ])
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp/2',
+            '-f', 'mp3 vbr',
+            '-q', 2
+        ])
+        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['debug'], False)
+        self.assertEqual(settings['recursive'], False)
+        self.assertTrue(os.path.isfile('tests/tmp/8/a.mp3'))
+        self.assertTrue(os.path.isfile('tests/tmp/2/a.mp3'))
+        size_8 = os.path.getsize('tests/tmp/8/a.mp3')
+        size_2 = os.path.getsize('tests/tmp/2/a.mp3')
+        # it should be significantly smaller
+        self.assertLess(size_8, size_2 / 2)
+        # TODO it's vbr, so it's not 320... screenshot_batch is wrong
+        # fails to read bitrate of vbr:
+        self.assertEqual(
+            self.get_bitrate('tests/tmp/2/a.mp3'),
+            0
+        )
+
+    def test_abr(self):
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp/320',
+            '-f', 'mp3 abr',
+            '-q', 320
+        ])
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp/112',
+            '-f', 'mp3 abr',
+            '-q', 112
+        ])
+        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['debug'], False)
+        self.assertEqual(settings['recursive'], False)
+        self.assertTrue(os.path.isfile('tests/tmp/320/a.mp3'))
+        self.assertTrue(os.path.isfile('tests/tmp/112/a.mp3'))
+        size_320 = os.path.getsize('tests/tmp/320/a.mp3')
+        size_112 = os.path.getsize('tests/tmp/112/a.mp3')
+        self.assertLess(size_112, size_320 / 2)
+        # fails to read bitrate of abr:
+        self.assertEqual(
+            self.get_bitrate('tests/tmp/112/a.mp3'),
+            0
+        )
+
+    def test_cbr(self):
+        launch([
+            '-b',
+            'tests/test data/audio/a.wav',
+            '-o', 'tests/tmp',
+            '-f', 'mp3 cbr',
+            '-q', 256
+        ])
+        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['debug'], False)
+        self.assertEqual(settings['recursive'], False)
+        self.assertTrue(os.path.isfile('tests/tmp/a.mp3'))
+        self.assertEqual(
+            self.get_bitrate('tests/tmp/a.mp3'),
+            256000
+        )
 
     def test_non_recursive_with_folder(self):
         # it should exit with code 1, because no files are supplied
         with self.assertRaises(SystemExit) as ctx:
             launch([
-                '-b', 'tests/test data/empty', '-f', 'audio/mpeg',
+                '-b', 'tests/test data/empty',
+                '-f', 'mp3',
                 '-o', 'tmp'
             ])
         self.assertEqual(settings['mode'], 'batch')
-        self.assertEqual(settings['quiet'], False)
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         exit_code = ctx.exception.code
@@ -112,12 +212,12 @@ class BatchIntegration(unittest.TestCase):
         # are not audio files
         with self.assertRaises(SystemExit) as cm:
             launch([
-                '-b', '-r', 'tests/test data/empty', '-f', 'audio/mpeg',
+                '-b', '-r', 'tests/test data/empty',
+                '-f', 'mp3',
                 '-o', 'tmp',
-                '-q', '-d'
+                '-d'
             ])
         self.assertEqual(settings['mode'], 'batch')
-        self.assertEqual(settings['quiet'], True)
         self.assertEqual(settings['debug'], True)
         self.assertEqual(settings['recursive'], True)
         the_exception = cm.exception
@@ -129,16 +229,14 @@ class BatchIntegration(unittest.TestCase):
             '-b', 'tests/test data/audio',
             '-r',
             '-o', 'tests/tmp',
-            '-f', 'audio/mpeg',
-            '-q'
+            '-f', 'wav',
         ])
         self.assertEqual(settings['mode'], 'batch')
-        self.assertEqual(settings['quiet'], True)
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
-        self.assertTrue(os.path.isfile('tests/tmp/audio/a.mp3'))
-        self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.mp3'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/a.wav'))
+        self.assertTrue(os.path.isfile('tests/tmp/audio/b/c.wav'))
 
     def test_multiple_paths(self):
         # it should convert
@@ -153,7 +251,6 @@ class BatchIntegration(unittest.TestCase):
             '-d'
         ])
         self.assertEqual(settings['mode'], 'batch')
-        self.assertEqual(settings['quiet'], False)
         self.assertEqual(settings['debug'], True)
         self.assertEqual(settings['recursive'], True)
         # The batch mode behaves like the cp command:
@@ -174,18 +271,6 @@ class BatchIntegration(unittest.TestCase):
         remaining_after = conversion_queue.get_remaining()
         self.assertEqual(remaining_before, remaining_after)
 
-    def test_check(self):
-        # it should run and not raise exceptions
-        launch([
-            '-c',
-            'tests/test data/',
-            '-r'
-        ])
-        self.assertEqual(settings['mode'], 'check')
-        self.assertEqual(settings['quiet'], False)
-        self.assertEqual(settings['debug'], False)
-        self.assertEqual(settings['recursive'], True)
-
     def test_tags(self):
         # it should run and not raise exceptions
         launch([
@@ -194,7 +279,6 @@ class BatchIntegration(unittest.TestCase):
             '-r'
         ])
         self.assertEqual(settings['mode'], 'tags')
-        self.assertEqual(settings['quiet'], False)
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
 
@@ -205,14 +289,13 @@ class BatchIntegration(unittest.TestCase):
         launch([
             '-b',
             'test data', '-r',
-            '-Q', '320',
-            '-f', 'mp3',
+            '-f', 'flac',
             '-o', 'tmp'
         ], '../bin/soundconverter')
         # the input directory is part of the output
         self.assertTrue(os.path.isdir('tmp/test data/audio/'))
-        self.assertTrue(os.path.isfile('tmp/test data/audio/a.mp3'))
-        self.assertTrue(os.path.isfile('tmp/test data/audio/b/c.mp3'))
+        self.assertTrue(os.path.isfile('tmp/test data/audio/a.flac'))
+        self.assertTrue(os.path.isfile('tmp/test data/audio/b/c.flac'))
 
 
 class GUI(unittest.TestCase):
@@ -220,12 +303,12 @@ class GUI(unittest.TestCase):
         # reset quality settings, since they may be invalid for the ui mode
         # (e.g. an aribtrary mp3 quality of 200 does not exist for the ui)
         gio_settings = get_gio_settings()
-        gio_settings.set_int('mp3-abr-quality', get_quality('mp3', -1, 'abr'))
-        gio_settings.set_int('mp3-vbr-quality', get_quality('mp3', -1, 'vbr'))
-        gio_settings.set_int('mp3-cbr-quality', get_quality('mp3', -1, 'cbr'))
-        gio_settings.set_int('opus-bitrate', get_quality('opus', -1))
-        gio_settings.set_int('aac-quality', get_quality('aac', -1))
-        gio_settings.set_double('vorbis-quality', get_quality('ogg', -1))
+        gio_settings.set_int('mp3-abr-quality', get_quality('audio/mpeg', -1, 'abr'))
+        gio_settings.set_int('mp3-vbr-quality', get_quality('audio/mpeg', -1, 'vbr'))
+        gio_settings.set_int('mp3-cbr-quality', get_quality('audio/mpeg', -1, 'cbr'))
+        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', -1))
+        gio_settings.set_int('aac-quality', get_quality('audio/x-m4a', -1))
+        gio_settings.set_double('vorbis-quality', get_quality('audio/x-vorbis', -1))
 
         # conversion setup
         gio_settings.set_boolean('create-subfolders', False)
@@ -248,7 +331,7 @@ class GUI(unittest.TestCase):
 
     def test_conversion(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
 
         launch([
             'tests/test data/audio/a.wav',
@@ -335,7 +418,7 @@ class GUI(unittest.TestCase):
 
     def test_pause_resume(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
 
         launch([
             'tests/test data/audio/a.wav'
@@ -409,7 +492,7 @@ class GUI(unittest.TestCase):
 
     def test_conversion_pattern(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('aac-quality', get_quality('aac', 3))
+        gio_settings.set_int('aac-quality', get_quality('audio/x-m4a', 3))
 
         gio_settings.set_int('name-pattern-index', -1)
         filename_pattern = '{Title}/f o'
@@ -457,7 +540,7 @@ class GUI(unittest.TestCase):
 
     def test_non_overwriting(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('opus', 3))
+        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
 
         launch([
             'tests/test data/audio/a.wav'

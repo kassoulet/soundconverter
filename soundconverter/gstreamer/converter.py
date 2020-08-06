@@ -123,6 +123,7 @@ def create_mp3_encoder():
 
     mp3_mode = mode
     mp3_quality = get_gio_settings().get_int(quality[mode])
+    print(f'{mp3_mode=}, {mp3_quality=}')
 
     cmd = 'lamemp3enc encoding-engine-quality=2 '
 
@@ -152,7 +153,7 @@ def create_mp3_encoder():
 def create_aac_encoder():
     """Return an aac encoder for the gst pipeline string."""
     aac_quality = get_gio_settings().get_int('aac-quality')
-    encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
+    encoder = 'avenc_aac' if 'avenc_aac' in available_elements else 'faac'
     return '{} bitrate={} ! mp4mux'.format(encoder, aac_quality * 1000)
 
 
@@ -251,13 +252,14 @@ class Converter(Task):
     def _stop_pipeline(self):
         # remove partial file
         if self.temporary_filename is not None:
-            try:
-                vfs_unlink(self.temporary_filename)
-            except Exception as e:
-                logger.error('cannot delete: \'{}\': {}'.format(
-                    beautify_uri(self.temporary_filename),
-                    str(e)
-                ))
+            if vfs_exists(self.temporary_filename):
+                try:
+                    vfs_unlink(self.temporary_filename)
+                except Exception as e:
+                    logger.error('cannot delete: \'{}\': {}'.format(
+                        beautify_uri(self.temporary_filename),
+                        str(e)
+                    ))
         if not self.pipeline:
             logger.debug('pipeline already stopped!')
             return

@@ -119,6 +119,10 @@ class DiscovererThread(Thread):
         try:
             discoverer = GstPbutils.Discoverer()
             info = discoverer.discover_uri(sound_file.uri)
+
+            # whatever anybody might ever need from it, here it is:
+            sound_file.info = info
+
             taglist = info.get_tags()
             taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 

@@ -38,7 +38,6 @@ _gio_settings = Gio.Settings(schema='org.soundconverter')
 # Arguments that can exclusively set over the CLI
 settings = {
     'mode': 'gui',
-    'quiet': False,
     'debug': False
 }
 

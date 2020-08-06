@@ -96,17 +96,11 @@ def parse_command_line():
     Parses the command line arguments and displays help with --help.
     """
     parser = ModifiedOptionParser(
-        epilog='\nExample:\n  '
-        'soundconverter -b [file] [dir] -r -f mp3 -o ' +
-        '[output dir] -Q 320\n'
-    )
-
-    parser.add_option(
-        '-c', '--check', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode': 'check'},
-        help=_(
-            'Print all audio files in the specified directories'
-        )
+        epilog='\nExamples:\n  '
+        'soundconverter -b [file] [dir] -r -f mp3 vbr -o ' +
+        '[output dir] -q 0\n'
+        'soundconverter -b [file] [dir] -r -f aac -o ' +
+        '[output dir] -q 320\n'
     )
     parser.add_option(
         '-b', '--batch', dest='mode', action='callback',
@@ -123,14 +117,8 @@ def parse_command_line():
         callback=mode_callback,  callback_kwargs={'mode': 'tags'},
         help=_(
             'Show tags for input files instead of converting '
-            'them. This indicates command line batch mode '
-            'and disables the graphical user interface.'
+            'them. This disables the graphical user interface.'
         )
-    )
-    parser.add_option(
-        '-q', '--quiet', action="store_true", dest="quiet",
-        help=_("Be quiet. Don't write normal output, only errors."),
-        default=False
     )
     parser.add_option(
         '-d', '--debug', action="store_true", dest="debug",
@@ -151,13 +139,9 @@ def parse_command_line():
     batch_option_group.add_option(
         '-f', '--format', dest="format", metavar='NAME',
         help=_(
-            'Set the output MIME type or file extension. The default '
-            'is {}. Supported values: {}'
-        ).format(
-            get_gio_settings().get_string('output-mime-type'),
-            '"audio/x-m4a" ("aac" or "m4a"), "audio/x-flac" ("flac"), '
-            '"audio/mpeg" ("mp3"), "audio/x-vorbis" ("ogg"), '
-            '"audio/ogg; codecs=opus" ("opus"), "audio/x-wav" ("wav")'
+            'Set the output format.'
+            'aac/m4a, flac, mp3, ogg, opus and wav are supported. You'
+            'can specify abr, vbr (default) or cbr by using e.g. "mp3 cbr"'
         )
     )
     batch_option_group.add_option(
@@ -178,21 +162,21 @@ def parse_command_line():
             'Put converted files into a different directory while rebuilding '
             'the original directory structure. This includes the name of the '
             'original directory.'
-        )
+        ),
+        default=None
     )
 
     batch_option_group.add_option(
-        '-Q', '--quality', action="store", type='float', dest="quality",
+        '-q', '--quality', action="store", type='float', dest="quality",
         metavar='NUM', help=_(
             'Quality of the converted output file. Possible values: '
             'vorbis: 0.0 - 1.0; '
             'aac: - 320; '
             'opus: - 192; '
-            'mp3: - 320; '
+            'mp3: 32 - 320; '
             'wav: 8, 16, 32 (bitdepth); '
             'flac: 0 - 8 (compression strength)'
-        ),
-        default=None
+        )
     )
 
     parser.add_option_group(batch_option_group)
@@ -206,31 +190,29 @@ options, files = parser.parse_args(args)
 options = vars(options)
 # the only cli args that are not available over gio settings.
 settings['mode'] = options['mode'] or 'gui'
-settings['quiet'] = options['quiet']
 settings['debug'] = options['debug']
 settings['recursive'] = options['recursive']
 
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()
 
-if not settings['quiet']:
-    logger.info(('{} {}'.format(NAME, VERSION)))
+logger.info(('{} {}'.format(NAME, VERSION)))
 
 if settings['mode'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
-    # now store the rest of the CLI args in the gio settings
-    validate_args(options)
-    use_memory_gsettings(options)
     if not files:
         logger.info('nothing to do…')
+
+    # first check if the cli is used correctly
+    if not validate_args(options):
+        raise SystemExit
+
+    # then store them in the gio settings
+    use_memory_gsettings(options)
+
     if settings['mode'] == 'tags':
-        CLICheck(
-            files, print_readable=True, print_tags=True,
-            print_not_readable=True
-        )
+        CLICheck(files, verbose=True)
     elif settings['mode'] == 'batch':
         batch_main(files)
-    elif settings['mode'] == 'check':
-        CLICheck(files, print_readable=True)

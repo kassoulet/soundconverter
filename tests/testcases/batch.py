@@ -23,8 +23,9 @@ import os
 import unittest
 import urllib.parse
 
-from soundconverter.interface.batch import prepare_files_list
-from soundconverter.util.settings import settings
+from soundconverter.interface.batch import prepare_files_list, \
+    validate_args, use_memory_gsettings
+from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.fileoperations import vfs_exists
 
 
@@ -185,6 +186,110 @@ class BatchUtils(unittest.TestCase):
         ])
 
         self.assertEqual(subdirectories, ['', ''])
+
+    def test_validate_args(self):
+        # input and output
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'format': 'mp3 cbr', 'quality': 192
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '',
+            'format': 'mp3 cbr', 'quality': 192
+        }))
+        # formats
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.', 'format': 'mp3',
+            'quality': 192  # False because it defaults to vbr
+        }))
+        self.assertTrue(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'mp3', 'quality': 5
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'mp3 vbr', 'quality': 192
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'mp3 abr', 'quality': 3
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'mp3 cbr', 'quality': 400
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'opus', 'quality': 600
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'wav', 'quality': 13
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'flac', 'quality': 20
+        }))
+        self.assertFalse(validate_args({
+            'mode': 'batch', 'output-path': '.',
+            'format': 'ogg', 'quality': 20
+        }))
+
+    def test_use_memory_gsettings_cbr(self):
+        use_memory_gsettings({
+            'output-path': '.',
+            'mode': 'batch',
+            'format': 'mp3 cbr',
+            'quality': '320'
+        })
+        gio_settings = get_gio_settings()
+        self.assertEqual(
+            gio_settings.get_string('mp3-mode'), 'cbr'
+        )
+        self.assertEqual(
+            gio_settings.get_string('output-mime-type'),
+            'audio/mpeg'
+        )
+        self.assertEqual(
+            gio_settings.get_int('mp3-cbr-quality'),
+            320
+        )
+
+    def test_use_memory_gsettings_default_mp3_mode(self):
+        use_memory_gsettings({
+            'output-path': '.',
+            'mode': 'batch',
+            'format': 'mp3',
+            'quality': '5'
+        })
+        gio_settings = get_gio_settings()
+        self.assertEqual(
+            gio_settings.get_string('mp3-mode'), 'vbr'
+        )
+        self.assertEqual(
+            gio_settings.get_string('output-mime-type'),
+            'audio/mpeg'
+        )
+        self.assertEqual(
+            gio_settings.get_int('mp3-vbr-quality'),
+            5
+        )
+
+    def test_use_memory_gsettings_ogg(self):
+        use_memory_gsettings({
+            'output-path': '.',
+            'mode': 'batch',
+            'format': 'ogg',
+            'quality': '0.5'
+        })
+        gio_settings = get_gio_settings()
+        self.assertEqual(
+            gio_settings.get_string('output-mime-type'),
+            'audio/x-vorbis'
+        )
+        self.assertEqual(
+            gio_settings.get_double('vorbis-quality'),
+            0.5
+        )
 
 
 if __name__ == "__main__":

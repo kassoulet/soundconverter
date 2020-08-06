@@ -44,21 +44,23 @@ def get_mime_type_mapping():
     return mime_types
 
 
-def get_mime_type(extension):
+def get_mime_type(audio_format):
     """Return the matching mime-type or None if it is not supported.
 
     Parameters
     ----------
-    extension : string
-        for example 'mp3'
+    audio_format : string
+        for example 'mp3', 'audio/mpeg', 'mp3 vbr' or 'audio/mpeg cbr', for
+        which the result would be 'audio/mpeg'
     """
+    audio_format = audio_format.split()[0]
     mime_types = get_mime_type_mapping()
-    if extension not in mime_types.values():
+    if audio_format not in mime_types.values():
         # possibly a file extension
-        return mime_types.get(extension, None)
+        return mime_types.get(audio_format, None)
     else:
         # already a mime string
-        return extension
+        return audio_format
 
 
 def get_file_extension(mime):
@@ -85,7 +87,7 @@ def get_file_extension(mime):
 
 
 def get_quality_setting_name():
-    """Depending on the selected mime_type, get the gio settings name."""
+    """Get the settings name for quality for the set output-mime-type."""
     settings = get_gio_settings()
     mime_type = settings.get_string('output-mime-type')
     if mime_type == 'audio/mpeg':
@@ -111,7 +113,6 @@ def get_bitrate_from_settings():
 
     For example '~224 kbps'
     """
-
     settings = get_gio_settings()
     mime_type = settings.get_string('output-mime-type')
     mode = settings.get_string('mp3-mode')
@@ -169,13 +170,44 @@ def get_bitrate_from_settings():
         return 'N/A'
 
 
-def get_quality(ftype, value, mode='vbr', reverse=False):
+def get_default_quality(mime, mode='vbr'):
+    """Return a default quality if the -q parameter is not set.
+
+    Parameters
+    ----------
+    mime : string
+        mime type
+    mode : string
+        one of 'cbr', 'abr' and 'vbr' for mp3
+    """
+
+    # get 6-tuple of qualities
+    default = {
+        'audio/x-vorbis': 1.0,
+        'audio/x-m4a': 320,
+        'audio/ogg; codecs=opus': 192,
+        'audio/mpeg': {
+            'cbr': 320,
+            'abr': 320,
+            'vbr': 0,  # inverted !
+        },
+        'audio/x-wav': 16,
+        'audio/x-flac': 5
+    }[mime]
+
+    if type(default) is dict:
+        default = default[mode]
+
+    return default
+
+
+def get_quality(mime, value, mode='vbr', reverse=False):
     """Map an integer between 0 and 5 to a proper quality/compression value.
 
     Parameters
     ----------
-    ftype : string
-        'ogg', 'aac', 'opus', 'flac', 'wav' or 'mp3'
+    mime : string
+        mime type
     value : number
         between 0 and 5, or 0 and 2 for flac and wav. -1 indexes the highest
         quality.
@@ -186,24 +218,22 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
         value-parameter given a quality setting. Value becomes the input for
         the quality then.
     """
-    if ftype == 'm4a':
-        ftype = 'aac'
 
     # get 6-tuple of qualities
     qualities = {
-        'ogg': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-        'aac': (64, 96, 128, 192, 256, 320),
-        'opus': (48, 64, 96, 128, 160, 192),
-        'mp3': {
+        'audio/x-vorbis': (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+        'audio/x-m4a': (64, 96, 128, 192, 256, 320),
+        'audio/ogg; codecs=opus': (48, 64, 96, 128, 160, 192),
+        'audio/mpeg': {
             'cbr': (64, 96, 128, 192, 256, 320),
             'abr': (64, 96, 128, 192, 256, 320),
             'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
         },
-        'wav': (8, 16, 32),
-        'flac': (0, 5, 8)
-    }[ftype]
+        'audio/x-wav': (8, 16, 32),
+        'audio/x-flac': (0, 5, 8)
+    }[mime]
 
-    if ftype == 'mp3':
+    if type(qualities) is dict:
         qualities = qualities[mode]
 
     # return depending on function parameters
@@ -221,10 +251,10 @@ def get_quality(ftype, value, mode='vbr', reverse=False):
             # it has predefined qualities as opposed to batch. So this is
             # either a setting leaking from some tests or the batch mode
             # persisted something.
-            if ftype == 'mp3':
-                ftype_mode = '{} {}'.format(ftype, mode)
+            if mime == 'mp3':
+                ftype_mode = '{} {}'.format(mime, mode)
             else:
-                ftype_mode = ftype
+                ftype_mode = mime
             logger.warn(
                 'tried to index unknow {} quality {}'.format(ftype_mode, value)
             )

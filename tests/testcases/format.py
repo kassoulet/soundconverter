@@ -27,10 +27,12 @@ from soundconverter.util.settings import get_gio_settings
 
 class Format(unittest.TestCase):
     def test_get_quality(self):
-        self.assertEqual(get_quality('mp3', 0, 'cbr'), 64)
-        self.assertEqual(get_quality('aac', 1, 'thetgdfgsfd'), 96)
-        self.assertEqual(get_quality('aac', 256, reverse=True), 4)
-        self.assertEqual(get_quality('mp3', 320, mode='abr', reverse=True), 5)
+        self.assertEqual(get_quality('audio/mpeg', 0, 'cbr'), 64)
+        self.assertEqual(get_quality('audio/x-m4a', 1, 'thetgdfgsfd'), 96)
+        self.assertEqual(get_quality('audio/x-m4a', 256, reverse=True), 4)
+        self.assertEqual(get_quality('audio/mpeg', 320, mode='abr', reverse=True), 5)
+        self.assertEqual(get_quality('audio/mpeg', -1, mode='abr', reverse=False), 320)
+        self.assertEqual(get_quality('audio/mpeg', -2, mode='cbr', reverse=False), 256)
 
     def test_get_bitrate_from_settings(self):
         # Use bitrates that are not part of the indexing triggered by the ui,
@@ -99,6 +101,14 @@ class Format(unittest.TestCase):
     def test_get_mime_type(self):
         self.assertEqual(get_mime_type('flac'), 'audio/x-flac')
         self.assertEqual(get_mime_type('audio/x-flac'), 'audio/x-flac')
+        self.assertEqual(get_mime_type('mp3'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('mp3 abr'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('mp3 vbr'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('mp3 cbr'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('audio/mpeg'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('audio/mpeg abr'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('audio/mpeg vbr'), 'audio/mpeg')
+        self.assertEqual(get_mime_type('audio/mpeg cbr'), 'audio/mpeg')
 
 
 if __name__ == "__main__":
