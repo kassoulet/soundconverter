@@ -36,7 +36,7 @@ soundconverter
 For command line args, see
 
 ```bash
-sounconverter --help
+soundconverter --help
 gst-launch-1.0 --help-gst
 ```
 
