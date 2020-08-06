@@ -22,7 +22,6 @@
 import os
 import time
 import sys
-import datetime
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -48,6 +47,7 @@ from soundconverter.util.error import show_error, set_error_handler
 from soundconverter.gstreamer.profiles import audio_profiles_list
 from soundconverter.interface.notify import notification
 from soundconverter.util.formatting import format_time
+
 
 # Names of columns in the file list
 MODEL = [
@@ -1022,10 +1022,12 @@ class PreferencesDialog(GladeWindow):
         selected = combobox.get_active()
         rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
         self.settings.set_int('resample-rate', rates[selected])
+        self.update_example()
 
     def on_resample_toggle(self, rstoggle):
         self.settings.set_boolean('output-resample', rstoggle.get_active())
         self.resample_rate.set_sensitive(rstoggle.get_active())
+        self.update_example()
 
     def on_jobs_toggled(self, jtoggle):
         self.settings.set_boolean('limit-jobs', jtoggle.get_active())
