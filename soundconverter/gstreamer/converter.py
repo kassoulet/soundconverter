@@ -96,7 +96,7 @@ def create_flac_encoder():
 def create_wav_encoder():
     """Return a wav encoder for the gst pipeline string."""
     wav_sample_width = get_gio_settings().get_int('wav-sample-width')
-    formats = {8: 'u8', 16: 's16le', 24: 's24le', 32: 's32le'}
+    formats = {8: 'U8', 16: 'S16LE', 24: 'S24LE', 32: 'S32LE'}
     return 'audioconvert ! audio/x-raw,format={} ! wavenc'.format(
         formats[wav_sample_width]
     )
@@ -189,6 +189,7 @@ class Converter(Task):
         self.temporary_filename = None
         self.overwrite = False
         self.name_generator = name_generator
+        self.callback = lambda: None
 
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
@@ -205,6 +206,7 @@ class Converter(Task):
         self.pipeline = None
         self.done = False
         self.error = None
+        self.output_uri = None
 
     def _query_position(self):
         """Ask for the stream position of the current pipeline."""
@@ -278,7 +280,7 @@ class Converter(Task):
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
 
-            except GLib.gerror as e:
+            except GLib.Error as e:
                 show_error('gstreamer error when creating pipeline', str(e))
                 self._on_error(str(e))
                 return
@@ -373,6 +375,7 @@ class Converter(Task):
                     beautify_uri(self.sound_file.uri)
                 ))
 
+        self.output_uri = newname
         self.done = True
         self.callback()
 
