@@ -40,10 +40,15 @@ class Formatter(logging.Formatter):
                 logging.DEBUG: 36,
                 logging.INFO: 32,
             }.get(record.levelno, 0)
-            self._style._fmt = (
-                '\033[{}m%(levelname)s\033[0m: '
-                '%(filename)s, line %(lineno)d, %(msg)s'
-            ).format(color)
+            if settings['debug']:
+                self._style._fmt = (
+                    '\033[{}m%(levelname)s\033[0m: '
+                    '%(filename)s, line %(lineno)d, %(msg)s'
+                ).format(color)
+            else:
+                self._style._fmt = (
+                    '\033[{}m%(levelname)s\033[0m: %(msg)s'
+                ).format(color)
         return super().format(record)
 
 

@@ -140,7 +140,7 @@ def parse_command_line():
         '-f', '--format', dest="format", metavar='NAME',
         help=_(
             'Set the output format.'
-            'aac/m4a, flac, mp3, ogg, opus and wav are supported. You'
+            'aac/m4a, flac, mp3, ogg, opus and wav are supported. You '
             'can specify abr, vbr (default) or cbr by using e.g. "mp3 cbr"'
         )
     )
@@ -171,9 +171,11 @@ def parse_command_line():
         metavar='NUM', help=_(
             'Quality of the converted output file. Possible values: '
             'vorbis: 0.0 - 1.0; '
-            'aac: - 320; '
-            'opus: - 192; '
-            'mp3: 32 - 320; '
+            'aac: 0 - 400; '
+            'opus: 6 - 510; '
+            'mp3 vbr: 9 (low) - 0 (high); '
+            'mp3 abr: 64 - 320; '
+            'mp3 cbr: 64 - 320; '
             'wav: 8, 16, 32 (bitdepth); '
             'flac: 0 - 8 (compression strength)'
         )

@@ -22,6 +22,7 @@
 """Batch mode to run soundconverter in a console."""
 
 import os
+import sys
 
 from gi.repository import GLib, Gio
 
@@ -137,12 +138,21 @@ def validate_args(options):
             raise SystemExit
         mime_type = get_mime_type(target_format)
         if mime_type is None:
-            logger.error('cannot use "{}" mime type.'.format(target_format))
-            msg = 'Supported shortcuts and mime types:'
-            for ext, mime in sorted(get_mime_type_mapping().items()):
-                msg += ' {} {}'.format(ext, mime)
+            logger.error('cannot use "{}" format.'.format(target_format))
+            msg = 'Supported formats: {}'.format(
+                ', '.join(get_mime_type_mapping())
+            )
             logger.error(msg)
             return False
+
+        if mime_type == 'audio/mpeg':
+            if 'cbr' in sys.argv or 'vbr' in sys.argv or 'abr' in sys.argv:
+                # could also be a folder name, so don't return False
+                logger.info(
+                    'You might have forgotten to enclose the mp3 mode in '
+                    'quotes, for example "mp3 cbr" (defaults to vbr with '
+                    '"mp3")'
+                )
 
         # validate if the quality setting makes sense
         quality = options.get('quality')
@@ -321,7 +331,7 @@ class CLIConvert:
             self.num_conversions += 1
 
         if self.num_conversions == 0:
-            logger.info('nothing to do…')
+            logger.info('no audio files for conversion found…')
             exit(2)
 
         logger.info('starting conversion of {} files…'.format(
@@ -371,6 +381,7 @@ class CLICheck:
         if len(input_files) == 0:
             # prepare_files_list will print something like
             # "use -r to go into subdirectories"
+            logger.info('no files found…')
             exit(1)
 
         discoverers = TaskQueue()
