@@ -708,7 +708,6 @@ class PreferencesDialog(GladeWindow):
 
         widget = self.wav_sample_width
         quality = self.settings.get_int('wav-sample-width')
-        # TODO test sample width on output because get_quality is new here
         quality_setting = get_quality('audio/x-wav', quality, reverse=True)
         widget.set_active(quality_setting)
 
