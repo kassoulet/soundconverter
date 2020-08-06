@@ -62,7 +62,7 @@ except (ImportError, ValueError) as error:
 # See `gst-launch-1.0 --help-gst`and
 # https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html # noqa
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
-Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
+Gst.init(sys.argv)
 
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.interface.batch import batch_main, \
