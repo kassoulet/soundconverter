@@ -123,7 +123,6 @@ def create_mp3_encoder():
 
     mp3_mode = mode
     mp3_quality = get_gio_settings().get_int(quality[mode])
-    print(f'{mp3_mode=}, {mp3_quality=}')
 
     cmd = 'lamemp3enc encoding-engine-quality=2 '
 
