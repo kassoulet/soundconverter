@@ -37,18 +37,18 @@ from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
 
 basename_patterns = [
-    ('%(.inputname)s', _('Same as input, but replacing the suffix')),
-    ('%(.inputname)s%(.ext)s', _('Same as input, but with an additional suffix')),
-    ('%(track-number)02d-%(title)s', _('Track number - title')),
-    ('%(title)s', _('Track title')),
-    ('%(artist)s-%(title)s', _('Artist - title')),
+    ('{inputname}', _('Same as input, but replacing the suffix')),
+    ('{inputname}.{ext}', _('Same as input, but with an additional suffix')),
+    ('{track-number:02}-{title}', _('Track number - title')),
+    ('{title}', _('Track title')),
+    ('{artist}-{title}', _('Artist - title')),
     ('Custom', _('Custom filename pattern')),
 ]
 
 subfolder_patterns = [
-    ('%(album-artist)s/%(album)s', _('artist/album')),
-    ('%(album-artist)s-%(album)s', _('artist-album')),
-    ('%(album-artist)s - %(album)s', _('artist - album')),
+    ('{album-artist}/{album}', _('artist/album')),
+    ('{album-artist}-{album}', _('artist-album')),
+    ('{album-artist} - {album}', _('artist - album')),
 ]
 
 # custom filename patterns
@@ -60,19 +60,19 @@ locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date '
                     'Year Timestamp DiscNumber DiscTotal Ext')
 
 patterns_formats = (
-    '%(artist)s',
-    '%(album)s',
-    '%(album-artist)s',
-    '%(title)s',
-    '%(track-number)02d',
-    '%(track-count)02d',
-    '%(genre)s',
-    '%(date)s',
-    '%(year)s',
-    '%(timestamp)s',
-    '%(album-disc-number)d',
-    '%(album-disc-count)d',
-    '%(.target-ext)s',
+    '{artist}',
+    '{album}',
+    '{album-artist}',
+    '{title}',
+    '{track-number:02}',
+    '{track-count:02}',
+    '{genre}',
+    '{date}',
+    '{year}',
+    '{timestamp}',
+    '{album-disc-number}',
+    '{album-disc-count}',
+    '{target-ext}',
 )
 
 # Name and pattern for CustomFileChooser
@@ -98,21 +98,21 @@ custom_patterns = english_patterns + ' ' + locale_patterns
 # convert to list
 custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
 # and finally to dict, thus removing doubles.
-# Example: { '{Artist}': '%(artist)s' }
+# Example: { '{Künstler}': '{artist}' } depending on the locale
 custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
 
 
 def process_custom_pattern(pattern):
-    """Convert '{tag}' to '%(tag)s' in the pattern."""
-    for curly_format, percent_format in custom_patterns.items():
-        pattern = pattern.replace(curly_format, percent_format)
+    """Convert e.g. '{Künster}' to '{artist}' in the pattern."""
+    for locale_name, tag_name in custom_patterns.items():
+        pattern = pattern.replace(locale_name, tag_name)
     return pattern
 
 
 def get_basename_pattern():
     """Get the currently selected or custom filename pattern.
 
-    For example '%(artist)s-%(title)s', without target extension.
+    For example '{artist}-{title}', without target extension.
 
     A custom-filename-pattern can also serve the purpose of a subfolder-pattern
     by having forward slashes.
@@ -134,9 +134,11 @@ def get_basename_pattern():
 def get_subfolder_pattern():
     """Get the currently selected subfolder pattern.
 
-    For example '%(album-artist)s/%(album)s', to create those new
+    For example '{album-artist}/{album}', to create those new
     subfolders in the slected_folder based on tags.
     """
+    # Since it is not a free text input on the ui, process_custom_pattern
+    # doesn't have to be used
     settings = get_gio_settings()
     index = settings.get_int('subfolder-pattern-index')
     if index >= len(subfolder_patterns) or index < -1:
@@ -288,6 +290,23 @@ class TargetNameGenerator:
 
         return safe
 
+    def find_format_string_tags(self, pattern):
+        """Given a pattern find all tags that can be substituted.
+
+        For example for {i}{a}b{c}{{d}}{e}c{{{g}}}{hhh} it should
+        find i, a, c, e, g, hhh
+        """
+        variables = []
+        candidates = re.findall(r'{+.+?}+', pattern)
+        for candidate in candidates:
+            # check if the candidate is made out of an uneven number of
+            # curly braces. Two curly braces are a single escaped one.
+            if not re.match(r'^(?:{{)*([^{}]+?)(?:}})*$', candidate):
+                # get the inner curly brace content
+                variable = re.search(r'([^{}]+)', candidate)[1]
+                variables.append(variable)
+        return variables
+
     def fill_pattern(self, sound_file, pattern):
         """Fill tags into a filename pattern for a SoundFile.
 
@@ -297,7 +316,7 @@ class TargetNameGenerator:
             The soundfile has to have tags, which can be done with the
             discoverer task.
         pattern : string
-            For example '%(album-artist)s/%(album)s/%(title)s'. Should not
+            For example '{album-artist}/{album}/{title}'. Should not
             be an URI
         """
         tags = sound_file.tags
@@ -307,9 +326,10 @@ class TargetNameGenerator:
         filename, ext = os.path.splitext(filename)
         assert '/' not in filename
         mapping = {
-            '.inputname': filename,
-            '.ext': ext,
-            '.target-ext': self.suffix[1:],
+            'filename': filename,
+            'inputname': filename,
+            'ext': ext[1:],
+            'target-ext': self.suffix,
             'album': _('Unknown Album'),
             'artist': _('Unknown Artist'),
             'album-artist': _('Unknown Artist'),
@@ -340,8 +360,14 @@ class TargetNameGenerator:
         timestamp_string = time.strftime('%Y%m%d_%H_%M_%S')
         mapping['timestamp'] = timestamp_string
 
+        # if some tag is called "venue", map it to "Unknown Venue"
+        tags_in_pattern = self.find_format_string_tags(pattern)
+        unknown_tags = [tag for tag in tags_in_pattern if tag not in mapping]
+        for tag in unknown_tags:
+            mapping[tag] = 'Unknown {}'.format(tag.capitalize())
+
         # now fill the tags in the pattern with values:
-        result = pattern % mapping
+        result = pattern.format(**mapping)
 
         return result
 

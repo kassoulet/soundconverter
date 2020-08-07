@@ -151,7 +151,6 @@ class BatchIntegration(unittest.TestCase):
         size_2 = os.path.getsize('tests/tmp/2/a.mp3')
         # it should be significantly smaller
         self.assertLess(size_8, size_2 / 2)
-        # TODO it's vbr, so it's not 320... screenshot_batch is wrong
         # fails to read bitrate of vbr:
         self.assertEqual(
             self.get_bitrate('tests/tmp/2/a.mp3'),
@@ -319,6 +318,42 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isdir('tmp/test data/audio/'))
         self.assertTrue(os.path.isfile('tmp/test data/audio/a.flac'))
         self.assertTrue(os.path.isfile('tmp/test data/audio/b/c.flac'))
+
+    def test_pattern_1(self):
+        launch([
+            '-b', 'tests/test data/audio/',
+            '-r',
+            '-o', 'tests/tmp',
+            '-p', '/{artist}/{album}',
+            '-f', 'm4a'
+        ])
+        # since pattern is used, the "audio" part of the input path
+        # is omitted and not reconstructed. e.g. "audio" might also be an
+        # album name, in which case the old structure should be replaced
+        # with the provided one.
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/test_artist/test_album.m4a'
+        ))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/Unknown Artist/Unknown Album.m4a'
+        ))
+
+    def test_pattern_2(self):
+        launch([
+            '-b',
+            'tests/test data/audio/b/c.mp3',
+            'tests/test data/audio/a.wav',
+            '-r',
+            '-o', 'tests/tmp',
+            '-p', '{Artist}/{bar}/{filename}',
+            '-f', 'm4a'
+        ])
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/test_artist/Unknown Bar/c.m4a'
+        ))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/Unknown Artist/Unknown Bar/a.m4a'
+        ))
 
 
 class GUI(unittest.TestCase):

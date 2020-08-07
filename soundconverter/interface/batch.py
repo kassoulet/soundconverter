@@ -64,10 +64,6 @@ def use_memory_gsettings(options):
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
-    # no pattern based subfolders supported yet. Use the subfolders relative
-    # to the input directory instead
-    gio_settings.set_boolean('create-subfolders', False)
-
     if options.get('main') == 'batch':
         # the number of jobs is only applied, when limit-jobs is true
         forced_jobs = options.get('forced-jobs', None)
@@ -91,8 +87,19 @@ def use_memory_gsettings(options):
 
         gio_settings.set_boolean('same-folder-as-input', False)
 
-        # enable custom patterns by setting the index to the last entry
-        gio_settings.set_int('subfolder-pattern-index', -1)
+        # other than the ui, the batch mode doesn't have a selection of
+        # predefined patterns and it's all text anyways, so patterns can be
+        # created with the -p argument on custom-filename-pattern. Don't use
+        # -o for that to avoid having to escape pattern symbols when a folder
+        # is called like a pattern string.
+        gio_settings.set_boolean('create-subfolders', False)
+        pattern = options.get('custom-filename-pattern')
+        if pattern:
+            gio_settings.set_int('name-pattern-index', -1)
+            gio_settings.set_string('custom-filename-pattern', pattern)
+        else:
+            # the first name pattern is the filename itself
+            gio_settings.set_int('name-pattern-index', 0)
 
         quality_setting = options.get('quality')
         if quality_setting is None:
