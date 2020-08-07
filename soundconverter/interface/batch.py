@@ -57,7 +57,7 @@ def use_memory_gsettings(options):
     temporary memory backend so that the ui keeps its settings and cli
     settings are thrown away at the end.
     """
-    if options.get('mode') == 'gui':
+    if options.get('main') == 'gui':
         raise AssertionError('should not be used with the gui mode')
 
     backend = Gio.memory_settings_backend_new()
@@ -68,7 +68,7 @@ def use_memory_gsettings(options):
     # to the input directory instead
     gio_settings.set_boolean('create-subfolders', False)
 
-    if options.get('mode') == 'batch':
+    if options.get('main') == 'batch':
         # the number of jobs is only applied, when limit-jobs is true
         forced_jobs = options.get('forced-jobs', None)
         if forced_jobs is not None:
@@ -77,12 +77,12 @@ def use_memory_gsettings(options):
         else:
             gio_settings.set_boolean('limit-jobs', False)
 
-        format_options = options['format'].split()
-        mime_type = get_mime_type(format_options[0])
+        format_option = options['format']
+        mime_type = get_mime_type(format_option)
 
-        # in case of for example 'mp3 abr'
-        if len(format_options) == 2 and mime_type == 'audio/mpeg':
-            gio_settings.set_string('mp3-mode', format_options[1])
+        mode = options.get('mode')
+        if mode:
+            gio_settings.set_string('mp3-mode', mode)
 
         gio_settings.set_string('output-mime-type', mime_type)
 
@@ -124,8 +124,12 @@ def validate_args(options):
 
     Will log usage mistakes to the console.
     """
-    mode = options.get('mode', 'gui')
-    if mode not in ['gui', 'check', 'tags']:
+    main = options.get('main', 'gui')
+    if main not in ['gui', 'check', 'tags', 'batch']:
+        logger.error('unknown main {}'.format(main))
+        return False
+
+    if main not in ['gui', 'check', 'tags']:
         # not needed for --check and --tags
         if not options.get('output-path'):
             logger.error('output path argument -o is required')
@@ -145,14 +149,10 @@ def validate_args(options):
             logger.error(msg)
             return False
 
-        if mime_type == 'audio/mpeg':
-            if 'cbr' in sys.argv or 'vbr' in sys.argv or 'abr' in sys.argv:
-                # could also be a folder name, so don't return False
-                logger.info(
-                    'You might have forgotten to enclose the mp3 mode in '
-                    'quotes, for example "mp3 cbr" (defaults to vbr with '
-                    '"mp3")'
-                )
+        mode = options.get('mode')
+        if mode and mode not in ['abr', 'cbr', 'vbr']:
+            logger.error('mode should be one of abr, cbr or vbr (default)')
+            return False
 
         # validate if the quality setting makes sense
         quality = options.get('quality')
@@ -160,7 +160,7 @@ def validate_args(options):
         if quality is not None:
             # optional; otherwise default quality values will be used
             if mime_type == 'audio/mpeg':
-                if 'cbr' in target_format or 'abr' in target_format:
+                if mode in ['abr', 'cbr']:
                     if quality > 320 or quality < 64:
                         logger.error(
                             'mp3 cbr/abr bitrate should be between 64 and 320'

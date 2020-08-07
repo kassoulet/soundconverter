@@ -98,7 +98,7 @@ class BatchIntegration(unittest.TestCase):
             '-f', 'm4a',
             '-q', '320'
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         self.assertTrue(os.path.isfile('tests/tmp/320/a.m4a'))
@@ -130,17 +130,19 @@ class BatchIntegration(unittest.TestCase):
             '-b',
             'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/8',
-            '-f', 'mp3 vbr',
+            '-f', 'mp3',
+            '-m', 'vbr',
             '-q', 8  # smaller
         ])
         launch([
             '-b',
             'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/2',
-            '-f', 'mp3 vbr',
+            '-f', 'mp3',
+            '-m', 'vbr',
             '-q', 2
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         self.assertTrue(os.path.isfile('tests/tmp/8/a.mp3'))
@@ -161,17 +163,19 @@ class BatchIntegration(unittest.TestCase):
             '-b',
             'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/320',
-            '-f', 'mp3 abr',
+            '-f', 'mp3',
+            '-m', 'abr',
             '-q', 320
         ])
         launch([
             '-b',
             'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/112',
-            '-f', 'mp3 abr',
+            '-f', 'mp3',
+            '-m', 'abr',
             '-q', 112
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         self.assertTrue(os.path.isfile('tests/tmp/320/a.mp3'))
@@ -190,10 +194,11 @@ class BatchIntegration(unittest.TestCase):
             '-b',
             'tests/test data/audio/a.wav',
             '-o', 'tests/tmp',
-            '-f', 'mp3 cbr',
+            '-f', 'mp3',
+            '-m', 'cbr',
             '-q', 256
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         self.assertTrue(os.path.isfile('tests/tmp/a.mp3'))
@@ -210,7 +215,7 @@ class BatchIntegration(unittest.TestCase):
                 '-f', 'mp3',
                 '-o', 'tmp'
             ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], False)
         exit_code = ctx.exception.code
@@ -226,7 +231,7 @@ class BatchIntegration(unittest.TestCase):
                 '-o', 'tmp',
                 '-d'
             ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], True)
         self.assertEqual(settings['recursive'], True)
         the_exception = cm.exception
@@ -241,7 +246,7 @@ class BatchIntegration(unittest.TestCase):
             '-f', 'wav',
             '-q', 24
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
         self.assertTrue(os.path.isdir('tests/tmp/audio/'))
@@ -268,7 +273,7 @@ class BatchIntegration(unittest.TestCase):
             '-f', 'opus',
             '-d'
         ])
-        self.assertEqual(settings['mode'], 'batch')
+        self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], True)
         self.assertEqual(settings['recursive'], True)
         # The batch mode behaves like the cp command:
@@ -296,7 +301,7 @@ class BatchIntegration(unittest.TestCase):
             'tests/test data/',
             '-r'
         ])
-        self.assertEqual(settings['mode'], 'tags')
+        self.assertEqual(settings['main'], 'tags')
         self.assertEqual(settings['debug'], False)
         self.assertEqual(settings['recursive'], True)
 
@@ -357,7 +362,7 @@ class GUI(unittest.TestCase):
             'tests/test data/audio/',
             'tests/test data/empty'
         ])
-        self.assertEqual(settings['mode'], 'gui')
+        self.assertEqual(settings['main'], 'gui')
         window = win[0]
 
         # check if directory is read correctly
@@ -441,7 +446,7 @@ class GUI(unittest.TestCase):
         launch([
             'tests/test data/audio/a.wav'
         ])
-        self.assertEqual(settings['mode'], 'gui')
+        self.assertEqual(settings['main'], 'gui')
         self.assertEqual(settings['debug'], False)
 
         window = win[0]
@@ -563,7 +568,7 @@ class GUI(unittest.TestCase):
         launch([
             'tests/test data/audio/a.wav'
         ])
-        self.assertEqual(settings['mode'], 'gui')
+        self.assertEqual(settings['main'], 'gui')
         window = win[0]
 
         # setup for conversion

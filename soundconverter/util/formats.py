@@ -50,10 +50,9 @@ def get_mime_type(audio_format):
     Parameters
     ----------
     audio_format : string
-        for example 'mp3', 'audio/mpeg', 'mp3 vbr' or 'audio/mpeg cbr', for
-        which the result would be 'audio/mpeg'
+        for example 'mp3' or 'audio/mpeg' for which the result would
+        be 'audio/mpeg'
     """
-    audio_format = audio_format.split()[0]
     mime_types = get_mime_type_mapping()
     if audio_format not in mime_types.values():
         # possibly a file extension
