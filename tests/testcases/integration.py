@@ -367,6 +367,7 @@ class GUI(unittest.TestCase):
         gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', -1))
         gio_settings.set_int('aac-quality', get_quality('audio/x-m4a', -1))
         gio_settings.set_double('vorbis-quality', get_quality('audio/x-vorbis', -1))
+        gio_settings.set_boolean('delete-original', False)
 
         # conversion setup
         gio_settings.set_boolean('create-subfolders', False)
@@ -584,6 +585,14 @@ class GUI(unittest.TestCase):
         while not queue.finished:
             gtk_iteration()
 
+        # input files should not have been deleted
+        self.assertTrue(os.path.isfile(
+            'tests/test data/audio/a.wav'
+        ))
+        self.assertTrue(os.path.isfile(
+            'tests/test data/audio/strângë chàrs фズ.wav'
+        ))
+
         self.assertTrue(os.path.isdir('tests/tmp/'))
         self.assertTrue(os.path.isfile(
             'tests/tmp/Unknown Artist/Unknown Album/a/f o.m4a'
@@ -619,6 +628,34 @@ class GUI(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(1).opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(2).opus'))
+
+    def test_delete_original(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
+        gio_settings.set_boolean('delete-original', True)
+
+        os.system('cp "tests/test data/audio/a.wav" "tests/tmp/a.wav"')
+        self.assertTrue(os.path.isfile('tests/tmp/a.wav'))
+
+        launch([
+            'tests/tmp/a.wav'
+        ])
+        self.assertEqual(settings['main'], 'gui')
+        window = win[0]
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+
+        window.on_convert_button_clicked()
+        queue = window.converter_queue
+        while not queue.finished:
+            gtk_iteration()
+
+        self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
+
+        # should have been deleted
+        self.assertFalse(os.path.isfile('tests/tmp/a.wav'))
+
 
     def test_missing_plugin(self):
         gio_settings = get_gio_settings()
