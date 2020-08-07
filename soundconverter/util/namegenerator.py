@@ -430,7 +430,7 @@ class TargetNameGenerator:
             self.suffix
         )
 
-    def generate_target_path(self, sound_file, for_display=False):
+    def generate_target_uri(self, sound_file, for_display=False):
         """Generate a target filename in URI format based on the settings.
 
         Patterns will be populated with tags.

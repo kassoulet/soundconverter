@@ -319,7 +319,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = True
         self.g.create_subfolders = False
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/path/to/file.ogg"
         )
 
@@ -331,7 +331,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = True
         self.g.create_subfolders = False
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/path/to/file.m4a"
         )
 
@@ -341,7 +341,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/path/to/01-Hi_Ho.ogg"
         )
 
@@ -351,7 +351,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolder_pattern = "{artist}/{album}"
         self.g.basename_pattern = "{track-number:02}-{title}"
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg"
         )
 
@@ -362,7 +362,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.selected_folder = "file:///mu sic"
         self.g.create_subfolders = False
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "file:///mu%20sic/file%20with%20spaces.ogg"
         )
 
@@ -374,7 +374,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "file:///spa%20ce/sub%20folder/foo.ogg"
         )
 
@@ -386,7 +386,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "file:///spa%20ce/sub_folder/foo.ogg"
         )
 
@@ -399,7 +399,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             base_path + '/audio/a.ogg'
         )
 
@@ -412,7 +412,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             base_path + '/audio/a.ogg'
         )
 
@@ -431,7 +431,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "ssh://user@server:port/path/to/%20file.ogg"
         )
 
@@ -449,7 +449,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "file:///music/file.ogg"
         )
 
@@ -467,7 +467,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "ftp://user2@dest-server:another-port:/music/file.ogg"
         )
 
@@ -487,7 +487,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = True
         self.g.replace_messy_chars = False
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/music /Foo Bar/IS: TOO/%25.ogg"
         )
 
@@ -507,7 +507,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = True
         self.g.replace_messy_chars = True
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/music /Foo_Bar/IS__TOO/_25.ogg"
         )
 
@@ -532,7 +532,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11,
         })
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "ftp://user2@dest-server:another-port:/m%C3%BBs%C3%AEc/file"
             "%20with%20%D0%9D%20chars.ogg"
         )
@@ -559,7 +559,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = False
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "ftp://user2@dest-server:another-port:" +
             quote("/mûsîc/file with strângë chàrs фズ.ogg")
         )
@@ -585,7 +585,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = False
         self.assertEqual(
-            self.g.generate_target_path(self.s),
+            self.g.generate_target_uri(self.s),
             "ftp://user2@dest-server:another-port:/" +
             quote("mûsîc") + "/file_with_strange_chars.ogg"
         )
@@ -617,7 +617,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             'file://' + quote("/path/to/file\xa0\xb0\xc0\xd0.ogg")
         )
 
@@ -630,7 +630,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             "file:///path/to/file_A.ogg"
         )
 
@@ -649,7 +649,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolder_pattern = "{artist}/{album}"
         self.g.basename_pattern = "{title}"
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             'file://' + quote(
                 "/music/\xa0\xb0\xc0\xd0/\xa2\xb2"
                 "\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"
@@ -669,7 +669,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/path/to/file.ogg"
         )
 
@@ -690,7 +690,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = False
 
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             "file:///music/%23to/file.ogg"
         )
 
@@ -711,7 +711,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.same_folder_as_input = True
 
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             # basefolder handling is disabled when the pattern has a /
             "/path/Unknown_Genre/Hi_Ho.ogg"
         )
@@ -734,7 +734,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.selected_folder = 'file:///foo'
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/foo/Unknown Artist/Unknown Album/Unknown Artist/file/00/00/"
             "Unknown Genre/Unknown Date/Unknown Year/0/0/ogg/file/file.ogg"
         )
@@ -763,7 +763,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.selected_folder = 'file:///foo'
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/foo/Unknown Venue/Unknown Weather.ogg"
         )
 
@@ -782,7 +782,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolder_pattern = "/bar"
         self.g.selected_folder = "/asdf"
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/asdf/home/foo/Hi_Ho.ogg"
         )
 
@@ -797,7 +797,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.subfolder_pattern = "/bar"
         self.g.selected_folder = "/asdf"
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/asdf/bar/Hi_Ho.ogg"
         )
 
@@ -816,7 +816,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.same_folder_as_input = False
         self.assertEqual(
-            self.g.generate_target_path(self.s, True),
+            self.g.generate_target_uri(self.s, True),
             "/music/to/Hi_Ho.ogg"
         )
 
@@ -831,14 +831,14 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.g.suffix = "ogg"
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             'file://' + quote("/path%'#/to/file%'#.ogg")
         )
         self.g.create_subfolders = True
         self.g.subfolder_pattern = "{artist}"
         self.g.basename_pattern = "{title}"
         self.assertEqual(
-            self.g.generate_target_path(self.s, False),
+            self.g.generate_target_uri(self.s, False),
             'file://' + quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg")
         )
 

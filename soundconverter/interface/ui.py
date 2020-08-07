@@ -777,7 +777,7 @@ class PreferencesDialog(GladeWindow):
         generator.replace_messy_chars = False
 
         example_path = GLib.markup_escape_text(
-            generator.generate_target_path(sound_file, for_display=True)
+            generator.generate_target_uri(sound_file, for_display=True)
         )
         position = 0
         replaces = []
