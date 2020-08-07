@@ -64,7 +64,7 @@ except (ImportError, ValueError) as error:
 args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
 Gst.init(sys.argv)
 
-from soundconverter.util.settings import settings, get_gio_settings
+from soundconverter.util.settings import settings
 from soundconverter.interface.batch import batch_main, \
     CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
@@ -72,6 +72,7 @@ from soundconverter.util.logger import logger, update_verbosity
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
+    """Write the main mode (batch, gui, tags) into the options."""
     setattr(parser.values, option.dest, kwargs[option.dest])
 
 
@@ -103,8 +104,8 @@ def parse_command_line():
         '[output dir] -q 320\n'
     )
     parser.add_option(
-        '-b', '--batch', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode': 'batch'},
+        '-b', '--batch', dest='main', action='callback',
+        callback=mode_callback, callback_kwargs={'main': 'batch'},
         help=_(
             'Convert in batch mode, from the command line, without '
             'a graphical user interface. You can use this from, '
@@ -113,8 +114,8 @@ def parse_command_line():
         )
     )
     parser.add_option(
-        '-t', '--tags', dest="mode", action='callback',
-        callback=mode_callback,  callback_kwargs={'mode': 'tags'},
+        '-t', '--tags', dest="main", action='callback',
+        callback=mode_callback,  callback_kwargs={'main': 'tags'},
         help=_(
             'Show tags for input files instead of converting '
             'them. This disables the graphical user interface.'
@@ -142,6 +143,14 @@ def parse_command_line():
             'Set the output format.'
             'aac/m4a, flac, mp3, ogg, opus and wav are supported. You '
             'can specify abr, vbr (default) or cbr by using e.g. "mp3 cbr"'
+        )
+    )
+    # mode might also be used for format options of other formats at some
+    # point if applicable
+    batch_option_group.add_option(
+        '-m', '--mode', dest="mode", metavar='NAME',
+        help=_(
+            'One of cbr, abr or vbr for mp3'
         )
     )
     batch_option_group.add_option(
@@ -191,7 +200,7 @@ parser = parse_command_line()
 options, files = parser.parse_args(args)
 options = vars(options)
 # the only cli args that are not available over gio settings.
-settings['mode'] = options['mode'] or 'gui'
+settings['main'] = options['main'] or 'gui'
 settings['debug'] = options['debug']
 settings['recursive'] = options['recursive']
 
@@ -200,7 +209,7 @@ update_verbosity()
 
 logger.info(('{} {}'.format(NAME, VERSION)))
 
-if settings['mode'] == 'gui':
+if settings['main'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
@@ -214,7 +223,7 @@ else:
     # then store them in the gio settings
     use_memory_gsettings(options)
 
-    if settings['mode'] == 'tags':
+    if settings['main'] == 'tags':
         CLICheck(files, verbose=True)
-    elif settings['mode'] == 'batch':
+    elif settings['main'] == 'batch':
         batch_main(files)

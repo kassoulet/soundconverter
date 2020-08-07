@@ -102,13 +102,7 @@ class Format(unittest.TestCase):
         self.assertEqual(get_mime_type('flac'), 'audio/x-flac')
         self.assertEqual(get_mime_type('audio/x-flac'), 'audio/x-flac')
         self.assertEqual(get_mime_type('mp3'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('mp3 abr'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('mp3 vbr'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('mp3 cbr'), 'audio/mpeg')
         self.assertEqual(get_mime_type('audio/mpeg'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('audio/mpeg abr'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('audio/mpeg vbr'), 'audio/mpeg')
-        self.assertEqual(get_mime_type('audio/mpeg cbr'), 'audio/mpeg')
 
 
 if __name__ == "__main__":

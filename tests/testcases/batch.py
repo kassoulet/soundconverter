@@ -190,55 +190,57 @@ class BatchUtils(unittest.TestCase):
     def test_validate_args(self):
         # input and output
         self.assertFalse(validate_args({
-            'mode': 'batch', 'format': 'mp3 cbr', 'quality': 192
+            'main': 'batch', 'format': 'mp3',
+            'mode': 'cbr', 'quality': 192
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '',
-            'format': 'mp3 cbr', 'quality': 192
+            'main': 'batch', 'output-path': '',
+            'format': 'mp3', 'mode': 'cbr', 'quality': 192
         }))
         # formats
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.', 'format': 'mp3',
+            'main': 'batch', 'output-path': '.', 'format': 'mp3',
             'quality': 192  # False because it defaults to vbr
         }))
         self.assertTrue(validate_args({
-            'mode': 'batch', 'output-path': '.',
+            'main': 'batch', 'output-path': '.',
             'format': 'mp3', 'quality': 5
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
-            'format': 'mp3 vbr', 'quality': 192
+            'main': 'batch', 'output-path': '.',
+            'format': 'mp3', 'mode': 'vbr', 'quality': 192
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
-            'format': 'mp3 abr', 'quality': 3
+            'main': 'batch', 'output-path': '.',
+            'format': 'mp3', 'mode': 'abr', 'quality': 3
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
-            'format': 'mp3 cbr', 'quality': 400
+            'main': 'batch', 'output-path': '.',
+            'format': 'mp3', 'mode': 'cbr', 'quality': 400
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
+            'main': 'batch', 'output-path': '.',
             'format': 'opus', 'quality': 600
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
+            'main': 'batch', 'output-path': '.',
             'format': 'wav', 'quality': 13
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
+            'main': 'batch', 'output-path': '.',
             'format': 'flac', 'quality': 20
         }))
         self.assertFalse(validate_args({
-            'mode': 'batch', 'output-path': '.',
+            'main': 'batch', 'output-path': '.',
             'format': 'ogg', 'quality': 20
         }))
 
     def test_use_memory_gsettings_cbr(self):
         use_memory_gsettings({
             'output-path': '.',
-            'mode': 'batch',
-            'format': 'mp3 cbr',
+            'main': 'batch',
+            'format': 'mp3',
+            'mode': 'cbr',
             'quality': '320'
         })
         gio_settings = get_gio_settings()
@@ -257,7 +259,7 @@ class BatchUtils(unittest.TestCase):
     def test_use_memory_gsettings_default_mp3_mode(self):
         use_memory_gsettings({
             'output-path': '.',
-            'mode': 'batch',
+            'main': 'batch',
             'format': 'mp3',
             'quality': '5'
         })
@@ -277,7 +279,7 @@ class BatchUtils(unittest.TestCase):
     def test_use_memory_gsettings_ogg(self):
         use_memory_gsettings({
             'output-path': '.',
-            'mode': 'batch',
+            'main': 'batch',
             'format': 'ogg',
             'quality': '0.5'
         })
