@@ -111,6 +111,15 @@ class Patterns(unittest.TestCase):
         pattern = get_basename_pattern()
         self.assertEqual(pattern, '{track-number:02}-{title}')
 
+        generator = TargetNameGenerator()
+        sound_file = SoundFile('file:///foo.bar')
+        sound_file.tags.update({
+            'track-number': 3,
+            'title': 'foo'
+        })
+        filled = generator.fill_pattern(sound_file, pattern)
+        self.assertEqual(filled, '03-foo')
+
         gio_settings.set_int('name-pattern-index', 5)
         gio_settings.set_string('custom-filename-pattern', 'test')
         pattern = get_basename_pattern()
