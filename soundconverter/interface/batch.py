@@ -64,6 +64,8 @@ def use_memory_gsettings(options):
     gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
     set_gio_settings(gio_settings)
 
+    gio_settings.set_boolean('delete-original', False)
+
     if options.get('main') == 'batch':
         # the number of jobs is only applied, when limit-jobs is true
         forced_jobs = options.get('forced-jobs', None)
