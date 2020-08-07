@@ -72,7 +72,7 @@ cwd = os.getcwd()
 
 class BatchIntegration(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         os.makedirs('tests/tmp', exist_ok=True)
 
     def tearDown(self):
@@ -354,6 +354,67 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile(
             'tests/tmp/Unknown Artist/Unknown Bar/a.m4a'
         ))
+
+    def test_skip_overwrite(self):
+        path = 'tests/tmp/c.m4a'
+        now = time.time()
+
+        os.system('touch -d "2 hours ago" {}'.format(path))
+        time_1 = os.path.getmtime(path)
+        size_1 = os.path.getsize(path)
+        # an empty file from 2 hours ago
+        self.assertLess(abs(time_1 - (now - 60 * 60 * 2)), 10)
+        self.assertEqual(size_1, 0)
+
+        launch([
+            '-b', 'tests/test data/audio/b/c.mp3',
+            '-o', 'tests/tmp',
+            '-f', 'm4a',
+            '-e', 'skip'
+        ])
+        time_2 = os.path.getmtime(path)
+        size_2 = os.path.getsize(path)
+        # unchanged
+        self.assertEqual(size_2, size_1)
+        self.assertEqual(time_2, time_1)
+        self.assertTrue(os.path.isfile(path))
+
+        launch([
+            '-b', 'tests/test data/audio/b/c.mp3',
+            '-o', 'tests/tmp',
+            '-f', 'm4a',
+            '-e', 'overwrite'
+        ])
+        time_3 = os.path.getmtime(path)
+        size_3 = os.path.getsize(path)
+        # larger and newer file
+        self.assertGreater(size_3, size_2)
+        self.assertLess(abs(time_3 - now), 10)
+
+    def test_increment_1(self):
+        for _ in range(3):
+            launch([
+                '-b', 'tests/test data/audio/b/c.mp3',
+                '-o', 'tests/tmp',
+                '-f', 'm4a',
+                '-e', 'increment'
+            ])
+        self.assertTrue(os.path.isfile('tests/tmp/c.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/c (1).m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/c (2).m4a'))
+
+    def test_increment_2(self):
+        # increments by default
+        for _ in range(3):
+            launch([
+                '-b', 'tests/test data/audio/b/c.mp3',
+                '-o', 'tests/tmp',
+                '-f', 'm4a'
+            ])
+        self.assertTrue(os.path.isfile('tests/tmp/c.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/c (1).m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/c (2).m4a'))
+
 
 
 class GUI(unittest.TestCase):
@@ -655,7 +716,6 @@ class GUI(unittest.TestCase):
 
         # should have been deleted
         self.assertFalse(os.path.isfile('tests/tmp/a.wav'))
-
 
     def test_missing_plugin(self):
         gio_settings = get_gio_settings()

@@ -174,6 +174,9 @@ def create_audio_profile():
 
 class Converter(Task):
     """Completely handle the conversion of a single file."""
+    INCREMENT = 'increment'
+    OVERWRITE = 'overwrite'
+    SKIP = 'skip'
 
     def __init__(self, sound_file, name_generator):
         """create a converter that converts a single file.
@@ -187,7 +190,8 @@ class Converter(Task):
         # Configuration
         self.sound_file = sound_file
         self.temporary_filename = None
-        self.overwrite = False
+        self.newname = None
+        self.existing_behaviour = Converter.INCREMENT
         self.name_generator = name_generator
         self.callback = lambda: None
 
@@ -298,6 +302,10 @@ class Converter(Task):
         to the final path on success.
         """
         input_uri = self.sound_file.uri
+        newname = self.newname
+
+        if newname is None:
+            raise AssertionError('the conversion was not started')
 
         if not vfs_exists(self.temporary_filename):
             self.error = 'Expected {} to exist after conversion.'.format(
@@ -318,7 +326,6 @@ class Converter(Task):
             return
 
         # rename temporary file
-        newname = self.name_generator.generate_target_path(self.sound_file)
         logger.debug('{} -> {}'.format(
             beautify_uri(self.temporary_filename), beautify_uri(newname)
         ))
@@ -330,7 +337,8 @@ class Converter(Task):
         if self.replace_messy_chars:
             space = '_'
 
-        if not self.overwrite:
+        exists = vfs_exists(newname)
+        if self.existing_behaviour == Converter.INCREMENT and exists:
             # If the file already exists, increment the filename so that
             # nothing gets overwritten.
             path = path + space + '(%d)' + extension
@@ -340,7 +348,7 @@ class Converter(Task):
                 i += 1
 
         try:
-            if self.overwrite and vfs_exists(newname):
+            if self.existing_behaviour == Converter.OVERWRITE and exists:
                 logger.info('overwriting \'{}\''.format(
                     beautify_uri(newname)
                 ))
@@ -369,6 +377,11 @@ class Converter(Task):
                 beautify_uri(newname)
             ))
 
+        # the modification date of the destination should be now
+        info = Gio.FileInfo()
+        info.set_modification_date_time(GLib.DateTime.new_now(GLib.TimeZone()))
+        destination.set_attributes_from_info(info, Gio.FileQueryInfoFlags.NONE)
+
         if self.delete_original and not self.error:
             logger.info('deleting: \'{}\''.format(self.sound_file.uri))
             if not vfs_unlink(self.sound_file.uri):
@@ -382,6 +395,24 @@ class Converter(Task):
 
     def run(self):
         """Call this in order to run the whole Converter task."""
+        self.newname = self.name_generator.generate_target_uri(
+            self.sound_file
+        )
+
+        # temporary output file, in order to easily remove it without
+        # any overwritten file and therefore caused damage in the target dir.
+        self.temporary_filename = self.name_generator.generate_temp_path(
+            self.sound_file
+        )
+
+        exists = vfs_exists(self.newname)
+        if self.existing_behaviour == Converter.SKIP and exists:
+            logger.info('output file already exists, skipping \'{}\''.format(
+                beautify_uri(self.newname)
+            ))
+            self._conversion_done()
+            return
+
         # construct a pipeline for conversion
         # Add default decoding step that remains the same for all formats.
         command = ['{} location="{}" name=src ! decodebin name=decoder'.format(
@@ -408,11 +439,6 @@ class Converter(Task):
         }[self.output_mime_type]()
         command.append(encoder)
 
-        # temporary output file, in order to easily remove it without
-        # any overwritten file and therefore caused damage in the target dir.
-        self.temporary_filename = self.name_generator.generate_temp_path(
-            self.sound_file
-        )
         gfile = Gio.file_parse_name(self.temporary_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
