@@ -188,6 +188,11 @@ class BatchUtils(unittest.TestCase):
         self.assertEqual(subdirectories, ['', ''])
 
     def test_validate_args(self):
+        # working example
+        self.assertTrue(validate_args({
+            'main': 'batch', 'output-path': '.',
+            'format': 'mp3', 'quality': 5
+        }))
         # input and output
         self.assertFalse(validate_args({
             'main': 'batch', 'format': 'mp3',
@@ -197,14 +202,24 @@ class BatchUtils(unittest.TestCase):
             'main': 'batch', 'output-path': '',
             'format': 'mp3', 'mode': 'cbr', 'quality': 192
         }))
-        # formats
         self.assertFalse(validate_args({
-            'main': 'batch', 'output-path': '.', 'format': 'mp3',
-            'quality': 192  # False because it defaults to vbr
+            'main': 'batch', 'output-path': '.',
+            'format': 'mp3', 'quality': 5,
+            'existing': 'abc'
         }))
         self.assertTrue(validate_args({
             'main': 'batch', 'output-path': '.',
-            'format': 'mp3', 'quality': 5
+            'format': 'mp3', 'quality': 5,
+            'existing': 'overwrite'
+        }))
+        # formats
+        self.assertFalse(validate_args({
+            'main': 'batch', 'output-path': '.',
+            'quality': 5
+        }))
+        self.assertFalse(validate_args({
+            'main': 'batch', 'output-path': '.', 'format': 'mp3',
+            'quality': 192  # False because it defaults to vbr
         }))
         self.assertFalse(validate_args({
             'main': 'batch', 'output-path': '.',

@@ -35,7 +35,8 @@ from soundconverter.gstreamer.discoverer import add_discoverers, \
     get_sound_files
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
+from soundconverter.util.fileoperations import filename_to_uri, \
+    vfs_exists, beautify_uri
 from soundconverter.util.logger import logger
 from soundconverter.util.formatting import format_time
 
@@ -144,11 +145,22 @@ def validate_args(options):
             logger.error('output path argument -o is required')
             return False
 
+        existing_behaviour = options.get('existing')
+        if existing_behaviour:
+            existing_behaviours = [
+                Converter.SKIP, Converter.OVERWRITE, Converter.INCREMENT
+            ]
+            if existing_behaviour not in existing_behaviours:
+                logger.error('-e should be one of {}'.format(
+                    ', '.join(existing_behaviours)
+                ))
+                return False
+
         # target_format might be a mime type or a file extension
         target_format = options.get('format')
         if target_format is None:
             logger.error('format argument -f is required')
-            raise SystemExit
+            return False
         mime_type = get_mime_type(target_format)
         if mime_type is None:
             logger.error('cannot use "{}" format.'.format(target_format))
@@ -333,7 +345,7 @@ class CLIConvert:
 
             converter = Converter(sound_file, name_generator)
 
-            converter.overwrite = True
+            converter.existing_behaviour = settings.get('existing')
 
             conversions.add(converter)
 

@@ -69,7 +69,7 @@ from soundconverter.interface.batch import batch_main, \
     CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
-from soundconverter.util.namegenerator import locale_patterns
+from soundconverter.gstreamer.converter import Converter
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -110,8 +110,7 @@ def parse_command_line():
         help=_(
             'Convert in batch mode, from the command line, without '
             'a graphical user interface. You can use this from, '
-            'say, shell scripts. CAUTION: If the output file (with the '
-            'same extension) already exists, it will be overwritten!'
+            'say, shell scripts.'
         )
     )
     parser.add_option(
@@ -148,22 +147,26 @@ def parse_command_line():
     # mode might also be used for format options of other formats at some
     # point if applicable
     batch_option_group.add_option(
-        '-m', '--mode', dest='mode', metavar='NAME',
+        '-m', '--mode', dest='mode', metavar='MODE',
         help=_(
             'One of cbr, abr or vbr for mp3'
         )
     )
     batch_option_group.add_option(
+        '-e', '--existing', dest='existing', metavar='MODE',
+        help=_(
+            'One of {}, {} or {}'.format(
+                Converter.SKIP,
+                Converter.OVERWRITE,
+                Converter.INCREMENT
+            )
+        ),
+        default=Converter.INCREMENT
+    )
+    batch_option_group.add_option(
         '-r', '--recursive', action='store_true', dest='recursive',
         help=_('Go recursively into subdirectories'),
         default=False
-    )
-    batch_option_group.add_option(
-        '-i', '--ignore', action='store_true', dest='ignore-existing',
-        help=_(
-            'Ignore files for which the target already exists instead '
-            'of converting them again'
-        )
     )
     batch_option_group.add_option(
         '-o', '--output', action='store', dest='output-path', metavar='PATH',
@@ -212,6 +215,7 @@ options = vars(options)
 settings['main'] = options['main'] or 'gui'
 settings['debug'] = options['debug']
 settings['recursive'] = options['recursive']
+settings['existing'] = options['existing']
 
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()
