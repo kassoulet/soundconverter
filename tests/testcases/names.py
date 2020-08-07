@@ -31,7 +31,8 @@ from gi.repository import Gst, Gio
 
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
-    get_subfolder_pattern, get_basename_pattern, process_custom_pattern
+    get_subfolder_pattern, get_basename_pattern, process_custom_pattern, \
+    custom_patterns
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.fileoperations import filename_to_uri, \
     unquote_filename, beautify_uri
@@ -101,14 +102,14 @@ class Patterns(unittest.TestCase):
         gio_settings = get_gio_settings()
         gio_settings.set_int('subfolder-pattern-index', 1)
         pattern = get_subfolder_pattern()
-        self.assertEqual(pattern, '%(album-artist)s-%(album)s')
+        self.assertEqual(pattern, '{album-artist}-{album}')
 
     def test_basename_pattern(self):
         gio_settings = get_gio_settings()
 
         gio_settings.set_int('name-pattern-index', 2)
         pattern = get_basename_pattern()
-        self.assertEqual(pattern, '%(track-number)02d-%(title)s')
+        self.assertEqual(pattern, '{track-number:02}-{title}')
 
         gio_settings.set_int('name-pattern-index', 5)
         gio_settings.set_string('custom-filename-pattern', 'test')
@@ -119,8 +120,11 @@ class Patterns(unittest.TestCase):
         pattern_in = '{Artist}/{Album} foo/{Track}'
         pattern_out = process_custom_pattern(pattern_in)
         self.assertEqual(
-            pattern_out, '%(artist)s/%(album)s foo/%(track-number)02d'
+            pattern_out, '{artist}/{album} foo/{track-number:02}'
         )
+
+    def test_custom_patterns_mapping(self):
+        self.assertEqual(custom_patterns['{Artist}'], '{artist}')
 
 
 class TargetNameGeneratorTestCases(unittest.TestCase):
@@ -324,7 +328,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
     def test_basename(self):
         self.g.suffix = "ogg"
-        self.g.basename_pattern = "%(track-number)02d-%(title)s"
+        self.g.basename_pattern = "{track-number:02}-{title}"
         self.g.create_subfolders = False
         self.g.same_folder_as_input = True
         self.assertEqual(
@@ -335,8 +339,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def test_location(self):
         self.g.suffix = "ogg"
         self.g.selected_folder = "file:///music"
-        self.g.subfolder_pattern = "%(artist)s/%(album)s"
-        self.g.basename_pattern = "%(track-number)02d-%(title)s"
+        self.g.subfolder_pattern = "{artist}/{album}"
+        self.g.basename_pattern = "{track-number:02}-{title}"
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
             "/music/Foo_Bar/IS__TOO/01-Hi_Ho.ogg"
@@ -470,7 +474,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.g.subfolder_pattern = "%(artist)s/%(album)s"
+        self.g.subfolder_pattern = "{artist}/{album}"
         self.g.create_subfolders = True
         self.g.replace_messy_chars = False
         self.assertEqual(
@@ -490,7 +494,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-number": 1,
             "track-count": 11,
         })
-        self.g.subfolder_pattern = "%(artist)s/%(album)s"
+        self.g.subfolder_pattern = "{artist}/{album}"
         self.g.create_subfolders = True
         self.g.replace_messy_chars = True
         self.assertEqual(
@@ -633,8 +637,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = "ogg"
         self.g.selected_folder = "file:///music"
-        self.g.subfolder_pattern = "%(artist)s/%(album)s"
-        self.g.basename_pattern = "%(title)s"
+        self.g.subfolder_pattern = "{artist}/{album}"
+        self.g.basename_pattern = "{title}"
         self.assertEqual(
             self.g.generate_target_path(self.s, False),
             'file://' + quote(
@@ -691,10 +695,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "track-count": 11
         })
         self.g.suffix = "ogg"
-        # make sure that a missing genre does not translate to '/filename',
-        # because then os.path.join would ignore anything before that and
-        # assume the directory should be a child of root.
-        self.g.basename_pattern = "%(genre)s/%(title)s"
+        self.g.basename_pattern = "{genre}/{title}"
 
         self.g.replace_messy_chars = True
         self.g.create_subfolders = False
@@ -706,17 +707,89 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             "/path/Unknown_Genre/Hi_Ho.ogg"
         )
 
+    def test_default_pattern_values(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('name-pattern-index', -1)
+        # without timestamp because I'd like to avoid having a test that
+        # fails randomly
+        gio_settings.set_string('custom-filename-pattern', (
+            '{Artist}/{Album}/{Album-Artist}/{Title}/{Track}/{Total}/{Genre}'
+            '/{Date}/{Year}/{DiscNumber}/{DiscTotal}/{Ext}/{inputname}/'
+            '{filename}'
+        ))
+        self.g = TargetNameGenerator()
+
+        self.s = SoundFile("file:///file.flac", "file:///")
+        self.g.suffix = "ogg"
+        self.g.replace_messy_chars = False
+        self.g.create_subfolders = False
+        self.g.selected_folder = 'file:///foo'
+        self.assertEqual(
+            self.g.generate_target_path(self.s, True),
+            "/foo/Unknown Artist/Unknown Album/Unknown Artist/file/00/00/"
+            "Unknown Genre/Unknown Date/Unknown Year/0/0/ogg/file/file.ogg"
+        )
+
+    def test_find_format_string_tags(self):
+        pattern = '{i}{a}b{c}{{d}}{e}c{{{g}}}{hhh}'
+        variables = self.g.find_format_string_tags(pattern)
+        mapping = {variable: 1 for variable in variables}
+        formatted = pattern.format(**mapping)
+        # if it didn't crash it's already working actually
+        self.assertEqual(formatted, '11b1{d}1c{1}1')
+
+    def test_pattern_unknown_tag(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int('name-pattern-index', -1)
+        # without timestamp because I'd like to avoid having a test that
+        # fails randomly
+        gio_settings.set_string('custom-filename-pattern', (
+            '{venue}/{weather}'
+        ))
+        self.g = TargetNameGenerator()
+
+        self.s = SoundFile("file:///file.flac", "file:///")
+        self.g.suffix = "ogg"
+        self.g.replace_messy_chars = False
+        self.g.create_subfolders = False
+        self.g.selected_folder = 'file:///foo'
+        self.assertEqual(
+            self.g.generate_target_path(self.s, True),
+            "/foo/Unknown Venue/Unknown Weather.ogg"
+        )
+
     def test_leading_slash_pattern(self):
         self.s = SoundFile("file:///path/#to/file.flac", "file:///path/")
         self.s.tags.update({
             "title": "Hi Ho"
         })
         self.g.suffix = "ogg"
-        self.g.basename_pattern = "/home/foo/%(title)s"
-        self.g.selected_folder = "/"
+        # basename_patterns can be user defined in a text input. if it
+        # contains slashes, the subfolder_pattern will be overwritten,
+        # so that custom subfolder patterns can be used by typing into
+        # the basename pattern.
+        self.g.basename_pattern = "/home/foo/{title}"
+        self.g.create_subfolders = True
+        self.g.subfolder_pattern = "/bar"
+        self.g.selected_folder = "/asdf"
         self.assertEqual(
             self.g.generate_target_path(self.s, True),
-            "/home/foo/Hi_Ho.ogg"
+            "/asdf/home/foo/Hi_Ho.ogg"
+        )
+
+    def test_leading_slash_subfolder_pattern(self):
+        self.s = SoundFile("file:///path/#to/file.flac", "file:///path/")
+        self.s.tags.update({
+            "title": "Hi Ho"
+        })
+        self.g.suffix = "ogg"
+        self.g.basename_pattern = "{title}"
+        self.g.create_subfolders = True
+        self.g.subfolder_pattern = "/bar"
+        self.g.selected_folder = "/asdf"
+        self.assertEqual(
+            self.g.generate_target_path(self.s, True),
+            "/asdf/bar/Hi_Ho.ogg"
         )
 
     def test_root_path_custom_pattern(self):
@@ -730,7 +803,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         })
         self.g.suffix = "ogg"
         self.g.selected_folder = "file:///music"
-        self.g.basename_pattern = "%(title)s"
+        self.g.basename_pattern = "{title}"
         self.g.create_subfolders = False
         self.g.same_folder_as_input = False
         self.assertEqual(
@@ -753,8 +826,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             'file://' + quote("/path%'#/to/file%'#.ogg")
         )
         self.g.create_subfolders = True
-        self.g.subfolder_pattern = "%(artist)s"
-        self.g.basename_pattern = "%(title)s"
+        self.g.subfolder_pattern = "{artist}"
+        self.g.basename_pattern = "{title}"
         self.assertEqual(
             self.g.generate_target_path(self.s, False),
             'file://' + quote("/path%'#/to/Foo%'#Bar/Hi%'#Ho.ogg")

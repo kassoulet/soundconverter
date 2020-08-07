@@ -69,6 +69,7 @@ from soundconverter.interface.batch import batch_main, \
     CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
+from soundconverter.util.namegenerator import locale_patterns
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -114,7 +115,7 @@ def parse_command_line():
         )
     )
     parser.add_option(
-        '-t', '--tags', dest="main", action='callback',
+        '-t', '--tags', dest='main', action='callback',
         callback=mode_callback,  callback_kwargs={'main': 'tags'},
         help=_(
             'Show tags for input files instead of converting '
@@ -122,7 +123,7 @@ def parse_command_line():
         )
     )
     parser.add_option(
-        '-d', '--debug', action="store_true", dest="debug",
+        '-d', '--debug', action='store_true', dest='debug',
         help=_('Displays additional debug information'),
         default=False
     )
@@ -138,45 +139,53 @@ def parse_command_line():
         'option is provided'
     )
     batch_option_group.add_option(
-        '-f', '--format', dest="format", metavar='NAME',
+        '-f', '--format', dest='format', metavar='NAME',
         help=_(
             'Set the output format.'
-            'aac/m4a, flac, mp3, ogg, opus and wav are supported. You '
-            'can specify abr, vbr (default) or cbr by using e.g. "mp3 cbr"'
+            'aac/m4a, flac, mp3, ogg, opus and wav are supported.'
         )
     )
     # mode might also be used for format options of other formats at some
     # point if applicable
     batch_option_group.add_option(
-        '-m', '--mode', dest="mode", metavar='NAME',
+        '-m', '--mode', dest='mode', metavar='NAME',
         help=_(
             'One of cbr, abr or vbr for mp3'
         )
     )
     batch_option_group.add_option(
-        '-r', '--recursive', action="store_true", dest="recursive",
+        '-r', '--recursive', action='store_true', dest='recursive',
         help=_('Go recursively into subdirectories'),
         default=False
     )
     batch_option_group.add_option(
-        '-i', '--ignore', action="store_true", dest="ignore-existing",
+        '-i', '--ignore', action='store_true', dest='ignore-existing',
         help=_(
             'Ignore files for which the target already exists instead '
             'of converting them again'
         )
     )
     batch_option_group.add_option(
-        '-o', '--output', action="store", dest="output-path", metavar='PATH',
+        '-o', '--output', action='store', dest='output-path', metavar='PATH',
         help=_(
             'Put converted files into a different directory while rebuilding '
             'the original directory structure. This includes the name of the '
-            'original directory.'
+            'original directory if a directory was selected.'
+        ),
+        default=None
+    )
+    batch_option_group.add_option(
+        '-p', '--pattern', action='store', dest='custom-filename-pattern',
+        metavar='PATH', help=_(
+            'For example {artist}/{album}/{title}. title defaults to the '
+            'filename if unknown, unknown tags default to "Unknown ..." '
+            'otherwise.'
         ),
         default=None
     )
 
     batch_option_group.add_option(
-        '-q', '--quality', action="store", type='float', dest="quality",
+        '-q', '--quality', action='store', type='float', dest='quality',
         metavar='NUM', help=_(
             'Quality of the converted output file. Possible values: '
             'vorbis: 0.0 - 1.0; '
