@@ -46,7 +46,7 @@ class SoundFile:
          - the filename (in .filename)
         """
         # enforcing an uri format reduced the nightmare of handling 2
-        # different path formats in generate_target_path
+        # different path formats in generate_target_uri
         if not is_uri(uri):
             raise ValueError('uri was not an uri: {}!'.format(
                 uri
