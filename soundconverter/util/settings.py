@@ -31,8 +31,17 @@ from gi.repository import Gio
 
 
 # Use get_gio_settings instead of importing this directly, because this
-# object changes in tests
-_gio_settings = Gio.Settings(schema='org.soundconverter')
+# object changes in tests, and also this object will be replaced with a
+# memory backend for the batch mode.
+_gio_settings = Gio.Settings(schema='org.soundconverter')  # do not import!
+
+
+def get_gio_settings():
+    """Return the current Gio.Settings object.
+
+    Use this isntead of importing _gio_settings directly.
+    """
+    return _gio_settings
 
 
 # Arguments that can exclusively set over the CLI
@@ -55,11 +64,6 @@ def set_gio_settings(settings):
     """
     global _gio_settings
     _gio_settings = settings
-
-
-def get_gio_settings():
-    """Return the current Gio.Settings object"""
-    return _gio_settings
 
 
 def get_num_jobs():

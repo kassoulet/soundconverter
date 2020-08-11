@@ -121,11 +121,6 @@
       <summary>Last used folder</summary>
       <description></description>
     </key>
-    <key name="audio-profile" type="s">
-      <default>'GStreamer profile'</default>
-      <summary></summary>
-      <description></description>
-    </key>
     <key name="limit-jobs" type="b">
       <default>false</default>
       <summary>Limit jobs</summary>

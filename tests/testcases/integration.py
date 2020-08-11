@@ -29,7 +29,6 @@ import time
 import sys
 import shutil
 import urllib.parse
-import collections
 from gi.repository import Gio, Gtk
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
@@ -44,6 +43,9 @@ from soundconverter.gstreamer.converter import available_elements
 from soundconverter.gstreamer.discoverer import Discoverer
 
 from util import reset_settings
+
+
+original_available_elements = available_elements.copy()
 
 
 def launch(argv=[], bin_path='bin/soundconverter'):
@@ -415,6 +417,18 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/c (1).m4a'))
         self.assertTrue(os.path.isfile('tests/tmp/c (2).m4a'))
 
+    def test_set_delete_original_false(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_boolean('delete-original', True)
+        gio_settings = get_gio_settings()
+        self.assertTrue(gio_settings.get_boolean('delete-original'))
+        launch([
+            '-b', 'tests/test data/audio/b/c.mp3',
+            '-o', 'tests/tmp',
+            '-f', 'm4a'
+        ])
+        gio_settings = get_gio_settings()
+        self.assertFalse(gio_settings.get_boolean('delete-original'))
 
 
 class GUI(unittest.TestCase):
@@ -448,6 +462,7 @@ class GUI(unittest.TestCase):
         reset_settings()
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
+        available_elements.update(original_available_elements)
 
     def test_conversion(self):
         gio_settings = get_gio_settings()

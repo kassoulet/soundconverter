@@ -44,7 +44,6 @@ from soundconverter.util.logger import logger
 from soundconverter.gstreamer.discoverer import add_discoverers
 from soundconverter.gstreamer.converter import Converter, available_elements
 from soundconverter.util.error import show_error, set_error_handler
-from soundconverter.gstreamer.profiles import audio_profiles_list
 from soundconverter.interface.notify import notification
 from soundconverter.util.formatting import format_time
 
@@ -71,7 +70,6 @@ encoders = (
     ('audio/x-wav', 'wavenc'),
     ('audio/x-m4a', 'faac,avenc_aac'),
     ('audio/ogg; codecs=opus', 'opusenc'),
-    ('gst-profile', None),
 )  # must be in same order as the output_mime_type GtkComboBox
 
 
@@ -527,8 +525,6 @@ class PreferencesDialog(GladeWindow):
 
         # encoders should be in the same order as in the glade file
         for i, encoder in enumerate(encoders):
-            if encoder[0] == 'gst-profile':
-                continue
             extension = get_file_extension(encoder[0])
             ui_row_text = self.liststore8[i][0]
             # the extension should be part of the row with the correct index
@@ -616,62 +612,23 @@ class PreferencesDialog(GladeWindow):
             len(model), len(encoders)
         )
 
-        if not self.gstprofile.get_model().get_n_columns():
-            self.gstprofile.set_model(Gtk.ListStore(str))
-            cell = Gtk.CellRendererText()
-            self.gstprofile.pack_start(cell, 0)
-            self.gstprofile.add_attribute(cell, 'text', 0)
-            self.gstprofile.set_active(0)
-
-        # check if we can find the stored audio profile
-        found_profile = False
-        stored_profile = self.settings.get_string('audio-profile')
-        for i, profile in enumerate(audio_profiles_list):
-            description, extension, pipeline = profile
-            text = '{} (.{})'.format(description, extension)
-            self.gstprofile.get_model().append([text])
-            if description == stored_profile:
-                self.gstprofile.set_active(i)
-                found_profile = True
-        if not found_profile and stored_profile:
-            # reset default output
-            logger.info(
-                'Cannot find audio profile "%s", resetting to default output.',
-                stored_profile
-            )
-            self.settings.set_string('audio-profile', '')
-            self.gstprofile.set_active(0)
-            self.settings.reset('output-mime-type')
-            current_mime_type = self.settings.get_string('output-mime-type')
-
         i = 0
         model = self.output_mime_type.get_model()
         for mime, encoder_name in encoders:
-            if mime == 'gst-profile':
-                # is a profile set?
-                if len(audio_profiles_list) > 0:
-                    # add to supported outputs
-                    self.present_mime_types.append(mime)
-                    i += 1
-                else:
-                    logger.debug('No gstreamer profile available')
-                    # remove it from the ui
-                    del model[i]
+            # valid default output?
+            encoder_present = any(
+                e in available_elements for e in encoder_name.split(',')
+            )
+            if encoder_present:
+                # add to supported outputs
+                self.present_mime_types.append(mime)
+                i += 1
             else:
-                # valid default output?
-                encoder_present = any(
-                    e in available_elements for e in encoder_name.split(',')
+                logger.error(
+                    '{} {} is not supported, a gstreamer plugins package '
+                    'is possibly missing.'.format(mime, encoder_name)
                 )
-                if encoder_present:
-                    # add to supported outputs
-                    self.present_mime_types.append(mime)
-                    i += 1
-                else:
-                    logger.error(
-                        '{}/{} is not supported, a gstreamer plugins package '
-                        'is possibly missing.'.format(mime, encoder_name)
-                    )
-                    del model[i]
+                del model[i]
 
         for i, mime in enumerate(self.present_mime_types):
             if current_mime_type == mime:
@@ -833,12 +790,8 @@ class PreferencesDialog(GladeWindow):
         self.sensitive_widgets['jobs_spinbutton'].set_sensitive(
             self.settings.get_boolean('limit-jobs'))
 
-        if self.settings.get_string('output-mime-type') == 'gst-profile':
-            self.sensitive_widgets['resample_hbox'].set_sensitive(False)
-            self.sensitive_widgets['force_mono'].set_sensitive(False)
-        else:
-            self.sensitive_widgets['resample_hbox'].set_sensitive(True)
-            self.sensitive_widgets['force_mono'].set_sensitive(True)
+        self.sensitive_widgets['resample_hbox'].set_sensitive(True)
+        self.sensitive_widgets['force_mono'].set_sensitive(True)
 
     def run(self):
         self.dialog.run()
@@ -903,7 +856,6 @@ class PreferencesDialog(GladeWindow):
             'audio/x-wav': 3,
             'audio/x-m4a': 4,
             'audio/ogg; codecs=opus': 5,
-            'gst-profile': 6,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -967,12 +919,6 @@ class PreferencesDialog(GladeWindow):
     def on_flac_compression_changed(self, combobox):
         quality = get_quality('audio/x-flac', combobox.get_active())
         self.settings.set_int('flac-compression', quality)
-        self.update_example()
-
-    def on_gstprofile_changed(self, combobox):
-        profile = audio_profiles_list[combobox.get_active()]
-        description = profile[0]
-        self.settings.set_string('audio-profile', description)
         self.update_example()
 
     def on_force_mono_toggle(self, button):
