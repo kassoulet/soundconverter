@@ -32,7 +32,6 @@ from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.error import show_error
 from soundconverter.util.task import Task
-from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 
 GSTREAMER_SOURCE = 'giosrc'
@@ -163,13 +162,6 @@ def create_opus_encoder():
         'opusenc bitrate={} bitrate-type=vbr '
         'bandwidth=auto ! oggmux'
     ).format(opus_quality * 1000)
-
-
-def create_audio_profile():
-    """TODO docstring."""
-    audio_profile = get_gio_settings().get_string('audio-profile')
-    pipeline = audio_profiles_dict[audio_profile][2]
-    return pipeline
 
 
 class Converter(Task):
@@ -434,8 +426,7 @@ class Converter(Task):
             'audio/x-wav': create_wav_encoder,
             'audio/mpeg': create_mp3_encoder,
             'audio/x-m4a': create_aac_encoder,
-            'audio/ogg; codecs=opus': create_opus_encoder,
-            'gst-profile': create_audio_profile,
+            'audio/ogg; codecs=opus': create_opus_encoder
         }[self.output_mime_type]()
         command.append(encoder)
 

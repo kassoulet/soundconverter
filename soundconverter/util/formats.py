@@ -22,7 +22,6 @@
 
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.logger import logger
-from soundconverter.gstreamer.profiles import audio_profiles_dict
 
 
 filename_denylist = (
@@ -32,15 +31,11 @@ filename_denylist = (
 
 def get_mime_type_mapping():
     """Return a mapping of file extension to mime type."""
-    profile = get_gio_settings().get_string('audio-profile')
     mime_types = {
         'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
         'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a', 'm4a': 'audio/x-m4a',
         'opus': 'audio/ogg; codecs=opus'
     }
-    if profile in audio_profiles_dict:
-        profile_ext = audio_profiles_dict[profile][1] if profile else ''
-        mime_types[profile_ext] = 'gst-profile'
     return mime_types
 
 

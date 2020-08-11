@@ -162,7 +162,6 @@ class TargetNameGenerator:
         self.same_folder_as_input = settings.get_boolean('same-folder-as-input')
         self.selected_folder = settings.get_string('selected-folder')
         self.output_mime_type = settings.get_string('output-mime-type')
-        self.audio_profile = settings.get_string('audio-profile')
         self.vorbis_oga_extension = settings.get_boolean('vorbis-oga-extension')
         self.create_subfolders = settings.get_boolean('create-subfolders')
         self.replace_messy_chars = settings.get_boolean('replace-messy-chars')

@@ -19,7 +19,6 @@ soundconverter/util/__init__.py
 soundconverter/gstreamer/__init__.py
 soundconverter/gstreamer/converter.py
 soundconverter/gstreamer/discoverer.py
-soundconverter/gstreamer/profiles.py
 soundconverter/interface/batch.py
 soundconverter/interface/notify.py
 soundconverter/interface/__init__.py

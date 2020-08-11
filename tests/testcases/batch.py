@@ -317,7 +317,8 @@ class BatchUtils(unittest.TestCase):
             'format': 'ogg',
             'quality': '0.5'
         })
-        self.assertFalse(gio_settings.get_string('delete-original'))
+        gio_settings = get_gio_settings()
+        self.assertFalse(gio_settings.get_boolean('delete-original'))
 
 
 if __name__ == "__main__":

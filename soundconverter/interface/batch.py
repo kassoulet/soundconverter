@@ -22,7 +22,6 @@
 """Batch mode to run soundconverter in a console."""
 
 import os
-import sys
 
 from gi.repository import GLib, Gio
 
@@ -35,8 +34,7 @@ from soundconverter.gstreamer.discoverer import add_discoverers, \
     get_sound_files
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.fileoperations import filename_to_uri, \
-    vfs_exists, beautify_uri
+from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
 from soundconverter.util.formatting import format_time
 
@@ -163,11 +161,12 @@ def validate_args(options):
             return False
         mime_type = get_mime_type(target_format)
         if mime_type is None:
-            logger.error('cannot use "{}" format.'.format(target_format))
-            msg = 'Supported formats: {}'.format(
-                ', '.join(get_mime_type_mapping())
+            logger.error(
+                'cannot use "{}" format. Supported formats: {}'.format(
+                    target_format,
+                    ', '.join(get_mime_type_mapping())
+                )
             )
-            logger.error(msg)
             return False
 
         mode = options.get('mode')
