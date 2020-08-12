@@ -29,7 +29,7 @@ import time
 import sys
 import shutil
 import urllib.parse
-from gi.repository import Gio, Gtk
+from gi.repository import Gio, Gtk, GLib
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
@@ -445,10 +445,10 @@ class GUI(unittest.TestCase):
         gio_settings.set_boolean('delete-original', False)
 
         # conversion setup
-        gio_settings.set_boolean('create-subfolders', False)
-        gio_settings.set_boolean('same-folder-as-input', False)
         selected_folder = filename_to_uri('tests/tmp')
         gio_settings.set_string('selected-folder', selected_folder)
+        gio_settings.set_boolean('create-subfolders', False)
+        gio_settings.set_boolean('same-folder-as-input', False)
         gio_settings.set_int('name-pattern-index', 0)
         gio_settings.set_boolean('replace-messy-chars', True)
         gio_settings.set_boolean('delete-original', False)
@@ -768,6 +768,57 @@ class GUI(unittest.TestCase):
             gio_settings.get_string('output-mime-type'),
             mime_to_select
         )
+
+    def test_non_audio(self):
+        # launch a window, insert a folder containing empty files, check
+        # list of non-audio files, check conversion output
+        launch()
+        window = win[0]
+        window.filelist.add_uris([
+            'file:///' + os.path.realpath('tests/test%20data')
+        ])
+
+        while window.filelist.discoverers is None:
+            gtk_iteration()
+
+        discoverer_queue = window.filelist.discoverers
+        while not discoverer_queue.finished:
+            gtk_iteration()
+
+        self.assertIn('test data/empty/b/c', window.filelist.invalid_files_list)
+        self.assertIn('test data/empty/a', window.filelist.invalid_files_list)
+        self.assertIn('test data/a.iso', window.filelist.invalid_files_list)
+
+        # due to the dialog being opened with .run, it would be blocking in
+        # a new main loop until the close button is clicked by hand (see
+        # https://lazka.github.io/pgi-docs/#Gtk-3.0/classes/Dialog.html)
+        # so add closing the dialog to pending events.
+        # Using .show instead of .run would probably work fine as well.
+        GLib.idle_add(lambda: window.showinvalid_dialog_closebutton.clicked())
+        window.on_showinvalid_activate()
+
+        text = window.showinvalid_dialog_list.get_buffer().props.text
+        self.assertIn('test data/empty/b/c', text)
+        self.assertIn('test data/empty/a', text)
+        self.assertIn('test data/a.iso', text)
+
+        window.prefs.change_mime_type('audio/mpeg')
+
+        window.on_convert_button_clicked()
+        queue = window.converter_queue
+        while not queue.finished:
+            gtk_iteration()
+
+        # it uses the commonprefix of all files, not just the valid ones
+        self.assertTrue(os.path.isfile('tests/tmp/test_data/audio/b/c.mp3'))
+        self.assertTrue(os.path.isfile('tests/tmp/test_data/audio/a.mp3'))
+        self.assertTrue(os.path.isfile(
+            'tests/tmp/test_data/audio/strange_chars_.mp3'
+        ))
+        self.assertFalse(os.path.isfile('tests/tmp/test_data/empty/b/c'))
+        self.assertFalse(os.path.isfile('tests/tmp/test_data/empty/a'))
+        self.assertFalse(os.path.isfile('tests/tmp/test_data/a.iso'))
+
 
 
 if __name__ == '__main__':
