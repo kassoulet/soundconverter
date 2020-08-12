@@ -33,7 +33,7 @@ from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
 from soundconverter.util.fileoperations import filename_to_uri, \
     beautify_uri, unquote_filename, vfs_walk
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.formats import get_quality, \
     get_bitrate_from_settings, get_file_extension
 from soundconverter.util.namegenerator import TargetNameGenerator, \
@@ -68,7 +68,7 @@ encoders = (
     ('audio/mpeg', 'lamemp3enc'),
     ('audio/x-flac', 'flacenc'),
     ('audio/x-wav', 'wavenc'),
-    ('audio/x-m4a', 'faac,avenc_aac'),
+    ('audio/x-m4a', 'fdkaacenc,faac,avenc_aac'),
     ('audio/ogg; codecs=opus', 'opusenc'),
 )  # must be in same order as the output_mime_type GtkComboBox
 
@@ -1100,7 +1100,8 @@ class SoundConverterWindow(GladeWindow):
         # wait one second…
         # yes, this sucks badly, but signals can still be called by gstreamer
         # so wait a bit for things to calm down, and quit.
-        gtk_sleep(1)
+        # It can be optionally changed in the settings dict to speed up tests.
+        gtk_sleep(settings.get('gtk_close_sleep', 1))
         Gtk.main_quit()
         return True
 
