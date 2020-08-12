@@ -57,6 +57,7 @@ def find_available_elements():
         ('lamemp3enc', 'MP3', 'mp3-enc'),
         ('faac', 'AAC', 'aac-enc'),
         ('avenc_aac', 'AAC', 'aac-enc'),
+        ('fdkaacenc', 'AAC', 'aac-enc'),
         ('mp4mux', 'AAC', 'aac-mux'),
         ('opusenc', 'Opus', 'opus-enc'),
     )
@@ -151,8 +152,28 @@ def create_mp3_encoder():
 def create_aac_encoder():
     """Return an aac encoder for the gst pipeline string."""
     aac_quality = get_gio_settings().get_int('aac-quality')
-    encoder = 'avenc_aac' if 'avenc_aac' in available_elements else 'faac'
-    return '{} bitrate={} ! mp4mux'.format(encoder, aac_quality * 1000)
+
+    # it seemed like I couldn't get vbr to work with any of these, not even
+    # with rate-control and quality of faac or with maxrate of avenc_aac.
+    # Or it was audacious not displaying the current vbr rate correctly.
+    bitrate = aac_quality * 1000
+
+    # list of recommended aac encoders:
+    # https://wiki.hydrogenaud.io/index.php?title=AAC_encoders
+    if 'fdkaacenc' in available_elements:
+        return 'fdkaacenc bitrate={} ! mp4mux'.format(bitrate)
+
+    encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
+    logger.warning(
+        'fdkaacenc is recommended for aac conversion but it is not '
+        'available. It can be installed with gst-plugins-bad. '
+        'Using {} instead.'.format(encoder)
+    )
+
+    if 'faac' in available_elements:
+        return 'faac bitrate={} rate-control=2 ! mp4mux'.format(bitrate)
+
+    return 'avenc_aac bitrate={} ! mp4mux'.format(bitrate)
 
 
 def create_opus_encoder():
@@ -223,8 +244,8 @@ class Converter(Task):
             progress = position / duration
             progress = min(max(progress, 0.0), 1.0)
             return progress, duration
-        else:
-            return 1, duration
+
+        return 1, duration
 
     def cancel(self):
         """Cancel execution of the task."""
