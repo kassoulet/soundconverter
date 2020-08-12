@@ -263,6 +263,8 @@ def prepare_files_list(input_files):
             # subdirectories
             subdirectories.append('')
             parsed_files.append(input_path)
+        elif not os.path.isdir(input_path):
+            logger.error('path {} does not exist'.format(input_path))
 
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
