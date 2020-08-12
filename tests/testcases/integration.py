@@ -54,9 +54,14 @@ def launch(argv=[], bin_path='bin/soundconverter'):
     The batch mode is synchronous since it iterates the loop itself until
     finished.
     """
+    # the tests should wait until the queues are done, so the sleep
+    # can be omitted to speed them up.
+    settings['gtk_close_sleep'] = 0
+
     argv = [str(a) for a in argv]
     testargs = sys.argv.copy()[:1]
     testargs += argv
+
     with patch.object(sys, 'argv', testargs):
         loader = SourceFileLoader('launcher', bin_path)
         spec = spec_from_loader('launcher', loader)
@@ -83,22 +88,18 @@ class BatchIntegration(unittest.TestCase):
         reset_settings()
         if os.path.isdir('tests/tmp/'):
             shutil.rmtree('tests/tmp')
+        available_elements.update(original_available_elements)
 
     def test_single_file_m4a(self):
-        # it should convert
         launch([
-            '-b',
-            'tests/test data/audio/a.wav',
+            '-b', 'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/64',
-            '-f', 'm4a',
-            '-q', '64'
+            '-f', 'm4a', '-q', '64'
         ])
         launch([
-            '-b',
-            'tests/test data/audio/a.wav',
+            '-b', 'tests/test data/audio/a.wav',
             '-o', 'tests/tmp/320',
-            '-f', 'm4a',
-            '-q', '320'
+            '-f', 'm4a', '-q', '320'
         ])
         self.assertEqual(settings['main'], 'batch')
         self.assertEqual(settings['debug'], False)
@@ -819,6 +820,44 @@ class GUI(unittest.TestCase):
         self.assertFalse(os.path.isfile('tests/tmp/test_data/empty/a'))
         self.assertFalse(os.path.isfile('tests/tmp/test_data/a.iso'))
 
+    def test_all_m4a_encoders(self):
+        for encoder in ['fdkaacenc', 'faac', 'avenc_aac']:
+            # create one large and one small file to test if the quality
+            # setting is respected
+            for quality_index in [0, 5]:
+                launch([
+                    'tests/test data/audio/a.wav'
+                ])
+                window = win[0]
+                window.prefs.change_mime_type('audio/x-m4a')
+
+                class FakeComboBox:
+                    """Act like some quality is selected."""
+                    def get_active(self):
+                        return quality_index
+
+                window.prefs.on_aac_quality_changed(FakeComboBox())
+
+                get_gio_settings().set_string(
+                    'selected-folder',
+                    'file://' + os.path.realpath(
+                        'tests/tmp/{}'.format(quality_index)
+                    )
+                )
+
+                available_elements.clear()
+                available_elements.update({encoder, 'mp4mux'})
+                window.on_convert_button_clicked()
+                queue = window.converter_queue
+                while not queue.finished:
+                    gtk_iteration()
+                win[0].close()
+
+            self.assertTrue(os.path.isfile('tests/tmp/5/a.m4a'))
+            self.assertTrue(os.path.isfile('tests/tmp/0/a.m4a'))
+            size_5 = os.path.getsize('tests/tmp/5/a.m4a')
+            size_0 = os.path.getsize('tests/tmp/0/a.m4a')
+            self.assertLess(size_0, size_5)
 
 
 if __name__ == '__main__':
