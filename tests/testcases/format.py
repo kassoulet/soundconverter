@@ -21,7 +21,7 @@
 
 import unittest
 from soundconverter.util.formats import get_mime_type, get_quality, \
-    get_bitrate_from_settings, get_file_extension
+    get_bitrate_from_settings, get_file_extension, get_default_quality
 from soundconverter.util.settings import get_gio_settings
 
 
@@ -33,6 +33,13 @@ class Format(unittest.TestCase):
         self.assertEqual(get_quality('audio/mpeg', 320, mode='abr', reverse=True), 5)
         self.assertEqual(get_quality('audio/mpeg', -1, mode='abr', reverse=False), 320)
         self.assertEqual(get_quality('audio/mpeg', -2, mode='cbr', reverse=False), 256)
+
+    def test_get_default_quality(self):
+        self.assertEqual(get_default_quality('audio/mpeg'), 0)
+        self.assertEqual(get_default_quality('audio/mpeg', 'vbr'), 0)
+        self.assertEqual(get_default_quality('audio/mpeg', 'cbr'), 320)
+        self.assertEqual(get_default_quality('audio/mpeg', 'abr'), 320)
+        self.assertEqual(get_default_quality('audio/x-m4a'), 400)
 
     def test_get_bitrate_from_settings(self):
         # Use bitrates that are not part of the indexing triggered by the ui,
