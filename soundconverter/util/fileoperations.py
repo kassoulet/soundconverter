@@ -60,9 +60,13 @@ def vfs_walk(uri):
     return a list of uri.
     """
     filelist = []
-    dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
+    dirlist = Gio.file_parse_name(uri).enumerate_children(
+        '*', Gio.FileMonitorFlags.NONE, None
+    )
     for file_info in dirlist:
-        info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
+        info = dirlist.get_child(file_info).query_file_type(
+            Gio.FileMonitorFlags.NONE, None
+        )
         if info == Gio.FileType.DIRECTORY:
             filelist.extend(vfs_walk(dirlist.get_child(file_info).get_uri()))
         if info == Gio.FileType.REGULAR:
@@ -87,7 +91,8 @@ def vfs_rename(original, newname):
     gforiginal = Gio.file_parse_name(original)
     gfnew = Gio.file_parse_name(newname)
     if not gfnew.get_parent().query_exists(None):
-        logger.debug('Creating folder: \'{}\''.format(gfnew.get_parent().get_uri()))
+        fgnew_uri = gfnew.get_parent().get_uri()
+        logger.debug('Creating folder: \'{}\''.format(fgnew_uri))
         Gio.File.make_directory_with_parents(gfnew.get_parent(), None)
     gforiginal.move(gfnew, Gio.FileCopyFlags.NONE, None, None, None)
 
@@ -105,12 +110,12 @@ def split_uri(uri):
     """Match a regex to the uri that results in:
 
     [0]: scheme and authority, might be None if not an uri
-    [1]: filename
+    [1]: filename. This still has to be unquoted!
     """
-    if type(uri) != str:
+    if not isinstance(uri, str):
         raise ValueError('cannot split {} {}'.format(type(uri), uri))
 
-    match = re.match(r'^([a-zA-Z]+://([^/]+?/){0,1}){0,1}(.*)', uri)
+    match = re.match(r'^([a-zA-Z]+://([^/]+?)?)?(/.*)', uri)
     if match is None:
         # not an uri
         return None, uri
@@ -149,7 +154,9 @@ def filename_to_uri(filename, prefix='file://'):
         uri = prefix + urllib.parse.quote(filename)
     return uri
 
+
 # GStreamer gnomevfssrc helpers
+
 
 def vfs_encode_filename(filename):
     return filename_to_uri(filename)

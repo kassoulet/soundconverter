@@ -59,7 +59,7 @@ def get_sound_files(task_queue):
     """Get all SoundFiles of discoverer tasks in a TaskQueue"""
     sound_files = []
     for task in task_queue:
-        if type(task) == Discoverer:
+        if isinstance(task, Discoverer):
             for sound_file in task.sound_files:
                 sound_files.append(sound_file)
     return sound_files
@@ -137,7 +137,7 @@ class DiscovererThread(Thread):
             sound_file.readable = True
             sound_file.duration = info.get_duration() / Gst.SECOND
         except Exception as e:
-            if type(e) is not GLib.Error:
+            if not isinstance(e, GLib.Error):
                 logger.error(str(e))
             sound_file.readable = False
 
