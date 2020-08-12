@@ -200,8 +200,12 @@ def validate_args(options):
                     return False
 
             elif mime_type == 'audio/x-m4a':
-                if quality < 0 or quality > 400:
-                    logger.error('m4a bitrate should be between 0 and 400')
+                # supports arbitrary bitrates
+                # source: https://en.wikipedia.org/wiki/Advanced_Audio_Coding
+                # Our used encoder seems to cap somewhere between 400 and
+                # 440 kbps though
+                if quality < 0:
+                    logger.error('m4a bitrate should be larger than 0')
                     return False
 
             elif mime_type == 'audio/x-flac':

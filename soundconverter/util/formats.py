@@ -174,11 +174,10 @@ def get_default_quality(mime, mode='vbr'):
     mode : string
         one of 'cbr', 'abr' and 'vbr' for mp3
     """
-
     # get 6-tuple of qualities
     default = {
         'audio/x-vorbis': 1.0,
-        'audio/x-m4a': 320,
+        'audio/x-m4a': 400,
         'audio/ogg; codecs=opus': 192,
         'audio/mpeg': {
             'cbr': 320,
@@ -189,7 +188,7 @@ def get_default_quality(mime, mode='vbr'):
         'audio/x-flac': 5
     }[mime]
 
-    if type(default) is dict:
+    if isinstance(default, dict):
         default = default[mode]
 
     return default
@@ -227,12 +226,12 @@ def get_quality(mime, value, mode='vbr', reverse=False):
         'audio/x-flac': (0, 5, 8)
     }[mime]
 
-    if type(qualities) is dict:
+    if isinstance(qualities, dict):
         qualities = qualities[mode]
 
     # return depending on function parameters
     if reverse:
-        if type(value) == float:
+        if isinstance(value, float):
             # floats are inaccurate, search for close value
             for i, quality in enumerate(qualities):
                 if abs(value - quality) < 0.01:
@@ -249,7 +248,7 @@ def get_quality(mime, value, mode='vbr', reverse=False):
                 ftype_mode = '{} {}'.format(mime, mode)
             else:
                 ftype_mode = mime
-            logger.warn(
+            logger.warning(
                 'tried to index unknow {} quality {}'.format(ftype_mode, value)
             )
             return None
