@@ -132,16 +132,18 @@ def filename_to_uri(filename, prefix='file://'):
     Parameters
     ----------
     filename : string
-        Filename can be a relative or absolute path, or an uri.
+        Filename can be a relative or absolute path, or an URI. If an URI,
+        only characters that are not escaped yet will be escaped.
     prefix : string
         for example 'file://'
     """
     match = split_uri(filename)
     if match[0]:
-        # it's an URI! Don't quote the schema
-        # filename might have a schema but still contain characters that
-        # need to be quoted. e.g. a pattern contained file:// in front but
-        # inserting tags into it resulted in whitespaces.
+        # it's an URI! It can be basically just returned as is. But to make
+        # sure that all characters are URI escaped, the path will be
+        # escaped again. Don't quote the schema.
+        # e.g. a pattern contained file:// in front but inserting tags into it
+        # resulted in whitespaces.
         # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
         filename = unquote_filename(match[1])
         filename = urllib.parse.quote(filename)
