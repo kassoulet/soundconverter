@@ -29,7 +29,7 @@ class Formatter(logging.Formatter):
     def format(self, record):
         if record.levelno == logging.INFO and not settings['debug']:
             # if not launched with --debug, then don't print "INFO:"
-            self._style._fmt = '%(msg)s'
+            self._style._fmt = '%(msg)s'  # noqa
         else:
             # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
             # for those numbers
@@ -41,12 +41,12 @@ class Formatter(logging.Formatter):
                 logging.INFO: 32,
             }.get(record.levelno, 0)
             if settings['debug']:
-                self._style._fmt = (
+                self._style._fmt = (  # noqa
                     '\033[{}m%(levelname)s\033[0m: '
                     '%(filename)s, line %(lineno)d, %(msg)s'
                 ).format(color)
             else:
-                self._style._fmt = (
+                self._style._fmt = (  # noqa
                     '\033[{}m%(levelname)s\033[0m: %(msg)s'
                 ).format(color)
         return super().format(record)

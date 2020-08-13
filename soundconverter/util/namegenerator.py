@@ -123,12 +123,12 @@ def get_basename_pattern():
     if index >= len(basename_patterns) or index < -1:
         index = 0
 
-    if index == -1 or index == len(basename_patterns) - 1:
+    if index in (-1, len(basename_patterns) - 1):
         pattern = settings.get_string('custom-filename-pattern')
         return process_custom_pattern(pattern)
-    else:
-        # an index of -1 selects the last entry on purpose
-        return basename_patterns[index][0]
+
+    # an index of -1 selects the last entry on purpose
+    return basename_patterns[index][0]
 
 
 def get_subfolder_pattern():

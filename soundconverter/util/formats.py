@@ -236,22 +236,23 @@ def get_quality(mime, value, mode='vbr', reverse=False):
             for i, quality in enumerate(qualities):
                 if abs(value - quality) < 0.01:
                     return i
+
         if value in qualities:
             return qualities.index(value)
+
+        # might be some custom value set e.g. in batch mode.
+        # the reverse mode is only interesting for the ui though, because
+        # it has predefined qualities as opposed to batch. So this is
+        # either a setting leaking from some tests or the batch mode
+        # persisted something.
+        if mime == 'mp3':
+            ftype_mode = '{} {}'.format(mime, mode)
         else:
-            # might be some custom value set e.g. in batch mode.
-            # the reverse mode is only interesting for the ui though, because
-            # it has predefined qualities as opposed to batch. So this is
-            # either a setting leaking from some tests or the batch mode
-            # persisted something.
-            if mime == 'mp3':
-                ftype_mode = '{} {}'.format(mime, mode)
-            else:
-                ftype_mode = mime
-            logger.warning(
-                'tried to index unknow {} quality {}'.format(ftype_mode, value)
-            )
-            return None
+            ftype_mode = mime
+        logger.warning(
+            'tried to index unknow {} quality {}'.format(ftype_mode, value)
+        )
+        return None
     else:
         # normal index
         if value > len(qualities):
