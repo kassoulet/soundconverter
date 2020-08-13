@@ -841,7 +841,7 @@ class GUI(unittest.TestCase):
                 get_gio_settings().set_string(
                     'selected-folder',
                     'file://' + os.path.realpath(
-                        'tests/tmp/{}'.format(quality_index)
+                        'tests/tmp/{}/{}'.format(encoder, quality_index)
                     )
                 )
 
@@ -853,10 +853,12 @@ class GUI(unittest.TestCase):
                     gtk_iteration()
                 win[0].close()
 
-            self.assertTrue(os.path.isfile('tests/tmp/5/a.m4a'))
-            self.assertTrue(os.path.isfile('tests/tmp/0/a.m4a'))
-            size_5 = os.path.getsize('tests/tmp/5/a.m4a')
-            size_0 = os.path.getsize('tests/tmp/0/a.m4a')
+            path_5 = 'tests/tmp/{}/5/a.m4a'.format(encoder)
+            path_0 = 'tests/tmp/{}/0/a.m4a'.format(encoder)
+            self.assertTrue(path_5)
+            self.assertTrue(path_0)
+            size_5 = os.path.getsize(path_5)
+            size_0 = os.path.getsize(path_0)
             self.assertLess(size_0, size_5)
 
 
