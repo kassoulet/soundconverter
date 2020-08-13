@@ -271,10 +271,10 @@ class Converter(Task):
             if vfs_exists(self.temporary_filename):
                 try:
                     vfs_unlink(self.temporary_filename)
-                except Exception as e:
+                except Exception as error:
                     logger.error('cannot delete: \'{}\': {}'.format(
                         beautify_uri(self.temporary_filename),
-                        str(e)
+                        str(error)
                     ))
         if not self.pipeline:
             logger.debug('pipeline already stopped!')
@@ -298,9 +298,12 @@ class Converter(Task):
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
 
-            except GLib.Error as e:
-                show_error('gstreamer error when creating pipeline', str(e))
-                self._on_error(str(e))
+            except GLib.Error as error:
+                show_error(
+                    'gstreamer error when creating pipeline',
+                    str(error)
+                )
+                self._on_error(str(error))
                 return
 
             bus.add_signal_watch()
@@ -367,8 +370,8 @@ class Converter(Task):
                 ))
                 vfs_unlink(newname)
             vfs_rename(self.temporary_filename, newname)
-        except Exception as e:
-            self.error = str(e)
+        except Exception as error:
+            self.error = str(error)
             logger.info('could not rename {} to {}:'.format(
                 beautify_uri(self.temporary_filename), beautify_uri(newname)
             ))

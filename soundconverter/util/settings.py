@@ -69,9 +69,7 @@ def set_gio_settings(settings):
 def get_num_jobs():
     """Return the number of jobs that should be run in parallel."""
     return (
-        (
-            _gio_settings.get_boolean('limit-jobs') and
-            _gio_settings.get_int('number-of-jobs')
-        ) or
-        cpu_count()
+        _gio_settings.get_int('number-of-jobs')
+        if _gio_settings.get_boolean('limit-jobs')
+        else cpu_count()
     )

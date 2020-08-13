@@ -136,9 +136,9 @@ class DiscovererThread(Thread):
             # sound_file
             sound_file.readable = True
             sound_file.duration = info.get_duration() / Gst.SECOND
-        except Exception as e:
-            if not isinstance(e, GLib.Error):
-                logger.error(str(e))
+        except Exception as error:
+            if not isinstance(error, GLib.Error):
+                logger.error(str(error))
             sound_file.readable = False
 
     def _add_tag(self, taglist, tag, sound_file):
@@ -179,17 +179,14 @@ class Discoverer(Task):
     def cancel(self):
         """Cancel execution of the task."""
         # fast task, use case doesn't exist
-        pass
 
     def pause(self):
         """Pause execution of the task."""
         # fast task, use case doesn't exist
-        pass
 
     def resume(self):
         """Resume execution of the task."""
         # fast task, use case doesn't exist
-        pass
 
     def run(self):
         self.running = True

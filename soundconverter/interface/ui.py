@@ -218,7 +218,6 @@ class FileList:
         # to show up:
         gtk_iteration(True)
         self.window.progressbarstatus.show()
-        self.files_to_add = 0
         self.window.progressbarstatus.set_fraction(0)
 
         for uri in uris:
@@ -272,7 +271,6 @@ class FileList:
 
         scan_t = time.time()
         logger.info('analysing file integrity')
-        self.files_to_add = len(files)
 
         # self.good_uris will be populated
         # by the discoverer.
@@ -400,7 +398,6 @@ class FileList:
 
         self.window.set_status()
         self.window.progressbarstatus.hide()
-        self.files_to_add = None
         end_t = time.time()
         logger.debug(
             'Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
@@ -779,10 +776,10 @@ class PreferencesDialog(GladeWindow):
         for widget in list(self.sensitive_widgets.values()):
             widget.set_sensitive(False)
 
-        x = self.settings.get_boolean('same-folder-as-input')
+        same_folder = self.settings.get_boolean('same-folder-as-input')
         for name in ['choose_folder', 'create_subfolders',
                      'subfolder_pattern']:
-            self.sensitive_widgets[name].set_sensitive(not x)
+            self.sensitive_widgets[name].set_sensitive(not same_folder)
 
         self.sensitive_widgets['vorbis_quality'].set_sensitive(
             self.settings.get_string('output-mime-type') == 'audio/x-vorbis')
@@ -974,10 +971,6 @@ class PreferencesDialog(GladeWindow):
 
     def on_jobs_spinbutton_value_changed(self, jspinbutton):
         self.settings.set_int('number-of-jobs', int(jspinbutton.get_value()))
-
-
-_old_progress = 0
-_old_total = 0
 
 
 class SoundConverterWindow(GladeWindow):
@@ -1199,7 +1192,7 @@ class SoundConverterWindow(GladeWindow):
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
         self.converter_queue.set_on_queue_finished(self.on_queue_finished)
-        for i, sound_file in enumerate(files):
+        for sound_file in files:
             gtk_iteration()
             self.converter_queue.add(Converter(
                 sound_file,
@@ -1389,8 +1382,8 @@ class SoundConverterWindow(GladeWindow):
 
     def set_sensitive(self):
         """Update the sensitive state of UI for the current state."""
-        for w in self.unsensitive_when_converting:
-            self.set_widget_sensitive(w, not self.is_running())
+        for widget_name in self.unsensitive_when_converting:
+            self.set_widget_sensitive(widget_name, not self.is_running())
 
         if not self.is_running():
             self.set_widget_sensitive(
