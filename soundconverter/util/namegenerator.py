@@ -207,29 +207,28 @@ class TargetNameGenerator:
 
     @staticmethod
     def safe_uri(parent, child):
-        """Make an uri out of child
+        """Replace all unusual characters in child for non-existing folders.
 
-        Returns an URI.
-
-        Replace all char acters that are not ascii, digits or '.' '-' '_' '/'
+        Replace all characters that are not ascii, digits or '.' '-' '_' '/'
         with '_'. Umlaute will be changed to their closest non-umlaut
         counterpart. Will not be applied on the part of the path that already
         exists, as that part apparently is already safe.
+
+        Returns an URI.
 
         Parameters
         ----------
         parent : string
             Part of filename starting from the beginning of it that should be
             considered safe already and not further modified. Has to be an
-            URI
+            URI. For example "file:///home/user/"
         child : string
             Part of the path that needs to be modified to be safe.
-
             May already be URI escaped, but doesn't have to.
-
             Substrings of this path may already exist, in which case they
             will not be modified (" " won't be replaced with "_" then, They
             will be escaped to %20 though to fit the URI format)
+            For example "music/artist/file.mp3"
         """
         # some validation of input parameters
         if not is_uri(parent):
@@ -256,7 +255,7 @@ class TargetNameGenerator:
         # ensure URI escaping of the parent
         parent = filename_to_uri(parent)
 
-        # "parent/.../" "child/..."
+        # ensure correct slahes like "file:///parent/" "subdir1/subdir2"
         if not parent.endswith('/'):
             parent += '/'
         if child.startswith('/'):
