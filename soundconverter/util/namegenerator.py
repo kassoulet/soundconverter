@@ -206,7 +206,7 @@ class TargetNameGenerator:
         ])
 
     @staticmethod
-    def safe_uri(child, parent=None):
+    def safe_uri(parent, child):
         """Make an uri out of child
 
         Returns an URI.
@@ -218,6 +218,10 @@ class TargetNameGenerator:
 
         Parameters
         ----------
+        parent : string
+            Part of filename starting from the beginning of it that should be
+            considered safe already and not further modified. Has to be an
+            URI
         child : string
             Part of the path that needs to be modified to be safe.
 
@@ -226,61 +230,37 @@ class TargetNameGenerator:
             Substrings of this path may already exist, in which case they
             will not be modified (" " won't be replaced with "_" then, They
             will be escaped to %20 though to fit the URI format)
-
-            If it starts with a forward slash, the parent will be ignored
-            except for its URI schema.
-        parent : string
-            Part of filename starting from the beginning of it that should be
-            considered safe already and not further modified. Has to be an
-            URI
         """
         # some validation of input parameters
-        if parent is not None:
-            if not is_uri(parent):
-                raise ValueError('expected the parent to be an URI')
-            if child.startswith(parent):
-                raise ValueError(
-                    'wrong usage. Child "{}" should be the '.format(child) +
-                    'child of parent "{}", not the whole path'.format(child)
-                )
-            if child.startswith('./'):
-                raise ValueError(
-                    'you cannot provide a relative path starting with ./ '
-                    'and a parent URI at the same time.'
-                )
+        if not is_uri(parent):
+            raise ValueError('expected the parent to be an URI')
+        if child.startswith(parent):
+            raise ValueError(
+                'wrong usage. Child "{}" should be the '.format(child) +
+                'child of parent "{}", not the whole path'.format(child)
+            )
+        if child.startswith('./'):
+            raise ValueError(
+                'you cannot provide a relative path to the cwd starting '
+                'with "./", the child is intended to be relative to the '
+                'parent.'
+            )
         if len(child) == 0:
             raise ValueError('empty filename')
         if is_uri(child):
             raise ValueError(
-                'expected child "{}" to be a child path, '.format(child) +
-                'not a complete URI.'
+                'expected child "{}" to be a subfolder, '.format(child) +
+                'path not a complete URI.'
             )
 
-        if parent is not None:
-            # ensure URI escaping of the parent
-            parent = filename_to_uri(parent)
+        # ensure URI escaping of the parent
+        parent = filename_to_uri(parent)
 
-        if parent is None and not child.startswith('/'):
-            # relative child, no parent. Use the current directory as parent
-            child_realpath = os.path.realpath(child)
-            # realpath strips trailing slashes, but maybe they are there
-            # on purpose so put them back in
-            if child.endswith('/'):
-                child = child_realpath + '/'
-            else:
-                child = child_realpath
-            parent = filename_to_uri('.')
-
-        if child.startswith('/'):
-            # child is absolute. keep only the uri scheme of parent and let
-            # the parent point to the root dir.
-            parent = split_uri(parent or 'file:///')[0] + '/'
-            # since the root slash is already in parent, it is not needed in
-            # child anymore.
-            child = child[1:]
-
+        # "parent/.../" "child/..."
         if not parent.endswith('/'):
             parent += '/'
+        if child.startswith('/'):
+            child = child[1:]
 
         # figure out how much of the path already exists
         # split into for example [/test', '/baz.flac'] or ['qux.mp3']
@@ -401,7 +381,7 @@ class TargetNameGenerator:
             rand = str(random())[-6:]
             if self.replace_messy_chars:
                 filename = basename + '~' + rand + '~SC~'
-                final_uri = TargetNameGenerator.safe_uri(filename, parent_uri)
+                final_uri = TargetNameGenerator.safe_uri(parent_uri, filename)
             else:
                 final_uri = parent_uri + basename + '~' + rand + '~SC~'
             if not vfs_exists(final_uri):
@@ -485,7 +465,7 @@ class TargetNameGenerator:
 
         # subfolder and basename need to be cleaned
         if self.replace_messy_chars:
-            path = self.safe_uri(child, parent_uri)
+            path = self.safe_uri(parent_uri, child)
         else:
             path = os.path.join(parent_uri, child)
 

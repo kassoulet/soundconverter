@@ -181,135 +181,101 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
 
         # 1. path doesn't exist at all
         self.assertEqual(
-            self.g.safe_uri('/b äz/quズx/foo.mp3'),
+            self.g.safe_uri('file:///', '/b äz/quズx/foo.mp3'),
             'file:///b_az/qux/foo.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('/baズz/qux'),
-            'file:///baz/qux'
+            self.g.safe_uri('file:///test/', '/baズz/qux'),
+            'file:///test/baz/qux'
         )
         self.assertEqual(
-            self.g.safe_uri('./ qux/foズo.mp3'),
-            cwd_uri + '/_qux/foo.mp3'
-        )
-        self.assertEqual(
-            self.g.safe_uri('./qズux/'),
-            cwd_uri + '/qux/'
-        )
-        self.assertEqual(
-            self.g.safe_uri('/ズfoo.mp3'),
+            self.g.safe_uri('file:///', '/ズfoo.mp3'),
             'file:///foo.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('fooズ.mp3'),
-            cwd_uri + '/foo.mp3'
-        )
-        self.assertEqual(
-            self.g.safe_uri('bla /foズo.mp3'),
-            cwd_uri + '/bla_/foo.mp3'
-        )
-        self.assertEqual(
-            self.g.safe_uri('blズa/'),
-            cwd_uri + '/bla/'
-        )
-        self.assertEqual(
-            self.g.safe_uri('ズblä'),
-            cwd_uri + '/bla'
-        )
-        self.assertEqual(
-            self.g.safe_uri('ズblä', 'ftp://hostname/'),
+            self.g.safe_uri('ftp://hostname/', 'ズblä'),
             'ftp://hostname/bla'
+        )
+        self.assertEqual(
+            self.g.safe_uri('ftp://hostname/foo', '/ズ blä'),
+            'ftp://hostname/foo/_bla'
         )
 
         # 2. the outer dir exists
         self.assertEqual(
-            self.g.safe_uri('/home/qфux/foo.mp3'),
-            'file:///home/qux/foo.mp3')
+            self.g.safe_uri(cwd_uri, '/home/qфux/foo.mp3'),
+            cwd_uri + '/home/qux/foo.mp3')
         self.assertEqual(
-            self.g.safe_uri('./foфo.mp3'),
-            cwd_uri + '/foo.mp3')
-        self.assertEqual(
-            self.g.safe_uri('./tests/asdf/fфoo.mp3'),
+            self.g.safe_uri(cwd_uri, 'tests/asdf/fooф.mp3'),
             cwd_uri + '/tests/asdf/foo.mp3')
         self.assertEqual(
-            self.g.safe_uri('tests/asdf/fooф.mp3'),
+            self.g.safe_uri(cwd_uri, '/tests/asdf/fooф.mp3'),
             cwd_uri + '/tests/asdf/foo.mp3')
         self.assertEqual(
-            self.g.safe_uri('tests/asdf/fooф.mp3', cwd_uri),
+            self.g.safe_uri(cwd_uri + '/', 'tests/asdf/fooф.mp3'),
             cwd_uri + '/tests/asdf/foo.mp3')
         self.assertEqual(
-            self.g.safe_uri('tests/asdf/fooф.mp3', cwd_uri + '/'),
+            self.g.safe_uri(cwd_uri + '/tests', '/asdf/fooф.mp3'),
             cwd_uri + '/tests/asdf/foo.mp3')
         self.assertEqual(
-            self.g.safe_uri('asdf/fooф.mp3', cwd_uri + '/tests'),
-            cwd_uri + '/tests/asdf/foo.mp3')
-        self.assertEqual(
-            self.g.safe_uri('asdf/fooф.mp3', cwd_uri + '/tests/'),
+            self.g.safe_uri(cwd_uri + '/tests/', 'asdf/fooф.mp3'),
             cwd_uri + '/tests/asdf/foo.mp3')
 
         # 3. all dirs exist (space of 'test data' will be kept)
         original_name = os.getcwd() + '/tests/test data/audio/fâoo.mp3'
         self.assertEqual(
-            self.g.safe_uri(original_name),
+            self.g.safe_uri('file:///', original_name),
             cwd_uri + '/tests/test%20data/audio/faoo.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('./tests/test data/fooâ.mp3'),
-            cwd_uri + '/tests/test%20data/fooa.mp3'
-        )
-        self.assertEqual(
-            self.g.safe_uri('tests/test%20data/fфズ oo.mp3â'),
+            self.g.safe_uri(cwd_uri, 'tests/test%20data/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('tests/test%20data/fфズ oo.mp3â', cwd_uri),
+            self.g.safe_uri(cwd_uri, '/tests/test%20data/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('tests/test%20data/fфズ oo.mp3â', cwd_uri + '/'),
+            self.g.safe_uri(cwd_uri + '/', 'tests/test%20data/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('test%20data/fфズ oo.mp3â', cwd_uri + '/tests'),
+            self.g.safe_uri(cwd_uri + '/tests', '/test%20data/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('test%20data/fфズ oo.mp3â', cwd_uri + '/tests/'),
+            self.g.safe_uri(cwd_uri + '/tests/', 'test%20data/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('fфズ oo.mp3â', cwd_uri + '/tests/test%20data'),
+            self.g.safe_uri(cwd_uri + '/tests/test%20data', '/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('fфズ oo.mp3â', cwd_uri + '/tests/test data'),
+            self.g.safe_uri(cwd_uri + '/tests/test data', 'fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('fфズ oo.mp3â', cwd_uri + '/tests/test%20data/'),
+            self.g.safe_uri(cwd_uri + '/tests/test%20data/', '/fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
         self.assertEqual(
-            self.g.safe_uri('fфズ oo.mp3â', cwd_uri + '/tests/test data/'),
+            self.g.safe_uri(cwd_uri + '/tests/test data/', 'fфズ oo.mp3â'),
             cwd_uri + '/tests/test%20data/f_oo.mp3a'
         )
 
         # 4. the complete path exists
         original_name = os.getcwd() + '/tests/test%20data/audio/a.wav'
         self.assertEqual(
-            self.g.safe_uri(original_name),
+            self.g.safe_uri('file:///', original_name),
             cwd_uri + '/tests/test%20data/audio/a.wav'
         )
         self.assertEqual(
-            self.g.safe_uri('./tests/test data'),
-            cwd_uri + '/tests/test%20data'
-        )
-        self.assertEqual(
-            self.g.safe_uri('tests/test data/'),
+            self.g.safe_uri(cwd_uri, '/tests/test data/'),
             cwd_uri + '/tests/test%20data/'
         )
         self.assertEqual(
-            self.g.safe_uri('tests/test data/', cwd_uri),
+            self.g.safe_uri(cwd_uri, 'tests/test data/'),
             cwd_uri + '/tests/test%20data/'
         )
 
@@ -319,7 +285,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # tags with special characters
         original_name = os.getcwd() + '/tests/test%20data/âuズdio/â.wav'
         self.assertEqual(
-            self.g.safe_uri(original_name),
+            self.g.safe_uri('file:///', original_name),
             cwd_uri + '/tests/test%20data/audio/a.wav'
         )
 
@@ -329,28 +295,22 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # output should be an uri as well, just like the input.
         original_name = os.getcwd() + '/tests/test%20data/fo%20o.mp3'
         self.assertEqual(
-            self.g.safe_uri(original_name, 'file:///'),
+            self.g.safe_uri('file:///', original_name),
             cwd_uri + '/tests/test%20data/fo_o.mp3'
         )
 
         # 7. any path added as parent is not modified
         self.assertEqual(
-            self.g.safe_uri('fo o.mp3', 'file:///ab cd'),
+            self.g.safe_uri('file:///ab cd', 'fo o.mp3'),
             'file:///ab%20cd/fo_o.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('fo o.mp3', 'file:///fфズ'),
+            self.g.safe_uri('file:///fфズ', 'fo o.mp3'),
             'file:///f%D1%84%E3%82%BA/fo_o.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('audio/a.wav', 'file:///' + os.getcwd() + '/tests/test data'),
+            self.g.safe_uri('file:///' + os.getcwd() + '/tests/test data', 'audio/a.wav'),
             'file:///' + os.getcwd() + '/tests/test%20data/audio/a.wav'
-        )
-
-        # 8. absolute paths only keep the parents uri scheme
-        self.assertEqual(
-            self.g.safe_uri('/fo o.mp3', 'file:///fфズ'),
-            'file:///fo_o.mp3'
         )
 
         # 8. weird URI schema means that 'test data' is probably not our
@@ -358,13 +318,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         # to check if it exists.
         original_name = 'tests/test%20data/fo%20o.mp3'
         self.assertEqual(
-            self.g.safe_uri(original_name, 'foo://' + os.getcwd()),
+            self.g.safe_uri('foo://' + os.getcwd(), original_name),
             'foo://' + os.getcwd() + '/tests/test_data/fo_o.mp3'
         )
         # don't break uri authorities
         original_name = 'tests/test%20data/fo%20o.mp3'
         self.assertEqual(
-            self.g.safe_uri(original_name, 'foo://foo@bar:1234/'),
+            self.g.safe_uri('foo://foo@bar:1234/', original_name),
             'foo://foo@bar:1234/tests/test_data/fo_o.mp3'
         )
 
