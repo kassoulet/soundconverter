@@ -309,13 +309,13 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
             'file:///f%D1%84%E3%82%BA/fo_o.mp3'
         )
         self.assertEqual(
-            self.g.safe_uri('file:///' + os.getcwd() + '/tests/test data', 'audio/a.wav'),
-            'file:///' + os.getcwd() + '/tests/test%20data/audio/a.wav'
+            self.g.safe_uri(cwd_uri + '/tests/test data', 'audio/a.wav'),
+            cwd_uri + '/tests/test%20data/audio/a.wav'
         )
 
-        # 8. weird URI schema means that 'test data' is probably not our
-        # existing folder. Should be file:// for that and gio needs to be able
-        # to check if it exists.
+        # 8. some weird URI schema means that 'test data' is probably not our
+        # existing folder in the filesystem. The URI scheme should be file://
+        # for that. Hence replace the space.
         original_name = 'tests/test%20data/fo%20o.mp3'
         self.assertEqual(
             self.g.safe_uri('foo://' + os.getcwd(), original_name),
