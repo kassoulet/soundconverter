@@ -58,11 +58,9 @@ except (ImportError, ValueError) as error:
     print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
 
-# remove gstreamer arguments so only gstreamer sees them.
-# See `gst-launch-1.0 --help-gst`and
-# https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html # noqa
-args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
-Gst.init(sys.argv)
+# Gst.init takes those args it knows from sys.argv and returns the remaining.
+# For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
+args = Gst.init(sys.argv)
 
 from soundconverter.util.settings import settings
 from soundconverter.interface.batch import batch_main, \
@@ -210,7 +208,7 @@ def parse_command_line():
 
 parser = parse_command_line()
 
-options, files = parser.parse_args(args)
+options, files = parser.parse_args(args[1:])
 options = vars(options)
 # the only cli args that are not available over gio settings.
 settings['main'] = options['main'] or 'gui'
