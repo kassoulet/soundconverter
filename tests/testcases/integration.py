@@ -48,7 +48,7 @@ from util import reset_settings
 original_available_elements = available_elements.copy()
 
 
-def launch(argv=[], bin_path='bin/soundconverter'):
+def launch(argv=None, bin_path='bin/soundconverter'):
     """Start the soundconverter with the command line argument array argv.
 
     The batch mode is synchronous since it iterates the loop itself until
@@ -58,11 +58,10 @@ def launch(argv=[], bin_path='bin/soundconverter'):
     # can be omitted to speed them up.
     settings['gtk_close_sleep'] = 0
 
-    argv = [str(a) for a in argv]
-    testargs = sys.argv.copy()[:1]
-    testargs += argv
+    if not argv:
+        argv = []
 
-    with patch.object(sys, 'argv', testargs):
+    with patch.object(sys, 'argv', [''] + [str(arg) for arg in argv]):
         loader = SourceFileLoader('launcher', bin_path)
         spec = spec_from_loader('launcher', loader)
         spec.loader.exec_module(module_from_spec(spec))
@@ -465,9 +464,41 @@ class GUI(unittest.TestCase):
             shutil.rmtree('tests/tmp')
         available_elements.update(original_available_elements)
 
+    def test_conversion_simple(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
+
+        launch([
+            'tests/test data/audio/a.wav'
+        ])
+        self.assertEqual(settings['main'], 'gui')
+        window = win[0]
+
+        # setup for conversion
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+        # start conversion
+        window.on_convert_button_clicked()
+
+        # wait for the assertions until all files are converted
+        queue = window.converter_queue
+        while not queue.finished:
+            # as Gtk.main is replaced by gtk_iteration, the unittests
+            # are responsible about when soundconverter continues
+            # to work on the conversions and updating the GUI
+            gtk_iteration()
+
+        self.assertTrue(os.path.isdir('tests/tmp/'))
+        self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
+
     def test_conversion(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
 
         launch([
             'tests/test data/audio/a.wav',
@@ -492,18 +523,13 @@ class GUI(unittest.TestCase):
         for uri in uris:
             self.assertIn(uri, win[0].filelist.filelist)
 
-        # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
 
-        # start conversion
         window.on_convert_button_clicked()
 
         # wait for the assertions until all files are converted
         queue = window.converter_queue
         while not queue.finished:
-            # as Gtk.main is replaced by gtk_iteration, the unittests
-            # are responsible about when soundconverter continues
-            # to work on the conversions and updating the GUI
             gtk_iteration()
 
         self.assertEqual(len(queue.all_tasks), 3)
@@ -554,7 +580,10 @@ class GUI(unittest.TestCase):
 
     def test_pause_resume(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
 
         launch([
             'tests/test data/audio/a.wav'
@@ -572,11 +601,10 @@ class GUI(unittest.TestCase):
             win[0].filelist.filelist
         )
 
-        # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
 
-        # start conversion
         window.on_convert_button_clicked()
+
         queue = window.converter_queue
         self.assertEqual(len(queue.running), 1)
         self.assertEqual(len(queue.done), 0)
@@ -618,6 +646,7 @@ class GUI(unittest.TestCase):
         converter_queue = window.converter_queue
         self.assertEqual(len(converter_queue.done), len(expected_filelist))
 
+        print(os.path.realpath('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
         errors = sum([1 for task in converter_queue.done if task.error])
@@ -655,7 +684,6 @@ class GUI(unittest.TestCase):
         # conversion
         window.prefs.change_mime_type('audio/x-m4a')
 
-        # start conversion
         window.on_convert_button_clicked()
 
         queue = window.converter_queue
@@ -684,7 +712,10 @@ class GUI(unittest.TestCase):
 
     def test_non_overwriting(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
 
         launch([
             'tests/test data/audio/a.wav'
@@ -692,7 +723,6 @@ class GUI(unittest.TestCase):
         self.assertEqual(settings['main'], 'gui')
         window = win[0]
 
-        # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
 
         # create a few duplicates
@@ -708,7 +738,10 @@ class GUI(unittest.TestCase):
 
     def test_delete_original(self):
         gio_settings = get_gio_settings()
-        gio_settings.set_int('opus-bitrate', get_quality('audio/ogg; codecs=opus', 3))
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
         gio_settings.set_boolean('delete-original', True)
 
         os.system('cp "tests/test data/audio/a.wav" "tests/tmp/a.wav"')
@@ -720,7 +753,6 @@ class GUI(unittest.TestCase):
         self.assertEqual(settings['main'], 'gui')
         window = win[0]
 
-        # setup for conversion
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
 
         window.on_convert_button_clicked()

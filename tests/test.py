@@ -13,7 +13,7 @@ gi.require_version('GstPbutils', '1.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gst, Gio, Gtk
-Gst.init(sys.argv)
+args = Gst.init(sys.argv)
 
 from soundconverter.util.settings import set_gio_settings
 from soundconverter.interface.ui import gtk_iteration
@@ -28,5 +28,18 @@ Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
 
 if __name__ == "__main__":
-    testsuite = unittest.TestLoader().discover('testcases', pattern='*.py')
-    unittest.TextTestRunner(verbosity=1).run(testsuite)
+    modules = args[1:]
+    # discoverer is really convenient, but it can't find a specific test
+    # in all of the available tests like unittest.main() does...,
+    # so provide both options.
+    if len(modules) > 0:
+        # for example `tests/test.py integration.GUI`
+        testsuite = unittest.defaultTestLoader.loadTestsFromNames(
+            ['testcases.{}'.format(module) for module in modules]
+        )
+    else:
+        # run all tests by default
+        testsuite = unittest.defaultTestLoader.discover(
+            'testcases', pattern='*.py'
+        )
+    testrunner = unittest.TextTestRunner(verbosity=1).run(testsuite)
