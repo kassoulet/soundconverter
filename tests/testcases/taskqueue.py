@@ -33,7 +33,7 @@ from util import reset_settings
 
 class SyncSleepTask(Task):
     """Task that does nothing.
-    
+
     Multiple of those tasks can't run in parallel.
     """
     def __init__(self):
@@ -62,7 +62,7 @@ class SyncSleepTask(Task):
 
 class AsyncSleepTask(Task):
     """Task that does nothing as well, but this time asynchronously.
-    
+
     Can run in parallel. This is just an example on how a Task might work.
     """
     def __init__(self):
@@ -189,7 +189,7 @@ class AsyncSleepTaskTest(unittest.TestCase):
 
         task.cancel()
         done.assert_not_called()
-        
+
         time.sleep(0.15)
         context.iteration(False)
         done.assert_not_called()
@@ -219,7 +219,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
             self.assertEqual(len(q.running), 0)
         self.assertEqual(q.pending.qsize(), self.num_tasks)
         self.q = q
-        
+
     def tearDown(self):
         self.q = None
 
@@ -332,7 +332,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
         # all tasks are running at once
         self.num_jobs = 5
         get_gio_settings().set_int('number-of-jobs', self.num_jobs)
-        
+
         loop = GLib.MainLoop()
         context = loop.get_context()
 
@@ -386,7 +386,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
         # only after some more time all are done, but don't sleep longer
         # than 0.15 more seconds, because after 0.25s they should be done.
-        slept = 0 
+        slept = 0
         while len(self.q.done) < self.num_tasks and slept < 0.15:
             time.sleep(0.05)
             slept += 0.05

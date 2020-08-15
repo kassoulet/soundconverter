@@ -80,6 +80,7 @@ class SoundFile:
         self.tags = {}
         self.readable = False
         self.duration = None
+        self.info = None
 
     @property
     def filename_for_display(self):

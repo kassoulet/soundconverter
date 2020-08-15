@@ -44,7 +44,7 @@ class Fileoperations(unittest.TestCase):
     def test_wrong_type(self):
         error = None
         try:
-            scheme, path = split_uri([1, 2, 3])
+            split_uri([1, 2, 3])
         except Exception as e:
             error = e
         self.assertIsNotNone(error)

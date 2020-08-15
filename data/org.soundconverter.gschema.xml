@@ -125,7 +125,7 @@
       <default>false</default>
       <summary>Limit jobs</summary>
       <description></description>
-    </key>    
+    </key>
     <key name="number-of-jobs" type="i">
       <default>1</default>
       <summary>Number of jobs</summary>

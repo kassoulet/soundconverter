@@ -80,12 +80,12 @@ def mode_callback(option, opt, value, parser, **kwargs):
 class ModifiedOptionParser(OptionParser):
     """An OptionParser class that doesn't remove newlines on the epilog in
     order to show usage examples.
-    
+
     https://stackoverflow.com/questions/1857346/
 
     See optparse.OptionParser for the original docstring
     """
-    
+
     def format_epilog(self, formatter):
         if self.epilog is None:
             return ""

@@ -29,7 +29,7 @@ import time
 import sys
 import shutil
 import urllib.parse
-from gi.repository import Gio, Gtk, GLib
+from gi.repository import Gtk, GLib
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
