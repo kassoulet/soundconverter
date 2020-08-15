@@ -97,7 +97,7 @@ def parse_command_line():
     """
     parser = ModifiedOptionParser(
         epilog='\nExamples:\n'
-        '  soundconverter -b [paths] -f flac -o [path]\n'
+        '  soundconverter -b [input paths] -f flac -o [output path]\n'
         '  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m ' +
         'vbr -o ~/compressed -e skip\n'
         '  soundconverter -b ~/music -r -f m4a -q 320 -o ' +
