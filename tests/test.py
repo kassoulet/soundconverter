@@ -6,6 +6,8 @@
 
 
 import sys
+import unittest
+
 import gi
 gi.require_version('GstPbutils', '1.0')
 gi.require_version('Gst', '1.0')
@@ -25,15 +27,6 @@ set_gio_settings(gio_settings)
 Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
 
-# import all the tests and run them
-import unittest
-from testcases.fileoperations import *
-from testcases.integration import *
-from testcases.batch import *
-from testcases.names import *
-from testcases.format import *
-from testcases.taskqueue import *
-from testcases.discoverer import *
-
 if __name__ == "__main__":
-    unittest.main()
+    testsuite = unittest.TestLoader().discover('testcases', pattern='*.py')
+    unittest.TextTestRunner(verbosity=1).run(testsuite)
