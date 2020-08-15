@@ -24,10 +24,9 @@
 
 import unittest
 import os
-from urllib.parse import unquote
 import urllib.parse
 import urllib.error
-from gi.repository import Gst, Gio
+from gi.repository import Gio
 
 from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
@@ -159,12 +158,6 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
     def tearDown(self):
         self.g = None
         self.s = None
-
-    def never_exists(self, pathname):
-        return False
-
-    def always_exists(self, pathname):
-        return True
 
     def test_unquote_filename(self):
         self.assertEqual(unquote_filename('file://baz%20qux'), 'file://baz qux')

@@ -12,7 +12,7 @@ import gi
 gi.require_version('GstPbutils', '1.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gst, Gio, Gtk, GLib
+from gi.repository import Gst, Gio, Gtk
 Gst.init(sys.argv)
 
 from soundconverter.util.settings import set_gio_settings
