@@ -24,13 +24,9 @@
 # imports and package setup
 
 import os
-import re
 import site
 import sys
-import locale
-import gettext
 from optparse import OptionParser, OptionGroup
-import pkgutil
 from gettext import gettext as _
 import pkg_resources
 
@@ -39,8 +35,9 @@ VERSION = pkg_resources.require('soundconverter')[0].version
 NAME = pkg_resources.require('soundconverter')[0].project_name
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
 
-# depending on where this file is installed to, make sure to use the proper prefix path for data
-# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files
+# depending on where this file is installed to, make sure to use the proper
+# prefix path for data
+# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
 if SOURCE_PATH.startswith(site.USER_BASE):
     DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
 elif SOURCE_PATH.startswith('/usr/local/'):
@@ -53,6 +50,7 @@ else:
 
 try:
     import gi
+    gi.require_version('GstPbutils', '1.0')
     gi.require_version('Gst', '1.0')
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gst, Gtk, GLib, Gdk
@@ -60,45 +58,32 @@ except (ImportError, ValueError) as error:
     print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
 
-# remove gstreamer arguments so only gstreamer sees them. See `gst-launch-1.0 --help-gst`
-# and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
-args = [a for a in sys.argv[1:] if not a.startswith('--gst-')]
-Gst.init([None] + [a for a in sys.argv[1:] if a.startswith('--gst-')])
+# Gst.init takes those args it knows from sys.argv and returns the remaining.
+# For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
+args = Gst.init(sys.argv)
 
-import soundconverter
 from soundconverter.util.settings import settings
-from soundconverter.util.formats import get_mime_type, mime_types
-from soundconverter.util.fileoperations import vfs_encode_filename, filename_to_uri
-from soundconverter.interface.batch import CLI_Convert, cli_tags_main, CLI_Check
+from soundconverter.interface.batch import batch_main, \
+    CLICheck, use_memory_gsettings, validate_args
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
-
-
-def check_mime_type(t):
-    """Exit soundconverter if the type is not supported"""
-    mime = get_mime_type(t)
-    if mime is None:
-        logger.info('Cannot use "{}" mime type.'.format(mime))
-        msg = 'Supported shortcuts and mime types:'
-        for k, v in sorted(mime_types.items()):
-            msg += ' {} {}'.format(k, v)
-        logger.info(msg)
-        raise SystemExit
-    return mime
+from soundconverter.gstreamer.converter import Converter
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
+    """Write the main mode (batch, gui, tags) into the options."""
     setattr(parser.values, option.dest, kwargs[option.dest])
 
 
 class ModifiedOptionParser(OptionParser):
-    """An OptionParser class that doesn't remove newlines on the epilog in order to show usage examples.
-    
+    """An OptionParser class that doesn't remove newlines on the epilog in
+    order to show usage examples.
+
     https://stackoverflow.com/questions/1857346/
 
     See optparse.OptionParser for the original docstring
     """
-    
+
     def format_epilog(self, formatter):
         if self.epilog is None:
             return ""
@@ -106,46 +91,39 @@ class ModifiedOptionParser(OptionParser):
 
 
 def parse_command_line():
-    """Create and return the OptionParser, which parse the command line arguments and displays help with --help."""
-    parser = ModifiedOptionParser(
-        epilog='\nExample:\n'
-        '  soundconverter -b [file] [dir] -r -m audio/x-vorbis -s .ogg -o [output dir] -Q 4\n'
-    )
+    """Create and return the OptionParser.
 
+    Parses the command line arguments and displays help with --help.
+    """
+    parser = ModifiedOptionParser(
+        epilog='\nExamples:\n'
+        '  soundconverter -b [input paths] -f flac -o [output path]\n'
+        '  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m ' +
+        'vbr -o ~/compressed -e skip\n'
+        '  soundconverter -b ~/music -r -f m4a -q 320 -o ' +
+        '/mnt/sd/compressed -p {artist}/{title}\n'
+    )
     parser.add_option(
-        '-c', '--check', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode': 'check'},
+        '-b', '--batch', dest='main', action='callback',
+        callback=mode_callback, callback_kwargs={'main': 'batch'},
         help=_(
-            'Log which files cannot be read by gstreamer. '
-            'Useful before converting. This will disable the GUI and '
-            'run in batch mode, from the command line.'
+            'Convert in batch mode, from the command line, without '
+            'a graphical user interface. You can use this from, '
+            'say, shell scripts.'
         )
     )
     parser.add_option(
-        '-b', '--batch', dest='mode', action='callback',
-        callback=mode_callback, callback_kwargs={'mode': 'batch'},
-        help=_(
-            'Convert in batch mode, from the command line, '
-            'without a graphical user interface. You '
-            'can use this from, say, shell scripts.'
-        )
-    )
-    parser.add_option(
-        '-t', '--tags', dest="mode", action='callback',
-        callback=mode_callback,  callback_kwargs={'mode': 'tags'},
+        '-t', '--tags', dest='main', action='callback',
+        callback=mode_callback,  callback_kwargs={'main': 'tags'},
         help=_(
             'Show tags for input files instead of converting '
-            'them. This indicates command line batch mode '
-            'and disables the graphical user interface.'
+            'them. This disables the graphical user interface.'
         )
     )
     parser.add_option(
-        '-q', '--quiet', action="store_true", dest="quiet",
-        help=_("Be quiet. Don't write normal output, only errors.")
-    )
-    parser.add_option(
-        '-d', '--debug', action="store_true", dest="debug",
-        help=_('Displays additional debug information')
+        '-d', '--debug', action='store_true', dest='debug',
+        help=_('Displays additional debug information'),
+        default=False
     )
     parser.add_option(
         '-j', '--jobs', action='store', type='int', dest='forced-jobs',
@@ -159,51 +137,68 @@ def parse_command_line():
         'option is provided'
     )
     batch_option_group.add_option(
-        '-m', '--mime-type', dest="cli-output-type",
+        '-f', '--format', dest='format', metavar='NAME',
         help=_(
-            'Set the output MIME type. The default '
-            'is %s. Note that you will probably want to set the output '
-            'suffix as well. Supported MIME types: %s'
-        ).format(
-            settings['cli-output-type'],
-            'audio/x-m4a (AAC) audio/x-flac (FLAC) audio/mpeg (MP3) audio/x-vorbis (Vorbis)'
-            'audio/x-wav (WAV)'
+            'Set the output format. '
+            'aac/m4a, flac, mp3, ogg, opus and wav are supported.'
+        )
+    )
+    # mode might also be used for format options of other formats at some
+    # point if applicable
+    batch_option_group.add_option(
+        '-m', '--mode', dest='mode', metavar='MODE',
+        help=_(
+            'One of cbr, abr or vbr (default) for mp3'
         )
     )
     batch_option_group.add_option(
-        '-s', '--suffix', dest="cli-output-suffix",
+        '-e', '--existing', dest='existing', metavar='MODE',
         help=_(
-            'Set the output filename suffix. '
-            'The default is %s. Note that the suffix does not '
-            'affect\n the output MIME type.'
-        ).format(settings['cli-output-suffix'])
+            'One of {}, {} or {}'.format(
+                Converter.SKIP,
+                Converter.OVERWRITE,
+                Converter.INCREMENT
+            )
+        ),
+        default=Converter.INCREMENT
     )
     batch_option_group.add_option(
-        '-r', '--recursive', action="store_true", dest="recursive",
-        help=_('Go recursively into subdirectories')
+        '-r', '--recursive', action='store_true', dest='recursive',
+        help=_('Go recursively into subdirectories'),
+        default=False
     )
     batch_option_group.add_option(
-        '-i', '--ignore', action="store_true", dest="ignore-existing",
-        help=_(
-            'Ignore files for which the target already exists instead '
-            'of converting them again'
-        )
-    )
-    batch_option_group.add_option(
-        '-o', '--output', action="store", dest="output-path",
+        '-o', '--output', action='store', dest='output-path', metavar='PATH',
         help=_(
             'Put converted files into a different directory while rebuilding '
-            'the original directory structure. This includes the name of the original '
-            'directory.'
-        )
+            'the original directory structure. This includes the name of the '
+            'original directory if a directory was selected.'
+        ),
+        default=None
     )
     batch_option_group.add_option(
-        '-Q', '--quality', action="store", type='int', dest="quality",
+        '-p', '--pattern', action='store', dest='custom-filename-pattern',
+        metavar='PATH', help=_(
+            'For example {artist}/{album}/{title}. title defaults to the '
+            'filename if unset. Unknown tags default to "Unknown ..." '
+            'otherwise.'
+        ),
+        default=None
+    )
+
+    batch_option_group.add_option(
+        '-q', '--quality', action='store', type='float', dest='quality',
         metavar='NUM', help=_(
-                'Quality of the converted output file. Between 0 '
-                '(lowest) and 5 (highest). Default is 3.'
-            ),
-        default=3
+            'Quality of the converted output file. Possible values: '
+            'vorbis: 0.0 - 1.0; '
+            'aac/m4a: 0 - 400; '
+            'opus: 6 - 510; '
+            'mp3 vbr: 9 (low) - 0 (high); '
+            'mp3 abr: 64 - 320; '
+            'mp3 cbr: 64 - 320; '
+            'wav: 8, 16, 32 (bitdepth); '
+            'flac: 0 - 8 (compression strength)'
+        )
     )
 
     parser.add_option_group(batch_option_group)
@@ -213,34 +208,34 @@ def parse_command_line():
 
 parser = parse_command_line()
 
-options, files = parser.parse_args(args)
-
-for k in dir(options):
-    if k.startswith('_'):
-        continue
-    if getattr(options, k) is None:
-        continue
-    settings[k] = getattr(options, k)
-
-settings['cli-output-type'] = check_mime_type(settings['cli-output-type'])
+options, files = parser.parse_args(args[1:])
+options = vars(options)
+# the only cli args that are not available over gio settings.
+settings['main'] = options['main'] or 'gui'
+settings['debug'] = options['debug']
+settings['recursive'] = options['recursive']
+settings['existing'] = options['existing']
 
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()
 
-if not settings.get('quiet'):
-    logger.info(('{} {}'.format(NAME, VERSION)))
-    if settings['forced-jobs']:
-        logger.info(('Using {} thread(s)'.format(settings['forced-jobs'])))
+logger.info(('{} {}'.format(NAME, VERSION)))
 
-if settings['mode'] == 'gui':
+if settings['main'] == 'gui':
     GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
         logger.info('nothing to do…')
-    if settings['mode'] == 'tags':
-        cli_tags_main(files)
-    elif settings['mode'] == 'batch':
-        CLI_Convert(files)
-    elif settings['mode'] == 'check':
-        CLI_Check(files)
+
+    # first check if the cli is used correctly
+    if not validate_args(options):
+        raise SystemExit
+
+    # then store them in the gio settings
+    use_memory_gsettings(options)
+
+    if settings['main'] == 'tags':
+        CLICheck(files, verbose=True)
+    elif settings['main'] == 'batch':
+        batch_main(files)

@@ -139,5 +139,7 @@ cython_debug/
 
 # IDEs
 .vscode
+.idea
 
 tests/tmp
+*~SC~

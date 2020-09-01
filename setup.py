@@ -28,7 +28,8 @@ import DistUtilsExtra.auto
 # - Install all the py files to /usr/lib/python3.8/site-packages/soundconverter
 # - Copy bin to /usr/bin
 # - Copy the rest to /usr/share/soundconverter, like the .glade file
-# Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc)
+# Thanks to DistUtilsExtra (https://salsa.debian.org/python-team/modules/python-distutils-extra/-/tree/master/doc) # noqa
+
 
 class Install(DistUtilsExtra.auto.install_auto):
     def run(self):
@@ -40,9 +41,10 @@ class Install(DistUtilsExtra.auto.install_auto):
         print('running {}'.format(cmd))
         os.system(cmd)
 
+
 DistUtilsExtra.auto.setup(
     name='soundconverter',
-    version='3.1.0',
+    version='4.0.0',
     description=(
         'A simple sound converter application for the GNOME environment. '
         'It writes WAV, FLAC, MP3, and Ogg Vorbis files.'

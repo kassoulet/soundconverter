@@ -19,20 +19,20 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-
-class ErrorPrinter:
-    def show_error(self, primary, secondary):
-        pass
+"""Functions for formatting strings."""
 
 
-error_handler = ErrorPrinter()
-
-
-def set_error_handler(handler):
-    """Add a function to show errors on the UI."""
-    global error_handler
-    error_handler = handler
-
-
-def show_error(primary, secondary):
-    error_handler.show_error(primary, secondary)
+def format_time(seconds):
+    units = [(86400, 'd'),
+             (3600, 'h'),
+             (60, 'm'),
+             (1, 's')]
+    seconds = round(seconds)
+    result = []
+    for factor, unity in units:
+        count = int(seconds / factor)
+        seconds -= count * factor
+        if count > 0 or (factor == 1 and not result):
+            result.append('{} {}'.format(count, unity))
+    assert seconds == 0
+    return ' '.join(result)
