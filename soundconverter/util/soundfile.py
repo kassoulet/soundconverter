@@ -20,45 +20,71 @@
 # USA
 
 import os
-import gi
 from gi.repository import GLib
 
-from soundconverter.util.fileoperations import unquote_filename
+from soundconverter.util.fileoperations import unquote_filename, is_uri
 
 
 class SoundFile:
     """Meta data information about a sound file (uri, tags)."""
 
     __slots__ = [
-        'uri', 'base_path', 'filename', 'tags', 'tags_read',
-        'duration', 'mime_type', 'filelist_row', 'progress'
+        'uri', 'base_path', 'filename', 'tags', 'filelist_row', 'subfolders',
+        'readable', 'duration', 'info'
     ]
 
     def __init__(self, uri, base_path=None):
         """Create a SoundFile object.
 
-        if base_path is set, the uri is cut in two parts,
-         - the base folder
-         - the remaining folder+filename.
+        if base_path is set, the uri is cut in three parts,
+         - the base folder, which is a common folder of multiple soundfiles
+           (.base_path)
+         - the remaining subfolders, which would be for example something
+           like artist/album in the existing folder structure. As long as
+           no subfolder pattern is provided, soundconverter will use those
+           subfolders in the output directory. (in .subfolders)
+         - the filename (in .filename)
         """
+        # enforcing an uri format reduced the nightmare of handling 2
+        # different path formats in generate_target_uri
+        if not is_uri(uri):
+            raise ValueError('uri was not an uri: {}!'.format(
+                uri
+            ))
+        if base_path is not None and not is_uri(base_path):
+            raise ValueError('base_path was not an uri: {}!'.format(
+                base_path
+            ))
+
         self.uri = uri
+        self.subfolders = None
 
         if base_path:
+            if not uri.startswith(base_path):
+                raise ValueError(
+                    'uri {} needs to start with the base_path {}!'.format(
+                        uri, base_path
+                    )
+                )
             self.base_path = base_path
-            self.filename = self.uri[len(self.base_path):]
+            subfolders, filename = os.path.split(uri[len(base_path):])
+            self.subfolders = unquote_filename(subfolders)
+            self.filename = filename
         else:
             self.base_path, self.filename = os.path.split(self.uri)
             self.base_path += '/'
 
-        self.tags = {}
-        self.tags_read = False
-        self.duration = None
-        self.mime_type = None
         self.filelist_row = None
-        self.progress = None
+
+        # properties of valid audio are yet to be figured out in a Discoverer
+        self.tags = {}
+        self.readable = False
+        self.duration = None
+        self.info = None
 
     @property
     def filename_for_display(self):
-        """Return the filename in a suitable for display form."""
+        """Return the filename in a form suitable for displaying it."""
         return GLib.filename_display_name(
-                unquote_filename(self.filename))
+            unquote_filename(self.filename)
+        )

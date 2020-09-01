@@ -19,82 +19,48 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import time
-import gi
-from gi.repository import GLib
 
+class Task:
+    """Abstract class of a single task."""
+    # avoid storing a variable called timer in your inheriting class
+    def get_progress(self):
+        """Fraction of how much of the task is completed.
 
-class BackgroundTask:
-    """A background task.
-
-    To use: derive a subclass and define the methods started, and
-    finished. Then call the start() method when you want to start the task.
-    You must call done() when the processing is finished.
-    Call the abort() method if you want to stop the task before it finishes
-    normally.
-    """
-
-    def __init__(self):
-        self.running = False
-        self.listeners = {}
-        self.progress = None
-
-    def start(self):
-        """Start running the task. Call started()."""
-        self.running = True
-        self.run_start_time = time.time()
-        self.emit('started')
-
-    def add_listener(self, signal, listener):
-        """Add a custom listener to the given signal.
-
-        Signals are 'started' and 'finished'
+        Returns a tuple of (progress, weight), because some tasks may
+        take longer than others (because it processes more audio), which
+        cannot be reflected by the progress alone. The weight might
+        correspond to the length of the audio files for example.
         """
-        if signal not in self.listeners:
-            self.listeners[signal] = []
-        self.listeners[signal].append(listener)
+        raise NotImplementedError()
 
-    def emit(self, signal):
-        """Call the signal handlers.
+    def cancel(self):
+        """Cancel the execution of the task."""
+        raise NotImplementedError()
 
-        Callbacks are called as GTK idle funcs to be sure
-        they are in the main thread.
+    def pause(self):
+        """Pause the execution of the task."""
+        raise NotImplementedError()
+
+    def resume(self):
+        """Resume the execution of the task after pausing."""
+        raise NotImplementedError()
+
+    def run(self):
+        """Run the task."""
+        raise NotImplementedError()
+
+    # don't overwrite
+
+    def set_callback(self, callback):
+        """For the Taskqueue to get notified when the Task is done.
+
+        Don't overwrite this function.
+
+        Make sure to call self.callback() when your task that inherits from
+        Task is finished.
         """
-        GLib.idle_add(getattr(self, signal))
-        if signal in self.listeners:
-            for listener in self.listeners[signal]:
-                GLib.idle_add(listener, self)
-
-    def emit_sync(self, signal):
-        """Call the signal handlers.
-
-        Callbacks are called synchronously.
-        """
-        getattr(self, signal)()
-        if signal in self.listeners:
-            for listener in self.listeners[signal]:
-                listener(self)
-
-    def done(self):
-        """Call to end normally the task."""
-        self.run_finish_time = time.time()
-        if self.running:
-            self.emit('finished')
-            self.running = False
-
-    def abort(self):
-        """Stop task processing. finished() is not called."""
-        self.emit('aborted')
-        self.running = False
-
-    def aborted(self):
-        """Called when the task is aborted."""
-        pass
-
-    def started(self):
-        """Called when the task starts."""
-        pass
-
-    def finished(self):
-        """Clean up the task after all work has been done."""
-        pass
+        def callback_wrapped():
+            # automatically provide self as argument, so that
+            # it's only required to call callback() without any argument
+            return callback(self)
+        self.callback = callback_wrapped

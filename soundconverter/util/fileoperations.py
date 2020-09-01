@@ -20,14 +20,13 @@
 # USA
 
 import os
+import re
 import urllib.request
 import urllib.parse
 import urllib.error
-import gi
 from gi.repository import Gio
 
 from soundconverter.util.logger import logger
-from soundconverter.util.error import show_error
 
 
 def unquote_filename(filename):
@@ -39,7 +38,19 @@ def unquote_filename(filename):
 
 
 def beautify_uri(uri):
-    return unquote_filename(uri).split('file://')[-1]
+    """Convert an URI to a normal path.
+
+    Also returns the prefix, for example 'file://'"""
+    match = split_uri(uri)
+    if match[0] is not None:
+        # take the path part from the uri
+        path = match[1]
+        path = unquote_filename(path)
+    else:
+        # no uri, take as is, return any existing %20 strings without
+        # modifying them.
+        path = uri
+    return path
 
 
 def vfs_walk(uri):
@@ -47,13 +58,15 @@ def vfs_walk(uri):
 
     uri -- the base folder uri.
     return a list of uri.
-
     """
     filelist = []
-    dirlist = Gio.file_parse_name(uri).enumerate_children('*', Gio.FileMonitorFlags.NONE, None)
+    dirlist = Gio.file_parse_name(uri).enumerate_children(
+        '*', Gio.FileMonitorFlags.NONE, None
+    )
     for file_info in dirlist:
-        name = file_info.get_name()
-        info = dirlist.get_child(file_info).query_file_type(Gio.FileMonitorFlags.NONE, None)
+        info = dirlist.get_child(file_info).query_file_type(
+            Gio.FileMonitorFlags.NONE, None
+        )
         if info == Gio.FileType.DIRECTORY:
             filelist.extend(vfs_walk(dirlist.get_child(file_info).get_uri()))
         if info == Gio.FileType.REGULAR:
@@ -77,33 +90,75 @@ def vfs_rename(original, newname):
     """Rename a gnomevfs file."""
     gforiginal = Gio.file_parse_name(original)
     gfnew = Gio.file_parse_name(newname)
-    logger.debug('Creating folder \'{}\'?'.format(gfnew.get_parent().get_uri()))
     if not gfnew.get_parent().query_exists(None):
-        logger.debug('Creating folder: \'{}\''.format(gfnew.get_parent().get_uri()))
+        fgnew_uri = gfnew.get_parent().get_uri()
+        logger.debug('Creating folder: \'{}\''.format(fgnew_uri))
         Gio.File.make_directory_with_parents(gfnew.get_parent(), None)
     gforiginal.move(gfnew, Gio.FileCopyFlags.NONE, None, None, None)
 
 
 def vfs_exists(filename):
+    """Check if file or URI exists."""
+    if not is_uri(filename):
+        # gio does not support relative path syntax
+        filename = os.path.realpath(filename)
     gfile = Gio.file_parse_name(filename)
     return gfile.query_exists(None)
 
 
-def filename_to_uri(filename):
+def split_uri(uri):
+    """Match a regex to the uri that results in:
+
+    [0]: scheme and authority, might be None if not an uri
+    [1]: filename. This still has to be unquoted!
+    """
+    if not isinstance(uri, str):
+        raise ValueError('cannot split {} {}'.format(type(uri), uri))
+
+    match = re.match(r'^([a-zA-Z]+://([^/]+?)?)?(/.*)', uri)
+    if match is None:
+        # not an uri
+        return None, uri
+    return match[1], match[3]
+
+
+def is_uri(uri):
+    return split_uri(uri)[0] is not None
+
+
+def filename_to_uri(filename, prefix='file://'):
     """Convert a filename to a valid uri.
 
-    Filename can be a relative or absolute path, or an uri.
+    Parameters
+    ----------
+    filename : string
+        Filename can be a relative or absolute path, or an URI. If an URI,
+        only characters that are not escaped yet will be escaped.
+    prefix : string
+        for example 'file://'
     """
-    if '://' not in filename:
-        # convert local filename to uri
-        filename = 'file://' + os.path.abspath(filename)
-        for char in '#', '%':
-            filename = filename.replace(char, '%%%x' % ord(char))
-    uri = Gio.file_parse_name(filename).get_uri()
+    match = split_uri(filename)
+    if match[0]:
+        # it's an URI! It can be basically just returned as is. But to make
+        # sure that all characters are URI escaped, the path will be
+        # escaped again. Don't quote the schema.
+        # e.g. a pattern contained file:// in front but inserting tags into it
+        # resulted in whitespaces.
+        # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
+        filename = unquote_filename(match[1])
+        filename = urllib.parse.quote(filename)
+        uri = match[0] + filename
+    else:
+        # convert to absolute path
+        filename = os.path.realpath(filename)
+        # it's a normal path. If it happens to contain %25, it might be
+        # part of the album name or something. ' %20' should become '%20%2520'
+        uri = prefix + urllib.parse.quote(filename)
     return uri
 
 
 # GStreamer gnomevfssrc helpers
+
 
 def vfs_encode_filename(filename):
     return filename_to_uri(filename)

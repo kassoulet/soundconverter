@@ -19,46 +19,57 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-from gettext import gettext as _
+
+"""Holds all the settings for both cli arguments as well as Gio settings.
+
+Gio Settings are set in the UI and retained over restarts. In batch mode,
+some of the CLI args are written into that temporarily.
+"""
+
 from multiprocessing import cpu_count
 from gi.repository import Gio
 
 
-"""Holds all the settings for both cli arguments as well as Gio settings (as configured in the UI)."""
+# Use get_gio_settings instead of importing this directly, because this
+# object changes in tests, and also this object will be replaced with a
+# memory backend for the batch mode.
+_gio_settings = Gio.Settings(schema='org.soundconverter')  # do not import!
 
 
-# those settings may be remembered across restarts of soundconverter by default by using dconf.
-# Use get_gio_settings instead of importing this directly, because this object changes in tests
-_gio_settings = Gio.Settings(schema='org.soundconverter')
+def get_gio_settings():
+    """Return the current Gio.Settings object.
+
+    Use this isntead of importing _gio_settings directly.
+    """
+    return _gio_settings
 
 
-# application-wide settings that need to be specified each time soundconverter starts over the command line.
-# This also contains all the batch mode settings.
-# May be populated with extra values that are derived from _gio_settings
+# Arguments that can exclusively set over the CLI
 settings = {
-    'mode': 'gui',
-    'quiet': False,
-    'debug': False,
-    'cli-output-type': 'audio/x-vorbis',
-    'cli-output-suffix': '.ogg',
-    'jobs': None,
-    'cpu-count': cpu_count(),
-    'forced-jobs': None,
+    'main': 'gui',
+    'debug': False
 }
 
 
 def set_gio_settings(settings):
-    """To overwrite the default Gio.Settings object to for example use a memory backend instead.
-    
+    """Overwrite the default Gio.Settings object.
+
+    For example use a memory backend instead.
+
     Parameters
     ----------
     settings : Gio.Settings
-        You can get this by using for example Gio.new_with_backend or Gio.Settings
+        You can get this by using for example Gio.new_with_backend or
+        Gio.Settings
     """
     global _gio_settings
     _gio_settings = settings
 
 
-def get_gio_settings():
-    """Return the current Gio.Settings object"""
-    return _gio_settings
+def get_num_jobs():
+    """Return the number of jobs that should be run in parallel."""
+    return (
+        _gio_settings.get_int('number-of-jobs')
+        if _gio_settings.get_boolean('limit-jobs')
+        else cpu_count()
+    )

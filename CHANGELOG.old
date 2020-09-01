@@ -934,7 +934,7 @@
 	* reverted quality setting to 'real-world' quantities
 	  -> values stored in gconf are now the values passed
        	  to gstreamer and not meaningless enums.
-       	* added a label showing an aproximate bitrate in the
+       	* added a label showing an approximate bitrate in the
           preference window
 
 

@@ -13,6 +13,10 @@ performance, the command line tools are always going to be preferable.
     <img src="data/screenshot.png" alt="SoundConverter Screenshot"/>
 </p>
 
+<p align="center">
+    <img src="data/screenshot_batch.png" alt="SoundConverter Screenshot"/>
+</p>
+
 ## Building and Installation
 
 Ubuntu and Arch packages exist in the official repositories.
@@ -32,7 +36,7 @@ soundconverter
 For command line args, see
 
 ```bash
-sounconverter --help
+soundconverter --help
 gst-launch-1.0 --help-gst
 ```
 
@@ -53,7 +57,7 @@ Copyright 2004 Lars Wirzenius
 
 Copyright 2005-2020 Gautier Portet
 
-Version 3.1.0 by sezanzeb
+Co-author Sezanzeb
 
 Thanks to: Guillaume Bedot, Dominik Zabłotny, Noa Resare, Nil Gradisnik, Elias Autio, Thom Pischke, Qball Cow, Janis Blechert, Brendan Martens, Jason Martens, Wouter Stomp, Joe Wrigley, Jonh Wendell, Regis Floret, Toni Fiz, Seketeli Apelete, Cristiano Canguçu, Adolfo González Blázquez, Marc E., Tobias Kral, Hanno Böck, Pedro Alejandro López-Valencia, James Lee, Christopher Barrington-Leigh, Thomas Schwing, Remi Grolleau, Julien Gascard, Kamil Páral, Stefano Luciani, Martin Seifert, Claudio Saavedra, Ken Harris, Jon Arnold, Major Kong, Uwe Bugla
 
