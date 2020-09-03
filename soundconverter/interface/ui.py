@@ -114,8 +114,8 @@ class ErrorDialog:
         self.secondary = builder.get_object('secondary_error_label')
 
     def show_error(self, primary, secondary):
-        self.primary.set_markup(primary)
-        self.secondary.set_markup(secondary)
+        self.primary.set_markup(str(primary))
+        self.secondary.set_markup(str(secondary))
         try:
             sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
         except Exception:
