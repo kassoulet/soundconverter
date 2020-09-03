@@ -238,15 +238,13 @@ class Converter(Task):
         """Fraction of how much of the task is completed."""
         duration = self.sound_file.duration
 
-        # don't waste time querying gstreamer if possible
-        if self.done:
-            return 1, duration
-        if not self.pipeline:
+        if self.pipeline is None or duration is None:
             return 0, duration
 
+        if self.done:
+            return 1, duration
+
         position = self._query_position()
-        if duration is None:
-            return 0
         progress = position / duration
         progress = min(max(progress, 0.0), 1.0)
         return progress, duration
