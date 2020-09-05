@@ -55,6 +55,7 @@ MODEL = [
     GObject.TYPE_FLOAT,  # progress
     GObject.TYPE_STRING,  # status
     GObject.TYPE_STRING,  # complete filename
+    GObject.TYPE_FLOAT  # duration of the audio
 ]
 
 COLUMNS = ['filename']
@@ -139,9 +140,14 @@ class FileList:
 
         self.widget = builder.get_object('filelist')
         self.widget.props.fixed_height_mode = True
+
+        # sort the longest audio to the front, because converting those
+        # right at the start make sure that no process ends up converting
+        # a single large file while all other tasks are done and therefore
+        # all other cpu cores are idle
         self.sortedmodel = Gtk.TreeModelSort(model=self.model)
         self.widget.set_model(self.sortedmodel)
-        self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
+        self.sortedmodel.set_sort_column_id(4, Gtk.SortType.DESCENDING)
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.widget.drag_dest_set(
@@ -462,7 +468,12 @@ class FileList:
             This soundfile is expected to be readable by gstreamer
         """
         self.model.append([
-            self.format_cell(sound_file), sound_file, 0.0, '', sound_file.uri
+            self.format_cell(sound_file),
+            sound_file,
+            0.0,
+            '',
+            sound_file.uri,
+            sound_file.duration
         ])
         self.filelist.add(sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1

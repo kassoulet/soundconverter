@@ -38,7 +38,10 @@ class TaskQueue:
         self.done = []
         self.finished = False
         self.paused = False
+
         self._timer = Timer()
+        self._remaining_history = History(size=11)
+        self._smooth_remaining_time = Smoothing(factor=20)
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -165,52 +168,108 @@ class TaskQueue:
             # cannot be estimated yet
             return None
 
-        total_duration = 0
-        total_remaining_weight = 0
+        print()
+
+        # replicate how the workload is distributed among the processes
+        # to figure out how much time is remaining
+        workloads = [0] * get_num_jobs()
+
         total_processed_weight = 0
+        total_duration = 0
 
-        max_remaining_weight = -1
         for task in self.all_tasks:
-            # duration is the time the timer has been running, not the
-            # audio duration.
-            duration = task.timer.get_duration()
-            # total_duration would be 12s if 12 tasks run for 1s
-            total_duration += duration
-
-            # weight is actually the audio duration, but it's unit is going
-            # to be canceled in the remaining_duration calculation. It could
-            # be anything as long as all tasks have the same unit of weight.
+            if task.done:
+                continue
             progress, weight = task.get_progress()
+            smallest_index = 0
+            smallest_workload = float('inf')
+            for i, workload in enumerate(workloads):
+                if workload < smallest_workload:
+                    smallest_index = i
+                    smallest_workload = workload
             remaining_weight = (1 - progress) * weight
-            max_remaining_weight = max(remaining_weight, max_remaining_weight)
-            total_remaining_weight += remaining_weight
-            processed_weight = progress * weight
-            total_processed_weight += processed_weight
+            workloads[smallest_index] += remaining_weight
 
-        if total_processed_weight == 0:
-            # cannot be calculated yet
-            return None
+            progress, weight = task.get_progress()
+            total_duration += task.timer.get_duration()
+            total_processed_weight += progress * weight
 
-        # how many seconds per weight. This remains pretty stable, even when
-        # less processes are running in parallel, because total_duration
-        # is the sum of all task durations and not the queues duration.
-        speed = total_duration / total_processed_weight
+        speed = total_processed_weight / total_duration
 
-        # how many weight left per process
-        remaining_weight_per_p = total_remaining_weight / len(self.running)
-        remaining_duration = speed * remaining_weight_per_p
+        remaining = max(workloads) / speed
 
-        # if the max_remaining time exceeds the time of the
-        # remaining_duration which especially happens when the conversion
-        # comes to an end while one very large file is being converted,
-        # take that one.
-        if max_remaining_weight != -1:
-            max_remaining = speed * max_remaining_weight
-            remaining = max(max_remaining, remaining_duration)
-        else:
-            remaining = remaining_duration
+        print('remaining', remaining)
+
+        # due to possible inaccuracies like unaccounted overheads, correct
+        # the remaining time based on how long it has actually been running.
+        # this is only really a concern for large files, otherwise the above
+        # prediction is actually not bad.
+        self._remaining_history.push({
+            'time': time.time(),
+            'remaining': remaining
+        })
+        historic = self._remaining_history.get_oldest()
+        if historic is not None:
+            seconds_since = time.time() - historic['time']
+            remaining_change = historic['remaining'] - remaining
+            max_factor = 1.5
+            if remaining_change > 0:
+                factor = seconds_since / remaining_change
+                # avoid having ridiculous factors, put some trust into
+                # the above unfactored prediction
+                factor = max(1 / max_factor, min(max_factor, factor))
+            else:
+                factor = max_factor
+            factor = self._smooth_remaining_time.smooth(factor)
+            print('####', factor, '####')
+            remaining = remaining * factor
 
         return remaining
+
+
+class Smoothing:
+    """Exponential smoothing for a single value."""
+    def __init__(self, factor):
+        self.factor = factor
+        self.value = None
+
+    def smooth(self, value):
+        if self.value is not None:
+            value = (self.value * self.factor + value) / (self.factor + 1)
+        self.value = value
+        return value
+
+
+class History:
+    """History of predictions."""
+    def __init__(self, size):
+        """Create a new History object, with a memory of `size`."""
+        self.index = 0
+        self.values = [None] * size
+
+    def push(self, value):
+        """Add a new value to the history, possibly overwriting old values."""
+        self.values[self.index] = value
+        self.index = (self.index + 1) % len(self.values)
+
+    def get(self, offset):
+        """Get a value offset steps in the past."""
+        if offset >= len(self.values):
+            # Doesn't carry such old values
+            return None
+
+        index = (self.index - offset) % len(self.values) - 1
+        return self.values[index]
+
+    def get_oldest(self):
+        """Get the oldest known value."""
+        index = len(self.values) - 1
+        while index > 0:
+            if self.get(index) is None:
+                index -= 1
+            else:
+                break
+        return self.get(index)
 
 
 class Timer:

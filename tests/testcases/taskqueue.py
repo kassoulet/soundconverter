@@ -25,7 +25,7 @@ import threading
 from unittest.mock import Mock
 from gi.repository import GLib, Gst
 
-from soundconverter.util.taskqueue import TaskQueue, Timer
+from soundconverter.util.taskqueue import TaskQueue, Timer, History, Smoothing
 from soundconverter.util.task import Task
 from soundconverter.util.settings import get_gio_settings
 from util import reset_settings
@@ -479,6 +479,42 @@ class TestTimer(unittest.TestCase):
         timer.start()
         time.sleep(0.01)
         self.assertLess(timer.get_duration(), 0.011)
+
+
+class TestHistory(unittest.TestCase):
+    def test(self):
+        history = History(size=5)
+        history.push(10)
+        history.push(20)
+        history.push(30)
+        print(history.values)
+        self.assertEqual(history.get(0), 30)
+        self.assertEqual(history.get(1), 20)
+        self.assertEqual(history.get(2), 10)
+        self.assertEqual(history.get(3), None)
+        self.assertEqual(history.get(5), None)
+        self.assertEqual(history.get(6), None)
+        self.assertEqual(history.get_oldest(), 10)
+        history.push(40)
+        history.push(50)
+        history.push(60)
+        self.assertEqual(history.get(0), 60)
+        self.assertEqual(history.get(1), 50)
+        self.assertEqual(history.get(2), 40)
+        self.assertEqual(history.get(3), 30)
+        self.assertEqual(history.get(4), 20)
+        self.assertEqual(history.get(5), None)
+        self.assertEqual(history.get(8), None)
+        self.assertEqual(history.get_oldest(), 20)
+
+
+class TestSmooth(unittest.TestCase):
+    def test(self):
+        smooth = Smoothing(factor=10)
+        self.assertEqual(smooth.smooth(5), 5)
+        value_2 = (5 * 10 + 10) / 11
+        self.assertEqual(smooth.smooth(10), (5 * 10 + 10) / 11)
+        self.assertEqual(smooth.smooth(20), (value_2 * 10 + 20) / 11)
 
 
 if __name__ == "__main__":
