@@ -30,7 +30,7 @@ class SoundFile:
 
     __slots__ = [
         'uri', 'base_path', 'filename', 'tags', 'filelist_row', 'subfolders',
-        'readable', 'duration', 'info'
+        'readable', 'duration', 'info', 'type'
     ]
 
     def __init__(self, uri, base_path=None):

@@ -106,6 +106,12 @@ class DiscovererThread(Thread):
         msg = Gst.Message.new_custom(msg_type, None, None)
         self.bus.post(msg)
 
+    def _get_type(self, info):
+        """Figure out the type of the audio stream."""
+        caps = info.get_audio_streams()[0].get_caps()
+        stream_type = caps.get_structure(0).get_name()
+        return stream_type
+
     def _analyse_file(self, sound_file):
         """Figure out readable, tags and duration properties."""
         denylisted_pattern = is_denylisted(sound_file)
@@ -122,6 +128,9 @@ class DiscovererThread(Thread):
 
             # whatever anybody might ever need from it, here it is:
             sound_file.info = info
+
+            # type of the stream
+            sound_file.type = self._get_type(info)
 
             taglist = info.get_tags()
             taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
