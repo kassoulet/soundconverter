@@ -21,7 +21,6 @@
 
 
 class GladeWindow(object):
-    """Create a window from a glade builder."""
 
     callbacks = {}
     builder = None
