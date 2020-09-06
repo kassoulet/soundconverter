@@ -202,7 +202,7 @@ class TaskQueue:
             # conversion speed seems to change during conversion
             speed_calculation_tasks = self.done
         else:
-            # not enough tasks to calculate speed yet
+            # not enough finished tasks to calculate speed yet
             speed_calculation_tasks = self.done + self.running
         for task in speed_calculation_tasks:
             progress, weight = task.get_progress()
