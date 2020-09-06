@@ -65,7 +65,14 @@ class ProgressBar:
     for a small number of files.
     """
     def __init__(self, progressbar, period=1):
-        """Initialize the fraction object without doing anything yet."""
+        """Initialize the fraction object without doing anything yet.
+
+        Parameters
+        ----------
+        period : int
+            How fast new fraction values are expected to arrive in seconds.
+            Doesn't have to be accurate.
+        """
         self.progressbar = progressbar
         self.steps = 0
         self.period = period
@@ -81,6 +88,7 @@ class ProgressBar:
 
     def set_fraction(self, fraction):
         """Set a fraction that will be shown after interpolating to it."""
+        fraction = min(1, max(0, fraction))
         if fraction in [0, 1]:
             self.set_current(fraction)
             return
@@ -88,8 +96,16 @@ class ProgressBar:
         self.fraction_target = fraction
         difference = self.fraction_target - self.current_fraction
 
+        if difference <= 0:
+            self.set_current(fraction)
+            return
+
         # not more steps than the progressbar can resolute
-        self.steps = round(self.progressbar.get_allocated_width() * difference)
+        # and not more than 30 fps
+        self.steps = min(
+            30 * self.period,
+            round(self.progressbar.get_allocated_width() * difference)
+        )
 
         # don't make an interval if not needed
         if self.steps <= 1:
