@@ -122,8 +122,8 @@ class TaskQueue:
         """
         if task.get_progress()[0] != 1:
             raise ValueError(
-                f'Task with a progress of {task.get_progress()[0]} called '
-                'task_done'
+                f'{task.__class__.__name__} Task with a progress of '
+                f'{task.get_progress()[0]} called task_done'
             )
         self.done.append(task)
         if task not in self.running:

@@ -426,6 +426,7 @@ class Converter(Task):
             logger.info('output file already exists, skipping \'{}\''.format(
                 beautify_uri(self.newname)
             ))
+            self.done = True
             self._conversion_done()
             return
 
