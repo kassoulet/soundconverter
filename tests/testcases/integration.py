@@ -37,7 +37,8 @@ from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.formats import get_quality, get_file_extension
 from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.util.soundfile import SoundFile
-from soundconverter.interface.ui import win, gtk_iteration, encoders
+from soundconverter.interface.ui import win, gtk_iteration
+from soundconverter.interface.preferences import encoders
 from soundconverter.interface.batch import cli_convert
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.gstreamer.discoverer import Discoverer
