@@ -40,8 +40,10 @@ class TaskQueue:
         self.paused = False
 
         self._timer = Timer()
-        self._remaining_history = History(size=11)
-        self._smooth_remaining_time = Smoothing(factor=20)
+        self._remaining_history = History(size=31)
+        # In my experience the factor for the remaining time correction
+        # is around 1.3. Start with it and then correct it if needed.
+        self._smooth_remaining_time = Smoothing(factor=50, first_value=1.3)
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -67,18 +69,18 @@ class TaskQueue:
         if len(self.all_tasks) == 0:
             return None
         total_weight = 0
-        total_progress = 0
+        total_processed_weight = 0
         tasks = self.running if only_running else self.all_tasks
 
         task_progress = []
 
         for task in tasks:
             progress, weight = task.get_progress()
-            total_progress += progress * weight
+            total_processed_weight += progress * weight
             total_weight += weight
             task_progress.append((task, progress))
 
-        return total_progress / total_weight, task_progress
+        return total_processed_weight / total_weight, task_progress
 
     def pause(self):
         """Pause all tasks."""
@@ -168,10 +170,10 @@ class TaskQueue:
             # cannot be estimated yet
             return None
 
-        print()
-
         # replicate how the workload is distributed among the processes
-        # to figure out how much time is remaining
+        # to figure out how much time is remaining. This is needed because
+        # at the end some processes will be idle while other are still
+        # converting.
         workloads = [0] * get_num_jobs()
 
         total_processed_weight = 0
@@ -190,20 +192,23 @@ class TaskQueue:
             remaining_weight = (1 - progress) * weight
             workloads[smallest_index] += remaining_weight
 
+        for task in self.all_tasks:
             progress, weight = task.get_progress()
             total_duration += task.timer.get_duration()
             total_processed_weight += progress * weight
 
-        speed = total_processed_weight / total_duration
+        if len(self.running) == get_num_jobs():
+            # if possible, use the the taskqueues duration instead of the
+            # sum of all tasks to account for overheads between running tasks
+            taskqueue_duration = self.get_duration() * get_num_jobs()
+            speed = total_processed_weight / taskqueue_duration
+        else:
+            speed = total_processed_weight / total_duration
 
         remaining = max(workloads) / speed
 
-        print('remaining', remaining)
-
-        # due to possible inaccuracies like unaccounted overheads, correct
-        # the remaining time based on how long it has actually been running.
-        # this is only really a concern for large files, otherwise the above
-        # prediction is actually not bad.
+        # correct the remaining time based on how long it has actually
+        # been running
         self._remaining_history.push({
             'time': time.time(),
             'remaining': remaining
@@ -212,16 +217,16 @@ class TaskQueue:
         if historic is not None:
             seconds_since = time.time() - historic['time']
             remaining_change = historic['remaining'] - remaining
-            max_factor = 1.5
             if remaining_change > 0:
                 factor = seconds_since / remaining_change
-                # avoid having ridiculous factors, put some trust into
-                # the above unfactored prediction
-                factor = max(1 / max_factor, min(max_factor, factor))
+                # put some trust into the unfactored prediction after all.
+                # sometimes for large files, the speed seems to decrease over
+                # time, in which case the remaining_change is close to 0.
+                # Don't make the factor super large then.
+                factor = max(0.8, min(1.6, factor))
             else:
-                factor = max_factor
+                factor = 1.6
             factor = self._smooth_remaining_time.smooth(factor)
-            print('####', factor, '####')
             remaining = remaining * factor
 
         return remaining
@@ -229,9 +234,9 @@ class TaskQueue:
 
 class Smoothing:
     """Exponential smoothing for a single value."""
-    def __init__(self, factor):
+    def __init__(self, factor, first_value=None):
         self.factor = factor
-        self.value = None
+        self.value = first_value
 
     def smooth(self, value):
         if self.value is not None:

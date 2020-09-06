@@ -381,9 +381,9 @@ class Converter(Task):
 
         assert vfs_exists(newname)
 
-        logger.info("converted '{}' to '{}'".format(
+        """logger.info("converted '{}' to '{}'".format(
             beautify_uri(input_uri), beautify_uri(newname)
-        ))
+        ))"""
 
         # Copy file permissions
         source = Gio.file_parse_name(self.sound_file.uri)

@@ -487,7 +487,6 @@ class TestHistory(unittest.TestCase):
         history.push(10)
         history.push(20)
         history.push(30)
-        print(history.values)
         self.assertEqual(history.get(0), 30)
         self.assertEqual(history.get(1), 20)
         self.assertEqual(history.get(2), 10)
