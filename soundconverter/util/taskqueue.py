@@ -105,8 +105,8 @@ class TaskQueue:
             # from the beginning. The proper way would be to call pause and
             # resume for such a functionality though.
             self.pending.put(task)
-            task.timer.stop()
             task.cancel()
+            task.timer.stop()
         self._timer.reset()
         self.running = []
 
@@ -120,26 +120,31 @@ class TaskQueue:
         task : Task
             A completed task
         """
+        if task.get_progress()[0] != 1:
+            raise ValueError(
+                f'Task with a progress of {task.get_progress()[0]} called '
+                'task_done'
+            )
         self.done.append(task)
-        task.timer.stop()
         if task not in self.running:
             logger.warning('tried to remove task that was already removed')
         else:
             self.running.remove(task)
+        task.timer.stop()
         if self.pending.qsize() > 0:
             self.start_next()
         elif len(self.running) == 0:
             self.finished = True
-            self._timer.stop()
             if self._on_queue_finished is not None:
                 self._on_queue_finished(self)
+            self._timer.stop()
 
     def start_next(self):
         """Start the next task if available."""
         if self.pending.qsize() > 0:
             task = self.pending.get()
-            self.running.append(task)
             task.timer.start()
+            self.running.append(task)
             task.run()
 
     def run(self):
@@ -148,6 +153,7 @@ class TaskQueue:
         Finished tasks will trigger running the next task over the task_done
         callback.
         """
+        self._remaining_history.reset()
         self._timer.start()
         num_jobs = get_num_jobs()
         while self.pending.qsize() > 0 and len(self.running) < num_jobs:
@@ -176,9 +182,6 @@ class TaskQueue:
         # converting.
         workloads = [0] * get_num_jobs()
 
-        total_processed_weight = 0
-        total_duration = 0
-
         for task in self.all_tasks:
             if task.done:
                 continue
@@ -192,18 +195,20 @@ class TaskQueue:
             remaining_weight = (1 - progress) * weight
             workloads[smallest_index] += remaining_weight
 
-        for task in self.all_tasks:
+        total_processed_weight = 0
+        total_duration = 0
+        if len(self.done) >= get_num_jobs():
+            # prefer finished tasks for the speed calculation, because the
+            # conversion speed seems to change during conversion
+            speed_calculation_tasks = self.done
+        else:
+            # not enough tasks to calculate speed yet
+            speed_calculation_tasks = self.done + self.running
+        for task in speed_calculation_tasks:
             progress, weight = task.get_progress()
             total_duration += task.timer.get_duration()
             total_processed_weight += progress * weight
-
-        if len(self.running) == get_num_jobs():
-            # if possible, use the the taskqueues duration instead of the
-            # sum of all tasks to account for overheads between running tasks
-            taskqueue_duration = self.get_duration() * get_num_jobs()
-            speed = total_processed_weight / taskqueue_duration
-        else:
-            speed = total_processed_weight / total_duration
+        speed = total_processed_weight / total_duration
 
         remaining = max(workloads) / speed
 
@@ -220,7 +225,7 @@ class TaskQueue:
             if remaining_change > 0:
                 factor = seconds_since / remaining_change
                 # put some trust into the unfactored prediction after all.
-                # sometimes for large files, the speed seems to decrease over
+                # sometimes for large files the speed seems to decrease over
                 # time, in which case the remaining_change is close to 0.
                 # Don't make the factor super large then.
                 factor = max(0.8, min(1.6, factor))
@@ -251,6 +256,10 @@ class History:
         """Create a new History object, with a memory of `size`."""
         self.index = 0
         self.values = [None] * size
+
+    def reset(self):
+        self.index = 0
+        self.values = [None] * len(self.values)
 
     def push(self, value):
         """Add a new value to the history, possibly overwriting old values."""
