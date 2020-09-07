@@ -380,7 +380,7 @@ class FileList:
     def set_row_progress(self, number, progress):
         """Update the progress bar of a single row/file."""
         self.progress_column.set_visible(True)
-        if self.model[number][2] == 1.0:
+        if self.model[number][2] == progress * 100:
             return
 
         self.model[number][2] = progress * 100.0
