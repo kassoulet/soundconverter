@@ -237,15 +237,17 @@ class Converter(Task):
     def get_progress(self):
         """Fraction of how much of the task is completed."""
         duration = self.sound_file.duration
-        if not self.done:
-            position = self._query_position()
-            if duration is None:
-                return 0
-            progress = position / duration
-            progress = min(max(progress, 0.0), 1.0)
-            return progress, duration
 
-        return 1, duration
+        if self.done:
+            return 1, duration
+
+        if self.pipeline is None or duration is None:
+            return 0, duration
+
+        position = self._query_position()
+        progress = position / duration
+        progress = min(max(progress, 0.0), 1.0)
+        return progress, duration
 
     def cancel(self):
         """Cancel execution of the task."""
@@ -265,6 +267,14 @@ class Converter(Task):
             return
         self.pipeline.set_state(Gst.State.PLAYING)
 
+    def _cleanup(self):
+        """Delete the pipeline."""
+        bus = self.pipeline.get_bus()
+        bus.disconnect(self.watch_id)
+        bus.remove_signal_watch()
+        self.pipeline.set_state(Gst.State.NULL)
+        self.pipeline = None
+
     def _stop_pipeline(self):
         # remove partial file
         if self.temporary_filename is not None:
@@ -279,11 +289,7 @@ class Converter(Task):
         if not self.pipeline:
             logger.debug('pipeline already stopped!')
             return
-        self.pipeline.set_state(Gst.State.NULL)
-        bus = self.pipeline.get_bus()
-        bus.disconnect(self.watch_id)
-        bus.remove_signal_watch()
-        self.pipeline = None
+        self._cleanup()
 
     def _convert(self):
         """Run the gst pipeline that converts files.
@@ -323,13 +329,6 @@ class Converter(Task):
         if newname is None:
             raise AssertionError('the conversion was not started')
 
-        if not vfs_exists(self.temporary_filename):
-            self.error = 'Expected {} to exist after conversion.'.format(
-                self.temporary_filename
-            )
-            self.callback()
-            return
-
         if self.error:
             logger.debug('error in task, skipping rename: {}'.format(
                 self.temporary_filename
@@ -338,6 +337,13 @@ class Converter(Task):
             logger.info('could not convert {}: {}'.format(
                 beautify_uri(input_uri), self.error
             ))
+            self.callback()
+            return
+
+        if not vfs_exists(self.temporary_filename):
+            self.error = 'Expected {} to exist after conversion.'.format(
+                self.temporary_filename
+            )
             self.callback()
             return
 
@@ -408,6 +414,7 @@ class Converter(Task):
         self.output_uri = newname
         self.done = True
         self.callback()
+        self._cleanup()
 
     def run(self):
         """Call this in order to run the whole Converter task."""

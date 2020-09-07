@@ -29,7 +29,7 @@ import time
 import sys
 import shutil
 import urllib.parse
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, Gst
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
@@ -527,8 +527,11 @@ class GUI(unittest.TestCase):
 
         window.on_convert_button_clicked()
 
-        # wait for the assertions until all files are converted
         queue = window.converter_queue
+
+        pipeline = queue.all_tasks[0].pipeline
+
+        # wait for the assertions until all files are converted
         while not queue.finished:
             gtk_iteration()
 
@@ -577,6 +580,11 @@ class GUI(unittest.TestCase):
         self.assertEqual(len(window.filelist.invalid_files_list), 2)
         self.assertIn('empty/a', window.filelist.invalid_files_list)
         self.assertIn('empty/b/c', window.filelist.invalid_files_list)
+
+        # cleans up at the end. Important because otherwise it will crash
+        # because too many files are open.
+        self.assertEqual(pipeline.get_state(0).state, Gst.State.NULL)
+        self.assertIsNone(queue.all_tasks[0].pipeline)
 
     def test_pause_resume(self):
         gio_settings = get_gio_settings()
@@ -646,7 +654,6 @@ class GUI(unittest.TestCase):
         converter_queue = window.converter_queue
         self.assertEqual(len(converter_queue.done), len(expected_filelist))
 
-        print(os.path.realpath('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
         errors = sum([1 for task in converter_queue.done if task.error])
@@ -654,6 +661,95 @@ class GUI(unittest.TestCase):
         self.assertNotIn('error', window.statustext.get_text())
         self.assertFalse(window.filelist.progress_column.get_visible())
         self.assertEqual(len(window.filelist.invalid_files_list), 0)
+
+    def test_cancel(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_int(
+            'opus-bitrate',
+            get_quality('audio/ogg; codecs=opus', 3)
+        )
+
+        launch([
+            'tests/test data/audio/a.wav'
+        ])
+        self.assertEqual(settings['main'], 'gui')
+        self.assertEqual(settings['debug'], False)
+
+        window = win[0]
+
+        window.prefs.change_mime_type('audio/ogg; codecs=opus')
+
+        window.on_convert_button_clicked()
+        gtk_iteration(True)
+        queue = window.converter_queue
+        pipeline = queue.all_tasks[0].pipeline
+
+        # quick check if the conversion correctly started
+        self.assertEqual(len(queue.running), 1)
+        pipeline_state = pipeline.get_state(Gst.CLOCK_TIME_NONE).state
+        self.assertEqual(pipeline_state, Gst.State.PLAYING)
+
+        window.on_button_cancel_clicked()
+
+        # the task should not be running anymore
+        self.assertEqual(len(queue.running), 0)
+        # the running task is put back into pending
+        self.assertEqual(queue.pending.qsize(), 1)
+        pipeline_state = pipeline.get_state(Gst.CLOCK_TIME_NONE).state
+        self.assertEqual(pipeline_state, Gst.State.NULL)
+
+        # my computer needs ~0.03 seconds to convert it. So sleep some
+        # significantly longer time than that to make sure cancel actually
+        # cancels the conversion.
+        time.sleep(0.5)
+        gtk_iteration()
+        self.assertFalse(window.filelist.progress_column.get_visible())
+        self.assertEqual(len(queue.running), 0)
+        self.assertEqual(len(queue.done), 0)
+        self.assertEqual(queue.pending.qsize(), 1)
+        self.assertFalse(os.path.isfile('tests/tmp/a.opus'))
+        pipeline_state = pipeline.get_state(Gst.CLOCK_TIME_NONE).state
+        self.assertEqual(pipeline_state, Gst.State.NULL)
+
+        window.on_convert_button_clicked()
+        gtk_iteration(True)
+        new_queue = window.converter_queue
+        new_pipeline = new_queue.all_tasks[0].pipeline
+
+        # the new queue is running now instead
+        self.assertEqual(len(new_queue.running), 1)
+        new_pipeline_state = new_pipeline.get_state(Gst.CLOCK_TIME_NONE).state
+        self.assertEqual(new_pipeline_state, Gst.State.PLAYING)
+        # the old one is not running
+        old_pipeline_state = pipeline.get_state(Gst.CLOCK_TIME_NONE).state
+        self.assertEqual(old_pipeline_state, Gst.State.NULL)
+        self.assertEqual(len(queue.running), 0)
+        self.assertEqual(queue.pending.qsize(), 1)
+
+        gtk_iteration()
+        self.assertTrue(window.filelist.progress_column.get_visible())
+
+        start = time.time()
+        while not new_queue.finished:
+            gtk_iteration()
+        if time.time() - start > 0.4:
+            print(
+                'The test may not work as intended because the conversion'
+                'may take longer than the cancel duration.'
+            )
+
+        # the old queue object didn't finish anything
+        self.assertEqual(len(queue.done), 0)
+        self.assertEqual(queue.pending.qsize(), 1)
+
+        # the new queue finished
+        self.assertEqual(len(new_queue.running), 0)
+        self.assertEqual(len(new_queue.done), 1)
+        self.assertEqual(new_queue.pending.qsize(), 0)
+        self.assertEqual(new_queue.get_progress()[0], 1)
+        self.assertEqual(new_pipeline.get_state(0).state, Gst.State.NULL)
+
+        self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
     def test_conversion_pattern(self):
         gio_settings = get_gio_settings()

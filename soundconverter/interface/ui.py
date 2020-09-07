@@ -114,8 +114,8 @@ class ErrorDialog:
         self.secondary = builder.get_object('secondary_error_label')
 
     def show_error(self, primary, secondary):
-        self.primary.set_markup(primary)
-        self.secondary.set_markup(secondary)
+        self.primary.set_markup(str(primary))
+        self.secondary.set_markup(str(secondary))
         try:
             sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
         except Exception:
@@ -445,7 +445,7 @@ class FileList:
     def set_row_progress(self, number, progress):
         """Update the progress bar of a single row/file."""
         self.progress_column.set_visible(True)
-        if self.model[number][2] == 1.0:
+        if self.model[number][2] == progress * 100:
             return
 
         self.model[number][2] = progress * 100.0
