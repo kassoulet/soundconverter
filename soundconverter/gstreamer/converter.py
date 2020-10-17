@@ -38,44 +38,60 @@ GSTREAMER_SOURCE = 'giosrc'
 GSTREAMER_SINK = 'giosink'
 
 available_elements = set()
-functions = dict()
 
 
 def find_available_elements():
     """Figure out which gstreamer pipeline plugins are available."""
     # gst-plugins-good, gst-plugins-bad, etc. packages provide them
-    global available_elements, functions
+    global available_elements
 
-    encoders = (
-        ('flacenc', 'FLAC', 'flac-enc'),
-        ('wavenc', 'WAV', 'wav-enc'),
-        ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc'),
-        ('oggmux', 'Ogg Vorbis', 'vorbis-mux'),
-        ('id3mux', 'MP3 tags', 'mp3-id-tags'),
-        ('id3v2mux', 'MP3 tags', 'mp3-id-tags'),
-        ('xingmux', 'VBR tags', 'mp3-vbr-tags'),
-        ('lamemp3enc', 'MP3', 'mp3-enc'),
-        ('faac', 'AAC', 'aac-enc'),
-        ('avenc_aac', 'AAC', 'aac-enc'),
-        ('fdkaacenc', 'AAC', 'aac-enc'),
-        ('mp4mux', 'AAC', 'aac-mux'),
-        ('opusenc', 'Opus', 'opus-enc'),
-    )
+    GOOD = 'gst-plugins-good'
+    BAD = 'gst-plugins-bad'
+    BASE = 'gst-plugins-base'
+    UGLY = 'gst-plugins-ugly'
+    LIBAV = 'gst-libav'
 
-    for encoder, name, function in encoders:
+    # some functions can be provided by various packages.
+    # move preferred packages towards the bottom.
+    encoders = [
+        ('flacenc', 'FLAC', 'flac-enc', GOOD),
+        ('wavenc', 'WAV', 'wav-enc', GOOD),
+        ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc', BASE),
+        ('oggmux', 'Ogg Vorbis', 'vorbis-mux', BASE),
+        ('id3mux', 'MP3 tags', 'mp3-id-tags', BAD),
+        ('id3v2mux', 'MP3 tags', 'mp3-id-tags', GOOD),
+        ('xingmux', 'VBR tags', 'mp3-vbr-tags', UGLY),
+        ('lamemp3enc', 'MP3', 'mp3-enc', GOOD),
+        ('mp4mux', 'AAC', 'aac-mux', GOOD),
+        ('opusenc', 'Opus', 'opus-enc', BASE),
+        ('faac', 'AAC', 'aac-enc', BAD),
+        ('avenc_aac', 'AAC', 'aac-enc', LIBAV),
+        ('fdkaacenc', 'AAC', 'aac-enc', BAD),
+    ]
+
+    result = dict()
+    for encoder, name, function, package in encoders:
         have_it = bool(Gst.ElementFactory.find(encoder))
         if have_it:
             available_elements.add(encoder)
         else:
-            logger.info('  {} gstreamer element not found'.format(encoder))
-        function += '_' + name
-        functions[function] = functions.get(function) or have_it
+            logger.debug(
+                '{} gstreamer element from "{}" not found\n'.format(
+                    encoder,
+                    package
+                )
+            )
+        result[function] = (have_it, package)
 
-    for function in sorted(functions):
-        if not functions[function]:
-            logger.info('  disabling {} output.'.format(
-                function.split('_')[1]
-            ))
+    for function in result:
+        have_it, package = result[function]
+        if not have_it:
+            logger.error(
+                'Disabling {} output. Do you have "{}" installed?'.format(
+                    function,
+                    package
+                )
+            )
 
     if 'oggmux' not in available_elements:
         available_elements.discard('vorbisenc')
