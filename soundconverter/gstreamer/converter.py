@@ -378,10 +378,11 @@ class Converter(Task):
             vfs_rename(self.temporary_filename, newname)
         except Exception as error:
             self.error = str(error)
-            logger.info('could not rename {} to {}:'.format(
-                beautify_uri(self.temporary_filename), beautify_uri(newname)
+            logger.error("could not rename '{}' to '{}':".format(
+                beautify_uri(self.temporary_filename),
+                beautify_uri(newname),
+                str(error)
             ))
-            logger.info(traceback.print_exc())
             self.callback()
             return
 
@@ -391,24 +392,44 @@ class Converter(Task):
             beautify_uri(input_uri), beautify_uri(newname)
         ))
 
-        # Copy file permissions
-        source = Gio.file_parse_name(self.sound_file.uri)
-        destination = Gio.file_parse_name(newname)
-        if not source.copy_attributes(destination, Gio.FileCopyFlags.NONE):
-            logger.info("Cannot set permission on '{}'".format(
-                beautify_uri(newname)
-            ))
+        # finish up the target file
+        try:
+            # Copy file permissions
+            source = Gio.file_parse_name(self.sound_file.uri)
+            destination = Gio.file_parse_name(newname)
+            source.copy_attributes(destination, Gio.FileCopyFlags.NONE)
 
-        # the modification date of the destination should be now
-        info = Gio.FileInfo()
-        info.set_modification_date_time(GLib.DateTime.new_now(GLib.TimeZone()))
-        destination.set_attributes_from_info(info, Gio.FileQueryInfoFlags.NONE)
+            # the modification date of the destination should be now
+            info = Gio.FileInfo()
+            now = GLib.DateTime.new_now(GLib.TimeZone())
+            if callable(getattr(info, 'set_modification_date_time', None)):
+                info.set_modification_date_time(now)
+            else:
+                # deprecated method
+                timeval = GLib.TimeVal()
+                now.to_timeval(timeval)
+                info.set_modification_time(timeval)
+
+            destination.set_attributes_from_info(
+                info,
+                Gio.FileQueryInfoFlags.NONE
+            )
+        except Exception as error:
+            logger.error(
+                "Could not set some attributes of the target '{}': {}".format(
+                    beautify_uri(newname),
+                    str(error)
+                )
+            )
 
         if self.delete_original and not self.error:
-            logger.info('deleting: \'{}\''.format(self.sound_file.uri))
-            if not vfs_unlink(self.sound_file.uri):
-                logger.info('cannot remove \'{}\''.format(
-                    beautify_uri(self.sound_file.uri)
+            logger.info("deleting: '{}'".format(self.sound_file.uri))
+            try:
+                vfs_unlink(self.sound_file.uri)
+            except Exception as error:
+                logger.info("cannot remove '{}': {}".format(
+                    beautify_uri(self.sound_file.uri),
+                    str(error)
                 ))
 
         self.output_uri = newname
