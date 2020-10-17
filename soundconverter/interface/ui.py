@@ -113,13 +113,13 @@ class ErrorDialog:
         self.primary = builder.get_object('primary_error_label')
         self.secondary = builder.get_object('secondary_error_label')
 
-    def show_error(self, primary, secondary):
+    def show_error(self, primary, secondary=None):
         self.primary.set_markup(str(primary))
-        self.secondary.set_markup(str(secondary))
-        try:
-            sys.stderr.write(_('\nError: %s\n%s\n') % (primary, secondary))
-        except Exception:
-            pass
+        self.secondary.set_markup(str(secondary) if secondary else '')
+        if secondary:
+            logger.error('{}: {}'.format(primary, secondary))
+        else:
+            logger.error(primary)
         self.dialog.run()
         self.dialog.hide()
 

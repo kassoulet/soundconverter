@@ -179,6 +179,7 @@ class Discoverer(Task):
     def cancel(self):
         """Cancel execution of the task."""
         # fast task, use case doesn't exist
+        self.callback()
 
     def pause(self):
         """Pause execution of the task."""
