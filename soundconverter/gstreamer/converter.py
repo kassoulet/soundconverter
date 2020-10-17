@@ -252,6 +252,7 @@ class Converter(Task):
     def cancel(self):
         """Cancel execution of the task."""
         self._stop_pipeline()
+        self.callback()
 
     def pause(self):
         """Pause execution of the task."""
@@ -269,11 +270,13 @@ class Converter(Task):
 
     def _cleanup(self):
         """Delete the pipeline."""
-        bus = self.pipeline.get_bus()
-        bus.disconnect(self.watch_id)
-        bus.remove_signal_watch()
-        self.pipeline.set_state(Gst.State.NULL)
-        self.pipeline = None
+        if self.pipeline is not None:
+            bus = self.pipeline.get_bus()
+            if hasattr(bus, 'watch_id'):
+                bus.disconnect(self.watch_id)
+                bus.remove_signal_watch()
+            self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline = None
 
     def _stop_pipeline(self):
         # remove partial file
@@ -303,13 +306,9 @@ class Converter(Task):
             try:
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
-
             except GLib.Error as error:
-                show_error(
-                    'gstreamer error when creating pipeline',
-                    str(error)
-                )
-                self._on_error(str(error))
+                self.error = 'gstreamer error when creating pipeline: {}'.format(str(error))
+                self._on_error(self.error)
                 return
 
             bus.add_signal_watch()
@@ -334,8 +333,9 @@ class Converter(Task):
                 self.temporary_filename
             ))
             vfs_unlink(self.temporary_filename)
-            logger.info('could not convert {}: {}'.format(
-                beautify_uri(input_uri), self.error
+            logger.error('could not convert {}: {}'.format(
+                beautify_uri(input_uri),
+                self.error
             ))
             self.callback()
             return
@@ -490,7 +490,6 @@ class Converter(Task):
             ))
             if not dirname.make_directory_with_parents():
                 show_error(
-                    'error',
                     _('cannot create \'{}\' folder.').format(
                         beautify_uri(dirname)
                     )
@@ -511,10 +510,9 @@ class Converter(Task):
         The TaskQueue is interested in reading the error.
         """
         self.error = error
-        logger.error('{}\n({})'.format(error, self.command))
         show_error(
             error,
-            self.command
+            beautify_uri(self.sound_file.uri)
         )
         self._stop_pipeline()
         self.callback()

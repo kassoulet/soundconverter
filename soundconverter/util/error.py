@@ -20,8 +20,16 @@
 # USA
 
 
+from soundconverter.util.logger import logger
+
+
 class ErrorPrinter:
-    def show_error(self, primary, secondary):
+    """Default error handler"""
+    def show_error(self, primary, secondary=None):
+        if secondary:
+            logger.error('{}: {}'.format(primary, secondary))
+        else:
+            logger.error(primary)
         pass
 
 
@@ -34,5 +42,5 @@ def set_error_handler(handler):
     error_handler = handler
 
 
-def show_error(primary, secondary):
+def show_error(primary, secondary=None):
     error_handler.show_error(primary, secondary)
