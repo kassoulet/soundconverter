@@ -252,6 +252,7 @@ class Converter(Task):
     def cancel(self):
         """Cancel execution of the task."""
         self._stop_pipeline()
+        self.callback()
 
     def pause(self):
         """Pause execution of the task."""
@@ -269,11 +270,13 @@ class Converter(Task):
 
     def _cleanup(self):
         """Delete the pipeline."""
-        bus = self.pipeline.get_bus()
-        bus.disconnect(self.watch_id)
-        bus.remove_signal_watch()
-        self.pipeline.set_state(Gst.State.NULL)
-        self.pipeline = None
+        if self.pipeline is not None:
+            bus = self.pipeline.get_bus()
+            if hasattr(bus, 'watch_id'):
+                bus.disconnect(self.watch_id)
+                bus.remove_signal_watch()
+            self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline = None
 
     def _stop_pipeline(self):
         # remove partial file
@@ -303,13 +306,9 @@ class Converter(Task):
             try:
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
-
             except GLib.Error as error:
-                show_error(
-                    'gstreamer error when creating pipeline',
-                    str(error)
-                )
-                self._on_error(str(error))
+                self.error = 'gstreamer error when creating pipeline: {}'.format(str(error))
+                self._on_error(self.error)
                 return
 
             bus.add_signal_watch()
@@ -334,8 +333,9 @@ class Converter(Task):
                 self.temporary_filename
             ))
             vfs_unlink(self.temporary_filename)
-            logger.info('could not convert {}: {}'.format(
-                beautify_uri(input_uri), self.error
+            logger.error('could not convert {}: {}'.format(
+                beautify_uri(input_uri),
+                self.error
             ))
             self.callback()
             return
@@ -378,10 +378,11 @@ class Converter(Task):
             vfs_rename(self.temporary_filename, newname)
         except Exception as error:
             self.error = str(error)
-            logger.info('could not rename {} to {}:'.format(
-                beautify_uri(self.temporary_filename), beautify_uri(newname)
+            logger.error("could not rename '{}' to '{}':".format(
+                beautify_uri(self.temporary_filename),
+                beautify_uri(newname),
+                str(error)
             ))
-            logger.info(traceback.print_exc())
             self.callback()
             return
 
@@ -391,24 +392,44 @@ class Converter(Task):
             beautify_uri(input_uri), beautify_uri(newname)
         ))
 
-        # Copy file permissions
-        source = Gio.file_parse_name(self.sound_file.uri)
-        destination = Gio.file_parse_name(newname)
-        if not source.copy_attributes(destination, Gio.FileCopyFlags.NONE):
-            logger.info("Cannot set permission on '{}'".format(
-                beautify_uri(newname)
-            ))
+        # finish up the target file
+        try:
+            # Copy file permissions
+            source = Gio.file_parse_name(self.sound_file.uri)
+            destination = Gio.file_parse_name(newname)
+            source.copy_attributes(destination, Gio.FileCopyFlags.NONE)
 
-        # the modification date of the destination should be now
-        info = Gio.FileInfo()
-        info.set_modification_date_time(GLib.DateTime.new_now(GLib.TimeZone()))
-        destination.set_attributes_from_info(info, Gio.FileQueryInfoFlags.NONE)
+            # the modification date of the destination should be now
+            info = Gio.FileInfo()
+            now = GLib.DateTime.new_now(GLib.TimeZone())
+            if callable(getattr(info, 'set_modification_date_time', None)):
+                info.set_modification_date_time(now)
+            else:
+                # deprecated method
+                timeval = GLib.TimeVal()
+                now.to_timeval(timeval)
+                info.set_modification_time(timeval)
+
+            destination.set_attributes_from_info(
+                info,
+                Gio.FileQueryInfoFlags.NONE
+            )
+        except Exception as error:
+            logger.error(
+                "Could not set some attributes of the target '{}': {}".format(
+                    beautify_uri(newname),
+                    str(error)
+                )
+            )
 
         if self.delete_original and not self.error:
-            logger.info('deleting: \'{}\''.format(self.sound_file.uri))
-            if not vfs_unlink(self.sound_file.uri):
-                logger.info('cannot remove \'{}\''.format(
-                    beautify_uri(self.sound_file.uri)
+            logger.info("deleting: '{}'".format(self.sound_file.uri))
+            try:
+                vfs_unlink(self.sound_file.uri)
+            except Exception as error:
+                logger.info("cannot remove '{}': {}".format(
+                    beautify_uri(self.sound_file.uri),
+                    str(error)
                 ))
 
         self.output_uri = newname
@@ -469,7 +490,6 @@ class Converter(Task):
             ))
             if not dirname.make_directory_with_parents():
                 show_error(
-                    'error',
                     _('cannot create \'{}\' folder.').format(
                         beautify_uri(dirname)
                     )
@@ -490,10 +510,9 @@ class Converter(Task):
         The TaskQueue is interested in reading the error.
         """
         self.error = error
-        logger.error('{}\n({})'.format(error, self.command))
         show_error(
             error,
-            self.command
+            beautify_uri(self.sound_file.uri)
         )
         self._stop_pipeline()
         self.callback()

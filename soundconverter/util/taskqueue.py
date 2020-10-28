@@ -95,6 +95,7 @@ class TaskQueue:
 
     def cancel(self):
         """Stop all tasks."""
+        self.finished = True
         for task in self.running:
             # by calling run it can be resumed, but cancelled tasks will start
             # from the beginning. The proper way would be to call pause and
@@ -115,6 +116,9 @@ class TaskQueue:
         task : Task
             A completed task
         """
+        if self.finished:
+            return
+
         self.done.append(task)
         task.timer.stop()
         if task not in self.running:
@@ -143,6 +147,7 @@ class TaskQueue:
         Finished tasks will trigger running the next task over the task_done
         callback.
         """
+        self.finished = False
         self._timer.start()
         num_jobs = get_num_jobs()
         while self.pending.qsize() > 0 and len(self.running) < num_jobs:
