@@ -2,20 +2,23 @@
 # Copyright (C) 2007 THE soundconverter'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the soundconverter package.
 # Uwe Bugla <uwe.bugla@gmx.de>, 2009.
+# Johannes Maibaum <jmaibaum@gmail.com>, 2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter 1.4.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2018-01-16 14:57+0000\n"
-"Last-Translator: Tobias Bannert <tobannert@gmail.com>\n"
+"PO-Revision-Date: 2020-11-28 16:58+0100\n"
+"Last-Translator: Johannes Maibaum <jmaibaum@gmail.com>\n"
 "Language-Team: German <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"X-Generator: Gtranslator 3.38.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -181,7 +184,6 @@ msgid "Same folder as the input file"
 msgstr "Gleicher Ordner wie die Eingabedatei"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
 msgid "Choose…"
 msgstr "Auswählen …"
 
@@ -314,15 +316,15 @@ msgstr "_Liste leeren"
 
 #: ../data/soundconverter.glade.h:69
 msgid "Invalid Files"
-msgstr ""
+msgstr "Ungültige Dateien"
 
 #: ../data/soundconverter.glade.h:70
 msgid "About"
-msgstr ""
+msgstr "Info"
 
 #: ../data/soundconverter.glade.h:71
 msgid "Quit"
-msgstr ""
+msgstr "Beenden"
 
 #: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
 #: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
@@ -369,25 +371,25 @@ msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
 "This will disable the GUI and run in batch mode, from the command line."
 msgstr ""
+"Dateien, die gstreamer nicht verarbeiten kann, werden ausgegeben. Dies ist "
+"vor der Konvertierung nützlich. Die grafische Benutzeroberfläche wird "
+"deaktiviert und die Stapelverarbeitung von der Befehlszeile aus gestartet."
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
 "Convert in batch mode, from the command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"Konvertierung per Stapelverarbeitung von der Befehlszeile ausgehend,\n"
-" ohne grafische Benutzeroberfläche. Besonders sinnvoll für Shell-Skripte."
+"Konvertierung per Stapelverarbeitung von der Befehlszeile ausgehend, ohne "
+"grafische Benutzeroberfläche. Besonders sinnvoll für Shell-Skripte."
 
 #: ../bin/soundconverter.py:138
-#, fuzzy
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
 msgstr ""
 "Meta-Tags der Eingabedateien anzeigen, anstatt sie umzuwandeln. Dies führt "
-"zu\n"
-" einer Stapelverarbeitung auf der Befehlszeile ohne grafische "
+"zu einer Stapelverarbeitung auf der Befehlszeile ohne grafische "
 "Benutzeroberfläche."
 
 #: ../bin/soundconverter.py:142
@@ -403,48 +405,54 @@ msgid "Force number of concurrent conversions."
 msgstr "Anzahl der gleichzeitigen Konvertierungen erzwingen."
 
 #: ../bin/soundconverter.py:153
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output MIME type. The default is %s. Note that you will probably "
 "want to set the output suffix as well. Supported MIME types: %s"
 msgstr ""
 "Ausgabe-MIME-Typ für die Stapelverarbeitung festlegen. Vorgabe ist %s. "
-"Beachten Sie,\r\n"
-" dass Sie wahrscheinlich auch die Endung der Ausgabedateien festlegen "
-"möchten."
+"Beachten Sie, dass Sie wahrscheinlich auch die Endung der Ausgabedateien "
+"festlegen möchten. Unterstützte MIME-Typen sind: %s."
 
 #: ../bin/soundconverter.py:159
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix. The default is %s. Note that the suffix does "
 "not affect\n"
 " the output MIME type."
 msgstr ""
-"Endung der Ausgabedateien für die Stapelverarbeitung festlegen. Vorgabe ist "
-"%s . Beachten Sie,\n"
-" dass sich die Dateiendung nicht auf den Ausgabe-MIME-Typ auswirkt."
+"Endung der Ausgabedateien festlegen. Vorgabe ist %s. Beachten Sie, dass sich "
+"die\n"
+" Dateiendung nicht auf den Ausgabe-MIME-Typ auswirkt."
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
-msgstr ""
+msgstr "Unterverzeichnisse rekursiv durchsuchen"
 
 #: ../bin/soundconverter.py:165
 msgid ""
 "Ignore files for which the target already exists instead of converting them "
 "again"
 msgstr ""
+"Dateien ignorieren, die bereits das Zielformat haben, anstatt sie erneut zu "
+"konvertieren"
 
 #: ../bin/soundconverter.py:168
 msgid ""
 "Put converted files into a different directory while rebuilding the original "
 "directory structure. This includes the name of the original directory."
 msgstr ""
+"Konvertierte Dateien in einem anderen Verzeichnis ablegen, unter "
+"Beibehaltung der vorherigen Verzeichnisstruktur. Dies beinhaltet den Namen "
+"des Ausgangsverzeichnisses."
 
 #: ../bin/soundconverter.py:172
 msgid ""
 "Quality of the converted output file. Between 0 (lowest) and 5 (highest). "
 "Default is 3."
 msgstr ""
+"Qualität der konvertierten Ausgabedatei, zwischen 0 (niedrigste) und 5 "
+"(höchste). Vorgabe ist 3."
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -522,42 +530,41 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-#, fuzzy
 msgid "Scanning files…"
 msgstr "Dateien werden eingelesen …"
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
 msgid "Adding Files…"
 msgstr "Dateien werden hinzugefügt …"
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
 msgid "The specified file is not supported!"
-msgstr ""
+msgstr "Die gewählte Datei wird nicht unterstützt!"
 
 #: ../soundconverter/ui.py:329
 msgid "Either because it is broken or not an audio file."
-msgstr ""
+msgstr "Entweder ist sie defekt oder sie ist keine Klangdatei."
 
 #. case 2: all files that should be added cannot be added
 #: ../soundconverter/ui.py:333
 msgid "All {} specified files are not supported!"
-msgstr ""
+msgstr "Alle {} gewählten Dateien werden nicht unterstützt!"
 
 #: ../soundconverter/ui.py:334
 msgid "Either because they are broken or not audio files."
-msgstr ""
+msgstr "Entweder sind sie defekt oder sie sind keine Klangdateien."
 
 #: ../soundconverter/ui.py:343
 msgid "One audio file could not be read by GStreamer!"
 msgid_plural "{} audio files could not be read by GStreamer!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Eine Klangdatei kann nicht von GStreamer verarbeitet werden!"
+msgstr[1] "{} Klangdateien können nicht von GStreamer verarbeitet werden!"
 
 #: ../soundconverter/ui.py:345
 msgid "Check \"Invalid Files\" in the menu for more information."
 msgstr ""
+"Überprüfen Sie die \"Ungültigen Dateien\" im Menü für weitere Informationen."
 
 #: ../soundconverter/ui.py:432
 msgid "Same as input, but replacing the suffix"
@@ -593,9 +600,8 @@ msgstr "Verfügbare Platzhalter:"
 
 # # lines 73 + 296
 #: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
 msgid "Add Folder…"
-msgstr "Ordner hinzufügen"
+msgstr "Ordner hinzufügen …"
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -609,12 +615,10 @@ msgstr "<small>Bitrate der Zieldatei: %s</small>"
 
 # # lines 51 279
 #: ../soundconverter/ui.py:1109
-#, fuzzy
 msgid "Add Files…"
-msgstr "Datei hinzufügen"
+msgstr "Dateien hinzufügen …"
 
 #: ../soundconverter/ui.py:1288
-#, fuzzy
 msgid "Preparing conversion…"
 msgstr "Konvertierung wird vorbereitet …"
 
