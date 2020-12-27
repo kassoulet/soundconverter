@@ -599,9 +599,6 @@ Gautier Portet</property>
       <row>
         <col id="0" translatable="yes">track_title</col>
       </row>
-      <row>
-        <col id="0" translatable="yes"/>
-      </row>
     </data>
   </object>
   <object class="GtkListStore" id="liststore_resample">
