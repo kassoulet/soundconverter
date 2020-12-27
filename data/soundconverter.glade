@@ -592,14 +592,6 @@ Gautier Portet</property>
       <!-- column-name item -->
       <column type="gchararray"/>
     </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">track_number - track_title</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">track_title</col>
-      </row>
-    </data>
   </object>
   <object class="GtkListStore" id="liststore_resample">
     <columns>
