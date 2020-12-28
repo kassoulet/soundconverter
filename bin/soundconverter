@@ -27,7 +27,9 @@ import os
 import site
 import sys
 from optparse import OptionParser, OptionGroup
-from gettext import gettext as _
+import locale
+import gettext
+_ = gettext.gettext
 import pkg_resources
 
 # read values from setup.py
@@ -47,6 +49,16 @@ elif SOURCE_PATH.startswith('/usr/'):
 elif SOURCE_PATH.startswith('/app/'):
     # flatpak support
     DATA_PATH = '/app/share/soundconverter'
+
+    # For flatpak, we need to explicitly (re-)bind the locale and the gettext
+    # textdomain, because Python's default localedir is pointing to
+    # /usr/share/locale, whereas flatpaks install their locales to
+    # /app/share/locale.
+    # For reference, see https://docs.python.org/3/library/gettext.html#id3
+    locale.setlocale(locale.LC_ALL, '')
+    locale.bindtextdomain(NAME, '/app/share/locale')
+    gettext.bindtextdomain(NAME, '/app/share/locale')
+    gettext.textdomain(NAME)
 else:
     # installed with -e, running from the cloned git source
     DATA_PATH = os.path.join(SOURCE_PATH, 'data')
