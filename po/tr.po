@@ -3,21 +3,24 @@
 # This file is distributed under the same license as the soundconverter package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Mehmet  Altan Pire <baybesteci@gmail.com>, 2011.
+# GautierPortet <kassoulet@gmail.com>, 2015.
+# Serkan ÖNDER <serkanonder@outlook.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2015-12-03 06:37+0000\n"
-"Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
-"Language-Team: Turkish <Free (Not in Team)>\n"
+"PO-Revision-Date: 2021-03-06 18:52+0300\n"
+"Last-Translator: Serkan ÖNDER <serkanonder@outlook.com>\n"
+"Language-Team: \n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -33,7 +36,7 @@ msgstr "Ses dosyalarını diğer biçimlere dönüştürür"
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
-msgstr "Gnome tabanlı Ses Dönüştürme"
+msgstr "GNOME-destekli Ses Dönüştürücü"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
@@ -61,7 +64,7 @@ msgstr "<big><b>Dosya zaten var</b></big>\n"
 
 #: ../data/soundconverter.glade.h:9
 msgid "_Apply to entire queue"
-msgstr "Tüm kuyruğa uygul_a"
+msgstr "Tüm kuyruğa _uygula"
 
 #: ../data/soundconverter.glade.h:10 ../soundconverter/ui.py:442
 msgid "artist/album"
@@ -73,99 +76,99 @@ msgstr "sanatçı - albüm"
 
 #: ../data/soundconverter.glade.h:12
 msgid "Very Low"
-msgstr ""
+msgstr "Çok Düşük"
 
 #: ../data/soundconverter.glade.h:13
 msgid "Low"
-msgstr ""
+msgstr "Düşük"
 
 #: ../data/soundconverter.glade.h:14
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: ../data/soundconverter.glade.h:15
 msgid "High"
-msgstr ""
+msgstr "Yüksek"
 
 #: ../data/soundconverter.glade.h:16
 msgid "Very High"
-msgstr ""
+msgstr "Çok Yüksek"
 
 #: ../data/soundconverter.glade.h:17
 msgid "Insanely High"
-msgstr ""
+msgstr "Delicesine Yüksek"
 
 #: ../data/soundconverter.glade.h:18
 msgid "8 bits (very low quality)"
-msgstr ""
+msgstr "8 bit (çok düşük kalite)"
 
 #: ../data/soundconverter.glade.h:19
 msgid "16 bits (default)"
-msgstr ""
+msgstr "16 bit (varsayılan)"
 
 #: ../data/soundconverter.glade.h:20
 msgid "32 bits"
-msgstr ""
+msgstr "32 bit"
 
 #: ../data/soundconverter.glade.h:21
 msgid "Less (Faster)"
-msgstr ""
+msgstr "Daha Az (Daha Hızlı)"
 
 #: ../data/soundconverter.glade.h:22
 msgid "Default"
-msgstr ""
+msgstr "Ön tanımlı"
 
 #: ../data/soundconverter.glade.h:23
 msgid "Better (Slower)"
-msgstr ""
+msgstr "Daha iyi (Daha yavaş)"
 
 #: ../data/soundconverter.glade.h:24
 msgid "Constant (CBR)"
-msgstr ""
+msgstr "Sabit (CBR)"
 
 #: ../data/soundconverter.glade.h:25
 msgid "Average (ABR)"
-msgstr ""
+msgstr "Ortalama (ABR)"
 
 #: ../data/soundconverter.glade.h:26
 msgid "Variable (VBR) - Best quality"
-msgstr ""
+msgstr "Değişken (VBR) - En iyi kalite"
 
 #: ../data/soundconverter.glade.h:27
 msgid "Ogg Vorbis (.ogg)"
-msgstr ""
+msgstr "Ogg Vorbis (.ogg)"
 
 #: ../data/soundconverter.glade.h:28
 msgid "MP3 (.mp3)"
-msgstr ""
+msgstr "MP3 (.mp3)"
 
 #: ../data/soundconverter.glade.h:29
 msgid "FLAC Lossless (.flac)"
-msgstr ""
+msgstr "FLAC Kayıpsız (.flac)"
 
 #: ../data/soundconverter.glade.h:30
 msgid "MS Wave (.wav)"
-msgstr ""
+msgstr "MS Wave (.wav)"
 
 #: ../data/soundconverter.glade.h:31
 msgid "AAC (.m4a)"
-msgstr ""
+msgstr "AAC (.m4a)"
 
 #: ../data/soundconverter.glade.h:32
 msgid "Opus (.opus)"
-msgstr ""
+msgstr "Opus (.opus)"
 
 #: ../data/soundconverter.glade.h:33
 msgid "GNOME Audio Profile"
-msgstr ""
+msgstr "GNOME Ses Profili"
 
 #: ../data/soundconverter.glade.h:34
 msgid "track_number - track_title"
-msgstr ""
+msgstr "parça_numarası - parça_başlığı"
 
 #: ../data/soundconverter.glade.h:35
 msgid "track_title"
-msgstr ""
+msgstr "parça_başlığı"
 
 #: ../data/soundconverter.glade.h:36
 msgid "Preferences"
@@ -173,12 +176,11 @@ msgstr "Tercihler"
 
 #: ../data/soundconverter.glade.h:37
 msgid "Same folder as the input file"
-msgstr ""
+msgstr "Giriş dosyasıyla aynı klasör"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
 msgid "Choose…"
-msgstr "Seçiniz..."
+msgstr "Seçiniz…"
 
 #: ../data/soundconverter.glade.h:39
 msgid "Into a specified folder"
@@ -206,7 +208,7 @@ msgstr "Tüm garip karakterleri kaldır"
 
 #: ../data/soundconverter.glade.h:45
 msgid "Remove all characters except letters, digits and ./_-"
-msgstr ""
+msgstr "Harfler, rakamlar ve ./_- dışındaki tüm karakterleri kaldırın"
 
 #: ../data/soundconverter.glade.h:46
 msgid "<i>Example filename:</i>"
@@ -230,11 +232,11 @@ msgstr ".oga uzantısını kullan"
 
 #: ../data/soundconverter.glade.h:51
 msgid "Ogg"
-msgstr ""
+msgstr "Ogg"
 
 #: ../data/soundconverter.glade.h:52
 msgid "Bitrate mode:"
-msgstr "Bir oran kipi:"
+msgstr "Bit hızı modu:"
 
 #: ../data/soundconverter.glade.h:53
 msgid "MP3"
@@ -258,19 +260,19 @@ msgstr "WAV"
 
 #: ../data/soundconverter.glade.h:58
 msgid "AAC"
-msgstr ""
+msgstr "AAC"
 
 #: ../data/soundconverter.glade.h:59
 msgid "Opus"
-msgstr ""
+msgstr "Opus"
 
 #: ../data/soundconverter.glade.h:60
 msgid "Profile:"
-msgstr ""
+msgstr "Profil:"
 
 #: ../data/soundconverter.glade.h:61
 msgid "gst-profile"
-msgstr ""
+msgstr "gst-profili"
 
 #: ../data/soundconverter.glade.h:62
 msgid "<b>Type of result?</b>"
@@ -286,11 +288,11 @@ msgstr "Tekli (mono) çıkışa zorla"
 
 #: ../data/soundconverter.glade.h:65
 msgid "Limit number of parallel jobs"
-msgstr ""
+msgstr "Paralel iş sayısını sınırlayın"
 
 #: ../data/soundconverter.glade.h:66
 msgid "MP3 Encoder is not present."
-msgstr "MP3 şifreleyici belirtilmedi"
+msgstr "MP3 şifreleyici belirtilmedi."
 
 #: ../data/soundconverter.glade.h:67
 msgid "Read how to install"
@@ -298,19 +300,19 @@ msgstr "Nasıl kurulacağını okuyun"
 
 #: ../data/soundconverter.glade.h:68
 msgid "_Clear List"
-msgstr ""
+msgstr "Listeyi _Temizle"
 
 #: ../data/soundconverter.glade.h:69
 msgid "Invalid Files"
-msgstr ""
+msgstr "Geçersiz Dosyalar"
 
 #: ../data/soundconverter.glade.h:70
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 #: ../data/soundconverter.glade.h:71
 msgid "Quit"
-msgstr ""
+msgstr "Çık"
 
 #: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
 #: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
@@ -335,7 +337,7 @@ msgstr "Dosya _Ekle"
 
 #: ../data/soundconverter.glade.h:77
 msgid "Add _Folder"
-msgstr "Klasör _Ekle"
+msgstr "_Klasör Ekle"
 
 #: ../data/soundconverter.glade.h:78
 msgid "_Edit"
@@ -350,22 +352,25 @@ msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
 "This will disable the GUI and run in batch mode, from the command line."
 msgstr ""
+"Gstreamer tarafından okunamayan dosyaları yazdırın. Dönüştürmeden önce "
+"kullanışlıdır. Bu, ARAYÜZÜ devre dışı bırakır ve komut satırından toplu iş "
+"modunda çalışır."
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
 "Convert in batch mode, from the command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"Sıralı dönüştürme kipi, komut satırından, grafiksel kullanıcı arabirimi "
-"olmaksızın.\n"
-" Bunu, söyleyin, kabuk komutlarından kullanabilirsiniz."
+"Grafik kullanıcı arayüzü olmadan komut satırından toplu modda dönüştürün. "
+"Bunu, örneğin kabuk komut dosyalarından kullanabilirsiniz."
 
 #: ../bin/soundconverter.py:138
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
 msgstr ""
+"Girdi dosyalarına dönüştürmek yerine etiketleri gösterin. Bu, komut satırı "
+"toplu modunu gösterir ve grafik kullanıcı arayüzünü devre dışı bırakır."
 
 #: ../bin/soundconverter.py:142
 msgid "Be quiet. Don't write normal output, only errors."
@@ -373,7 +378,7 @@ msgstr "Sessiz ol. Normal çıktıyı yazma, sadece hataları yaz."
 
 #: ../bin/soundconverter.py:144
 msgid "Displays additional debug information"
-msgstr ""
+msgstr "Ek hata ayıklama bilgilerini görüntüler"
 
 #: ../bin/soundconverter.py:146
 msgid "Force number of concurrent conversions."
@@ -385,6 +390,8 @@ msgid ""
 "Set the output MIME type. The default is %s. Note that you will probably "
 "want to set the output suffix as well. Supported MIME types: %s"
 msgstr ""
+"Çıkış MIME türünü ayarlayın. Varsayılan% s. Muhtemelen çıktı sonekini de "
+"ayarlamak isteyeceğinizi unutmayın. Desteklenen MIME türleri: %s"
 
 #: ../bin/soundconverter.py:159
 #, python-format
@@ -393,28 +400,35 @@ msgid ""
 "not affect\n"
 " the output MIME type."
 msgstr ""
+"Çıktı dosya adı sonekini ayarlayın. Varsayılan %s. Son ekin etkilemediğini "
+"unutmayın\n"
+" çıktı MIME türü."
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
-msgstr ""
+msgstr "Yinelemeli olarak alt dizinlere gidin"
 
 #: ../bin/soundconverter.py:165
 msgid ""
 "Ignore files for which the target already exists instead of converting them "
 "again"
-msgstr ""
+msgstr "Yeniden dönüştürmek yerine hedefin zaten var olduğu dosyaları yoksay"
 
 #: ../bin/soundconverter.py:168
 msgid ""
 "Put converted files into a different directory while rebuilding the original "
 "directory structure. This includes the name of the original directory."
 msgstr ""
+"Orijinal dizin yapısını yeniden oluştururken dönüştürülen dosyaları farklı "
+"bir dizine koyun. Bu, orijinal dizinin adını içerir."
 
 #: ../bin/soundconverter.py:172
 msgid ""
 "Quality of the converted output file. Between 0 (lowest) and 5 (highest). "
 "Default is 3."
 msgstr ""
+"Dönüştürülen çıktı dosyasının kalitesi. 0 (en düşük) ile 5 (en yüksek) "
+"arasında. Varsayılan 3'tür."
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -431,29 +445,29 @@ msgstr ""
 
 #: ../soundconverter/gstreamer.py:210
 msgid "Plugin installation aborted."
-msgstr ""
+msgstr "Eklenti kurulumu iptal edildi."
 
 #: ../soundconverter/gstreamer.py:564
 #, python-format
 msgid "Cannot create '%s' folder."
-msgstr "'%s' klasörü yaratılamadı."
+msgstr "'%s' klasörü oluşturulamıyor."
 
 #: ../soundconverter/gstreamer.py:600
 msgid "GStreamer Error:"
-msgstr ""
+msgstr "GStreamer Hatası:"
 
 #: ../soundconverter/gstreamer.py:810
 #, python-format
 msgid "Conversion done in %s"
-msgstr ""
+msgstr "Dönüşüm %s içinde yapıldı"
 
 #: ../soundconverter/namegenerator.py:77
 msgid "Unknown Album"
-msgstr ""
+msgstr "Bilinmeyen Albüm"
 
 #: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
 msgid "Unknown Artist"
-msgstr ""
+msgstr "Bilinmeyen Sanatçı"
 
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:46
@@ -461,10 +475,12 @@ msgid ""
 "Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
 "DiscNumber DiscTotal Ext"
 msgstr ""
+"Sanatçı Albümü Albüm-Sanatçı Adı Parça Toplam Tür Tarih Yıl Zaman Damgası "
+"Disk Numarası DiskToplam Uzantı"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
-msgstr ""
+msgstr "Tüm dosyalar"
 
 #: ../soundconverter/ui.py:83 ../soundconverter/ui.py:98
 #, python-format
@@ -473,43 +489,45 @@ msgid ""
 "Error: %s\n"
 "%s\n"
 msgstr ""
+"\n"
+"Hata: %s\n"
+"%s\n"
 
 #: ../soundconverter/ui.py:211
 msgid "Scanning files…"
-msgstr ""
+msgstr "Dosyalar taranıyor…"
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
 msgid "Adding Files…"
-msgstr "Dosya Ekle"
+msgstr "Dosyalar Ekleniyor…"
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
 msgid "The specified file is not supported!"
-msgstr ""
+msgstr "Belirtilen dosya desteklenmiyor!"
 
 #: ../soundconverter/ui.py:329
 msgid "Either because it is broken or not an audio file."
-msgstr ""
+msgstr "Ya bozuk olduğu ya da bir ses dosyası olmadığı için."
 
 #. case 2: all files that should be added cannot be added
 #: ../soundconverter/ui.py:333
 msgid "All {} specified files are not supported!"
-msgstr ""
+msgstr "Belirtilen tüm {} dosyalar desteklenmiyor!"
 
 #: ../soundconverter/ui.py:334
 msgid "Either because they are broken or not audio files."
-msgstr ""
+msgstr "Ya bozuk oldukları ya da ses dosyaları olmadığı için."
 
 #: ../soundconverter/ui.py:343
 msgid "One audio file could not be read by GStreamer!"
 msgid_plural "{} audio files could not be read by GStreamer!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bir ses dosyası GStreamer tarafından okunamadı!"
+msgstr[1] "{} ses dosyaları GStreamer tarafından okunamadı!"
 
 #: ../soundconverter/ui.py:345
 msgid "Check \"Invalid Files\" in the menu for more information."
-msgstr ""
+msgstr "Daha fazla bilgi için menüdeki \"Geçersiz Dosyalar\" ı işaretleyin."
 
 #: ../soundconverter/ui.py:432
 msgid "Same as input, but replacing the suffix"
@@ -525,7 +543,7 @@ msgstr "Parça numarası - başlık"
 
 #: ../soundconverter/ui.py:436
 msgid "Track title"
-msgstr ""
+msgstr "Parça başlığı"
 
 #: ../soundconverter/ui.py:437
 msgid "Artist - title"
@@ -541,17 +559,16 @@ msgstr "sanatçı-albüm"
 
 #: ../soundconverter/ui.py:469
 msgid "Available patterns:"
-msgstr ""
+msgstr "Mevcut modeller:"
 
 #: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
 msgid "Add Folder…"
-msgstr "Klasör Ekle"
+msgstr "Klasör Ekle…"
 
 #: ../soundconverter/ui.py:659
 #, python-format
 msgid "Into folder %s"
-msgstr ""
+msgstr "%s klasörüne"
 
 #: ../soundconverter/ui.py:739
 #, python-format
@@ -559,17 +576,16 @@ msgid "Target bitrate: %s"
 msgstr "Hedef bit oranı: %s"
 
 #: ../soundconverter/ui.py:1109
-#, fuzzy
 msgid "Add Files…"
-msgstr "Dosya Ekle"
+msgstr "Dosya Ekle…"
 
 #: ../soundconverter/ui.py:1288
 msgid "Preparing conversion…"
-msgstr ""
+msgstr "Dönüştürme hazırlanıyor…"
 
 #: ../soundconverter/ui.py:1309
 msgid "Converting"
-msgstr "Çevriliyor"
+msgstr "Dönüştürülüyor"
 
 #: ../soundconverter/ui.py:1327
 msgid "Canceled"
