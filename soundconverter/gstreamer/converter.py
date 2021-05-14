@@ -288,7 +288,7 @@ class Converter(Task):
         """Delete the pipeline."""
         if self.pipeline is not None:
             bus = self.pipeline.get_bus()
-            if hasattr(bus, 'watch_id'):
+            if hasattr(self, 'watch_id'):
                 bus.disconnect(self.watch_id)
                 bus.remove_signal_watch()
             self.pipeline.set_state(Gst.State.NULL)
