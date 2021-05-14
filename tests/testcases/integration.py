@@ -529,7 +529,6 @@ class GUI(unittest.TestCase):
 
         queue = window.converter_queue
 
-        # expect the task to not listen for messages from the pipline anymore
         first_conversion = queue.all_tasks[0]
         first_bus = first_conversion.pipeline.get_bus()
         # is listening for messages
