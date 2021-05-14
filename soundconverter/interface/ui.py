@@ -63,14 +63,14 @@ COLUMNS = ['filename']
 # ALL_COLUMNS = VISIBLE_COLUMNS + ['META']
 
 
-encoders = (
+encoders = [
     ('audio/x-vorbis', 'vorbisenc'),
     ('audio/mpeg', 'lamemp3enc'),
     ('audio/x-flac', 'flacenc'),
     ('audio/x-wav', 'wavenc'),
     ('audio/x-m4a', 'fdkaacenc,faac,avenc_aac'),
     ('audio/ogg; codecs=opus', 'opusenc'),
-)  # must be in same order as the output_mime_type GtkComboBox
+]  # must be in same order as the output_mime_type GtkComboBox
 
 
 def idle(func):
@@ -610,6 +610,7 @@ class PreferencesDialog(GladeWindow):
         )
 
         i = 0
+        to_remove = []
         model = self.output_mime_type.get_model()
         for mime, encoder_name in encoders:
             # valid default output?
@@ -625,7 +626,11 @@ class PreferencesDialog(GladeWindow):
                     '{} {} is not supported, a gstreamer plugins package '
                     'is possibly missing.'.format(mime, encoder_name)
                 )
-                del model[i]
+                to_remove.append(i)
+                
+        for i in to_remove:
+            del model[i]
+            del encoders[i]
 
         for i, mime in enumerate(self.present_mime_types):
             if current_mime_type == mime:
