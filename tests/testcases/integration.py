@@ -29,7 +29,7 @@ import time
 import sys
 import shutil
 import urllib.parse
-from gi.repository import Gtk, GLib, Gst
+from gi.repository import Gtk, GLib, Gst, GObject
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
@@ -529,6 +529,14 @@ class GUI(unittest.TestCase):
 
         queue = window.converter_queue
 
+        first_conversion = queue.all_tasks[0]
+        first_bus = first_conversion.pipeline.get_bus()
+        # is listening for messages
+        self.assertTrue(GObject.signal_handler_is_connected(
+            first_bus,
+            first_conversion.watch_id
+        ))
+
         pipeline = queue.all_tasks[0].pipeline
 
         # wait for the assertions until all files are converted
@@ -585,6 +593,13 @@ class GUI(unittest.TestCase):
         # because too many files are open.
         self.assertEqual(pipeline.get_state(0).state, Gst.State.NULL)
         self.assertIsNone(queue.all_tasks[0].pipeline)
+
+        # correctly stops listening for messages to avoid a leakage of
+        # open fds https://bugs.launchpad.net/soundconverter/+bug/1928210
+        self.assertFalse(GObject.signal_handler_is_connected(
+            first_bus,
+            first_conversion.watch_id
+        ))
 
     def test_pause_resume(self):
         gio_settings = get_gio_settings()
