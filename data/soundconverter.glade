@@ -993,7 +993,7 @@ Gautier Portet</property>
                               <object class="GtkLabel" id="example_filename">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label">label27</property>
+                                <property name="label"></property>
                                 <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="ellipsize">start</property>

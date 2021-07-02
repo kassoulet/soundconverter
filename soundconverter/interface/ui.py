@@ -732,7 +732,11 @@ class PreferencesDialog(GladeWindow):
         })
         sound_file.tags.update(locale_patterns_dict)
 
-        generator = TargetNameGenerator()
+        try:
+            generator = TargetNameGenerator()
+        except ValueError:
+            return
+
         generator.replace_messy_chars = False
 
         example_path = GLib.markup_escape_text(
