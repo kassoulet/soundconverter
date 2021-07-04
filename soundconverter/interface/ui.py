@@ -846,10 +846,12 @@ class PreferencesDialog(GladeWindow):
 
     def on_output_mime_type_changed(self, combo):
         """Called when the format is changed on the UI."""
-        format_index = combo.get_active()
-        mime = encoders[format_index][0]
-        if mime in self.present_mime_types:
-            self.change_mime_type(mime)
+        selected_display_name = self.liststore8[combo.get_active()][0]
+        # TODO test that this works if a format is disabled
+        for mime, _, display_name in encoders:
+            if display_name == selected_display_name:
+                self.change_mime_type(mime)
+                return
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
