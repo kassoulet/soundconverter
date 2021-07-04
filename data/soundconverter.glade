@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAboutDialog" id="aboutdialog">
-    <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon_name">soundconverter</property>
-    <property name="type_hint">normal</property>
-    <property name="program_name">SoundConverter</property>
+    <property name="can-focus">False</property>
+    <property name="border-width">5</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="icon-name">soundconverter</property>
+    <property name="type-hint">normal</property>
+    <property name="program-name">SoundConverter</property>
     <property name="copyright">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
 © 2005-2019 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
     <property name="comments" translatable="yes">GNOME-powered Sound Conversion</property>
     <property name="website">http://soundconverter.org</property>
-    <property name="website_label" translatable="yes">Website</property>
+    <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Lars Wirzenius
 Gautier Portet</property>
     <property name="logo">soundconverter-logo.svg</property>
-    <property name="license_type">gpl-3-0</property>
+    <property name="license-type">gpl-3-0</property>
     <signal name="response" handler="on_aboutdialog_response" swapped="no"/>
-    <child>
-      <placeholder/>
-    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -50,63 +47,60 @@ Gautier Portet</property>
   <object class="GtkAccelGroup" id="accelgroup1a"/>
   <object class="GtkImage" id="add_image">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="stock">gtk-add</property>
   </object>
   <object class="GtkAdjustment" id="adjustment1a">
     <property name="lower">32</property>
     <property name="upper">320</property>
     <property name="value">192</property>
-    <property name="step_increment">32</property>
-    <property name="page_increment">64</property>
-    <property name="page_size">64</property>
+    <property name="step-increment">32</property>
+    <property name="page-increment">64</property>
+    <property name="page-size">64</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2a">
     <property name="upper">10</property>
     <property name="value">4</property>
-    <property name="step_increment">1</property>
+    <property name="step-increment">1</property>
   </object>
   <object class="GtkAdjustment" id="adjustment3a">
     <property name="upper">10</property>
     <property name="value">6</property>
-    <property name="step_increment">1</property>
+    <property name="step-increment">1</property>
   </object>
   <object class="GtkDialog" id="error_dialog">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">Error</property>
     <property name="modal">True</property>
-    <property name="window_position">center</property>
-    <property name="icon_name">soundconverter</property>
-    <property name="type_hint">dialog</property>
-    <property name="urgency_hint">True</property>
-    <child>
-      <placeholder/>
-    </child>
+    <property name="window-position">center</property>
+    <property name="icon-name">soundconverter</property>
+    <property name="type-hint">dialog</property>
+    <property name="urgency-hint">True</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox6">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area6">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">center</property>
-            <property name="layout_style">end</property>
+            <property name="layout-style">end</property>
             <child>
               <object class="GtkButton" id="closebutton1">
                 <property name="label">gtk-close</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -118,18 +112,18 @@ Gautier Portet</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkBox" id="hbox14">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkImage" id="image3">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="yalign">0</property>
                 <property name="xpad">12</property>
                 <property name="ypad">12</property>
@@ -145,15 +139,15 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="vbox11">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="primary_error_label">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="ypad">6</property>
                     <property name="label">asdf</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
@@ -165,10 +159,10 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkLabel" id="secondary_error_label">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="ypad">6</property>
                     <property name="label">zxcv</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>
                   </object>
@@ -199,32 +193,29 @@ Gautier Portet</property>
     </action-widgets>
   </object>
   <object class="GtkDialog" id="existsdialog">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">File exists already</property>
-    <property name="icon_name">soundconverter</property>
-    <property name="type_hint">dialog</property>
-    <child>
-      <placeholder/>
-    </child>
+    <property name="icon-name">soundconverter</property>
+    <property name="type-hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox3">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area3">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
             <child>
               <object class="GtkButton" id="button3">
                 <property name="label">gtk-cancel</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -235,12 +226,12 @@ Gautier Portet</property>
             <child>
               <object class="GtkButton" id="overwritebutton">
                 <property name="label" translatable="yes">_Overwrite</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-underline">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -251,14 +242,14 @@ Gautier Portet</property>
             <child>
               <object class="GtkButton" id="skipbutton">
                 <property name="label" translatable="yes">_Skip</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="has_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="has_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="can-focus">True</property>
+                <property name="has-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="has-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-underline">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -270,18 +261,18 @@ Gautier Portet</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkBox" id="hbox3">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkImage" id="image1">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="xpad">6</property>
                 <property name="stock">gtk-dialog-warning</property>
                 <property name="icon_size">6</property>
@@ -295,17 +286,17 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="vbox18">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label33">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="xpad">6</property>
                     <property name="ypad">6</property>
                     <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;File exists already&lt;/b&gt;&lt;/big&gt;
 </property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
@@ -317,10 +308,10 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkLabel" id="exists_message">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="xpad">6</property>
                     <property name="label">The output file XXX for ARTIST, ALBUM, TITLE exists already. Do you want to skip or overwrite?</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="xalign">0</property>
                   </object>
@@ -333,13 +324,13 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkCheckButton" id="apply_to_all">
                     <property name="label" translatable="yes">_Apply to entire queue</property>
-                    <property name="use_action_appearance">False</property>
+                    <property name="use-action-appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="use-underline">True</property>
                     <property name="xalign">0.5</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="draw-indicator">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -372,34 +363,34 @@ Gautier Portet</property>
   </object>
   <object class="GtkImage" id="folder_image">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="stock">gtk-directory</property>
   </object>
   <object class="GtkImage" id="image1a">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">document-new-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">document-new-symbolic</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="xpad">6</property>
     <property name="stock">gtk-dialog-warning</property>
     <property name="icon_size">1</property>
   </object>
   <object class="GtkImage" id="image2a">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">folder-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">folder-symbolic</property>
   </object>
   <object class="GtkImage" id="image3a">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="stock">gtk-clear</property>
   </object>
   <object class="GtkImage" id="image5">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="yalign">0</property>
     <property name="xpad">12</property>
     <property name="ypad">12</property>
@@ -408,14 +399,14 @@ Gautier Portet</property>
   </object>
   <object class="GtkImage" id="image7">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">preferences-system-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">preferences-system-symbolic</property>
   </object>
   <object class="GtkAdjustment" id="jobs_adjustment">
     <property name="lower">1</property>
     <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">1</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">1</property>
   </object>
   <object class="GtkListStore" id="liststore10">
     <columns>
@@ -566,26 +557,6 @@ Gautier Portet</property>
       <!-- column-name item -->
       <column type="gchararray"/>
     </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Ogg Vorbis (.ogg)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">MP3 (.mp3)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">FLAC Lossless (.flac)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">MS Wave (.wav)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">AAC (.m4a)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Opus (.opus)</col>
-      </row>
-    </data>
   </object>
   <object class="GtkListStore" id="liststore9">
     <columns>
@@ -629,33 +600,30 @@ Gautier Portet</property>
     </data>
   </object>
   <object class="GtkDialog" id="prefsdialog">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">Preferences</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon_name">soundconverter</property>
-    <property name="type_hint">dialog</property>
-    <child>
-      <placeholder/>
-    </child>
+    <property name="destroy-with-parent">True</property>
+    <property name="icon-name">soundconverter</property>
+    <property name="type-hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox7">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area7">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
             <child>
               <object class="GtkButton" id="closebutton2">
                 <property name="label">gtk-close</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -667,44 +635,44 @@ Gautier Portet</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkBox" id="vbox12">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">12</property>
+            <property name="can-focus">False</property>
+            <property name="border-width">12</property>
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">none</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
                 <child>
                   <object class="GtkAlignment" id="alignment2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="top_padding">4</property>
-                    <property name="left_padding">12</property>
+                    <property name="can-focus">False</property>
+                    <property name="top-padding">4</property>
+                    <property name="left-padding">12</property>
                     <child>
                       <object class="GtkTable" id="table2">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="n_rows">4</property>
-                        <property name="n_columns">2</property>
-                        <property name="column_spacing">4</property>
-                        <property name="row_spacing">4</property>
+                        <property name="can-focus">False</property>
+                        <property name="n-rows">4</property>
+                        <property name="n-columns">2</property>
+                        <property name="column-spacing">4</property>
+                        <property name="row-spacing">4</property>
                         <child>
                           <placeholder/>
                         </child>
                         <child>
                           <object class="GtkComboBox" id="subfolder_pattern">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="model">liststore10</property>
                             <signal name="changed" handler="on_subfolder_pattern_changed" swapped="no"/>
                             <child>
@@ -715,51 +683,51 @@ Gautier Portet</property>
                             </child>
                           </object>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="y_options"/>
+                            <property name="left-attach">1</property>
+                            <property name="right-attach">2</property>
+                            <property name="top-attach">2</property>
+                            <property name="bottom-attach">3</property>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkRadioButton" id="same_folder_as_input">
                             <property name="label" translatable="yes">Same folder as the input file</property>
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="use-underline">True</property>
                             <property name="xalign">0.5</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="draw-indicator">True</property>
                             <signal name="toggled" handler="on_same_folder_as_input_toggled" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="y_options"/>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkButton" id="choose_folder">
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
                             <signal name="clicked" handler="on_choose_folder_clicked" swapped="no"/>
                             <child>
                               <object class="GtkAlignment" id="alignment5">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="xscale">0</property>
                                 <property name="yscale">0</property>
                                 <child>
                                   <object class="GtkBox" id="hbox15">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="spacing">2</property>
                                     <child>
                                       <object class="GtkImage" id="image4">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
+                                        <property name="can-focus">False</property>
                                         <property name="stock">gtk-open</property>
                                       </object>
                                       <packing>
@@ -771,10 +739,10 @@ Gautier Portet</property>
                                     <child>
                                       <object class="GtkLabel" id="label19">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="margin_start">5</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="margin-start">5</property>
                                         <property name="label" translatable="yes">Choose…</property>
-                                        <property name="use_underline">True</property>
+                                        <property name="use-underline">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -788,11 +756,11 @@ Gautier Portet</property>
                             </child>
                           </object>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="y_options"/>
+                            <property name="left-attach">1</property>
+                            <property name="right-attach">2</property>
+                            <property name="top-attach">1</property>
+                            <property name="bottom-attach">2</property>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                         <child>
@@ -801,58 +769,58 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkRadioButton" id="into_selected_folder">
                             <property name="label" translatable="yes">Into a specified folder</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="width_request">320</property>
+                            <property name="use-action-appearance">False</property>
+                            <property name="width-request">320</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="use-underline">True</property>
                             <property name="xalign">0.5</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="draw-indicator">True</property>
                             <property name="group">same_folder_as_input</property>
                             <signal name="toggled" handler="on_into_selected_folder_toggled" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="y_options"/>
+                            <property name="top-attach">1</property>
+                            <property name="bottom-attach">2</property>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="create_subfolders">
                             <property name="label" translatable="yes">Create subfolders: </property>
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="use-underline">True</property>
                             <property name="xalign">0.5</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="draw-indicator">True</property>
                             <signal name="toggled" handler="on_create_subfolders_toggled" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="y_options"/>
+                            <property name="top-attach">2</property>
+                            <property name="bottom-attach">3</property>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="delete_original">
                             <property name="label" translatable="yes">Delete original file</property>
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="use-underline">True</property>
                             <property name="xalign">0.5</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="draw-indicator">True</property>
                             <signal name="toggled" handler="on_delete_original_toggled" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="top_attach">3</property>
-                            <property name="bottom_attach">4</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"/>
+                            <property name="top-attach">3</property>
+                            <property name="bottom-attach">4</property>
+                            <property name="x-options">GTK_FILL</property>
+                            <property name="y-options"/>
                           </packing>
                         </child>
                       </object>
@@ -862,10 +830,10 @@ Gautier Portet</property>
                 <child type="label">
                   <object class="GtkLabel" id="label16">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_bottom">6</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;Where to place results?&lt;/b&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                   </object>
                 </child>
               </object>
@@ -878,25 +846,25 @@ Gautier Portet</property>
             <child>
               <object class="GtkFrame" id="frame2">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">none</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
                 <child>
                   <object class="GtkAlignment" id="alignment3">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="top_padding">4</property>
-                    <property name="left_padding">12</property>
+                    <property name="can-focus">False</property>
+                    <property name="top-padding">4</property>
+                    <property name="left-padding">12</property>
                     <child>
                       <object class="GtkBox" id="vbox13">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">4</property>
                         <child>
                           <object class="GtkComboBox" id="basename_pattern">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="model">liststore9</property>
                             <signal name="changed" handler="on_basename_pattern_changed" swapped="no"/>
                             <child>
@@ -915,12 +883,12 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkBox" id="custom_filename_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="label34">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Filename pattern: </property>
                                 <property name="xalign">0</property>
                               </object>
@@ -933,10 +901,10 @@ Gautier Portet</property>
                             <child>
                               <object class="GtkEntry" id="custom_filename">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
-                                <property name="primary_icon_activatable">False</property>
-                                <property name="secondary_icon_activatable">False</property>
+                                <property name="can-focus">True</property>
+                                <property name="invisible-char">●</property>
+                                <property name="primary-icon-activatable">False</property>
+                                <property name="secondary-icon-activatable">False</property>
                                 <signal name="changed" handler="on_custom_filename_changed" swapped="no"/>
                               </object>
                               <packing>
@@ -955,14 +923,14 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkCheckButton" id="replace_messy_chars">
                             <property name="label" translatable="yes">Replace all messy characters</property>
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">Remove all characters except letters, digits and ./_-</property>
-                            <property name="use_underline">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="tooltip-text" translatable="yes">Remove all characters except letters, digits and ./_-</property>
+                            <property name="use-underline">True</property>
                             <property name="xalign">0.5</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="draw-indicator">True</property>
                             <signal name="toggled" handler="on_replace_messy_chars_toggled" swapped="no"/>
                           </object>
                           <packing>
@@ -974,14 +942,14 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkBox" id="hbox18">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="label26">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">&lt;i&gt;Example filename:&lt;/i&gt;</property>
-                                <property name="use_markup">True</property>
+                                <property name="use-markup">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -992,12 +960,11 @@ Gautier Portet</property>
                             <child>
                               <object class="GtkLabel" id="example_filename">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label"></property>
-                                <property name="use_markup">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="use-markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="ellipsize">start</property>
-                                <property name="single_line_mode">True</property>
+                                <property name="single-line-mode">True</property>
                                 <property name="xalign">0</property>
                               </object>
                               <packing>
@@ -1023,11 +990,11 @@ Gautier Portet</property>
                 <child type="label">
                   <object class="GtkLabel" id="label17">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_top">24</property>
-                    <property name="margin_bottom">6</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;How to name files?&lt;/b&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                   </object>
                 </child>
               </object>
@@ -1040,31 +1007,31 @@ Gautier Portet</property>
             <child>
               <object class="GtkFrame" id="frame3">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">none</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
                 <child>
                   <object class="GtkAlignment" id="alignment4">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="top_padding">4</property>
-                    <property name="left_padding">12</property>
+                    <property name="can-focus">False</property>
+                    <property name="top-padding">4</property>
+                    <property name="left-padding">12</property>
                     <child>
                       <object class="GtkBox" id="vbox14">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkBox" id="hbox19">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel" id="label32">
-                                <property name="width_request">100</property>
+                                <property name="width-request">100</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Format: </property>
                                 <property name="xalign">0</property>
                               </object>
@@ -1077,7 +1044,7 @@ Gautier Portet</property>
                             <child>
                               <object class="GtkComboBox" id="output_mime_type">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="model">liststore8</property>
                                 <signal name="changed" handler="on_output_mime_type_changed" swapped="no"/>
                                 <child>
@@ -1106,17 +1073,20 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkNotebook" id="quality_tabs">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="tab_pos">bottom</property>
-                            <property name="show_border">False</property>
+                            <property name="can-focus">True</property>
+                            <property name="tab-pos">bottom</property>
+                            <property name="show-border">False</property>
                             <child>
                               <object class="GtkTable" id="table3">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">3</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">6</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">3</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">6</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1126,7 +1096,7 @@ Gautier Portet</property>
                                 <child>
                                   <object class="GtkComboBox" id="vorbis_quality">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore7</property>
                                     <signal name="changed" handler="on_vorbis_quality_changed" swapped="no"/>
                                     <child>
@@ -1137,68 +1107,68 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options"/>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label29">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Quality:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkCheckButton" id="vorbis_oga_extension">
                                     <property name="label" translatable="yes">Use .oga extension</property>
-                                    <property name="use_action_appearance">False</property>
+                                    <property name="use-action-appearance">False</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="use_underline">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">False</property>
+                                    <property name="use-underline">True</property>
                                     <property name="xalign">0</property>
-                                    <property name="draw_indicator">True</property>
+                                    <property name="draw-indicator">True</property>
                                     <signal name="toggled" handler="on_vorbis_oga_extension_toggled" swapped="no"/>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="top-attach">2</property>
+                                    <property name="bottom-attach">3</property>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                             </child>
                             <child type="tab">
                               <object class="GtkLabel" id="label22">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Ogg</property>
                               </object>
                               <packing>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkTable" id="table4">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">4</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">4</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">4</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">4</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1208,7 +1178,7 @@ Gautier Portet</property>
                                 <child>
                                   <object class="GtkComboBox" id="mp3_mode">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore6</property>
                                     <signal name="changed" handler="on_mp3_mode_changed" swapped="no"/>
                                     <child>
@@ -1219,15 +1189,15 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options"/>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="mp3_quality">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore5</property>
                                     <signal name="changed" handler="on_mp3_quality_changed" swapped="no"/>
                                     <child>
@@ -1238,44 +1208,44 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="y_options"/>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="top-attach">1</property>
+                                    <property name="bottom-attach">2</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label30">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Bitrate mode:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label31">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Quality:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="top-attach">1</property>
+                                    <property name="bottom-attach">2</property>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="hbox1">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <child>
                                       <placeholder/>
                                     </child>
@@ -1284,10 +1254,10 @@ Gautier Portet</property>
                                     </child>
                                     <child>
                                       <object class="GtkSpinButton" id="spinbutton1">
-                                        <property name="can_focus">True</property>
-                                        <property name="invisible_char">●</property>
-                                        <property name="primary_icon_activatable">False</property>
-                                        <property name="secondary_icon_activatable">False</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="invisible-char">●</property>
+                                        <property name="primary-icon-activatable">False</property>
+                                        <property name="secondary-icon-activatable">False</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -1297,10 +1267,10 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">3</property>
-                                    <property name="bottom_attach">4</property>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="top-attach">3</property>
+                                    <property name="bottom-attach">4</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1311,22 +1281,22 @@ Gautier Portet</property>
                             <child type="tab">
                               <object class="GtkLabel" id="label23">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">MP3</property>
                               </object>
                               <packing>
                                 <property name="position">1</property>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkTable" id="table1">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">2</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">4</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">2</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">4</property>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1335,21 +1305,21 @@ Gautier Portet</property>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label1">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Compression:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="flac_compression">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore4</property>
                                     <signal name="changed" handler="on_flac_compression_changed" swapped="no"/>
                                     <child>
@@ -1360,9 +1330,9 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options">GTK_FILL</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1373,22 +1343,22 @@ Gautier Portet</property>
                             <child type="tab">
                               <object class="GtkLabel" id="label24">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">FLAC</property>
                               </object>
                               <packing>
                                 <property name="position">2</property>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkTable" id="table6">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">2</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">4</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">2</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">4</property>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1397,21 +1367,21 @@ Gautier Portet</property>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label2">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Sample width:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="wav_sample_width">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore3</property>
                                     <signal name="changed" handler="on_wav_sample_width_changed" swapped="no"/>
                                     <child>
@@ -1422,9 +1392,9 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options">GTK_FILL</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1435,22 +1405,22 @@ Gautier Portet</property>
                             <child type="tab">
                               <object class="GtkLabel" id="label25">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">WAV</property>
                               </object>
                               <packing>
                                 <property name="position">3</property>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkTable" id="table5">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">2</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">6</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">2</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">6</property>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1459,21 +1429,21 @@ Gautier Portet</property>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label38">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Quality:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="aac_quality">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore2</property>
                                     <signal name="changed" handler="on_aac_quality_changed" swapped="no"/>
                                     <child>
@@ -1484,9 +1454,9 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options">GTK_FILL</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1497,22 +1467,22 @@ Gautier Portet</property>
                             <child type="tab">
                               <object class="GtkLabel" id="label111">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">AAC</property>
                               </object>
                               <packing>
                                 <property name="position">4</property>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkTable" id="table5b">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="n_rows">2</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">6</property>
+                                <property name="can-focus">False</property>
+                                <property name="n-rows">2</property>
+                                <property name="n-columns">2</property>
+                                <property name="column-spacing">6</property>
+                                <property name="row-spacing">6</property>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1521,21 +1491,21 @@ Gautier Portet</property>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="label38b">
-                                    <property name="width_request">100</property>
+                                    <property name="width-request">100</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Quality:</property>
                                     <property name="xalign">0</property>
                                   </object>
                                   <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"/>
+                                    <property name="x-options">GTK_FILL</property>
+                                    <property name="y-options"/>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="opus_quality">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">liststore2</property>
                                     <signal name="changed" handler="on_opus_quality_changed" swapped="no"/>
                                     <child>
@@ -1546,9 +1516,9 @@ Gautier Portet</property>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
+                                    <property name="left-attach">1</property>
+                                    <property name="right-attach">2</property>
+                                    <property name="y-options">GTK_FILL</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1559,12 +1529,12 @@ Gautier Portet</property>
                             <child type="tab">
                               <object class="GtkLabel" id="label111b">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Opus</property>
                               </object>
                               <packing>
                                 <property name="position">5</property>
-                                <property name="tab_fill">False</property>
+                                <property name="tab-fill">False</property>
                               </packing>
                             </child>
                           </object>
@@ -1577,7 +1547,7 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkLabel" id="approx_bitrate">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label">~xxx kbps</property>
                             <property name="xalign">0</property>
                           </object>
@@ -1594,11 +1564,11 @@ Gautier Portet</property>
                 <child type="label">
                   <object class="GtkLabel" id="label18">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_top">24</property>
-                    <property name="margin_bottom">6</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">6</property>
                     <property name="label" translatable="yes">&lt;b&gt;Type of result?&lt;/b&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                   </object>
                 </child>
               </object>
@@ -1611,18 +1581,18 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="resample_hbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkCheckButton" id="resample_toggle">
                     <property name="label" translatable="yes">Resample</property>
-                    <property name="use_action_appearance">False</property>
+                    <property name="use-action-appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="receives-default">False</property>
+                    <property name="use-underline">True</property>
                     <property name="xalign">0.5</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="draw-indicator">True</property>
                     <signal name="toggled" handler="on_resample_toggle" swapped="no"/>
                   </object>
                   <packing>
@@ -1635,9 +1605,9 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkComboBox" id="resample_rate">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="model">liststore_resample</property>
-                    <property name="entry_text_column">0</property>
+                    <property name="entry-text-column">0</property>
                     <signal name="changed" handler="on_resample_rate_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -1649,7 +1619,7 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkLabel" id="resample_Hz_entry">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="label">Hz</property>
                   </object>
                   <packing>
@@ -1668,18 +1638,18 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="mono_hbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkCheckButton" id="force_mono">
                     <property name="label" translatable="yes">Force mono output</property>
-                    <property name="use_action_appearance">False</property>
+                    <property name="use-action-appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="receives-default">False</property>
+                    <property name="use-underline">True</property>
                     <property name="xalign">0.5</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="draw-indicator">True</property>
                     <signal name="toggled" handler="on_force_mono_toggle" swapped="no"/>
                   </object>
                   <packing>
@@ -1699,18 +1669,18 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="threads_hbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkCheckButton" id="jobs">
                     <property name="label" translatable="yes">Limit number of parallel jobs</property>
-                    <property name="use_action_appearance">False</property>
+                    <property name="use-action-appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="use-underline">True</property>
                     <property name="xalign">0.5</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="draw-indicator">True</property>
                     <signal name="toggled" handler="on_jobs_toggled" swapped="no"/>
                   </object>
                   <packing>
@@ -1723,12 +1693,12 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkSpinButton" id="jobs_spinbutton">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="invisible_char">•</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
+                    <property name="can-focus">True</property>
+                    <property name="invisible-char">•</property>
+                    <property name="primary-icon-activatable">False</property>
+                    <property name="secondary-icon-activatable">False</property>
                     <property name="adjustment">jobs_adjustment</property>
-                    <property name="climb_rate">1</property>
+                    <property name="climb-rate">1</property>
                     <signal name="value-changed" handler="on_jobs_spinbutton_value_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -1749,11 +1719,11 @@ Gautier Portet</property>
             </child>
             <child>
               <object class="GtkBox" id="lame_absent">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkHSeparator" id="hseparator1">
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1764,17 +1734,17 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkBox" id="hbox26">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkBox" id="lame_absent_">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkImage" id="image23">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">gtk-dialog-info</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">gtk-dialog-info</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1785,7 +1755,7 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkLabel" id="label35">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">MP3 Encoder is not present.</property>
                           </object>
                           <packing>
@@ -1800,11 +1770,11 @@ Gautier Portet</property>
                         <child>
                           <object class="GtkLinkButton" id="linkbutton1">
                             <property name="label" translatable="yes">Read how to install</property>
-                            <property name="use_action_appearance">False</property>
+                            <property name="use-action-appearance">False</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="has_tooltip">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="has-tooltip">True</property>
                             <property name="relief">none</property>
                             <property name="uri">http://soundconverter.org/gstreamer-mp3-encoding-howto/</property>
                           </object>
@@ -1849,21 +1819,21 @@ Gautier Portet</property>
     </action-widgets>
   </object>
   <object class="GtkPopoverMenu" id="popover1">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">8</property>
-        <property name="margin_right">8</property>
-        <property name="margin_top">8</property>
-        <property name="margin_bottom">8</property>
+        <property name="can-focus">False</property>
+        <property name="margin-left">8</property>
+        <property name="margin-right">8</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">8</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkModelButton" id="prefs_button">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
             <property name="text" translatable="yes">Preferences</property>
             <signal name="clicked" handler="on_prefs_button_clicked" swapped="no"/>
           </object>
@@ -1876,7 +1846,7 @@ Gautier Portet</property>
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1887,8 +1857,8 @@ Gautier Portet</property>
         <child>
           <object class="GtkModelButton" id="clear_button">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
             <property name="text" translatable="yes">_Clear List</property>
             <signal name="clicked" handler="on_clearlist_activate" swapped="no"/>
           </object>
@@ -1900,8 +1870,8 @@ Gautier Portet</property>
         </child>
         <child>
           <object class="GtkModelButton" id="invalid_files_button">
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
             <property name="text" translatable="yes">Invalid Files</property>
             <signal name="clicked" handler="on_showinvalid_activate" swapped="no"/>
           </object>
@@ -1914,7 +1884,7 @@ Gautier Portet</property>
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1925,8 +1895,8 @@ Gautier Portet</property>
         <child>
           <object class="GtkModelButton" id="about_button">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
             <property name="text" translatable="yes">About</property>
             <signal name="clicked" handler="on_about_activate" swapped="no"/>
           </object>
@@ -1939,8 +1909,8 @@ Gautier Portet</property>
         <child>
           <object class="GtkModelButton" id="quit_button">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
             <property name="text" translatable="yes">Quit</property>
             <signal name="clicked" handler="on_quit_button_clicked" swapped="no"/>
           </object>
@@ -1959,142 +1929,39 @@ Gautier Portet</property>
   </object>
   <object class="GtkWindow" id="window">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="window_position">center</property>
-    <property name="default_width">600</property>
-    <property name="default_height">500</property>
-    <property name="icon_name">soundconverter</property>
+    <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="default-width">600</property>
+    <property name="default-height">500</property>
+    <property name="icon-name">soundconverter</property>
     <signal name="delete-event" handler="on_window_delete_event" swapped="no"/>
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="headerbar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="title" translatable="yes">SoundConverter</property>
-        <property name="has_subtitle">False</property>
-        <property name="show_close_button">True</property>
-        <child>
-          <object class="GtkButton" id="convert_button">
-            <property name="label">gtk-convert</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="use_stock">True</property>
-            <property name="image_position">top</property>
-            <signal name="clicked" handler="on_convert_button_clicked" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="toolbutton_addfile">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Add File</property>
-            <property name="image">image1a</property>
-            <property name="use_underline">True</property>
-            <property name="always_show_image">True</property>
-            <signal name="clicked" handler="on_add_activate" swapped="no"/>
-          </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="toolbutton_addfolder">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Add Folder</property>
-            <property name="image">image2a</property>
-            <property name="use_underline">True</property>
-            <property name="always_show_image">True</property>
-            <signal name="clicked" handler="on_addfolder_activate" swapped="no"/>
-          </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="menubutton1">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="popover">popover1</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="toolbutton_prefs">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Preferences</property>
-            <property name="image">image7</property>
-            <signal name="clicked" handler="on_prefs_button_clicked" swapped="no"/>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
     <child>
       <object class="GtkBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="menubar">
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkMenuItem" id="file1">
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_File</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="file2_menu1">
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="add">
                         <property name="label" translatable="yes">_Add File</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
                         <property name="image">image2</property>
-                        <property name="use_stock">False</property>
+                        <property name="use-stock">False</property>
                         <signal name="activate" handler="on_add_activate" swapped="no"/>
                         <accelerator key="O" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
@@ -2102,11 +1969,11 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkImageMenuItem" id="add_folder">
                         <property name="label" translatable="yes">Add _Folder</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">False</property>
                         <signal name="activate" handler="on_addfolder_activate" swapped="no"/>
                         <accelerator key="F" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
@@ -2114,11 +1981,11 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkImageMenuItem" id="remove">
                         <property name="label">gtk-remove</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
                         <signal name="activate" handler="on_remove_activate" swapped="no"/>
                         <accelerator key="Delete" signal="activate"/>
                       </object>
@@ -2126,17 +1993,17 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separator1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="quit">
                         <property name="label">gtk-quit</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
                         <signal name="activate" handler="on_quit_activate" swapped="no"/>
                       </object>
                     </child>
@@ -2146,32 +2013,32 @@ Gautier Portet</property>
             </child>
             <child>
               <object class="GtkMenuItem" id="edit1">
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Edit</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="edit2_menu1">
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="select_all">
                         <property name="label">gtk-select-all</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="clearlist">
                         <property name="label" translatable="yes">_Clear List</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">False</property>
                         <signal name="activate" handler="on_clearlist_activate" swapped="no"/>
                         <accelerator key="C" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
@@ -2179,17 +2046,17 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separator2">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="preferences">
                         <property name="label">gtk-preferences</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
                         <signal name="activate" handler="on_preferences_activate" swapped="no"/>
                       </object>
                     </child>
@@ -2199,22 +2066,22 @@ Gautier Portet</property>
             </child>
             <child>
               <object class="GtkMenuItem" id="help1">
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Help</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="help2_menu1">
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="about_logo">
                         <property name="label">gtk-about</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
                         <signal name="activate" handler="on_about_activate" swapped="no"/>
                       </object>
                     </child>
@@ -2241,16 +2108,16 @@ Gautier Portet</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow2">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">never</property>
+            <property name="can-focus">True</property>
+            <property name="hscrollbar-policy">never</property>
             <child>
               <object class="GtkTreeView" id="filelist">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="border_width">1000</property>
-                <property name="headers_visible">False</property>
-                <property name="headers_clickable">False</property>
-                <property name="rules_hint">True</property>
+                <property name="can-focus">True</property>
+                <property name="border-width">1000</property>
+                <property name="headers-visible">False</property>
+                <property name="headers-clickable">False</property>
+                <property name="rules-hint">True</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection" id="treeview-selection1"/>
                 </child>
@@ -2266,28 +2133,28 @@ Gautier Portet</property>
         <child>
           <object class="GtkBox" id="vbox_status">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox" id="progress_frame">
-                <property name="can_focus">False</property>
-                <property name="border_width">6</property>
+                <property name="can-focus">False</property>
+                <property name="border-width">6</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkBox" id="hbox23">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkBox" id="hbox24">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkProgressBar" id="progressbar">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="fraction">0.20000000298000001</property>
-                            <property name="pulse_step">0.10000000149</property>
+                            <property name="can-focus">False</property>
+                            <property name="fraction">0.20000000298</property>
+                            <property name="pulse-step">0.10000000149</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -2308,11 +2175,11 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkButton" id="button_cancel">
                         <property name="label">gtk-cancel</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="use-stock">True</property>
                         <signal name="clicked" handler="on_button_cancel_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -2324,11 +2191,11 @@ Gautier Portet</property>
                     <child>
                       <object class="GtkToggleButton" id="button_pause">
                         <property name="label">gtk-media-pause</property>
-                        <property name="use_action_appearance">False</property>
+                        <property name="use-action-appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_stock">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="use-stock">True</property>
                         <signal name="clicked" handler="on_button_pause_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -2346,10 +2213,10 @@ Gautier Portet</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="progressfile">
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="label">current file</property>
                     <property name="ellipsize">middle</property>
-                    <property name="single_line_mode">True</property>
+                    <property name="single-line-mode">True</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
@@ -2368,16 +2235,16 @@ Gautier Portet</property>
             <child>
               <object class="GtkBox" id="status_frame">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="border_width">6</property>
+                <property name="can-focus">False</property>
+                <property name="border-width">6</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkLabel" id="statustext">
-                    <property name="height_request">22</property>
+                    <property name="height-request">22</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="label">status text here</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -2391,13 +2258,13 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkProgressBar" id="progressbarstatus">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="fraction">0.19</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="pack_type">end</property>
+                    <property name="pack-type">end</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -2405,17 +2272,17 @@ Gautier Portet</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">end</property>
+                <property name="pack-type">end</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox" id="error_frame">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkImage" id="image6">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="stock">gtk-dialog-error</property>
                     <property name="icon_size">6</property>
                   </object>
@@ -2428,7 +2295,7 @@ Gautier Portet</property>
                 <child>
                   <object class="GtkLabel" id="label_error">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -2455,37 +2322,137 @@ Gautier Portet</property>
         </child>
       </object>
     </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="headerbar">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title" translatable="yes">SoundConverter</property>
+        <property name="has-subtitle">False</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkButton" id="convert_button">
+            <property name="label">gtk-convert</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="use-stock">True</property>
+            <property name="image-position">top</property>
+            <signal name="clicked" handler="on_convert_button_clicked" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="menubutton1">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="popover">popover1</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="toolbutton_addfile">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Add File</property>
+            <property name="image">image1a</property>
+            <property name="use-underline">True</property>
+            <property name="always-show-image">True</property>
+            <signal name="clicked" handler="on_add_activate" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="toolbutton_prefs">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Preferences</property>
+            <property name="image">image7</property>
+            <signal name="clicked" handler="on_prefs_button_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="toolbutton_addfolder">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Add Folder</property>
+            <property name="image">image2a</property>
+            <property name="use-underline">True</property>
+            <property name="always-show-image">True</property>
+            <signal name="clicked" handler="on_addfolder_activate" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkDialog" id="showinvalid_dialog">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">Invalid Files</property>
     <property name="modal">True</property>
-    <property name="window_position">center</property>
-    <property name="icon_name">soundconverter</property>
-    <property name="type_hint">dialog</property>
-    <property name="urgency_hint">True</property>
-    <child>
-      <placeholder/>
-    </child>
+    <property name="window-position">center</property>
+    <property name="icon-name">soundconverter</property>
+    <property name="type-hint">dialog</property>
+    <property name="urgency-hint">True</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="showinvalid_dialog_vbox1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="showinvalid_dialog-action_area">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
             <child>
               <object class="GtkButton" id="showinvalid_dialog_closebutton">
                 <property name="label">gtk-close</property>
-                <property name="use_action_appearance">False</property>
+                <property name="use-action-appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">False</property>
+                <property name="use-stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2497,22 +2464,22 @@ Gautier Portet</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkBox" id="showinvalid_dialog_vbox2">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">12</property>
+            <property name="can-focus">False</property>
+            <property name="border-width">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="showinvalid_dialog_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="ypad">6</property>
-                <property name="use_markup">True</property>
+                <property name="use-markup">True</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -2524,16 +2491,16 @@ Gautier Portet</property>
             <child>
               <object class="GtkScrolledWindow" id="showinvalid_dialog_scroll">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_top">6</property>
-                <property name="margin_bottom">6</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
                 <property name="vexpand">True</property>
-                <property name="min_content_height">200</property>
+                <property name="min-content-height">200</property>
                 <child>
                   <object class="GtkTextView" id="showinvalid_dialog_list">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="border_width">12</property>
+                    <property name="can-focus">True</property>
+                    <property name="border-width">12</property>
                     <property name="editable">False</property>
                   </object>
                 </child>
