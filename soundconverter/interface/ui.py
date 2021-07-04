@@ -35,7 +35,7 @@ from soundconverter.util.fileoperations import filename_to_uri, \
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.formats import get_quality, \
-    get_bitrate_from_settings, get_file_extension
+    get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
     subfolder_patterns, basename_patterns, locale_patterns_dict, \
     filepattern
@@ -712,8 +712,8 @@ class PreferencesDialog(GladeWindow):
         try:
             generator = TargetNameGenerator()
         except ValueError:
-            # TODO test
-            # since this is just for displaying the example we don't care about any errors
+            # since this is just for displaying the example we don't
+            # care about any errors
             return
 
         generator.replace_messy_chars = False

@@ -1004,6 +1004,20 @@ class GUI(unittest.TestCase):
             size_0 = os.path.getsize(path_0)
             self.assertLess(size_0, size_5)
 
+    def test_ignores_example_name_errors(self):
+        # https://bugs.launchpad.net/soundconverter/+bug/1934517
+        def fail(*args):
+            # make the constructor raise an error
+            raise ValueError()
+
+        init = 'soundconverter.util.namegenerator.TargetNameGenerator.__init__'
+        with patch(init, fail):
+            # won't crash because an error in update_example is not critical
+            # enough
+            launch()
+            window = win[0]
+            window.prefs.update_example()
+
 
 if __name__ == '__main__':
     unittest.main()
