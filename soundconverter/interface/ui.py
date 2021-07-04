@@ -543,23 +543,26 @@ class PreferencesDialog(GladeWindow):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
 
+        self.output_mime_type.set_id_column(0)
+
     def populate_output_formats(self):
         """Add the available encoders to the liststore for formats."""
-        # TODO test
         for mime, encoder_name, display_name in encoders:
             # valid default output?
             encoder_present = any(
-                e in available_elements for e in encoder_name.split(',')
+                e in available_elements
+                for e in encoder_name.split(',')
             )
-            if encoder_present:
-                # add to supported outputs
-                self.present_mime_types.append(mime)
-                self.liststore8.append((display_name,))
-            else:
+            if not encoder_present:
                 logger.error(
                     '{} {} is not supported, a gstreamer plugins package '
                     'is possibly missing.'.format(mime, encoder_name)
                 )
+                continue
+
+            # add to supported outputs
+            self.present_mime_types.append(mime)
+            self.liststore8.append((display_name,))
 
     def set_widget_initial_values(self):
         self.quality_tabs.set_show_tabs(False)
@@ -847,7 +850,6 @@ class PreferencesDialog(GladeWindow):
     def on_output_mime_type_changed(self, combo):
         """Called when the format is changed on the UI."""
         selected_display_name = self.liststore8[combo.get_active()][0]
-        # TODO test that this works if a format is disabled
         for mime, _, display_name in encoders:
             if display_name == selected_display_name:
                 self.change_mime_type(mime)
