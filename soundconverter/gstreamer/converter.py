@@ -21,7 +21,6 @@
 
 
 import os
-import traceback
 from gettext import gettext as _
 
 from gi.repository import Gst, GLib, Gio

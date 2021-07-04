@@ -883,7 +883,7 @@ class GUI(unittest.TestCase):
         # in order to test how the higher indexes behave. Selecting any
         # format row on the ui should still properly match to the right
         # encoder.
-        mime_to_delete, encoder_to_delete = encoders[1]
+        mime_to_delete, encoder_to_delete, _ = encoders[1]
         selected_index = 2
         mime_to_select = encoders[selected_index][0]
         # index 1 is currently (and will most likely stay) lamemp3enc.
