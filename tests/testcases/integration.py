@@ -883,10 +883,9 @@ class GUI(unittest.TestCase):
         # in order to test how the higher indexes behave. Selecting any
         # format row on the ui should still properly match to the right
         # encoder.
-        mime_to_delete, encoder_to_delete = encoders[1]
+        mime_to_delete, encoder_to_delete, display_name_to_delete = encoders[1]
         selected_index = 2
         mime_to_select = encoders[selected_index][0]
-        # index 1 is currently (and will most likely stay) lamemp3enc.
         # Test doesn't support multiple options like in m4a (faac,avenc_aac)
         # currently. If needed rewrite this.
         self.assertNotIn(',', encoder_to_delete)
@@ -897,14 +896,15 @@ class GUI(unittest.TestCase):
         launch()
         window = win[0]
 
-        extension_to_delete = get_file_extension(mime_to_delete).lower()
+        self.assertNotIn(mime_to_delete, window.prefs.present_mime_types)
+
         for row in window.prefs.liststore8:
-            if extension_to_delete in row[0].lower():
+            if display_name_to_delete == row[0]:
                 raise AssertionError(
-                    'Expected {} to be missing'.format(extension_to_delete)
+                    'Expected "{}" to be missing'.format(display_name_to_delete)
                 )
 
-        window.prefs.output_mime_type.set_active(selected_index)
+        window.prefs.output_mime_type.set_active_id(encoders[selected_index][2])
 
         # indexes should all map to each other properly without having to
         # modify `encoders`.
@@ -1003,6 +1003,20 @@ class GUI(unittest.TestCase):
             size_5 = os.path.getsize(path_5)
             size_0 = os.path.getsize(path_0)
             self.assertLess(size_0, size_5)
+
+    def test_ignores_example_name_errors(self):
+        # https://bugs.launchpad.net/soundconverter/+bug/1934517
+        def fail(*args):
+            # make the constructor raise an error
+            raise ValueError()
+
+        init = 'soundconverter.util.namegenerator.TargetNameGenerator.__init__'
+        with patch(init, fail):
+            # won't crash because an error in update_example is not critical
+            # enough
+            launch()
+            window = win[0]
+            window.prefs.update_example()
 
 
 if __name__ == '__main__':

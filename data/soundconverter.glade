@@ -566,26 +566,6 @@ Gautier Portet</property>
       <!-- column-name item -->
       <column type="gchararray"/>
     </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Ogg Vorbis (.ogg)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">MP3 (.mp3)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">FLAC Lossless (.flac)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">MS Wave (.wav)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">AAC (.m4a)</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Opus (.opus)</col>
-      </row>
-    </data>
   </object>
   <object class="GtkListStore" id="liststore9">
     <columns>
