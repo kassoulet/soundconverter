@@ -35,7 +35,7 @@ from soundconverter.util.fileoperations import filename_to_uri, \
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.formats import get_quality, \
-    get_bitrate_from_settings, get_file_extension
+    get_bitrate_from_settings
 from soundconverter.util.namegenerator import TargetNameGenerator, \
     subfolder_patterns, basename_patterns, locale_patterns_dict, \
     filepattern
@@ -64,13 +64,13 @@ COLUMNS = ['filename']
 
 
 encoders = [
-    ('audio/x-vorbis', 'vorbisenc'),
-    ('audio/mpeg', 'lamemp3enc'),
-    ('audio/x-flac', 'flacenc'),
-    ('audio/x-wav', 'wavenc'),
-    ('audio/x-m4a', 'fdkaacenc,faac,avenc_aac'),
-    ('audio/ogg; codecs=opus', 'opusenc'),
-]  # must be in same order as the output_mime_type GtkComboBox
+    ('audio/x-vorbis', 'vorbisenc', 'Ogg Vorbis (.ogg)'),
+    ('audio/mpeg', 'lamemp3enc', 'MP3 (.mp3)'),
+    ('audio/x-flac', 'flacenc', 'FLAC Lossless (.flac)'),
+    ('audio/x-wav', 'wavenc', 'MS Wave (.wav)'),
+    ('audio/x-m4a', 'fdkaacenc,faac,avenc_aac', 'AAC (.m4a)'),
+    ('audio/ogg; codecs=opus', 'opusenc', 'Opus (.opus)'),
+]
 
 
 def idle(func):
@@ -520,12 +520,8 @@ class PreferencesDialog(GladeWindow):
         self.settings = get_gio_settings()
         GladeWindow.__init__(self, builder)
 
-        # encoders should be in the same order as in the glade file
-        for i, encoder in enumerate(encoders):
-            extension = get_file_extension(encoder[0])
-            ui_row_text = self.liststore8[i][0]
-            # the extension should be part of the row with the correct index
-            assert extension.lower() in ui_row_text.lower()
+        self.present_mime_types = []
+        self.populate_output_formats()
 
         self.dialog = builder.get_object('prefsdialog')
         self.dialog.set_transient_for(parent)
@@ -539,9 +535,6 @@ class PreferencesDialog(GladeWindow):
             self.sensitive_widgets[name] = builder.get_object(name)
             assert self.sensitive_widgets[name] is not None
 
-        self.encoders = None
-        self.present_mime_types = []
-
         self.set_widget_initial_values()
         self.set_sensitive()
 
@@ -549,6 +542,27 @@ class PreferencesDialog(GladeWindow):
         for k in sorted(locale_patterns_dict.values()):
             tip.append(k)
         self.custom_filename.set_tooltip_text('\n'.join(tip))
+
+        self.output_mime_type.set_id_column(0)
+
+    def populate_output_formats(self):
+        """Add the available encoders to the liststore for formats."""
+        for mime, encoder_name, display_name in encoders:
+            # valid default output?
+            encoder_present = any(
+                e in available_elements
+                for e in encoder_name.split(',')
+            )
+            if not encoder_present:
+                logger.error(
+                    '{} {} is not supported, a gstreamer plugins package '
+                    'is possibly missing.'.format(mime, encoder_name)
+                )
+                continue
+
+            # add to supported outputs
+            self.present_mime_types.append(mime)
+            self.liststore8.append((display_name,))
 
     def set_widget_initial_values(self):
         self.quality_tabs.set_show_tabs(False)
@@ -601,40 +615,9 @@ class PreferencesDialog(GladeWindow):
             self.delete_original.set_active(True)
 
         current_mime_type = self.settings.get_string('output-mime-type')
-
-        # deactivate output if encoder plugin is not present
-        widget = self.output_mime_type
-        model = widget.get_model()
-        assert len(model) == len(encoders), 'model:{} widgets:{}'.format(
-            len(model), len(encoders)
-        )
-
-        i = 0
-        to_remove = []
-        model = self.output_mime_type.get_model()
-        for mime, encoder_name in encoders:
-            # valid default output?
-            encoder_present = any(
-                e in available_elements for e in encoder_name.split(',')
-            )
-            if encoder_present:
-                # add to supported outputs
-                self.present_mime_types.append(mime)
-                i += 1
-            else:
-                logger.error(
-                    '{} {} is not supported, a gstreamer plugins package '
-                    'is possibly missing.'.format(mime, encoder_name)
-                )
-                to_remove.append(i)
-                
-        for i in to_remove:
-            del model[i]
-            del encoders[i]
-
         for i, mime in enumerate(self.present_mime_types):
             if current_mime_type == mime:
-                widget.set_active(i)
+                self.output_mime_type.set_active(i)
         self.change_mime_type(current_mime_type)
 
         # display information about mp3 encoding
@@ -669,9 +652,6 @@ class PreferencesDialog(GladeWindow):
         quality = self.settings.get_int('wav-sample-width')
         quality_setting = get_quality('audio/x-wav', quality, reverse=True)
         widget.set_active(quality_setting)
-
-        self.mp3_quality = self.mp3_quality
-        self.mp3_mode = self.mp3_mode
 
         mode = self.settings.get_string('mp3-mode')
         self.change_mp3_mode(mode)
@@ -732,7 +712,13 @@ class PreferencesDialog(GladeWindow):
         })
         sound_file.tags.update(locale_patterns_dict)
 
-        generator = TargetNameGenerator()
+        try:
+            generator = TargetNameGenerator()
+        except ValueError:
+            # since this is just for displaying the example we don't
+            # care about any errors
+            return
+
         generator.replace_messy_chars = False
 
         example_path = GLib.markup_escape_text(
@@ -863,10 +849,11 @@ class PreferencesDialog(GladeWindow):
 
     def on_output_mime_type_changed(self, combo):
         """Called when the format is changed on the UI."""
-        format_index = combo.get_active()
-        mime = encoders[format_index][0]
-        if mime in self.present_mime_types:
-            self.change_mime_type(mime)
+        selected_display_name = self.liststore8[combo.get_active()][0]
+        for mime, _, display_name in encoders:
+            if display_name == selected_display_name:
+                self.change_mime_type(mime)
+                return
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
