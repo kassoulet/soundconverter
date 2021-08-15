@@ -201,7 +201,7 @@ class TaskQueue:
         # is the sum of all task durations and not the queues duration.
         speed = total_duration / total_processed_weight
 
-        # how many weight left per process
+        # how much weight left per process
         remaining_weight_per_p = total_remaining_weight / len(self.running)
         remaining_duration = speed * remaining_weight_per_p
 
