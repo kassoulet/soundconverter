@@ -31,7 +31,7 @@ from soundconverter.gstreamer.discoverer import Discoverer, is_denylisted, \
 from soundconverter.util.taskqueue import TaskQueue
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.interface.ui import gtk_iteration
+from soundconverter.interface.mainloop import gtk_iteration
 
 
 class DiscovererQueueTest(unittest.TestCase):

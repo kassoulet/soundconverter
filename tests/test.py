@@ -16,7 +16,7 @@ from gi.repository import Gst, Gio, Gtk
 args = Gst.init(sys.argv)
 
 from soundconverter.util.settings import set_gio_settings
-from soundconverter.interface.ui import gtk_iteration
+from soundconverter.interface.mainloop import gtk_iteration
 
 # don't overwrite the users settings during tests
 backend = Gio.memory_settings_backend_new()
