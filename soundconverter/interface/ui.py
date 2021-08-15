@@ -53,7 +53,6 @@ class SoundConverterWindow(GladeWindow):
     ]
 
     def __init__(self, builder):
-        print('lel2')
         GladeWindow.__init__(self, builder)
 
         self.widget = builder.get_object('window')
