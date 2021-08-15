@@ -21,7 +21,6 @@
 
 import os
 import time
-import sys
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -979,6 +978,7 @@ class SoundConverterWindow(GladeWindow):
     ]
 
     def __init__(self, builder):
+        print('lel2')
         GladeWindow.__init__(self, builder)
 
         self.widget = builder.get_object('window')
@@ -1274,6 +1274,10 @@ class SoundConverterWindow(GladeWindow):
             self.progressbar.set_fraction(total_progress)
 
             for task, progress in task_progress:
+                if progress == 0:
+                    # otherwise the ui becomes really laggy with too many files
+                    continue
+
                 self.set_file_progress(task.sound_file, progress)
 
         # return True to keep the GLib timeout running
