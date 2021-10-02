@@ -108,9 +108,10 @@ class DiscovererThread(Thread):
 
     def _analyse_file(self, sound_file):
         """Figure out readable, tags and duration properties."""
+        sound_file.readable = False
+
         denylisted_pattern = is_denylisted(sound_file)
         if denylisted_pattern:
-            sound_file.readable = False
             logger.info('filename denylisted ({}): {}'.format(
                 denylisted_pattern, sound_file.filename_for_display
             ))
@@ -143,12 +144,11 @@ class DiscovererThread(Thread):
             # since threads share memory, this doesn't have to be sent
             # over a bus or queue, but rather can be written into the
             # sound_file
-            sound_file.readable = True
             sound_file.duration = info.get_duration() / Gst.SECOND
+            sound_file.readable = True
         except Exception as error:
             if not isinstance(error, GLib.Error):
                 logger.error(str(error))
-            sound_file.readable = False
 
     def _add_tag(self, taglist, tag, sound_file):
         """Convert the taglist to a dict one by one."""
