@@ -124,6 +124,15 @@ class DiscovererThread(Thread):
             sound_file.info = info
 
             taglist = info.get_tags()
+
+            if not taglist:
+                # fallback
+                # https://bugs.launchpad.net/soundconverter/+bug/1945838
+                taglist = info.get_audio_streams()[0].get_tags()
+
+            if not taglist:
+                return
+
             taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
