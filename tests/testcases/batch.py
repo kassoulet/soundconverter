@@ -120,7 +120,10 @@ class BatchUtils(unittest.TestCase):
             'file://' + urllib.parse.quote(os.path.realpath('test data/audio/strângë chàrs фズ.wav')),
             'file://' + os.path.realpath('test%20data/empty/a'),
             'file://' + os.path.realpath('test%20data/empty/b/c'),
-            'file://' + os.path.realpath('test%20data/a.iso')
+            'file://' + os.path.realpath('test%20data/a.iso'),
+            'file://' + os.path.realpath('test%20data/no%20tags/no-tags.mp3'),
+            'file://' + os.path.realpath('test%20data/no%20tags/no-tags.ogg'),
+            'file://' + os.path.realpath('test%20data/no%20tags/no-tags.flac'),
         ]
         for expected_file in expected_files:
             # make sure expected_files are correctly written
@@ -136,10 +139,13 @@ class BatchUtils(unittest.TestCase):
         expected_dirs = [
             'test data/audio/b/',
             'test data/audio/',
-            'test data/audio/',
+            'test data/audio/',  # duplicate, because there are two files in there
             'test data/empty/',
             'test data/empty/b/',
-            'test data/'
+            'test data/',
+            'test data/no tags/',
+            'test data/no tags/',
+            'test data/no tags/'
         ]
         expected_dirs.sort()
         subdirectories.sort()
@@ -155,7 +161,10 @@ class BatchUtils(unittest.TestCase):
             'file://' + urllib.parse.quote(os.path.realpath('tests/test data/audio/strângë chàrs фズ.wav')),
             'file://' + os.path.realpath('tests/test%20data/empty/a'),
             'file://' + os.path.realpath('tests/test%20data/empty/b/c'),
-            'file://' + os.path.realpath('tests/test%20data/a.iso')
+            'file://' + os.path.realpath('tests/test%20data/a.iso'),
+            'file://' + os.path.realpath('tests/test%20data/no%20tags/no-tags.mp3'),
+            'file://' + os.path.realpath('tests/test%20data/no%20tags/no-tags.ogg'),
+            'file://' + os.path.realpath('tests/test%20data/no%20tags/no-tags.flac'),
         ]
         expected_files.sort()
         parsed_files.sort()
@@ -164,10 +173,13 @@ class BatchUtils(unittest.TestCase):
         expected_dirs = [
             'test data/audio/b/',
             'test data/audio/',
-            'test data/audio/',
+            'test data/audio/',  # duplicate, because there are two files in there
             'test data/empty/',
             'test data/empty/b/',
-            'test data/'
+            'test data/',
+            'test data/no tags/',
+            'test data/no tags/',
+            'test data/no tags/'
         ]
         expected_dirs.sort()
         subdirectories.sort()

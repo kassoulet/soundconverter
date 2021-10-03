@@ -131,10 +131,8 @@ class DiscovererThread(Thread):
                 # https://bugs.launchpad.net/soundconverter/+bug/1945838
                 taglist = info.get_audio_streams()[0].get_tags()
 
-            if not taglist:
-                return
-
-            taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
+            if taglist:
+                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
             logger.debug('found tag: {}'.format(filename))

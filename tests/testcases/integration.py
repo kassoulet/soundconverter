@@ -432,6 +432,20 @@ class BatchIntegration(unittest.TestCase):
         gio_settings = get_gio_settings()
         self.assertFalse(gio_settings.get_boolean('delete-original'))
 
+    def test_conversion_no_tags(self):
+        launch([
+            '-b', 'tests/test data/no tags',
+            '-r',
+            '-o', 'tests/tmp',
+            '-f', 'm4a',
+            '-d'
+        ])
+
+        self.assertTrue(os.path.isdir('tests/tmp/'))
+        self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags.m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags (1).m4a'))
+        self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags (2).m4a'))
+
 
 class GUI(unittest.TestCase):
     def setUp(self):

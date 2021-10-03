@@ -42,4 +42,5 @@ if __name__ == "__main__":
         testsuite = unittest.defaultTestLoader.discover(
             'testcases', pattern='*.py'
         )
-    testrunner = unittest.TextTestRunner(verbosity=1).run(testsuite)
+
+    testrunner = unittest.TextTestRunner(verbosity=2).run(testsuite)
