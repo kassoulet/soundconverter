@@ -124,14 +124,14 @@ class DiscovererThread(Thread):
             # whatever anybody might ever need from it, here it is:
             sound_file.info = info
 
+            # Read root tags
             taglist = info.get_tags()
+            if taglist: 
+                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
-            if not taglist:
-                # fallback
-                # https://bugs.launchpad.net/soundconverter/+bug/1945838
-                taglist = info.get_audio_streams()[0].get_tags()
-
-            if taglist:
+            for audio_stream in info.get_audio_streams():
+                # Read tags for each audio stream
+                taglist = audio_stream.get_tags()
                 taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
