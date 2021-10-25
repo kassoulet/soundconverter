@@ -260,7 +260,7 @@ class Converter(Task):
             return 0, duration
 
         position = self._query_position()
-        progress = position / duration
+        progress = position / duration if duration else 0
         progress = min(max(progress, 0.0), 1.0)
         return progress, duration
 
