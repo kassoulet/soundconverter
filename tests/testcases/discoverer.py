@@ -85,11 +85,11 @@ class DiscovererTest(unittest.TestCase):
     def test_read_tags(self):
         c_mp3 = 'file://' + os.path.realpath('tests/test%20data/audio/b/c.mp3')
         discoverer = Discoverer([SoundFile(c_mp3)])
-        discoverer.set_callback(lambda _: None)
+        discoverer.connect('done', lambda _: None)
         discoverer.run()
 
         done = Mock()
-        discoverer.set_callback(done)
+        discoverer.connect('done', done)
         discoverer.run()
 
         # needs to iterate the main loop for messages on the bus
@@ -117,10 +117,10 @@ class DiscovererTest(unittest.TestCase):
         ]
 
         discoverer = Discoverer(sound_files)
-        discoverer.set_callback(lambda _: None)
+        discoverer.connect('done', lambda _: None)
 
         done = Mock()
-        discoverer.set_callback(done)
+        discoverer.connect('done', done)
         discoverer.run()
 
         # needs to iterate the main loop for messages on the bus
@@ -155,11 +155,11 @@ class DiscovererTest(unittest.TestCase):
             SoundFile(a_iso),
             SoundFile(image_jpg)
         ])
-        discoverer.set_callback(lambda _: None)
+        discoverer.connect('done', lambda _: None)
         discoverer.run()
 
         done = Mock()
-        discoverer.set_callback(done)
+        discoverer.connect('done', done)
         discoverer.run()
 
         loop = GLib.MainLoop()
