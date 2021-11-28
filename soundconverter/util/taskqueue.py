@@ -22,11 +22,13 @@
 import time
 from queue import Queue
 
+from gi.repository import GObject
+
 from soundconverter.util.settings import get_num_jobs
 from soundconverter.util.logger import logger
 
 
-class TaskQueue:
+class TaskQueue(GObject.Object):
     """Executes multiple tasks in parallel."""
     def __init__(self):
         self._on_queue_finished = None
@@ -39,6 +41,8 @@ class TaskQueue:
         self.finished = False
         self.paused = False
         self._timer = Timer()
+
+        super().__init__()
 
     def add(self, task):
         """Add a task to the queue that will be executed later.
@@ -121,19 +125,21 @@ class TaskQueue:
 
         self.done.append(task)
         task.timer.stop()
+
         if task not in self.running:
             logger.warning('tried to remove task that was already removed')
         else:
             self.running.remove(task)
-        if self.pending.qsize() > 0:
-            self.start_next()
-        elif len(self.running) == 0:
+
+        if self.pending.qsize() == 0 and len(self.running) == 0:
             self.finished = True
             self._timer.stop()
             if self._on_queue_finished is not None:
                 self._on_queue_finished(self)
 
-    def start_next(self):
+        self.emit('task_done')
+
+    def start_next(self, _=None):
         """Start the next task if available."""
         if self.pending.qsize() > 0:
             task = self.pending.get()
@@ -142,14 +148,23 @@ class TaskQueue:
             task.run()
 
     def run(self):
-        """Run as many tasks as the configured number of jobs.
-        
-        Finished tasks will trigger running the next task over the task_done
-        callback.
-        """
+        """Run all tasks."""
         self.finished = False
         self._timer.start()
         num_jobs = get_num_jobs()
+
+        # - Just looping over pending causes too many tasks to be running in
+        # parallel
+        # - There is no semaphore mechanism for glib
+        # - I don't think GLib.Mutex works with main-loop single-thread
+        # parallelization and the whole thread will stop here
+        # - Telling tasks to start the next task via a python callback
+        # causes the runtime to crash due to recursion with too many tasks
+        # - Events/Signals worked
+        self.connect('task_done', self.start_next)
+
+        # Run as many tasks as the configured number of jobs. Finished tasks will
+        # trigger running the next task via the "task_done" event
         while self.pending.qsize() > 0 and len(self.running) < num_jobs:
             self.start_next()
 
@@ -216,6 +231,15 @@ class TaskQueue:
             remaining = remaining_duration
 
         return remaining
+
+
+GObject.signal_new(
+    'task_done',
+    TaskQueue,
+    GObject.SignalFlags.RUN_FIRST,
+    None,
+    []
+)
 
 
 class Timer:
