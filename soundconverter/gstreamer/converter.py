@@ -236,9 +236,11 @@ class Converter(Task):
         # State
         self.command = None
         self.pipeline = None
-        self.done = False
+        self._done = False
         self.error = None
         self.output_uri = None
+
+        super().__init__()
 
     def _query_position(self):
         """Ask for the stream position of the current pipeline."""
@@ -253,7 +255,7 @@ class Converter(Task):
         """Fraction of how much of the task is completed."""
         duration = self.sound_file.duration
 
-        if self.done:
+        if self._done:
             return 1, duration
 
         if self.pipeline is None or duration is None:
@@ -267,7 +269,7 @@ class Converter(Task):
     def cancel(self):
         """Cancel execution of the task."""
         self._stop_pipeline()
-        self.callback()
+        self.done()
 
     def pause(self):
         """Pause execution of the task."""
@@ -352,14 +354,14 @@ class Converter(Task):
                 beautify_uri(input_uri),
                 self.error
             ))
-            self.callback()
+            self.done()
             return
 
         if not vfs_exists(self.temporary_filename):
             self.error = 'Expected {} to exist after conversion.'.format(
                 self.temporary_filename
             )
-            self.callback()
+            self.done()
             return
 
         # rename temporary file
@@ -398,7 +400,7 @@ class Converter(Task):
                 beautify_uri(newname),
                 str(error)
             ))
-            self.callback()
+            self.done()
             return
 
         assert vfs_exists(newname)
@@ -448,8 +450,8 @@ class Converter(Task):
                 ))
 
         self.output_uri = newname
-        self.done = True
-        self.callback()
+        self._done = True
+        self.done()
         self._cleanup()
 
     def run(self):
@@ -530,7 +532,7 @@ class Converter(Task):
             beautify_uri(self.sound_file.uri)
         )
         self._stop_pipeline()
-        self.callback()
+        self.done()
 
     def _on_message(self, _, message):
         """Handle message events sent by gstreamer.
