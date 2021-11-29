@@ -147,9 +147,14 @@ class DiscovererTest(unittest.TestCase):
         self.assertLess(abs(sound_files[2].duration - 1.00), 0.01)
 
     def test_not_audio(self):
-        c_mp3 = 'file://' + os.path.realpath('tests/test%20data/empty/a')
+        empty = 'file://' + os.path.realpath('tests/test%20data/empty/a')
         a_iso = 'file://' + os.path.realpath('tests/test%20data/a.iso')
-        discoverer = Discoverer([SoundFile(c_mp3), SoundFile(a_iso)])
+        image_jpg = 'file://' + os.path.realpath('tests/test%20data/image.jpg')
+        discoverer = Discoverer([
+            SoundFile(empty),
+            SoundFile(a_iso),
+            SoundFile(image_jpg)
+        ])
         discoverer.set_callback(lambda _: None)
         discoverer.run()
 
@@ -164,16 +169,13 @@ class DiscovererTest(unittest.TestCase):
 
         done.assert_called_with(discoverer)
 
-        sound_file = discoverer.sound_files[0]
-        self.assertIsNone(sound_file.duration)
-        self.assertFalse(sound_file.readable)
-        self.assertEqual(len(sound_file.tags), 0)
+        self.assertEqual(len(discoverer.sound_files), 3)
+        for sound_file in discoverer.sound_files:
+            self.assertFalse(sound_file.readable)
+            self.assertIsNone(sound_file.duration)
+            self.assertEqual(len(sound_file.tags), 0)
 
-        sound_file = discoverer.sound_files[1]
-        self.assertEqual(is_denylisted(sound_file), '*.iso')
-        self.assertIsNone(sound_file.duration)
-        self.assertFalse(sound_file.readable)
-        self.assertEqual(len(sound_file.tags), 0)
+        self.assertEqual(is_denylisted(discoverer.sound_files[1]), '*.iso')
 
 
 if __name__ == "__main__":

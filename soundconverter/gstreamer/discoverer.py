@@ -139,10 +139,16 @@ class DiscovererThread(Thread):
             for tag, value in sound_file.tags.items():
                 logger.debug('    {}: {}'.format(tag, value))
 
+            duration = info.get_duration() / Gst.SECOND
+            if duration == 0:
+                # might be an image
+                return
+
             # since threads share memory, this doesn't have to be sent
             # over a bus or queue, but rather can be written into the
             # sound_file
-            sound_file.duration = info.get_duration() / Gst.SECOND
+            sound_file.duration = duration
+
             sound_file.readable = True
         except Exception as error:
             if not isinstance(error, GLib.Error):
