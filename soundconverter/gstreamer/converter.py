@@ -221,7 +221,6 @@ class Converter(Task):
         self.newname = None
         self.existing_behaviour = Converter.INCREMENT
         self.name_generator = name_generator
-        self.callback = lambda: None
 
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
@@ -450,9 +449,12 @@ class Converter(Task):
                 ))
 
         self.output_uri = newname
-        self._done = True
         self.done()
+
+    def done(self):
+        self._done = True
         self._cleanup()
+        super().done()
 
     def run(self):
         """Call this in order to run the whole Converter task."""
@@ -471,7 +473,7 @@ class Converter(Task):
             logger.info('output file already exists, skipping \'{}\''.format(
                 beautify_uri(self.newname)
             ))
-            self._conversion_done()
+            self.done()
             return
 
         # construct a pipeline for conversion
