@@ -342,6 +342,8 @@ class SoundConverterWindow(GladeWindow):
             self.filelist.hide_row_progress()
             return False
 
+        self.filelist.show_row_progress()
+
         if not paused and running:
             # if paused, don't refresh the progress
             total_progress, task_progress = self.converter_queue.get_progress()

@@ -61,6 +61,7 @@ class FileList:
         self.filelist = set()
 
         self.model = Gtk.ListStore(*MODEL)
+        self.progress_cache = {}
 
         self.widget = builder.get_object('filelist')
         self.widget.props.fixed_height_mode = True
@@ -133,6 +134,8 @@ class FileList:
         are inside a directory and only some of them should be
         converted. Default:None which accepts all types.
         """
+        self.progress_cache = {}
+
         if len(uris) == 0:
             return
 
@@ -369,14 +372,22 @@ class FileList:
 
     def set_row_progress(self, number, progress):
         """Update the progress bar of a single row/file."""
-        self.progress_column.set_visible(True)
-        if self.model[number][2] == progress * 100:
+        # when convertin a lot of files updating all progress bars really becomes
+        # quite an expensive task
+        cached = self.progress_cache.get(number, 0)
+        # - progress_cache is faster than self.model for this optimization
+        # - skip small changes
+        # - make sure it will be set to 1 even if the change is small
+        if (progress == 1 and cached != 1) or abs(cached - progress) > 0.02:
+            self.model[number][2] = progress * 100.0
+            self.progress_cache[number] = progress
             return
-
-        self.model[number][2] = progress * 100.0
 
     def hide_row_progress(self):
         self.progress_column.set_visible(False)
+
+    def show_row_progress(self):
+        self.progress_column.set_visible(True)
 
     def append_file(self, sound_file):
         """Add a valid SoundFile object to the list of files in the GUI.
