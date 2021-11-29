@@ -120,6 +120,7 @@ class BatchUtils(unittest.TestCase):
             'file://' + urllib.parse.quote(os.path.realpath('test data/audio/strângë chàrs фズ.wav')),
             'file://' + os.path.realpath('test%20data/empty/a'),
             'file://' + os.path.realpath('test%20data/empty/b/c'),
+            'file://' + os.path.realpath('test%20data/image.jpg'),
             'file://' + os.path.realpath('test%20data/a.iso'),
             'file://' + os.path.realpath('test%20data/no%20tags/no-tags.mp3'),
             'file://' + os.path.realpath('test%20data/no%20tags/no-tags.ogg'),
@@ -143,6 +144,7 @@ class BatchUtils(unittest.TestCase):
             'test data/empty/',
             'test data/empty/b/',
             'test data/',
+            'test data/',
             'test data/no tags/',
             'test data/no tags/',
             'test data/no tags/'
@@ -161,6 +163,7 @@ class BatchUtils(unittest.TestCase):
             'file://' + urllib.parse.quote(os.path.realpath('tests/test data/audio/strângë chàrs фズ.wav')),
             'file://' + os.path.realpath('tests/test%20data/empty/a'),
             'file://' + os.path.realpath('tests/test%20data/empty/b/c'),
+            'file://' + os.path.realpath('tests/test%20data/image.jpg'),
             'file://' + os.path.realpath('tests/test%20data/a.iso'),
             'file://' + os.path.realpath('tests/test%20data/no%20tags/no-tags.mp3'),
             'file://' + os.path.realpath('tests/test%20data/no%20tags/no-tags.ogg'),
@@ -176,6 +179,7 @@ class BatchUtils(unittest.TestCase):
             'test data/audio/',  # duplicate, because there are two files in there
             'test data/empty/',
             'test data/empty/b/',
+            'test data/',
             'test data/',
             'test data/no tags/',
             'test data/no tags/',
