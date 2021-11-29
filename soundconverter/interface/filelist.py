@@ -214,7 +214,7 @@ class FileList:
 
         add_discoverers(self.discoverers, sound_files)
 
-        self.discoverers.set_on_queue_finished(self.discoverer_queue_ended)
+        self.discoverers.connect('done', self.discoverer_queue_ended)
         self.discoverers.run()
 
         self.window.set_status('{}'.format(_('Adding Files…')))

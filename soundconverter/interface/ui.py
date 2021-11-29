@@ -257,7 +257,7 @@ class SoundConverterWindow(GladeWindow):
         name_generator = TargetNameGenerator()
         files = self.filelist.get_files()
         self.converter_queue = TaskQueue()
-        self.converter_queue.set_on_queue_finished(self.on_queue_finished)
+        self.converter_queue.connect('done', self.on_queue_finished)
         for sound_file in files:
             gtk_iteration()
             self.converter_queue.add(Converter(
@@ -408,12 +408,12 @@ class SoundConverterWindow(GladeWindow):
     def selection_changed(self, *args):
         self.set_sensitive()
 
-    def on_queue_finished(self, queue):
+    def on_queue_finished(self, __=None):
         """Should be called when all conversions are completed."""
-        total_time = queue.get_duration()
+        total_time = self.converter_queue.get_duration()
         msg = _('Conversion done in %s') % format_time(total_time)
         error_count = len([
-            task for task in queue.done
+            task for task in self.converter_queue.done
             if task.error
         ])
         if error_count > 0:
