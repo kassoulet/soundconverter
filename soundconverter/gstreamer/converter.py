@@ -221,7 +221,6 @@ class Converter(Task):
         self.newname = None
         self.existing_behaviour = Converter.INCREMENT
         self.name_generator = name_generator
-        self.callback = lambda: None
 
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
@@ -236,9 +235,11 @@ class Converter(Task):
         # State
         self.command = None
         self.pipeline = None
-        self.done = False
+        self._done = False
         self.error = None
         self.output_uri = None
+
+        super().__init__()
 
     def _query_position(self):
         """Ask for the stream position of the current pipeline."""
@@ -253,7 +254,7 @@ class Converter(Task):
         """Fraction of how much of the task is completed."""
         duration = self.sound_file.duration
 
-        if self.done:
+        if self._done:
             return 1, duration
 
         if self.pipeline is None or duration is None:
@@ -267,7 +268,7 @@ class Converter(Task):
     def cancel(self):
         """Cancel execution of the task."""
         self._stop_pipeline()
-        self.callback()
+        self.done()
 
     def pause(self):
         """Pause execution of the task."""
@@ -352,14 +353,14 @@ class Converter(Task):
                 beautify_uri(input_uri),
                 self.error
             ))
-            self.callback()
+            self.done()
             return
 
         if not vfs_exists(self.temporary_filename):
             self.error = 'Expected {} to exist after conversion.'.format(
                 self.temporary_filename
             )
-            self.callback()
+            self.done()
             return
 
         # rename temporary file
@@ -398,7 +399,7 @@ class Converter(Task):
                 beautify_uri(newname),
                 str(error)
             ))
-            self.callback()
+            self.done()
             return
 
         assert vfs_exists(newname)
@@ -448,9 +449,12 @@ class Converter(Task):
                 ))
 
         self.output_uri = newname
-        self.done = True
-        self.callback()
+        self.done()
+
+    def done(self):
+        self._done = True
         self._cleanup()
+        super().done()
 
     def run(self):
         """Call this in order to run the whole Converter task."""
@@ -469,7 +473,7 @@ class Converter(Task):
             logger.info('output file already exists, skipping \'{}\''.format(
                 beautify_uri(self.newname)
             ))
-            self._conversion_done()
+            self.done()
             return
 
         # construct a pipeline for conversion
@@ -530,7 +534,7 @@ class Converter(Task):
             beautify_uri(self.sound_file.uri)
         )
         self._stop_pipeline()
-        self.callback()
+        self.done()
 
     def _on_message(self, _, message):
         """Handle message events sent by gstreamer.

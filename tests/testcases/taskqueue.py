@@ -50,7 +50,7 @@ class SyncSleepTask(Task):
 
     def run(self):
         time.sleep(0.1)
-        self.callback()
+        self.emit('done')
 
     def pause(self):
         # cannot be paused
@@ -130,7 +130,7 @@ class AsyncSleepTask(Task):
     def done(self, bus, message):
         """Write down that it is finished and call the callback."""
         self.running = False
-        self.callback()
+        super().done()
 
 
 class SyncSleepTaskTest(unittest.TestCase):
@@ -138,7 +138,7 @@ class SyncSleepTaskTest(unittest.TestCase):
         """Checks if basic Task class functions are working properly."""
         task = SyncSleepTask()
         done = Mock()
-        task.set_callback(done)
+        task.connect('done', done)
         task.run()
         done.assert_called_with(task)
 
@@ -152,7 +152,7 @@ class AsyncSleepTaskTest(unittest.TestCase):
         task = AsyncSleepTask()
         self.assertEqual(task.get_progress()[0], 0)
         done = Mock()
-        task.set_callback(done)
+        task.connect('done', done)
 
         task.run()
         time.sleep(0.15)
@@ -180,7 +180,7 @@ class AsyncSleepTaskTest(unittest.TestCase):
 
         task = AsyncSleepTask()
         done = Mock()
-        task.set_callback(done)
+        task.connect('done', done)
 
         task.run()
         time.sleep(0.15)
