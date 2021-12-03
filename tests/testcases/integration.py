@@ -34,7 +34,7 @@ from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
 
 from soundconverter.util.settings import get_gio_settings, settings
-from soundconverter.util.formats import get_quality, get_file_extension
+from soundconverter.util.formats import get_quality
 from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.interface.ui import win
@@ -445,6 +445,41 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags.m4a'))
         self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags (1).m4a'))
         self.assertTrue(os.path.isfile('tests/tmp/no tags/no-tags (2).m4a'))
+
+    def test_wont_fail_with_recursion_error(self):
+        # converting and skipping files won't cause a super long recursion chain,
+        # like it used to https://bugs.launchpad.net/soundconverter/+bug/1952551
+        # GLib.idle_add seems to start a new call chain, fixing this issue.
+        path = 'soundconverter.gstreamer.discoverer.DiscovererThread._analyse_file'
+
+        def _analyse_file(_, sound_file):
+            # to speed the test up
+            sound_file.readable = True
+
+        with patch(path, _analyse_file):
+            launch([
+                '-b', 'tests/bulk-test-data',
+                '-r',
+                '-o', 'tests/tmp',
+                '-f', 'mp3',
+                '-q', 8,
+            ])
+
+            self.assertTrue(os.path.isdir('tests/tmp/bulk-test-data'))
+            self.assertEqual(len(os.listdir('tests/tmp/bulk-test-data')), 300)
+
+            # won't raise an exception
+            launch([
+                '-b', 'tests/bulk-test-data',
+                '-r',
+                '-o', 'tests/tmp',
+                '-f', 'mp3',
+                '-q', 8,
+                '-e', 'skip',
+                '-j', 1
+            ])
+
+            self.assertEqual(len(os.listdir('tests/tmp/bulk-test-data')), 300)
 
 
 class GUI(unittest.TestCase):

@@ -185,6 +185,8 @@ class Discoverer(Task):
         self.bus = None
         self.thread = None
 
+        super().__init__()
+
     def get_progress(self):
         """Fraction of how much of the task is completed."""
         return self.discovered / len(self.sound_files), 1
@@ -192,7 +194,7 @@ class Discoverer(Task):
     def cancel(self):
         """Cancel execution of the task."""
         # fast task, use case doesn't exist
-        self.callback()
+        self.done()
 
     def pause(self):
         """Pause execution of the task."""
@@ -216,6 +218,6 @@ class Discoverer(Task):
         """Write down that it is finished and call the callback."""
         if message.type == Gst.MessageType.EOS:
             self.running = False
-            self.callback()
+            self.done()
         else:
             self.discovered += 1

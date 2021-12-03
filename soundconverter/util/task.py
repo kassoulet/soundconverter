@@ -20,8 +20,14 @@
 # USA
 
 
-class Task:
+from gi.repository import GObject
+
+
+class Task(GObject.Object):
     """Abstract class of a single task."""
+    def __init__(self):
+        super().__init__()
+
     # avoid storing a variable called timer in your inheriting class
     def get_progress(self):
         """Fraction of how much of the task is completed.
@@ -49,18 +55,15 @@ class Task:
         """Run the task."""
         raise NotImplementedError()
 
-    # don't overwrite
+    def done(self):
+        """Emit a "done" event."""
+        self.emit('done')
 
-    def set_callback(self, callback):
-        """For the Taskqueue to get notified when the Task is done.
 
-        Don't overwrite this function.
-
-        Make sure to call self.callback() when your task that inherits from
-        Task is finished.
-        """
-        def callback_wrapped():
-            # automatically provide self as argument, so that
-            # it's only required to call callback() without any argument
-            return callback(self)
-        self.callback = callback_wrapped
+GObject.signal_new(
+    'done',
+    Task,
+    GObject.SignalFlags.RUN_FIRST,
+    None,
+    []
+)

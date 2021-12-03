@@ -37,6 +37,7 @@ from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
 from soundconverter.util.formatting import format_time
+from soundconverter.interface.mainloop import gtk_iteration
 
 cli_convert = [None]
 
@@ -364,19 +365,24 @@ class CLIConvert:
             len(sound_files)
         ))
         self.conversions = conversions
+
+        def finished(_=None):
+            total_time = conversions.get_duration()
+            logger.info('converted {} files in {}'.format(
+                len(sound_files),
+                format_time(total_time)
+            ))
+
+        conversions.connect('done', finished)
+
         conversions.run()
-        while conversions.running:
+
+        while not conversions.finished:
             # make the eventloop of glibs async stuff run until finished:
-            context.iteration(True)
+            context.iteration(may_block=True)
 
         # do another one to print the queue done message
-        context.iteration(True)
-
-        total_time = conversions.get_duration()
-        logger.info('converted {} files in {}'.format(
-            len(sound_files),
-            format_time(total_time)
-        ))
+        context.iteration(may_block=False)
 
 
 class CLICheck:
