@@ -64,5 +64,6 @@ DistUtilsExtra.auto.setup(
     ],
     cmdclass={
         'install': Install
-    }
+    },
+    scripts=["bin/soundconverter"]
 )

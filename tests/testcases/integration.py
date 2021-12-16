@@ -432,6 +432,26 @@ class BatchIntegration(unittest.TestCase):
         gio_settings = get_gio_settings()
         self.assertFalse(gio_settings.get_boolean('delete-original'))
 
+    def test_set_delete_original_true(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_boolean('delete-original', False)
+        gio_settings = get_gio_settings()
+        self.assertFalse(gio_settings.get_boolean('delete-original'))
+
+        os.system('cp "tests/test data/audio/a.wav" "tests/tmp/a.wav"')
+        self.assertTrue(os.path.isfile('tests/tmp/a.wav'))
+
+        launch([
+            '-b', 'tests/tmp/a.wav',
+            '-o', 'tests/tmp',
+            '-f', 'm4a',
+            '-D',
+        ])
+
+        gio_settings = get_gio_settings()
+        self.assertTrue(gio_settings.get_boolean('delete-original'))
+        self.assertFalse(os.path.isfile('tests/tmp/a.wav'))
+
     def test_conversion_no_tags(self):
         launch([
             '-b', 'tests/test data/no tags',
