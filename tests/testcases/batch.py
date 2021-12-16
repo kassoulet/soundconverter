@@ -336,6 +336,19 @@ class BatchUtils(unittest.TestCase):
         gio_settings = get_gio_settings()
         self.assertFalse(gio_settings.get_boolean('delete-original'))
 
+    def test_set_delete_original_true(self):
+        gio_settings = get_gio_settings()
+        gio_settings.set_boolean('delete-original', False)
+        use_memory_gsettings({
+            'output-path': '.',
+            'main': 'batch',
+            'format': 'ogg',
+            'quality': '0.5',
+            'delete-original': True
+        })
+        gio_settings = get_gio_settings()
+        self.assertTrue(gio_settings.get_boolean('delete-original'))
+
 
 if __name__ == "__main__":
     unittest.main()
