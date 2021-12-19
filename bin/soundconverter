@@ -144,6 +144,10 @@ def parse_command_line():
         '-j', '--jobs', action='store', type='int', dest='forced-jobs',
         metavar='NUM', help=_('Force number of concurrent conversions.')
     )
+    parser.add_option(
+        '-D', '--delete-original', action='store_true', dest='delete-original',
+        help=_('Deletes the original file when conversion is done.')
+    )
 
     # batch mode settings
     batch_option_group = OptionGroup(
