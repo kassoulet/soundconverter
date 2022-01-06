@@ -33,20 +33,18 @@ _ = gettext.gettext
 import pkg_resources
 
 # read values from setup.py
-VERSION = pkg_resources.require('soundconverter')[0].version
-NAME = pkg_resources.require('soundconverter')[0].project_name
-SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+try:
+    VERSION = pkg_resources.require('soundconverter')[0].version
+    NAME = pkg_resources.require('soundconverter')[0].project_name
+    SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+except pkg_resources.DistributionNotFound:
+    # happens sometimes for unknown reasons
+    VERSION = 'unknown-version'
+    NAME = 'soundconverter'
+    SOURCE_PATH = None
 
-# depending on where this file is installed to, make sure to use the proper
-# prefix path for data
-# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
-if SOURCE_PATH.startswith(site.USER_BASE):
-    DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
-elif SOURCE_PATH.startswith('/usr/local/'):
-    DATA_PATH = '/usr/local/share/soundconverter'
-elif SOURCE_PATH.startswith('/usr/'):
-    DATA_PATH = '/usr/share/soundconverter'
-elif SOURCE_PATH.startswith('/app/'):
+
+if os.environ.get('container') == 'flatpak':
     # flatpak support
     DATA_PATH = '/app/share/soundconverter'
 
@@ -59,9 +57,34 @@ elif SOURCE_PATH.startswith('/app/'):
     locale.bindtextdomain(NAME, '/app/share/locale')
     gettext.bindtextdomain(NAME, '/app/share/locale')
     gettext.textdomain(NAME)
+elif SOURCE_PATH:
+    # depending on where this file is installed to, make sure to use the proper
+    # prefix path for data
+    # https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
+    if SOURCE_PATH.startswith(site.USER_BASE):
+        DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
+    elif SOURCE_PATH.startswith('/usr/local/'):
+        DATA_PATH = '/usr/local/share/soundconverter'
+    elif SOURCE_PATH.startswith('/usr/'):
+        DATA_PATH = '/usr/share/soundconverter'
+    else:
+        # installed with -e, running from the cloned git source
+        DATA_PATH = os.path.join(SOURCE_PATH, 'data')
 else:
-    # installed with -e, running from the cloned git source
-    DATA_PATH = os.path.join(SOURCE_PATH, 'data')
+    # if the source_path is unknown, use the first folder that exists
+    candidates = [
+        os.path.join(site.USER_BASE, 'share/soundconverter'),
+        '/usr/local/share/soundconverter',
+        '/usr/share/soundconverter',
+        '/app/share/soundconverter'
+    ]
+    for folder in candidates:
+        if os.path.exists(folder):
+            DATA_PATH = folder
+            break
+    else:
+        raise Exception("Could not figure out where soundconverters files are")
+
 
 try:
     import gi
@@ -111,12 +134,14 @@ def parse_command_line():
     Parses the command line arguments and displays help with --help.
     """
     parser = ModifiedOptionParser(
-        epilog='\nExamples:\n'
-        '  soundconverter -b [input paths] -f flac -o [output path]\n'
-        '  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m ' +
-        'vbr -o ~/compressed -e skip\n'
-        '  soundconverter -b ~/music -r -f m4a -q 320 -o ' +
-        '/mnt/sd/compressed -p {artist}/{title}\n'
+        epilog=(
+            '\nExamples:\n'
+            '  soundconverter -b [input paths] -f flac -o [output path]\n'
+            '  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m ' +
+            'vbr -o ~/compressed -e skip\n'
+            '  soundconverter -b ~/music -r -f m4a -q 320 -o ' +
+            '/mnt/sd/compressed -p {artist}/{title}\n'
+        )
     )
     parser.add_option(
         '-b', '--batch', dest='main', action='callback',
