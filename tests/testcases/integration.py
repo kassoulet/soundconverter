@@ -452,6 +452,28 @@ class BatchIntegration(unittest.TestCase):
         self.assertTrue(gio_settings.get_boolean('delete-original'))
         self.assertFalse(os.path.isfile('tests/tmp/a.wav'))
 
+    def test_set_output_resample(self):
+        gio_settings = get_gio_settings()
+        self.assertFalse(gio_settings.get_boolean('output-resample'))
+        self.assertEqual(48000, gio_settings.get_int('resample-rate'))
+
+        os.system('cp "tests/test data/audio//b/c.mp3" "tests/tmp/c.mp3"')
+        self.assertTrue(os.path.isfile('tests/tmp/c.mp3'))
+
+        sample_rate = 8000
+
+        launch([
+            '-b', 'tests/tmp/c.mp3',
+            '-o', 'tests/tmp',
+            '-f', 'wav',
+            '-R', str(sample_rate)
+        ])
+
+        gio_settings = get_gio_settings()
+        self.assertTrue(gio_settings.get_boolean('output-resample'))
+        self.assertEqual(gio_settings.get_int('resample-rate'), sample_rate)
+        self.assertEqual(self.get_bitrate('tests/tmp/c.wav'), sample_rate * 8 / 1000 * 2)
+
     def test_conversion_no_tags(self):
         launch([
             '-b', 'tests/test data/no tags',
