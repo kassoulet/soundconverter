@@ -25,6 +25,7 @@ import os
 
 from gi.repository import GLib, Gio
 
+from soundconverter.interface.preferences import rates
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.settings import settings, set_gio_settings
 from soundconverter.util.formats import get_quality_setting_name, \
@@ -127,6 +128,12 @@ def use_memory_gsettings(options):
         gio_settings.set_boolean('limit-jobs', True)
         gio_settings.set_int('number-of-jobs', 1)
 
+    resample = options.get('output-resample')
+
+    if resample is not None:
+        gio_settings.set_boolean('output-resample', True)
+        gio_settings.set_int('resample-rate', resample)
+
 
 def validate_args(options):
     """Check if required command line args are provided.
@@ -228,6 +235,16 @@ def validate_args(options):
                 if quality < 6 or quality > 510:
                     logger.error('opus bitrate should be between 6 and 510')
                     return False
+
+    resample = options.get('output-resample', None)
+
+    if resample and resample not in rates:
+        logger.error(
+            "Possible values for -R or --output-resample option are {rates}".format(
+                rates=", ".join([str(item for item in rates)])
+            )
+        )
+        return False
 
     return True
 

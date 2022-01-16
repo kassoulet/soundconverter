@@ -48,6 +48,8 @@ encoders = [
     ('audio/ogg; codecs=opus', 'opusenc', 'Opus (.opus)'),
 ]
 
+rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
+
 
 class PreferencesDialog(GladeWindow):
     sensitive_names = [
@@ -219,7 +221,6 @@ class PreferencesDialog(GladeWindow):
         cell = Gtk.CellRendererText()
         self.resample_rate.pack_start(cell, True)
         self.resample_rate.add_attribute(cell, 'text', 0)
-        rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
         rate = self.settings.get_int('resample-rate')
         try:
             idx = rates.index(rate)
@@ -488,7 +489,6 @@ class PreferencesDialog(GladeWindow):
 
     def on_resample_rate_changed(self, combobox):
         selected = combobox.get_active()
-        rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
         self.settings.set_int('resample-rate', rates[selected])
         self.update_example()
 

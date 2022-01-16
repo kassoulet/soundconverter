@@ -265,6 +265,7 @@ class BatchUtils(unittest.TestCase):
             'main': 'batch', 'output-path': '.',
             'format': 'ogg', 'quality': 20
         }))
+        self.assertFalse(validate_args({'output-resample': 160}))
 
     def test_use_memory_gsettings_cbr(self):
         use_memory_gsettings({
@@ -348,6 +349,23 @@ class BatchUtils(unittest.TestCase):
         })
         gio_settings = get_gio_settings()
         self.assertTrue(gio_settings.get_boolean('delete-original'))
+
+    def test_set_output_sample(self):
+        gio_settings = get_gio_settings()
+        self.assertFalse(gio_settings.get_boolean('output-resample'))
+        self.assertEqual(48000, gio_settings.get_int('resample-rate'))
+
+        use_memory_gsettings({
+            'output-path': '.',
+            'main': 'batch',
+            'format': 'ogg',
+            'quality': '0.5',
+            'output-resample': 44100
+        })
+
+        gio_settings = get_gio_settings()
+        self.assertTrue(gio_settings.get_boolean('output-resample'))
+        self.assertEqual(44100, gio_settings.get_int('resample-rate'))
 
 
 if __name__ == "__main__":
