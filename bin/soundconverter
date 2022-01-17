@@ -29,6 +29,7 @@ import sys
 from optparse import OptionParser, OptionGroup
 import locale
 import gettext
+
 _ = gettext.gettext
 import pkg_resources
 
@@ -83,6 +84,8 @@ from soundconverter.interface.batch import batch_main, \
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
 from soundconverter.gstreamer.converter import Converter
+
+from soundconverter.interface.preferences import rates
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -147,6 +150,12 @@ def parse_command_line():
     parser.add_option(
         '-D', '--delete-original', action='store_true', dest='delete-original',
         help=_('Deletes the original file when conversion is done.')
+    )
+    parser.add_option(
+        '-R', '--output-resample', dest='output-resample',
+        help=_('Resamples audio during conversion. Possible values: %(rates)s') %
+              {'rates': ", ".join([str(item) for item in rates])},
+        type=int
     )
 
     # batch mode settings
