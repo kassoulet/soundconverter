@@ -38,16 +38,27 @@ class DiscovererQueueTest(unittest.TestCase):
     def setUp(self):
         self.gio_settings = get_gio_settings()
         queue = TaskQueue()
-        parent = 'file://' + os.getcwd()
-        sound_files = [
-            SoundFile(parent + '/tests/test%20data/audio/b/c.mp3'),
-            SoundFile(parent + '/tests/test%20data/audio/a.wav'),
-            SoundFile(parent + '/tests/test%20data/audio/strângë chàrs фズ.wav'),
-            SoundFile(parent + '/tests/test%20data/empty/a'),
-            SoundFile(parent + '/tests/test%20data/empty/b/c')
+        parent_dir = 'file://' + os.getcwd()
+        self.sound_files = [
+            SoundFile(parent_dir + '/tests/test%20data/audio/b/c.mp3'),
+            SoundFile(parent_dir + '/tests/test%20data/audio/a.wav'),
+            SoundFile(parent_dir + '/tests/test%20data/empty/b/c'),
+            # add_discoverers will split it here into two tasks or something. Make sure
+            # each of them gets at least one valid audio file in order to test that they
+            # are doing their stuff in parallel.
+            SoundFile(parent_dir + '/tests/test%20data/audio/strângë chàrs фズ.wav'),
+            SoundFile(parent_dir + '/tests/test%20data/empty/a'),
         ]
         self.queue = queue
-        self.sound_files = sound_files
+
+    def wait_for_queue(self):
+        while len(self.queue.done) < len(self.queue.all_tasks):
+            # wait for the test to copmlete
+            time.sleep(0.01)
+            gtk_iteration()
+
+    def tearDown(self):
+        self.wait_for_queue()
 
     def test_add_discoverers(self):
         sound_files = self.sound_files
@@ -63,20 +74,21 @@ class DiscovererQueueTest(unittest.TestCase):
             self.assertFalse(sound_file.readable)
 
         queue.run()
+        # two tasks are running at the same time
         self.assertEqual(len(queue.running), 2)
+
         # add_discoverers creates only one task per job, each task handles
         # multiple sound_files, as opposed to the converter, which only
         # works on a single sound_file.
         self.assertEqual(len(queue.all_tasks), 2)
 
-        while len(queue.done) < 2:
-            time.sleep(0.01)
-            gtk_iteration()
+        self.wait_for_queue()
 
+        # correctly figures out which sound_files contain readable information
         self.assertTrue(sound_files[0].readable)
         self.assertTrue(sound_files[1].readable)
-        self.assertTrue(sound_files[2].readable)
-        self.assertFalse(sound_files[3].readable)
+        self.assertFalse(sound_files[2].readable)
+        self.assertTrue(sound_files[3].readable)
         self.assertFalse(sound_files[4].readable)
 
 
