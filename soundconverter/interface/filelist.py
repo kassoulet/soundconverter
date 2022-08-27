@@ -316,7 +316,7 @@ class FileList:
                             broken_audiofiles
                         ).format(broken_audiofiles),
                         _(
-                            'Check "Invalid Files" in the menu for more'
+                            'Check "Invalid Files" in the menu for more '
                             'information.'
                         )
                     )
