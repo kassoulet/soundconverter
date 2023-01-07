@@ -1,0 +1,405 @@
+# Georgian translation for SoundConverter.
+# Copyright (C) 2022 SoundConverter authors
+# This file is distributed under the same license as the SoundConverter package.
+# Ekaterine Papava <katopapava@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: soundconverter\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-07 11:43+0100\n"
+"PO-Revision-Date: 2023-01-07 11:52+0100\n"
+"Last-Translator: Ekaterine Papava <katopapava@gmail.com>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: ../data/soundconverter.desktop.in.h:1
+msgid "Sound Converter"
+msgstr "Sound Converter"
+
+#: ../data/soundconverter.desktop.in.h:2
+msgid "Audio Format Converter"
+msgstr "აუდიო ფორმატების გადამყვანი"
+
+#: ../data/soundconverter.desktop.in.h:3
+msgid "Converts audio files into other formats"
+msgstr "აუდიო ფაილების სხვა ფორმატებში გადაყვანა"
+
+#: ../data/soundconverter.glade.h:1
+msgid "GNOME-powered Sound Conversion"
+msgstr "GNOME-ზე აგებული ხმის გადამყვანი"
+
+#: ../data/soundconverter.glade.h:2
+msgid "Website"
+msgstr "ვებგვერდი"
+
+#: ../data/soundconverter.glade.h:3
+msgid "Error"
+msgstr "შეცდომა"
+
+#: ../data/soundconverter.glade.h:4
+msgid "File exists already"
+msgstr "ფაილი უკვე არსებობს"
+
+#: ../data/soundconverter.glade.h:5
+msgid "_Overwrite"
+msgstr "_ზედგადაწერა"
+
+#: ../data/soundconverter.glade.h:6
+msgid "_Skip"
+msgstr "_გამოტოვება"
+
+#: ../data/soundconverter.glade.h:7
+msgid "<big><b>File exists already</b></big>\n"
+msgstr "<big><b>ფაილი უკვე არსებობს</b></big>\n"
+
+#: ../data/soundconverter.glade.h:9
+msgid "_Apply to entire queue"
+msgstr "მთელ _რიგზე გადატარება"
+
+#: ../data/soundconverter.glade.h:10 ../soundconverter/util/namegenerator.py:49
+msgid "artist/album"
+msgstr "შემსრულებელი / ალბომი"
+
+#: ../data/soundconverter.glade.h:11 ../soundconverter/util/namegenerator.py:51
+msgid "artist - album"
+msgstr "შემსრულებელი - ალბომი"
+
+#: ../data/soundconverter.glade.h:12
+msgid "Very Low"
+msgstr "ძალიან დაბალი"
+
+#: ../data/soundconverter.glade.h:13
+msgid "Low"
+msgstr "დაბალი"
+
+#: ../data/soundconverter.glade.h:14
+msgid "Normal"
+msgstr "ნორმალური"
+
+#: ../data/soundconverter.glade.h:15
+msgid "High"
+msgstr "მაღალი"
+
+#: ../data/soundconverter.glade.h:16
+msgid "Very High"
+msgstr "ძალიან მაღალი"
+
+#: ../data/soundconverter.glade.h:17
+msgid "Insanely High"
+msgstr "ძალიან მაღალი"
+
+#: ../data/soundconverter.glade.h:18
+msgid "8 bits (very low quality)"
+msgstr "8 ბიტი (ძალიან დაბალი ხარისხი)"
+
+#: ../data/soundconverter.glade.h:19
+msgid "16 bits (default)"
+msgstr "16 ბიტი (ნაგულისხმები)"
+
+#: ../data/soundconverter.glade.h:20
+msgid "32 bits"
+msgstr "32 ბიტი"
+
+#: ../data/soundconverter.glade.h:21
+msgid "Less (Faster)"
+msgstr "ნაკლები (ჩქარი)"
+
+#: ../data/soundconverter.glade.h:22
+msgid "Default"
+msgstr "ნაგულისხმები"
+
+#: ../data/soundconverter.glade.h:23
+msgid "Better (Slower)"
+msgstr "უკეთესი (უფრო ნელი)"
+
+#: ../data/soundconverter.glade.h:24
+msgid "Constant (CBR)"
+msgstr "მუდმივი (CBR)"
+
+#: ../data/soundconverter.glade.h:25
+msgid "Average (ABR)"
+msgstr "საშუალო (ABR)"
+
+#: ../data/soundconverter.glade.h:26
+msgid "Variable (VBR) - Best quality"
+msgstr "ცვლადი (VBR) - საუკეთსო ხარისხი"
+
+#: ../data/soundconverter.glade.h:27
+msgid "Preferences"
+msgstr "მორგება"
+
+#: ../data/soundconverter.glade.h:28
+msgid "Same folder as the input file"
+msgstr "იგივე საქაღალდე, საიდანაც შეყვანის ფაილი"
+
+#: ../data/soundconverter.glade.h:29
+msgid "Choose…"
+msgstr "არჩევა…"
+
+#: ../data/soundconverter.glade.h:30
+msgid "Into a specified folder"
+msgstr "მითითებულ საქაღალდეში"
+
+#: ../data/soundconverter.glade.h:31
+msgid "Create subfolders: "
+msgstr "ქვესაქაღალდეების შექმნა: "
+
+#: ../data/soundconverter.glade.h:32
+msgid "Delete original file"
+msgstr "საწყისი ფაილის წაშლა"
+
+#: ../data/soundconverter.glade.h:33
+msgid "<b>Where to place results?</b>"
+msgstr "<b>სად წავიღო შედეგები?</b>"
+
+#: ../data/soundconverter.glade.h:34
+msgid "Filename pattern: "
+msgstr "ფაილის სახელის შაბლონი: "
+
+#: ../data/soundconverter.glade.h:35
+msgid "Replace all messy characters"
+msgstr "არეული სიმბოლოების ჩანაცვლება"
+
+#: ../data/soundconverter.glade.h:36
+msgid "Remove all characters except letters, digits and ./_-"
+msgstr "ყველა სიმბოლოს წაშლა, გარდა ასოების, ციფრების და /_-"
+
+#: ../data/soundconverter.glade.h:37
+msgid "<i>Example filename:</i>"
+msgstr "<i>მაგალითად ფაილის სახელი:</i>"
+
+#: ../data/soundconverter.glade.h:38
+msgid "<b>How to name files?</b>"
+msgstr "<b>რა დავარქვათ ფაილებს?</b>"
+
+#: ../data/soundconverter.glade.h:39
+msgid "Format: "
+msgstr "ფორმატი: "
+
+#: ../data/soundconverter.glade.h:40
+msgid "Quality:"
+msgstr "ხარისხი:"
+
+#: ../data/soundconverter.glade.h:41
+msgid "Use .oga extension"
+msgstr ".oga გაფართოების გამოყენება"
+
+#: ../data/soundconverter.glade.h:42
+msgid "Ogg"
+msgstr "Ogg"
+
+#: ../data/soundconverter.glade.h:43
+msgid "Bitrate mode:"
+msgstr "ბიტური სიჩქარის რეჟიმი:"
+
+#: ../data/soundconverter.glade.h:44
+msgid "MP3"
+msgstr "MP3"
+
+#: ../data/soundconverter.glade.h:45
+msgid "Compression:"
+msgstr "შეკუმშვა:"
+
+#: ../data/soundconverter.glade.h:46
+msgid "FLAC"
+msgstr "FLAC"
+
+#: ../data/soundconverter.glade.h:47
+msgid "Sample width:"
+msgstr "სემპლის სიგანე:"
+
+#: ../data/soundconverter.glade.h:48
+msgid "WAV"
+msgstr "WAV"
+
+#: ../data/soundconverter.glade.h:49
+msgid "AAC"
+msgstr "AAC"
+
+#: ../data/soundconverter.glade.h:50
+msgid "Opus"
+msgstr "Opus"
+
+#: ../data/soundconverter.glade.h:51
+msgid "<b>Type of result?</b>"
+msgstr "<b>შედეგის ტიპი?</b>"
+
+#: ../data/soundconverter.glade.h:52
+msgid "Resample"
+msgstr "რესემპლინგი"
+
+#: ../data/soundconverter.glade.h:53
+msgid "Force mono output"
+msgstr "მონოში ძალით გატანა"
+
+#: ../data/soundconverter.glade.h:54
+msgid "Limit number of parallel jobs"
+msgstr "პარალელური დავალებების რაოდენობის შეზღუდვა"
+
+#: ../data/soundconverter.glade.h:55
+msgid "MP3 Encoder is not present."
+msgstr "MP3 ენკოდერი ვერ ვიპოვე."
+
+#: ../data/soundconverter.glade.h:56
+msgid "Read how to install"
+msgstr "წაიკითხეთ, როგორ დააყენოთ"
+
+#: ../data/soundconverter.glade.h:57
+msgid "_Clear List"
+msgstr "_სიის გასუფთავება"
+
+#: ../data/soundconverter.glade.h:58
+msgid "Invalid Files"
+msgstr "არასწორი ფაილები"
+
+#: ../data/soundconverter.glade.h:59
+msgid "About"
+msgstr "შესახებ"
+
+#: ../data/soundconverter.glade.h:60
+msgid "Quit"
+msgstr "დასრულება"
+
+#: ../data/soundconverter.glade.h:61 ../soundconverter/interface/ui.py:306
+#: ../soundconverter/interface/ui.py:326 ../soundconverter/interface/ui.py:477
+msgid "SoundConverter"
+msgstr "SoundConverter"
+
+#: ../data/soundconverter.glade.h:62
+msgid "Add File"
+msgstr "ფაილის დამატება"
+
+#: ../data/soundconverter.glade.h:63
+msgid "Add Folder"
+msgstr "საქაღალდის დამატება"
+
+#: ../data/soundconverter.glade.h:64
+msgid "_File"
+msgstr "_ფაილი"
+
+#: ../data/soundconverter.glade.h:65
+msgid "_Add File"
+msgstr "_ფაილის დამატება"
+
+#: ../data/soundconverter.glade.h:66
+msgid "Add _Folder"
+msgstr "_საქაღალდის დამატება"
+
+#: ../data/soundconverter.glade.h:67
+msgid "_Edit"
+msgstr "_ჩასწორება"
+
+#: ../data/soundconverter.glade.h:68
+msgid "_Help"
+msgstr "_დახმარება"
+
+#: ../soundconverter/util/namegenerator.py:40
+msgid "Same as input, but replacing the suffix"
+msgstr "იგივე, რაც შეყვანილი. შეიცვლება მხოლოდ სუფიქსი"
+
+#: ../soundconverter/util/namegenerator.py:41
+msgid "Same as input, but with an additional suffix"
+msgstr "იგივე, რაც შეყვანილი. სუფიქსი დაემატება"
+
+#: ../soundconverter/util/namegenerator.py:42
+msgid "Track number - title"
+msgstr "ტრეკის ნომერი - სათაური"
+
+#: ../soundconverter/util/namegenerator.py:43
+msgid "Track title"
+msgstr "ტრეკის სათაური"
+
+#: ../soundconverter/util/namegenerator.py:44
+msgid "Artist - title"
+msgstr "შემსრულებელი - სათაური"
+
+#: ../soundconverter/util/namegenerator.py:45
+msgid "Custom filename pattern"
+msgstr "ფაილის სახელის ნიმუშის ხელით მითითება"
+
+#: ../soundconverter/util/namegenerator.py:50
+msgid "artist-album"
+msgstr "შემსრულებელი-ალბომი"
+
+#. traductors: These are the custom filename patterns. Only if it makes sense.
+#: ../soundconverter/util/namegenerator.py:59
+msgid ""
+"Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
+"DiscNumber DiscTotal Ext"
+msgstr ""
+"შემსრულებელი ალბომი ალბომი-შემსრულებელი სათაური ტრეკი სულ ჟანრი თარიღი წელი "
+"დროისშტამპი დისკისნომერი სულდისკები გაფ"
+
+#: ../soundconverter/util/namegenerator.py:80
+msgid "All files"
+msgstr "ყველა ფაილი"
+
+#: ../soundconverter/util/namegenerator.py:334
+msgid "Unknown Album"
+msgstr "უცნობი ალბომი"
+
+#: ../soundconverter/util/namegenerator.py:335
+#: ../soundconverter/util/namegenerator.py:336
+msgid "Unknown Artist"
+msgstr "უცნობი შემსრულებელი"
+
+#: ../soundconverter/util/namegenerator.py:340
+msgid "Unknown Genre"
+msgstr "უცნობი ჟანრი"
+
+#: ../soundconverter/util/namegenerator.py:341
+msgid "Unknown Year"
+msgstr "უცნობი წელი"
+
+#: ../soundconverter/util/namegenerator.py:342
+msgid "Unknown Date"
+msgstr "უცნობი თარიღი"
+
+#: ../soundconverter/gstreamer/converter.py:508
+msgid "cannot create '{}' folder."
+msgstr "'()' საქაღალდის შექმნის შეცდომა."
+
+#: ../soundconverter/interface/ui.py:70
+msgid "Add Folder…"
+msgstr "საქაღალდის დამატება…"
+
+#: ../soundconverter/interface/ui.py:95
+msgid "Add Files…"
+msgstr "ფაილების დამატება…"
+
+#: ../soundconverter/interface/ui.py:305 ../soundconverter/interface/ui.py:306
+msgid "Paused"
+msgstr "დაპაუზებულია"
+
+#. wait a bit not to display crap
+#: ../soundconverter/interface/ui.py:314
+msgid "Estimating…"
+msgstr "დაახლოებით…"
+
+#: ../soundconverter/interface/ui.py:323
+#, python-format
+msgid "%d:%02d left"
+msgstr "დარჩენილია %d:%02d"
+
+#: ../soundconverter/interface/ui.py:364
+msgid "Converting"
+msgstr "გადაყვანა"
+
+#: ../soundconverter/interface/ui.py:380
+msgid "Canceled"
+msgstr "გაუქმებულია"
+
+#: ../soundconverter/interface/ui.py:412
+#, python-format
+msgid "Conversion done in %s"
+msgstr "გადაყვანის დასრულების დროა %s"
+
+#: ../soundconverter/interface/ui.py:475
+msgid "Ready"
+msgstr "მზადაა"
