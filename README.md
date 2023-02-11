@@ -49,6 +49,7 @@ To start unittests, use
 ```bash
 sudo python3 setup.py install
 python3 tests/test.py
+python3 tests/test.py discoverer.DiscovererTest.test_read_tags
 ```
 
 ## Copyright and Acknowledgements
