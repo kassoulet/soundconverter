@@ -557,6 +557,14 @@ class GUI(unittest.TestCase):
             shutil.rmtree('tests/tmp')
         available_elements.update(original_available_elements)
 
+    def _wait_for_conversion_to_finish(self, window):
+        queue = window.converter_queue
+        while not queue.finished:
+            # as Gtk.main is replaced by gtk_iteration, the unittests
+            # are responsible about when soundconverter continues
+            # to work on the conversions and updating the GUI
+            gtk_iteration()
+
     def test_conversion_simple(self):
         gio_settings = get_gio_settings()
         gio_settings.set_int(
@@ -576,12 +584,7 @@ class GUI(unittest.TestCase):
         window.on_convert_button_clicked()
 
         # wait for the assertions until all files are converted
-        queue = window.converter_queue
-        while not queue.finished:
-            # as Gtk.main is replaced by gtk_iteration, the unittests
-            # are responsible about when soundconverter continues
-            # to work on the conversions and updating the GUI
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
 
         self.assertTrue(os.path.isdir('tests/tmp/'))
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
@@ -633,8 +636,7 @@ class GUI(unittest.TestCase):
         pipeline = queue.all_tasks[0].pipeline
 
         # wait for the assertions until all files are converted
-        while not queue.finished:
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
 
         self.assertEqual(len(queue.all_tasks), 3)
         self.assertTrue(queue.all_tasks[0].done)
@@ -745,8 +747,8 @@ class GUI(unittest.TestCase):
         window.on_button_pause_clicked()  # resume
 
         start = time.time()
-        while not queue.finished:
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
+
         if time.time() - start > 0.4:
             print(
                 'The test may not work as intended because the conversion'
@@ -890,9 +892,7 @@ class GUI(unittest.TestCase):
 
         window.on_convert_button_clicked()
 
-        queue = window.converter_queue
-        while not queue.finished:
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
 
         # input files should not have been deleted
         self.assertTrue(os.path.isfile(
@@ -932,9 +932,7 @@ class GUI(unittest.TestCase):
         # create a few duplicates
         for _ in range(3):
             window.on_convert_button_clicked()
-            queue = window.converter_queue
-            while not queue.finished:
-                gtk_iteration()
+            self._wait_for_conversion_to_finish(window)
 
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
         self.assertTrue(os.path.isfile('tests/tmp/a_(1).opus'))
@@ -960,9 +958,7 @@ class GUI(unittest.TestCase):
         window.prefs.change_mime_type('audio/ogg; codecs=opus')
 
         window.on_convert_button_clicked()
-        queue = window.converter_queue
-        while not queue.finished:
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
 
         self.assertTrue(os.path.isfile('tests/tmp/a.opus'))
 
@@ -1042,9 +1038,7 @@ class GUI(unittest.TestCase):
         window.prefs.change_mime_type('audio/mpeg')
 
         window.on_convert_button_clicked()
-        queue = window.converter_queue
-        while not queue.finished:
-            gtk_iteration()
+        self._wait_for_conversion_to_finish(window)
 
         # it uses the commonprefix of all files, not just the valid ones
         self.assertTrue(os.path.isfile('tests/tmp/test_data/audio/b/c.mp3'))
@@ -1084,9 +1078,7 @@ class GUI(unittest.TestCase):
                 available_elements.clear()
                 available_elements.update({encoder, 'mp4mux'})
                 window.on_convert_button_clicked()
-                queue = window.converter_queue
-                while not queue.finished:
-                    gtk_iteration()
+                self._wait_for_conversion_to_finish(window)
                 win[0].close()
 
             path_5 = 'tests/tmp/{}/5/a.m4a'.format(encoder)

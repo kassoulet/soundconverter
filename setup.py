@@ -20,10 +20,12 @@
 # USA
 
 import sys
+
 try:
     import DistUtilsExtra.auto
-except ImportError:
+except ImportError as e:
     sys.stderr.write('You need python-distutils-extra\n')
+    sys.stderr.write(e)
     sys.exit(1)
 
 import os
