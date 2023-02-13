@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # in all of the available tests like unittest.main() does...,
     # so provide both options.
     if len(modules) > 0:
-        # for example `tests/test.py integration.GUI`
+        # for example `python3 tests/test.py discoverer.DiscovererTest.test_read_tags`
         testsuite = unittest.defaultTestLoader.loadTestsFromNames(
             ['testcases.{}'.format(module) for module in modules]
         )
