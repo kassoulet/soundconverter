@@ -43,11 +43,11 @@ class Formatter(logging.Formatter):
             if settings['debug']:
                 self._style._fmt = (  # noqa
                     '\033[{}m%(levelname)s\033[0m: '
-                    '%(filename)s, line %(lineno)d, %(msg)s'
+                    '%(filename)s, line %(lineno)d, %(message)s'
                 ).format(color)
             else:
                 self._style._fmt = (  # noqa
-                    '\033[{}m%(levelname)s\033[0m: %(msg)s'
+                    '\033[{}m%(levelname)s\033[0m: %(message)s'
                 ).format(color)
         return super().format(record)
 

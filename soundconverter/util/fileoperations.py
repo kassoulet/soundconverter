@@ -60,17 +60,29 @@ def vfs_walk(uri):
     return a list of uri.
     """
     filelist = []
-    dirlist = Gio.file_parse_name(uri).enumerate_children(
-        '*', Gio.FileMonitorFlags.NONE, None
-    )
-    for file_info in dirlist:
-        info = dirlist.get_child(file_info).query_file_type(
-            Gio.FileMonitorFlags.NONE, None
+
+    try:
+        dirlist = Gio.file_parse_name(uri).enumerate_children(
+            '*', Gio.FileMonitorFlags.NONE, None
         )
-        if info == Gio.FileType.DIRECTORY:
-            filelist.extend(vfs_walk(dirlist.get_child(file_info).get_uri()))
-        if info == Gio.FileType.REGULAR:
-            filelist.append(str(dirlist.get_child(file_info).get_uri()))
+
+        for file_info in dirlist:
+            info = dirlist.get_child(file_info).query_file_type(
+                Gio.FileMonitorFlags.NONE, None
+            )
+
+            uri = dirlist.get_child(file_info).get_uri();
+
+            if info == Gio.FileType.DIRECTORY:
+                filelist.extend(vfs_walk(uri))
+
+            if info == Gio.FileType.REGULAR:
+                filelist.append(str(uri))
+    except Exception as e:
+        # this is impossible to write unittests for, because this only happens
+        # when the owner of this directory is e.g. root
+        logger.error('Failed to walk "%s": "%s"', uri, e)
+
     return filelist
 
 
