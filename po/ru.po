@@ -34,7 +34,7 @@ msgstr "Конвертирует аудиофайлы в другие форма
 
 #: ../data/soundconverter.glade.h:1
 msgid "GNOME-powered Sound Conversion"
-msgstr "Конверсия аудио в GNOME"
+msgstr "Конвертация аудио в GNOME"
 
 #: ../data/soundconverter.glade.h:2
 msgid "Website"
@@ -361,7 +361,7 @@ msgid ""
 "DiscNumber DiscTotal Ext"
 msgstr ""
 "Исполнитель Альбом Альбом-Исполнитель Название Трек Полностью Жанр Дата Год "
-"ВременнаяОтметка НомерДиска ДискПолностью Расширение"
+"ВременнаяОтметка НомерДиска ВсегоДисков Расширение"
 
 #: ../soundconverter/util/namegenerator.py:80
 msgid "All files"
