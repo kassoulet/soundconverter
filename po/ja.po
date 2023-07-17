@@ -7,17 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2018-10-29 10:48+0000\n"
-"Last-Translator: Shinichirou Yamada <yamada_strong_yamada_nice_64bit@yahoo."
-"co.jp>\n"
+"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"PO-Revision-Date: 2020-05-03 14:54+0000\n"
+"Last-Translator: Shinichirou Yamada "
+"<yamada_strong_yamada_nice_64bit@yahoo.co.jp>\n"
 "Language-Team: Japanese <ja@li.org>\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2023-01-23 08:08+0000\n"
+"X-Generator: Launchpad (build e04feada4865d7ca041d8edeee137fe87b5bcb3e)\n"
+"Language: ja\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -176,8 +177,7 @@ msgid "Same folder as the input file"
 msgstr "入力ファイルと同じフォルダー"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
-msgid "Choose…"
+msgid "Choose..."
 msgstr "選択..."
 
 #: ../data/soundconverter.glade.h:39
@@ -302,18 +302,18 @@ msgstr "一覧を消去(_C)"
 
 #: ../data/soundconverter.glade.h:69
 msgid "Invalid Files"
-msgstr ""
+msgstr "無効なファイル"
 
 #: ../data/soundconverter.glade.h:70
 msgid "About"
-msgstr ""
+msgstr "このアプリケーションについて"
 
 #: ../data/soundconverter.glade.h:71
 msgid "Quit"
-msgstr ""
+msgstr "終了"
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
-#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
@@ -348,27 +348,21 @@ msgstr "ヘルプ(_H)"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the GUI and run in batch mode, from the command line."
+"This will disable the gui and run in batch mode."
 msgstr ""
+"gstreamer で読み取れないファイルを出力する。実際に変換を行う前に役立ちます。この機能は GUI を表示しないバッチモードでの実行になります。"
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
-"Convert in batch mode, from the command line, without a graphical user "
+"Convert in batch mode, from command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
-msgstr ""
-"コマンドラインから、GUI なしのバッチモードで変換する。\n"
-" シェルスクリプトなどで利用できます。"
+msgstr "コマンドラインから GUI のないバッチモードで変換する。シェルスクリプトから使用できます。"
 
 #: ../bin/soundconverter.py:138
-#, fuzzy
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
-msgstr ""
-"入力ファイルを変換する代わりにタグを表示する。\n"
-"これはコマンドラインバッチモードであることを示し、グラフィカルユーザーイン"
-"ターフェースを無効にします。"
+msgstr "入力したファイルを変換せずにタグを表示する。GUI を表示しないコマンドラインのバッチモードになります。"
 
 #: ../bin/soundconverter.py:142
 msgid "Be quiet. Don't write normal output, only errors."
@@ -383,45 +377,46 @@ msgid "Force number of concurrent conversions."
 msgstr "並列変換数を強制する"
 
 #: ../bin/soundconverter.py:153
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you will probably "
-"want to set the output suffix as well. Supported MIME types: %s"
+"Set the output MIME type. The default is %s. Note that you probably want to "
+"set the output suffix as well. Supported shortcuts and mime types: aac "
+"audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav "
+"audio/x-wav"
 msgstr ""
-"バッチモードの出力 MIME タイプを設定する。デフォルトは %s です。おそらく出力"
-"拡張子も同様に設定される点に注意してください。"
+"出力する MIME タイプを設定する。デフォルトは %s です。拡張子も同様に設定する必要があるかもしれません。サポートしているショートカットと "
+"MIME タイプ: aac audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-"
+"vorbis wav audio/x-wav"
 
 #: ../bin/soundconverter.py:159
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix. The default is %s. Note that the suffix does "
 "not affect\n"
 " the output MIME type."
-msgstr ""
-"バッチモードの出力拡張子を設定する。デフォルトは %s です。拡張子は出力 MIME "
-"タイプに影響しない点に注意してください。"
+msgstr "出力ファイルの拡張子を設定する。デフォルトは %s です。拡張子は出力する MIME タイプには影響しない点にご注意ください。"
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
-msgstr ""
+msgstr "サブディレクトリを再帰的に確認する"
 
 #: ../bin/soundconverter.py:165
 msgid ""
 "Ignore files for which the target already exists instead of converting them "
 "again"
-msgstr ""
+msgstr "変換先がすでに存在するファイルは変換せずに無視する"
 
 #: ../bin/soundconverter.py:168
 msgid ""
 "Put converted files into a different directory while rebuilding the original "
 "directory structure. This includes the name of the original directory."
-msgstr ""
+msgstr "変換元のディレクトリ構造を基にして、変換したファイルを別のディレクトリに出力する。元のディレクトリ名を含みます。"
 
 #: ../bin/soundconverter.py:172
 msgid ""
 "Quality of the converted output file. Between 0 (lowest) and 5 (highest). "
 "Default is 3."
-msgstr ""
+msgstr "変換した出力ファイルの音質。デフォルトは 3 で、0 (最低) から 5 (最高) を指定できます。"
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -440,25 +435,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "プラグインのインストールが中止されました。"
 
-#: ../soundconverter/gstreamer.py:564
+#: ../soundconverter/gstreamer.py:563
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "フォルダー '%s' を作成できません。"
 
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:599
 msgid "GStreamer Error:"
 msgstr "GStreamer エラー:"
 
-#: ../soundconverter/gstreamer.py:810
+#: ../soundconverter/gstreamer.py:808
 #, python-format
 msgid "Conversion done in %s"
 msgstr "%s の変換が終了しました"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
 
@@ -468,8 +463,7 @@ msgid ""
 "Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
 "DiscNumber DiscTotal Ext"
 msgstr ""
-"アーティスト アルバム アルバム-アーティスト タイトル トラック トラック総数 "
-"ジャンル 日付 年 タイムスタンプ ディスク数 ディスク総数 拡張子"
+"アーティスト アルバム アルバム-アーティスト タイトル トラック トラック総数 ジャンル 日付 年 タイムスタンプ ディスク数 ディスク総数 拡張子"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -487,42 +481,39 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-#, fuzzy
-msgid "Scanning files…"
+msgid "Scanning files..."
 msgstr "ファイルをスキャンしています..."
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
-msgid "Adding Files…"
+msgid "Adding Files..."
 msgstr "ファイルを追加しています..."
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
 msgid "The specified file is not supported!"
-msgstr ""
+msgstr "指定したファイルはサポートしていません!"
 
 #: ../soundconverter/ui.py:329
 msgid "Either because it is broken or not an audio file."
-msgstr ""
+msgstr "オーディオファイルではない、またはファイルが壊れています。"
 
 #. case 2: all files that should be added cannot be added
 #: ../soundconverter/ui.py:333
 msgid "All {} specified files are not supported!"
-msgstr ""
+msgstr "指定したすべてのファイル ({} 個) はサポートしていません!"
 
 #: ../soundconverter/ui.py:334
 msgid "Either because they are broken or not audio files."
-msgstr ""
+msgstr "オーディオファイルではない、またはファイルが壊れています。"
 
 #: ../soundconverter/ui.py:343
-msgid "One audio file could not be read by GStreamer!"
-msgid_plural "{} audio files could not be read by GStreamer!"
-msgstr[0] ""
-msgstr[1] ""
+msgid "One audiofile could not be read by gstreamer!"
+msgid_plural "{} audiofiles could not be read by gstreamer!"
+msgstr[0] "{} 個のオーディオファイルを gstreamer で読み取れませんでした!"
 
 #: ../soundconverter/ui.py:345
 msgid "Check \"Invalid Files\" in the menu for more information."
-msgstr ""
+msgstr "詳細はメニューの \"無効なファイル\" で確認してください。"
 
 #: ../soundconverter/ui.py:432
 msgid "Same as input, but replacing the suffix"
@@ -556,10 +547,9 @@ msgstr "アーティスト-アルバム"
 msgid "Available patterns:"
 msgstr "使用可能なパターン:"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
-msgid "Add Folder…"
-msgstr "フォルダーを追加"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
+msgid "Add Folder..."
+msgstr "フォルダーを追加..."
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -571,55 +561,31 @@ msgstr "次のフォルダー: %s"
 msgid "Target bitrate: %s"
 msgstr "対象のビットレート: %s"
 
-#: ../soundconverter/ui.py:1109
-#, fuzzy
-msgid "Add Files…"
-msgstr "ファイルを追加"
+#: ../soundconverter/ui.py:1107
+msgid "Add Files..."
+msgstr "ファイルを追加..."
 
-#: ../soundconverter/ui.py:1288
-#, fuzzy
-msgid "Preparing conversion…"
+#: ../soundconverter/ui.py:1286
+msgid "Preparing conversion..."
 msgstr "変換準備中..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1307
 msgid "Converting"
 msgstr "変換中"
 
-#: ../soundconverter/ui.py:1327
+#: ../soundconverter/ui.py:1325
 msgid "Canceled"
 msgstr "キャンセルされました"
 
-#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
 msgid "Paused"
 msgstr "一時停止"
 
-#: ../soundconverter/ui.py:1419
+#: ../soundconverter/ui.py:1417
 #, python-format
 msgid "%d:%02d left"
 msgstr "残り時間 %d:%02d"
 
-#: ../soundconverter/ui.py:1427
+#: ../soundconverter/ui.py:1425
 msgid "Ready"
 msgstr "準備完了"
-
-#~ msgid "Add Folder..."
-#~ msgstr "フォルダーを追加..."
-
-#, fuzzy
-#~ msgid "Add Files..."
-#~ msgstr "ファイルを追加しています..."
-
-#~ msgid "dialog1"
-#~ msgstr "ダイアログ1"
-
-#~ msgid "Filter "
-#~ msgstr "フィルター "
-
-#~ msgid "Where to place results?"
-#~ msgstr "どこに変換結果を保存しますか?"
-
-#~ msgid "Shows GStreamer Options"
-#~ msgstr "GStreamer のオプションを表示する"
-
-#~ msgid "Open a file"
-#~ msgstr "ファイルを開く"

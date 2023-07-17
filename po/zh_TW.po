@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2015-12-03 06:36+0000\n"
-"Last-Translator: Pin-hsien Lee <pspeter9931@gmail.com>\n"
+"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"PO-Revision-Date: 2020-04-29 16:16+0000\n"
+"Last-Translator: Pin-hsien Lee <phsnlee@ncpy.dev>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2023-01-23 08:08+0000\n"
+"X-Generator: Launchpad (build e04feada4865d7ca041d8edeee137fe87b5bcb3e)\n"
+"Language: \n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -175,8 +176,7 @@ msgid "Same folder as the input file"
 msgstr "與輸入檔同一個資料夾"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
-msgid "Choose…"
+msgid "Choose..."
 msgstr "選擇…"
 
 #: ../data/soundconverter.glade.h:39
@@ -311,8 +311,8 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
-#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
@@ -347,26 +347,20 @@ msgstr "說明(_H)"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the GUI and run in batch mode, from the command line."
+"This will disable the gui and run in batch mode."
 msgstr ""
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
-"Convert in batch mode, from the command line, without a graphical user "
+"Convert in batch mode, from command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"在指令列進行批次模式轉換，不使用圖形使用者\n"
-" 介面。您可以透過如 Shell 腳本來使用此功能。"
 
 #: ../bin/soundconverter.py:138
-#, fuzzy
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
 msgstr ""
-"顯示輸入檔案的標籤，而非轉換它們。這代表會使用 \n"
-" 指令列批次模式，並停用圖形使用者介面。"
 
 #: ../bin/soundconverter.py:142
 msgid "Be quiet. Don't write normal output, only errors."
@@ -381,22 +375,21 @@ msgid "Force number of concurrent conversions."
 msgstr "強制設定同時間進行的轉換工作的數目。"
 
 #: ../bin/soundconverter.py:153
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you will probably "
-"want to set the output suffix as well. Supported MIME types: %s"
+"Set the output MIME type. The default is %s. Note that you probably want to "
+"set the output suffix as well. Supported shortcuts and mime types: aac "
+"audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav "
+"audio/x-wav"
 msgstr ""
-"設定批次模式的輸出 MIME 類型。預設值為 %s。您或許也想要設定輸出副檔名。"
 
 #: ../bin/soundconverter.py:159
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix. The default is %s. Note that the suffix does "
 "not affect\n"
 " the output MIME type."
 msgstr ""
-"設定批次模式的輸出副檔名。預設值為 %s。注意，副檔名並不會影響\n"
-" 輸出的 MIME 類型。"
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
@@ -437,25 +430,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "插件安裝已停止。"
 
-#: ../soundconverter/gstreamer.py:564
+#: ../soundconverter/gstreamer.py:563
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "無法建立資料夾「%s」。"
 
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:599
 msgid "GStreamer Error:"
 msgstr "GStreamer 錯誤："
 
-#: ../soundconverter/gstreamer.py:810
+#: ../soundconverter/gstreamer.py:808
 #, python-format
 msgid "Conversion done in %s"
 msgstr "轉換完成於 %s"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "未知專輯"
 
-#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "未知歌手"
 
@@ -482,13 +475,12 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-msgid "Scanning files…"
+msgid "Scanning files..."
 msgstr ""
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
-msgid "Adding Files…"
-msgstr "加入檔案"
+msgid "Adding Files..."
+msgstr ""
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
@@ -509,8 +501,8 @@ msgid "Either because they are broken or not audio files."
 msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audio file could not be read by GStreamer!"
-msgid_plural "{} audio files could not be read by GStreamer!"
+msgid "One audiofile could not be read by gstreamer!"
+msgid_plural "{} audiofiles could not be read by gstreamer!"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -550,10 +542,9 @@ msgstr "歌手-專輯"
 msgid "Available patterns:"
 msgstr "可用樣式："
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
-msgid "Add Folder…"
-msgstr "新增資料夾"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
+msgid "Add Folder..."
+msgstr "新增資料夾..."
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -565,55 +556,31 @@ msgstr "於資料夾 %s 內"
 msgid "Target bitrate: %s"
 msgstr "目標位元率：%s"
 
-#: ../soundconverter/ui.py:1109
-#, fuzzy
-msgid "Add Files…"
-msgstr "加入檔案"
+#: ../soundconverter/ui.py:1107
+msgid "Add Files..."
+msgstr ""
 
-#: ../soundconverter/ui.py:1288
-#, fuzzy
-msgid "Preparing conversion…"
+#: ../soundconverter/ui.py:1286
+msgid "Preparing conversion..."
 msgstr "正在準備轉換..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1307
 msgid "Converting"
 msgstr "轉換中"
 
-#: ../soundconverter/ui.py:1327
+#: ../soundconverter/ui.py:1325
 msgid "Canceled"
 msgstr "已取消"
 
-#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
 msgid "Paused"
 msgstr "已暫停"
 
-#: ../soundconverter/ui.py:1419
+#: ../soundconverter/ui.py:1417
 #, python-format
 msgid "%d:%02d left"
 msgstr "剩餘時間 %d:%02d"
 
-#: ../soundconverter/ui.py:1427
+#: ../soundconverter/ui.py:1425
 msgid "Ready"
 msgstr "就緒"
-
-#~ msgid "Add Folder..."
-#~ msgstr "新增資料夾..."
-
-#, fuzzy
-#~ msgid "Add Files..."
-#~ msgstr "新增資料夾..."
-
-#~ msgid "dialog1"
-#~ msgstr "dialog1"
-
-#~ msgid "Filter "
-#~ msgstr "過濾器 "
-
-#~ msgid "Where to place results?"
-#~ msgstr "輸出結果要放置的地方？"
-
-#~ msgid "Shows GStreamer Options"
-#~ msgstr "顯示 GStreamer 選項"
-
-#~ msgid "Open a file"
-#~ msgstr "開啟檔案"

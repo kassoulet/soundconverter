@@ -9,16 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2015-12-03 06:38+0000\n"
+"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"PO-Revision-Date: 2020-04-29 17:07+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Breton <br@li.org>\n"
-"Language: br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Launchpad-Export-Date: 2023-01-23 08:08+0000\n"
+"X-Generator: Launchpad (build e04feada4865d7ca041d8edeee137fe87b5bcb3e)\n"
+"Language: br\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -177,8 +178,7 @@ msgid "Same folder as the input file"
 msgstr "Er memes teuliad ar restr enank"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
-msgid "Choose…"
+msgid "Choose..."
 msgstr "Furchal..."
 
 #: ../data/soundconverter.glade.h:39
@@ -313,8 +313,8 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
-#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
 msgid "SoundConverter"
 msgstr "SoundConverter"
 
@@ -349,27 +349,20 @@ msgstr "_Skoazell"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the GUI and run in batch mode, from the command line."
+"This will disable the gui and run in batch mode."
 msgstr ""
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
-"Convert in batch mode, from the command line, without a graphical user "
+"Convert in batch mode, from command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"Amdreiñ er mod  batch, diouzh al linenn urzhiañ, hep etrefas\n"
-" grafek. Da implij er skriptoù shell."
 
 #: ../bin/soundconverter.py:138
-#, fuzzy
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
 msgstr ""
-"Diskouez klavioù evit ar restroù enank e-lec'h amdreiñ anezho. Menegiñ a "
-"ra \n"
-" mod dre lodoù al linenn arc'had ha diweredekaat ketal grafek an arveriad."
 
 #: ../bin/soundconverter.py:142
 msgid "Be quiet. Don't write normal output, only errors."
@@ -384,24 +377,21 @@ msgid "Force number of concurrent conversions."
 msgstr "Bountañ war niverenn an amdroadurioù kevezel"
 
 #: ../bin/soundconverter.py:153
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you will probably "
-"want to set the output suffix as well. Supported MIME types: %s"
+"Set the output MIME type. The default is %s. Note that you probably want to "
+"set the output suffix as well. Supported shortcuts and mime types: aac "
+"audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav "
+"audio/x-wav"
 msgstr ""
-"Arventenniñ rizh MIME an ec'hankad evit ar mod dre lodoù. %s eo dre ziouer. "
-"Ha marteze e vo arventennet askouezhadenn an ec'hankad ivez."
 
 #: ../bin/soundconverter.py:159
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Set the output filename suffix. The default is %s. Note that the suffix does "
 "not affect\n"
 " the output MIME type."
 msgstr ""
-"Arventenniñ anv restr an ec'hankad evit ar mod dre lodoù. %s eo dre ziouer. "
-"Ne vo ket kemmet\n"
-" rizh MIME an ec'hankad."
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
@@ -442,25 +432,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "Staliadur an enlugellad troc'het."
 
-#: ../soundconverter/gstreamer.py:564
+#: ../soundconverter/gstreamer.py:563
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "N'eus ket tu da grouiñ an teuliad :·'%s'."
 
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:599
 msgid "GStreamer Error:"
 msgstr "Fazi GStreamer"
 
-#: ../soundconverter/gstreamer.py:810
+#: ../soundconverter/gstreamer.py:808
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Amdroadur graet e %s"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "Albom dianav"
 
-#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "Arzour dianav"
 
@@ -487,13 +477,12 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-msgid "Scanning files…"
+msgid "Scanning files..."
 msgstr ""
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
-msgid "Adding Files…"
-msgstr "Ouzhpennañ ur restr"
+msgid "Adding Files..."
+msgstr ""
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
@@ -514,8 +503,8 @@ msgid "Either because they are broken or not audio files."
 msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audio file could not be read by GStreamer!"
-msgid_plural "{} audio files could not be read by GStreamer!"
+msgid "One audiofile could not be read by gstreamer!"
+msgid_plural "{} audiofiles could not be read by gstreamer!"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -555,10 +544,9 @@ msgstr "arzour-albom"
 msgid "Available patterns:"
 msgstr "Gousturioù hegerz"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
-msgid "Add Folder…"
-msgstr "Ouzhpennañ un teuliad"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
+msgid "Add Folder..."
+msgstr "Ouzhpennañ un teuliad..."
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -570,55 +558,31 @@ msgstr "En teuliad %s"
 msgid "Target bitrate: %s"
 msgstr "Kas binarel al lec'h kas : %s"
 
-#: ../soundconverter/ui.py:1109
-#, fuzzy
-msgid "Add Files…"
-msgstr "Ouzhpennañ ur restr"
+#: ../soundconverter/ui.py:1107
+msgid "Add Files..."
+msgstr ""
 
-#: ../soundconverter/ui.py:1288
-#, fuzzy
-msgid "Preparing conversion…"
+#: ../soundconverter/ui.py:1286
+msgid "Preparing conversion..."
 msgstr "O prientiñ an amdroadur..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1307
 msgid "Converting"
 msgstr "Oc'h amdreiñ"
 
-#: ../soundconverter/ui.py:1327
+#: ../soundconverter/ui.py:1325
 msgid "Canceled"
 msgstr "Nullet"
 
-#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
 msgid "Paused"
 msgstr "Ehanet"
 
-#: ../soundconverter/ui.py:1419
+#: ../soundconverter/ui.py:1417
 #, python-format
 msgid "%d:%02d left"
 msgstr "O chom %d:%02d"
 
-#: ../soundconverter/ui.py:1427
+#: ../soundconverter/ui.py:1425
 msgid "Ready"
 msgstr "Prest"
-
-#~ msgid "Add Folder..."
-#~ msgstr "Ouzhpennañ un teuliad..."
-
-#, fuzzy
-#~ msgid "Add Files..."
-#~ msgstr "Ouzhpennañ un teuliad..."
-
-#~ msgid "dialog1"
-#~ msgstr "dialog1"
-
-#~ msgid "Filter "
-#~ msgstr "Sil "
-
-#~ msgid "Where to place results?"
-#~ msgstr "E pelec'h lechiañ ar restroù amdreet?"
-
-#~ msgid "Shows GStreamer Options"
-#~ msgstr "Diskouez an dibarzhioù GStreamer"
-
-#~ msgid "Open a file"
-#~ msgstr "Digeriñ ur restr"

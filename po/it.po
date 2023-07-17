@@ -1,23 +1,23 @@
 # Italian translation for soundconverter
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the soundconverter package.
-# Stefano Luciani <luciani.fa@tiscali.it>, 2007
-# Albano Battistella <albano_battistella@hotmail.com>, 2022.
+# Stefano Luciani <luciani.fa@tiscali.it>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2022-01-09 21:39+0100\n"
-"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"PO-Revision-Date: 2020-04-29 16:00+0000\n"
+"Last-Translator: episto <episto@katamail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2023-01-23 08:08+0000\n"
+"X-Generator: Launchpad (build e04feada4865d7ca041d8edeee137fe87b5bcb3e)\n"
+"Language: it\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -176,8 +176,8 @@ msgid "Same folder as the input file"
 msgstr "Stessa cartella del file di input"
 
 #: ../data/soundconverter.glade.h:38
-msgid "Choose…"
-msgstr "Scegli…"
+msgid "Choose..."
+msgstr "Scegli..."
 
 #: ../data/soundconverter.glade.h:39
 msgid "Into a specified folder"
@@ -297,22 +297,22 @@ msgstr "Leggi come installare"
 
 #: ../data/soundconverter.glade.h:68
 msgid "_Clear List"
-msgstr "_Cancella elenco"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:69
 msgid "Invalid Files"
-msgstr "File non validi"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:70
 msgid "About"
-msgstr "Informazioni"
+msgstr ""
 
 #: ../data/soundconverter.glade.h:71
 msgid "Quit"
-msgstr "Esci"
+msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
-#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
 msgid "SoundConverter"
 msgstr "Sound Converter - Convertitore Audio"
 
@@ -338,35 +338,29 @@ msgstr "Aggiungi _Cartella"
 
 #: ../data/soundconverter.glade.h:78
 msgid "_Edit"
-msgstr "_Modifica"
+msgstr "Modifica"
 
 #: ../data/soundconverter.glade.h:79
 msgid "_Help"
-msgstr "_Aiuto"
+msgstr "Aiuto (_H)"
 
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the GUI and run in batch mode, from the command line."
+"This will disable the gui and run in batch mode."
 msgstr ""
-"Stampa quali file non possono essere letti da gstreamer. Utile prima della conversione. "
-"Questo disabiliterà la GUI e verrà eseguito in modalità batch, dalla riga di comando."
 
 #: ../bin/soundconverter.py:133
 msgid ""
-"Convert in batch mode, from the command line, without a graphical user "
+"Convert in batch mode, from command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"Converti in modalità batch, da linea di comando, senza interfaccia "
-"grafica. Puoi usarlo, diciamo, da script di shell."
 
 #: ../bin/soundconverter.py:138
 msgid ""
 "Show tags for input files instead of converting them. This indicates command "
 "line batch mode and disables the graphical user interface."
 msgstr ""
-"Mostra i tag dei file di input invece di convertirli. Questo mostra "
-"la modalità batch a linea di comando e disabilita l'interfaccia grafica."
 
 #: ../bin/soundconverter.py:142
 msgid "Be quiet. Don't write normal output, only errors."
@@ -381,50 +375,43 @@ msgid "Force number of concurrent conversions."
 msgstr "Forza il numero di conversioni simultanee"
 
 #: ../bin/soundconverter.py:153
+#, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you will probably "
-"want to set the output suffix as well. Supported MIME types: %s"
+"Set the output MIME type. The default is %s. Note that you probably want to "
+"set the output suffix as well. Supported shortcuts and mime types: aac "
+"audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav "
+"audio/x-wav"
 msgstr ""
-"Imposta il tipo di MIME. L'impostazione predefinita è %s. Nota che probabilmente dovrai "
-"impostare anche il suffisso di output. Tipo di MIME supportati: %s"
 
 #: ../bin/soundconverter.py:159
+#, python-format
 msgid ""
 "Set the output filename suffix. The default is %s. Note that the suffix does "
 "not affect\n"
 " the output MIME type."
 msgstr ""
-"Imposta il suffisso del nome del file di output. Il valore predefinito è %s. Nota che il suffisso non "
-"non interessa\n"
-" il tipo MIME di output."
 
 #: ../bin/soundconverter.py:163
 msgid "Go recursively into subdirectories"
-msgstr "Vai ricorsivamente nelle sottocartelle"
+msgstr ""
 
 #: ../bin/soundconverter.py:165
 msgid ""
 "Ignore files for which the target already exists instead of converting them "
 "again"
 msgstr ""
-"Ignora i file per i quali esiste già la destinazione invece di convertirli "
-"ancora"
 
 #: ../bin/soundconverter.py:168
 msgid ""
 "Put converted files into a different directory while rebuilding the original "
 "directory structure. This includes the name of the original directory."
 msgstr ""
-"Metti i file convertiti in una directory diversa mentre ricostruisci la struttura "
-"originale della directory. Questo include il nome della directory originale."
 
 #: ../bin/soundconverter.py:172
 msgid ""
 "Quality of the converted output file. Between 0 (lowest) and 5 (highest). "
 "Default is 3."
 msgstr ""
-"Qualità del file di output convertito. Tra 0 (minimo) e 5 (massimo). "
-"Il valore predefinito è 3."
 
 #: ../soundconverter/error.py:30
 #, python-format
@@ -443,25 +430,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "Installazione plugin interrotta."
 
-#: ../soundconverter/gstreamer.py:564
+#: ../soundconverter/gstreamer.py:563
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Impossibile creare la cartella '%s'."
 
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:599
 msgid "GStreamer Error:"
 msgstr "Errore di GStreamer:"
 
-#: ../soundconverter/gstreamer.py:810
+#: ../soundconverter/gstreamer.py:808
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Conversione completata in %s"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "Album sconosciuto"
 
-#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "Artista sconosciuto"
 
@@ -471,8 +458,6 @@ msgid ""
 "Artist Album Album-Artist Title Track Total Genre Date Year Timestamp "
 "DiscNumber DiscTotal Ext"
 msgstr ""
-"Album artista Album-Titolo artista Traccia Totale Genere Data Anno Timestamp"
-"DiscNumber DiscoTotal Ext"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -490,40 +475,40 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-msgid "Scanning files…"
-msgstr "Scansione file…"
+msgid "Scanning files..."
+msgstr ""
 
 #: ../soundconverter/ui.py:280
-msgid "Adding Files…"
-msgstr "Aggiungi file…"
+msgid "Adding Files..."
+msgstr ""
 
 #. case 1: the single file that should be added is not supported
 #: ../soundconverter/ui.py:328
 msgid "The specified file is not supported!"
-msgstr "Il file specificato non è supportato!"
+msgstr ""
 
 #: ../soundconverter/ui.py:329
 msgid "Either because it is broken or not an audio file."
-msgstr "O perché è corrotto o non è un file audio."
+msgstr ""
 
 #. case 2: all files that should be added cannot be added
 #: ../soundconverter/ui.py:333
 msgid "All {} specified files are not supported!"
-msgstr "Tutti i {} file specificati non sono supportati!"
+msgstr ""
 
 #: ../soundconverter/ui.py:334
 msgid "Either because they are broken or not audio files."
-msgstr "O perché è corrotto o non sono file audio."
+msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audio file could not be read by GStreamer!"
-msgid_plural "{} audio files could not be read by GStreamer!"
-msgstr[0] "Un file audio non può essere letto da GStreamer!"
-msgstr[1] "{} file audio non possono essere letti da GStreamer!"
+msgid "One audiofile could not be read by gstreamer!"
+msgid_plural "{} audiofiles could not be read by gstreamer!"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../soundconverter/ui.py:345
 msgid "Check \"Invalid Files\" in the menu for more information."
-msgstr "Seleziona \"File non validi\" nel menu per ulteriori informazioni."
+msgstr ""
 
 #: ../soundconverter/ui.py:432
 msgid "Same as input, but replacing the suffix"
@@ -557,9 +542,9 @@ msgstr "artista-album"
 msgid "Available patterns:"
 msgstr "Modelli disponibili:"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-msgid "Add Folder…"
-msgstr "Aggiungi Cartella…"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
+msgid "Add Folder..."
+msgstr "Aggiungi Cartella..."
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -571,53 +556,31 @@ msgstr "Nella cartella %s"
 msgid "Target bitrate: %s"
 msgstr "Bitrate bersaglio: %s"
 
-#: ../soundconverter/ui.py:1109
-msgid "Add Files…"
-msgstr "Aggiungi file…"
+#: ../soundconverter/ui.py:1107
+msgid "Add Files..."
+msgstr ""
 
-#: ../soundconverter/ui.py:1288
-#, fuzzy
-msgid "Preparing conversion…"
+#: ../soundconverter/ui.py:1286
+msgid "Preparing conversion..."
 msgstr "Preparazione conversione..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1307
 msgid "Converting"
 msgstr "Conversione in corso"
 
-#: ../soundconverter/ui.py:1327
+#: ../soundconverter/ui.py:1325
 msgid "Canceled"
 msgstr "Annullato"
 
-#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
 msgid "Paused"
 msgstr "In Pausa"
 
-#: ../soundconverter/ui.py:1419
+#: ../soundconverter/ui.py:1417
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d.%02d rimanenti"
 
-#: ../soundconverter/ui.py:1427
+#: ../soundconverter/ui.py:1425
 msgid "Ready"
 msgstr "Pronto"
-
-#~ msgid "Add Folder..."
-#~ msgstr "Aggiungi Cartella..."
-
-#~ msgid "Add Files..."
-#~ msgstr "Aggiungi File..."
-
-#~ msgid "dialog1"
-#~ msgstr "dialog1"
-
-#~ msgid "Filter "
-#~ msgstr "Filtro "
-
-#~ msgid "Where to place results?"
-#~ msgstr "Dove posizionare i risultati?"
-
-#~ msgid "Shows GStreamer Options"
-#~ msgstr "Mostra le opzioni di GStreamer"
-
-#~ msgid "Open a file"
-#~ msgstr "Apri un file"
