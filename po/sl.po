@@ -8,17 +8,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-30 13:26+0200\n"
-"PO-Revision-Date: 2018-10-23 09:18+0000\n"
+"POT-Creation-Date: 2020-02-01 17:29+0100\n"
+"PO-Revision-Date: 2020-04-29 16:50+0000\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
-"Language-Team: Slovenian GNOME translation group <gnome-si@googlegroups."
-"com>\n"
-"Language: \n"
+"Language-Team: Slovenian GNOME translation group <gnome-"
+"si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-02-01 16:16+0000\n"
-"X-Generator: Launchpad (build 0a62c17273454a1313f81a74a2198ec30b44c7b6)\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
+"n%100==4 ? 3 : 0);\n"
+"X-Launchpad-Export-Date: 2023-01-23 08:08+0000\n"
+"X-Generator: Launchpad (build e04feada4865d7ca041d8edeee137fe87b5bcb3e)\n"
+"Language: \n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -180,8 +182,7 @@ msgid "Same folder as the input file"
 msgstr "Ista mapa kot vhodne datoteke"
 
 #: ../data/soundconverter.glade.h:38
-#, fuzzy
-msgid "Choose…"
+msgid "Choose..."
 msgstr "Izberite ..."
 
 #: ../data/soundconverter.glade.h:39
@@ -316,8 +317,8 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1401
-#: ../soundconverter/ui.py:1423 ../soundconverter/ui.py:1429
+#: ../data/soundconverter.glade.h:72 ../soundconverter/ui.py:1399
+#: ../soundconverter/ui.py:1421 ../soundconverter/ui.py:1427
 msgid "SoundConverter"
 msgstr "Pretvornik zvoka"
 
@@ -352,17 +353,14 @@ msgstr "_Pomoč"
 #: ../bin/soundconverter.py:128
 msgid ""
 "Print which files cannot be read by gstreamer. Useful before converting. "
-"This will disable the GUI and run in batch mode, from the command line."
+"This will disable the gui and run in batch mode."
 msgstr ""
 
 #: ../bin/soundconverter.py:133
-#, fuzzy
 msgid ""
-"Convert in batch mode, from the command line, without a graphical user "
+"Convert in batch mode, from command line, without a graphical user "
 "interface. You can use this from, say, shell scripts."
 msgstr ""
-"Pretvori v paketnemu načinu iz ukazne vrstice brez grafičnega uporabniškega\n"
-" vmesnika. Možnost je mogoče uporabiti s skripti lupine."
 
 #: ../bin/soundconverter.py:138
 msgid ""
@@ -385,8 +383,10 @@ msgstr "Prisili število hkratnih pogovorov."
 #: ../bin/soundconverter.py:153
 #, python-format
 msgid ""
-"Set the output MIME type. The default is %s. Note that you will probably "
-"want to set the output suffix as well. Supported MIME types: %s"
+"Set the output MIME type. The default is %s. Note that you probably want to "
+"set the output suffix as well. Supported shortcuts and mime types: aac "
+"audio/x-m4a flac audio/x-flac mp3 audio/mpeg vorbis audio/x-vorbis wav "
+"audio/x-wav"
 msgstr ""
 
 #: ../bin/soundconverter.py:159
@@ -436,25 +436,25 @@ msgstr ""
 msgid "Plugin installation aborted."
 msgstr "Nameščanje vstavka je bilo prekinjeno."
 
-#: ../soundconverter/gstreamer.py:564
+#: ../soundconverter/gstreamer.py:563
 #, python-format
 msgid "Cannot create '%s' folder."
 msgstr "Ni mogoče ustvariti mape '%s'"
 
-#: ../soundconverter/gstreamer.py:600
+#: ../soundconverter/gstreamer.py:599
 msgid "GStreamer Error:"
 msgstr "GStreamer napaka:"
 
-#: ../soundconverter/gstreamer.py:810
+#: ../soundconverter/gstreamer.py:808
 #, python-format
 msgid "Conversion done in %s"
 msgstr "Pretvorba bo končana v %s"
 
-#: ../soundconverter/namegenerator.py:77
+#: ../soundconverter/namegenerator.py:71
 msgid "Unknown Album"
 msgstr "Neznan album"
 
-#: ../soundconverter/namegenerator.py:78 ../soundconverter/namegenerator.py:79
+#: ../soundconverter/namegenerator.py:72 ../soundconverter/namegenerator.py:73
 msgid "Unknown Artist"
 msgstr "Neznan izvajalec"
 
@@ -481,13 +481,11 @@ msgstr ""
 "%s\n"
 
 #: ../soundconverter/ui.py:211
-#, fuzzy
-msgid "Scanning files…"
+msgid "Scanning files..."
 msgstr "Pregledovanje datotek..."
 
 #: ../soundconverter/ui.py:280
-#, fuzzy
-msgid "Adding Files…"
+msgid "Adding Files..."
 msgstr "Poteka dodajanje datotek ..."
 
 #. case 1: the single file that should be added is not supported
@@ -509,8 +507,8 @@ msgid "Either because they are broken or not audio files."
 msgstr ""
 
 #: ../soundconverter/ui.py:343
-msgid "One audio file could not be read by GStreamer!"
-msgid_plural "{} audio files could not be read by GStreamer!"
+msgid "One audiofile could not be read by gstreamer!"
+msgid_plural "{} audiofiles could not be read by gstreamer!"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -550,10 +548,9 @@ msgstr "izvajalec - album"
 msgid "Available patterns:"
 msgstr "Razpoložljivi vzorci:"
 
-#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1088
-#, fuzzy
-msgid "Add Folder…"
-msgstr "Dodaj mapo"
+#: ../soundconverter/ui.py:486 ../soundconverter/ui.py:1086
+msgid "Add Folder..."
+msgstr "Dodaj mapo ..."
 
 #: ../soundconverter/ui.py:659
 #, python-format
@@ -565,55 +562,31 @@ msgstr "V mapo %s"
 msgid "Target bitrate: %s"
 msgstr "Ciljna bitna hitrost: %s"
 
-#: ../soundconverter/ui.py:1109
-#, fuzzy
-msgid "Add Files…"
-msgstr "Dodaj datoteko"
+#: ../soundconverter/ui.py:1107
+msgid "Add Files..."
+msgstr ""
 
-#: ../soundconverter/ui.py:1288
-#, fuzzy
-msgid "Preparing conversion…"
+#: ../soundconverter/ui.py:1286
+msgid "Preparing conversion..."
 msgstr "Poteka pripravljanje na pretvorbo ..."
 
-#: ../soundconverter/ui.py:1309
+#: ../soundconverter/ui.py:1307
 msgid "Converting"
 msgstr "Pretvarjanje"
 
-#: ../soundconverter/ui.py:1327
+#: ../soundconverter/ui.py:1325
 msgid "Canceled"
 msgstr "Preklicano"
 
-#: ../soundconverter/ui.py:1400 ../soundconverter/ui.py:1401
+#: ../soundconverter/ui.py:1398 ../soundconverter/ui.py:1399
 msgid "Paused"
 msgstr "V premoru"
 
-#: ../soundconverter/ui.py:1419
+#: ../soundconverter/ui.py:1417
 #, python-format
 msgid "%d:%02d left"
 msgstr "%d:%02d preostalo"
 
-#: ../soundconverter/ui.py:1427
+#: ../soundconverter/ui.py:1425
 msgid "Ready"
 msgstr "Pripravljeno"
-
-#~ msgid "Add Folder..."
-#~ msgstr "Dodaj mapo ..."
-
-#, fuzzy
-#~ msgid "Add Files..."
-#~ msgstr "Poteka dodajanje datotek ..."
-
-#~ msgid "dialog1"
-#~ msgstr "pogovorno okno 1"
-
-#~ msgid "Filter "
-#~ msgstr "Filter "
-
-#~ msgid "Where to place results?"
-#~ msgstr "Kje naj bodo ustvarjeni rezultati?"
-
-#~ msgid "Shows GStreamer Options"
-#~ msgstr "Pokaži možnosti GStreamer"
-
-#~ msgid "Open a file"
-#~ msgstr "Odpri datoteko"

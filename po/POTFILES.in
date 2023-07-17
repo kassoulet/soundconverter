@@ -1,10 +1,6 @@
-[encoding: UTF-8]
-
 bin/soundconverter
-
 data/soundconverter.desktop.in
 data/soundconverter.glade
-
 soundconverter/util/soundfile.py
 soundconverter/util/settings.py
 soundconverter/util/formats.py
