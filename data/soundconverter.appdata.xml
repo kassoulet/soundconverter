@@ -2,6 +2,7 @@
 <component type="desktop">
   <id>soundconverter.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
   <name>SoundConverter</name>
   <summary>Convert audio files</summary>
   <description>
@@ -12,7 +13,6 @@ SoundConverter is the leading audio file converter for the GNOME Desktop.
 SoundConverter is a simple to use, and very fast audio converter. It can convert multiples files at same the time to speed up the conversion. It can also extract the audio from videos. 
 </p>
   </description>
-  <url type="homepage">http://soundconverter.org/</url>
   <screenshots>
     <screenshot height="534" width="502" type="default">
       <image>https://soundconverter.org/screenshot-soundconverter.png</image>
@@ -20,13 +20,11 @@ SoundConverter is a simple to use, and very fast audio converter. It can convert
     </screenshot>
   </screenshots>
   <update_contact>gautier@soundconverter.org</update_contact>
+  <developer_name translatable="no">Gautier Portet</developer_name>
 
-  <project_license>GPL-3.0</project_license>
-
-  <developer_name>Gautier Portet</developer_name>
-
+  <url type="homepage">https://soundconverter.org/</url>
   <!--<url type="bugtracker">https://bugs.launchpad.net/soundconverter</url>-->
-
+  <url type="vcs-browser">https://github.com/kassoulet/soundconverter</url>
   <url type="translate">https://translations.launchpad.net/soundconverter</url>
 
   <content_rating type="oars-1.1" />
