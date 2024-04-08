@@ -52,6 +52,10 @@ python3 tests/test.py
 python3 tests/test.py discoverer.DiscovererTest.test_read_tags
 ```
 
+## Availability in Linux Distribution
+[![Packaging status](https://repology.org/badge/vertical-allrepos/soundconverter.svg)](https://repology.org/project/soundconverter/versions)
+
+
 ## Copyright and Acknowledgements
 
 Copyright 2004 Lars Wirzenius
