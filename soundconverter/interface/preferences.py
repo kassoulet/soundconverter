@@ -46,6 +46,7 @@ encoders = [
     ('audio/x-wav', 'wavenc', 'MS Wave (.wav)'),
     ('audio/x-m4a', 'fdkaacenc,faac,avenc_aac', 'AAC (.m4a)'),
     ('audio/ogg; codecs=opus', 'opusenc', 'Opus (.opus)'),
+    ('audio/x-ms-wma', 'avenc_wmav2', 'WMA (.wma)'),
 ]
 
 rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
@@ -183,6 +184,11 @@ class PreferencesDialog(GladeWindow):
         widget = self.opus_quality
         quality = self.settings.get_int('opus-bitrate')
         quality_setting = get_quality('audio/ogg; codecs=opus', quality, reverse=True)
+        widget.set_active(quality_setting)
+
+        widget = self.wma_quality
+        quality = self.settings.get_int('wma-bitrate')
+        quality_setting = get_quality('audio/x-ms-wma', quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.flac_compression
@@ -385,6 +391,7 @@ class PreferencesDialog(GladeWindow):
             'audio/x-wav': 3,
             'audio/x-m4a': 4,
             'audio/ogg; codecs=opus': 5,
+            'audio/x-ms-wma': 6,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -420,6 +427,10 @@ class PreferencesDialog(GladeWindow):
         if button.get_active():
             self.change_mime_type('audio/ogg; codecs=opus')
 
+    def on_output_mime_type_wma_toggled(self, button):
+        if button.get_active():
+            self.change_mime_type('audio/x-ms-wma')
+
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return  # just de-selectionning
@@ -439,6 +450,11 @@ class PreferencesDialog(GladeWindow):
     def on_opus_quality_changed(self, combobox):
         quality = get_quality('audio/ogg; codecs=opus', combobox.get_active())
         self.settings.set_int('opus-bitrate', quality)
+        self.update_example()
+
+    def on_wma_quality_changed(self, combobox):
+        quality = get_quality('audio/x-ms-wma', combobox.get_active())
+        self.settings.set_int('wma-bitrate', quality)
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):

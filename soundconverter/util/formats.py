@@ -34,7 +34,7 @@ def get_mime_type_mapping():
     mime_types = {
         'ogg': 'audio/x-vorbis', 'flac': 'audio/x-flac', 'wav': 'audio/x-wav',
         'mp3': 'audio/mpeg', 'aac': 'audio/x-m4a', 'm4a': 'audio/x-m4a',
-        'opus': 'audio/ogg; codecs=opus'
+        'opus': 'audio/ogg; codecs=opus', 'wma': 'audio/x-ms-wma'
     }
     return mime_types
 
@@ -97,6 +97,7 @@ def get_quality_setting_name():
             'audio/x-m4a': 'aac-quality',
             'audio/ogg; codecs=opus': 'opus-bitrate',
             'audio/x-flac': 'flac-compression',
+            'audio/x-ms-wma': 'wma-bitrate',
             'audio/x-wav': 'wav-sample-width'
         }[mime_type]
     return setting_name
@@ -125,6 +126,9 @@ def get_bitrate_from_settings():
 
     elif mime_type == 'audio/ogg; codecs=opus':
         bitrate = settings.get_int('opus-bitrate')
+
+    elif mime_type == 'audio/x-ms-wma':
+        bitrate = settings.get_int('wma-bitrate')
 
     elif mime_type == 'audio/mpeg':
         mp3_quality_setting_name = {
@@ -185,7 +189,8 @@ def get_default_quality(mime, mode='vbr'):
             'vbr': 0,  # inverted !
         },
         'audio/x-wav': 16,
-        'audio/x-flac': 5
+        'audio/x-flac': 5,
+        'audio/x-ms-wma': 192,
     }[mime]
 
     if isinstance(default, dict):
@@ -223,7 +228,8 @@ def get_quality(mime, value, mode='vbr', reverse=False):
             'vbr': (9, 7, 5, 3, 1, 0),  # inverted !
         },
         'audio/x-wav': (8, 16, 32),
-        'audio/x-flac': (0, 5, 8)
+        'audio/x-flac': (0, 5, 8),
+        'audio/x-ms-wma': (64, 96, 128, 192, 256, 320),
     }[mime]
 
     if isinstance(qualities, dict):
