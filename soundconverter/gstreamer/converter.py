@@ -53,6 +53,8 @@ def find_available_elements():
     # some functions can be provided by various packages.
     # move preferred packages towards the bottom.
     encoders = [
+        ('asfmux', 'WMA', 'wma-enc', BAD),
+        ('avenc_wmav2', 'WMA', 'wma-enc', LIBAV),
         ('flacenc', 'FLAC', 'flac-enc', GOOD),
         ('wavenc', 'WAV', 'wav-enc', GOOD),
         ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc', BASE),
@@ -97,6 +99,8 @@ def find_available_elements():
     if 'mp4mux' not in available_elements:
         available_elements.discard('faac')
         available_elements.discard('avenc_aac')
+    if 'asfmux' not in available_elements:
+        available_elements.discard('avenc_wmav2')
 
 
 find_available_elements()
@@ -199,6 +203,12 @@ def create_opus_encoder():
         'bandwidth=auto ! oggmux'
     ).format(opus_quality * 1000)
 
+def create_wma_encoder():
+    """Return an wma encoder for the gst pipeline string."""
+    wma_quality = get_gio_settings().get_int('wma-bitrate')
+    return (
+        'avenc_wmav2 bitrate={} ! asfmux'
+    ).format(wma_quality * 1000)
 
 class Converter(Task):
     """Completely handle the conversion of a single file."""
@@ -497,7 +507,8 @@ class Converter(Task):
             'audio/x-wav': create_wav_encoder,
             'audio/mpeg': create_mp3_encoder,
             'audio/x-m4a': create_aac_encoder,
-            'audio/ogg; codecs=opus': create_opus_encoder
+            'audio/ogg; codecs=opus': create_opus_encoder,
+            'audio/x-ms-wma': create_wma_encoder
         }[self.output_mime_type]()
         command.append(encoder)
 

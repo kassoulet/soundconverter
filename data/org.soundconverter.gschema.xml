@@ -85,6 +85,10 @@
       <default>96</default>
       <summary>Opus bitrate</summary>
       <description></description>
+    </key>    <key name="wma-bitrate" type="i">
+      <default>192</default>
+      <summary>WMA bitrate</summary>
+      <description></description>
     </key>
     <key name="flac-compression" type="i">
       <default>8</default>
