@@ -71,7 +71,7 @@ def vfs_walk(uri):
                 Gio.FileMonitorFlags.NONE, None
             )
 
-            uri = dirlist.get_child(file_info).get_uri();
+            uri = dirlist.get_child(file_info).get_uri()
 
             if info == Gio.FileType.DIRECTORY:
                 filelist.extend(vfs_walk(uri))

@@ -404,7 +404,7 @@ class Converter(Task):
             vfs_rename(self.temporary_filename, newname)
         except Exception as error:
             self.error = str(error)
-            logger.error("could not rename '{}' to '{}':".format(
+            logger.error("could not rename '{}' to '{}': {}".format(
                 beautify_uri(self.temporary_filename),
                 beautify_uri(newname),
                 str(error)
