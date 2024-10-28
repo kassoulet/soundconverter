@@ -1,0 +1,129 @@
+[project]
+name = "soundconverter"
+version = "4.0.6"
+description = "A simple sound converter application for the GNOME environment. It writes WAV, FLAC, MP3, Opus, WMA and Ogg Vorbis files."
+authors = [
+    { name = "Gautier Portet" },
+    { name = "Sezanzeb" },
+    { name = "Lars Wirzenius" },
+]
+readme = "README.md"
+keywords = ['soundconverter', 'gnome', 'sound', 'convert', 'gstreamer']
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    #"soundconverter>=2.1.1"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: X11 Applications :: Gnome",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Topic :: Desktop Environment :: Gnome",
+    "Topic :: Multimedia :: Sound/Audio :: Conversion",
+]
+
+[project.urls]
+Homepage = "https://soundconverter.org/"
+Repository = "https://github.com/kassoulet/soundconverter"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.2.0",
+    "tox-uv>=1.11.3",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.6.9",
+]
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+soundconverter = "soundconverter:soundconverter"
+
+[tool.setuptools]
+packages = [
+    "soundconverter",
+    "soundconverter.gstreamer",
+    "soundconverter.interface",
+    "soundconverter.util",
+]
+
+[tool.setuptools.package-data]
+"soundconverter" = ["*"]
+
+[tool.setuptools.data-files]
+"share/applications" = ["data/soundconverter.desktop"]
+"share/metainfo/" = ['data/soundconverter.appdata.xml']
+"share/pixmaps/" = ['data/soundconverter.png']
+"share/icons/hicolor/scalable/apps/" = ['data/soundconverter.svg']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.run]
+branch = true
+source = ["soundconverter"]
+
+[tool.deptry]
+extend_exclude = [".+/test_foo.py"]
+
+[tool.deptry.per_rule_ignores]
+DEP002 = ["soundconverter"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+#fix = true
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E",
+    "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S603"]
+
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]

@@ -1,0 +1,274 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# SoundConverter - GNOME application for converting between audio formats.
+# Copyright 2004 Lars Wirzenius
+# Copyright 2005-2020 Gautier Portet
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+# USA
+
+"""SoundConverter Launcher."""
+
+# imports and package setup
+
+import os
+import site
+import sys
+from optparse import OptionParser, OptionGroup
+import locale
+import gettext
+
+_ = gettext.gettext
+import pkg_resources
+
+# read values from setup.py
+VERSION = pkg_resources.require('soundconverter')[0].version
+NAME = pkg_resources.require('soundconverter')[0].project_name
+SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+
+# depending on where this file is installed to, make sure to use the proper
+# prefix path for data
+# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
+if SOURCE_PATH.startswith(site.USER_BASE):
+    DATA_PATH = os.path.join(site.USER_BASE, 'share/soundconverter')
+elif SOURCE_PATH.startswith('/usr/local/'):
+    DATA_PATH = '/usr/local/share/soundconverter'
+elif SOURCE_PATH.startswith('/usr/'):
+    DATA_PATH = '/usr/share/soundconverter'
+elif SOURCE_PATH.startswith('/app/'):
+    # flatpak support
+    DATA_PATH = '/app/share/soundconverter'
+
+    # For flatpak, we need to explicitly (re-)bind the locale and the gettext
+    # textdomain, because Python's default localedir is pointing to
+    # /usr/share/locale, whereas flatpaks install their locales to
+    # /app/share/locale.
+    # For reference, see https://docs.python.org/3/library/gettext.html#id3
+    locale.setlocale(locale.LC_ALL, '')
+    locale.bindtextdomain(NAME, '/app/share/locale')
+    gettext.bindtextdomain(NAME, '/app/share/locale')
+    gettext.textdomain(NAME)
+else:
+    # installed with -e, running from the cloned git source
+    DATA_PATH = os.path.join(SOURCE_PATH, 'data')
+
+try:
+    import gi
+    gi.require_version('GstPbutils', '1.0')
+    gi.require_version('Gst', '1.0')
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gst, Gtk, GLib, Gdk
+except (ImportError, ValueError) as error:
+    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
+    sys.exit(1)
+
+# Gst.init takes those args it knows from sys.argv and returns the remaining.
+# For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
+args = Gst.init(sys.argv)
+
+if type(args) != list:
+    # in tests it just suddenly returns a boolean instead. when writing tests,
+    # beware that `--gst-...` arguments are not filtered here
+    args = sys.argv
+
+from soundconverter.util.settings import settings
+from soundconverter.interface.batch import batch_main, \
+    CLICheck, use_memory_gsettings, validate_args
+from soundconverter.interface.ui import gui_main
+from soundconverter.util.logger import logger, update_verbosity
+from soundconverter.gstreamer.converter import Converter
+
+from soundconverter.interface.preferences import rates
+
+
+def mode_callback(option, opt, value, parser, **kwargs):
+    """Write the main mode (batch, gui, tags) into the options."""
+    setattr(parser.values, option.dest, kwargs[option.dest])
+
+
+class ModifiedOptionParser(OptionParser):
+    """An OptionParser class that doesn't remove newlines on the epilog in
+    order to show usage examples.
+
+    https://stackoverflow.com/questions/1857346/
+
+    See optparse.OptionParser for the original docstring
+    """
+
+    def format_epilog(self, formatter):
+        if self.epilog is None:
+            return ""
+        return self.epilog
+
+
+def parse_command_line():
+    """Create and return the OptionParser.
+
+    Parses the command line arguments and displays help with --help.
+    """
+    parser = ModifiedOptionParser(
+        epilog='\nExamples:\n'
+        '  soundconverter -b [input paths] -f flac -o [output path]\n'
+        '  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m ' +
+        'vbr -o ~/compressed -e skip\n'
+        '  soundconverter -b ~/music -r -f m4a -q 320 -o ' +
+        '/mnt/sd/compressed -p {artist}/{title}\n'
+    )
+    parser.add_option(
+        '-b', '--batch', dest='main', action='callback',
+        callback=mode_callback, callback_kwargs={'main': 'batch'},
+        help=_(
+            'Convert in batch mode, from the command line, without '
+            'a graphical user interface. You can use this from, '
+            'say, shell scripts.'
+        )
+    )
+    parser.add_option(
+        '-t', '--tags', dest='main', action='callback',
+        callback=mode_callback,  callback_kwargs={'main': 'tags'},
+        help=_(
+            'Show tags for input files instead of converting '
+            'them. This disables the graphical user interface.'
+        )
+    )
+    parser.add_option(
+        '-d', '--debug', action='store_true', dest='debug',
+        help=_('Displays additional debug information'),
+        default=False
+    )
+    parser.add_option(
+        '-j', '--jobs', action='store', type='int', dest='forced-jobs',
+        metavar='NUM', help=_('Force number of concurrent conversions.')
+    )
+    parser.add_option(
+        '-D', '--delete-original', action='store_true', dest='delete-original',
+        help=_('Deletes the original file when conversion is done.')
+    )
+    parser.add_option(
+        '-R', '--output-resample', dest='output-resample',
+        help=_('Resamples audio during conversion. Possible values: %(rates)s') %
+              {'rates': ", ".join([str(item) for item in rates])},
+        type=int
+    )
+
+    # batch mode settings
+    batch_option_group = OptionGroup(
+        parser, 'Batch Mode Options',
+        'Those options will only have effect when the -b, -c or -t '
+        'option is provided'
+    )
+    batch_option_group.add_option(
+        '-f', '--format', dest='format', metavar='NAME',
+        help=_(
+            'Set the output format. '
+            'aac/m4a, flac, mp3, ogg, opus and wav are supported.'
+        )
+    )
+    # mode might also be used for format options of other formats at some
+    # point if applicable
+    batch_option_group.add_option(
+        '-m', '--mode', dest='mode', metavar='MODE',
+        help=_(
+            'One of cbr, abr or vbr (default) for mp3'
+        )
+    )
+    batch_option_group.add_option(
+        '-e', '--existing', dest='existing', metavar='MODE',
+        help=_(
+            'One of {}, {} or {}'.format(
+                Converter.SKIP,
+                Converter.OVERWRITE,
+                Converter.INCREMENT
+            )
+        ),
+        default=Converter.INCREMENT
+    )
+    batch_option_group.add_option(
+        '-r', '--recursive', action='store_true', dest='recursive',
+        help=_('Go recursively into subdirectories'),
+        default=False
+    )
+    batch_option_group.add_option(
+        '-o', '--output', action='store', dest='output-path', metavar='PATH',
+        help=_(
+            'Put converted files into a different directory while rebuilding '
+            'the original directory structure. This includes the name of the '
+            'original directory if a directory was selected.'
+        ),
+        default=None
+    )
+    batch_option_group.add_option(
+        '-p', '--pattern', action='store', dest='custom-filename-pattern',
+        metavar='PATH', help=_(
+            'For example {artist}/{album}/{title}. title defaults to the '
+            'filename if unset. Unknown tags default to "Unknown ..." '
+            'otherwise.'
+        ),
+        default=None
+    )
+
+    batch_option_group.add_option(
+        '-q', '--quality', action='store', type='float', dest='quality',
+        metavar='NUM', help=_(
+            'Quality of the converted output file. Possible values: '
+            'vorbis: 0.0 - 1.0; '
+            'aac/m4a: 0 - 400; '
+            'opus: 6 - 510; '
+            'mp3 vbr: 9 (low) - 0 (high); '
+            'mp3 abr: 64 - 320; '
+            'mp3 cbr: 64 - 320; '
+            'wav: 8, 16, 32 (bitdepth); '
+            'flac: 0 - 8 (compression strength)'
+        )
+    )
+
+    parser.add_option_group(batch_option_group)
+
+    return parser
+
+
+parser = parse_command_line()
+
+options, files = parser.parse_args(args[1:])
+options = vars(options)
+# the only cli args that are not available over gio settings.
+settings['main'] = options['main'] or 'gui'
+settings['debug'] = options['debug']
+settings['recursive'] = options['recursive']
+settings['existing'] = options['existing']
+
+# now that the settings are populated, the verbosity can be determined:
+update_verbosity()
+
+logger.info(('{} {}'.format(NAME, VERSION)))
+
+if settings['main'] == 'gui':
+    GLADEFILE = os.path.join(DATA_PATH, 'soundconverter.glade')
+    gui_main(NAME, VERSION, GLADEFILE, files)
+else:
+    if not files:
+        logger.info('nothing to do…')
+
+    # first check if the cli is used correctly
+    if not validate_args(options):
+        raise SystemExit
+
+    # then store them in the gio settings
+    use_memory_gsettings(options)
+
+    if settings['main'] == 'tags':
+        CLICheck(files, verbose=True)
+    elif settings['main'] == 'batch':
+        batch_main(files)
