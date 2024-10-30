@@ -26,7 +26,7 @@ Installing from source requires distutils-extra
 ```bash
 git clone https://github.com/kassoulet/soundconverter.git
 cd soundconverter
-git checkout py3k
+git checkout main
 sudo python3 setup.py install
 soundconverter
 ```
