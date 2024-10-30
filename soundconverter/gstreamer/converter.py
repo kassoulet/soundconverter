@@ -423,8 +423,15 @@ class Converter(Task):
             # Copy file permissions
             source = Gio.file_parse_name(self.sound_file.uri)
             destination = Gio.file_parse_name(newname)
-            source.copy_attributes(destination, Gio.FileCopyFlags.NONE)
-
+            source.copy_attributes(destination, Gio.FileCopyFlags.ALL_METADATA)
+        except Exception as error:
+            logger.error(
+                "Could not set some attributes of the target '{}': {}".format(
+                    beautify_uri(newname),
+                    str(error)
+                )
+            )
+        try:
             # the modification date of the destination should be now
             info = Gio.FileInfo()
             now = GLib.DateTime.new_now(GLib.TimeZone())
@@ -442,7 +449,7 @@ class Converter(Task):
             )
         except Exception as error:
             logger.error(
-                "Could not set some attributes of the target '{}': {}".format(
+                "Could not set modification time of the target '{}': {}".format(
                     beautify_uri(newname),
                     str(error)
                 )
