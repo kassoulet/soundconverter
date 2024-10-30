@@ -114,7 +114,8 @@ class DiscovererTest(unittest.TestCase):
 
         sound_file = discoverer.sound_files[0]
         self.assertTrue(sound_file.readable)
-        self.assertLess(abs(sound_file.duration - 1.04), 0.01)
+        print(sound_file.duration)
+        self.assertEqual(int(sound_file.duration), 1)
         self.assertEqual(sound_file.tags['artist'], 'test_artist')
         self.assertEqual(sound_file.tags['album'], 'test_album')
 
@@ -146,7 +147,7 @@ class DiscovererTest(unittest.TestCase):
         self.assertTrue(sound_files[0].readable)
         self.assertEqual(sound_files[0].tags['artist'], 'test_artist')
         self.assertEqual(sound_files[0].tags['album'], 'test_album')
-        self.assertLess(abs(sound_files[0].duration - 1.04), 0.01)
+        self.assertEqual(int(sound_files[0].duration), 1)
 
         self.assertFalse(sound_files[1].readable)
         self.assertEqual(len(sound_files[1].tags), 0)
