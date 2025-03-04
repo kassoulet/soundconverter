@@ -37,7 +37,7 @@ from importlib.metadata import metadata
 # read values from setup.py
 soundconverter_metadata = metadata('soundconverter')  
 NAME = soundconverter_metadata['Name']
-VERSION = version('soundconverter')
+VERSION = soundconverter_metadata['version']
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
 
 
