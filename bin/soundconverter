@@ -32,11 +32,14 @@ import gettext
 
 _ = gettext.gettext
 import pkg_resources
+from importlib.metadata import metadata
 
 # read values from setup.py
-VERSION = pkg_resources.require('soundconverter')[0].version
-NAME = pkg_resources.require('soundconverter')[0].project_name
+soundconverter_metadata = metadata('soundconverter')  
+NAME = soundconverter_metadata['Name']
+VERSION = version('soundconverter')
 SOURCE_PATH = pkg_resources.require('soundconverter')[0].location
+
 
 # depending on where this file is installed to, make sure to use the proper
 # prefix path for data
