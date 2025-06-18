@@ -71,13 +71,13 @@ def get_file_extension(mime):
     if mime in mime_types:
         # already an extension
         suffix = mime
-        if suffix == 'ogg':
-            if get_gio_settings().get_boolean('vorbis-oga-extension'):
-                suffix = 'oga'
-        return suffix
     else:
         mime2ext = {mime: ext for ext, mime in mime_types.items()}
-        return mime2ext.get(mime, '?')
+        suffix = mime2ext.get(mime, '?')
+    if suffix == 'ogg':
+        if get_gio_settings().get_boolean('vorbis-oga-extension'):
+            suffix = 'oga'
+    return suffix
 
 
 def get_quality_setting_name():
