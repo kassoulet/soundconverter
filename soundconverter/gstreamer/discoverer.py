@@ -132,7 +132,8 @@ class DiscovererThread(Thread):
             for audio_stream in info.get_audio_streams():
                 # Read tags for each audio stream
                 taglist = audio_stream.get_tags()
-                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
+                if taglist: 
+                    taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
             logger.debug('found tag: {}'.format(filename))
