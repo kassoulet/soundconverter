@@ -27,6 +27,7 @@ from gi.repository import Gtk, GLib
 def idle(func):
     def callback(*args, **kwargs):
         GLib.idle_add(func, *args, **kwargs)
+
     return callback
 
 

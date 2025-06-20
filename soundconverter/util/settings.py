@@ -33,7 +33,7 @@ from gi.repository import Gio
 # Use get_gio_settings instead of importing this directly, because this
 # object changes in tests, and also this object will be replaced with a
 # memory backend for the batch mode.
-_gio_settings = Gio.Settings(schema='org.soundconverter')  # do not import!
+_gio_settings = Gio.Settings(schema="org.soundconverter")  # do not import!
 
 
 def get_gio_settings():
@@ -45,10 +45,7 @@ def get_gio_settings():
 
 
 # Arguments that can exclusively set over the CLI
-settings = {
-    'main': 'gui',
-    'debug': False
-}
+settings = {"main": "gui", "debug": False}
 
 
 def set_gio_settings(settings):
@@ -69,7 +66,7 @@ def set_gio_settings(settings):
 def get_num_jobs():
     """Return the number of jobs that should be run in parallel."""
     return (
-        _gio_settings.get_int('number-of-jobs')
-        if _gio_settings.get_boolean('limit-jobs')
+        _gio_settings.get_int("number-of-jobs")
+        if _gio_settings.get_boolean("limit-jobs")
         else cpu_count()
     )

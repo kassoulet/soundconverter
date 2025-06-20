@@ -31,72 +31,85 @@ import urllib.parse
 import urllib.error
 import unicodedata
 from gettext import gettext as _
-from soundconverter.util.fileoperations import vfs_exists, filename_to_uri, \
-    split_uri, is_uri, beautify_uri
+from soundconverter.util.fileoperations import (
+    vfs_exists,
+    filename_to_uri,
+    split_uri,
+    is_uri,
+    beautify_uri,
+)
 from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
 
 basename_patterns = [
-    ('{inputname}', _('Same as input, but replacing the suffix')),
-    ('{inputname}.{ext}', _('Same as input, but with an additional suffix')),
-    ('{track-number:02}-{title}', _('Track number - title')),
-    ('{title}', _('Track title')),
-    ('{artist}-{title}', _('Artist - title')),
-    ('Custom', _('Custom filename pattern')),
+    ("{inputname}", _("Same as input, but replacing the suffix")),
+    ("{inputname}.{ext}", _("Same as input, but with an additional suffix")),
+    ("{track-number:02}-{title}", _("Track number - title")),
+    ("{title}", _("Track title")),
+    ("{artist}-{title}", _("Artist - title")),
+    ("Custom", _("Custom filename pattern")),
 ]
 
 subfolder_patterns = [
-    ('{album-artist}/{album}', _('artist/album')),
-    ('{album-artist}-{album}', _('artist-album')),
-    ('{album-artist} - {album}', _('artist - album')),
+    ("{album-artist}/{album}", _("artist/album")),
+    ("{album-artist}-{album}", _("artist-album")),
+    ("{album-artist} - {album}", _("artist - album")),
 ]
 
 # custom filename patterns
-english_patterns = 'Artist Album Album-Artist Title Track Total Genre Date ' \
-                   'Year Timestamp DiscNumber DiscTotal Ext'
+english_patterns = (
+    "Artist Album Album-Artist Title Track Total Genre Date "
+    "Year Timestamp DiscNumber DiscTotal Ext"
+)
 
 # traductors: These are the custom filename patterns. Only if it makes sense.
-locale_patterns = _('Artist Album Album-Artist Title Track Total Genre Date '
-                    'Year Timestamp DiscNumber DiscTotal Ext')
+locale_patterns = _(
+    "Artist Album Album-Artist Title Track Total Genre Date "
+    "Year Timestamp DiscNumber DiscTotal Ext"
+)
 
 patterns_formats = (
-    '{artist}',
-    '{album}',
-    '{album-artist}',
-    '{title}',
-    '{track-number:02}',
-    '{track-count:02}',
-    '{genre}',
-    '{date}',
-    '{year}',
-    '{timestamp}',
-    '{album-disc-number}',
-    '{album-disc-count}',
-    '{target-ext}',
+    "{artist}",
+    "{album}",
+    "{album-artist}",
+    "{title}",
+    "{track-number:02}",
+    "{track-count:02}",
+    "{genre}",
+    "{date}",
+    "{year}",
+    "{timestamp}",
+    "{album-disc-number}",
+    "{album-disc-count}",
+    "{target-ext}",
 )
 
 # Name and pattern for CustomFileChooser
 filepattern = (
-    (_('All files'), '*.*'),
-    ('MP3', '*.mp3'),
-    ('Ogg Vorbis', '*.ogg;*.oga'),
-    ('iTunes AAC ', '*.m4a'),
-    ('Windows WAV', '*.wav'),
-    ('AAC', '*.aac'),
-    ('FLAC', '*.flac'),
-    ('AC3', '*.ac3')
+    (_("All files"), "*.*"),
+    ("MP3", "*.mp3"),
+    ("Ogg Vorbis", "*.ogg;*.oga"),
+    ("iTunes AAC ", "*.m4a"),
+    ("Windows WAV", "*.wav"),
+    ("AAC", "*.aac"),
+    ("FLAC", "*.flac"),
+    ("AC3", "*.ac3"),
 )
 
 # Example: { 'artist': '{Artist}' }
-locale_patterns_dict = dict(list(zip(
-    [p.lower() for p in english_patterns.split()],
-    ['{%s}' % p for p in locale_patterns.split()]
-)))
+locale_patterns_dict = dict(
+    list(
+        zip(
+            [p.lower() for p in english_patterns.split()],
+            ["{%s}" % p for p in locale_patterns.split()],
+        )
+    )
+)
 
 # add english and locale
-custom_patterns = english_patterns + ' ' + locale_patterns
+custom_patterns = english_patterns + " " + locale_patterns
 # convert to list
-custom_patterns = ['{%s}' % p for p in custom_patterns.split()]
+custom_patterns = ["{%s}" % p for p in custom_patterns.split()]
 # and finally to dict, thus removing doubles.
 # Example: { '{Künstler}': '{artist}' } depending on the locale
 custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
@@ -119,12 +132,12 @@ def get_basename_pattern():
     """
     settings = get_gio_settings()
 
-    index = settings.get_int('name-pattern-index')
+    index = settings.get_int("name-pattern-index")
     if index >= len(basename_patterns) or index < -1:
         index = 0
 
     if index in (-1, len(basename_patterns) - 1):
-        pattern = settings.get_string('custom-filename-pattern')
+        pattern = settings.get_string("custom-filename-pattern")
         return process_custom_pattern(pattern)
 
     # an index of -1 selects the last entry on purpose
@@ -140,7 +153,7 @@ def get_subfolder_pattern():
     # Since it is not a free text input on the ui, process_custom_pattern
     # doesn't have to be used
     settings = get_gio_settings()
-    index = settings.get_int('subfolder-pattern-index')
+    index = settings.get_int("subfolder-pattern-index")
     if index >= len(subfolder_patterns) or index < -1:
         index = 0
     return subfolder_patterns[index][0]
@@ -156,15 +169,16 @@ class TargetNameGenerator:
     This class, once created, can create the names for all conversions in the
     queue, there is no need to create one TargetNameGenerator per Converter.
     """
+
     def __init__(self):
         # remember settings from when TargetNameGenerator was created:
         settings = get_gio_settings()
-        self.same_folder_as_input = settings.get_boolean('same-folder-as-input')
-        self.selected_folder = settings.get_string('selected-folder')
-        self.output_mime_type = settings.get_string('output-mime-type')
-        self.vorbis_oga_extension = settings.get_boolean('vorbis-oga-extension')
-        self.create_subfolders = settings.get_boolean('create-subfolders')
-        self.replace_messy_chars = settings.get_boolean('replace-messy-chars')
+        self.same_folder_as_input = settings.get_boolean("same-folder-as-input")
+        self.selected_folder = settings.get_string("selected-folder")
+        self.output_mime_type = settings.get_string("output-mime-type")
+        self.vorbis_oga_extension = settings.get_boolean("vorbis-oga-extension")
+        self.create_subfolders = settings.get_boolean("create-subfolders")
+        self.replace_messy_chars = settings.get_boolean("replace-messy-chars")
         self.subfolder_pattern = get_subfolder_pattern()
         self.basename_pattern = get_basename_pattern()
         self.suffix = get_file_extension(self.output_mime_type)
@@ -173,21 +187,22 @@ class TargetNameGenerator:
         # behaviour of functions and to reduce their complexity.
         if not self.same_folder_as_input and not is_uri(self.selected_folder):
             raise ValueError(
-                'your selected folder {} should be in URI format.'.format(
+                "your selected folder {} should be in URI format.".format(
                     self.selected_folder
                 )
             )
         # If you wish to provide an uri scheme like ftp:// it should be in
         # the selected_folder instead.
         if is_uri(self.basename_pattern) or is_uri(self.subfolder_pattern):
-            raise ValueError(
-                'patterns should be patterns, not complete URIs.'
-            )
+            raise ValueError("patterns should be patterns, not complete URIs.")
 
     @staticmethod
     def _unicode_to_ascii(unicode_string):
         # thanks to http://code.activestate.com/recipes/251871/
-        return str(unicodedata.normalize('NFKD', unicode_string).encode('ASCII', 'ignore'), 'ASCII')
+        return str(
+            unicodedata.normalize("NFKD", unicode_string).encode("ASCII", "ignore"),
+            "ASCII",
+        )
 
     @staticmethod
     def safe_string(name):
@@ -200,10 +215,8 @@ class TargetNameGenerator:
         Will not break URI schemes.
         """
         scheme, name = split_uri(name)
-        nice_chars = string.ascii_letters + string.digits + '.-_/'
-        return (scheme or '') + ''.join([
-            c if c in nice_chars else '_' for c in name
-        ])
+        nice_chars = string.ascii_letters + string.digits + ".-_/"
+        return (scheme or "") + "".join([c if c in nice_chars else "_" for c in name])
 
     @staticmethod
     def safe_uri(parent, child):
@@ -232,39 +245,39 @@ class TargetNameGenerator:
         """
         # some validation of input parameters
         if not is_uri(parent):
-            raise ValueError('expected the parent to be an URI')
+            raise ValueError("expected the parent to be an URI")
         if child.startswith(parent):
             raise ValueError(
-                'wrong usage. Child "{}" should be the '.format(child) +
-                'child of parent "{}", not the whole path'.format(child)
+                'wrong usage. Child "{}" should be the '.format(child)
+                + 'child of parent "{}", not the whole path'.format(child)
             )
-        if child.startswith('./'):
+        if child.startswith("./"):
             raise ValueError(
-                'you cannot provide a relative path to the cwd starting '
+                "you cannot provide a relative path to the cwd starting "
                 'with "./", the child is intended to be relative to the '
-                'parent.'
+                "parent."
             )
         if len(child) == 0:
-            raise ValueError('empty filename')
+            raise ValueError("empty filename")
         if is_uri(child):
             raise ValueError(
-                'expected child "{}" to be a subfolder, '.format(child) +
-                'path not a complete URI.'
+                'expected child "{}" to be a subfolder, '.format(child)
+                + "path not a complete URI."
             )
 
         # ensure URI escaping of the parent
         parent = filename_to_uri(parent)
 
         # ensure correct slahes like "file:///parent/" "subdir1/subdir2"
-        if not parent.endswith('/'):
-            parent += '/'
-        if child.startswith('/'):
+        if not parent.endswith("/"):
+            parent += "/"
+        if child.startswith("/"):
             child = child[1:]
 
         # figure out how much of the path already exists
         # split into for example [/test', '/baz.flac'] or ['qux.mp3']
-        split = [s for s in re.split(r'((?:/|^)[^/]+)', child) if s != '']
-        safe = ''
+        split = [s for s in re.split(r"((?:/|^)[^/]+)", child) if s != ""]
+        safe = ""
         while len(split) > 0:
             part = split.pop(0)
             if vfs_exists(parent + safe + part):
@@ -272,7 +285,7 @@ class TargetNameGenerator:
             else:
                 # put the remaining unknown non-existing path back together
                 # and make it safe
-                rest = part + ''.join(split)
+                rest = part + "".join(split)
 
                 # the path is in uri format, so before applying safe_string,
                 # unquote it.
@@ -298,13 +311,13 @@ class TargetNameGenerator:
         find i, a, c, e, g, hhh
         """
         variables = []
-        candidates = re.findall(r'{+.+?}+', pattern)
+        candidates = re.findall(r"{+.+?}+", pattern)
         for candidate in candidates:
             # check if the candidate is made out of an uneven number of
             # curly braces. Two curly braces are a single escaped one.
-            if not re.match(r'^(?:{{)*([^{}]+?)(?:}})*$', candidate):
+            if not re.match(r"^(?:{{)*([^{}]+?)(?:}})*$", candidate):
                 # get the inner curly brace content
-                variable = re.search(r'([^{}]+)', candidate)[1]
+                variable = re.search(r"([^{}]+)", candidate)[1]
                 variables.append(variable)
         return variables
 
@@ -325,47 +338,47 @@ class TargetNameGenerator:
         filename = beautify_uri(sound_file.uri)
         filename = os.path.basename(filename)
         filename, ext = os.path.splitext(filename)
-        assert '/' not in filename
+        assert "/" not in filename
         mapping = {
-            'filename': filename,
-            'inputname': filename,
-            'ext': ext[1:],
-            'target-ext': self.suffix,
-            'album': _('Unknown Album'),
-            'artist': _('Unknown Artist'),
-            'album-artist': _('Unknown Artist'),
-            'title': filename,
-            'track-number': 0,
-            'track-count': 0,
-            'genre': _('Unknown Genre'),
-            'year': _('Unknown Year'),
-            'date': _('Unknown Date'),
-            'album-disc-number': 0,
-            'album-disc-count': 0,
+            "filename": filename,
+            "inputname": filename,
+            "ext": ext[1:],
+            "target-ext": self.suffix,
+            "album": _("Unknown Album"),
+            "artist": _("Unknown Artist"),
+            "album-artist": _("Unknown Artist"),
+            "title": filename,
+            "track-number": 0,
+            "track-count": 0,
+            "genre": _("Unknown Genre"),
+            "year": _("Unknown Year"),
+            "date": _("Unknown Date"),
+            "album-disc-number": 0,
+            "album-disc-count": 0,
         }
 
         for key in tags:
             mapping[key] = tags[key]
             if isinstance(mapping[key], str):
                 # take care of tags containing slashes
-                mapping[key] = mapping[key].replace('/', '-')
-                if key.endswith('-number'):
+                mapping[key] = mapping[key].replace("/", "-")
+                if key.endswith("-number"):
                     mapping[key] = int(mapping[key])
 
         # when artist set & album-artist not, use artist for album-artist
-        if 'artist' in tags and 'album-artist' not in tags:
-            mapping['album-artist'] = tags['artist']
+        if "artist" in tags and "album-artist" not in tags:
+            mapping["album-artist"] = tags["artist"]
 
         # add timestamp to substitution dict -- this could be split into more
         # entries for more fine-grained control over the string by the user...
-        timestamp_string = time.strftime('%Y%m%d_%H_%M_%S')
-        mapping['timestamp'] = timestamp_string
+        timestamp_string = time.strftime("%Y%m%d_%H_%M_%S")
+        mapping["timestamp"] = timestamp_string
 
         # if some tag is called "venue", map it to "Unknown Venue"
         tags_in_pattern = self.find_format_string_tags(pattern)
         unknown_tags = [tag for tag in tags_in_pattern if tag not in mapping]
         for tag in unknown_tags:
-            mapping[tag] = 'Unknown {}'.format(tag.capitalize())
+            mapping[tag] = "Unknown {}".format(tag.capitalize())
 
         # now fill the tags in the pattern with values:
         result = pattern.format(**mapping)
@@ -379,10 +392,10 @@ class TargetNameGenerator:
         while True:
             rand = str(random())[-6:]
             if self.replace_messy_chars:
-                filename = basename + '~' + rand + '~SC~'
+                filename = basename + "~" + rand + "~SC~"
                 final_uri = TargetNameGenerator.safe_uri(parent_uri, filename)
             else:
-                final_uri = parent_uri + basename + '~' + rand + '~SC~'
+                final_uri = parent_uri + basename + "~" + rand + "~SC~"
             if not vfs_exists(final_uri):
                 return final_uri
 
@@ -398,7 +411,7 @@ class TargetNameGenerator:
         subfolder = None
         if self.create_subfolders:
             subfolder = self.fill_pattern(sound_file, subfolder_pattern)
-        elif sound_file.subfolders is not None and '/' not in basename_pattern:
+        elif sound_file.subfolders is not None and "/" not in basename_pattern:
             # use existing subfolders between base_path and the soundfile, but
             # only if the basename_pattern does not create subfolders.
             # For example:
@@ -416,8 +429,8 @@ class TargetNameGenerator:
             parent = sound_file.base_path
         else:
             parent = self.selected_folder
-        if not parent.endswith('/'):
-            parent += '/'
+        if not parent.endswith("/"):
+            parent += "/"
         # ensure it is an URI, possibly adding file://
         return filename_to_uri(parent)
 
@@ -426,9 +439,8 @@ class TargetNameGenerator:
         # note, that basename_pattern might actually contain subfolders, so
         # it's not always only a basename.
         # It's the deepest part of the target path though.
-        return '{}.{}'.format(
-            self.fill_pattern(sound_file, self.basename_pattern),
-            self.suffix
+        return "{}.{}".format(
+            self.fill_pattern(sound_file, self.basename_pattern), self.suffix
         )
 
     def generate_target_uri(self, sound_file, for_display=False):
@@ -458,7 +470,7 @@ class TargetNameGenerator:
         # child should be quoted to form a proper URI together with parent
         child = urllib.parse.quote(child)
 
-        if child.startswith('/'):
+        if child.startswith("/"):
             # os.path.join will omit parent_uri otherwise
             child = child[1:]
 
