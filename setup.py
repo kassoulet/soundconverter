@@ -24,7 +24,7 @@ import sys
 try:
     import DistUtilsExtra.auto
 except ImportError as e:
-    sys.stderr.write('You need python-distutils-extra\n')
+    sys.stderr.write("You need python-distutils-extra\n")
     sys.stderr.write(e)
     sys.exit(1)
 
@@ -45,27 +45,25 @@ class Install(DistUtilsExtra.auto.install_auto):
         DistUtilsExtra.auto.install_auto.run(self)
         # after DistUtilsExtra automatically copied data/org.soundconverter.gschema.xml
         # to /usr/share/glib-2.0/schemas/ it doesn't seem to compile them.
-        glib_schema_path = os.path.join(self.install_data, 'share/glib-2.0/schemas/')
-        cmd = 'glib-compile-schemas {}'.format(glib_schema_path)
-        print('running {}'.format(cmd))
+        glib_schema_path = os.path.join(self.install_data, "share/glib-2.0/schemas/")
+        cmd = "glib-compile-schemas {}".format(glib_schema_path)
+        print("running {}".format(cmd))
         os.system(cmd)
 
 
 DistUtilsExtra.auto.setup(
-    name='soundconverter',
-    version='4.0.6',
+    name="soundconverter",
+    version="4.0.6",
     description=(
-        'A simple sound converter application for the GNOME environment. '
-        'It writes WAV, FLAC, MP3, Opus, WMA and Ogg Vorbis files.'
+        "A simple sound converter application for the GNOME environment. "
+        "It writes WAV, FLAC, MP3, Opus, WMA and Ogg Vorbis files."
     ),
-    license='GPL-3.0',
+    license="GPL-3.0",
     data_files=[
-        ('share/metainfo/', ['data/soundconverter.appdata.xml']),
-        ('share/pixmaps/', ['data/soundconverter.png']),
-        ('share/icons/hicolor/scalable/apps/', ['data/soundconverter.svg'])
+        ("share/metainfo/", ["data/soundconverter.appdata.xml"]),
+        ("share/pixmaps/", ["data/soundconverter.png"]),
+        ("share/icons/hicolor/scalable/apps/", ["data/soundconverter.svg"]),
     ],
-    cmdclass={
-        'install': Install
-    },
-    scripts=["bin/soundconverter"]
+    cmdclass={"install": Install},
+    scripts=["bin/soundconverter"],
 )

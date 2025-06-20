@@ -36,6 +36,7 @@ class SyncSleepTask(Task):
 
     Multiple of those tasks can't run in parallel.
     """
+
     def __init__(self):
         super().__init__()
 
@@ -50,7 +51,7 @@ class SyncSleepTask(Task):
 
     def run(self):
         time.sleep(0.1)
-        self.emit('done')
+        self.emit("done")
 
     def pause(self):
         # cannot be paused
@@ -65,6 +66,7 @@ class AsyncSleepTask(Task):
 
     Can run in parallel. This is just an example on how a Task might work.
     """
+
     def __init__(self):
         self.progress = 0
         self.paused = False
@@ -121,7 +123,7 @@ class AsyncSleepTask(Task):
     def run(self):
         self.cancelled = False
         bus = Gst.Bus()
-        bus.connect('message', self.done)
+        bus.connect("message", self.done)
         bus.add_signal_watch()
         thread = threading.Thread(target=self.async_stuff, args=(bus,))
         thread.start()
@@ -138,13 +140,14 @@ class SyncSleepTaskTest(unittest.TestCase):
         """Checks if basic Task class functions are working properly."""
         task = SyncSleepTask()
         done = Mock()
-        task.connect('done', done)
+        task.connect("done", done)
         task.run()
         done.assert_called_with(task)
 
 
 class AsyncSleepTaskTest(unittest.TestCase):
     """Checks if async Task class functions are working properly."""
+
     def test_pause_resume(self):
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -152,7 +155,7 @@ class AsyncSleepTaskTest(unittest.TestCase):
         task = AsyncSleepTask()
         self.assertEqual(task.get_progress()[0], 0)
         done = Mock()
-        task.connect('done', done)
+        task.connect("done", done)
 
         task.run()
         time.sleep(0.15)
@@ -180,7 +183,7 @@ class AsyncSleepTaskTest(unittest.TestCase):
 
         task = AsyncSleepTask()
         done = Mock()
-        task.connect('done', done)
+        task.connect("done", done)
 
         task.run()
         time.sleep(0.15)
@@ -208,8 +211,9 @@ class AsyncSleepTaskTest(unittest.TestCase):
 
 class AsyncMulticoreTaskQueueTest(unittest.TestCase):
     """Example closest to the real world, should be tested well."""
+
     def setUp(self):
-        get_gio_settings().set_boolean('limit-jobs', True)
+        get_gio_settings().set_boolean("limit-jobs", True)
         self.num_tasks = 5
         q = TaskQueue()
         for i in range(self.num_tasks):
@@ -225,7 +229,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_queue_multiple_async(self):
         self.num_jobs = 2
-        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int("number-of-jobs", self.num_jobs)
 
         self.q.run()
         self.assertEqual(len(self.q.done), 0)
@@ -250,7 +254,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
 
     def test_pause_resume(self):
         self.num_jobs = 5
-        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int("number-of-jobs", self.num_jobs)
 
         self.assertEqual(self.q.get_progress()[0], 0)
         self.assertEqual(self.q.pending.qsize(), self.num_tasks)
@@ -331,7 +335,7 @@ class AsyncMulticoreTaskQueueTest(unittest.TestCase):
     def test_cancel_run(self):
         # all tasks are running at once
         self.num_jobs = 5
-        get_gio_settings().set_int('number-of-jobs', self.num_jobs)
+        get_gio_settings().set_int("number-of-jobs", self.num_jobs)
 
         loop = GLib.MainLoop()
         context = loop.get_context()
@@ -405,8 +409,8 @@ class TaskQueueTest(unittest.TestCase):
 
     def test_queue_single(self):
         """A TaskQueue only consisting of synchronous tasks."""
-        get_gio_settings().set_boolean('limit-jobs', True)
-        get_gio_settings().set_int('number-of-jobs', 1)
+        get_gio_settings().set_boolean("limit-jobs", True)
+        get_gio_settings().set_int("number-of-jobs", 1)
         q = TaskQueue()
 
         q.add(SyncSleepTask())
@@ -422,8 +426,8 @@ class TaskQueueTest(unittest.TestCase):
         self.assertEqual(len(q.running), 0)
 
     def test_queue_single_async(self):
-        get_gio_settings().set_boolean('limit-jobs', True)
-        get_gio_settings().set_int('number-of-jobs', 1)
+        get_gio_settings().set_boolean("limit-jobs", True)
+        get_gio_settings().set_int("number-of-jobs", 1)
         q = TaskQueue()
 
         q.add(AsyncSleepTask())

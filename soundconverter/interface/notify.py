@@ -28,16 +28,17 @@ notification = _notification_dummy
 
 try:
     import gi
-    gi.require_version('Notify', '0.7')
+
+    gi.require_version("Notify", "0.7")
     from gi.repository import Notify
 
     def _notification(message):
         try:
-            Notify.Notification('SoundConverter', message).show()
+            Notify.Notification("SoundConverter", message).show()
         except Exception:
             pass
 
-    if Notify.init('Basics'):
+    if Notify.init("Basics"):
         notification = _notification
 
 except (ImportError, ValueError):

@@ -25,21 +25,21 @@ from soundconverter.util.fileoperations import split_uri, is_uri
 
 class Fileoperations(unittest.TestCase):
     def test_split_uri(self):
-        scheme, path = split_uri('file:///one/two/three')
-        self.assertEqual(scheme, 'file://')
-        self.assertEqual(path, '/one/two/three')
+        scheme, path = split_uri("file:///one/two/three")
+        self.assertEqual(scheme, "file://")
+        self.assertEqual(path, "/one/two/three")
 
-        scheme, path = split_uri('file:///three')
-        self.assertEqual(scheme, 'file://')
-        self.assertEqual(path, '/three')
+        scheme, path = split_uri("file:///three")
+        self.assertEqual(scheme, "file://")
+        self.assertEqual(path, "/three")
 
-        scheme, path = split_uri('ftp://foo@bar:1234:/one/two/three')
-        self.assertEqual(scheme, 'ftp://foo@bar:1234:')
-        self.assertEqual(path, '/one/two/three')
+        scheme, path = split_uri("ftp://foo@bar:1234:/one/two/three")
+        self.assertEqual(scheme, "ftp://foo@bar:1234:")
+        self.assertEqual(path, "/one/two/three")
 
-        scheme, path = split_uri('file://hostname/')
-        self.assertEqual(scheme, 'file://hostname')
-        self.assertEqual(path, '/')
+        scheme, path = split_uri("file://hostname/")
+        self.assertEqual(scheme, "file://hostname")
+        self.assertEqual(path, "/")
 
     def test_wrong_type(self):
         error = None
@@ -50,18 +50,18 @@ class Fileoperations(unittest.TestCase):
         self.assertIsNotNone(error)
 
     def test_is_uri(self):
-        self.assertTrue(is_uri('file:///one/two/three'))
-        self.assertTrue(is_uri('file://hostname/three'))
-        self.assertTrue(is_uri('ftp://foo@bar:1234:/one/two/three'))
+        self.assertTrue(is_uri("file:///one/two/three"))
+        self.assertTrue(is_uri("file://hostname/three"))
+        self.assertTrue(is_uri("ftp://foo@bar:1234:/one/two/three"))
 
-        self.assertFalse(is_uri('/folder/file'))
-        self.assertFalse(is_uri('./folder/file'))
-        self.assertFalse(is_uri('folder/file'))
+        self.assertFalse(is_uri("/folder/file"))
+        self.assertFalse(is_uri("./folder/file"))
+        self.assertFalse(is_uri("folder/file"))
 
-        self.assertFalse(is_uri('file///one/two/three'))
-        self.assertFalse(is_uri('file:/three'))
-        self.assertFalse(is_uri('://foo@bar:1234:/one/two/three'))
-        self.assertFalse(is_uri('file://'))
+        self.assertFalse(is_uri("file///one/two/three"))
+        self.assertFalse(is_uri("file:/three"))
+        self.assertFalse(is_uri("://foo@bar:1234:/one/two/three"))
+        self.assertFalse(is_uri("file://"))
 
 
 if __name__ == "__main__":

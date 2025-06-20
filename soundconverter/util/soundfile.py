@@ -29,8 +29,15 @@ class SoundFile:
     """Meta data information about a sound file (uri, tags)."""
 
     __slots__ = [
-        'uri', 'base_path', 'filename', 'tags', 'filelist_row', 'subfolders',
-        'readable', 'duration', 'info'
+        "uri",
+        "base_path",
+        "filename",
+        "tags",
+        "filelist_row",
+        "subfolders",
+        "readable",
+        "duration",
+        "info",
     ]
 
     def __init__(self, uri, base_path=None):
@@ -48,13 +55,9 @@ class SoundFile:
         # enforcing an uri format reduced the nightmare of handling 2
         # different path formats in generate_target_uri
         if not is_uri(uri):
-            raise ValueError('uri was not an uri: {}!'.format(
-                uri
-            ))
+            raise ValueError("uri was not an uri: {}!".format(uri))
         if base_path is not None and not is_uri(base_path):
-            raise ValueError('base_path was not an uri: {}!'.format(
-                base_path
-            ))
+            raise ValueError("base_path was not an uri: {}!".format(base_path))
 
         self.uri = uri
         self.subfolders = None
@@ -62,17 +65,17 @@ class SoundFile:
         if base_path:
             if not uri.startswith(base_path):
                 raise ValueError(
-                    'uri {} needs to start with the base_path {}!'.format(
+                    "uri {} needs to start with the base_path {}!".format(
                         uri, base_path
                     )
                 )
             self.base_path = base_path
-            subfolders, filename = os.path.split(uri[len(base_path):])
+            subfolders, filename = os.path.split(uri[len(base_path) :])
             self.subfolders = unquote_filename(subfolders)
             self.filename = filename
         else:
             self.base_path, self.filename = os.path.split(self.uri)
-            self.base_path += '/'
+            self.base_path += "/"
 
         self.filelist_row = None
 
@@ -85,6 +88,4 @@ class SoundFile:
     @property
     def filename_for_display(self):
         """Return the filename in a form suitable for displaying it."""
-        return GLib.filename_display_name(
-            unquote_filename(self.filename)
-        )
+        return GLib.filename_display_name(unquote_filename(self.filename))

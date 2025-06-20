@@ -30,6 +30,7 @@ from soundconverter.interface.mainloop import gtk_iteration
 
 class TaskQueue(GObject.Object):
     """Executes multiple tasks in parallel."""
+
     def __init__(self):
         self._on_queue_finished = None
 
@@ -123,7 +124,7 @@ class TaskQueue(GObject.Object):
         task.disconnect_by_func(self.task_done)
 
         if task in self.done:
-            raise Exception('Duplicate task_done call')
+            raise Exception("Duplicate task_done call")
 
         if self.finished:
             return
@@ -138,14 +139,14 @@ class TaskQueue(GObject.Object):
         elif len(self.running) == 0:
             self.finished = True
             self._timer.stop()
-            self.emit('done')
+            self.emit("done")
 
     def start_next(self, _=None):
         """Start the next task if available."""
         if self.pending.qsize() > 0:
             task = self.pending.get()
 
-            task.connect('done', self.task_done)
+            task.connect("done", self.task_done)
 
             self.running.append(task)
 
@@ -235,17 +236,12 @@ class TaskQueue(GObject.Object):
         return remaining
 
 
-GObject.signal_new(
-    'done',
-    TaskQueue,
-    GObject.SignalFlags.RUN_FIRST,
-    None,
-    []
-)
+GObject.signal_new("done", TaskQueue, GObject.SignalFlags.RUN_FIRST, None, [])
 
 
 class Timer:
     """Time how long the TaskQueue took."""
+
     # separate class because I would like to not pollute the TaskQueue
     # with a bunch of timing variables
     def __init__(self):
