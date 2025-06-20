@@ -9,14 +9,12 @@ import sys
 import unittest
 
 import gi
-gi.require_version('GstPbutils', '1.0')
-gi.require_version('Gst', '1.0')
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gst, Gio, Gtk
+from gi.repository import Gio, Gst, Gtk  # noqa: E402
+
 args = Gst.init(sys.argv)
 
-from soundconverter.util.settings import set_gio_settings
-from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.interface.mainloop import gtk_iteration  # noqa: E402
+from soundconverter.util.settings import set_gio_settings  # noqa: E402
 
 # don't overwrite the users settings during tests
 backend = Gio.memory_settings_backend_new()
