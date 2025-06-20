@@ -394,7 +394,7 @@ class PreferencesDialog(GladeWindow):
     def on_output_mime_type_changed(self, combo):
         """Called when the format is changed on the UI."""
         selected_display_name = self.liststore8[combo.get_active()][0]
-        for mime, _, display_name in encoders:
+        for mime, encoder_name, display_name in encoders:
             if display_name == selected_display_name:
                 self.change_mime_type(mime)
                 return
