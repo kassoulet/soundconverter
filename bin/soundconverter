@@ -30,8 +30,9 @@ from optparse import OptionParser, OptionGroup
 import locale
 import gettext
 
-_ = gettext.gettext
 import pkg_resources
+
+_ = gettext.gettext
 
 # read values from setup.py
 VERSION = pkg_resources.require("soundconverter")[0].version
@@ -70,7 +71,7 @@ try:
     gi.require_version("GstPbutils", "1.0")
     gi.require_version("Gst", "1.0")
     gi.require_version("Gtk", "3.0")
-    from gi.repository import Gst, Gtk, GLib, Gdk
+    from gi.repository import Gst, Gtk, GLib, Gdk  # noqa: F401
 except (ImportError, ValueError) as error:
     print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
     sys.exit(1)
@@ -79,7 +80,7 @@ except (ImportError, ValueError) as error:
 # For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
 args = Gst.init(sys.argv)
 
-if type(args) != list:
+if isinstance(args, list):
     # in tests it just suddenly returns a boolean instead. when writing tests,
     # beware that `--gst-...` arguments are not filtered here
     args = sys.argv
