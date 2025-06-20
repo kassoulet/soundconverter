@@ -19,6 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+from datetime import datetime
 import os
 import re
 import urllib.request
@@ -26,6 +27,7 @@ import urllib.parse
 import urllib.error
 from gi.repository import Gio
 
+from soundconverter.interface.mainloop import gtk_iteration
 from soundconverter.util.logger import logger
 
 
@@ -61,6 +63,8 @@ def vfs_walk(uri):
     """
     filelist = []
 
+    next_heartbeat = datetime.now().timestamp()
+
     try:
         dirlist = Gio.file_parse_name(uri).enumerate_children(
             '*', Gio.FileMonitorFlags.NONE, None
@@ -78,6 +82,12 @@ def vfs_walk(uri):
 
             if info == Gio.FileType.REGULAR:
                 filelist.append(str(uri))
+
+            if datetime.now().timestamp() > next_heartbeat:
+                gtk_iteration()
+                next_heartbeat = datetime.now().timestamp()
+
+
     except Exception as e:
         # this is impossible to write unittests for, because this only happens
         # when the owner of this directory is e.g. root
