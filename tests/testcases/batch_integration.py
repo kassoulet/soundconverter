@@ -26,7 +26,6 @@ import os
 import shutil
 import time
 import unittest
-import urllib.parse
 from unittest.mock import patch
 
 from util import reset_settings, launch

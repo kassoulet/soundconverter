@@ -38,7 +38,6 @@ from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
 from soundconverter.util.logger import logger
 from soundconverter.util.formatting import format_time
-from soundconverter.interface.mainloop import gtk_iteration
 
 cli_convert = [None]
 
