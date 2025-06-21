@@ -42,6 +42,10 @@ gst-launch-1.0 --help-gst
 
 and https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html
 
+
+## Availability in Linux Distribution
+[![Packaging status](https://repology.org/badge/vertical-allrepos/soundconverter.svg)](https://repology.org/project/soundconverter/versions)
+
 ## Testing
 
 To start unittests, use
@@ -52,17 +56,23 @@ python3 tests/test.py
 python3 tests/test.py discoverer.DiscovererTest.test_read_tags
 ```
 
-## Availability in Linux Distribution
-[![Packaging status](https://repology.org/badge/vertical-allrepos/soundconverter.svg)](https://repology.org/project/soundconverter/versions)
+Before submitting patches or merge requests, please make sure the source code is well formatted and do not trigger lint errors:
 
+```bash
+ruff format soundconverter bin/soundconverter 
+ruff check  soundconverter bin/soundconverter 
+```
+
+*You can also use the `black` formatter and `pylint` of course.*
 
 ## Copyright and Acknowledgements
 
 Copyright 2004 Lars Wirzenius
 
-Copyright 2005-2020 Gautier Portet
+Copyright 2005-2025 Gautier Portet
 
-Co-author Sezanzeb
+Copyright 2020-2025 Sezanzeb
+
 
 Thanks to: Guillaume Bedot, Dominik Zabłotny, Noa Resare, Nil Gradisnik, Elias Autio, Thom Pischke, Qball Cow, Janis Blechert, Brendan Martens, Jason Martens, Wouter Stomp, Joe Wrigley, Jonh Wendell, Regis Floret, Toni Fiz, Seketeli Apelete, Cristiano Canguçu, Adolfo González Blázquez, Marc E., Tobias Kral, Hanno Böck, Pedro Alejandro López-Valencia, James Lee, Christopher Barrington-Leigh, Thomas Schwing, Remi Grolleau, Julien Gascard, Kamil Páral, Stefano Luciani, Martin Seifert, Claudio Saavedra, Ken Harris, Jon Arnold, Major Kong, Uwe Bugla
 
