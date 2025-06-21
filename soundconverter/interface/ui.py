@@ -454,7 +454,8 @@ class SoundConverterWindow(GladeWindow):
 
         if not self.is_running():
             self.set_widget_sensitive(
-                "remove", self.filelist_selection.count_selected_rows() > 0,
+                "remove",
+                self.filelist_selection.count_selected_rows() > 0,
             )
             self.set_widget_sensitive("convert_button", self.filelist.is_nonempty())
 

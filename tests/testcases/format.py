@@ -19,12 +19,13 @@
 # USA
 
 import unittest
+
 from soundconverter.util.formats import (
+    get_bitrate_from_settings,
+    get_default_quality,
+    get_file_extension,
     get_mime_type,
     get_quality,
-    get_bitrate_from_settings,
-    get_file_extension,
-    get_default_quality,
 )
 from soundconverter.util.settings import get_gio_settings
 
@@ -82,18 +83,16 @@ class Format(unittest.TestCase):
         get_gio_settings().set_string("output-mime-type", "audio/x-wav")
         get_gio_settings().set_boolean("output-resample", False)
         rate = 705.6
-        self.assertEqual(get_bitrate_from_settings(), "{} kbps".format(rate))
+        self.assertEqual(get_bitrate_from_settings(), f"{rate} kbps")
         get_gio_settings().set_boolean("output-resample", True)
         get_gio_settings().set_int("resample-rate", 44100)
         get_gio_settings().set_int("wav-sample-width", 16)
-        self.assertEqual(get_bitrate_from_settings(), "{} kbps".format(rate))
+        self.assertEqual(get_bitrate_from_settings(), f"{rate} kbps")
         get_gio_settings().set_int("wav-sample-width", 32)
-        self.assertEqual(get_bitrate_from_settings(), "{} kbps".format(rate * 2))
+        self.assertEqual(get_bitrate_from_settings(), f"{rate * 2} kbps")
         get_gio_settings().set_int("wav-sample-width", 8)
         get_gio_settings().set_int("resample-rate", 128000)
-        self.assertEqual(
-            get_bitrate_from_settings(), "{} kbps".format(rate / 44.1 * 128 / 2)
-        )
+        self.assertEqual(get_bitrate_from_settings(), f"{rate / 44.1 * 128 / 2} kbps")
 
     def test_get_file_extension(self):
         self.assertEqual(get_file_extension("audio/x-flac"), "flac")

@@ -20,29 +20,29 @@
 
 """Test filename handling."""
 
-import unittest
 import os
-import urllib.parse
+import unittest
 import urllib.error
-from gi.repository import Gio
+import urllib.parse
 
-from soundconverter.util.settings import settings, get_gio_settings
-from soundconverter.util.namegenerator import (
-    TargetNameGenerator,
-    get_subfolder_pattern,
-    get_basename_pattern,
-    process_custom_pattern,
-    custom_patterns,
-)
-from soundconverter.util.soundfile import SoundFile
+from gi.repository import Gio
+from util import reset_settings
+
+from soundconverter.interface.batch import prepare_files_list
 from soundconverter.util.fileoperations import (
+    beautify_uri,
     filename_to_uri,
     unquote_filename,
-    beautify_uri,
 )
-from soundconverter.interface.batch import prepare_files_list
-
-from util import reset_settings
+from soundconverter.util.namegenerator import (
+    TargetNameGenerator,
+    custom_patterns,
+    get_basename_pattern,
+    get_subfolder_pattern,
+    process_custom_pattern,
+)
+from soundconverter.util.settings import get_gio_settings, settings
+from soundconverter.util.soundfile import SoundFile
 
 
 def quote(ss):
@@ -544,7 +544,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.replace_messy_chars = False
 
         self.s = SoundFile(
-            "ssh://user@server:port" + quote("/path/to/file with strângë chàrs фズ.flac")
+            "ssh://user@server:port"
+            + quote("/path/to/file with strângë chàrs фズ.flac")
         )
         self.s.tags.update(
             {
@@ -641,7 +642,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.assertEqual(
             self.g.generate_target_uri(self.s, False),
             "file://"
-            + quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2" "\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"),
+            + quote("/music/\xa0\xb0\xc0\xd0/\xa2\xb2\xc2\xd2/\xa1\xb1\xc1\xd1.ogg"),
         )
 
     def test_root(self):
@@ -841,7 +842,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         expected = "file:///music/bar.mp3_"
         self.assertTrue(
             temp_path.startswith(expected),
-            "expected {} to start with {}".format(temp_path, expected),
+            f"expected {temp_path} to start with {expected}",
         )
         self.assertTrue(temp_path.endswith("_SC_"))
 
@@ -855,7 +856,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         expected = "file:///music/bar.mp3~"
         self.assertTrue(
             temp_path.startswith(expected),
-            "expected {} to start with {}".format(temp_path, expected),
+            f"expected {temp_path} to start with {expected}",
         )
         self.assertTrue(temp_path.endswith("~SC~"))
 
@@ -868,7 +869,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         expected = "file:///foo/bar.mp3_"
         self.assertTrue(
             temp_path.startswith(expected),
-            "expected {} to start with {}".format(temp_path, expected),
+            f"expected {temp_path} to start with {expected}",
         )
         self.assertTrue(temp_path.endswith("_SC_"))
 
@@ -881,7 +882,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         expected = "file:///foo/bar.mp3~"
         self.assertTrue(
             temp_path.startswith(expected),
-            "expected {} to start with {}".format(temp_path, expected),
+            f"expected {temp_path} to start with {expected}",
         )
         self.assertTrue(temp_path.endswith("~SC~"))
 
@@ -894,7 +895,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         expected = "file:///foo/bar.mp3~"
         self.assertTrue(
             temp_path.startswith(expected),
-            "expected {} to start with {}".format(temp_path, expected),
+            f"expected {temp_path} to start with {expected}",
         )
         self.assertTrue(temp_path.endswith("~SC~"))
 

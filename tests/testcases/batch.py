@@ -24,12 +24,11 @@ import urllib.parse
 
 from soundconverter.interface.batch import (
     prepare_files_list,
-    validate_args,
     use_memory_gsettings,
+    validate_args,
 )
-from soundconverter.util.settings import settings, get_gio_settings
 from soundconverter.util.fileoperations import vfs_exists
-
+from soundconverter.util.settings import get_gio_settings, settings
 
 cwd = os.getcwd()
 
@@ -100,7 +99,7 @@ class BatchUtils(unittest.TestCase):
         for expected_file in expected_files:
             # make sure expected_files are correctly written
             self.assertTrue(
-                vfs_exists(expected_file), "expected {} to exist".format(expected_file)
+                vfs_exists(expected_file), f"expected {expected_file} to exist"
             )
 
         expected_files.sort()
@@ -137,7 +136,7 @@ class BatchUtils(unittest.TestCase):
         for expected_file in expected_files:
             # make sure expected_files are correctly written
             self.assertTrue(
-                vfs_exists(expected_file), "expected {} to exist".format(expected_file)
+                vfs_exists(expected_file), f"expected {expected_file} to exist"
             )
 
         expected_files.sort()

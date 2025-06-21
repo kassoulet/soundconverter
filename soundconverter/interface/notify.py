@@ -34,7 +34,8 @@ try:
     def _notification(message):
         try:
             Notify.Notification("SoundConverter", message).show()
-        except Exception:
+        except Exception as e:
+            print("Error sending notification:", e)
             pass
 
     if Notify.init("Basics"):

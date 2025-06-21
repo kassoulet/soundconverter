@@ -19,21 +19,21 @@
 # USA
 
 import os
-import unittest
 import time
+import unittest
 from unittest.mock import Mock
 
 from gi.repository import GLib
 
 from soundconverter.gstreamer.discoverer import (
     Discoverer,
-    is_denylisted,
     add_discoverers,
+    is_denylisted,
 )
-from soundconverter.util.taskqueue import TaskQueue
-from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import get_gio_settings
 from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.taskqueue import TaskQueue
 
 
 class DiscovererQueueTest(unittest.TestCase):

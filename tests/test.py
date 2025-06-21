@@ -6,8 +6,12 @@
 import sys
 import unittest
 
-# import gi
-from gi.repository import Gio, Gst, Gtk  # noqa: E402
+import gi
+
+gi.require_version("GstPbutils", "1.0")
+gi.require_version("Gst", "1.0")
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gst, Gtk, Gio  # noqa: E402, F401, I001
 
 args = Gst.init(sys.argv)
 

@@ -170,7 +170,8 @@ def validate_args(options):
         if mime_type is None:
             logger.error(
                 'cannot use "{}" format. Supported formats: {}'.format(
-                    target_format, ", ".join(get_mime_type_mapping()),
+                    target_format,
+                    ", ".join(get_mime_type_mapping()),
                 ),
             )
             return False
