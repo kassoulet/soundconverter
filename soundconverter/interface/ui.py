@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -22,20 +21,20 @@
 import os
 from gettext import gettext as _
 
-from gi.repository import Gtk, GLib
+from gi.repository import GLib, Gtk
 
-from soundconverter.util.fileoperations import filename_to_uri
-from soundconverter.util.settings import settings
-from soundconverter.util.namegenerator import TargetNameGenerator, filepattern
-from soundconverter.util.taskqueue import TaskQueue
-from soundconverter.util.logger import logger
 from soundconverter.gstreamer.converter import Converter
-from soundconverter.util.error import set_error_handler
-from soundconverter.util.formatting import format_time
-from soundconverter.interface.gladewindow import GladeWindow
-from soundconverter.interface.preferences import PreferencesDialog
 from soundconverter.interface.filelist import FileList
+from soundconverter.interface.gladewindow import GladeWindow
 from soundconverter.interface.mainloop import gtk_iteration, gtk_sleep
+from soundconverter.interface.preferences import PreferencesDialog
+from soundconverter.util.error import set_error_handler
+from soundconverter.util.fileoperations import filename_to_uri
+from soundconverter.util.formatting import format_time
+from soundconverter.util.logger import logger
+from soundconverter.util.namegenerator import TargetNameGenerator, filepattern
+from soundconverter.util.settings import settings
+from soundconverter.util.taskqueue import TaskQueue
 
 
 class SoundConverterWindow(GladeWindow):
@@ -87,7 +86,7 @@ class SoundConverterWindow(GladeWindow):
         self.combo.add_attribute(combo_rend, "text", 0)
 
         for files in filepattern:
-            self.store.append(["{} ({})".format(files[0], files[1])])
+            self.store.append([f"{files[0]} ({files[1]})"])
 
         self.combo.set_active(0)
         self.addfolderchooser.set_extra_widget(self.combo)
@@ -115,7 +114,7 @@ class SoundConverterWindow(GladeWindow):
         self.pattern = []
         for files in filepattern:
             self.pattern.append(files[1])
-            self.addfile_store.append(["{} ({})".format(files[0], files[1])])
+            self.addfile_store.append([f"{files[0]} ({files[1]})"])
 
         self.addfile_combo.set_active(0)
         self.addchooser.set_extra_widget(self.addfile_combo)
@@ -144,7 +143,7 @@ class SoundConverterWindow(GladeWindow):
         """Allow direct use of window widget."""
         widget = self.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError("Widget '{}' not found".format(attribute))
+            raise AttributeError(f"Widget '{attribute}' not found")
         self.__dict__[attribute] = widget  # cache result
         return widget
 
@@ -245,7 +244,7 @@ class SoundConverterWindow(GladeWindow):
         self.showinvalid_dialog_label.set_label(
             "Those are the files that could "
             "not be added to the list due to not\ncontaining audio data, "
-            "being broken or being incompatible to gstreamer:"
+            "being broken or being incompatible to gstreamer:",
         )
         buffer = Gtk.TextBuffer()
         buffer.set_text("\n".join(self.filelist.invalid_files_list))
@@ -297,13 +296,13 @@ class SoundConverterWindow(GladeWindow):
                 self.progressfile.set_markup("")
                 self.filelist.hide_row_progress()
                 self.progressbar.set_show_text(False)
-                return
+                return None
 
             if converter_queue.paused:
                 self.progressbar.set_text(_("Paused"))
                 title = "{} - {}".format(_("SoundConverter"), _("Paused"))
                 self.widget.set_title(title)
-                return
+                return None
 
             # how long it has already been running
             duration = converter_queue.get_duration()
@@ -311,7 +310,7 @@ class SoundConverterWindow(GladeWindow):
                 # wait a bit not to display crap
                 self.progressbar.set_text(_("Estimating…"))
                 self.progressbar.set_show_text(True)
-                return
+                return None
 
             # remainign duration
             remaining = converter_queue.get_remaining()
@@ -412,7 +411,7 @@ class SoundConverterWindow(GladeWindow):
         msg = _("Conversion done in %s") % format_time(total_time)
         error_count = len([task for task in self.converter_queue.done if task.error])
         if error_count > 0:
-            msg += ", {} error(s)".format(error_count)
+            msg += f", {error_count} error(s)"
 
         logger.info(msg)
 
@@ -455,7 +454,7 @@ class SoundConverterWindow(GladeWindow):
 
         if not self.is_running():
             self.set_widget_sensitive(
-                "remove", self.filelist_selection.count_selected_rows() > 0
+                "remove", self.filelist_selection.count_selected_rows() > 0,
             )
             self.set_widget_sensitive("convert_button", self.filelist.is_nonempty())
 
@@ -494,7 +493,7 @@ class ErrorDialog:
         self.primary.set_markup(str(primary))
         self.secondary.set_markup(str(secondary) if secondary else "")
         if secondary:
-            logger.error("{}: {}".format(primary, secondary))
+            logger.error(f"{primary}: {secondary}")
         else:
             logger.error(primary)
         self.dialog.run()

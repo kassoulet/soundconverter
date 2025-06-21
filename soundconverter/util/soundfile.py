@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -20,9 +19,10 @@
 # USA
 
 import os
+
 from gi.repository import GLib
 
-from soundconverter.util.fileoperations import unquote_filename, is_uri
+from soundconverter.util.fileoperations import is_uri, unquote_filename
 
 
 class SoundFile:
@@ -55,9 +55,9 @@ class SoundFile:
         # enforcing an uri format reduced the nightmare of handling 2
         # different path formats in generate_target_uri
         if not is_uri(uri):
-            raise ValueError("uri was not an uri: {}!".format(uri))
+            raise ValueError(f"uri was not an uri: {uri}!")
         if base_path is not None and not is_uri(base_path):
-            raise ValueError("base_path was not an uri: {}!".format(base_path))
+            raise ValueError(f"base_path was not an uri: {base_path}!")
 
         self.uri = uri
         self.subfolders = None
@@ -65,9 +65,7 @@ class SoundFile:
         if base_path:
             if not uri.startswith(base_path):
                 raise ValueError(
-                    "uri {} needs to start with the base_path {}!".format(
-                        uri, base_path
-                    )
+                    f"uri {uri} needs to start with the base_path {base_path}!",
                 )
             self.base_path = base_path
             subfolders, filename = os.path.split(uri[len(base_path) :])

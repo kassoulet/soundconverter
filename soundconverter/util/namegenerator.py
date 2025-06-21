@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -21,25 +20,26 @@
 
 """Utils for generating names."""
 
+import os
+import re
 import string
 import time
-import re
-import os
-from random import random
-import urllib.request
-import urllib.parse
-import urllib.error
 import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
 from gettext import gettext as _
+from random import random
+
 from soundconverter.util.fileoperations import (
-    vfs_exists,
-    filename_to_uri,
-    split_uri,
-    is_uri,
     beautify_uri,
+    filename_to_uri,
+    is_uri,
+    split_uri,
+    vfs_exists,
 )
-from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.formats import get_file_extension
+from soundconverter.util.settings import get_gio_settings
 
 basename_patterns = [
     ("{inputname}", _("Same as input, but replacing the suffix")),
@@ -65,7 +65,7 @@ english_patterns = (
 # traductors: These are the custom filename patterns. Only if it makes sense.
 locale_patterns = _(
     "Artist Album Album-Artist Title Track Total Genre Date "
-    "Year Timestamp DiscNumber DiscTotal Ext"
+    "Year Timestamp DiscNumber DiscTotal Ext",
 )
 
 patterns_formats = (
@@ -101,15 +101,15 @@ locale_patterns_dict = dict(
     list(
         zip(
             [p.lower() for p in english_patterns.split()],
-            ["{%s}" % p for p in locale_patterns.split()],
-        )
-    )
+            ["{" + p + "}" for p in locale_patterns.split()],
+        ),
+    ),
 )
 
 # add english and locale
 custom_patterns = english_patterns + " " + locale_patterns
 # convert to list
-custom_patterns = ["{%s}" % p for p in custom_patterns.split()]
+custom_patterns = ["{" + p + "}" for p in custom_patterns.split()]
 # and finally to dict, thus removing doubles.
 # Example: { '{Künstler}': '{artist}' } depending on the locale
 custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
@@ -187,9 +187,7 @@ class TargetNameGenerator:
         # behaviour of functions and to reduce their complexity.
         if not self.same_folder_as_input and not is_uri(self.selected_folder):
             raise ValueError(
-                "your selected folder {} should be in URI format.".format(
-                    self.selected_folder
-                )
+                f"your selected folder {self.selected_folder} should be in URI format.",
             )
         # If you wish to provide an uri scheme like ftp:// it should be in
         # the selected_folder instead.
@@ -248,21 +246,21 @@ class TargetNameGenerator:
             raise ValueError("expected the parent to be an URI")
         if child.startswith(parent):
             raise ValueError(
-                'wrong usage. Child "{}" should be the '.format(child)
-                + 'child of parent "{}", not the whole path'.format(child)
+                f'wrong usage. Child "{child}" should be the '
+                f'child of parent "{child}", not the whole path',
             )
         if child.startswith("./"):
             raise ValueError(
                 "you cannot provide a relative path to the cwd starting "
                 'with "./", the child is intended to be relative to the '
-                "parent."
+                "parent.",
             )
         if len(child) == 0:
             raise ValueError("empty filename")
         if is_uri(child):
             raise ValueError(
-                'expected child "{}" to be a subfolder, '.format(child)
-                + "path not a complete URI."
+                f'expected child "{child}" to be a subfolder, '
+                "path not a complete URI.",
             )
 
         # ensure URI escaping of the parent
@@ -300,9 +298,7 @@ class TargetNameGenerator:
             safe = parent + safe
 
         # ensure URI escaping of the result
-        safe = filename_to_uri(safe)
-
-        return safe
+        return filename_to_uri(safe)
 
     def find_format_string_tags(self, pattern):
         """Given a pattern find all tags that can be substituted.
@@ -378,12 +374,10 @@ class TargetNameGenerator:
         tags_in_pattern = self.find_format_string_tags(pattern)
         unknown_tags = [tag for tag in tags_in_pattern if tag not in mapping]
         for tag in unknown_tags:
-            mapping[tag] = "Unknown {}".format(tag.capitalize())
+            mapping[tag] = f"Unknown {tag.capitalize()}"
 
         # now fill the tags in the pattern with values:
-        result = pattern.format(**mapping)
-
-        return result
+        return pattern.format(**mapping)
 
     def generate_temp_path(self, sound_file):
         """Generate a random filename that doesn't exist yet."""
@@ -439,9 +433,7 @@ class TargetNameGenerator:
         # note, that basename_pattern might actually contain subfolders, so
         # it's not always only a basename.
         # It's the deepest part of the target path though.
-        return "{}.{}".format(
-            self.fill_pattern(sound_file, self.basename_pattern), self.suffix
-        )
+        return f"{self.fill_pattern(sound_file, self.basename_pattern)}.{self.suffix}"
 
     def generate_target_uri(self, sound_file, for_display=False):
         """Generate a target filename in URI format based on the settings.
@@ -482,5 +474,4 @@ class TargetNameGenerator:
 
         if for_display:
             return beautify_uri(path)
-        else:
-            return path
+        return path

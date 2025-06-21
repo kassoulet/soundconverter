@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -22,10 +21,10 @@
 import time
 from queue import Queue
 
-from gi.repository import GObject, GLib
+from gi.repository import GLib, GObject
 
-from soundconverter.util.settings import get_num_jobs
 from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.util.settings import get_num_jobs
 
 
 class TaskQueue(GObject.Object):

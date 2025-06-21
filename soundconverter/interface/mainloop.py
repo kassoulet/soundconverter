@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -21,7 +20,7 @@
 
 import time
 
-from gi.repository import Gtk, GLib
+from gi.repository import GLib, Gtk
 
 
 def idle(func):

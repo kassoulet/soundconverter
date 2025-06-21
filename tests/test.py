@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 
 """Sets up soundconverter for the tests and runs them."""
@@ -7,7 +6,7 @@
 import sys
 import unittest
 
-import gi
+# import gi
 from gi.repository import Gio, Gst, Gtk  # noqa: E402
 
 args = Gst.init(sys.argv)
@@ -32,7 +31,7 @@ if __name__ == "__main__":
     if len(modules) > 0:
         # for example `python3 tests/test.py discoverer.DiscovererTest.test_read_tags`
         testsuite = unittest.defaultTestLoader.loadTestsFromNames(
-            ["testcases.{}".format(module) for module in modules]
+            [f"testcases.{module}" for module in modules]
         )
     else:
         # run all tests by default

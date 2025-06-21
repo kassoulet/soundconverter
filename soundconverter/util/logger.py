@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -21,8 +20,9 @@
 
 # logging & debugging
 
-from soundconverter.util.settings import settings
 import logging
+
+from soundconverter.util.settings import settings
 
 
 class Formatter(logging.Formatter):

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -23,24 +22,24 @@
 
 import os
 
-from gi.repository import GLib, Gio
+from gi.repository import Gio, GLib
 
-from soundconverter.interface.preferences import rates
-from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, set_gio_settings
-from soundconverter.util.formats import (
-    get_quality_setting_name,
-    get_mime_type,
-    get_mime_type_mapping,
-    get_default_quality,
-)
 from soundconverter.gstreamer.converter import Converter
 from soundconverter.gstreamer.discoverer import add_discoverers, get_sound_files
-from soundconverter.util.taskqueue import TaskQueue
-from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
-from soundconverter.util.logger import logger
+from soundconverter.interface.preferences import rates
+from soundconverter.util.fileoperations import beautify_uri, filename_to_uri
+from soundconverter.util.formats import (
+    get_default_quality,
+    get_mime_type,
+    get_mime_type_mapping,
+    get_quality_setting_name,
+)
 from soundconverter.util.formatting import format_time
+from soundconverter.util.logger import logger
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.settings import set_gio_settings, settings
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.taskqueue import TaskQueue
 
 cli_convert = [None]
 
@@ -140,7 +139,7 @@ def validate_args(options):
     """
     main = options.get("main", "gui")
     if main not in ["gui", "check", "tags", "batch"]:
-        logger.error("unknown main {}".format(main))
+        logger.error(f"unknown main {main}")
         return False
 
     if main not in ["gui", "check", "tags"]:
@@ -158,7 +157,7 @@ def validate_args(options):
             ]
             if existing_behaviour not in existing_behaviours:
                 logger.error(
-                    "-e should be one of {}".format(", ".join(existing_behaviours))
+                    "-e should be one of {}".format(", ".join(existing_behaviours)),
                 )
                 return False
 
@@ -171,8 +170,8 @@ def validate_args(options):
         if mime_type is None:
             logger.error(
                 'cannot use "{}" format. Supported formats: {}'.format(
-                    target_format, ", ".join(get_mime_type_mapping())
-                )
+                    target_format, ", ".join(get_mime_type_mapping()),
+                ),
             )
             return False
 
@@ -194,7 +193,7 @@ def validate_args(options):
                 else:
                     if quality > 9 or quality < 0:
                         logger.error(
-                            "mp3 vbr quality should be between 9 (low) and " "0 (hight)"
+                            "mp3 vbr quality should be between 9 (low) and 0 (hight)",
                         )
                         return False
 
@@ -233,8 +232,8 @@ def validate_args(options):
     if resample and resample not in rates:
         logger.error(
             "Possible values for -R or --output-resample option are {rates}".format(
-                rates=", ".join([str(item for item in rates)])
-            )
+                rates=", ".join([str(item for item in rates)]),
+            ),
         )
         return False
 
@@ -278,7 +277,7 @@ def prepare_files_list(input_files):
             subdirectories.append("")
             parsed_files.append(input_path)
         elif not os.path.isdir(input_path):
-            logger.error("path {} does not exist".format(input_path))
+            logger.error(f"path {input_path} does not exist")
 
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
@@ -306,9 +305,7 @@ def prepare_files_list(input_files):
                 # else it didn't go into any directory.
                 # Provide some information about how to
                 logger.error(
-                    "{} is a directory. Use -r to go into all subdirectories.".format(
-                        input_path
-                    )
+                    f"{input_path} is a directory. Use -r to go into all subdirectories.",
                 )
         # if not a file and not a dir it doesn't exist. skip
 
@@ -352,7 +349,7 @@ class CLIConvert:
         for sound_file in sound_files:
             if not sound_file.readable:
                 filename = beautify_uri(sound_file.uri)
-                logger.info("skipping '{}': not an audiofile".format(filename))
+                logger.info(f"skipping '{filename}': not an audiofile")
                 continue
 
             converter = Converter(sound_file, name_generator)
@@ -367,15 +364,13 @@ class CLIConvert:
             logger.info("no audio files for conversion found…")
             exit(2)
 
-        logger.info("starting conversion of {} files…".format(len(sound_files)))
+        logger.info(f"starting conversion of {len(sound_files)} files…")
         self.conversions = conversions
 
         def finished(_=None):
             total_time = conversions.get_duration()
             logger.info(
-                "converted {} files in {}".format(
-                    len(sound_files), format_time(total_time)
-                )
+                f"converted {len(sound_files)} files in {format_time(total_time)}",
             )
 
         conversions.connect("done", finished)
@@ -451,7 +446,7 @@ class CLICheck:
                     self.print(sound_file)
                 else:
                     logger.info(
-                        "{} is not an audiofile".format(beautify_uri(sound_file.uri))
+                        f"{beautify_uri(sound_file.uri)} is not an audiofile",
                     )
 
     def get_sound_files(self):
@@ -465,6 +460,6 @@ class CLICheck:
         if len(sound_file.tags) > 0:
             for key in sorted(sound_file.tags):
                 value = sound_file.tags[key]
-                logger.info(("    {}: {}".format(key, value)))
+                logger.info(f"    {key}: {value}")
         else:
-            logger.info(("    no tags found"))
+            logger.info("    no tags found")

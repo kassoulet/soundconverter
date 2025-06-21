@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -22,12 +21,12 @@
 from fnmatch import fnmatch
 from threading import Thread
 
-from gi.repository import Gst, GObject, GstPbutils, GLib
+from gi.repository import GLib, GObject, Gst, GstPbutils
 
-from soundconverter.util.task import Task
+from soundconverter.util.formats import filename_denylist
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_num_jobs
-from soundconverter.util.formats import filename_denylist
+from soundconverter.util.task import Task
 
 type_getters = {
     GObject.TYPE_STRING: "get_string",
@@ -111,9 +110,7 @@ class DiscovererThread(Thread):
         denylisted_pattern = is_denylisted(sound_file)
         if denylisted_pattern:
             logger.info(
-                "filename denylisted ({}): {}".format(
-                    denylisted_pattern, sound_file.filename_for_display
-                )
+                f"filename denylisted ({denylisted_pattern}): {sound_file.filename_for_display}",
             )
             return
 
@@ -136,9 +133,9 @@ class DiscovererThread(Thread):
                     taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
-            logger.debug("found tag: {}".format(filename))
+            logger.debug(f"found tag: {filename}")
             for tag, value in sound_file.tags.items():
-                logger.debug("    {}: {}".format(tag, value))
+                logger.debug(f"    {tag}: {value}")
 
             duration = info.get_duration() / Gst.SECOND
             if duration == 0:
