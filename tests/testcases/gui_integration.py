@@ -526,7 +526,9 @@ class GUIIntegration(unittest.TestCase):
         self.assertFalse(os.path.isfile("tests/tmp/test_data/empty/a"))
         self.assertFalse(os.path.isfile("tests/tmp/test_data/a.iso"))
 
-    def test_all_m4a_encoders(self):
+    # prevent tests stalling on error
+    @patch("soundconverter.interface.ui.ErrorDialog.show_error")
+    def test_all_m4a_encoders(self, mock_handler):
         for encoder in ["fdkaacenc", "faac", "avenc_aac"]:
             # create one large and one small file to test if the quality
             # setting is respected
