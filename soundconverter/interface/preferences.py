@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -19,27 +18,26 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-import urllib.request
-import urllib.parse
 import urllib.error
+import urllib.parse
+import urllib.request
 from gettext import gettext as _
 
-from gi.repository import Gtk, GLib
+from gi.repository import GLib, Gtk
 
-from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
-from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import get_gio_settings
-from soundconverter.util.formats import get_quality, get_bitrate_from_settings
-from soundconverter.util.namegenerator import (
-    TargetNameGenerator,
-    subfolder_patterns,
-    basename_patterns,
-    locale_patterns_dict,
-)
-from soundconverter.util.logger import logger
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.interface.gladewindow import GladeWindow
-
+from soundconverter.util.fileoperations import beautify_uri, filename_to_uri
+from soundconverter.util.formats import get_bitrate_from_settings, get_quality
+from soundconverter.util.logger import logger
+from soundconverter.util.namegenerator import (
+    TargetNameGenerator,
+    basename_patterns,
+    locale_patterns_dict,
+    subfolder_patterns,
+)
+from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.soundfile import SoundFile
 
 encoders = [
     ("audio/x-vorbis", "vorbisenc", "Ogg Vorbis (.ogg)"),
@@ -103,8 +101,8 @@ class PreferencesDialog(GladeWindow):
             )
             if not encoder_present:
                 logger.error(
-                    "{} {} is not supported, a gstreamer plugins package "
-                    "is possibly missing.".format(mime, encoder_name)
+                    f"{mime} {encoder_name} is not supported, a gstreamer plugins package "
+                    "is possibly missing.",
                 )
                 continue
 
@@ -134,7 +132,7 @@ class PreferencesDialog(GladeWindow):
         self.target_folder_chooser.set_local_only(False)
 
         uri = filename_to_uri(
-            urllib.parse.quote(self.settings.get_string("selected-folder"), safe="/:@")
+            urllib.parse.quote(self.settings.get_string("selected-folder"), safe="/:@"),
         )
         self.target_folder_chooser.set_uri(uri)
         self.update_selected_folder()
@@ -210,12 +208,12 @@ class PreferencesDialog(GladeWindow):
         model = widget.get_model()
         model.clear()
         for pattern, desc in basename_patterns:
-            iter = model.append()
-            model.set(iter, 0, desc)
+            iterator = model.append()
+            model.set(iterator, 0, desc)
         widget.set_active(active)
 
         self.custom_filename.set_text(
-            self.settings.get_string("custom-filename-pattern")
+            self.settings.get_string("custom-filename-pattern"),
         )
         if self.basename_pattern.get_active() == len(basename_patterns) - 1:
             self.custom_filename_box.set_sensitive(True)
@@ -246,7 +244,7 @@ class PreferencesDialog(GladeWindow):
         self.into_selected_folder.set_use_underline(False)
         self.into_selected_folder.set_label(
             _("Into folder %s")
-            % beautify_uri(self.settings.get_string("selected-folder"))
+            % beautify_uri(self.settings.get_string("selected-folder")),
         )
 
     def update_example(self):
@@ -258,7 +256,7 @@ class PreferencesDialog(GladeWindow):
                 "track-count": 99,
                 "album-disc-number": 2,
                 "album-disc-count": 9,
-            }
+            },
         )
         sound_file.tags.update(locale_patterns_dict)
 
@@ -272,7 +270,7 @@ class PreferencesDialog(GladeWindow):
         generator.replace_messy_chars = False
 
         example_path = GLib.markup_escape_text(
-            generator.generate_target_uri(sound_file, for_display=True)
+            generator.generate_target_uri(sound_file, for_display=True),
         )
         position = 0
         replaces = []
@@ -290,7 +288,8 @@ class PreferencesDialog(GladeWindow):
                 replaces.append([tag, bold_tag])
             else:
                 red_tag = tag.replace("{", "<span foreground='red'><i>{").replace(
-                    "}", "}</i></span>"
+                    "}",
+                    "}</i></span>",
                 )
                 replaces.append([tag, red_tag])
             position = beginning + 1
@@ -301,7 +300,7 @@ class PreferencesDialog(GladeWindow):
         self.example.set_markup(example_path)
 
         markup = "<small>{}</small>".format(
-            _("Target bitrate: %s") % get_bitrate_from_settings()
+            _("Target bitrate: %s") % get_bitrate_from_settings(),
         )
         self.approx_bitrate.set_markup(markup)
 
@@ -314,11 +313,11 @@ class PreferencesDialog(GladeWindow):
             self.sensitive_widgets[name].set_sensitive(not same_folder)
 
         self.sensitive_widgets["vorbis_quality"].set_sensitive(
-            self.settings.get_string("output-mime-type") == "audio/x-vorbis"
+            self.settings.get_string("output-mime-type") == "audio/x-vorbis",
         )
 
         self.sensitive_widgets["jobs_spinbutton"].set_sensitive(
-            self.settings.get_boolean("limit-jobs")
+            self.settings.get_boolean("limit-jobs"),
         )
 
         self.sensitive_widgets["resample_hbox"].set_sensitive(True)

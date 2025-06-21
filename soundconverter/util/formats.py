@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -20,16 +19,15 @@
 # USA
 
 
-from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.logger import logger
-
+from soundconverter.util.settings import get_gio_settings
 
 filename_denylist = ("*.iso",)
 
 
 def get_mime_type_mapping():
     """Return a mapping of file extension to mime type."""
-    mime_types = {
+    return {
         "ogg": "audio/x-vorbis",
         "flac": "audio/x-flac",
         "wav": "audio/x-wav",
@@ -39,7 +37,6 @@ def get_mime_type_mapping():
         "opus": "audio/ogg; codecs=opus",
         "wma": "audio/x-ms-wma",
     }
-    return mime_types
 
 
 def get_mime_type(audio_format):
@@ -55,9 +52,8 @@ def get_mime_type(audio_format):
     if audio_format not in mime_types.values():
         # possibly a file extension
         return mime_types.get(audio_format, None)
-    else:
-        # already a mime string
-        return audio_format
+    # already a mime string
+    return audio_format
 
 
 def get_file_extension(mime):
@@ -164,11 +160,9 @@ def get_bitrate_from_settings():
 
     if bitrate:
         if approx:
-            return "~{} kbps".format(bitrate)
-        else:
-            return "{} kbps".format(bitrate)
-    else:
-        return "N/A"
+            return f"~{bitrate} kbps"
+        return f"{bitrate} kbps"
+    return "N/A"
 
 
 def get_default_quality(mime, mode="vbr"):
@@ -255,15 +249,14 @@ def get_quality(mime, value, mode="vbr", reverse=False):
         # either a setting leaking from some tests or the batch mode
         # persisted something.
         if mime == "mp3":
-            ftype_mode = "{} {}".format(mime, mode)
+            ftype_mode = f"{mime} {mode}"
         else:
             ftype_mode = mime
-        logger.warning("tried to index unknow {} quality {}".format(ftype_mode, value))
+        logger.warning(f"tried to index unknow {ftype_mode} quality {value}")
         return None
-    else:
-        # normal index
-        if value > len(qualities):
-            raise ValueError(
-                "quality index {} has to be < {}".format(value, len(qualities))
-            )
-        return qualities[value]
+    # normal index
+    if value > len(qualities):
+        raise ValueError(
+            f"quality index {value} has to be < {len(qualities)}",
+        )
+    return qualities[value]

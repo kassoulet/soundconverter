@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -19,12 +18,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
-from datetime import datetime
 import os
 import re
-import urllib.request
-import urllib.parse
 import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime
+
 from gi.repository import Gio
 
 from soundconverter.interface.mainloop import gtk_iteration
@@ -67,12 +67,12 @@ def vfs_walk(uri):
 
     try:
         dirlist = Gio.file_parse_name(uri).enumerate_children(
-            "*", Gio.FileMonitorFlags.NONE, None
+            "*", Gio.FileMonitorFlags.NONE, None,
         )
 
         for file_info in dirlist:
             info = dirlist.get_child(file_info).query_file_type(
-                Gio.FileMonitorFlags.NONE, None
+                Gio.FileMonitorFlags.NONE, None,
             )
 
             uri = dirlist.get_child(file_info).get_uri()
@@ -113,7 +113,7 @@ def vfs_rename(original, newname):
     gfnew = Gio.file_parse_name(newname)
     if not gfnew.get_parent().query_exists(None):
         fgnew_uri = gfnew.get_parent().get_uri()
-        logger.debug("Creating folder: '{}'".format(fgnew_uri))
+        logger.debug(f"Creating folder: '{fgnew_uri}'")
         Gio.File.make_directory_with_parents(gfnew.get_parent(), None)
     gforiginal.move(gfnew, Gio.FileCopyFlags.NONE, None, None, None)
 
@@ -134,7 +134,7 @@ def split_uri(uri):
     [1]: filename. This still has to be unquoted!
     """
     if not isinstance(uri, str):
-        raise ValueError("cannot split {} {}".format(type(uri), uri))
+        raise ValueError(f"cannot split {type(uri)} {uri}")
 
     match = re.match(r"^([a-zA-Z]+://([^/]+?)?)?(/.*)", uri)
     if match is None:

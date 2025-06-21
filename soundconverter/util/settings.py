@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -27,8 +26,8 @@ some of the CLI args are written into that temporarily.
 """
 
 from multiprocessing import cpu_count
-from gi.repository import Gio
 
+from gi.repository import Gio
 
 # Use get_gio_settings instead of importing this directly, because this
 # object changes in tests, and also this object will be replaced with a

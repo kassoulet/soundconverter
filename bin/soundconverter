@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -23,12 +22,12 @@
 
 # imports and package setup
 
+import gettext
+import locale
 import os
 import site
 import sys
-from optparse import OptionParser, OptionGroup
-import locale
-import gettext
+from optparse import OptionGroup, OptionParser
 
 import pkg_resources
 
@@ -71,9 +70,9 @@ try:
     gi.require_version("GstPbutils", "1.0")
     gi.require_version("Gst", "1.0")
     gi.require_version("Gtk", "3.0")
-    from gi.repository import Gst, Gtk, GLib, Gdk  # noqa: F401
+    from gi.repository import Gst, Gtk, GLib, Gdk  # noqa: F401, I001
 except (ImportError, ValueError) as error:
-    print(('{} needs GTK >= 3.0 (Error: "{}")'.format(NAME, error)))
+    print(f'{NAME} needs GTK >= 3.0 (Error: "{error}")')
     sys.exit(1)
 
 # Gst.init takes those args it knows from sys.argv and returns the remaining.
@@ -85,18 +84,17 @@ if isinstance(args, list):
     # beware that `--gst-...` arguments are not filtered here
     args = sys.argv
 
-from soundconverter.util.settings import settings
+from soundconverter.gstreamer.converter import Converter
 from soundconverter.interface.batch import (
-    batch_main,
     CLICheck,
+    batch_main,
     use_memory_gsettings,
     validate_args,
 )
+from soundconverter.interface.preferences import rates
 from soundconverter.interface.ui import gui_main
 from soundconverter.util.logger import logger, update_verbosity
-from soundconverter.gstreamer.converter import Converter
-
-from soundconverter.interface.preferences import rates
+from soundconverter.util.settings import settings
 
 
 def mode_callback(option, opt, value, parser, **kwargs):
@@ -125,12 +123,12 @@ def parse_command_line():
     Parses the command line arguments and displays help with --help.
     """
     parser = ModifiedOptionParser(
-        epilog="\nExamples:\n"
-        "  soundconverter -b [input paths] -f flac -o [output path]\n"
-        "  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m "
-        + "vbr -o ~/compressed -e skip\n"
-        "  soundconverter -b ~/music -r -f m4a -q 320 -o "
-        + "/mnt/sd/compressed -p {artist}/{title}\n"
+        epilog=(
+            "\nExamples:\n"
+            "  soundconverter -b [input paths] -f flac -o [output path]\n"
+            "  soundconverter -b ./file_1.flac ./file_2.flac -f mp3 -q 0 -m vbr -o ~/compressed -e skip\n"
+            "  soundconverter -b ~/music -r -f m4a -q 320 -o /mnt/sd/compressed -p {artist}/{title}\n"
+        ),
     )
     parser.add_option(
         "-b",
@@ -142,7 +140,7 @@ def parse_command_line():
         help=_(
             "Convert in batch mode, from the command line, without "
             "a graphical user interface. You can use this from, "
-            "say, shell scripts."
+            "say, shell scripts.",
         ),
     )
     parser.add_option(
@@ -154,7 +152,7 @@ def parse_command_line():
         callback_kwargs={"main": "tags"},
         help=_(
             "Show tags for input files instead of converting "
-            "them. This disables the graphical user interface."
+            "them. This disables the graphical user interface.",
         ),
     )
     parser.add_option(
@@ -204,7 +202,7 @@ def parse_command_line():
         metavar="NAME",
         help=_(
             "Set the output format. "
-            "aac/m4a, flac, mp3, ogg, opus and wav are supported."
+            "aac/m4a, flac, mp3, ogg, opus and wav are supported.",
         ),
     )
     # mode might also be used for format options of other formats at some
@@ -222,9 +220,7 @@ def parse_command_line():
         dest="existing",
         metavar="MODE",
         help=_(
-            "One of {}, {} or {}".format(
-                Converter.SKIP, Converter.OVERWRITE, Converter.INCREMENT
-            )
+            f"One of {Converter.SKIP}, {Converter.OVERWRITE} or {Converter.INCREMENT}",
         ),
         default=Converter.INCREMENT,
     )
@@ -245,7 +241,7 @@ def parse_command_line():
         help=_(
             "Put converted files into a different directory while rebuilding "
             "the original directory structure. This includes the name of the "
-            "original directory if a directory was selected."
+            "original directory if a directory was selected.",
         ),
         default=None,
     )
@@ -258,7 +254,7 @@ def parse_command_line():
         help=_(
             "For example {artist}/{album}/{title}. title defaults to the "
             'filename if unset. Unknown tags default to "Unknown ..." '
-            "otherwise."
+            "otherwise.",
         ),
         default=None,
     )
@@ -279,7 +275,7 @@ def parse_command_line():
             "mp3 abr: 64 - 320; "
             "mp3 cbr: 64 - 320; "
             "wav: 8, 16, 32 (bitdepth); "
-            "flac: 0 - 8 (compression strength)"
+            "flac: 0 - 8 (compression strength)",
         ),
     )
 
@@ -301,7 +297,7 @@ settings["existing"] = options["existing"]
 # now that the settings are populated, the verbosity can be determined:
 update_verbosity()
 
-logger.info(("{} {}".format(NAME, VERSION)))
+logger.info(f"{NAME} {VERSION}")
 
 if settings["main"] == "gui":
     GLADEFILE = os.path.join(DATA_PATH, "soundconverter.glade")

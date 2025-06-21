@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -545,8 +544,7 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.replace_messy_chars = False
 
         self.s = SoundFile(
-            "ssh://user@server:port"
-            + quote("/path/to/file with strângë chàrs фズ.flac")
+            "ssh://user@server:port" + quote("/path/to/file with strângë chàrs фズ.flac")
         )
         self.s.tags.update(
             {
