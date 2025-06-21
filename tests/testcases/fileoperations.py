@@ -19,7 +19,8 @@
 # USA
 
 import unittest
-from soundconverter.util.fileoperations import split_uri, is_uri
+
+from soundconverter.util.fileoperations import is_uri, split_uri
 
 
 class Fileoperations(unittest.TestCase):

@@ -26,8 +26,8 @@ import time
 import unittest
 from unittest.mock import patch
 
-from gi.repository import Gtk, GLib, Gst, GObject
-from util import reset_settings, launch
+from gi.repository import GLib, GObject, Gst, Gtk
+from util import launch, reset_settings
 
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.interface.mainloop import gtk_iteration
@@ -402,7 +402,7 @@ class GUIIntegration(unittest.TestCase):
         )
         self.assertTrue(
             os.path.isfile(
-                "tests/tmp/Unknown Artist/Unknown Album/strângë chàrs " "фズ/f o.m4a"
+                "tests/tmp/Unknown Artist/Unknown Album/strângë chàrs фズ/f o.m4a"
             )
         )
         self.assertTrue(os.path.isfile("tests/tmp/test_artist/test_album/c/f o.m4a"))
@@ -473,7 +473,7 @@ class GUIIntegration(unittest.TestCase):
         for row in window.prefs.liststore8:
             if display_name_to_delete == row[0]:
                 raise AssertionError(
-                    'Expected "{}" to be missing'.format(display_name_to_delete)
+                    f'Expected "{display_name_to_delete}" to be missing'
                 )
 
         window.prefs.output_mime_type.set_active_id(encoders[selected_index][2])
@@ -546,9 +546,7 @@ class GUIIntegration(unittest.TestCase):
                 get_gio_settings().set_string(
                     "selected-folder",
                     "file://"
-                    + os.path.realpath(
-                        "tests/tmp/{}/{}".format(encoder, quality_index)
-                    ),
+                    + os.path.realpath(f"tests/tmp/{encoder}/{quality_index}"),
                 )
 
                 available_elements.clear()
@@ -557,8 +555,8 @@ class GUIIntegration(unittest.TestCase):
                 self._wait_for_conversion_to_finish(window)
                 win[0].close()
 
-            path_5 = "tests/tmp/{}/5/a.m4a".format(encoder)
-            path_0 = "tests/tmp/{}/0/a.m4a".format(encoder)
+            path_5 = f"tests/tmp/{encoder}/5/a.m4a"
+            path_0 = f"tests/tmp/{encoder}/0/a.m4a"
             self.assertTrue(path_5)
             self.assertTrue(path_0)
             size_5 = os.path.getsize(path_5)

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -29,6 +28,7 @@ except ImportError as e:
     sys.exit(1)
 
 import os
+
 import DistUtilsExtra.auto
 
 # This will automatically, assuming that the prefix is /usr
@@ -46,8 +46,8 @@ class Install(DistUtilsExtra.auto.install_auto):
         # after DistUtilsExtra automatically copied data/org.soundconverter.gschema.xml
         # to /usr/share/glib-2.0/schemas/ it doesn't seem to compile them.
         glib_schema_path = os.path.join(self.install_data, "share/glib-2.0/schemas/")
-        cmd = "glib-compile-schemas {}".format(glib_schema_path)
-        print("running {}".format(cmd))
+        cmd = f"glib-compile-schemas {glib_schema_path}"
+        print(f"running {cmd}")
         os.system(cmd)
 
 

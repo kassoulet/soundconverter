@@ -18,16 +18,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+import threading
 import time
 import unittest
-import threading
 from unittest.mock import Mock
-from gi.repository import GLib, Gst
 
-from soundconverter.util.taskqueue import TaskQueue, Timer
-from soundconverter.util.task import Task
-from soundconverter.util.settings import get_gio_settings
+from gi.repository import GLib, Gst
 from util import reset_settings
+
+from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.task import Task
+from soundconverter.util.taskqueue import TaskQueue, Timer
 
 
 class SyncSleepTask(Task):

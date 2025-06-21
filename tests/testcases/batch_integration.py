@@ -26,7 +26,7 @@ import time
 import unittest
 from unittest.mock import patch
 
-from util import reset_settings, launch
+from util import launch, reset_settings
 
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.gstreamer.discoverer import Discoverer
@@ -362,7 +362,7 @@ class BatchIntegration(unittest.TestCase):
         path = "tests/tmp/c.m4a"
         now = time.time()
 
-        os.system('touch -d "2 hours ago" {}'.format(path))
+        os.system(f'touch -d "2 hours ago" {path}')
         time_1 = os.path.getmtime(path)
         size_1 = os.path.getsize(path)
         # an empty file from 2 hours ago
