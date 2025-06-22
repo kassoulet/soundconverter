@@ -329,6 +329,15 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         self.g.create_subfolders = False
         self.assertEqual(self.g.generate_target_uri(self.s, True), "/path/to/file.ogg")
 
+    def test_oga_suffix(self):
+        get_gio_settings().set_string("output-mime-type", "audio/x-vorbis")
+        # figures out the suffix when created
+        self.g = TargetNameGenerator()
+        self.g.suffix = "oga"
+        self.g.same_folder_as_input = True
+        self.g.create_subfolders = False
+        self.assertEqual(self.g.generate_target_uri(self.s, True), "/path/to/file.oga")
+
     def test_no_extension(self):
         get_gio_settings().set_string("output-mime-type", "audio/x-m4a")
         # figures out the suffix when created
