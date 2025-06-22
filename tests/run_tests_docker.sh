@@ -44,8 +44,7 @@ echo "XDG_RUNTIME_DIR set to: $XDG_RUNTIME_DIR"
 # `dbus-launch --exit-with-session`: Ensures a D-Bus session is started,
 # and it automatically exits when the wrapped command (pytest) finishes.
 echo "Starting tests within a D-Bus session..."
-# dbus-launch --exit-with-session python3 tests/test.py
-dbus-launch --exit-with-session soundconverter --help
+dbus-launch --exit-with-session python3 tests/test.py
 
 # Ensure Xvfb process is killed after tests, even if dbus-launch didn't clean it up for some reason.
 # `wait` prevents the script from exiting immediately, giving Xvfb a chance to respond to the kill.
