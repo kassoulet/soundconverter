@@ -1,0 +1,27 @@
+# .github/workflows/test.yml
+
+name: Headless Tests
+
+# Define when this workflow should run
+on:
+  push:
+    branches:
+      - main # Run on pushes to the main branch
+  pull_request:
+    branches:
+      - main # Run on pull requests targeting the main branch
+  workflow_dispatch: # Allows you to manually trigger the workflow from the GitHub UI
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image for tests
+      run: docker build -t soundconverter-test .
+
+    - name: Run tests in Docker container
+      run: docker run soundconverter-test
