@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -23,18 +22,22 @@
 import os
 from gettext import gettext as _
 
-from gi.repository import Gst, GLib, Gio
+from gi.repository import Gio, GLib, Gst
 
-from soundconverter.util.fileoperations import vfs_encode_filename, \
-    vfs_unlink, vfs_rename, vfs_exists, beautify_uri
+from soundconverter.util.error import show_error
+from soundconverter.util.fileoperations import (
+    beautify_uri,
+    vfs_encode_filename,
+    vfs_exists,
+    vfs_rename,
+    vfs_unlink,
+)
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
-from soundconverter.util.error import show_error
 from soundconverter.util.task import Task
 
-
-GSTREAMER_SOURCE = 'giosrc'
-GSTREAMER_SINK = 'giosink'
+GSTREAMER_SOURCE = "giosrc"
+GSTREAMER_SINK = "giosink"
 
 available_elements = set()
 
@@ -44,43 +47,40 @@ def find_available_elements():
     # gst-plugins-good, gst-plugins-bad, etc. packages provide them
     global available_elements
 
-    GOOD = 'gst-plugins-good'
-    BAD = 'gst-plugins-bad'
-    BASE = 'gst-plugins-base'
-    UGLY = 'gst-plugins-ugly'
-    LIBAV = 'gst-libav'
+    GOOD = "gst-plugins-good"
+    BAD = "gst-plugins-bad"
+    BASE = "gst-plugins-base"
+    UGLY = "gst-plugins-ugly"
+    LIBAV = "gst-libav"
 
     # some functions can be provided by various packages.
     # move preferred packages towards the bottom.
     encoders = [
-        ('asfmux', 'WMA', 'wma-enc', BAD),
-        ('avenc_wmav2', 'WMA', 'wma-enc', LIBAV),
-        ('flacenc', 'FLAC', 'flac-enc', GOOD),
-        ('wavenc', 'WAV', 'wav-enc', GOOD),
-        ('vorbisenc', 'Ogg Vorbis', 'vorbis-enc', BASE),
-        ('oggmux', 'Ogg Vorbis', 'vorbis-mux', BASE),
-        ('id3mux', 'MP3 tags', 'mp3-id-tags', BAD),
-        ('id3v2mux', 'MP3 tags', 'mp3-id-tags', GOOD),
-        ('xingmux', 'VBR tags', 'mp3-vbr-tags', UGLY),
-        ('lamemp3enc', 'MP3', 'mp3-enc', GOOD),
-        ('mp4mux', 'AAC', 'aac-mux', GOOD),
-        ('opusenc', 'Opus', 'opus-enc', BASE),
-        ('faac', 'AAC', 'aac-enc', BAD),
-        ('avenc_aac', 'AAC', 'aac-enc', LIBAV),
-        ('fdkaacenc', 'AAC', 'aac-enc', BAD),
+        ("asfmux", "WMA", "wma-enc", BAD),
+        ("avenc_wmav2", "WMA", "wma-enc", LIBAV),
+        ("flacenc", "FLAC", "flac-enc", GOOD),
+        ("wavenc", "WAV", "wav-enc", GOOD),
+        ("vorbisenc", "Ogg Vorbis", "vorbis-enc", BASE),
+        ("oggmux", "Ogg Vorbis", "vorbis-mux", BASE),
+        ("id3mux", "MP3 tags", "mp3-id-tags", BAD),
+        ("id3v2mux", "MP3 tags", "mp3-id-tags", GOOD),
+        ("xingmux", "VBR tags", "mp3-vbr-tags", UGLY),
+        ("lamemp3enc", "MP3", "mp3-enc", GOOD),
+        ("mp4mux", "AAC", "aac-mux", GOOD),
+        ("opusenc", "Opus", "opus-enc", BASE),
+        ("faac", "AAC", "aac-enc", BAD),
+        ("avenc_aac", "AAC", "aac-enc", LIBAV),
+        ("fdkaacenc", "AAC", "aac-enc", BAD),
     ]
 
-    result = dict()
+    result = {}
     for encoder, name, function, package in encoders:
         have_it = bool(Gst.ElementFactory.find(encoder))
         if have_it:
             available_elements.add(encoder)
         else:
             logger.debug(
-                '{} gstreamer element from "{}" not found\n'.format(
-                    encoder,
-                    package
-                )
+                f'{encoder} gstreamer element from "{package}" not found\n',
             )
         result[function] = (have_it, package)
 
@@ -88,19 +88,16 @@ def find_available_elements():
         have_it, package = result[function]
         if not have_it:
             logger.error(
-                'Disabling {} output. Do you have "{}" installed?'.format(
-                    function,
-                    package
-                )
+                f'Disabling {function} output. Do you have "{package}" installed?',
             )
 
-    if 'oggmux' not in available_elements:
-        available_elements.discard('vorbisenc')
-    if 'mp4mux' not in available_elements:
-        available_elements.discard('faac')
-        available_elements.discard('avenc_aac')
-    if 'asfmux' not in available_elements:
-        available_elements.discard('avenc_wmav2')
+    if "oggmux" not in available_elements:
+        available_elements.discard("vorbisenc")
+    if "mp4mux" not in available_elements:
+        available_elements.discard("faac")
+        available_elements.discard("avenc_aac")
+    if "asfmux" not in available_elements:
+        available_elements.discard("avenc_wmav2")
 
 
 find_available_elements()
@@ -108,69 +105,67 @@ find_available_elements()
 
 def create_flac_encoder():
     """Return an flac encoder for the gst pipeline string."""
-    flac_compression = get_gio_settings().get_int('flac-compression')
-    return 'flacenc mid-side-stereo=true quality={}'.format(flac_compression)
+    flac_compression = get_gio_settings().get_int("flac-compression")
+    return f"flacenc mid-side-stereo=true quality={flac_compression}"
 
 
 def create_wav_encoder():
     """Return a wav encoder for the gst pipeline string."""
-    wav_sample_width = get_gio_settings().get_int('wav-sample-width')
-    formats = {8: 'U8', 16: 'S16LE', 24: 'S24LE', 32: 'S32LE'}
-    return 'audioconvert ! audio/x-raw,format={} ! wavenc'.format(
-        formats[wav_sample_width]
-    )
+    wav_sample_width = get_gio_settings().get_int("wav-sample-width")
+    formats = {8: "U8", 16: "S16LE", 24: "S24LE", 32: "S32LE"}
+    return f"audioconvert ! audio/x-raw,format={formats[wav_sample_width]} ! wavenc"
 
 
 def create_oggvorbis_encoder():
     """Return an ogg encoder for the gst pipeline string."""
-    cmd = 'vorbisenc'
-    vorbis_quality = get_gio_settings().get_double('vorbis-quality')
+    cmd = "vorbisenc"
+    vorbis_quality = get_gio_settings().get_double("vorbis-quality")
     if vorbis_quality is not None:
-        cmd += ' quality={}'.format(vorbis_quality)
-    cmd += ' ! oggmux '
+        cmd += f" quality={vorbis_quality}"
+    cmd += " ! oggmux "
     return cmd
 
 
 def create_mp3_encoder():
     """Return an mp3 encoder for the gst pipeline string."""
     quality = {
-        'cbr': 'mp3-cbr-quality',
-        'abr': 'mp3-abr-quality',
-        'vbr': 'mp3-vbr-quality'
+        "cbr": "mp3-cbr-quality",
+        "abr": "mp3-abr-quality",
+        "vbr": "mp3-vbr-quality",
     }
-    mode = get_gio_settings().get_string('mp3-mode')
+    mode = get_gio_settings().get_string("mp3-mode")
 
     mp3_mode = mode
     mp3_quality = get_gio_settings().get_int(quality[mode])
 
-    cmd = 'lamemp3enc encoding-engine-quality=2 '
+    cmd = "lamemp3enc encoding-engine-quality=2 "
 
     if mp3_mode is not None:
         properties = {
-            'cbr': 'target=bitrate cbr=true bitrate=%s ',
-            'abr': 'target=bitrate cbr=false bitrate=%s ',
-            'vbr': 'target=quality cbr=false quality=%s ',
+            "cbr": "target=bitrate cbr=true bitrate=%s ",
+            "abr": "target=bitrate cbr=false bitrate=%s ",
+            "vbr": "target=quality cbr=false quality=%s ",
         }
 
         cmd += properties[mp3_mode] % mp3_quality
 
-        if 'xingmux' in available_elements and mp3_mode != 'cbr':
+        if "xingmux" in available_elements and mp3_mode != "cbr":
             # add xing header when creating vbr/abr mp3
-            cmd += '! xingmux '
+            cmd += "! xingmux "
 
-    if 'id3mux' in available_elements:
+    if "id3mux" in available_elements:
         # add tags
-        cmd += '! id3mux '
-    elif 'id3v2mux' in available_elements:
+        cmd += "! id3mux "
+    elif "id3v2mux" in available_elements:
         # add tags
-        cmd += '! id3v2mux '
+        cmd += "! id3v2mux "
 
     return cmd
 
 
 def create_aac_encoder():
     """Return an aac encoder for the gst pipeline string."""
-    aac_quality = get_gio_settings().get_int('aac-quality')
+    aac_quality = get_gio_settings().get_int("aac-quality")
 
     # it seemed like I couldn't get vbr to work with any of these, not even
     # with rate-control and quality of faac or with maxrate of avenc_aac.
@@ -179,42 +174,43 @@ def create_aac_encoder():
 
     # list of recommended aac encoders:
     # https://wiki.hydrogenaud.io/index.php?title=AAC_encoders
-    if 'fdkaacenc' in available_elements:
-        return 'fdkaacenc bitrate={} ! mp4mux'.format(bitrate)
+    if "fdkaacenc" in available_elements:
+        return f"fdkaacenc bitrate={bitrate} ! mp4mux"
 
-    encoder = 'faac' if 'faac' in available_elements else 'avenc_aac'
+    encoder = "faac" if "faac" in available_elements else "avenc_aac"
     logger.warning(
-        'fdkaacenc is recommended for aac conversion but it is not '
-        'available. It can be installed with gst-plugins-bad. '
-        'Using {} instead.'.format(encoder)
+        "fdkaacenc is recommended for aac conversion but it is not "
+        "available. It can be installed with gst-plugins-bad. "
+        f"Using {encoder} instead.",
     )
 
-    if 'faac' in available_elements:
-        return 'faac bitrate={} rate-control=2 ! mp4mux'.format(bitrate)
+    if "faac" in available_elements:
+        return f"faac bitrate={bitrate} rate-control=2 ! mp4mux"
 
-    return 'avenc_aac bitrate={} ! mp4mux'.format(bitrate)
+    return f"avenc_aac bitrate={bitrate} ! mp4mux"
 
 
 def create_opus_encoder():
     """Return an opus encoder for the gst pipeline string."""
-    opus_quality = get_gio_settings().get_int('opus-bitrate')
+    opus_quality = get_gio_settings().get_int("opus-bitrate")
     return (
-        'opusenc bitrate={} bitrate-type=vbr '
-        'bandwidth=auto ! oggmux'
-    ).format(opus_quality * 1000)
+        f"opusenc bitrate={opus_quality * 1000} bitrate-type=vbr "
+        "bandwidth=auto ! oggmux"
+    )
+
 
 def create_wma_encoder():
     """Return an wma encoder for the gst pipeline string."""
-    wma_quality = get_gio_settings().get_int('wma-bitrate')
-    return (
-        'avenc_wmav2 bitrate={} ! asfmux'
-    ).format(wma_quality * 1000)
+    wma_quality = get_gio_settings().get_int("wma-bitrate")
+    return f"avenc_wmav2 bitrate={wma_quality * 1000} ! asfmux"
+
 
 class Converter(Task):
     """Completely handle the conversion of a single file."""
-    INCREMENT = 'increment'
-    OVERWRITE = 'overwrite'
-    SKIP = 'skip'
+
+    INCREMENT = "increment"
+    OVERWRITE = "overwrite"
+    SKIP = "skip"
 
     def __init__(self, sound_file, name_generator):
         """create a converter that converts a single file.
@@ -235,12 +231,12 @@ class Converter(Task):
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
         settings = get_gio_settings()
-        self.output_mime_type = settings.get_string('output-mime-type')
-        self.output_resample = settings.get_boolean('output-resample')
-        self.resample_rate = settings.get_int('resample-rate')
-        self.force_mono = settings.get_boolean('force-mono')
-        self.replace_messy_chars = settings.get_boolean('replace-messy-chars')
-        self.delete_original = settings.get_boolean('delete-original')
+        self.output_mime_type = settings.get_string("output-mime-type")
+        self.output_resample = settings.get_boolean("output-resample")
+        self.resample_rate = settings.get_int("resample-rate")
+        self.force_mono = settings.get_boolean("force-mono")
+        self.replace_messy_chars = settings.get_boolean("replace-messy-chars")
+        self.delete_original = settings.get_boolean("delete-original")
 
         # State
         self.command = None
@@ -283,14 +279,14 @@ class Converter(Task):
     def pause(self):
         """Pause execution of the task."""
         if not self.pipeline:
-            logger.debug('pause(): pipeline is None!')
+            logger.debug("pause(): pipeline is None!")
             return
         self.pipeline.set_state(Gst.State.PAUSED)
 
     def resume(self):
         """Resume execution of the task."""
         if not self.pipeline:
-            logger.debug('resume(): pipeline is None!')
+            logger.debug("resume(): pipeline is None!")
             return
         self.pipeline.set_state(Gst.State.PLAYING)
 
@@ -298,7 +294,7 @@ class Converter(Task):
         """Delete the pipeline."""
         if self.pipeline is not None:
             bus = self.pipeline.get_bus()
-            if hasattr(self, 'watch_id'):
+            if hasattr(self, "watch_id"):
                 bus.disconnect(self.watch_id)
                 bus.remove_signal_watch()
             self.pipeline.set_state(Gst.State.NULL)
@@ -311,12 +307,11 @@ class Converter(Task):
                 try:
                     vfs_unlink(self.temporary_filename)
                 except Exception as error:
-                    logger.error('cannot delete: \'{}\': {}'.format(
-                        beautify_uri(self.temporary_filename),
-                        str(error)
-                    ))
+                    logger.error(
+                        f"cannot delete: '{beautify_uri(self.temporary_filename)}': {str(error)}",
+                    )
         if not self.pipeline:
-            logger.debug('pipeline already stopped!')
+            logger.debug("pipeline already stopped!")
             return
         self._cleanup()
 
@@ -328,17 +323,17 @@ class Converter(Task):
         """
         command = self.command
         if self.pipeline is None:
-            logger.debug('launching: \'{}\''.format(command))
+            logger.debug(f"launching: '{command}'")
             try:
                 self.pipeline = Gst.parse_launch(command)
                 bus = self.pipeline.get_bus()
             except GLib.Error as error:
-                self.error = 'gstreamer error when creating pipeline: {}'.format(str(error))
+                self.error = f"gstreamer error when creating pipeline: {str(error)}"
                 self._on_error(self.error)
                 return
 
             bus.add_signal_watch()
-            self.watch_id = bus.connect('message', self._on_message)
+            self.watch_id = bus.connect("message", self._on_message)
 
         self.pipeline.set_state(Gst.State.PLAYING)
 
@@ -352,44 +347,43 @@ class Converter(Task):
         newname = self.newname
 
         if newname is None:
-            raise AssertionError('the conversion was not started')
+            raise AssertionError("the conversion was not started")
 
         if self.error:
-            logger.debug('error in task, skipping rename: {}'.format(
-                self.temporary_filename
-            ))
+            logger.debug(
+                f"error in task, skipping rename: {self.temporary_filename}",
+            )
             vfs_unlink(self.temporary_filename)
-            logger.error('could not convert {}: {}'.format(
-                beautify_uri(input_uri),
-                self.error
-            ))
+            logger.error(
+                f"could not convert {beautify_uri(input_uri)}: {self.error}",
+            )
             self.done()
             return
 
         if not vfs_exists(self.temporary_filename):
-            self.error = 'Expected {} to exist after conversion.'.format(
-                self.temporary_filename
+            self.error = (
+                f"Expected {self.temporary_filename} to exist after conversion."
             )
             self.done()
             return
 
         # rename temporary file
-        logger.debug('{} -> {}'.format(
-            beautify_uri(self.temporary_filename), beautify_uri(newname)
-        ))
+        logger.debug(
+            f"{beautify_uri(self.temporary_filename)} -> {beautify_uri(newname)}",
+        )
 
         path, extension = os.path.splitext(newname)
-        path = path.replace('%', '%%')
+        path = path.replace("%", "%%")
 
-        space = ' '
+        space = " "
         if self.replace_messy_chars:
-            space = '_'
+            space = "_"
 
         exists = vfs_exists(newname)
         if self.existing_behaviour == Converter.INCREMENT and exists:
             # If the file already exists, increment the filename so that
             # nothing gets overwritten.
-            path = path + space + '(%d)' + extension
+            path = path + space + "(%d)" + extension
             i = 1
             while vfs_exists(newname):
                 newname = path % i
@@ -397,26 +391,22 @@ class Converter(Task):
 
         try:
             if self.existing_behaviour == Converter.OVERWRITE and exists:
-                logger.info('overwriting \'{}\''.format(
-                    beautify_uri(newname)
-                ))
+                logger.info(f"overwriting '{beautify_uri(newname)}'")
                 vfs_unlink(newname)
             vfs_rename(self.temporary_filename, newname)
         except Exception as error:
             self.error = str(error)
-            logger.error("could not rename '{}' to '{}': {}".format(
-                beautify_uri(self.temporary_filename),
-                beautify_uri(newname),
-                str(error)
-            ))
+            logger.error(
+                f"could not rename '{beautify_uri(self.temporary_filename)}' to '{beautify_uri(newname)}': {str(error)}",
+            )
             self.done()
             return
 
         assert vfs_exists(newname)
 
-        logger.info("converted '{}' to '{}'".format(
-            beautify_uri(input_uri), beautify_uri(newname)
-        ))
+        logger.info(
+            f"converted '{beautify_uri(input_uri)}' to '{beautify_uri(newname)}'",
+        )
 
         # finish up the target file
         try:
@@ -426,16 +416,13 @@ class Converter(Task):
             source.copy_attributes(destination, Gio.FileCopyFlags.ALL_METADATA)
         except Exception as error:
             logger.error(
-                "Could not set some attributes of the target '{}': {}".format(
-                    beautify_uri(newname),
-                    str(error)
-                )
+                f"Could not set some attributes of the target '{beautify_uri(newname)}': {str(error)}",
             )
         try:
             # the modification date of the destination should be now
             info = Gio.FileInfo()
             now = GLib.DateTime.new_now(GLib.TimeZone())
-            if callable(getattr(info, 'set_modification_date_time', None)):
+            if callable(getattr(info, "set_modification_date_time", None)):
                 info.set_modification_date_time(now)
             else:
                 # deprecated method
@@ -443,27 +430,20 @@ class Converter(Task):
                 now.to_timeval(timeval)
                 info.set_modification_time(timeval)
 
-            destination.set_attributes_from_info(
-                info,
-                Gio.FileQueryInfoFlags.NONE
-            )
+            destination.set_attributes_from_info(info, Gio.FileQueryInfoFlags.NONE)
         except Exception as error:
             logger.error(
-                "Could not set modification time of the target '{}': {}".format(
-                    beautify_uri(newname),
-                    str(error)
-                )
+                f"Could not set modification time of the target '{beautify_uri(newname)}': {str(error)}",
             )
 
         if self.delete_original and not self.error:
-            logger.info("deleting: '{}'".format(self.sound_file.uri))
+            logger.info(f"deleting: '{self.sound_file.uri}'")
             try:
                 vfs_unlink(self.sound_file.uri)
             except Exception as error:
-                logger.info("cannot remove '{}': {}".format(
-                    beautify_uri(self.sound_file.uri),
-                    str(error)
-                ))
+                logger.info(
+                    f"cannot remove '{beautify_uri(self.sound_file.uri)}': {str(error)}",
+                )
 
         self.output_uri = newname
         self.done()
@@ -475,70 +455,65 @@ class Converter(Task):
 
     def run(self):
         """Call this in order to run the whole Converter task."""
-        self.newname = self.name_generator.generate_target_uri(
-            self.sound_file
-        )
+        self.newname = self.name_generator.generate_target_uri(self.sound_file)
 
         # temporary output file, in order to easily remove it without
         # any overwritten file and therefore caused damage in the target dir.
         self.temporary_filename = self.name_generator.generate_temp_path(
-            self.sound_file
+            self.sound_file,
         )
 
         exists = vfs_exists(self.newname)
         if self.existing_behaviour == Converter.SKIP and exists:
-            logger.info('output file already exists, skipping \'{}\''.format(
-                beautify_uri(self.newname)
-            ))
+            logger.info(
+                f"output file already exists, skipping '{beautify_uri(self.newname)}'",
+            )
             self.done()
             return
 
         # construct a pipeline for conversion
         # Add default decoding step that remains the same for all formats.
-        command = ['{} location="{}" name=src ! decodebin name=decoder'.format(
-            GSTREAMER_SOURCE, vfs_encode_filename(self.sound_file.uri)
-        ), 'audiorate ! audioconvert ! audioresample']
+        command = [
+            f'{GSTREAMER_SOURCE} location="{vfs_encode_filename(self.sound_file.uri)}" name=src ! decodebin name=decoder',
+            "audiorate ! audioconvert ! audioresample",
+        ]
 
         # audio resampling support
         if self.output_resample:
-            command.append('audio/x-raw,rate={}'.format(self.resample_rate))
-            command.append('audioconvert ! audioresample')
+            command.append(f"audio/x-raw,rate={self.resample_rate}")
+            command.append("audioconvert ! audioresample")
 
         if self.force_mono:
-            command.append('audio/x-raw,channels=1 ! audioconvert')
+            command.append("audio/x-raw,channels=1 ! audioconvert")
 
         # figure out the rest of the gst pipeline string
         encoder = {
-            'audio/x-vorbis': create_oggvorbis_encoder,
-            'audio/x-flac': create_flac_encoder,
-            'audio/x-wav': create_wav_encoder,
-            'audio/mpeg': create_mp3_encoder,
-            'audio/x-m4a': create_aac_encoder,
-            'audio/ogg; codecs=opus': create_opus_encoder,
-            'audio/x-ms-wma': create_wma_encoder
+            "audio/x-vorbis": create_oggvorbis_encoder,
+            "audio/x-flac": create_flac_encoder,
+            "audio/x-wav": create_wav_encoder,
+            "audio/mpeg": create_mp3_encoder,
+            "audio/x-m4a": create_aac_encoder,
+            "audio/ogg; codecs=opus": create_opus_encoder,
+            "audio/x-ms-wma": create_wma_encoder,
         }[self.output_mime_type]()
         command.append(encoder)
 
         gfile = Gio.file_parse_name(self.temporary_filename)
         dirname = gfile.get_parent()
         if dirname and not dirname.query_exists(None):
-            logger.info('creating folder: \'{}\''.format(
-                beautify_uri(dirname.get_uri())
-            ))
+            logger.info(f"creating folder: '{beautify_uri(dirname.get_uri())}'")
             if not dirname.make_directory_with_parents():
                 show_error(
-                    _('cannot create \'{}\' folder.').format(
-                        beautify_uri(dirname)
-                    )
+                    _("cannot create '{}' folder.").format(beautify_uri(dirname)),
                 )
                 return
 
-        command.append('{} location="{}"'.format(
-            GSTREAMER_SINK, vfs_encode_filename(self.temporary_filename)
-        ))
+        command.append(
+            f'{GSTREAMER_SINK} location="{vfs_encode_filename(self.temporary_filename)}"',
+        )
 
         # preparation done, now convert
-        self.command = ' ! '.join(command)
+        self.command = " ! ".join(command)
         self._convert()
 
     def _on_error(self, error):
@@ -547,10 +522,7 @@ class Converter(Task):
         The TaskQueue is interested in reading the error.
         """
         self.error = error
-        show_error(
-            error,
-            beautify_uri(self.sound_file.uri)
-        )
+        show_error(error, beautify_uri(self.sound_file.uri))
         self._stop_pipeline()
         self.done()
 

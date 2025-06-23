@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -21,15 +20,16 @@
 
 # logging & debugging
 
-from soundconverter.util.settings import settings
 import logging
+
+from soundconverter.util.settings import settings
 
 
 class Formatter(logging.Formatter):
     def format(self, record):
-        if record.levelno == logging.INFO and not settings['debug']:
+        if record.levelno == logging.INFO and not settings["debug"]:
             # if not launched with --debug, then don't print "INFO:"
-            self._style._fmt = '%(msg)s'  # noqa
+            self._style._fmt = "%(msg)s"  # noqa
         else:
             # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
             # for those numbers
@@ -40,14 +40,14 @@ class Formatter(logging.Formatter):
                 logging.DEBUG: 36,
                 logging.INFO: 32,
             }.get(record.levelno, 0)
-            if settings['debug']:
+            if settings["debug"]:
                 self._style._fmt = (  # noqa
-                    '\033[{}m%(levelname)s\033[0m: '
-                    '%(filename)s, line %(lineno)d, %(message)s'
+                    "\033[{}m%(levelname)s\033[0m: "
+                    "%(filename)s, line %(lineno)d, %(message)s"
                 ).format(color)
             else:
                 self._style._fmt = (  # noqa
-                    '\033[{}m%(levelname)s\033[0m: %(message)s'
+                    "\033[{}m%(levelname)s\033[0m: %(message)s"
                 ).format(color)
         return super().format(record)
 
@@ -60,7 +60,7 @@ logger.addHandler(handler)
 
 def update_verbosity():
     """Set the logging verbosity according to the settings object."""
-    if settings['debug']:
+    if settings["debug"]:
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)

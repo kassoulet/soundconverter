@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -23,22 +22,24 @@
 
 import os
 
-from gi.repository import GLib, Gio
+from gi.repository import Gio, GLib
 
-from soundconverter.interface.preferences import rates
-from soundconverter.util.soundfile import SoundFile
-from soundconverter.util.settings import settings, set_gio_settings
-from soundconverter.util.formats import get_quality_setting_name, \
-    get_mime_type, get_mime_type_mapping, get_default_quality
 from soundconverter.gstreamer.converter import Converter
-from soundconverter.gstreamer.discoverer import add_discoverers, \
-    get_sound_files
-from soundconverter.util.taskqueue import TaskQueue
-from soundconverter.util.namegenerator import TargetNameGenerator
-from soundconverter.util.fileoperations import filename_to_uri, beautify_uri
-from soundconverter.util.logger import logger
+from soundconverter.gstreamer.discoverer import add_discoverers, get_sound_files
+from soundconverter.interface.preferences import rates
+from soundconverter.util.fileoperations import beautify_uri, filename_to_uri
+from soundconverter.util.formats import (
+    get_default_quality,
+    get_mime_type,
+    get_mime_type_mapping,
+    get_quality_setting_name,
+)
 from soundconverter.util.formatting import format_time
-from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.util.logger import logger
+from soundconverter.util.namegenerator import TargetNameGenerator
+from soundconverter.util.settings import set_gio_settings, settings
+from soundconverter.util.soundfile import SoundFile
+from soundconverter.util.taskqueue import TaskQueue
 
 cli_convert = [None]
 
@@ -58,81 +59,77 @@ def use_memory_gsettings(options):
     temporary memory backend so that the ui keeps its settings and cli
     settings are thrown away at the end.
     """
-    if options.get('main') == 'gui':
-        raise AssertionError('should not be used with the gui mode')
+    if options.get("main") == "gui":
+        raise AssertionError("should not be used with the gui mode")
 
     backend = Gio.memory_settings_backend_new()
-    gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
+    gio_settings = Gio.Settings.new_with_backend("org.soundconverter", backend)
     set_gio_settings(gio_settings)
 
-    gio_settings.set_boolean('delete-original', options.get('delete-original', False))
+    gio_settings.set_boolean("delete-original", options.get("delete-original", False))
 
-    if options.get('main') == 'batch':
+    if options.get("main") == "batch":
         # the number of jobs is only applied, when limit-jobs is true
-        forced_jobs = options.get('forced-jobs', None)
+        forced_jobs = options.get("forced-jobs", None)
         if forced_jobs is not None:
-            gio_settings.set_boolean('limit-jobs', True)
-            gio_settings.set_int('number-of-jobs', options['forced-jobs'])
+            gio_settings.set_boolean("limit-jobs", True)
+            gio_settings.set_int("number-of-jobs", options["forced-jobs"])
         else:
-            gio_settings.set_boolean('limit-jobs', False)
+            gio_settings.set_boolean("limit-jobs", False)
 
-        format_option = options['format']
+        format_option = options["format"]
         mime_type = get_mime_type(format_option)
 
-        mode = options.get('mode')
+        mode = options.get("mode")
         if mode:
-            gio_settings.set_string('mp3-mode', mode)
+            gio_settings.set_string("mp3-mode", mode)
 
-        gio_settings.set_string('output-mime-type', mime_type)
+        gio_settings.set_string("output-mime-type", mime_type)
 
-        output_path = filename_to_uri(options.get('output-path'))
-        gio_settings.set_string('selected-folder', output_path)
+        output_path = filename_to_uri(options.get("output-path"))
+        gio_settings.set_string("selected-folder", output_path)
 
-        gio_settings.set_boolean('same-folder-as-input', False)
+        gio_settings.set_boolean("same-folder-as-input", False)
 
         # other than the ui, the batch mode doesn't have a selection of
         # predefined patterns and it's all text anyways, so patterns can be
         # created with the -p argument on custom-filename-pattern. Don't use
         # -o for that to avoid having to escape pattern symbols when a folder
         # is called like a pattern string.
-        gio_settings.set_boolean('create-subfolders', False)
-        pattern = options.get('custom-filename-pattern')
+        gio_settings.set_boolean("create-subfolders", False)
+        pattern = options.get("custom-filename-pattern")
         if pattern:
-            gio_settings.set_int('name-pattern-index', -1)
-            gio_settings.set_string('custom-filename-pattern', pattern)
+            gio_settings.set_int("name-pattern-index", -1)
+            gio_settings.set_string("custom-filename-pattern", pattern)
         else:
             # the first name pattern is the filename itself
-            gio_settings.set_int('name-pattern-index', 0)
+            gio_settings.set_int("name-pattern-index", 0)
 
-        quality_setting = options.get('quality')
+        quality_setting = options.get("quality")
         if quality_setting is None:
             quality_setting = get_default_quality(mime_type)
 
         setting_name = get_quality_setting_name()
         # here is the very long and incredible way to set a variable as gio
         # settings value with the correct type as defined in the schema:
-        type_string = gio_settings \
-            .props \
-            .settings_schema \
-            .get_key(setting_name) \
-            .get_value_type() \
+        type_string = (
+            gio_settings.props.settings_schema.get_key(setting_name)
+            .get_value_type()
             .dup_string()
-        variant = GLib.Variant(type_string, float(quality_setting))
-        gio_settings.set_value(
-            setting_name,
-            variant
         )
+        variant = GLib.Variant(type_string, float(quality_setting))
+        gio_settings.set_value(setting_name, variant)
 
     else:
         # --tags and --check
-        gio_settings.set_boolean('limit-jobs', True)
-        gio_settings.set_int('number-of-jobs', 1)
+        gio_settings.set_boolean("limit-jobs", True)
+        gio_settings.set_int("number-of-jobs", 1)
 
-    resample = options.get('output-resample')
+    resample = options.get("output-resample")
 
     if resample is not None:
-        gio_settings.set_boolean('output-resample', True)
-        gio_settings.set_int('resample-rate', resample)
+        gio_settings.set_boolean("output-resample", True)
+        gio_settings.set_int("resample-rate", resample)
 
 
 def validate_args(options):
@@ -140,109 +137,104 @@ def validate_args(options):
 
     Will log usage mistakes to the console.
     """
-    main = options.get('main', 'gui')
-    if main not in ['gui', 'check', 'tags', 'batch']:
-        logger.error('unknown main {}'.format(main))
+    main = options.get("main", "gui")
+    if main not in ["gui", "check", "tags", "batch"]:
+        logger.error(f"unknown main {main}")
         return False
 
-    if main not in ['gui', 'check', 'tags']:
+    if main not in ["gui", "check", "tags"]:
         # not needed for --check and --tags
-        if not options.get('output-path'):
-            logger.error('output path argument -o is required')
+        if not options.get("output-path"):
+            logger.error("output path argument -o is required")
             return False
 
-        existing_behaviour = options.get('existing')
+        existing_behaviour = options.get("existing")
         if existing_behaviour:
             existing_behaviours = [
-                Converter.SKIP, Converter.OVERWRITE, Converter.INCREMENT
+                Converter.SKIP,
+                Converter.OVERWRITE,
+                Converter.INCREMENT,
             ]
             if existing_behaviour not in existing_behaviours:
-                logger.error('-e should be one of {}'.format(
-                    ', '.join(existing_behaviours)
-                ))
+                logger.error(
+                    "-e should be one of {}".format(", ".join(existing_behaviours)),
+                )
                 return False
 
         # target_format might be a mime type or a file extension
-        target_format = options.get('format')
+        target_format = options.get("format")
         if target_format is None:
-            logger.error('format argument -f is required')
+            logger.error("format argument -f is required")
             return False
         mime_type = get_mime_type(target_format)
         if mime_type is None:
             logger.error(
                 'cannot use "{}" format. Supported formats: {}'.format(
                     target_format,
-                    ', '.join(get_mime_type_mapping())
-                )
+                    ", ".join(get_mime_type_mapping()),
+                ),
             )
             return False
 
-        mode = options.get('mode')
-        if mode and mode not in ['abr', 'cbr', 'vbr']:
-            logger.error('mode should be one of abr, cbr or vbr (default)')
+        mode = options.get("mode")
+        if mode and mode not in ["abr", "cbr", "vbr"]:
+            logger.error("mode should be one of abr, cbr or vbr (default)")
             return False
 
         # validate if the quality setting makes sense
-        quality = options.get('quality')
+        quality = options.get("quality")
 
         if quality is not None:
             # optional; otherwise default quality values will be used
-            if mime_type == 'audio/mpeg':
-                if mode in ['abr', 'cbr']:
+            if mime_type == "audio/mpeg":
+                if mode in ["abr", "cbr"]:
                     if quality > 320 or quality < 64:
-                        logger.error(
-                            'mp3 cbr/abr bitrate should be between 64 and 320'
-                        )
+                        logger.error("mp3 cbr/abr bitrate should be between 64 and 320")
                         return False
                 else:
                     if quality > 9 or quality < 0:
                         logger.error(
-                            'mp3 vbr quality should be between 9 (low) and '
-                            '0 (hight)'
+                            "mp3 vbr quality should be between 9 (low) and 0 (hight)",
                         )
                         return False
 
-            elif mime_type == 'audio/x-vorbis':
+            elif mime_type == "audio/x-vorbis":
                 if quality < 0 or quality > 1:
-                    logger.error('ogg quality should be between 0.0 and 1.0')
+                    logger.error("ogg quality should be between 0.0 and 1.0")
                     return False
 
-            elif mime_type == 'audio/x-m4a':
+            elif mime_type == "audio/x-m4a":
                 # supports arbitrary bitrates
                 # source: https://en.wikipedia.org/wiki/Advanced_Audio_Coding
                 # Our used encoder seems to cap somewhere between 400 and
                 # 440 kbps though
                 if quality < 0:
-                    logger.error('m4a bitrate should be larger than 0')
+                    logger.error("m4a bitrate should be larger than 0")
                     return False
 
-            elif mime_type == 'audio/x-flac':
+            elif mime_type == "audio/x-flac":
                 if quality < 0 or quality > 8:
-                    logger.error(
-                        'flac compression strength should be between 0 and 8'
-                    )
+                    logger.error("flac compression strength should be between 0 and 8")
                     return False
 
-            elif mime_type == 'audio/x-wav':
+            elif mime_type == "audio/x-wav":
                 if quality not in [8, 16, 24, 32]:
-                    logger.error(
-                        'wav sample width has to be one of 8, 16, 24 or 32'
-                    )
+                    logger.error("wav sample width has to be one of 8, 16, 24 or 32")
                     return False
 
-            elif mime_type == 'audio/ogg; codecs=opus':
+            elif mime_type == "audio/ogg; codecs=opus":
                 # source: https://wiki.hydrogenaud.io/index.php?title=Opus
                 if quality < 6 or quality > 510:
-                    logger.error('opus bitrate should be between 6 and 510')
+                    logger.error("opus bitrate should be between 6 and 510")
                     return False
 
-    resample = options.get('output-resample', None)
+    resample = options.get("output-resample", None)
 
     if resample and resample not in rates:
         logger.error(
             "Possible values for -R or --output-resample option are {rates}".format(
-                rates=", ".join([str(item for item in rates)])
-            )
+                rates=", ".join([str(item for item in rates)]),
+            ),
         )
         return False
 
@@ -283,10 +275,10 @@ def prepare_files_list(input_files):
         if os.path.isfile(input_path):
             # for every appended file, also append to
             # subdirectories
-            subdirectories.append('')
+            subdirectories.append("")
             parsed_files.append(input_path)
         elif not os.path.isdir(input_path):
-            logger.error('path {} does not exist'.format(input_path))
+            logger.error(f"path {input_path} does not exist")
 
         # walk over directories to add the files of all the subdirectories
         elif os.path.isdir(input_path):
@@ -294,12 +286,12 @@ def prepare_files_list(input_files):
                 input_path = input_path[:-1]
 
             if input_path.rfind(os.sep) != -1:
-                parent = input_path[:input_path.rfind(os.sep)]
+                parent = input_path[: input_path.rfind(os.sep)]
             else:
                 parent = input_path
 
             # but only if -r option was provided
-            if settings.get('recursive'):
+            if settings.get("recursive"):
                 for dirpath, _, filenames in os.walk(input_path):
                     for filename in filenames:
                         if dirpath[-1] != os.sep:
@@ -307,15 +299,14 @@ def prepare_files_list(input_files):
                         # dirpath: for example a/b/c/e/f/
                         parsed_files.append(dirpath + filename)
                         subdir = os.path.relpath(dirpath, parent) + os.sep
-                        if subdir == './':
-                            subdir = ''
+                        if subdir == "./":
+                            subdir = ""
                         subdirectories.append(subdir)
             else:
                 # else it didn't go into any directory.
                 # Provide some information about how to
                 logger.error(
-                    '{} is a directory. Use -r to go into all subdirectories.'
-                    .format(input_path)
+                    f"{input_path} is a directory. Use -r to go into all subdirectories.",
                 )
         # if not a file and not a dir it doesn't exist. skip
 
@@ -336,9 +327,7 @@ class CLIConvert:
 
         input_files is an array of string paths.
         """
-        logger.info(
-            'checking files and walking dirs in the specified paths…'
-        )
+        logger.info("checking files and walking dirs in the specified paths…")
 
         # CLICheck will exit(1) if no input_files available and resolve
         # all files in input_files and also figure out which files can be
@@ -361,36 +350,31 @@ class CLIConvert:
         for sound_file in sound_files:
             if not sound_file.readable:
                 filename = beautify_uri(sound_file.uri)
-                logger.info(
-                    'skipping \'{}\': not an audiofile'.format(filename)
-                )
+                logger.info(f"skipping '{filename}': not an audiofile")
                 continue
 
             converter = Converter(sound_file, name_generator)
 
-            converter.existing_behaviour = settings.get('existing')
+            converter.existing_behaviour = settings.get("existing")
 
             conversions.add(converter)
 
             self.num_conversions += 1
 
         if self.num_conversions == 0:
-            logger.info('no audio files for conversion found…')
+            logger.info("no audio files for conversion found…")
             exit(2)
 
-        logger.info('starting conversion of {} files…'.format(
-            len(sound_files)
-        ))
+        logger.info(f"starting conversion of {len(sound_files)} files…")
         self.conversions = conversions
 
         def finished(_=None):
             total_time = conversions.get_duration()
-            logger.info('converted {} files in {}'.format(
-                len(sound_files),
-                format_time(total_time)
-            ))
+            logger.info(
+                f"converted {len(sound_files)} files in {format_time(total_time)}",
+            )
 
-        conversions.connect('done', finished)
+        conversions.connect("done", finished)
 
         conversions.run()
 
@@ -405,9 +389,7 @@ class CLIConvert:
 class CLICheck:
     """Print all the tags of the specified files to the console."""
 
-    def __init__(
-            self, input_files, verbose=False
-    ):
+    def __init__(self, input_files, verbose=False):
         """Print all the tags of the specified files to the console.
 
         To go into subdirectories of paths provided, the -r command line
@@ -430,7 +412,7 @@ class CLICheck:
         if len(input_files) == 0:
             # prepare_files_list will print something like
             # "use -r to go into subdirectories"
-            logger.info('no files found…')
+            logger.info("no files found…")
             exit(1)
 
         discoverers = TaskQueue()
@@ -464,9 +446,9 @@ class CLICheck:
                 if sound_file.readable:
                     self.print(sound_file)
                 else:
-                    logger.info('{} is not an audiofile'.format(
-                        beautify_uri(sound_file.uri)
-                    ))
+                    logger.info(
+                        f"{beautify_uri(sound_file.uri)} is not an audiofile",
+                    )
 
     def get_sound_files(self):
         """Get all SoundFiles."""
@@ -479,6 +461,6 @@ class CLICheck:
         if len(sound_file.tags) > 0:
             for key in sorted(sound_file.tags):
                 value = sound_file.tags[key]
-                logger.info(('    {}: {}'.format(key, value)))
+                logger.info(f"    {key}: {value}")
         else:
-            logger.info(('    no tags found'))
+            logger.info("    no tags found")

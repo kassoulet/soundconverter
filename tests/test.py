@@ -1,26 +1,26 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 
 """Sets up soundconverter for the tests and runs them."""
-
 
 import sys
 import unittest
 
 import gi
-gi.require_version('GstPbutils', '1.0')
-gi.require_version('Gst', '1.0')
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gst, Gio, Gtk
+
+gi.require_version("GstPbutils", "1.0")
+gi.require_version("Gst", "1.0")
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gst, Gtk, Gio  # noqa: E402, F401, I001
+
 args = Gst.init(sys.argv)
 
-from soundconverter.util.settings import set_gio_settings
-from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.interface.mainloop import gtk_iteration  # noqa: E402
+from soundconverter.util.settings import set_gio_settings  # noqa: E402
 
 # don't overwrite the users settings during tests
 backend = Gio.memory_settings_backend_new()
-gio_settings = Gio.Settings.new_with_backend('org.soundconverter', backend)
+gio_settings = Gio.Settings.new_with_backend("org.soundconverter", backend)
 set_gio_settings(gio_settings)
 
 # tests will control gtk main iterations for the ui
@@ -35,12 +35,11 @@ if __name__ == "__main__":
     if len(modules) > 0:
         # for example `python3 tests/test.py discoverer.DiscovererTest.test_read_tags`
         testsuite = unittest.defaultTestLoader.loadTestsFromNames(
-            ['testcases.{}'.format(module) for module in modules]
+            [f"testcases.{module}" for module in modules]
         )
     else:
         # run all tests by default
-        testsuite = unittest.defaultTestLoader.discover(
-            'testcases', pattern='*.py'
-        )
+        testsuite = unittest.defaultTestLoader.discover("testcases", pattern="*.py")
 
     testrunner = unittest.TextTestRunner(verbosity=2).run(testsuite)
+    sys.exit(len(testrunner.failures) + len(testrunner.errors))

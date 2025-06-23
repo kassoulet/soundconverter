@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -30,15 +29,15 @@ class GladeWindow:
         You have to call connect_signals() when all descendants are ready.
         """
         GladeWindow.builder = builder
-        GladeWindow.callbacks.update(dict(
-            [[x, getattr(self, x)] for x in dir(self) if x.startswith('on_')]
-        ))
+        GladeWindow.callbacks.update(
+            dict([[x, getattr(self, x)] for x in dir(self) if x.startswith("on_")]),
+        )
 
     def __getattr__(self, attribute):
         """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
-            raise AttributeError('Widget \'{}\' not found'.format(attribute))
+            raise AttributeError(f"Widget '{attribute}' not found")
         self.__dict__[attribute] = widget  # cache result
         return widget
 

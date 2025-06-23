@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -25,6 +24,7 @@ from gi.repository import GObject
 
 class Task(GObject.Object):
     """Abstract class of a single task."""
+
     def __init__(self):
         super().__init__()
 
@@ -57,13 +57,7 @@ class Task(GObject.Object):
 
     def done(self):
         """Emit a "done" event."""
-        self.emit('done')
+        self.emit("done")
 
 
-GObject.signal_new(
-    'done',
-    Task,
-    GObject.SignalFlags.RUN_FIRST,
-    None,
-    []
-)
+GObject.signal_new("done", Task, GObject.SignalFlags.RUN_FIRST, None, [])

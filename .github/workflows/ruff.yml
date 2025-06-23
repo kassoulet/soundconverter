@@ -1,4 +1,4 @@
-name: Pylint
+name: Ruff
 
 on: [push]
 
@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
+        pip install ruff
+    - name: Analysing the code with ruff
       run: |
-        pylint $(find soundconverter/ -name '*.py') bin/soundconverter
+        ruff check soundconverter/ bin/soundconverter

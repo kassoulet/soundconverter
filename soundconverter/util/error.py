@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -25,9 +24,10 @@ from soundconverter.util.logger import logger
 
 class ErrorPrinter:
     """Default error handler"""
+
     def show_error(self, primary, secondary=None):
         if secondary:
-            logger.error('{}: {}'.format(primary, secondary))
+            logger.error(f"{primary}: {secondary}")
         else:
             logger.error(primary)
         pass

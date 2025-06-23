@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -23,16 +22,13 @@
 
 
 def format_time(seconds):
-    units = [(86400, 'd'),
-             (3600, 'h'),
-             (60, 'm'),
-             (1, 's')]
+    units = [(86400, "d"), (3600, "h"), (60, "m"), (1, "s")]
     seconds = round(seconds)
     result = []
     for factor, unity in units:
         count = int(seconds / factor)
         seconds -= count * factor
         if count > 0 or (factor == 1 and not result):
-            result.append('{} {}'.format(count, unity))
+            result.append(f"{count} {unity}")
     assert seconds == 0
-    return ' '.join(result)
+    return " ".join(result)

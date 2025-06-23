@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -24,18 +23,17 @@ import time
 from gettext import gettext as _
 from gettext import ngettext
 
-from gi.repository import GObject, Gtk, Gio, Gdk, GLib, Pango
+from gi.repository import Gdk, Gio, GLib, GObject, Gtk, Pango
 
+from soundconverter.gstreamer.discoverer import add_discoverers
+from soundconverter.interface.mainloop import gtk_iteration, idle
+from soundconverter.interface.notify import notification
+from soundconverter.util.error import show_error
 from soundconverter.util.fileoperations import unquote_filename, vfs_walk
+from soundconverter.util.formatting import format_time
+from soundconverter.util.logger import logger
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.taskqueue import TaskQueue
-from soundconverter.util.logger import logger
-from soundconverter.gstreamer.discoverer import add_discoverers
-from soundconverter.util.error import show_error
-from soundconverter.interface.notify import notification
-from soundconverter.interface.mainloop import gtk_iteration, idle
-from soundconverter.util.formatting import format_time
-
 
 # Names of columns in the file list
 MODEL = [
@@ -46,14 +44,14 @@ MODEL = [
     GObject.TYPE_STRING,  # complete filename
 ]
 
-COLUMNS = ['filename']
+COLUMNS = ["filename"]
 
 
 class FileList:
     """List of files added by the user."""
 
     # List of MIME types which we accept for drops.
-    drop_mime_types = ['text/uri-list', 'text/plain', 'STRING']
+    drop_mime_types = ["text/uri-list", "text/plain", "STRING"]
 
     def __init__(self, window, builder):
         self.window = window
@@ -63,27 +61,22 @@ class FileList:
         self.model = Gtk.ListStore(*MODEL)
         self.progress_cache = {}
 
-        self.widget = builder.get_object('filelist')
+        self.widget = builder.get_object("filelist")
         self.widget.props.fixed_height_mode = True
         self.sortedmodel = Gtk.TreeModelSort(model=self.model)
         self.widget.set_model(self.sortedmodel)
         self.sortedmodel.set_sort_column_id(4, Gtk.SortType.ASCENDING)
         self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
-        self.widget.drag_dest_set(
-            Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY
-        )
-        targets = [
-            (accepted, 0, i) for i, accepted
-            in enumerate(self.drop_mime_types)
-        ]
+        self.widget.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
+        targets = [(accepted, 0, i) for i, accepted in enumerate(self.drop_mime_types)]
         self.widget.drag_dest_set_target_list(targets)
 
-        self.widget.connect('drag-data-received', self.drag_data_received)
+        self.widget.connect("drag-data-received", self.drag_data_received)
 
         renderer = Gtk.CellRendererProgress()
         column = Gtk.TreeViewColumn(
-            'progress',
+            "progress",
             renderer,
             value=2,
             text=3,
@@ -94,9 +87,9 @@ class FileList:
         self.progress_column.set_visible(False)
 
         renderer = Gtk.CellRendererText()
-        renderer.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
+        renderer.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
         column = Gtk.TreeViewColumn(
-            'Filename',
+            "Filename",
             renderer,
             markup=0,
         )
@@ -110,10 +103,10 @@ class FileList:
         self.good_uris = []
 
     def drag_data_received(self, widget, context, x, y, selection, mime_id, time):
-        widget.stop_emission('drag-data-received')
+        widget.stop_emission("drag-data-received")
         if 0 <= mime_id < len(self.drop_mime_types):
-            text = selection.get_data().decode('utf-8')
-            uris = [uri.strip() for uri in text.split('\n')]
+            text = selection.get_data().decode("utf-8")
+            uris = [uri.strip() for uri in text.split("\n")]
             self.add_uris(uris)
             context.finish(True, False, time)
 
@@ -141,7 +134,7 @@ class FileList:
 
         start_t = time.time()
         files = []
-        self.window.set_status(_('Scanning files…'))
+        self.window.set_status(_("Scanning files…"))
         # for whichever reason, that set_status needs some more iterations
         # to show up:
         gtk_iteration(True)
@@ -152,17 +145,18 @@ class FileList:
             gtk_iteration()
             if not uri:
                 continue
-            if uri.startswith('cdda:'):
+            if uri.startswith("cdda:"):
                 show_error(
-                    'Cannot read from Audio CD.',
-                    'Use SoundJuicer Audio CD Extractor instead.'
+                    "Cannot read from Audio CD.",
+                    "Use SoundJuicer Audio CD Extractor instead.",
                 )
                 return
             info = Gio.file_parse_name(uri).query_file_type(
-                Gio.FileMonitorFlags.NONE, None
+                Gio.FileMonitorFlags.NONE,
+                None,
             )
             if info == Gio.FileType.DIRECTORY:
-                logger.info('walking: \'{}\''.format(uri))
+                logger.info(f"walking: '{uri}'")
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
@@ -183,22 +177,22 @@ class FileList:
             else:
                 files.append(uri)
 
-        files = [f for f in files if not f.endswith('~SC~')]
+        files = [f for f in files if not f.endswith("~SC~")]
 
         if len(files) == 0:
-            show_error('No files found!', '')
+            show_error("No files found!", "")
 
         if not base:
             base = os.path.commonprefix(files)
-            if base and not base.endswith('/'):
+            if base and not base.endswith("/"):
                 # we want a common folder
-                base = base[0:base.rfind('/')]
-                base += '/'
+                base = base[0 : base.rfind("/")]
+                base += "/"
         else:
-            base += '/'
+            base += "/"
 
         scan_t = time.time()
-        logger.info('analysing file integrity')
+        logger.info("analysing file integrity")
 
         # self.good_uris will be populated
         # by the discoverer.
@@ -214,15 +208,15 @@ class FileList:
 
         add_discoverers(self.discoverers, sound_files)
 
-        self.discoverers.connect('done', self.discoverer_queue_ended)
+        self.discoverers.connect("done", self.discoverer_queue_ended)
         self.discoverers.run()
 
-        self.window.set_status('{}'.format(_('Adding Files…')))
-        logger.info('adding: {} files'.format(len(files)))
+        self.window.set_status("{}".format(_("Adding Files…")))
+        logger.info(f"adding: {len(files)} files")
 
         # show progress and enable GTK main loop iterations
         # so that the ui stays responsive
-        self.window.progressbarstatus.set_text('0/{}'.format(len(files)))
+        self.window.progressbarstatus.set_text(f"0/{len(files)}")
         self.window.progressbarstatus.set_show_text(True)
 
         while self.discoverers.running:
@@ -231,20 +225,27 @@ class FileList:
                 completed = int(progress * len(files))
                 self.window.progressbarstatus.set_fraction(progress)
                 self.window.progressbarstatus.set_text(
-                    '{}/{}'.format(completed, len(files))
+                    f"{completed}/{len(files)}",
                 )
             gtk_iteration()
-        logger.info('Discovered {} audiofiles in {} s'.format(
-            len(files), round(self.discoverers.get_duration(), 1)
-        ))
+        logger.info(
+            f"Discovered {len(files)} audiofiles in {round(self.discoverers.get_duration(), 1)} s",
+        )
 
         self.window.progressbarstatus.set_show_text(False)
 
         # see if one of the files with an audio extension
         # was not readable.
         known_audio_types = [
-            '.flac', '.mp3', '.aac',
-            '.m4a', '.mpeg', '.opus', '.vorbis', '.ogg', '.wav'
+            ".flac",
+            ".mp3",
+            ".aac",
+            ".m4a",
+            ".mpeg",
+            ".opus",
+            ".vorbis",
+            ".ogg",
+            ".wav",
         ]
 
         # invalid_files is the number of files that are not
@@ -274,9 +275,7 @@ class FileList:
                 invalid_files += 1
                 continue
             if sound_file.uri in self.filelist:
-                logger.info('file already present: \'{}\''.format(
-                    sound_file.uri
-                ))
+                logger.info(f"file already present: '{sound_file.uri}'")
                 continue
             self.append_file(sound_file)
 
@@ -285,17 +284,15 @@ class FileList:
             if len(files) == invalid_files == 1:
                 # case 1: the single file that should be added is not supported
                 show_error(
-                    _('The specified file is not supported!'),
-                    _('Either because it is broken or not an audio file.')
+                    _("The specified file is not supported!"),
+                    _("Either because it is broken or not an audio file."),
                 )
 
             elif len(files) == invalid_files:
                 # case 2: all files that should be added cannot be added
                 show_error(
-                    _('All {} specified files are not supported!').format(
-                        len(files)
-                    ),
-                    _('Either because they are broken or not audio files.')
+                    _("All {} specified files are not supported!").format(len(files)),
+                    _("Either because they are broken or not audio files."),
                 )
 
             else:
@@ -304,21 +301,16 @@ class FileList:
                 # of sound files). Show an error if this skipped file has a
                 # soundfile extension, otherwise don't bother the user.
                 logger.info(
-                    '{} of {} files were not added to the list'.format(
-                        invalid_files, len(files)
-                    )
+                    f"{invalid_files} of {len(files)} files were not added to the list",
                 )
                 if broken_audiofiles > 0:
                     show_error(
                         ngettext(
-                            'One audio file could not be read by GStreamer!',
-                            '{} audio files could not be read by GStreamer!',
-                            broken_audiofiles
+                            "One audio file could not be read by GStreamer!",
+                            "{} audio files could not be read by GStreamer!",
+                            broken_audiofiles,
                         ).format(broken_audiofiles),
-                        _(
-                            'Check "Invalid Files" in the menu for more '
-                            'information.'
-                        )
+                        _('Check "Invalid Files" in the menu for more information.'),
                     )
         else:
             # case 4: all files were successfully added. No error message
@@ -328,9 +320,7 @@ class FileList:
         self.window.progressbarstatus.hide()
         end_t = time.time()
         logger.debug(
-            'Added %d files in %.2fs (scan %.2fs, add %.2fs)' % (
-                len(files), end_t - start_t, scan_t - start_t, end_t - scan_t
-            )
+            f"Added {len(files)} files in {end_t - start_t:.2f}s (scan {scan_t - start_t:.2f}s, add {end_t - scan_t:.2f}s)",
         )
 
     def discoverer_queue_ended(self, queue):
@@ -339,14 +329,11 @@ class FileList:
         self.window.conversion_ended()
 
         total_time = queue.get_duration()
-        msg = _('Tasks done in %s') % format_time(total_time)
+        msg = _("Tasks done in %s") % format_time(total_time)
 
-        errors = [
-            task.error for task in queue.done
-            if task.error is not None
-        ]
+        errors = [task.error for task in queue.done if task.error is not None]
         if len(errors) > 0:
-            msg += ', {} error(s)'.format(len(errors))
+            msg += f", {len(errors)} error(s)"
 
         self.window.set_status(msg)
         if not self.window.is_active():
@@ -397,9 +384,9 @@ class FileList:
         sound_file : SoundFile
             This soundfile is expected to be readable by gstreamer
         """
-        self.model.append([
-            self.format_cell(sound_file), sound_file, 0.0, '', sound_file.uri
-        ])
+        self.model.append(
+            [self.format_cell(sound_file), sound_file, 0.0, "", sound_file.uri],
+        )
         self.filelist.add(sound_file.uri)
         sound_file.filelist_row = len(self.model) - 1
 
