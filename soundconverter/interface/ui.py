@@ -29,6 +29,7 @@ from soundconverter.interface.filelist import FileList
 from soundconverter.interface.gladewindow import GladeWindow
 from soundconverter.interface.mainloop import gtk_iteration, gtk_sleep
 from soundconverter.interface.preferences import PreferencesDialog
+from soundconverter.interface.theme import theme_switcher
 from soundconverter.util.error import set_error_handler
 from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.util.formatting import format_time
@@ -534,5 +535,7 @@ def gui_main(name, version, gladefile, input_files):
 
     global win
     win[0] = window
+
+    theme_switcher()
 
     Gtk.main()
