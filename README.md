@@ -1,3 +1,5 @@
+[![Build](https://github.com/kassoulet/soundconverter/actions/workflows/tests_docker.yml/badge.svg)](https://github.com/kassoulet/soundconverter/actions/workflows/tests_docker.yml) [![Build](https://github.com/kassoulet/soundconverter/actions/workflows/ruff.yml/badge.svg)](https://github.com/kassoulet/soundconverter/actions/workflows/ruff.yml)
+
 # SoundConverter
 
 <img align="left" src="data/soundconverter.png"> A simple sound converter
