@@ -42,11 +42,14 @@ echo "XDG_RUNTIME_DIR set to: $XDG_RUNTIME_DIR"
 
 # Start a D-Bus session for GTK applications and run pytest within it.
 # `dbus-launch --exit-with-session`: Ensures a D-Bus session is started,
-# and it automatically exits when the wrapped command (pytest) finishes.
+# and it automatically exits when the wrapped command finishes.
 echo "Starting tests within a D-Bus session..."
 dbus-launch --exit-with-session python3 tests/test.py
+errors=$?
 
 # Ensure Xvfb process is killed after tests, even if dbus-launch didn't clean it up for some reason.
 # `wait` prevents the script from exiting immediately, giving Xvfb a chance to respond to the kill.
 kill $XVFB_PID
 wait $XVFB_PID 2>/dev/null # Suppress "No such process" if already exited
+
+exit $errors
