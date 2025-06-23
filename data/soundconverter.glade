@@ -9,8 +9,11 @@
     <property name="icon-name">soundconverter</property>
     <property name="type-hint">normal</property>
     <property name="program-name">SoundConverter</property>
-    <property name="copyright">© 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
-© 2005-2019 Gautier Portet &lt;gautier@soundconverter.org&gt;</property>
+    <property name="copyright">
+    © 2004 Lars Wirzenius &lt;liw@iki.fi&gt;
+    © 2005-2025 Gautier Portet &lt;gautier@soundconverter.org&gt;
+    © 2020-2025 Sezanzeb &lt;proxima@hip70890b.de&gt;
+    </property>
     <property name="comments" translatable="yes">GNOME-powered Sound Conversion</property>
     <property name="website">http://soundconverter.org</property>
     <property name="website-label" translatable="yes">Website</property>
