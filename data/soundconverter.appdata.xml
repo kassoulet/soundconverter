@@ -31,6 +31,7 @@ SoundConverter is a simple to use, and very fast audio converter. It can convert
   <launchable type="desktop-id">soundconverter.desktop</launchable>
 
   <releases>
+    <release date="2025-06-23" version="4.1.0"/>
     <release date="2024-10-30" version="4.0.6"/>
     <release date="2024-04-08" version="4.0.5"/>
     <release date="2023-07-17" version="4.0.4"/>
