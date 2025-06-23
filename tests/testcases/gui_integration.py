@@ -530,7 +530,14 @@ class GUIIntegration(unittest.TestCase):
     # prevent tests stalling on error
     @patch("soundconverter.interface.ui.ErrorDialog.show_error")
     def test_all_m4a_encoders(self, mock_handler):
-        for encoder in ["fdkaacenc", "faac", "avenc_aac"]:
+        # don't test unavalable encoders
+        encoders = [
+            encoder
+            for encoder in ["fdkaacenc", "faac", "avenc_aac"]
+            if encoder in original_available_elements
+        ]
+
+        for encoder in encoders:
             # create one large and one small file to test if the quality
             # setting is respected
             for quality_index in [0, 5]:
