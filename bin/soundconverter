@@ -38,6 +38,7 @@ NAME = soundconverter_metadata["Name"]
 VERSION = soundconverter_metadata["version"]
 SOURCE_PATH = os.path.dirname(files("soundconverter")[0].locate())
 
+
 # depending on where this file is installed to, make sure to use the proper
 # prefix path for data
 # https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
