@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -22,19 +21,19 @@
 from fnmatch import fnmatch
 from threading import Thread
 
-from gi.repository import Gst, GObject, GstPbutils, GLib
+from gi.repository import GLib, GObject, Gst, GstPbutils
 
-from soundconverter.util.task import Task
+from soundconverter.util.formats import filename_denylist
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_num_jobs
-from soundconverter.util.formats import filename_denylist
+from soundconverter.util.task import Task
 
 type_getters = {
-    GObject.TYPE_STRING: 'get_string',
-    GObject.TYPE_DOUBLE: 'get_double',
-    GObject.TYPE_FLOAT: 'get_float',
-    GObject.TYPE_INT: 'get_int',
-    GObject.TYPE_UINT: 'get_uint',
+    GObject.TYPE_STRING: "get_string",
+    GObject.TYPE_DOUBLE: "get_double",
+    GObject.TYPE_FLOAT: "get_float",
+    GObject.TYPE_INT: "get_int",
+    GObject.TYPE_UINT: "get_uint",
 }
 
 
@@ -50,9 +49,7 @@ def add_discoverers(task_queue, sound_files):
             chunk = []
 
     if len(chunk) > 0:
-        raise AssertionError(
-            'All chunks should have been added to discoverers'
-        )
+        raise AssertionError("All chunks should have been added to discoverers")
 
 
 def get_sound_files(task_queue):
@@ -112,9 +109,9 @@ class DiscovererThread(Thread):
 
         denylisted_pattern = is_denylisted(sound_file)
         if denylisted_pattern:
-            logger.info('filename denylisted ({}): {}'.format(
-                denylisted_pattern, sound_file.filename_for_display
-            ))
+            logger.info(
+                f"filename denylisted ({denylisted_pattern}): {sound_file.filename_for_display}",
+            )
             return
 
         try:
@@ -126,18 +123,19 @@ class DiscovererThread(Thread):
 
             # Read root tags
             taglist = info.get_tags()
-            if taglist: 
+            if taglist:
                 taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             for audio_stream in info.get_audio_streams():
                 # Read tags for each audio stream
                 taglist = audio_stream.get_tags()
-                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
+                if taglist:
+                    taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
             filename = sound_file.filename_for_display
-            logger.debug('found tag: {}'.format(filename))
+            logger.debug(f"found tag: {filename}")
             for tag, value in sound_file.tags.items():
-                logger.debug('    {}: {}'.format(tag, value))
+                logger.debug(f"    {tag}: {value}")
 
             duration = info.get_duration() / Gst.SECOND
             if duration == 0:
@@ -164,10 +162,10 @@ class DiscovererThread(Thread):
             value = str(getter(tag)[1])
             sound_file.tags[tag] = value
 
-        if 'datetime' in tag:
+        if "datetime" in tag:
             date_time = taglist.get_date_time(tag)[1]
-            sound_file.tags['year'] = date_time.get_year()
-            sound_file.tags['date'] = date_time.to_iso8601_string()[:10]
+            sound_file.tags["year"] = date_time.get_year()
+            sound_file.tags["date"] = date_time.to_iso8601_string()[:10]
 
 
 class Discoverer(Task):
@@ -207,7 +205,7 @@ class Discoverer(Task):
     def run(self):
         self.running = True
         bus = Gst.Bus()
-        bus.connect('message', self._on_message)
+        bus.connect("message", self._on_message)
         bus.add_signal_watch()
         thread = DiscovererThread(self.sound_files, bus)
         thread.start()

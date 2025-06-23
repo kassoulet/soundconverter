@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 #
 # SoundConverter - GNOME application for converting between audio formats.
 # Copyright 2004 Lars Wirzenius
@@ -28,16 +27,18 @@ notification = _notification_dummy
 
 try:
     import gi
-    gi.require_version('Notify', '0.7')
+
+    gi.require_version("Notify", "0.7")
     from gi.repository import Notify
 
     def _notification(message):
         try:
-            Notify.Notification('SoundConverter', message).show()
-        except Exception:
+            Notify.Notification("SoundConverter", message).show()
+        except Exception as e:
+            print("Error sending notification:", e)
             pass
 
-    if Notify.init('Basics'):
+    if Notify.init("Basics"):
         notification = _notification
 
 except (ImportError, ValueError):
