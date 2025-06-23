@@ -59,10 +59,12 @@ class FilenameToUriTest(unittest.TestCase):
             self.assertTrue(uri.startswith("file://"))
             self.assertTrue(Gio.file_parse_name(path).get_uri() in uri)
 
-        for path in ("http://example.com/foo",):
-            uri = filename_to_uri(path)
-            self.assertTrue(uri.startswith("http://"))
-            self.assertTrue(Gio.file_parse_name(path).get_uri() in uri)
+        for already_uri in (
+            "http://example.com/foo",
+            "file:///tmp/foo",
+        ):
+            uri = filename_to_uri(already_uri)
+            self.assertEqual(uri, already_uri)
 
 
 class PrepareFilesList(unittest.TestCase):
