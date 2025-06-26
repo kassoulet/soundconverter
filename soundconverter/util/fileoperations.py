@@ -24,7 +24,6 @@ import re
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime
 
 from gi.repository import Gio
 
@@ -64,8 +63,6 @@ def vfs_walk(uri):
     """
     filelist = []
 
-    next_heartbeat = datetime.now().timestamp()
-
     try:
         dirlist = Gio.file_parse_name(uri).enumerate_children(
             "*",
@@ -83,13 +80,10 @@ def vfs_walk(uri):
 
             if info == Gio.FileType.DIRECTORY:
                 filelist.extend(vfs_walk(uri))
+                gtk_iteration()
 
             if info == Gio.FileType.REGULAR:
                 filelist.append(str(uri))
-
-            if datetime.now().timestamp() > next_heartbeat:
-                gtk_iteration()
-                next_heartbeat = datetime.now().timestamp()
 
     except Exception as e:
         # this is impossible to write unittests for, because this only happens
