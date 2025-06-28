@@ -19,7 +19,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+from datetime import datetime
 import os
+import sys
 import time
 from gettext import gettext as _
 from gettext import ngettext
@@ -165,8 +167,12 @@ class FileList:
 
                 # get a list of all the files as URIs in
                 # that directory and its subdirectories
+                start = datetime.now()
                 filelist = vfs_walk(uri)
-
+                stop = datetime.now()
+                duration = stop - start
+                logger.info(f"Discovered {len(filelist)} files in {duration}")
+                sys.exit(0)
                 accepted = []
                 if extensions:
                     for filename in filelist:

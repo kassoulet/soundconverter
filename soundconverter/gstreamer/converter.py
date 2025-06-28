@@ -25,6 +25,12 @@ from gettext import gettext as _
 
 from gi.repository import Gio, GLib, Gst
 
+from soundconverter.common.constants import (
+    EncoderName,
+    MimeType,
+    Mp3Mode,
+    Mp3QualitySetting,
+)
 from soundconverter.util.error import show_error
 from soundconverter.util.fileoperations import (
     beautify_uri,
@@ -57,21 +63,22 @@ def find_available_elements():
     # some functions can be provided by various packages.
     # move preferred packages towards the bottom.
     encoders = [
-        ("asfmux", "WMA", "wma-enc", BAD),
-        ("avenc_wmav2", "WMA", "wma-enc", LIBAV),
-        ("flacenc", "FLAC", "flac-enc", GOOD),
-        ("wavenc", "WAV", "wav-enc", GOOD),
-        ("vorbisenc", "Ogg Vorbis", "vorbis-enc", BASE),
-        ("oggmux", "Ogg Vorbis", "vorbis-mux", BASE),
-        ("id3mux", "MP3 tags", "mp3-id-tags", BAD),
-        ("id3v2mux", "MP3 tags", "mp3-id-tags", GOOD),
-        ("xingmux", "VBR tags", "mp3-vbr-tags", UGLY),
-        ("lamemp3enc", "MP3", "mp3-enc", GOOD),
-        ("mp4mux", "AAC", "aac-mux", GOOD),
-        ("opusenc", "Opus", "opus-enc", BASE),
-        ("faac", "AAC", "aac-enc", BAD),
-        ("avenc_aac", "AAC", "aac-enc", LIBAV),
-        ("fdkaacenc", "AAC", "aac-enc", BAD),
+        (EncoderName.ASFMUX, "WMA", "wma-enc", BAD),
+        (EncoderName.AVENC_WMAV2, "WMA", "wma-enc", LIBAV),
+        (EncoderName.FLACENC, "FLAC", "flac-enc", GOOD),
+        (EncoderName.WAVENC, "WAV", "wav-enc", GOOD),
+        (EncoderName.VORBISENC, "Ogg Vorbis", "vorbis-enc", BASE),
+        (EncoderName.OGGMUX, "Ogg Vorbis", "vorbis-mux", BASE),
+        (EncoderName.ID3MUX, "MP3 tags", "mp3-id-tags", BAD),
+        (EncoderName.ID3V2MUX, "MP3 tags", "mp3-id-tags", GOOD),
+        (EncoderName.XINGMUX, "VBR tags", "mp3-vbr-tags", UGLY),
+        (EncoderName.LAMEMP3ENC, "MP3", "mp3-enc", GOOD),
+        (EncoderName.MP4MUX, "AAC", "aac-mux", GOOD),
+        (EncoderName.OPUSENC, "Opus", "opus-enc", BASE),
+        (EncoderName.FAAC, "AAC", "aac-enc", BAD),
+        # ("voaacenc", "AAC", "aac-enc", BAD),
+        (EncoderName.AVENC_AAC, "AAC", "aac-enc", LIBAV),
+        (EncoderName.FDKAACENC, "AAC", "aac-enc", BAD),
     ]
 
     result = {}
@@ -92,13 +99,13 @@ def find_available_elements():
                 f'Disabling {function} output. Do you have "{package}" installed?',
             )
 
-    if "oggmux" not in available_elements:
-        available_elements.discard("vorbisenc")
-    if "mp4mux" not in available_elements:
-        available_elements.discard("faac")
-        available_elements.discard("avenc_aac")
-    if "asfmux" not in available_elements:
-        available_elements.discard("avenc_wmav2")
+    if EncoderName.OGGMUX not in available_elements:
+        available_elements.discard(EncoderName.VORBISENC)
+    if EncoderName.MP4MUX not in available_elements:
+        available_elements.discard(EncoderName.FAAC)
+        available_elements.discard(EncoderName.AVENC_AAC)
+    if EncoderName.ASFMUX not in available_elements:
+        available_elements.discard(EncoderName.AVENC_WMAV2)
 
 
 find_available_elements()
@@ -107,59 +114,59 @@ find_available_elements()
 def create_flac_encoder():
     """Return an flac encoder for the gst pipeline string."""
     flac_compression = get_gio_settings().get_int("flac-compression")
-    return f"flacenc mid-side-stereo=true quality={flac_compression}"
+    return f"{EncoderName.FLACENC} mid-side-stereo=true quality={flac_compression}"
 
 
 def create_wav_encoder():
     """Return a wav encoder for the gst pipeline string."""
     wav_sample_width = get_gio_settings().get_int("wav-sample-width")
     formats = {8: "U8", 16: "S16LE", 24: "S24LE", 32: "S32LE"}
-    return f"audioconvert ! audio/x-raw,format={formats[wav_sample_width]} ! wavenc"
+    return f"audioconvert ! audio/x-raw,format={formats[wav_sample_width]} ! {EncoderName.WAVENC}"
 
 
 def create_oggvorbis_encoder():
     """Return an ogg encoder for the gst pipeline string."""
-    cmd = "vorbisenc"
+    cmd = EncoderName.VORBISENC
     vorbis_quality = get_gio_settings().get_double("vorbis-quality")
     if vorbis_quality is not None:
         cmd += f" quality={vorbis_quality}"
-    cmd += " ! oggmux "
+    cmd += f" ! {EncoderName.OGGMUX} "
     return cmd
 
 
 def create_mp3_encoder():
     """Return an mp3 encoder for the gst pipeline string."""
     quality = {
-        "cbr": "mp3-cbr-quality",
-        "abr": "mp3-abr-quality",
-        "vbr": "mp3-vbr-quality",
+        Mp3Mode.CBR: Mp3QualitySetting.CBR,
+        Mp3Mode.ABR: Mp3QualitySetting.ABR,
+        Mp3Mode.VBR: Mp3QualitySetting.VBR,
     }
     mode = get_gio_settings().get_string("mp3-mode")
 
     mp3_mode = mode
     mp3_quality = get_gio_settings().get_int(quality[mode])
 
-    cmd = "lamemp3enc encoding-engine-quality=2 "
+    cmd = f"{EncoderName.LAMEMP3ENC} encoding-engine-quality=2 "
 
     if mp3_mode is not None:
         properties = {
-            "cbr": "target=bitrate cbr=true bitrate=%s ",
-            "abr": "target=bitrate cbr=false bitrate=%s ",
-            "vbr": "target=quality cbr=false quality=%s ",
+            Mp3Mode.CBR: "target=bitrate cbr=true bitrate=%s ",
+            Mp3Mode.ABR: "target=bitrate cbr=false bitrate=%s ",
+            Mp3Mode.VBR: "target=quality cbr=false quality=%s ",
         }
 
         cmd += properties[mp3_mode] % mp3_quality
 
-        if "xingmux" in available_elements and mp3_mode != "cbr":
+        if EncoderName.XINGMUX in available_elements and mp3_mode != Mp3Mode.CBR:
             # add xing header when creating vbr/abr mp3
-            cmd += "! xingmux "
+            cmd += f"! {EncoderName.XINGMUX} "
 
-    if "id3mux" in available_elements:
+    if EncoderName.ID3MUX in available_elements:
         # add tags
-        cmd += "! id3mux "
-    elif "id3v2mux" in available_elements:
+        cmd += f"! {EncoderName.ID3MUX} "
+    elif EncoderName.ID3V2MUX in available_elements:
         # add tags
-        cmd += "! id3v2mux "
+        cmd += f"! {EncoderName.ID3V2MUX} "
 
     return cmd
 
@@ -175,28 +182,32 @@ def create_aac_encoder():
 
     # list of recommended aac encoders:
     # https://wiki.hydrogenaud.io/index.php?title=AAC_encoders
-    if "fdkaacenc" in available_elements:
-        return f"fdkaacenc bitrate={bitrate} ! mp4mux"
+    if EncoderName.FDKAACENC in available_elements:
+        return f"{EncoderName.FDKAACENC} bitrate={bitrate} ! {EncoderName.MP4MUX}"
 
-    encoder = "faac" if "faac" in available_elements else "avenc_aac"
+    encoder = (
+        EncoderName.FAAC
+        if EncoderName.FAAC in available_elements
+        else EncoderName.AVENC_AAC
+    )
     logger.warning(
-        "fdkaacenc is recommended for aac conversion but it is not "
+        f"{EncoderName.FDKAACENC} is recommended for aac conversion but it is not "
         "available. It can be installed with gst-plugins-bad. "
         f"Using {encoder} instead.",
     )
 
-    if "faac" in available_elements:
-        return f"faac bitrate={bitrate} rate-control=2 ! mp4mux"
+    if EncoderName.FAAC in available_elements:
+        return f"{EncoderName.FAAC} bitrate={bitrate} rate-control=2 ! {EncoderName.MP4MUX}"
 
-    return f"avenc_aac bitrate={bitrate} ! mp4mux"
+    return f"{EncoderName.AVENC_AAC} bitrate={bitrate} ! {EncoderName.MP4MUX}"
 
 
 def create_opus_encoder():
     """Return an opus encoder for the gst pipeline string."""
     opus_quality = get_gio_settings().get_int("opus-bitrate")
     return (
-        f"opusenc bitrate={opus_quality * 1000} bitrate-type=vbr "
-        "bandwidth=auto ! oggmux"
+        f"{EncoderName.OPUSENC} bitrate={opus_quality * 1000} bitrate-type=vbr "
+        f"bandwidth=auto ! {EncoderName.OGGMUX}"
     )
 
 
@@ -489,13 +500,13 @@ class Converter(Task):
 
         # figure out the rest of the gst pipeline string
         encoder = {
-            "audio/x-vorbis": create_oggvorbis_encoder,
-            "audio/x-flac": create_flac_encoder,
-            "audio/x-wav": create_wav_encoder,
-            "audio/mpeg": create_mp3_encoder,
-            "audio/x-m4a": create_aac_encoder,
-            "audio/ogg; codecs=opus": create_opus_encoder,
-            "audio/x-ms-wma": create_wma_encoder,
+            MimeType.OGG_VORBIS: create_oggvorbis_encoder,
+            MimeType.MPEG: create_mp3_encoder,
+            MimeType.FLAC: create_flac_encoder,
+            MimeType.WAV: create_wav_encoder,
+            MimeType.M4A: create_aac_encoder,
+            MimeType.OPUS: create_opus_encoder,
+            MimeType.WMA: create_wma_encoder,
         }[self.output_mime_type]()
         command.append(encoder)
 
