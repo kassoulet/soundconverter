@@ -26,6 +26,13 @@ from gettext import gettext as _
 
 from gi.repository import GLib, Gtk
 
+from soundconverter.common.constants import (
+    EncoderName,
+    MimeType,
+    Mp3Mode,
+    Mp3QualitySetting,
+    QualityTabPage,
+)
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.interface.gladewindow import GladeWindow
 from soundconverter.util.fileoperations import beautify_uri, filename_to_uri
@@ -41,13 +48,17 @@ from soundconverter.util.settings import get_gio_settings
 from soundconverter.util.soundfile import SoundFile
 
 encoders = [
-    ("audio/x-vorbis", "vorbisenc", "Ogg Vorbis (.ogg)"),
-    ("audio/mpeg", "lamemp3enc", "MP3 (.mp3)"),
-    ("audio/x-flac", "flacenc", "FLAC Lossless (.flac)"),
-    ("audio/x-wav", "wavenc", "MS Wave (.wav)"),
-    ("audio/x-m4a", "fdkaacenc,faac,avenc_aac", "AAC (.m4a)"),
-    ("audio/ogg; codecs=opus", "opusenc", "Opus (.opus)"),
-    ("audio/x-ms-wma", "avenc_wmav2", "WMA (.wma)"),
+    (MimeType.OGG_VORBIS, EncoderName.VORBISENC, "Ogg Vorbis (.ogg)"),
+    (MimeType.MPEG, EncoderName.LAMEMP3ENC, "MP3 (.mp3)"),
+    (MimeType.FLAC, EncoderName.FLACENC, "FLAC Lossless (.flac)"),
+    (MimeType.WAV, EncoderName.WAVENC, "MS Wave (.wav)"),
+    (
+        MimeType.M4A,
+        f"{EncoderName.FDKAACENC},{EncoderName.FAAC},{EncoderName.AVENC_AAC}",
+        "AAC (.m4a)",
+    ),
+    (MimeType.OPUS, EncoderName.OPUSENC, "Opus (.opus)"),
+    (MimeType.WMA, EncoderName.AVENC_WMAV2, "WMA (.wma)"),
 ]
 
 rates = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 128000]
@@ -164,13 +175,13 @@ class PreferencesDialog(GladeWindow):
         self.change_mime_type(current_mime_type)
 
         # display information about mp3 encoding
-        if "lamemp3enc" not in available_elements:
+        if EncoderName.LAMEMP3ENC not in available_elements:
             widget = self.lame_absent
             widget.show()
 
         widget = self.vorbis_quality
         quality = self.settings.get_double("vorbis-quality")
-        quality_setting = get_quality("audio/x-vorbis", quality, reverse=True)
+        quality_setting = get_quality(MimeType.OGG_VORBIS, quality, reverse=True)
         widget.set_active(-1)
         self.vorbis_quality.set_active(quality_setting)
         if self.settings.get_boolean("vorbis-oga-extension"):
@@ -178,27 +189,27 @@ class PreferencesDialog(GladeWindow):
 
         widget = self.aac_quality
         quality = self.settings.get_int("aac-quality")
-        quality_setting = get_quality("audio/x-m4a", quality, reverse=True)
+        quality_setting = get_quality(MimeType.M4A, quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.opus_quality
         quality = self.settings.get_int("opus-bitrate")
-        quality_setting = get_quality("audio/ogg; codecs=opus", quality, reverse=True)
+        quality_setting = get_quality(MimeType.OPUS, quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.wma_quality
         quality = self.settings.get_int("wma-bitrate")
-        quality_setting = get_quality("audio/x-ms-wma", quality, reverse=True)
+        quality_setting = get_quality(MimeType.WMA, quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.flac_compression
         quality = self.settings.get_int("flac-compression")
-        quality_setting = get_quality("audio/x-flac", quality, reverse=True)
+        quality_setting = get_quality(MimeType.FLAC, quality, reverse=True)
         widget.set_active(quality_setting)
 
         widget = self.wav_sample_width
         quality = self.settings.get_int("wav-sample-width")
-        quality_setting = get_quality("audio/x-wav", quality, reverse=True)
+        quality_setting = get_quality(MimeType.WAV, quality, reverse=True)
         widget.set_active(quality_setting)
 
         mode = self.settings.get_string("mp3-mode")
@@ -381,13 +392,13 @@ class PreferencesDialog(GladeWindow):
         self.set_sensitive()
         self.update_example()
         tabs = {
-            "audio/x-vorbis": 0,
-            "audio/mpeg": 1,
-            "audio/x-flac": 2,
-            "audio/x-wav": 3,
-            "audio/x-m4a": 4,
-            "audio/ogg; codecs=opus": 5,
-            "audio/x-ms-wma": 6,
+            MimeType.OGG_VORBIS: QualityTabPage.OGG_VORBIS.value,
+            MimeType.MPEG: QualityTabPage.MPEG.value,
+            MimeType.FLAC: QualityTabPage.FLAC.value,
+            MimeType.WAV: QualityTabPage.WAV.value,
+            MimeType.M4A: QualityTabPage.M4A.value,
+            MimeType.OPUS: QualityTabPage.OPUS.value,
+            MimeType.WMA: QualityTabPage.WMA.value,
         }
         self.quality_tabs.set_current_page(tabs[mime_type])
 
@@ -401,36 +412,36 @@ class PreferencesDialog(GladeWindow):
 
     def on_output_mime_type_ogg_vorbis_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/x-vorbis")
+            self.change_mime_type(MimeType.OGG_VORBIS)
 
     def on_output_mime_type_flac_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/x-flac")
+            self.change_mime_type(MimeType.FLAC)
 
     def on_output_mime_type_wav_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/x-wav")
+            self.change_mime_type(MimeType.WAV)
 
     def on_output_mime_type_mp3_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/mpeg")
+            self.change_mime_type(MimeType.MPEG)
 
     def on_output_mime_type_aac_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/x-m4a")
+            self.change_mime_type(MimeType.M4A)
 
     def on_output_mime_type_opus_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/ogg; codecs=opus")
+            self.change_mime_type(MimeType.OPUS)
 
     def on_output_mime_type_wma_toggled(self, button):
         if button.get_active():
-            self.change_mime_type("audio/x-ms-wma")
+            self.change_mime_type(MimeType.WMA)
 
     def on_vorbis_quality_changed(self, combobox):
         if combobox.get_active() == -1:
             return  # just de-selectionning
-        fquality = get_quality("audio/x-vorbis", combobox.get_active())
+        fquality = get_quality(MimeType.OGG_VORBIS, combobox.get_active())
         self.settings.set_double("vorbis-quality", fquality)
         self.update_example()
 
@@ -439,27 +450,27 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def on_aac_quality_changed(self, combobox):
-        quality = get_quality("audio/x-m4a", combobox.get_active())
+        quality = get_quality(MimeType.M4A, combobox.get_active())
         self.settings.set_int("aac-quality", quality)
         self.update_example()
 
     def on_opus_quality_changed(self, combobox):
-        quality = get_quality("audio/ogg; codecs=opus", combobox.get_active())
+        quality = get_quality(MimeType.OPUS, combobox.get_active())
         self.settings.set_int("opus-bitrate", quality)
         self.update_example()
 
     def on_wma_quality_changed(self, combobox):
-        quality = get_quality("audio/x-ms-wma", combobox.get_active())
+        quality = get_quality(MimeType.WMA, combobox.get_active())
         self.settings.set_int("wma-bitrate", quality)
         self.update_example()
 
     def on_wav_sample_width_changed(self, combobox):
-        quality = get_quality("audio/x-wav", combobox.get_active())
+        quality = get_quality(MimeType.WAV, combobox.get_active())
         self.settings.set_int("wav-sample-width", quality)
         self.update_example()
 
     def on_flac_compression_changed(self, combobox):
-        quality = get_quality("audio/x-flac", combobox.get_active())
+        quality = get_quality(MimeType.FLAC, combobox.get_active())
         self.settings.set_int("flac-compression", quality)
         self.update_example()
 
@@ -468,34 +479,34 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def change_mp3_mode(self, mode):
-        keys = {"cbr": 0, "abr": 1, "vbr": 2}
+        keys = {Mp3Mode.CBR: 0, Mp3Mode.ABR: 1, Mp3Mode.VBR: 2}
         self.mp3_mode.set_active(keys[mode])
 
         keys = {
-            "cbr": "mp3-cbr-quality",
-            "abr": "mp3-abr-quality",
-            "vbr": "mp3-vbr-quality",
+            Mp3Mode.CBR: Mp3QualitySetting.CBR,
+            Mp3Mode.ABR: Mp3QualitySetting.ABR,
+            Mp3Mode.VBR: Mp3QualitySetting.VBR,
         }
         quality = self.settings.get_int(keys[mode])
 
-        index = get_quality("audio/mpeg", quality, mode, reverse=True)
+        index = get_quality(MimeType.MPEG, quality, mode, reverse=True)
         self.mp3_quality.set_active(index)
         self.update_example()
 
     def on_mp3_mode_changed(self, combobox):
-        mode = ("cbr", "abr", "vbr")[combobox.get_active()]
+        mode = (Mp3Mode.CBR, Mp3Mode.ABR, Mp3Mode.VBR)[combobox.get_active()]
         self.settings.set_string("mp3-mode", mode)
         self.change_mp3_mode(mode)
 
     def on_mp3_quality_changed(self, combobox):
         keys = {
-            "cbr": "mp3-cbr-quality",
-            "abr": "mp3-abr-quality",
-            "vbr": "mp3-vbr-quality",
+            Mp3Mode.CBR: Mp3QualitySetting.CBR,
+            Mp3Mode.ABR: Mp3QualitySetting.ABR,
+            Mp3Mode.VBR: Mp3QualitySetting.VBR,
         }
         mode = self.settings.get_string("mp3-mode")
 
-        bitrate = get_quality("audio/mpeg", combobox.get_active(), mode)
+        bitrate = get_quality(MimeType.MPEG, combobox.get_active(), mode)
         self.settings.set_int(keys[mode], bitrate)
         self.update_example()
 
