@@ -21,9 +21,10 @@
 
 
 from soundconverter.util.logger import logger
-from soundconverter.util.settings import get_gio_settings
 
 filename_denylist = ("*.iso",)
+FLOAT_TOLERANCE = 0.01
+BITRATE_CONVERSION_FACTOR = 1000
 
 
 def get_mime_type_mapping():
@@ -152,12 +153,12 @@ def get_bitrate_from_settings():
         resample_rate = settings.get_int("resample-rate")
         sample_width = settings.get_int("wav-sample-width")
         if output_resample:
-            bitrate = sample_width * resample_rate / 1000
+            bitrate = sample_width * resample_rate / BITRATE_CONVERSION_FACTOR
         else:
             # the actual bitrate will depend on the input audio, which
             # cannot be known in the settings menu beforehand. Assume 44100
             # which is the most common.
-            bitrate = sample_width * 44100 / 1000
+            bitrate = sample_width * 44100 / BITRATE_CONVERSION_FACTOR
 
     if bitrate:
         if approx:
@@ -238,7 +239,7 @@ def get_quality(mime, value, mode="vbr", reverse=False):
         if isinstance(value, float):
             # floats are inaccurate, search for close value
             for i, quality in enumerate(qualities):
-                if abs(value - quality) < 0.01:
+                if abs(value - quality) < FLOAT_TOLERANCE:
                     return i
 
         if value in qualities:

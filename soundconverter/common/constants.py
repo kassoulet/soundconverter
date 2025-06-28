@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class MimeType(str, Enum):
     OGG_VORBIS = "audio/x-vorbis"
     MPEG = "audio/mpeg"
@@ -8,6 +9,7 @@ class MimeType(str, Enum):
     M4A = "audio/x-m4a"
     OPUS = "audio/ogg; codecs=opus"
     WMA = "audio/x-ms-wma"
+
 
 class EncoderName(str, Enum):
     VORBISENC = "vorbisenc"
@@ -26,6 +28,7 @@ class EncoderName(str, Enum):
     XINGMUX = "xingmux"
     MP4MUX = "mp4mux"
 
+
 class QualityTabPage(Enum):
     OGG_VORBIS = 0
     MPEG = 1
@@ -35,12 +38,17 @@ class QualityTabPage(Enum):
     OPUS = 5
     WMA = 6
 
+
 class Mp3Mode(str, Enum):
     CBR = "cbr"
     ABR = "abr"
     VBR = "vbr"
 
+
 class Mp3QualitySetting(str, Enum):
     CBR = "mp3-cbr-quality"
     ABR = "mp3-abr-quality"
     VBR = "mp3-vbr-quality"
+
+
+EXIT_CODE_NO_AUDIO_FILES = 2
