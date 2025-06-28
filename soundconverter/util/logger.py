@@ -23,7 +23,14 @@
 
 import logging
 
-from soundconverter.util.settings import settings
+from soundconverter.util import settings
+
+# ANSI escape codes for text colors
+ANSI_COLOR_RESET = 0
+ANSI_COLOR_RED = 31
+ANSI_COLOR_GREEN = 32
+ANSI_COLOR_YELLOW = 33
+ANSI_COLOR_CYAN = 36
 
 
 class Formatter(logging.Formatter):
@@ -35,12 +42,12 @@ class Formatter(logging.Formatter):
             # see https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
             # for those numbers
             color = {
-                logging.WARNING: 33,
-                logging.ERROR: 31,
-                logging.FATAL: 31,
-                logging.DEBUG: 36,
-                logging.INFO: 32,
-            }.get(record.levelno, 0)
+                logging.WARNING: ANSI_COLOR_YELLOW,
+                logging.ERROR: ANSI_COLOR_RED,
+                logging.FATAL: ANSI_COLOR_RED,
+                logging.DEBUG: ANSI_COLOR_CYAN,
+                logging.INFO: ANSI_COLOR_GREEN,
+            }.get(record.levelno, ANSI_COLOR_RESET)
             if settings["debug"]:
                 self._style._fmt = (  # noqa
                     "\033[{}m%(levelname)s\033[0m: "

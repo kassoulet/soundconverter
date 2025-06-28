@@ -42,6 +42,11 @@ from soundconverter.util.settings import set_gio_settings, settings
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.taskqueue import TaskQueue
 
+from soundconverter.common.constants import (
+    INITIAL_CLI_CONVERT_VALUE,
+    EXIT_CODE_NO_AUDIO_FILES,
+)
+
 cli_convert = [None]
 
 
@@ -364,7 +369,7 @@ class CLIConvert:
 
         if self.num_conversions == 0:
             logger.info("no audio files for conversion found…")
-            exit(2)
+            exit(EXIT_CODE_NO_AUDIO_FILES)
 
         logger.info(f"starting conversion of {len(sound_files)} files…")
         self.conversions = conversions
