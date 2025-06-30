@@ -42,12 +42,8 @@ from soundconverter.util.settings import set_gio_settings, settings
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.taskqueue import TaskQueue
 
-from soundconverter.common.constants import (
-    INITIAL_CLI_CONVERT_VALUE,
-    EXIT_CODE_NO_AUDIO_FILES,
-)
-
 cli_convert = [None]
+EXIT_CODE_NO_AUDIO_FILES = 2
 
 
 def batch_main(files):

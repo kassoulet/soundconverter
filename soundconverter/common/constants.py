@@ -49,6 +49,3 @@ class Mp3QualitySetting(str, Enum):
     CBR = "mp3-cbr-quality"
     ABR = "mp3-abr-quality"
     VBR = "mp3-vbr-quality"
-
-
-EXIT_CODE_NO_AUDIO_FILES = 2
