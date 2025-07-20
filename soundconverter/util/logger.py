@@ -23,7 +23,7 @@
 
 import logging
 
-from soundconverter.util import settings
+from soundconverter.util.settings import settings
 
 # ANSI escape codes for text colors
 ANSI_COLOR_RESET = 0

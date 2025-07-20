@@ -21,6 +21,7 @@
 
 
 from soundconverter.util.logger import logger
+from soundconverter.util.settings import get_gio_settings
 
 filename_denylist = ("*.iso",)
 FLOAT_TOLERANCE = 0.01
