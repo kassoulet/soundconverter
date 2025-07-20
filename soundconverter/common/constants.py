@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
 
-class MimeType(str, Enum):
+class MimeType(StrEnum):
     OGG_VORBIS = "audio/x-vorbis"
     MPEG = "audio/mpeg"
     FLAC = "audio/x-flac"
@@ -11,7 +11,7 @@ class MimeType(str, Enum):
     WMA = "audio/x-ms-wma"
 
 
-class EncoderName(str, Enum):
+class EncoderName(StrEnum):
     VORBISENC = "vorbisenc"
     LAMEMP3ENC = "lamemp3enc"
     FLACENC = "flacenc"
@@ -39,13 +39,13 @@ class QualityTabPage(Enum):
     WMA = 6
 
 
-class Mp3Mode(str, Enum):
+class Mp3Mode(StrEnum):
     CBR = "cbr"
     ABR = "abr"
     VBR = "vbr"
 
 
-class Mp3QualitySetting(str, Enum):
+class Mp3QualitySetting(StrEnum):
     CBR = "mp3-cbr-quality"
     ABR = "mp3-abr-quality"
     VBR = "mp3-vbr-quality"
