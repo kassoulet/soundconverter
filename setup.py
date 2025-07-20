@@ -67,4 +67,5 @@ DistUtilsExtra.auto.setup(
     ],
     cmdclass={"install": Install},
     scripts=["bin/soundconverter"],
+    python_requires=">=3.11",
 )
