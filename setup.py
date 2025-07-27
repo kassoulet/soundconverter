@@ -54,7 +54,7 @@ class Install(DistUtilsExtra.auto.install_auto):
 
 DistUtilsExtra.auto.setup(
     name="soundconverter",
-    version="4.1.0",
+    version="4.1.1",
     description=(
         "A simple sound converter application for the GNOME environment. "
         "It writes WAV, FLAC, MP3, Opus, WMA and Ogg Vorbis files."
@@ -67,4 +67,5 @@ DistUtilsExtra.auto.setup(
     ],
     cmdclass={"install": Install},
     scripts=["bin/soundconverter"],
+    python_requires=">=3.11",
 )
