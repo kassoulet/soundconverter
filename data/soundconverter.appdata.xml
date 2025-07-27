@@ -23,7 +23,7 @@ SoundConverter is a simple to use, and very fast audio converter. It can convert
   <developer_name translatable="no">Gautier Portet</developer_name>
 
   <url type="homepage">https://soundconverter.org/</url>
-  <!--<url type="bugtracker">https://bugs.launchpad.net/soundconverter</url>-->
+  <url type="bugtracker">https://bugs.launchpad.net/soundconverter</url>
   <url type="vcs-browser">https://github.com/kassoulet/soundconverter</url>
   <url type="translate">https://translations.launchpad.net/soundconverter</url>
 
@@ -31,6 +31,7 @@ SoundConverter is a simple to use, and very fast audio converter. It can convert
   <launchable type="desktop-id">soundconverter.desktop</launchable>
 
   <releases>
+    <release date="2025-07-27" version="4.1.1" />
     <release date="2025-06-23" version="4.1.0"/>
     <release date="2024-10-30" version="4.0.6"/>
     <release date="2024-04-08" version="4.0.5"/>
