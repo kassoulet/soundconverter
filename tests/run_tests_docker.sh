@@ -40,6 +40,22 @@ chmod 0700 "$XDG_RUNTIME_DIR" # Set secure permissions (read/write/execute only 
 echo "XDG_RUNTIME_DIR set to: $XDG_RUNTIME_DIR"
 # --- End XDG_RUNTIME_DIR setup ---
 
+# --- Launch test ---
+echo "Launching the app to check for startup errors..."
+# We expect timeout to kill the app, which is a success (exit code 124).
+# Any other exit code means the app crashed or exited prematurely.
+timeout 5s dbus-launch --exit-with-session python3 bin/soundconverter
+LAUNCH_STATUS=$?
+
+if [ $LAUNCH_STATUS -eq 124 ]; then
+    echo "App launch test successful (killed by timeout as expected)."
+else
+    echo "Error: App launch test failed with exit code $LAUNCH_STATUS."
+    # Clean up Xvfb and exit with the failure code.
+    kill $XVFB_PID
+    exit $LAUNCH_STATUS
+fi
+# --- End of launch test ---
 # Start a D-Bus session for GTK applications and run pytest within it.
 # `dbus-launch --exit-with-session`: Ensures a D-Bus session is started,
 # and it automatically exits when the wrapped command finishes.
