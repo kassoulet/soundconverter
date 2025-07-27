@@ -28,30 +28,26 @@ import locale
 import os
 import site
 import sys
-from importlib.metadata import files, metadata
+from importlib.metadata import distribution
 from optparse import OptionGroup, OptionParser
 
 _ = gettext.gettext
 
 # read values from package metadata
-soundconverter_metadata = metadata("soundconverter")
-NAME = soundconverter_metadata["Name"]
-VERSION = soundconverter_metadata["version"]
-SOURCE_PATH = os.path.dirname(files("soundconverter")[0].locate())
+dist = distribution("soundconverter")
+NAME = dist.metadata["Name"]
+VERSION = dist.version
+GLADEFILE = str(dist.locate_file("data/soundconverter.glade"))
 
+if not os.path.exists(GLADEFILE):
+    paths = "/usr/share/soundconverter", "/usr/local/share/soundconverter", "/app/share/soundconverter"
+    for path in paths:
+        gladefile = os.path.join(path, "soundconverter.glade")
+        if os.path.exists(gladefile):
+            GLADEFILE = gladefile
+            break
 
-# depending on where this file is installed to, make sure to use the proper
-# prefix path for data
-# https://docs.python.org/3/distutils/setupscript.html?highlight=package_data#installing-additional-files # noqa
-if SOURCE_PATH.startswith(site.USER_BASE):
-    DATA_PATH = os.path.join(site.USER_BASE, "share/soundconverter")
-elif SOURCE_PATH.startswith("/usr/local/"):
-    DATA_PATH = "/usr/local/share/soundconverter"
-elif SOURCE_PATH.startswith("/usr/"):
-    DATA_PATH = "/usr/share/soundconverter"
-elif SOURCE_PATH.startswith("/app/"):
-    # flatpak support
-    DATA_PATH = "/app/share/soundconverter"
+if GLADEFILE.startswith("/app"):
 
     # For flatpak, we need to explicitly (re-)bind the locale and the gettext
     # textdomain, because Python's default localedir is pointing to
@@ -62,9 +58,6 @@ elif SOURCE_PATH.startswith("/app/"):
     locale.bindtextdomain(NAME, "/app/share/locale")
     gettext.bindtextdomain(NAME, "/app/share/locale")
     gettext.textdomain(NAME)
-else:
-    # installed with -e, running from the cloned git source
-    DATA_PATH = os.path.join(SOURCE_PATH, "data")
 
 try:
     import gi
@@ -302,7 +295,6 @@ update_verbosity()
 logger.info(f"{NAME} {VERSION}")
 
 if settings["main"] == "gui":
-    GLADEFILE = os.path.join(DATA_PATH, "soundconverter.glade")
     gui_main(NAME, VERSION, GLADEFILE, files)
 else:
     if not files:
