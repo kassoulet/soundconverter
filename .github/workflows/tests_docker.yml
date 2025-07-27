@@ -1,6 +1,6 @@
 # .github/workflows/test.yml
 
-name: Headless Tests
+name: Ubuntu Tests
 
 # Define when this workflow should run
 on:
