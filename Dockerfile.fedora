@@ -1,0 +1,49 @@
+# Run Test in Docker on Fedora
+#
+# This is not straightforward as we launch a graphical application
+
+FROM fedora:42
+
+# Install packages
+RUN dnf install -y \
+    python3-pip \
+    python3-devel \
+    python3-distutils-extra \
+    gcc \
+    gtk3 \
+    gtk3-devel \
+    gobject-introspection-devel \
+    gstreamer1 \
+    gstreamer1-plugins-base \
+    gstreamer1-plugins-good \
+    gstreamer1-plugins-bad-free \
+    gstreamer1-plugins-ugly-free \
+    gstreamer1-plugins-bad-free-extras \
+    gstreamer1-plugins-good-extras \
+    vorbis-tools \
+    lame \
+    flac \
+    wavpack \
+    opus-tools \
+    gstreamer1-plugin-libav \
+    python3-gobject \
+    xorg-x11-server-Xvfb \
+    xprop \
+    xwininfo \
+    dbus-x11 \
+    procps-ng \
+    file
+
+# Set the working directory to the application's source code
+WORKDIR /app
+
+COPY . /app
+
+# Install Python dependencies
+RUN python3 setup.py install --prefix=/usr
+
+# Copy the script to run tests with Xvfb and make it executable
+COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
+RUN chmod +x /usr/local/bin/run_tests_docker.sh
+
+CMD ["run_tests_docker.sh"]
