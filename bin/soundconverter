@@ -26,7 +26,6 @@
 import gettext
 import locale
 import os
-import site
 import sys
 from importlib.metadata import distribution
 from optparse import OptionGroup, OptionParser
