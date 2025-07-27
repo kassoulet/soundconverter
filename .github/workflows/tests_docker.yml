@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build Docker image for tests
-      run: docker build -t soundconverter-test .
+      run: docker build -t soundconverter-ubuntu-test .
 
     - name: Run tests in Docker container
-      run: docker run soundconverter-test
+      run: docker run soundconverter-ubuntu-test
