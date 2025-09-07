@@ -6,7 +6,10 @@ FROM fedora:42
 
 # Install packages
 RUN dnf install -y \
+    meson \
+    ninja \
     python3-pip \
+
     python3-devel \
     python3-distutils-extra \
     gcc \
@@ -40,7 +43,8 @@ WORKDIR /app
 COPY . /app
 
 # Install Python dependencies
-RUN python3 setup.py install --prefix=/usr
+RUN meson setup builddir --prefix=/usr
+RUN meson install -C builddir
 
 # Copy the script to run tests with Xvfb and make it executable
 COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
