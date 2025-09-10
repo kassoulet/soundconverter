@@ -1,4 +1,4 @@
-project('soundconverter', version : '4.1.1', license : 'GPL3+', meson_version : '>= 0.50.0', default_options : [ 'warning_level=2', 'buildtype=debugoptimized', ])
+project('soundconverter', version : '4.1.1', license : 'GPL3+', meson_version : '>= 0.59.0', default_options : [ 'warning_level=2', 'buildtype=debugoptimized', ])
 
 python = import('python')
 
@@ -53,7 +53,7 @@ install_data(
 desktop_file = i18n.merge_file(
   input : 'data/soundconverter.desktop.in',
   output : 'soundconverter.desktop',
-  po_dir : join_paths(meson.source_root(), 'po'),
+    po_dir : join_paths(meson.project_source_root(), 'po'),
   type : 'desktop',
   install : true,
   install_dir : join_paths(get_option('datadir'), 'applications')
