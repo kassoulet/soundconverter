@@ -27,24 +27,15 @@ import gettext
 import locale
 import os
 import sys
-from importlib.metadata import distribution
 from optparse import OptionGroup, OptionParser
 
 _ = gettext.gettext
 
 # read values from package metadata
-dist = distribution("soundconverter")
-NAME = dist.metadata["Name"]
-VERSION = dist.version
-GLADEFILE = str(dist.locate_file("data/soundconverter.glade"))
+NAME = "soundconverter"
+VERSION = "@VERSION@"
+GLADEFILE = "@GLADEFILE_PATH@"
 
-if not os.path.exists(GLADEFILE):
-    paths = "/usr/share/soundconverter", "/usr/local/share/soundconverter", "/app/share/soundconverter"
-    for path in paths:
-        gladefile = os.path.join(path, "soundconverter.glade")
-        if os.path.exists(gladefile):
-            GLADEFILE = gladefile
-            break
 
 if GLADEFILE.startswith("/app"):
 
