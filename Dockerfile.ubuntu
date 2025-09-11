@@ -15,7 +15,6 @@ RUN apt-get update \
     meson \
     ninja-build \
     python3-pip \
-
     python3-dev \
     python3-distutils-extra \
     build-essential \
@@ -32,15 +31,11 @@ RUN apt-get update \
     gstreamer1.0-plugins-ugly \
     gstreamer1.0-fdkaac \
     gstreamer1.0-libav \
-    # xorg \
-    # x11vnc \
-    # gnome \
-    # gnome-terminal \
-    # x11-apps \
     xvfb \
     dbus-x11 \
     x11-utils \
     procps \
+    desktop-file-utils \
     libgtk-3-0 \
     libglib2.0-0
 
@@ -52,9 +47,6 @@ COPY . /app
 # Install Python dependencies
 RUN meson setup builddir --prefix=/usr
 RUN meson install -C builddir
-
-# RUN pip install setuptools wheel \
-#     && pip install . 
 
 # Copy the script to run tests with Xvfb and make it executable
 COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
