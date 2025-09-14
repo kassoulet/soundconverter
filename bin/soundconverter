@@ -73,7 +73,7 @@ except (ImportError, ValueError) as error:
 # For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
 args = Gst.init(sys.argv)
 
-if isinstance(args, list):
+if not isinstance(args, list):
     # in tests it just suddenly returns a boolean instead. when writing tests,
     # beware that `--gst-...` arguments are not filtered here
     args = sys.argv
