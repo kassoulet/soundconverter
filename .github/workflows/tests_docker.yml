@@ -11,7 +11,8 @@ on:
     branches:
       - main # Run on pull requests targeting the main branch
   workflow_dispatch: # Allows you to manually trigger the workflow from the GitHub UI
-
+  schedule:
+    - cron: '0 0 1 * *' # Monthly
 jobs:
   test:
     runs-on: ubuntu-latest

@@ -23,13 +23,14 @@ performance, the command line tools are always going to be preferable.
 
 Ubuntu and Arch packages exist in the official repositories.
 
-Installing from source requires distutils-extra
+Installing from source requires meson.
 
 ```bash
 git clone https://github.com/kassoulet/soundconverter.git
 cd soundconverter
 git checkout main
-sudo python3 setup.py install
+meson setup builddir && meson install -C builddir
+
 soundconverter
 ```
 
@@ -53,9 +54,8 @@ and https://gstreamer.freedesktop.org/documentation/application-development/appe
 To start unittests, use
 
 ```bash
-sudo python3 setup.py install
-python3 tests/test.py
-python3 tests/test.py discoverer.DiscovererTest.test_read_tags
+meson setup builddir && meson install -C builddir
+meson test -C builddir
 ```
 
 Before submitting patches or merge requests, please make sure the source code is well formatted and do not trigger lint errors:

@@ -22,4 +22,4 @@ jobs:
         pip install ruff
     - name: Analysing the code with ruff
       run: |
-        ruff check soundconverter/ bin/soundconverter
+        ruff check soundconverter/ bin/soundconverter.in
