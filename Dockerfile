@@ -2,7 +2,7 @@
 #
 # This is not straightforward as we launch a graphical application
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 # Set environment variables to prevent interactive prompts during apt-get
 ENV DEBIAN_FRONTEND=noninteractive
@@ -16,6 +16,14 @@ RUN apt-get update \
     python3-dev \
     python3-distutils-extra \
     build-essential \
+    meson \
+    ninja-build \
+    gettext \
+    desktop-file-utils \
+    libglib2.0-dev-bin \
+    libglib2.0-dev \
+    pkg-config \
+    gir1.2-gst-plugins-base-1.0 \
     libgstreamer1.0-0 \
     libgstreamer1.0-dev \
     libgtk-3-0 \
@@ -46,14 +54,12 @@ WORKDIR /app
 
 COPY . /app
 
-# Install Python dependencies
-RUN python3 setup.py install --prefix=/usr
+ENV MESON_SOURCE_ROOT /app
 
-# RUN pip install setuptools wheel \
-#     && pip install . 
-
-# Copy the script to run tests with Xvfb and make it executable
-COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
-RUN chmod +x /usr/local/bin/run_tests_docker.sh
-
-CMD ["run_tests_docker.sh"]
+# Build and run tests
+RUN meson setup --wipe builddir
+RUN cp /app/data/org.soundconverter.gschema.xml /usr/share/glib-2.0/schemas/
+RUN glib-compile-schemas /usr/share/glib-2.0/schemas
+RUN update-desktop-database
+RUN gtk-update-icon-cache
+CMD ["meson", "test", "-C", "builddir", "--print-errorlogs"]
