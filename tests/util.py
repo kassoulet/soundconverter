@@ -6,10 +6,12 @@ import sys
 from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
 from unittest.mock import patch
+import os
 
 from soundconverter.util.settings import settings
 
 DEFAULT_SETTINGS = settings.copy()
+BUILD_DIR = "builddir"
 
 
 def reset_settings():
@@ -24,7 +26,7 @@ def reset_settings():
     assert ("recursive" not in settings) or (not settings["recursive"])
 
 
-def launch(argv=None, bin_path="bin/soundconverter"):
+def launch(argv=None, bin_path="soundconverter"):
     """Start the soundconverter with the command line argument array argv.
 
     The batch mode is synchronous since it iterates the loop itself until
@@ -37,7 +39,9 @@ def launch(argv=None, bin_path="bin/soundconverter"):
     if not argv:
         argv = []
 
+    # Use the build directory specified in the environment or default to 'builddir'
+    build_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), BUILD_DIR)
     with patch.object(sys, "argv", [""] + [str(arg) for arg in argv]):
-        loader = SourceFileLoader("launcher", bin_path)
+        loader = SourceFileLoader("launcher", os.path.join(build_dir, bin_path))
         spec = spec_from_loader("launcher", loader)
         spec.loader.exec_module(module_from_spec(spec))

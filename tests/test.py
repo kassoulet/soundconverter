@@ -5,6 +5,7 @@
 
 import sys
 import unittest
+import os
 
 import gi
 
@@ -13,10 +14,9 @@ gi.require_version("Gst", "1.0")
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gst, Gtk, Gio  # noqa: E402, F401, I001
 
-args = Gst.init(sys.argv)
-
 from soundconverter.interface.mainloop import gtk_iteration  # noqa: E402
 from soundconverter.util.settings import set_gio_settings  # noqa: E402
+import util
 
 # don't overwrite the users settings during tests
 backend = Gio.memory_settings_backend_new()
@@ -28,7 +28,15 @@ Gtk.main = gtk_iteration
 Gtk.main_quit = lambda: None
 
 if __name__ == "__main__":
-    modules = args[1:]
+    args = Gst.init(sys.argv)
+
+    if len(args) > 1 and os.path.isdir(args[1]):
+        util.BUILD_DIR = args[1]
+        modules = args[2:]
+    else:
+        print("Error: Build directory not specified. Please provide the build directory as an argument.", file=sys.stderr)
+        sys.exit(1)
+
     # discoverer is really convenient, but it can't find a specific test
     # in all of the available tests like unittest.main() does...,
     # so provide both options.
@@ -41,5 +49,11 @@ if __name__ == "__main__":
         # run all tests by default
         testsuite = unittest.defaultTestLoader.discover("testcases", pattern="*.py")
 
-    testrunner = unittest.TextTestRunner(verbosity=2).run(testsuite)
-    sys.exit(len(testrunner.failures) + len(testrunner.errors))
+    test_results = unittest.TextTestRunner(verbosity=2).run(testsuite)
+
+    test_results.printErrors()
+    
+
+
+    if not test_results.wasSuccessful():
+        sys.exit(1)
