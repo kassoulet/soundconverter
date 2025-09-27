@@ -37,7 +37,6 @@ GLADEFILE = "@GLADEFILE_PATH@"
 
 
 if GLADEFILE.startswith("/app"):
-
     # For flatpak, we need to explicitly (re-)bind the locale and the gettext
     # textdomain, because Python's default localedir is pointing to
     # /usr/share/locale, whereas flatpaks install their locales to
@@ -176,8 +175,7 @@ def parse_command_line():
     batch_option_group = OptionGroup(
         parser,
         "Batch Mode Options",
-        "Those options will only have effect when the -b, -c or -t "
-        "option is provided",
+        "Those options will only have effect when the -b, -c or -t option is provided",
     )
     batch_option_group.add_option(
         "-f",
