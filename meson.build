@@ -48,7 +48,7 @@ install_data(
 )
 install_data(
   'data/soundconverter.svg',
-  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps'),
+  install_dir: join_paths(get_option('datadir'), 'soundconverter'),
 )
 
 # man page

@@ -34,7 +34,10 @@ if __name__ == "__main__":
         util.BUILD_DIR = args[1]
         modules = args[2:]
     else:
-        print("Error: Build directory not specified. Please provide the build directory as an argument.", file=sys.stderr)
+        print(
+            "Error: Build directory not specified. Please provide the build directory as an argument.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     # discoverer is really convenient, but it can't find a specific test
@@ -52,8 +55,6 @@ if __name__ == "__main__":
     test_results = unittest.TextTestRunner(verbosity=2).run(testsuite)
 
     test_results.printErrors()
-    
-
 
     if not test_results.wasSuccessful():
         sys.exit(1)
