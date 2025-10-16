@@ -313,7 +313,7 @@ class BatchIntegration(unittest.TestCase):
         # appear to add value over test_recursive_audio
         launch(
             ["-b", "test data", "-r", "-f", "flac", "-o", "tmp"],
-            "../bin/soundconverter",
+            "soundconverter",
         )
         # the input directory is part of the output
         self.assertTrue(os.path.isdir("tmp/test data/audio/"))
