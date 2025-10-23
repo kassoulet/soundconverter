@@ -1,8 +1,8 @@
-# Run Test in Docker
+# Run Test in Docker on Ubuntu
 #
 # This is not straightforward as we launch a graphical application
 
-FROM ubuntu:24.04
+FROM ubuntu:latest
 
 # Set environment variables to prevent interactive prompts during apt-get
 ENV DEBIAN_FRONTEND=noninteractive
@@ -12,18 +12,12 @@ ENV PYTHONUNBUFFERED=1
 # Install packages
 RUN apt-get update \
     && apt-get install -y \
+    meson \
+    ninja-build \
     python3-pip \
     python3-dev \
     python3-distutils-extra \
     build-essential \
-    meson \
-    ninja-build \
-    gettext \
-    desktop-file-utils \
-    libglib2.0-dev-bin \
-    libglib2.0-dev \
-    pkg-config \
-    gir1.2-gst-plugins-base-1.0 \
     libgstreamer1.0-0 \
     libgstreamer1.0-dev \
     libgtk-3-0 \
@@ -37,15 +31,11 @@ RUN apt-get update \
     gstreamer1.0-plugins-ugly \
     gstreamer1.0-fdkaac \
     gstreamer1.0-libav \
-    # xorg \
-    # x11vnc \
-    # gnome \
-    # gnome-terminal \
-    # x11-apps \
     xvfb \
     dbus-x11 \
     x11-utils \
     procps \
+    desktop-file-utils \
     libgtk-3-0 \
     libglib2.0-0
 
@@ -54,12 +44,15 @@ WORKDIR /app
 
 COPY . /app
 
-ENV MESON_SOURCE_ROOT /app
+# Install the application with proper permissions
+RUN mkdir -p /usr/local/share/locale \
+    && chmod 777 /usr/local/share/locale \
+    && meson setup builddir --prefix=/usr --wipe \
+    && meson install -C builddir
 
-# Build and run tests
-RUN meson setup --wipe builddir
-RUN cp /app/data/org.soundconverter.gschema.xml /usr/share/glib-2.0/schemas/
-RUN glib-compile-schemas /usr/share/glib-2.0/schemas
-RUN update-desktop-database
-RUN gtk-update-icon-cache
-CMD ["meson", "test", "-C", "builddir", "--print-errorlogs"]
+# Copy the corrected script to run tests with Xvfb and make it executable
+COPY tests/run_tests_docker_corrected.sh /usr/local/bin/run_tests_docker.sh
+
+RUN chmod +x /usr/local/bin/run_tests_docker.sh
+
+CMD ["run_tests_docker.sh"]

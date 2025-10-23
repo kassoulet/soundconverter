@@ -44,7 +44,7 @@ echo "XDG_RUNTIME_DIR set to: $XDG_RUNTIME_DIR"
 echo "Launching the app to check for startup errors..."
 # We expect timeout to kill the app, which is a success (exit code 124).
 # Any other exit code means the app crashed or exited prematurely.
-timeout 5s dbus-launch --exit-with-session python3 bin/soundconverter
+timeout 5s dbus-launch --exit-with-session soundconverter
 LAUNCH_STATUS=$?
 
 if [ $LAUNCH_STATUS -eq 124 ]; then
@@ -55,12 +55,13 @@ else
     kill $XVFB_PID
     exit $LAUNCH_STATUS
 fi
+
 # --- End of launch test ---
 # Start a D-Bus session for GTK applications and run pytest within it.
 # `dbus-launch --exit-with-session`: Ensures a D-Bus session is started,
 # and it automatically exits when the wrapped command finishes.
 echo "Starting tests within a D-Bus session..."
-dbus-launch --exit-with-session python3 tests/test.py
+dbus-launch --exit-with-session python3 /app/tests/test.py /app/builddir
 errors=$?
 
 # Ensure Xvfb process is killed after tests, even if dbus-launch didn't clean it up for some reason.

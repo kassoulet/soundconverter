@@ -18,6 +18,29 @@ i18n = import('i18n')
 
 project_description = 'A simple sound converter application for the GNOME environment. It writes WAV, FLAC, MP3, Opus, WMA and Ogg Vorbis files.'
 
+
+# Check for required Python modules that should be provided by system packages
+dep_check_script = '''import sys
+try:
+    import gi
+    gi.require_version("Gst", "1.0")
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gst, Gtk, GLib, GObject, Gio
+    print("All required Python modules found")
+    sys.exit(0)
+except ImportError as e:
+    print(f"Missing Python module: {e}")
+    sys.exit(1)
+'''
+
+python_check_result = run_command(py_inst, '-c', dep_check_script, check: false)
+if python_check_result.returncode() != 0
+  warning('Python dependency check failed: ' + python_check_result.stdout())
+endif
+
+# Rest of your existing meson.build content would continue here...
+
+
 subdir('po')
 
 # Executable
@@ -70,37 +93,37 @@ install_data(
   install_dir: join_paths(get_option('datadir'), 'soundconverter'),
 )
 
-# Install python files
-py_inst.install_sources(
-  [
-    'soundconverter/__init__.py',
-    'soundconverter/common/constants.py',
-    'soundconverter/common/__init__.py',
-    'soundconverter/gstreamer/converter.py',
-    'soundconverter/gstreamer/discoverer.py',
-    'soundconverter/gstreamer/__init__.py',
-    'soundconverter/interface/batch.py',
-    'soundconverter/interface/filelist.py',
-    'soundconverter/interface/gladewindow.py',
-    'soundconverter/interface/mainloop.py',
-    'soundconverter/interface/notify.py',
-    'soundconverter/interface/preferences.py',
-    'soundconverter/interface/theme.py',
-    'soundconverter/interface/ui.py',
-    'soundconverter/interface/__init__.py',
-    'soundconverter/util/error.py',
-    'soundconverter/util/fileoperations.py',
-    'soundconverter/util/formats.py',
-    'soundconverter/util/formatting.py',
-    'soundconverter/util/logger.py',
-    'soundconverter/util/namegenerator.py',
-    'soundconverter/util/settings.py',
-    'soundconverter/util/soundfile.py',
-    'soundconverter/util/task.py',
-    'soundconverter/util/taskqueue.py',
-    'soundconverter/util/__init__.py',
-  ],
-  subdir: 'soundconverter',
+# Install the soundconverter Python package with proper directory structure
+# Using install_data to preserve the internal directory structure
+
+install_data(
+  files('soundconverter/__init__.py'),
+  install_dir: py_inst.get_install_dir()
+)
+
+install_data(
+  files('soundconverter/common/__init__.py', 'soundconverter/common/constants.py'),
+  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'common')
+)
+
+install_data(
+  files('soundconverter/gstreamer/__init__.py', 'soundconverter/gstreamer/converter.py', 'soundconverter/gstreamer/discoverer.py'),
+  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'gstreamer')
+)
+
+install_data(
+  files('soundconverter/interface/__init__.py', 'soundconverter/interface/batch.py', 'soundconverter/interface/filelist.py', 
+        'soundconverter/interface/gladewindow.py', 'soundconverter/interface/mainloop.py', 'soundconverter/interface/notify.py', 
+        'soundconverter/interface/preferences.py', 'soundconverter/interface/theme.py', 'soundconverter/interface/ui.py'),
+  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'interface')
+)
+
+install_data(
+  files('soundconverter/util/__init__.py', 'soundconverter/util/error.py', 'soundconverter/util/fileoperations.py', 
+        'soundconverter/util/formats.py', 'soundconverter/util/formatting.py', 'soundconverter/util/logger.py', 
+        'soundconverter/util/namegenerator.py', 'soundconverter/util/settings.py', 'soundconverter/util/soundfile.py', 
+        'soundconverter/util/task.py', 'soundconverter/util/taskqueue.py'),
+  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'util')
 )
 
 soundconverter_bin_configured = configure_file(
