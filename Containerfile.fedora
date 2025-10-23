@@ -9,7 +9,6 @@ RUN dnf install -y \
     meson \
     ninja \
     python3-pip \
-
     python3-devel \
     python3-distutils-extra \
     gcc \
@@ -35,19 +34,24 @@ RUN dnf install -y \
     xwininfo \
     dbus-x11 \
     procps-ng \
-    file
+    file \
+    desktop-file-utils
 
 # Set the working directory to the application's source code
 WORKDIR /app
 
 COPY . /app
 
-# Install Python dependencies
-RUN meson setup builddir --prefix=/usr
+# Install the application
+RUN meson setup --wipe builddir --prefix=/usr
 RUN meson install -C builddir
 
 # Copy the script to run tests with Xvfb and make it executable
 COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
+
+# Check program presence
+RUN ls -l /usr/bin/soundconverter
+
 RUN chmod +x /usr/local/bin/run_tests_docker.sh
 
 CMD ["run_tests_docker.sh"]

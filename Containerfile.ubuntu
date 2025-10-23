@@ -1,8 +1,8 @@
-# Run Test in Docker
+# Run Test in Docker on Ubuntu
 #
 # This is not straightforward as we launch a graphical application
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 # Set environment variables to prevent interactive prompts during apt-get
 ENV DEBIAN_FRONTEND=noninteractive
@@ -44,12 +44,15 @@ WORKDIR /app
 
 COPY . /app
 
-# Install Python dependencies
-RUN meson setup builddir --prefix=/usr
-RUN meson install -C builddir
+# Install the application with proper permissions
+RUN mkdir -p /usr/local/share/locale \
+    && chmod 777 /usr/local/share/locale \
+    && meson setup builddir --prefix=/usr --wipe \
+    && meson install -C builddir
 
-# Copy the script to run tests with Xvfb and make it executable
-COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
+# Copy the corrected script to run tests with Xvfb and make it executable
+COPY tests/run_tests_docker_corrected.sh /usr/local/bin/run_tests_docker.sh
+
 RUN chmod +x /usr/local/bin/run_tests_docker.sh
 
 CMD ["run_tests_docker.sh"]
