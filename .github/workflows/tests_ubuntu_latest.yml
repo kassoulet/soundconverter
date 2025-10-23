@@ -1,16 +1,14 @@
-name: Ubuntu Tests
+name: Ubuntu Latest Tests
 
-# Define when this workflow should run
 on:
   push:
-    branches:
-      - main # Run on pushes to the main branch
+    branches: [ '**' ]  # All branches
   pull_request:
-    branches:
-      - main # Run on pull requests targeting the main branch
+    branches: [ '**' ]  # All branches
   workflow_dispatch: # Allows you to manually trigger the workflow from the GitHub UI
   schedule:
     - cron: '0 0 1 * *' # Monthly
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,7 +20,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build the Docker image
-      run: docker build . --file Containerfile.ubuntu --tag soundconverter-tests-ubuntu
+      run: docker build . --file Containerfile.ubuntu.latest --tag soundconverter-tests-ubuntu-latest
 
     - name: Run tests
-      run: docker run --rm soundconverter-tests-ubuntu
+      run: docker run --rm soundconverter-tests-ubuntu-latest
