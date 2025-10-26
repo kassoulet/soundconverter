@@ -97,10 +97,10 @@ install_data(
   install_dir: py_inst.get_install_dir()
 )
 
-install_data(
-  files('soundconverter/common/__init__.py', 'soundconverter/common/constants.py'),
-  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'common')
-)
+# install_data(
+#   files('soundconverter/common/__init__.py', 'soundconverter/common/constants.py'),
+#   install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'common')
+# )
 
 install_data(
   files('soundconverter/gstreamer/__init__.py', 'soundconverter/gstreamer/converter.py', 'soundconverter/gstreamer/discoverer.py'),
