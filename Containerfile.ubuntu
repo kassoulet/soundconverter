@@ -51,7 +51,7 @@ RUN mkdir -p /usr/local/share/locale \
     && meson install -C builddir
 
 # Copy the corrected script to run tests with Xvfb and make it executable
-COPY tests/run_tests_docker_corrected.sh /usr/local/bin/run_tests_docker.sh
+COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
 
 RUN chmod +x /usr/local/bin/run_tests_docker.sh
 
