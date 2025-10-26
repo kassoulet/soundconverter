@@ -40,11 +40,7 @@ endif
 
 # Rest of your existing meson.build content would continue here...
 
-
 subdir('po')
-
-# Executable
-install_data(['run'], install_dir: get_option('bindir'))
 
 # Appstream
 install_data(
@@ -112,16 +108,16 @@ install_data(
 )
 
 install_data(
-  files('soundconverter/interface/__init__.py', 'soundconverter/interface/batch.py', 'soundconverter/interface/filelist.py', 
-        'soundconverter/interface/gladewindow.py', 'soundconverter/interface/mainloop.py', 'soundconverter/interface/notify.py', 
+  files('soundconverter/interface/__init__.py', 'soundconverter/interface/batch.py', 'soundconverter/interface/filelist.py',
+        'soundconverter/interface/gladewindow.py', 'soundconverter/interface/mainloop.py', 'soundconverter/interface/notify.py',
         'soundconverter/interface/preferences.py', 'soundconverter/interface/theme.py', 'soundconverter/interface/ui.py'),
   install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'interface')
 )
 
 install_data(
-  files('soundconverter/util/__init__.py', 'soundconverter/util/error.py', 'soundconverter/util/fileoperations.py', 
-        'soundconverter/util/formats.py', 'soundconverter/util/formatting.py', 'soundconverter/util/logger.py', 
-        'soundconverter/util/namegenerator.py', 'soundconverter/util/settings.py', 'soundconverter/util/soundfile.py', 
+  files('soundconverter/util/__init__.py', 'soundconverter/util/error.py', 'soundconverter/util/fileoperations.py',
+        'soundconverter/util/formats.py', 'soundconverter/util/formatting.py', 'soundconverter/util/logger.py',
+        'soundconverter/util/namegenerator.py', 'soundconverter/util/settings.py', 'soundconverter/util/soundfile.py',
         'soundconverter/util/task.py', 'soundconverter/util/taskqueue.py'),
   install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'util')
 )
