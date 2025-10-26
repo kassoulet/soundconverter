@@ -44,7 +44,7 @@ echo "XDG_RUNTIME_DIR set to: $XDG_RUNTIME_DIR"
 echo "Launching the app to check for startup errors..."
 # We expect timeout to kill the app, which is a success (exit code 124).
 # Any other exit code means the app crashed or exited prematurely.
-timeout 5s dbus-launch --exit-with-session soundconverter
+timeout 5s dbus-launch --exit-with-session /usr/bin/soundconverter
 LAUNCH_STATUS=$?
 
 if [ $LAUNCH_STATUS -eq 124 ]; then
