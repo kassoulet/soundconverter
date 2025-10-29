@@ -22,6 +22,7 @@
 """Batch mode to run soundconverter in a console."""
 
 import os
+from typing import List, Optional
 
 from gi.repository import Gio, GLib
 
@@ -42,7 +43,6 @@ from soundconverter.util.settings import set_gio_settings, settings
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.taskqueue import TaskQueue
 
-from typing import List, Optional
 cli_convert: List[Optional[CLIConvert]] = [None]
 
 

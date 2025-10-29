@@ -20,7 +20,8 @@
 # USA
 
 
-from typing import Dict, Tuple, Union, Optional, Any, List
+from typing import Dict, Optional, Tuple, Union
+
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 
@@ -191,7 +192,7 @@ def get_default_quality(mime: str, mode: str = "vbr") -> Union[int, float, Dict[
         "audio/x-flac": 5,
         "audio/x-ms-wma": 192,
     }
-    
+
     default = default_map[mime]
 
     if isinstance(default, dict):
@@ -232,7 +233,7 @@ def get_quality(mime: str, value: Union[int, float], mode: str = "vbr", reverse:
         "audio/x-flac": (0, 5, 8),
         "audio/x-ms-wma": (64, 96, 128, 192, 256, 320),
     }
-    
+
     qualities = qualities_map[mime]
 
     if isinstance(qualities, dict):

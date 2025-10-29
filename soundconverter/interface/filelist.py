@@ -23,7 +23,7 @@ import os
 import time
 from gettext import gettext as _
 from gettext import ngettext
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List
 
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk, Pango
 

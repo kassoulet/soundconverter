@@ -21,7 +21,6 @@
 
 from fnmatch import fnmatch
 from threading import Thread
-from typing import Any, Dict, List, Callable, Optional
 
 from gi.repository import GLib, GObject, Gst, GstPbutils
 
@@ -29,7 +28,6 @@ from soundconverter.util.formats import filename_denylist
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_num_jobs
 from soundconverter.util.task import Task
-from soundconverter.soundfile import SoundFile
 
 type_getters = {
     GObject.TYPE_STRING: "get_string",
