@@ -74,7 +74,7 @@ class PrepareFilesList(unittest.TestCase):
     def test_non_recursive_directory(self):
         test = ["tests/test data/empty/"]
         # it should not find anything, as test is a directory
-        expectation = ([], [])
+        expectation: tuple = ([], [])
         self.assertEqual(prepare_files_list(test), expectation)
 
     def test_recursive_directory(self):
@@ -160,8 +160,8 @@ class TargetNameGeneratorTestCases(unittest.TestCase):
         )
 
     def tearDown(self):
-        self.g = None
-        self.s = None
+        self.g = None  # type: ignore
+        self.s = None  # type: ignore
 
     def test_unquote_filename(self):
         self.assertEqual(unquote_filename("file://baz%20qux"), "file://baz qux")

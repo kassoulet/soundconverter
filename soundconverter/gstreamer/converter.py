@@ -21,7 +21,9 @@
 
 
 import os
+from enum import Enum
 from gettext import gettext as _
+from typing import Dict, Optional, Tuple
 
 from gi.repository import Gio, GLib, Gst
 
@@ -34,16 +36,23 @@ from soundconverter.util.fileoperations import (
     vfs_unlink,
 )
 from soundconverter.util.logger import logger
+from soundconverter.util.namegenerator import TargetNameGenerator
 from soundconverter.util.settings import get_gio_settings
+from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.task import Task
 
-GSTREAMER_SOURCE = "giosrc"
-GSTREAMER_SINK = "giosink"
+# Type aliases for better readability
+EncoderName = str
+ElementName = str
+PackageName = str
 
-available_elements = set()
+GSTREAMER_SOURCE: str = "giosrc"
+GSTREAMER_SINK: str = "giosink"
+
+available_elements: set = set()
 
 
-def find_available_elements():
+def find_available_elements() -> None:
     """Figure out which gstreamer pipeline plugins are available."""
     # gst-plugins-good, gst-plugins-bad, etc. packages provide them
     global available_elements
@@ -74,7 +83,7 @@ def find_available_elements():
         ("fdkaacenc", "AAC", "aac-enc", BAD),
     ]
 
-    result = {}
+    result: Dict[str, Tuple[bool, str]] = {}
     for encoder, name, function, package in encoders:
         have_it = bool(Gst.ElementFactory.find(encoder))
         if have_it:
@@ -104,20 +113,20 @@ def find_available_elements():
 find_available_elements()
 
 
-def create_flac_encoder():
+def create_flac_encoder() -> str:
     """Return an flac encoder for the gst pipeline string."""
     flac_compression = get_gio_settings().get_int("flac-compression")
     return f"flacenc mid-side-stereo=true quality={flac_compression}"
 
 
-def create_wav_encoder():
+def create_wav_encoder() -> str:
     """Return a wav encoder for the gst pipeline string."""
     wav_sample_width = get_gio_settings().get_int("wav-sample-width")
     formats = {8: "U8", 16: "S16LE", 24: "S24LE", 32: "S32LE"}
     return f"audioconvert ! audio/x-raw,format={formats[wav_sample_width]} ! wavenc"
 
 
-def create_oggvorbis_encoder():
+def create_oggvorbis_encoder() -> str:
     """Return an ogg encoder for the gst pipeline string."""
     cmd = "vorbisenc"
     vorbis_quality = get_gio_settings().get_double("vorbis-quality")
@@ -127,7 +136,7 @@ def create_oggvorbis_encoder():
     return cmd
 
 
-def create_mp3_encoder():
+def create_mp3_encoder() -> str:
     """Return an mp3 encoder for the gst pipeline string."""
     quality = {
         "cbr": "mp3-cbr-quality",
@@ -164,7 +173,7 @@ def create_mp3_encoder():
     return cmd
 
 
-def create_aac_encoder():
+def create_aac_encoder() -> str:
     """Return an aac encoder for the gst pipeline string."""
     aac_quality = get_gio_settings().get_int("aac-quality")
 
@@ -191,7 +200,7 @@ def create_aac_encoder():
     return f"avenc_aac bitrate={bitrate} ! mp4mux"
 
 
-def create_opus_encoder():
+def create_opus_encoder() -> str:
     """Return an opus encoder for the gst pipeline string."""
     opus_quality = get_gio_settings().get_int("opus-bitrate")
     return (
@@ -200,20 +209,22 @@ def create_opus_encoder():
     )
 
 
-def create_wma_encoder():
+def create_wma_encoder() -> str:
     """Return an wma encoder for the gst pipeline string."""
     wma_quality = get_gio_settings().get_int("wma-bitrate")
     return f"avenc_wmav2 bitrate={wma_quality * 1000} ! asfmux"
 
 
-class Converter(Task):
-    """Completely handle the conversion of a single file."""
-
+class ExistingFileBehavior(Enum):
     INCREMENT = "increment"
     OVERWRITE = "overwrite"
     SKIP = "skip"
 
-    def __init__(self, sound_file, name_generator):
+
+class Converter(Task):
+    """Completely handle the conversion of a single file."""
+
+    def __init__(self, sound_file: SoundFile, name_generator: TargetNameGenerator) -> None:
         """create a converter that converts a single file.
 
         Parameters
@@ -224,31 +235,33 @@ class Converter(Task):
         """
         # Configuration
         self.sound_file = sound_file
-        self.temporary_filename = None
-        self.newname = None
-        self.existing_behaviour = Converter.INCREMENT
+        self.temporary_filename: Optional[str] = None
+        self.newname: Optional[str] = None
+        self.existing_behaviour: ExistingFileBehavior = ExistingFileBehavior.INCREMENT
         self.name_generator = name_generator
 
         # All relevant gio settings have to be copied and remembered, so that
         # they don't suddenly change during the conversion
         settings = get_gio_settings()
-        self.output_mime_type = settings.get_string("output-mime-type")
-        self.output_resample = settings.get_boolean("output-resample")
-        self.resample_rate = settings.get_int("resample-rate")
-        self.force_mono = settings.get_boolean("force-mono")
-        self.replace_messy_chars = settings.get_boolean("replace-messy-chars")
-        self.delete_original = settings.get_boolean("delete-original")
+        self.output_mime_type: str = settings.get_string("output-mime-type")
+        self.output_resample: bool = settings.get_boolean("output-resample")
+        self.resample_rate: int = settings.get_int("resample-rate")
+        self.force_mono: bool = settings.get_boolean("force-mono")
+        self.replace_messy_chars: bool = settings.get_boolean("replace-messy-chars")
+        self.delete_original: bool = settings.get_boolean("delete-original")
 
         # State
-        self.command = None
-        self.pipeline = None
-        self._done = False
-        self.error = None
-        self.output_uri = None
+        self.command: Optional[str] = None
+        self.pipeline: Optional[Gst.Pipeline] = None
+        self._done: bool = False
+        self.error: Optional[str] = None
+        self.output_uri: Optional[str] = None
+        # Dynamic attribute used by Gst.Bus - initialize as int but will be set later
+        self.watch_id: int = 0
 
         super().__init__()
 
-    def _query_position(self):
+    def _query_position(self) -> float:
         """Ask for the stream position of the current pipeline."""
         if self.pipeline:
             # during Gst.State.PAUSED it returns super small numbers,
@@ -257,41 +270,41 @@ class Converter(Task):
             return max(0, position / Gst.SECOND)
         return 0
 
-    def get_progress(self):
+    def get_progress(self) -> Tuple[float, float]:
         """Fraction of how much of the task is completed."""
         duration = self.sound_file.duration
 
         if self._done:
-            return 1, duration
+            return 1, duration or 0.0
 
         if self.pipeline is None or duration is None:
-            return 0, duration
+            return 0, duration or 0.0
 
         position = self._query_position()
         progress = position / duration if duration else 0
         progress = min(max(progress, 0.0), 1.0)
-        return progress, duration
+        return progress, duration or 0.0
 
-    def cancel(self):
+    def cancel(self) -> None:
         """Cancel execution of the task."""
         self._stop_pipeline()
         self.done()
 
-    def pause(self):
+    def pause(self) -> None:
         """Pause execution of the task."""
         if not self.pipeline:
             logger.debug("pause(): pipeline is None!")
             return
         self.pipeline.set_state(Gst.State.PAUSED)
 
-    def resume(self):
+    def resume(self) -> None:
         """Resume execution of the task."""
         if not self.pipeline:
             logger.debug("resume(): pipeline is None!")
             return
         self.pipeline.set_state(Gst.State.PLAYING)
 
-    def _cleanup(self):
+    def _cleanup(self) -> None:
         """Delete the pipeline."""
         if self.pipeline is not None:
             bus = self.pipeline.get_bus()
@@ -301,7 +314,7 @@ class Converter(Task):
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
 
-    def _stop_pipeline(self):
+    def _stop_pipeline(self) -> None:
         # remove partial file
         if self.temporary_filename is not None:
             if vfs_exists(self.temporary_filename):
@@ -316,7 +329,7 @@ class Converter(Task):
             return
         self._cleanup()
 
-    def _convert(self):
+    def _convert(self) -> None:
         """Run the gst pipeline that converts files.
 
         Handlers for messages sent from gst are added, which also triggers
@@ -338,7 +351,7 @@ class Converter(Task):
 
         self.pipeline.set_state(Gst.State.PLAYING)
 
-    def _conversion_done(self):
+    def _conversion_done(self) -> None:
         """Should be called when the EOS message arrived or on error.
 
         Will clear the temporary data on error or move the temporary file
@@ -381,7 +394,7 @@ class Converter(Task):
             space = "_"
 
         exists = vfs_exists(newname)
-        if self.existing_behaviour == Converter.INCREMENT and exists:
+        if self.existing_behaviour == ExistingFileBehavior.INCREMENT and exists:
             # If the file already exists, increment the filename so that
             # nothing gets overwritten.
             path = path + space + "(%d)" + extension
@@ -391,7 +404,7 @@ class Converter(Task):
                 i += 1
 
         try:
-            if self.existing_behaviour == Converter.OVERWRITE and exists:
+            if self.existing_behaviour == ExistingFileBehavior.OVERWRITE and exists:
                 logger.info(f"overwriting '{beautify_uri(newname)}'")
                 vfs_unlink(newname)
             vfs_rename(self.temporary_filename, newname)
@@ -449,12 +462,12 @@ class Converter(Task):
         self.output_uri = newname
         self.done()
 
-    def done(self):
+    def done(self) -> None:
         self._done = True
         self._cleanup()
         super().done()
 
-    def run(self):
+    def run(self) -> None:
         """Call this in order to run the whole Converter task."""
         self.newname = self.name_generator.generate_target_uri(self.sound_file)
 
@@ -465,7 +478,7 @@ class Converter(Task):
         )
 
         exists = vfs_exists(self.newname)
-        if self.existing_behaviour == Converter.SKIP and exists:
+        if self.existing_behaviour == ExistingFileBehavior.SKIP and exists:
             logger.info(
                 f"output file already exists, skipping '{beautify_uri(self.newname)}'",
             )
@@ -517,7 +530,7 @@ class Converter(Task):
         self.command = " ! ".join(command)
         self._convert()
 
-    def _on_error(self, error):
+    def _on_error(self, error: str) -> None:
         """Log errors and write down that this Task failed.
 
         The TaskQueue is interested in reading the error.
@@ -527,7 +540,7 @@ class Converter(Task):
         self._stop_pipeline()
         self.done()
 
-    def _on_message(self, _, message):
+    def _on_message(self, _, message: Gst.Message) -> None:
         """Handle message events sent by gstreamer.
 
         Parameters

@@ -108,12 +108,12 @@ locale_patterns_dict = dict(
 )
 
 # add english and locale
-custom_patterns = english_patterns + " " + locale_patterns
+custom_patterns_str = english_patterns + " " + locale_patterns
 # convert to list
-custom_patterns = ["{" + p + "}" for p in custom_patterns.split()]
+custom_patterns_list = ["{" + p + "}" for p in custom_patterns_str.split()]
 # and finally to dict, thus removing doubles.
 # Example: { '{Künstler}': '{artist}' } depending on the locale
-custom_patterns = dict(list(zip(custom_patterns, patterns_formats * 2)))
+custom_patterns = dict(list(zip(custom_patterns_list, patterns_formats * 2)))
 
 
 def process_custom_pattern(pattern):
@@ -314,8 +314,10 @@ class TargetNameGenerator:
             # curly braces. Two curly braces are a single escaped one.
             if not re.match(r"^(?:{{)*([^{}]+?)(?:}})*$", candidate):
                 # get the inner curly brace content
-                variable = re.search(r"([^{}]+)", candidate)[1]
-                variables.append(variable)
+                match = re.search(r"([^{}]+)", candidate)
+                if match:
+                    variable = match.group(1)
+                    variables.append(variable)
         return variables
 
     def fill_pattern(self, sound_file, pattern):

@@ -23,6 +23,7 @@ import os
 import time
 from gettext import gettext as _
 from gettext import ngettext
+from typing import Any, Dict, List, Optional, Tuple
 
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk, Pango
 
@@ -111,7 +112,7 @@ class FileList:
             self.add_uris(uris)
             context.finish(True, False, time)
 
-    def get_files(self):
+    def get_files(self) -> List[SoundFile]:
         """Return all valid SoundFile objects."""
         return [i[1] for i in self.sortedmodel]
 
@@ -221,13 +222,15 @@ class FileList:
         self.window.progressbarstatus.set_show_text(True)
 
         while self.discoverers.running:
-            progress = self.discoverers.get_progress()[0]
-            if progress:
-                completed = int(progress * len(files))
-                self.window.progressbarstatus.set_fraction(progress)
-                self.window.progressbarstatus.set_text(
-                    f"{completed}/{len(files)}",
-                )
+            progress_data = self.discoverers.get_progress()
+            if progress_data is not None and len(progress_data) > 0:
+                progress = progress_data[0]
+                if progress:
+                    completed = int(progress * len(files))
+                    self.window.progressbarstatus.set_fraction(progress)
+                    self.window.progressbarstatus.set_text(
+                        f"{completed}/{len(files)}",
+                    )
             gtk_iteration()
         logger.info(
             f"Discovered {len(files)} audiofiles in {round(self.discoverers.get_duration(), 1)} s",
@@ -270,6 +273,8 @@ class FileList:
                     broken_audiofiles += 1
 
                 subfolders = sound_file.subfolders
+                if subfolders is None:
+                    subfolders = ""
                 relative_path = os.path.join(subfolders, filename)
 
                 self.invalid_files_list.append(relative_path)

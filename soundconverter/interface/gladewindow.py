@@ -19,22 +19,28 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+from typing import Any, Callable, Dict
+
+from gi.repository import Gtk
+
 
 class GladeWindow:
-    callbacks = {}
-    builder = None
+    callbacks: Dict[str, Callable] = {}
+    builder: Gtk.Builder = None
 
-    def __init__(self, builder):
+    def __init__(self, builder: Gtk.Builder) -> None:
         """Init GladeWindow, store the objects's potential callbacks for later.
 
         You have to call connect_signals() when all descendants are ready.
         """
         GladeWindow.builder = builder
-        GladeWindow.callbacks.update(
-            dict([[x, getattr(self, x)] for x in dir(self) if x.startswith("on_")]),
-        )
+        callbacks_dict: Dict[str, Callable] = {}
+        for x in dir(self):
+            if x.startswith("on_"):
+                callbacks_dict[x] = getattr(self, x)
+        GladeWindow.callbacks.update(callbacks_dict)
 
-    def __getattr__(self, attribute):
+    def __getattr__(self, attribute: str) -> Any:
         """Allow direct use of window widget."""
         widget = GladeWindow.builder.get_object(attribute)
         if widget is None:
@@ -43,6 +49,6 @@ class GladeWindow:
         return widget
 
     @staticmethod
-    def connect_signals():
+    def connect_signals() -> None:
         """Connect all GladeWindow objects to theirs respective signals."""
         GladeWindow.builder.connect_signals(GladeWindow.callbacks)

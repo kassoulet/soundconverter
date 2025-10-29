@@ -20,6 +20,7 @@
 # USA
 
 import os
+from typing import Any, Dict, Optional
 
 from gi.repository import GLib
 
@@ -41,7 +42,7 @@ class SoundFile:
         "info",
     ]
 
-    def __init__(self, uri, base_path=None):
+    def __init__(self, uri: str, base_path: Optional[str] = None) -> None:
         """Create a SoundFile object.
 
         if base_path is set, the uri is cut in three parts,
@@ -60,31 +61,31 @@ class SoundFile:
         if base_path is not None and not is_uri(base_path):
             raise ValueError(f"base_path was not an uri: {base_path}!")
 
-        self.uri = uri
-        self.subfolders = None
+        self.uri: str = uri
+        self.subfolders: Optional[str] = None
 
         if base_path:
             if not uri.startswith(base_path):
                 raise ValueError(
                     f"uri {uri} needs to start with the base_path {base_path}!",
                 )
-            self.base_path = base_path
+            self.base_path: str = base_path
             subfolders, filename = os.path.split(uri[len(base_path) :])
             self.subfolders = unquote_filename(subfolders)
-            self.filename = filename
+            self.filename: str = filename
         else:
             self.base_path, self.filename = os.path.split(self.uri)
             self.base_path += "/"
 
-        self.filelist_row = None
+        self.filelist_row: Optional[Any] = None
 
         # properties of valid audio are yet to be figured out in a Discoverer
-        self.tags = {}
-        self.readable = False
-        self.duration = None
-        self.info = None
+        self.tags: Dict[str, Any] = {}
+        self.readable: bool = False
+        self.duration: Optional[float] = None
+        self.info: Optional[Any] = None
 
     @property
-    def filename_for_display(self):
+    def filename_for_display(self) -> str:
         """Return the filename in a form suitable for displaying it."""
         return GLib.filename_display_name(unquote_filename(self.filename))

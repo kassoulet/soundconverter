@@ -468,15 +468,15 @@ class PreferencesDialog(GladeWindow):
         self.update_example()
 
     def change_mp3_mode(self, mode):
-        keys = {"cbr": 0, "abr": 1, "vbr": 2}
-        self.mp3_mode.set_active(keys[mode])
+        mode_keys = {"cbr": 0, "abr": 1, "vbr": 2}
+        self.mp3_mode.set_active(mode_keys[mode])
 
-        keys = {
+        quality_keys = {
             "cbr": "mp3-cbr-quality",
             "abr": "mp3-abr-quality",
             "vbr": "mp3-vbr-quality",
         }
-        quality = self.settings.get_int(keys[mode])
+        quality = self.settings.get_int(quality_keys[mode])
 
         index = get_quality("audio/mpeg", quality, mode, reverse=True)
         self.mp3_quality.set_active(index)

@@ -21,6 +21,7 @@
 
 from fnmatch import fnmatch
 from threading import Thread
+from typing import Any, Dict, List, Callable, Optional
 
 from gi.repository import GLib, GObject, Gst, GstPbutils
 
@@ -28,6 +29,7 @@ from soundconverter.util.formats import filename_denylist
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_num_jobs
 from soundconverter.util.task import Task
+from soundconverter.soundfile import SoundFile
 
 type_getters = {
     GObject.TYPE_STRING: "get_string",
@@ -125,13 +127,17 @@ class DiscovererThread(Thread):
             # Read root tags
             taglist = info.get_tags()
             if taglist:
-                taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
+                def tag_callback(taglist, tag, *args):
+                    self._add_tag(taglist, tag, sound_file)
+                taglist.foreach(tag_callback)
 
             for audio_stream in info.get_audio_streams():
                 # Read tags for each audio stream
                 taglist = audio_stream.get_tags()
                 if taglist:
-                    taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
+                    def tag_callback(taglist, tag, *args):
+                        self._add_tag(taglist, tag, sound_file)
+                    taglist.foreach(tag_callback)
 
             filename = sound_file.filename_for_display
             logger.debug(f"found tag: {filename}")
@@ -160,13 +166,17 @@ class DiscovererThread(Thread):
 
         if tag_type in type_getters:
             getter = getattr(taglist, type_getters[tag_type])
-            value = str(getter(tag)[1])
-            sound_file.tags[tag] = value
+            result = getter(tag)
+            if result[0]:  # Check if getting the value was successful
+                value = str(result[1])
+                sound_file.tags[tag] = value
 
         if "datetime" in tag:
-            date_time = taglist.get_date_time(tag)[1]
-            sound_file.tags["year"] = date_time.get_year()
-            sound_file.tags["date"] = date_time.to_iso8601_string()[:10]
+            result = taglist.get_date_time(tag)
+            if result[0]:  # Check if getting the date was successful
+                date_time = result[1]
+                sound_file.tags["year"] = date_time.get_year()
+                sound_file.tags["date"] = date_time.to_iso8601_string()[:10]
 
 
 class Discoverer(Task):

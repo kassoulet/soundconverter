@@ -27,7 +27,7 @@ from soundconverter.util.settings import settings
 
 
 class Formatter(logging.Formatter):
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         if record.levelno == logging.INFO and not settings["debug"]:
             # if not launched with --debug, then don't print "INFO:"
             self._style._fmt = "%(msg)s"  # noqa
@@ -53,13 +53,13 @@ class Formatter(logging.Formatter):
         return super().format(record)
 
 
-logger = logging.getLogger()
+logger: logging.Logger = logging.getLogger()
 handler = logging.StreamHandler()
 handler.setFormatter(Formatter())
 logger.addHandler(handler)
 
 
-def update_verbosity():
+def update_verbosity() -> None:
     """Set the logging verbosity according to the settings object."""
     if settings["debug"]:
         logger.setLevel(logging.DEBUG)

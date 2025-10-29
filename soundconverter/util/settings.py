@@ -27,16 +27,17 @@ some of the CLI args are written into that temporarily.
 """
 
 from multiprocessing import cpu_count
+from typing import Any, Dict
 
 from gi.repository import Gio
 
 # Use get_gio_settings instead of importing this directly, because this
 # object changes in tests, and also this object will be replaced with a
 # memory backend for the batch mode.
-_gio_settings = Gio.Settings(schema="org.soundconverter")  # do not import!
+_gio_settings: Gio.Settings = Gio.Settings(schema="org.soundconverter")  # do not import!
 
 
-def get_gio_settings():
+def get_gio_settings() -> Gio.Settings:
     """Return the current Gio.Settings object.
 
     Use this isntead of importing _gio_settings directly.
@@ -45,10 +46,10 @@ def get_gio_settings():
 
 
 # Arguments that can exclusively set over the CLI
-settings = {"main": "gui", "debug": False}
+settings: Dict[str, Any] = {"main": "gui", "debug": False}
 
 
-def set_gio_settings(settings):
+def set_gio_settings(settings: Gio.Settings) -> None:
     """Overwrite the default Gio.Settings object.
 
     For example use a memory backend instead.
@@ -63,7 +64,7 @@ def set_gio_settings(settings):
     _gio_settings = settings
 
 
-def get_num_jobs():
+def get_num_jobs() -> int:
     """Return the number of jobs that should be run in parallel."""
     return (
         _gio_settings.get_int("number-of-jobs")

@@ -20,13 +20,14 @@
 # USA
 
 
+from typing import Dict, Tuple, Union, Optional, Any, List
 from soundconverter.util.logger import logger
 from soundconverter.util.settings import get_gio_settings
 
 filename_denylist = ("*.iso",)
 
 
-def get_mime_type_mapping():
+def get_mime_type_mapping() -> Dict[str, str]:
     """Return a mapping of file extension to mime type."""
     return {
         "ogg": "audio/x-vorbis",
@@ -40,7 +41,7 @@ def get_mime_type_mapping():
     }
 
 
-def get_mime_type(audio_format):
+def get_mime_type(audio_format: str) -> Optional[str]:
     """Return the matching mime-type or None if it is not supported.
 
     Parameters
@@ -57,7 +58,7 @@ def get_mime_type(audio_format):
     return audio_format
 
 
-def get_file_extension(mime):
+def get_file_extension(mime: str) -> str:
     """Return the matching file extension or '?' if it is not supported.
 
     Examples: 'mp3', 'flac'.
@@ -72,7 +73,7 @@ def get_file_extension(mime):
         # already an extension
         suffix = mime
     else:
-        mime2ext = {mime: ext for ext, mime in mime_types.items()}
+        mime2ext = {mime_value: ext for ext, mime_value in mime_types.items()}
         suffix = mime2ext.get(mime, "?")
     if suffix == "ogg":
         if get_gio_settings().get_boolean("vorbis-oga-extension"):
@@ -80,7 +81,7 @@ def get_file_extension(mime):
     return suffix
 
 
-def get_quality_setting_name():
+def get_quality_setting_name() -> str:
     """Get the settings name for quality for the set output-mime-type."""
     settings = get_gio_settings()
     mime_type = settings.get_string("output-mime-type")
@@ -103,7 +104,7 @@ def get_quality_setting_name():
     return setting_name
 
 
-def get_bitrate_from_settings():
+def get_bitrate_from_settings() -> str:
     """Get a human readable bitrate from quality settings.
 
     For example '~224 kbps'
@@ -112,7 +113,7 @@ def get_bitrate_from_settings():
     mime_type = settings.get_string("output-mime-type")
     mode = settings.get_string("mp3-mode")
 
-    bitrate = 0
+    bitrate: float = 0
     approx = True
 
     if mime_type == "audio/x-vorbis":
@@ -166,7 +167,7 @@ def get_bitrate_from_settings():
     return "N/A"
 
 
-def get_default_quality(mime, mode="vbr"):
+def get_default_quality(mime: str, mode: str = "vbr") -> Union[int, float, Dict[str, int]]:
     """Return a default quality if the -q parameter is not set.
 
     Parameters
@@ -177,7 +178,7 @@ def get_default_quality(mime, mode="vbr"):
         one of 'cbr', 'abr' and 'vbr' for mp3
     """
     # get 6-tuple of qualities
-    default = {
+    default_map: Dict[str, Union[int, float, Dict[str, int]]] = {
         "audio/x-vorbis": 1.0,
         "audio/x-m4a": 400,
         "audio/ogg; codecs=opus": 192,
@@ -189,15 +190,17 @@ def get_default_quality(mime, mode="vbr"):
         "audio/x-wav": 16,
         "audio/x-flac": 5,
         "audio/x-ms-wma": 192,
-    }[mime]
+    }
+    
+    default = default_map[mime]
 
     if isinstance(default, dict):
-        default = default[mode]
+        default = default[mode]  # type: ignore
 
     return default
 
 
-def get_quality(mime, value, mode="vbr", reverse=False):
+def get_quality(mime: str, value: Union[int, float], mode: str = "vbr", reverse: bool = False) -> Optional[Union[int, float]]:
     """Map an integer between 0 and 5 to a proper quality/compression value.
 
     Parameters
@@ -216,7 +219,7 @@ def get_quality(mime, value, mode="vbr", reverse=False):
     """
 
     # get 6-tuple of qualities
-    qualities = {
+    qualities_map: Dict[str, Union[Tuple[Union[int, float], ...], Dict[str, Tuple[Union[int, float], ...]]]] = {
         "audio/x-vorbis": (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
         "audio/x-m4a": (64, 96, 128, 192, 256, 320),
         "audio/ogg; codecs=opus": (48, 64, 96, 128, 160, 192),
@@ -228,7 +231,9 @@ def get_quality(mime, value, mode="vbr", reverse=False):
         "audio/x-wav": (8, 16, 32),
         "audio/x-flac": (0, 5, 8),
         "audio/x-ms-wma": (64, 96, 128, 192, 256, 320),
-    }[mime]
+    }
+    
+    qualities = qualities_map[mime]
 
     if isinstance(qualities, dict):
         qualities = qualities[mode]
@@ -260,4 +265,4 @@ def get_quality(mime, value, mode="vbr", reverse=False):
         raise ValueError(
             f"quality index {value} has to be < {len(qualities)}",
         )
-    return qualities[value]
+    return qualities[value]  # type: ignore

@@ -5,6 +5,7 @@
 import sys
 from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
+from typing import Optional, List, Any
 from unittest.mock import patch
 import os
 
@@ -26,7 +27,7 @@ def reset_settings():
     assert ("recursive" not in settings) or (not settings["recursive"])
 
 
-def launch(argv=None, bin_path="soundconverter"):
+def launch(argv: Optional[List[str]] = None, bin_path: str = "soundconverter") -> None:
     """Start the soundconverter with the command line argument array argv.
 
     The batch mode is synchronous since it iterates the loop itself until
@@ -36,7 +37,7 @@ def launch(argv=None, bin_path="soundconverter"):
     # can be omitted to speed them up.
     settings["gtk_close_sleep"] = 0
 
-    if not argv:
+    if argv is None:
         argv = []
 
     # Use the build directory specified in the environment or default to 'builddir'
@@ -44,4 +45,6 @@ def launch(argv=None, bin_path="soundconverter"):
     with patch.object(sys, "argv", [""] + [str(arg) for arg in argv]):
         loader = SourceFileLoader("launcher", os.path.join(build_dir, bin_path))
         spec = spec_from_loader("launcher", loader)
-        spec.loader.exec_module(module_from_spec(spec))
+        if spec is not None and spec.loader is not None:
+            module = module_from_spec(spec)
+            spec.loader.exec_module(module)

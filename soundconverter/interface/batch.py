@@ -25,7 +25,7 @@ import os
 
 from gi.repository import Gio, GLib
 
-from soundconverter.gstreamer.converter import Converter
+from soundconverter.gstreamer.converter import Converter, ExistingFileBehavior
 from soundconverter.gstreamer.discoverer import add_discoverers, get_sound_files
 from soundconverter.interface.preferences import rates
 from soundconverter.util.fileoperations import beautify_uri, filename_to_uri
@@ -42,7 +42,8 @@ from soundconverter.util.settings import set_gio_settings, settings
 from soundconverter.util.soundfile import SoundFile
 from soundconverter.util.taskqueue import TaskQueue
 
-cli_convert = [None]
+from typing import List, Optional
+cli_convert: List[Optional[CLIConvert]] = [None]
 
 
 def batch_main(files):
@@ -108,6 +109,7 @@ def use_memory_gsettings(options):
 
         quality_setting = options.get("quality")
         if quality_setting is None:
+            assert mime_type is not None  # Based on earlier validation
             quality_setting = get_default_quality(mime_type)
 
         setting_name = get_quality_setting_name()
@@ -152,9 +154,9 @@ def validate_args(options):
         existing_behaviour = options.get("existing")
         if existing_behaviour:
             existing_behaviours = [
-                Converter.SKIP,
-                Converter.OVERWRITE,
-                Converter.INCREMENT,
+                ExistingFileBehavior.SKIP.value,
+                ExistingFileBehavior.OVERWRITE.value,
+                ExistingFileBehavior.INCREMENT.value,
             ]
             if existing_behaviour not in existing_behaviours:
                 logger.error(
@@ -356,7 +358,17 @@ class CLIConvert:
 
             converter = Converter(sound_file, name_generator)
 
-            converter.existing_behaviour = settings.get("existing")
+            # Convert the string value from settings to the enum type
+            existing_str = settings.get("existing")
+            if existing_str == ExistingFileBehavior.SKIP.value:
+                converter.existing_behaviour = ExistingFileBehavior.SKIP
+            elif existing_str == ExistingFileBehavior.OVERWRITE.value:
+                converter.existing_behaviour = ExistingFileBehavior.OVERWRITE
+            elif existing_str == ExistingFileBehavior.INCREMENT.value:
+                converter.existing_behaviour = ExistingFileBehavior.INCREMENT
+            else:
+                # default to increment if not recognized
+                converter.existing_behaviour = ExistingFileBehavior.INCREMENT
 
             conversions.add(converter)
 

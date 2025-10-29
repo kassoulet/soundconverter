@@ -20,17 +20,19 @@
 # USA
 
 
+from typing import Tuple
+
 from gi.repository import GObject
 
 
 class Task(GObject.Object):
     """Abstract class of a single task."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     # avoid storing a variable called timer in your inheriting class
-    def get_progress(self):
+    def get_progress(self) -> Tuple[float, float]:
         """Fraction of how much of the task is completed.
 
         Returns a tuple of (progress, weight), because some tasks may
@@ -40,23 +42,23 @@ class Task(GObject.Object):
         """
         raise NotImplementedError()
 
-    def cancel(self):
+    def cancel(self) -> None:
         """Cancel the execution of the task."""
         raise NotImplementedError()
 
-    def pause(self):
+    def pause(self) -> None:
         """Pause the execution of the task."""
         raise NotImplementedError()
 
-    def resume(self):
+    def resume(self) -> None:
         """Resume the execution of the task after pausing."""
         raise NotImplementedError()
 
-    def run(self):
+    def run(self) -> None:
         """Run the task."""
         raise NotImplementedError()
 
-    def done(self):
+    def done(self) -> None:
         """Emit a "done" event."""
         self.emit("done")
 

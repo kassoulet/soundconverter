@@ -31,9 +31,9 @@ from optparse import OptionGroup, OptionParser
 _ = gettext.gettext
 
 # read values from package metadata
-NAME = "soundconverter"
-VERSION = "@VERSION@"
-GLADEFILE = "@GLADEFILE_PATH@"
+NAME: str = "soundconverter"
+VERSION: str = "@VERSION@"
+GLADEFILE: str = "@GLADEFILE_PATH@"
 
 
 if GLADEFILE.startswith("/app"):
@@ -80,7 +80,7 @@ from soundconverter.util.logger import logger, update_verbosity
 from soundconverter.util.settings import settings
 
 
-def mode_callback(option, opt, value, parser, **kwargs):
+def mode_callback(option, opt, value, parser, **kwargs) -> None:
     """Write the main mode (batch, gui, tags) into the options."""
     setattr(parser.values, option.dest, kwargs[option.dest])
 
@@ -100,7 +100,7 @@ class ModifiedOptionParser(OptionParser):
         return self.epilog
 
 
-def parse_command_line():
+def parse_command_line() -> ModifiedOptionParser:
     """Create and return the OptionParser.
 
     Parses the command line arguments and displays help with --help.
@@ -282,7 +282,7 @@ update_verbosity()
 logger.info(f"{NAME} {VERSION}")
 
 if settings["main"] == "gui":
-    gui_main(NAME, VERSION, GLADEFILE, files)
+    gui_main(NAME, VERSION, GLADEFILE, files)  # type: ignore
 else:
     if not files:
         logger.info("nothing to do…")
@@ -295,6 +295,6 @@ else:
     use_memory_gsettings(options)
 
     if settings["main"] == "tags":
-        CLICheck(files, verbose=True)
+        CLICheck(files, verbose=True)  # type: ignore
     elif settings["main"] == "batch":
-        batch_main(files)
+        batch_main(files)  # type: ignore

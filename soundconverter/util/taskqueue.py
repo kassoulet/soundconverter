@@ -21,31 +21,33 @@
 
 import time
 from queue import Queue
+from typing import Any, Callable, List, Optional, Tuple
 
 from gi.repository import GLib, GObject
 
 from soundconverter.interface.mainloop import gtk_iteration
 from soundconverter.util.settings import get_num_jobs
+from soundconverter.util.task import Task
 
 
 class TaskQueue(GObject.Object):
     """Executes multiple tasks in parallel."""
 
-    def __init__(self):
-        self._on_queue_finished = None
+    def __init__(self) -> None:
+        self._on_queue_finished: Optional[Callable] = None
 
         # state
-        self.all_tasks = []
-        self.pending = Queue()
-        self.running = []
-        self.done = []
-        self.finished = False
-        self.paused = False
-        self._timer = Timer()
+        self.all_tasks: List[Task] = []
+        self.pending: Queue[Task] = Queue()
+        self.running: List[Task] = []
+        self.done: List[Task] = []
+        self.finished: bool = False
+        self.paused: bool = False
+        self._timer: Timer = Timer()
 
         super().__init__()
 
-    def add(self, task):
+    def add(self, task: Task) -> None:
         """Add a task to the queue that will be executed later.
 
         Parameters
@@ -57,7 +59,7 @@ class TaskQueue(GObject.Object):
         self.all_tasks.append(task)
         self.pending.put(task)
 
-    def get_progress(self, only_running=False):
+    def get_progress(self, only_running: bool = False) -> Optional[Tuple[float, List[Tuple[Any, float]]]]:
         """Get the fraction of tasks that have been completed.
 
         returns a tuple of (total progress, task progress)
@@ -67,11 +69,11 @@ class TaskQueue(GObject.Object):
         # provide a weight attribute.
         if len(self.all_tasks) == 0:
             return None
-        total_weight = 0
-        total_progress = 0
+        total_weight = 0.0
+        total_progress = 0.0
         tasks = self.running if only_running else self.all_tasks
 
-        task_progress = []
+        task_progress: List[Tuple[Any, float]] = []
 
         for task in tasks:
             progress, weight = task.get_progress()
@@ -81,7 +83,7 @@ class TaskQueue(GObject.Object):
 
         return total_progress / total_weight, task_progress
 
-    def pause(self):
+    def pause(self) -> None:
         """Pause all tasks."""
         self._timer.pause()
         self.paused = True
@@ -89,7 +91,7 @@ class TaskQueue(GObject.Object):
             task.timer.pause()
             task.pause()
 
-    def resume(self):
+    def resume(self) -> None:
         """Resume all tasks after the queue has been paused."""
         self._timer.resume()
         for task in self.running:
@@ -97,7 +99,7 @@ class TaskQueue(GObject.Object):
             task.resume()
         self.paused = False
 
-    def cancel(self):
+    def cancel(self) -> None:
         """Stop all tasks."""
         self.finished = True
         for task in self.running:
@@ -110,7 +112,7 @@ class TaskQueue(GObject.Object):
         self._timer.reset()
         self.running = []
 
-    def task_done(self, task):
+    def task_done(self, task: Task) -> None:
         """One task is done, start another one.
 
         This callback has to be called by the task, when the task is done.
@@ -141,7 +143,7 @@ class TaskQueue(GObject.Object):
             self._timer.stop()
             self.emit("done")
 
-    def start_next(self, _=None):
+    def start_next(self, _=None) -> None:
         """Start the next task if available."""
         if self.pending.qsize() > 0:
             task = self.pending.get()
@@ -162,7 +164,7 @@ class TaskQueue(GObject.Object):
             GLib.idle_add(task.run)
             task.timer.start()
 
-    def run(self):
+    def run(self) -> None:
         """Run all tasks."""
         self.finished = False
         self._timer.start()
@@ -175,24 +177,24 @@ class TaskQueue(GObject.Object):
 
         gtk_iteration()
 
-    def get_duration(self):
+    def get_duration(self) -> float:
         """Get for how many seconds the queue has been actively running.
 
         The time spent while being paused is not included.
         """
         return self._timer.get_duration()
 
-    def get_remaining(self):
+    def get_remaining(self) -> Optional[float]:
         """Calculate how many seconds are left until the queue is done."""
         if len(self.running) == 0:
             # cannot be estimated yet
             return None
 
-        total_duration = 0
-        total_remaining_weight = 0
-        total_processed_weight = 0
+        total_duration = 0.0
+        total_remaining_weight = 0.0
+        total_processed_weight = 0.0
 
-        max_remaining_weight = -1
+        max_remaining_weight = -1.0
         for task in self.all_tasks:
             # duration is the time the timer has been running, not the
             # audio duration.
@@ -244,43 +246,51 @@ class Timer:
 
     # separate class because I would like to not pollute the TaskQueue
     # with a bunch of timing variables
-    def __init__(self):
+    def __init__(self) -> None:
         self.reset()
 
-    def reset(self):
-        self.run_start_time = None
-        self.pause_duration = 0
-        self.pause_time = None
-        self.finished_time = None
+    def reset(self) -> None:
+        self.run_start_time: Optional[float] = None
+        self.pause_duration: float = 0.0
+        self.pause_time: Optional[float] = None
+        self.finished_time: Optional[float] = None
 
-    def stop(self):
+    def stop(self) -> None:
         self.finished_time = time.time()
 
-    def start(self):
+    def start(self) -> None:
         self.run_start_time = time.time()
 
-    def pause(self):
+    def pause(self) -> None:
         self.pause_time = time.time()
 
-    def resume(self):
-        self.pause_duration += time.time() - self.pause_time
+    def resume(self) -> None:
+        if self.pause_time is not None:
+            self.pause_duration += time.time() - self.pause_time
         self.pause_time = None
 
-    def get_duration(self):
+    def get_duration(self) -> float:
         """Get for how many seconds the queue has been actively running.
 
         The time spent while being paused is not included.
         """
         if self.run_start_time is None:
-            return 0
+            return 0.0
+        # At this point we know self.run_start_time is not None
         if self.pause_time is not None:
-            # still being paused
-            pause_duration = time.time() - self.pause_time
+            # Calculate active pause duration (when currently paused)
+            active_pause = time.time() - self.pause_time
+            pause_duration = self.pause_duration + active_pause
         else:
+            # Not currently paused
             pause_duration = self.pause_duration
+
+        # Determine finished time vs current time
         if self.finished_time is None:
             # still running
-            finished_time = time.time()
+            duration = time.time() - self.run_start_time - pause_duration
         else:
-            finished_time = self.finished_time
-        return finished_time - self.run_start_time - pause_duration
+            # finished
+            duration = self.finished_time - self.run_start_time - pause_duration
+
+        return duration

@@ -21,11 +21,13 @@
 
 """Functions for formatting strings."""
 
+from typing import List
 
-def format_time(seconds):
+
+def format_time(seconds: float) -> str:
     units = [(86400, "d"), (3600, "h"), (60, "m"), (1, "s")]
     seconds = round(seconds)
-    result = []
+    result: List[str] = []
     for factor, unity in units:
         count = int(seconds / factor)
         seconds -= count * factor
