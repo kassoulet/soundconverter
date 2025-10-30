@@ -1,5 +1,6 @@
-name: Fedora Tests
+name: Ubuntu Tests
 
+# Define when this workflow should run
 on:
   push:
     branches: [ '**' ]  # All branches
@@ -8,14 +9,18 @@ on:
   workflow_dispatch: # Allows you to manually trigger the workflow from the GitHub UI
   schedule:
     - cron: '0 0 1 * *' # Monthly
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Build the Docker image
-      run: docker build . --file Containerfile.fedora --tag soundconverter-tests-fedora
+      run: docker build . --file Containerfile.ubuntu --tag soundconverter-tests-ubuntu
 
     - name: Run tests
-      run: docker run --rm soundconverter-tests-fedora
+      run: docker run --rm soundconverter-tests-ubuntu

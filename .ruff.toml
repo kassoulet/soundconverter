@@ -1,5 +1,5 @@
 
-include = ["soundconverter/", "bin/soundconverter"]
+include = ["soundconverter/", "bin/soundconverter.in"]
 
 line-length = 88
 
@@ -20,7 +20,7 @@ lint.extend-select = [
     "RET",      # Good return practices
     # "SIM",      # Common simplification rules
     "TID",      # Some good import practices
-    "TC",       # Enforce importing certain types in a TYPE_CHECKING block
+
     # "PTH",      # Use pathlib instead of os.path
     # "TD",       # Be diligent with TODO comments
     "NPY",      # Some numpy-specific things
@@ -34,10 +34,10 @@ lint.extend-select = [
     #"FBT",      # detect boolean traps
     "N",        # enforce naming conventions, e.g. ClassName vs function_name
 ]
-lint.ignore = ["E501", "N806"]
+lint.ignore = ["E501", "N806", "ISC001"]
 
 [lint.per-file-ignores]
 # Ignore `E402` (import violations) for bin/soundconverter`.
 # As we are loading and initializing modules dynamically, 
 # we cannot have application import statements at the top level.
-"bin/soundconverter" = ["E402"]
+"bin/soundconverter.in" = ["E402"]

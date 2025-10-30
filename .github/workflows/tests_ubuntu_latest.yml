@@ -1,4 +1,4 @@
-name: Fedora Tests
+name: Ubuntu Latest Tests
 
 on:
   push:
@@ -12,10 +12,15 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Build the Docker image
-      run: docker build . --file Containerfile.fedora --tag soundconverter-tests-fedora
+      run: docker build . --file Containerfile.ubuntu.latest --tag soundconverter-tests-ubuntu-latest
 
     - name: Run tests
-      run: docker run --rm soundconverter-tests-fedora
+      run: docker run --rm soundconverter-tests-ubuntu-latest

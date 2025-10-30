@@ -22,4 +22,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(find soundconverter/ -name '*.py') bin/soundconverter
+        pylint $(find soundconverter/ -name '*.py') bin/soundconverter.in

@@ -1,8 +1,8 @@
-# Run Test in Docker
+# Run Test in Docker on Ubuntu
 #
 # This is not straightforward as we launch a graphical application
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 # Set environment variables to prevent interactive prompts during apt-get
 ENV DEBIAN_FRONTEND=noninteractive
@@ -12,6 +12,8 @@ ENV PYTHONUNBUFFERED=1
 # Install packages
 RUN apt-get update \
     && apt-get install -y \
+    meson \
+    ninja-build \
     python3-pip \
     python3-dev \
     python3-distutils-extra \
@@ -29,15 +31,11 @@ RUN apt-get update \
     gstreamer1.0-plugins-ugly \
     gstreamer1.0-fdkaac \
     gstreamer1.0-libav \
-    # xorg \
-    # x11vnc \
-    # gnome \
-    # gnome-terminal \
-    # x11-apps \
     xvfb \
     dbus-x11 \
     x11-utils \
     procps \
+    desktop-file-utils \
     libgtk-3-0 \
     libglib2.0-0
 
@@ -46,14 +44,15 @@ WORKDIR /app
 
 COPY . /app
 
-# Install Python dependencies
-RUN python3 setup.py install --prefix=/usr
+# Install the application with proper permissions
+RUN mkdir -p /usr/local/share/locale \
+    && chmod 777 /usr/local/share/locale \
+    && meson setup builddir --prefix=/usr --wipe \
+    && meson install -C builddir
 
-# RUN pip install setuptools wheel \
-#     && pip install . 
-
-# Copy the script to run tests with Xvfb and make it executable
+# Copy the corrected script to run tests with Xvfb and make it executable
 COPY tests/run_tests_docker.sh /usr/local/bin/run_tests_docker.sh
+
 RUN chmod +x /usr/local/bin/run_tests_docker.sh
 
 CMD ["run_tests_docker.sh"]
