@@ -280,7 +280,7 @@ def parse_command_line():
 
 parser = parse_command_line()
 
-options, files = parser.parse_args(args[1:])
+options, files = parser.parse_args(args[1:] if args else [])
 options = vars(options)
 # the only cli args that are not available over gio settings.
 settings["main"] = options["main"] or "gui"
