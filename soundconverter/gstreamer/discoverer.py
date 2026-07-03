@@ -119,6 +119,11 @@ class DiscovererThread(Thread):
             discoverer = GstPbutils.Discoverer()
             info = discoverer.discover_uri(sound_file.uri)
 
+            audio_streams = info.get_audio_streams()
+            if not audio_streams:
+                # no audio streams available, not an audio file
+                return
+
             # whatever anybody might ever need from it, here it is:
             sound_file.info = info
 
@@ -127,7 +132,7 @@ class DiscovererThread(Thread):
             if taglist:
                 taglist.foreach(lambda *args: self._add_tag(*args, sound_file))
 
-            for audio_stream in info.get_audio_streams():
+            for audio_stream in audio_streams:
                 # Read tags for each audio stream
                 taglist = audio_stream.get_tags()
                 if taglist:
