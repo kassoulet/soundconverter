@@ -3,21 +3,22 @@
 # This file is distributed under the same license as the soundconverter package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Mehmet  Altan Pire <baybesteci@gmail.com>, 2011.
+# Sabri Ünal <libreajans@gmail.com>,
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-02 18:42+0100\n"
-"PO-Revision-Date: 2024-01-16 00:15+0000\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"PO-Revision-Date: 2026-07-04 13:14+0300\n"
+"Last-Translator: Ümit Solmaz <usuyum@yandex.com>\n"
 "Language-Team: Turkish <Free (Not in Team)>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2024-04-08 15:24+0000\n"
-"X-Generator: Launchpad (build aec24aef7a9042c99ef3e238d8b0ca01df9e1a9f)\n"
-"Language: tr\n"
+"X-Generator: Poedit 3.9\n"
 
 #: ../data/soundconverter.desktop.in.in.h:1
 msgid "Sound Converter"
@@ -41,11 +42,11 @@ msgstr "İnternet Sitesi"
 
 #: ../data/soundconverter.glade.h:3
 msgid "dialog1"
-msgstr "iletişim1"
+msgstr "iletişim kutusu"
 
 #: ../data/soundconverter.glade.h:4
 msgid "Filter "
-msgstr "Filtre "
+msgstr "Süzgeç "
 
 #. TODO: is this used ?
 #. TODO: add proper error management when an encoder cannot be created
@@ -71,7 +72,7 @@ msgstr "<big><b>Dosya zaten var</b></big>\n"
 
 #: ../data/soundconverter.glade.h:11
 msgid "_Apply to entire queue"
-msgstr "Tüm kuyruğa uygul_a"
+msgstr "_Tüm kuyruğa uygula"
 
 #: ../data/soundconverter.glade.h:12 ../soundconverter/ui.py:388
 msgid "artist/album"
@@ -171,11 +172,11 @@ msgstr "GNOME Ses Profili"
 
 #: ../data/soundconverter.glade.h:36
 msgid "track_number - track_title"
-msgstr "track_number - track_title"
+msgstr "parça_numarası - parça_başlığı"
 
 #: ../data/soundconverter.glade.h:37
 msgid "track_title"
-msgstr "track_title"
+msgstr "parça_başlığı"
 
 #: ../data/soundconverter.glade.h:38
 msgid "Preferences"
@@ -191,7 +192,7 @@ msgstr "Seçiniz..."
 
 #: ../data/soundconverter.glade.h:41
 msgid "Into a specified folder"
-msgstr "Belirtilmiş bir dosyaya"
+msgstr "Belirtilmiş bir klasöre"
 
 #: ../data/soundconverter.glade.h:42
 msgid "Create subfolders: "
@@ -243,7 +244,7 @@ msgstr "Ogg"
 
 #: ../data/soundconverter.glade.h:54
 msgid "Bitrate mode:"
-msgstr "Bir oran kipi:"
+msgstr "Bit hızı modu:"
 
 #: ../data/soundconverter.glade.h:55
 msgid "MP3"
@@ -299,7 +300,7 @@ msgstr "Paralel iş sayısını sınırla"
 
 #: ../data/soundconverter.glade.h:68
 msgid "MP3 Encoder is not present."
-msgstr "MP3 şifreleyici belirtilmedi"
+msgstr "MP3 kodlayıcı mevcut değil."
 
 #: ../data/soundconverter.glade.h:69
 msgid "Read how to install"
@@ -347,6 +348,9 @@ msgid ""
 "Show tags for input files instead of converting them. This indicates \n"
 " command line batch mode and disables the graphical user interface."
 msgstr ""
+"Girdi dosyalarını dönüştürmek yerine etiketlerini göster. Bu, komut satırı "
+"toplu işlem modunu belirtir ve grafiksel kullanıcı arayüzünü devre dışı "
+"bırakır."
 
 #: ../bin/soundconverter.py:116
 #, python-format
@@ -354,6 +358,8 @@ msgid ""
 "Set the output MIME type for batch mode. The default is %s. Note that you "
 "probably want to set the output suffix as well."
 msgstr ""
+"Toplu işlem modu için çıktı MIME türünü ayarlayın. Varsayılan %s'tir. "
+"Muhtemelen çıktı son ekini de ayarlamak isteyeceğinizi unutmayın."
 
 #: ../bin/soundconverter.py:120
 msgid "Be quiet. Don't write normal output, only errors."
@@ -370,6 +376,8 @@ msgid ""
 "the suffix does not affect\n"
 " the output MIME type."
 msgstr ""
+"Toplu işlem modu için çıktı dosya adı son ekini ayarlayın. Varsayılan %s'tir. "
+"Son ekin, çıktı MIME türünü etkilemediğini unutmayın."
 
 #: ../bin/soundconverter.py:128
 msgid "Force number of concurrent conversions."
@@ -419,7 +427,7 @@ msgstr "GStreamer Hatası:"
 #: ../soundconverter/gstreamer.py:814
 #, python-format
 msgid "Conversion done in %s"
-msgstr "Dönüştürme %s içinde tamamlandı."
+msgstr "Dönüştürme %s içinde tamamlandı"
 
 #: ../soundconverter/namegenerator.py:76
 msgid "Unknown Album"
@@ -432,9 +440,11 @@ msgstr "Bilinmeyen Sanatçı"
 #. traductors: These are the custom filename patterns. Only if it makes sense.
 #: ../soundconverter/settings.py:47
 msgid ""
-"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber "
-"DiscTotal Ext"
+"Artist Album Title Track Total Genre Date Year Timestamp DiscNumber DiscTotal "
+"Ext"
 msgstr ""
+"Sanatçı Albüm Başlık Parça Toplam Tür Tarih Yıl ZamanDamgası DiskNumarası "
+"DiskToplamı Uzantı"
 
 #: ../soundconverter/settings.py:84
 msgid "All files"
@@ -511,7 +521,7 @@ msgstr "Dönüşüm hazırlanıyor..."
 
 #: ../soundconverter/ui.py:1358
 msgid "Converting"
-msgstr "Çevriliyor"
+msgstr "Dönüştürülüyor"
 
 #: ../soundconverter/ui.py:1376
 msgid "Canceled"
