@@ -24,7 +24,7 @@ import urllib.parse
 import urllib.request
 from gettext import gettext as _
 
-from gi.repository import GLib, Gtk
+from gi.repository import GLib, Gtk, Gdk
 
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.interface.gladewindow import GladeWindow
@@ -73,6 +73,15 @@ class PreferencesDialog(GladeWindow):
 
         self.dialog = builder.get_object("prefsdialog")
         self.dialog.set_transient_for(parent)
+
+        display = Gdk.Display.get_default()
+        monitor = display.get_primary_monitor()
+        self._monitor_height = None
+        if monitor is None:
+            monitor = display.get_monitor(0)
+        if monitor is not None:
+            self._monitor_height = monitor.get_workarea().height
+            self._map_handler_id = self.dialog.connect('map', self._on_prefs_map)
         self.example = builder.get_object("example_filename")
         self.force_mono = builder.get_object("force_mono")
 
@@ -323,6 +332,26 @@ class PreferencesDialog(GladeWindow):
 
         self.sensitive_widgets["resample_hbox"].set_sensitive(True)
         self.sensitive_widgets["force_mono"].set_sensitive(True)
+
+    def _on_prefs_map(self, dialog):
+        content = self.builder.get_object("vbox12")
+        natural = content.get_preferred_height()[1]
+        sw = content.get_parent().get_parent()
+        chrome = dialog.get_allocation().height - sw.get_allocation().height
+        needed = natural + chrome + 24
+        if self._monitor_height is not None:
+            height = min(needed, int(self._monitor_height * 0.9))
+        else:
+            height = needed
+        dialog.resize(600, height)
+        geometry = Gdk.Geometry()
+        geometry.max_height = height
+        geometry.min_height = 300
+        dialog.set_geometry_hints(
+            None, geometry,
+            Gdk.WindowHints.MAX_SIZE | Gdk.WindowHints.MIN_SIZE
+        )
+        dialog.disconnect(self._map_handler_id)
 
     def run(self):
         self.dialog.run()
