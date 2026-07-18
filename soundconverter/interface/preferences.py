@@ -344,13 +344,6 @@ class PreferencesDialog(GladeWindow):
         else:
             height = needed
         dialog.resize(600, height)
-        geometry = Gdk.Geometry()
-        geometry.max_height = height
-        geometry.min_height = 300
-        dialog.set_geometry_hints(
-            None, geometry,
-            Gdk.WindowHints.MAX_SIZE | Gdk.WindowHints.MIN_SIZE
-        )
         dialog.disconnect(self._map_handler_id)
 
     def run(self):
