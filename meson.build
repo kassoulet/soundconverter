@@ -63,10 +63,14 @@ endif
 # Icons
 install_data(
   'data/soundconverter.png',
-  install_dir: join_paths(get_option('datadir'), 'pixmaps'),
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', '48x48', 'apps'),
 )
 install_data(
   'data/soundconverter.svg',
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps'),
+)
+install_data(
+  'data/soundconverter-logo.svg',
   install_dir: join_paths(get_option('datadir'), 'soundconverter'),
 )
 
