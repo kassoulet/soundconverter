@@ -106,7 +106,7 @@ class DiscovererThread(Thread):
 
     def _analyse_file(self, sound_file):
         """Figure out readable, tags and duration properties."""
-        sound_file.readable = False
+        sound_file.readable = True
 
         denylisted_pattern = is_denylisted(sound_file)
         if denylisted_pattern:
@@ -118,6 +118,10 @@ class DiscovererThread(Thread):
         try:
             discoverer = GstPbutils.Discoverer()
             info = discoverer.discover_uri(sound_file.uri)
+            if info is None:
+                logger.info(f"Non-readable file: '{sound_file.filename_for_display}'")
+                # Non-supported file
+                return
 
             audio_streams = info.get_audio_streams()
             if not audio_streams:
@@ -155,8 +159,10 @@ class DiscovererThread(Thread):
 
             sound_file.readable = True
         except Exception as error:
-            if not isinstance(error, GLib.Error):
-                logger.error(str(error))
+            # print("##### ", error)
+            logger.error(str(error))
+            # if not isinstance(error, GLib.Error):
+            #     logger.error(str(error))
 
     def _add_tag(self, taglist, tag, sound_file):
         """Convert the taglist to a dict one by one."""
