@@ -31,6 +31,9 @@ try:
 except ImportError as e:
     print(f"Missing Python module: {e}")
     sys.exit(1)
+except ValueError as e:
+    print(f"Error importing required modules: {e}")
+    sys.exit(1)
 '''
 
 python_check_result = run_command(py_inst, '-c', dep_check_script, check: false)
