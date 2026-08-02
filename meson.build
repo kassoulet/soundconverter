@@ -130,8 +130,8 @@ install_data(
 )
 
 soundconverter_bin_configured = configure_file(
-  input: 'bin/soundconverter.in',
-  output: 'soundconverter',
+  input: 'bin/soundconverter.py.in',
+  output: 'soundconverter.py',
   configuration: {
     'GLADEFILE_PATH': join_paths(
       get_option('prefix'),
@@ -146,7 +146,7 @@ soundconverter_bin_configured = configure_file(
 install_data(
   soundconverter_bin_configured,
   install_dir: get_option('bindir'),
-  rename: 'soundconverter',
+  rename: ['soundconverter'],
   install_mode: 'r-xr-xr-x',
 )
 
