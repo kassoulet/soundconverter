@@ -319,7 +319,7 @@ class SoundConverterWindow(GladeWindow):
             if remaining is not None:
                 seconds = max(remaining % 60, 1)
                 minutes = remaining / 60
-                remaining = _("%d:%02d left") % (minutes, seconds)
+                remaining = _(f"{minutes}:{seconds:02d} left")
                 self.progressbar.set_text(remaining)
                 self.progressbar.set_show_text(True)
                 title = "{} - {}".format(_("SoundConverter"), remaining)
