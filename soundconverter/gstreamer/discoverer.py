@@ -106,7 +106,7 @@ class DiscovererThread(Thread):
 
     def _analyse_file(self, sound_file):
         """Figure out readable, tags and duration properties."""
-        sound_file.readable = True
+        sound_file.readable = False
 
         denylisted_pattern = is_denylisted(sound_file)
         if denylisted_pattern:
