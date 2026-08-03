@@ -34,6 +34,7 @@ _ = gettext.gettext
 NAME = "soundconverter"
 VERSION = "@VERSION@"
 GLADEFILE = "@GLADEFILE_PATH@"
+LOCALEDIR = "@LOCALEDIR@"
 
 
 if GLADEFILE.startswith("/app"):
@@ -42,10 +43,19 @@ if GLADEFILE.startswith("/app"):
     # /usr/share/locale, whereas flatpaks install their locales to
     # /app/share/locale.
     # For reference, see https://docs.python.org/3/library/gettext.html#id3
+    LOCALEDIR = "/app/share/locale"
+
+try:
     locale.setlocale(locale.LC_ALL, "")
-    locale.bindtextdomain(NAME, "/app/share/locale")
-    gettext.bindtextdomain(NAME, "/app/share/locale")
-    gettext.textdomain(NAME)
+except locale.Error:
+    # fall back to a sane default if the system locale is unavailable
+    locale.setlocale(locale.LC_ALL, "C")
+
+# bind the gettext textdomain so that both the Python _() strings and the
+# GtkBuilder strings in the glade file are translated.
+locale.bindtextdomain(NAME, LOCALEDIR)
+gettext.bindtextdomain(NAME, LOCALEDIR)
+gettext.textdomain(NAME)
 
 try:
     import gi

@@ -1,5 +1,5 @@
 
-include = ["soundconverter/", "bin/soundconverter.in"]
+include = ["soundconverter/", "bin/soundconverter.py.in"]
 
 line-length = 88
 
@@ -40,4 +40,4 @@ lint.ignore = ["E501", "N806", "ISC001"]
 # Ignore `E402` (import violations) for bin/soundconverter`.
 # As we are loading and initializing modules dynamically, 
 # we cannot have application import statements at the top level.
-"bin/soundconverter.in" = ["E402"]
+"bin/soundconverter.py.in" = ["E402"]

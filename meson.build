@@ -131,13 +131,18 @@ install_data(
 
 soundconverter_bin_configured = configure_file(
   input: 'bin/soundconverter.py.in',
-  output: 'soundconverter.py',
+  output: 'soundconverter',
   configuration: {
     'GLADEFILE_PATH': join_paths(
       get_option('prefix'),
       get_option('datadir'),
       'soundconverter',
       'soundconverter.glade',
+    ),
+    'LOCALEDIR': join_paths(
+      get_option('prefix'),
+      get_option('datadir'),
+      'locale',
     ),
     'VERSION': meson.project_version(),
   },
@@ -146,7 +151,6 @@ soundconverter_bin_configured = configure_file(
 install_data(
   soundconverter_bin_configured,
   install_dir: get_option('bindir'),
-  rename: ['soundconverter'],
   install_mode: 'r-xr-xr-x',
 )
 
