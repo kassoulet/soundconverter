@@ -22,7 +22,7 @@
 from fnmatch import fnmatch
 from threading import Thread
 
-from gi.repository import GLib, GObject, Gst, GstPbutils
+from gi.repository import GObject, Gst, GstPbutils
 
 from soundconverter.util.formats import filename_denylist
 from soundconverter.util.logger import logger

@@ -1,5 +1,5 @@
 
-include = ["soundconverter/", "bin/soundconverter.py.in"]
+include = ["soundconverter/**/*.py", "bin/soundconverter.py.in"]
 
 line-length = 88
 

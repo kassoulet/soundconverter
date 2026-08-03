@@ -24,7 +24,7 @@ import urllib.parse
 import urllib.request
 from gettext import gettext as _
 
-from gi.repository import GLib, Gtk, Gdk
+from gi.repository import Gdk, GLib, Gtk
 
 from soundconverter.gstreamer.converter import available_elements
 from soundconverter.interface.gladewindow import GladeWindow
