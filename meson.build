@@ -31,6 +31,9 @@ try:
 except ImportError as e:
     print(f"Missing Python module: {e}")
     sys.exit(1)
+except ValueError as e:
+    print(f"Error importing required modules: {e}")
+    sys.exit(1)
 '''
 
 python_check_result = run_command(py_inst, '-c', dep_check_script, check: false)
@@ -127,8 +130,8 @@ install_data(
 )
 
 soundconverter_bin_configured = configure_file(
-  input: 'bin/soundconverter.in',
-  output: 'soundconverter',
+  input: 'bin/soundconverter.py.in',
+  output: 'soundconverter.py',
   configuration: {
     'GLADEFILE_PATH': join_paths(
       get_option('prefix'),
@@ -143,7 +146,7 @@ soundconverter_bin_configured = configure_file(
 install_data(
   soundconverter_bin_configured,
   install_dir: get_option('bindir'),
-  rename: 'soundconverter',
+  rename: ['soundconverter'],
   install_mode: 'r-xr-xr-x',
 )
 

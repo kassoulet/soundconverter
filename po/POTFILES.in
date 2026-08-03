@@ -1,4 +1,4 @@
-bin/soundconverter
+bin/soundconverter.py.in
 data/soundconverter.desktop.in
 data/soundconverter.glade
 soundconverter/util/soundfile.py
