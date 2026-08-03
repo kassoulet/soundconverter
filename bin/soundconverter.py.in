@@ -211,8 +211,11 @@ def parse_command_line():
         "--existing",
         dest="existing",
         metavar="MODE",
-        help=_(
-            f"One of {Converter.SKIP}, {Converter.OVERWRITE} or {Converter.INCREMENT}",
+        help=_("One of %s, %s or %s")
+        % (
+            Converter.SKIP,
+            Converter.OVERWRITE,
+            Converter.INCREMENT,
         ),
         default=Converter.INCREMENT,
     )
