@@ -63,7 +63,9 @@ class NTFSErrorTest(unittest.TestCase):
 
         # also reverse: base Gio plain, file urllib encoded should also be tolerant
         # (via unquote fallback)
-        sf2 = SoundFile("file:///tmp/test%20%282005%29/a.mp3", "file:///tmp/test%20(2005)/")
+        sf2 = SoundFile(
+            "file:///tmp/test%20%282005%29/a.mp3", "file:///tmp/test%20(2005)/"
+        )
         self.assertEqual(sf2.filename, "a.mp3")
 
     def test_soundfile_tolerant_to_ntfs_case_insensitivity(self):
@@ -122,7 +124,9 @@ class NTFSErrorTest(unittest.TestCase):
             files_common = files
             # base via commonprefix would be file:///tmp/.../Lost%20(2005)/
             # if we used old urllib base, it would be %28, but files are plain
-            base_common_urllib = os.path.commonprefix([uri_old_style + "/a.mp3", uri_old_style + "/b.mp3"])
+            base_common_urllib = os.path.commonprefix(
+                [uri_old_style + "/a.mp3", uri_old_style + "/b.mp3"]
+            )
             # commonprefix gives encoded %28 version
             self.assertIn("%28", base_common_urllib)
             if not base_common_urllib.endswith("/"):

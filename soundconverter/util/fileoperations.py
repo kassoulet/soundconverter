@@ -166,22 +166,16 @@ def filename_to_uri(filename, prefix="file://"):
         if match[0].startswith("file://"):
             filename = unquote_filename(match[1])
             # safe "/" and "()" to leave parens plain (matches Gio), others encoded
-            filename = urllib.parse.quote(filename, safe="/()")
-            uri = match[0] + filename
-            return uri
+            return match[0] + urllib.parse.quote(filename, safe="/()")
         # fallback to urllib quoting (preserves non-file scheme/authority)
         filename = unquote_filename(match[1])
-        filename = urllib.parse.quote(filename)
-        uri = match[0] + filename
-        return uri
-    else:
-        # convert to absolute path
-        filename = os.path.realpath(filename)
-        # Use quote with safe "()" to leave parentheses plain, matching Gio's
-        # vfs_walk encoding, while still encoding "'" and "#" etc.
-        # This keeps NTFS handling consistent without needing Gio.
-        uri = prefix + urllib.parse.quote(filename, safe="/()")
-        return uri
+        return match[0] + urllib.parse.quote(filename)
+    # convert to absolute path
+    filename = os.path.realpath(filename)
+    # Use quote with safe "()" to leave parentheses plain, matching Gio's
+    # vfs_walk encoding, while still encoding "'" and "#" etc.
+    # This keeps NTFS handling consistent without needing Gio.
+    return prefix + urllib.parse.quote(filename, safe="/()")
 
 
 # GStreamer gnomevfssrc helpers

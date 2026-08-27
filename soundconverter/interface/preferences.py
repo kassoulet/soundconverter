@@ -81,7 +81,7 @@ class PreferencesDialog(GladeWindow):
             monitor = display.get_monitor(0)
         if monitor is not None:
             self._monitor_height = monitor.get_workarea().height
-            self._map_handler_id = self.dialog.connect('map', self._on_prefs_map)
+            self._map_handler_id = self.dialog.connect("map", self._on_prefs_map)
         self.example = builder.get_object("example_filename")
         self.force_mono = builder.get_object("force_mono")
 

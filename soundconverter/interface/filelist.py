@@ -22,7 +22,6 @@
 import os
 import re
 import time
-import urllib.parse
 from gettext import gettext as _
 from gettext import ngettext
 
@@ -190,7 +189,12 @@ class FileList:
         # Lost (2005) where vfs_walk returns plain parens but
         # filename_to_uri used %28.
         def _norm(u):
-            return re.sub(r"%29", ")", re.sub(r"%28", "(", u, flags=re.IGNORECASE), flags=re.IGNORECASE)
+            return re.sub(
+                r"%29",
+                ")",
+                re.sub(r"%28", "(", u, flags=re.IGNORECASE),
+                flags=re.IGNORECASE,
+            )
 
         files = [_norm(f) for f in files]
         if base:
@@ -227,10 +231,14 @@ class FileList:
                 continue
 
         if not sound_files:
-            logger.error("No valid files could be added (all files skipped due to base mismatch)")
+            logger.error(
+                "No valid files could be added (all files skipped due to base mismatch)"
+            )
             show_error(
                 _("No valid files found!"),
-                _("Files could not be added due to path handling. Check logs for details."),
+                _(
+                    "Files could not be added due to path handling. Check logs for details."
+                ),
             )
             self.window.set_status()
             self.window.progressbarstatus.hide()

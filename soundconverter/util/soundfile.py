@@ -73,7 +73,10 @@ class SoundFile:
             # while filename_to_uri (urllib) used %28.
             def _norm(u):
                 return re.sub(
-                    r"%29", ")", re.sub(r"%28", "(", u, flags=re.IGNORECASE), flags=re.IGNORECASE
+                    r"%29",
+                    ")",
+                    re.sub(r"%28", "(", u, flags=re.IGNORECASE),
+                    flags=re.IGNORECASE,
                 )
 
             uri_norm = _norm(uri)
@@ -86,8 +89,10 @@ class SoundFile:
                     urllib.parse.unquote(base_norm)
                 ):
                     ok = True
-                elif urllib.parse.unquote(uri_norm).lower().startswith(
-                    urllib.parse.unquote(base_norm).lower()
+                elif (
+                    urllib.parse.unquote(uri_norm)
+                    .lower()
+                    .startswith(urllib.parse.unquote(base_norm).lower())
                 ):
                     # NTFS is case-insensitive; allow case mismatch
                     ok = True
