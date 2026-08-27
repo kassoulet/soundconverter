@@ -20,9 +20,10 @@
 # USA
 
 import os
+import re
 import urllib.parse
 
-from gi.repository import Gio, GLib
+from gi.repository import GLib
 
 from soundconverter.util.fileoperations import is_uri, unquote_filename
 
@@ -65,31 +66,28 @@ class SoundFile:
         self.subfolders = None
 
         if base_path:
-            # Normalize uris via Gio to handle different encodings
-            # (e.g. urllib quotes '(' as %28 while Gio leaves it as '(')
-            # and to be tolerant of NTFS case-insensitivity.
-            def _canonical(u):
-                try:
-                    canon = Gio.file_parse_name(u).get_uri()
-                    # Gio strips trailing slash; preserve it if original had it
-                    if u.endswith("/") and not canon.endswith("/"):
-                        canon += "/"
-                    return canon
-                except Exception:
-                    return u
+            # Normalize %28/%29 (parentheses) to plain '(' / ')' for
+            # consistent handling between urllib (%28) and Gio (plain).
+            # This is the root cause of NTFS hang for folders like
+            # Lost (2005) where vfs_walk (Gio) returns plain parens
+            # while filename_to_uri (urllib) used %28.
+            def _norm(u):
+                return re.sub(
+                    r"%29", ")", re.sub(r"%28", "(", u, flags=re.IGNORECASE), flags=re.IGNORECASE
+                )
 
-            canon_uri = _canonical(uri)
-            canon_base = _canonical(base_path)
+            uri_norm = _norm(uri)
+            base_norm = _norm(base_path)
 
             # check prefix tolerant to encoding and case (NTFS)
-            ok = canon_uri.startswith(canon_base)
+            ok = uri_norm.startswith(base_norm)
             if not ok:
-                if urllib.parse.unquote(canon_uri).startswith(
-                    urllib.parse.unquote(canon_base)
+                if urllib.parse.unquote(uri_norm).startswith(
+                    urllib.parse.unquote(base_norm)
                 ):
                     ok = True
-                elif urllib.parse.unquote(canon_uri).lower().startswith(
-                    urllib.parse.unquote(canon_base).lower()
+                elif urllib.parse.unquote(uri_norm).lower().startswith(
+                    urllib.parse.unquote(base_norm).lower()
                 ):
                     # NTFS is case-insensitive; allow case mismatch
                     ok = True
@@ -99,10 +97,12 @@ class SoundFile:
                     f"uri {uri} needs to start with the base_path {base_path}!",
                 )
 
-            # Use canonical forms for storage and slicing to ensure
-            # correct handling when encodings differ (e.g. %28 vs '(').
-            uri = canon_uri
-            base_path = canon_base
+            # Use normalized forms for storage and slicing to handle
+            # %28 vs '(' mismatch correctly. Keep original uri's other
+            # encodings (e.g. %27 for "'") as they are already normalized
+            # for parens only.
+            uri = uri_norm
+            base_path = base_norm
             self.uri = uri
 
             self.base_path = base_path

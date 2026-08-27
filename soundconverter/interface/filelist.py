@@ -20,7 +20,9 @@
 # USA
 
 import os
+import re
 import time
+import urllib.parse
 from gettext import gettext as _
 from gettext import ngettext
 
@@ -161,15 +163,7 @@ class FileList:
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
-                    # Use Gio to get a canonical parent URI so that
-                    # encoding (e.g. '(' vs %28) is consistent with
-                    # vfs_walk results. This prevents NTFS hang where
-                    # urllib and Gio encodings differ.
-                    try:
-                        parent = Gio.file_parse_name(uri).get_parent()
-                        base = parent.get_uri() if parent else os.path.dirname(uri)
-                    except Exception:
-                        base = os.path.dirname(uri)
+                    base = os.path.dirname(uri)
 
                 # get a list of all the files as URIs in
                 # that directory and its subdirectories
@@ -191,26 +185,16 @@ class FileList:
         if len(files) == 0:
             show_error("No files found!", "")
 
-        # Normalize files to canonical Gio URIs for consistent base
-        # handling (e.g. '(' vs %28) and NTFS case differences.
-        normalized_files = []
-        for f in files:
-            try:
-                normalized_files.append(Gio.file_parse_name(f).get_uri())
-            except Exception:
-                normalized_files.append(f)
-        # Use normalized files for base calculation but keep original
-        # for SoundFile if normalization not needed; however SoundFile
-        # itself will canonicalize, so we can use normalized.
-        files = normalized_files
+        # Normalize %28/%29 to plain parentheses for consistent handling
+        # between urllib (%28) and Gio (plain) – the NTFS bug for
+        # Lost (2005) where vfs_walk returns plain parens but
+        # filename_to_uri used %28.
+        def _norm(u):
+            return re.sub(r"%29", ")", re.sub(r"%28", "(", u, flags=re.IGNORECASE), flags=re.IGNORECASE)
 
-        # Normalize base as well if it was set via dirname
+        files = [_norm(f) for f in files]
         if base:
-            try:
-                base = Gio.file_parse_name(base).get_uri() if not base.endswith("://") else base
-                # base currently is without trailing slash (dirname), will add slash below
-            except Exception:
-                pass
+            base = _norm(base)
 
         if not base:
             base = os.path.commonprefix(files)
@@ -219,9 +203,7 @@ class FileList:
                 base = base[0 : base.rfind("/")]
                 base += "/"
         else:
-            # base is from dirname without trailing slash; ensure canonical and add slash
-            if not base.endswith("/"):
-                base += "/"
+            base += "/"
 
         scan_t = time.time()
         logger.info("analysing file integrity")

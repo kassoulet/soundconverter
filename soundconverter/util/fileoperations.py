@@ -158,29 +158,30 @@ def filename_to_uri(filename, prefix="file://"):
     """
     match = split_uri(filename)
     if match[0]:
-        # it's an URI! Normalize it via Gio to have a canonical encoding
-        # (e.g. Gio leaves parentheses unescaped while urllib quotes them).
-        # Using Gio ensures consistency with vfs_walk which also uses Gio.
-        try:
-            return Gio.file_parse_name(filename).get_uri()
-        except Exception:
-            # fallback to urllib quoting
+        # it's an URI! For file:// URIs, be consistent with Gio's vfs_walk
+        # which leaves '(' and ')' unescaped. Use quote with safe="()/" to
+        # keep parentheses plain while still encoding other chars like "'".
+        # For non-file URIs (ssh, ftp, etc.) keep original quoting to preserve
+        # authority/port strings like "another-port" used in tests.
+        if match[0].startswith("file://"):
             filename = unquote_filename(match[1])
-            filename = urllib.parse.quote(filename)
+            # safe "/" and "()" to leave parens plain (matches Gio), others encoded
+            filename = urllib.parse.quote(filename, safe="/()")
             uri = match[0] + filename
             return uri
+        # fallback to urllib quoting (preserves non-file scheme/authority)
+        filename = unquote_filename(match[1])
+        filename = urllib.parse.quote(filename)
+        uri = match[0] + filename
+        return uri
     else:
         # convert to absolute path
         filename = os.path.realpath(filename)
-        # Use Gio to get a canonical URI when possible, to match Gio's
-        # encoding (e.g. parentheses handling) used by vfs_walk.
-        try:
-            return Gio.File.new_for_path(filename).get_uri()
-        except Exception:
-            # fallback: it's a normal path. If it happens to contain %25, it might be
-            # part of the album name or something. ' %20' should become '%20%2520'
-            uri = prefix + urllib.parse.quote(filename)
-            return uri
+        # Use quote with safe "()" to leave parentheses plain, matching Gio's
+        # vfs_walk encoding, while still encoding "'" and "#" etc.
+        # This keeps NTFS handling consistent without needing Gio.
+        uri = prefix + urllib.parse.quote(filename, safe="/()")
+        return uri
 
 
 # GStreamer gnomevfssrc helpers
