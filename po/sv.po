@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundconverter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-02 23:59+0200\n"
+"POT-Creation-Date: 2026-08-07 15:52+0200\n"
 "PO-Revision-Date: 2023-01-23 09:15+0000\n"
 "Last-Translator: GautierPortet <kassoulet@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2024-04-08 15:24+0000\n"
 "X-Generator: Launchpad (build aec24aef7a9042c99ef3e238d8b0ca01df9e1a9f)\n"
 
-#: bin/soundconverter.py.in:124
+#: bin/soundconverter.py.in:134
 #, fuzzy
 msgid ""
 "Convert in batch mode, from the command line, without a graphical user "
@@ -28,57 +28,62 @@ msgstr ""
 "Konvertera i satsläge, från kommandorad, utan ett grafiskt gränssnitt.\n"
 " Du kan använda detta, till exempel från skalskript."
 
-#: bin/soundconverter.py.in:137
+#: bin/soundconverter.py.in:147
 msgid ""
 "Show tags for input files instead of converting them. This disables the "
 "graphical user interface."
 msgstr ""
 
-#: bin/soundconverter.py.in:146
+#: bin/soundconverter.py.in:156
 msgid "Displays additional debug information"
 msgstr "Visar ytterligare felsökningsinformation"
 
-#: bin/soundconverter.py.in:156
+#: bin/soundconverter.py.in:166
 msgid "Force number of concurrent conversions."
 msgstr "Tvinga antalet samtidiga konverteringar."
 
-#: bin/soundconverter.py.in:163
+#: bin/soundconverter.py.in:173
 msgid "Deletes the original file when conversion is done."
 msgstr ""
 
-#: bin/soundconverter.py.in:169
+#: bin/soundconverter.py.in:179
 #, python-format
 msgid "Resamples audio during conversion. Possible values: %(rates)s"
 msgstr ""
 
-#: bin/soundconverter.py.in:186
+#: bin/soundconverter.py.in:196
 msgid ""
 "Set the output format. aac/m4a, flac, mp3, ogg, opus and wav are supported."
 msgstr ""
 
-#: bin/soundconverter.py.in:197
+#: bin/soundconverter.py.in:207
 msgid "One of cbr, abr or vbr (default) for mp3"
 msgstr ""
 
 #: bin/soundconverter.py.in:214
+#, python-format
+msgid "One of %s, %s or %s"
+msgstr ""
+
+#: bin/soundconverter.py.in:227
 msgid "Go recursively into subdirectories"
 msgstr ""
 
-#: bin/soundconverter.py.in:224
+#: bin/soundconverter.py.in:237
 msgid ""
 "Put converted files into a different directory while rebuilding the original "
 "directory structure. This includes the name of the original directory if a "
 "directory was selected."
 msgstr ""
 
-#: bin/soundconverter.py.in:237
+#: bin/soundconverter.py.in:250
 #, python-brace-format
 msgid ""
 "For example {artist}/{album}/{title}. title defaults to the filename if "
 "unset. Unknown tags default to \"Unknown ...\" otherwise."
 msgstr ""
 
-#: bin/soundconverter.py.in:252
+#: bin/soundconverter.py.in:265
 msgid ""
 "Quality of the converted output file. Possible values: vorbis: 0.0 - 1.0; "
 "aac/m4a: 0 - 400; opus: 6 - 510; mp3 vbr: 9 (low) - 0 (high); mp3 abr: 64 - "
@@ -451,10 +456,67 @@ msgstr "Okänd artist"
 msgid "cannot create '{}' folder."
 msgstr "Kan inte skapa mappen \"%s\"."
 
+#: soundconverter/interface/filelist.py:138
+msgid "Scanning files…"
+msgstr ""
+
+#: soundconverter/interface/filelist.py:215
+#, fuzzy
+msgid "Adding Files…"
+msgstr "_Lägg till fil"
+
+#: soundconverter/interface/filelist.py:288
+msgid "The specified file is not supported!"
+msgstr ""
+
+#: soundconverter/interface/filelist.py:289
+msgid "Either because it is broken or not an audio file."
+msgstr ""
+
+#: soundconverter/interface/filelist.py:295
+#, python-brace-format
+msgid "All {} specified files are not supported!"
+msgstr ""
+
+#: soundconverter/interface/filelist.py:296
+msgid "Either because they are broken or not audio files."
+msgstr ""
+
+#: soundconverter/interface/filelist.py:310
+#, python-brace-format
+msgid "One audio file could not be read by GStreamer!"
+msgid_plural "{} audio files could not be read by GStreamer!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: soundconverter/interface/filelist.py:314
+msgid "Check \"Invalid Files\" in the menu for more information."
+msgstr ""
+
+#: soundconverter/interface/filelist.py:333
+#, python-format
+msgid "Tasks done in %s"
+msgstr ""
+
+#: soundconverter/interface/preferences.py:98
+msgid "Available patterns:"
+msgstr "Tillgängliga mönster:"
+
+#: soundconverter/interface/preferences.py:133
 #: soundconverter/interface/ui.py:72
 #, fuzzy
 msgid "Add Folder…"
 msgstr "Lägg till _mapp"
+
+#: soundconverter/interface/preferences.py:256
+#, python-format
+msgid "Into folder %s"
+msgstr "I mappen %s"
+
+#: soundconverter/interface/preferences.py:313
+#, python-format
+msgid "Target bitrate: %s"
+msgstr "Målets bitfrekvens: %s"
 
 #: soundconverter/interface/ui.py:97
 #, fuzzy
@@ -559,17 +621,6 @@ msgstr "Redo"
 #~ "\n"
 #~ "Fel: %s\n"
 #~ "%s\n"
-
-#~ msgid "Available patterns:"
-#~ msgstr "Tillgängliga mönster:"
-
-#, python-format
-#~ msgid "Into folder %s"
-#~ msgstr "I mappen %s"
-
-#, python-format
-#~ msgid "Target bitrate: %s"
-#~ msgstr "Målets bitfrekvens: %s"
 
 #~ msgid "Open a file"
 #~ msgstr "Öppna en fil"
