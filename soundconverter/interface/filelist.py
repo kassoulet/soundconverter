@@ -161,7 +161,15 @@ class FileList:
                 if len(uris) == 1:
                     # if only one folder is passed to the function,
                     # use its parent as base path.
-                    base = os.path.dirname(uri)
+                    # Use Gio to get a canonical parent URI so that
+                    # encoding (e.g. '(' vs %28) is consistent with
+                    # vfs_walk results. This prevents NTFS hang where
+                    # urllib and Gio encodings differ.
+                    try:
+                        parent = Gio.file_parse_name(uri).get_parent()
+                        base = parent.get_uri() if parent else os.path.dirname(uri)
+                    except Exception:
+                        base = os.path.dirname(uri)
 
                 # get a list of all the files as URIs in
                 # that directory and its subdirectories
@@ -183,6 +191,27 @@ class FileList:
         if len(files) == 0:
             show_error("No files found!", "")
 
+        # Normalize files to canonical Gio URIs for consistent base
+        # handling (e.g. '(' vs %28) and NTFS case differences.
+        normalized_files = []
+        for f in files:
+            try:
+                normalized_files.append(Gio.file_parse_name(f).get_uri())
+            except Exception:
+                normalized_files.append(f)
+        # Use normalized files for base calculation but keep original
+        # for SoundFile if normalization not needed; however SoundFile
+        # itself will canonicalize, so we can use normalized.
+        files = normalized_files
+
+        # Normalize base as well if it was set via dirname
+        if base:
+            try:
+                base = Gio.file_parse_name(base).get_uri() if not base.endswith("://") else base
+                # base currently is without trailing slash (dirname), will add slash below
+            except Exception:
+                pass
+
         if not base:
             base = os.path.commonprefix(files)
             if base and not base.endswith("/"):
@@ -190,7 +219,9 @@ class FileList:
                 base = base[0 : base.rfind("/")]
                 base += "/"
         else:
-            base += "/"
+            # base is from dirname without trailing slash; ensure canonical and add slash
+            if not base.endswith("/"):
+                base += "/"
 
         scan_t = time.time()
         logger.info("analysing file integrity")
@@ -204,8 +235,24 @@ class FileList:
         self.discoverers = TaskQueue()
         sound_files = []
         for filename in files:
-            sound_file = SoundFile(filename, base)
-            sound_files.append(sound_file)
+            try:
+                sound_file = SoundFile(filename, base)
+                sound_files.append(sound_file)
+            except ValueError as e:
+                logger.error(f"Skipping file '{filename}': {e}")
+                # keep GUI responsive and avoid hang: count as invalid
+                # we will still show progress for remaining files
+                continue
+
+        if not sound_files:
+            logger.error("No valid files could be added (all files skipped due to base mismatch)")
+            show_error(
+                _("No valid files found!"),
+                _("Files could not be added due to path handling. Check logs for details."),
+            )
+            self.window.set_status()
+            self.window.progressbarstatus.hide()
+            return
 
         add_discoverers(self.discoverers, sound_files)
 

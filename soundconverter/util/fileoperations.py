@@ -158,22 +158,29 @@ def filename_to_uri(filename, prefix="file://"):
     """
     match = split_uri(filename)
     if match[0]:
-        # it's an URI! It can be basically just returned as is. But to make
-        # sure that all characters are URI escaped, the path will be
-        # escaped again. Don't quote the schema.
-        # e.g. a pattern contained file:// in front but inserting tags into it
-        # resulted in whitespaces.
-        # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
-        filename = unquote_filename(match[1])
-        filename = urllib.parse.quote(filename)
-        uri = match[0] + filename
+        # it's an URI! Normalize it via Gio to have a canonical encoding
+        # (e.g. Gio leaves parentheses unescaped while urllib quotes them).
+        # Using Gio ensures consistency with vfs_walk which also uses Gio.
+        try:
+            return Gio.file_parse_name(filename).get_uri()
+        except Exception:
+            # fallback to urllib quoting
+            filename = unquote_filename(match[1])
+            filename = urllib.parse.quote(filename)
+            uri = match[0] + filename
+            return uri
     else:
         # convert to absolute path
         filename = os.path.realpath(filename)
-        # it's a normal path. If it happens to contain %25, it might be
-        # part of the album name or something. ' %20' should become '%20%2520'
-        uri = prefix + urllib.parse.quote(filename)
-    return uri
+        # Use Gio to get a canonical URI when possible, to match Gio's
+        # encoding (e.g. parentheses handling) used by vfs_walk.
+        try:
+            return Gio.File.new_for_path(filename).get_uri()
+        except Exception:
+            # fallback: it's a normal path. If it happens to contain %25, it might be
+            # part of the album name or something. ' %20' should become '%20%2520'
+            uri = prefix + urllib.parse.quote(filename)
+            return uri
 
 
 # GStreamer gnomevfssrc helpers

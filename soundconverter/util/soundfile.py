@@ -20,8 +20,9 @@
 # USA
 
 import os
+import urllib.parse
 
-from gi.repository import GLib
+from gi.repository import Gio, GLib
 
 from soundconverter.util.fileoperations import is_uri, unquote_filename
 
@@ -64,10 +65,46 @@ class SoundFile:
         self.subfolders = None
 
         if base_path:
-            if not uri.startswith(base_path):
+            # Normalize uris via Gio to handle different encodings
+            # (e.g. urllib quotes '(' as %28 while Gio leaves it as '(')
+            # and to be tolerant of NTFS case-insensitivity.
+            def _canonical(u):
+                try:
+                    canon = Gio.file_parse_name(u).get_uri()
+                    # Gio strips trailing slash; preserve it if original had it
+                    if u.endswith("/") and not canon.endswith("/"):
+                        canon += "/"
+                    return canon
+                except Exception:
+                    return u
+
+            canon_uri = _canonical(uri)
+            canon_base = _canonical(base_path)
+
+            # check prefix tolerant to encoding and case (NTFS)
+            ok = canon_uri.startswith(canon_base)
+            if not ok:
+                if urllib.parse.unquote(canon_uri).startswith(
+                    urllib.parse.unquote(canon_base)
+                ):
+                    ok = True
+                elif urllib.parse.unquote(canon_uri).lower().startswith(
+                    urllib.parse.unquote(canon_base).lower()
+                ):
+                    # NTFS is case-insensitive; allow case mismatch
+                    ok = True
+
+            if not ok:
                 raise ValueError(
                     f"uri {uri} needs to start with the base_path {base_path}!",
                 )
+
+            # Use canonical forms for storage and slicing to ensure
+            # correct handling when encodings differ (e.g. %28 vs '(').
+            uri = canon_uri
+            base_path = canon_base
+            self.uri = uri
+
             self.base_path = base_path
             subfolders, filename = os.path.split(uri[len(base_path) :])
             self.subfolders = unquote_filename(subfolders)
