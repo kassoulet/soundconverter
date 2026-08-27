@@ -20,6 +20,7 @@
 # USA
 
 import os
+import re
 import time
 from gettext import gettext as _
 from gettext import ngettext
@@ -183,6 +184,22 @@ class FileList:
         if len(files) == 0:
             show_error("No files found!", "")
 
+        # Normalize %28/%29 to plain parentheses for consistent handling
+        # between urllib (%28) and Gio (plain) – the NTFS bug for
+        # Lost (2005) where vfs_walk returns plain parens but
+        # filename_to_uri used %28.
+        def _norm(u):
+            return re.sub(
+                r"%29",
+                ")",
+                re.sub(r"%28", "(", u, flags=re.IGNORECASE),
+                flags=re.IGNORECASE,
+            )
+
+        files = [_norm(f) for f in files]
+        if base:
+            base = _norm(base)
+
         if not base:
             base = os.path.commonprefix(files)
             if base and not base.endswith("/"):
@@ -204,8 +221,28 @@ class FileList:
         self.discoverers = TaskQueue()
         sound_files = []
         for filename in files:
-            sound_file = SoundFile(filename, base)
-            sound_files.append(sound_file)
+            try:
+                sound_file = SoundFile(filename, base)
+                sound_files.append(sound_file)
+            except ValueError as e:
+                logger.error(f"Skipping file '{filename}': {e}")
+                # keep GUI responsive and avoid hang: count as invalid
+                # we will still show progress for remaining files
+                continue
+
+        if not sound_files:
+            logger.error(
+                "No valid files could be added (all files skipped due to base mismatch)"
+            )
+            show_error(
+                _("No valid files found!"),
+                _(
+                    "Files could not be added due to path handling. Check logs for details."
+                ),
+            )
+            self.window.set_status()
+            self.window.progressbarstatus.hide()
+            return
 
         add_discoverers(self.discoverers, sound_files)
 

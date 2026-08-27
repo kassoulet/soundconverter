@@ -20,6 +20,8 @@
 # USA
 
 import os
+import re
+import urllib.parse
 
 from gi.repository import GLib
 
@@ -64,10 +66,50 @@ class SoundFile:
         self.subfolders = None
 
         if base_path:
-            if not uri.startswith(base_path):
+            # Normalize %28/%29 (parentheses) to plain '(' / ')' for
+            # consistent handling between urllib (%28) and Gio (plain).
+            # This is the root cause of NTFS hang for folders like
+            # Lost (2005) where vfs_walk (Gio) returns plain parens
+            # while filename_to_uri (urllib) used %28.
+            def _norm(u):
+                return re.sub(
+                    r"%29",
+                    ")",
+                    re.sub(r"%28", "(", u, flags=re.IGNORECASE),
+                    flags=re.IGNORECASE,
+                )
+
+            uri_norm = _norm(uri)
+            base_norm = _norm(base_path)
+
+            # check prefix tolerant to encoding and case (NTFS)
+            ok = uri_norm.startswith(base_norm)
+            if not ok:
+                if urllib.parse.unquote(uri_norm).startswith(
+                    urllib.parse.unquote(base_norm)
+                ):
+                    ok = True
+                elif (
+                    urllib.parse.unquote(uri_norm)
+                    .lower()
+                    .startswith(urllib.parse.unquote(base_norm).lower())
+                ):
+                    # NTFS is case-insensitive; allow case mismatch
+                    ok = True
+
+            if not ok:
                 raise ValueError(
                     f"uri {uri} needs to start with the base_path {base_path}!",
                 )
+
+            # Use normalized forms for storage and slicing to handle
+            # %28 vs '(' mismatch correctly. Keep original uri's other
+            # encodings (e.g. %27 for "'") as they are already normalized
+            # for parens only.
+            uri = uri_norm
+            base_path = base_norm
+            self.uri = uri
+
             self.base_path = base_path
             subfolders, filename = os.path.split(uri[len(base_path) :])
             self.subfolders = unquote_filename(subfolders)

@@ -158,22 +158,24 @@ def filename_to_uri(filename, prefix="file://"):
     """
     match = split_uri(filename)
     if match[0]:
-        # it's an URI! It can be basically just returned as is. But to make
-        # sure that all characters are URI escaped, the path will be
-        # escaped again. Don't quote the schema.
-        # e.g. a pattern contained file:// in front but inserting tags into it
-        # resulted in whitespaces.
-        # ' %20' to '  ' to '%20%20'. Don't quote it to '%20%2520'!
+        # it's an URI! For file:// URIs, be consistent with Gio's vfs_walk
+        # which leaves '(' and ')' unescaped. Use quote with safe="()/" to
+        # keep parentheses plain while still encoding other chars like "'".
+        # For non-file URIs (ssh, ftp, etc.) keep original quoting to preserve
+        # authority/port strings like "another-port" used in tests.
+        if match[0].startswith("file://"):
+            filename = unquote_filename(match[1])
+            # safe "/" and "()" to leave parens plain (matches Gio), others encoded
+            return match[0] + urllib.parse.quote(filename, safe="/()")
+        # fallback to urllib quoting (preserves non-file scheme/authority)
         filename = unquote_filename(match[1])
-        filename = urllib.parse.quote(filename)
-        uri = match[0] + filename
-    else:
-        # convert to absolute path
-        filename = os.path.realpath(filename)
-        # it's a normal path. If it happens to contain %25, it might be
-        # part of the album name or something. ' %20' should become '%20%2520'
-        uri = prefix + urllib.parse.quote(filename)
-    return uri
+        return match[0] + urllib.parse.quote(filename)
+    # convert to absolute path
+    filename = os.path.realpath(filename)
+    # Use quote with safe "()" to leave parentheses plain, matching Gio's
+    # vfs_walk encoding, while still encoding "'" and "#" etc.
+    # This keeps NTFS handling consistent without needing Gio.
+    return prefix + urllib.parse.quote(filename, safe="/()")
 
 
 # GStreamer gnomevfssrc helpers

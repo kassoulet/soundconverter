@@ -260,8 +260,7 @@ class TargetNameGenerator:
             raise ValueError("empty filename")
         if is_uri(child):
             raise ValueError(
-                f'expected child "{child}" to be a subfolder, '
-                "path not a complete URI.",
+                f'expected child "{child}" to be a subfolder, path not a complete URI.',
             )
 
         # ensure URI escaping of the parent
