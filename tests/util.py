@@ -41,11 +41,11 @@ def launch(argv=None, bin_path="soundconverter"):
 
     # Use the build directory specified in the environment or default to 'builddir'
     build_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), BUILD_DIR)
-    
+
     # Use local glade file for tests
     source_root = os.path.dirname(os.path.dirname(__file__))
     glade_file = os.path.join(source_root, "data", "soundconverter.glade")
-    
+
     with patch.object(sys, "argv", [""] + [str(arg) for arg in argv]):
         with patch.dict(os.environ, {"SOUNDCONVERTER_GLADE_FILE": glade_file}):
             loader = SourceFileLoader("launcher", os.path.join(build_dir, bin_path))
