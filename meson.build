@@ -122,11 +122,16 @@ install_data(
 )
 
 install_data(
-  files('soundconverter/util/__init__.py', 'soundconverter/util/error.py', 'soundconverter/util/fileoperations.py',
-        'soundconverter/util/formats.py', 'soundconverter/util/formatting.py', 'soundconverter/util/logger.py',
-        'soundconverter/util/namegenerator.py', 'soundconverter/util/settings.py', 'soundconverter/util/soundfile.py',
-        'soundconverter/util/task.py', 'soundconverter/util/taskqueue.py'),
-  install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'util')
+    files('soundconverter/util/__init__.py', 'soundconverter/util/error.py', 'soundconverter/util/fileoperations.py',
+          'soundconverter/util/formats.py', 'soundconverter/util/formatting.py', 'soundconverter/util/logger.py',
+          'soundconverter/util/namegenerator.py', 'soundconverter/util/settings.py', 'soundconverter/util/soundfile.py',
+          'soundconverter/util/task.py', 'soundconverter/util/taskqueue.py'),
+    install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'util')
+)
+
+install_data(
+    files('soundconverter/plugins/__init__.py', 'soundconverter/plugins/gstcbrinfomux.py'),
+    install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'plugins')
 )
 
 soundconverter_bin_configured = configure_file(
