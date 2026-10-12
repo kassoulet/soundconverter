@@ -150,8 +150,8 @@ def create_mp3_encoder():
 
         cmd += properties[mp3_mode] % mp3_quality
 
-        if "xingmux" in available_elements and mp3_mode != "cbr":
-            # add xing header when creating vbr/abr mp3
+        if "xingmux" in available_elements:
+            # add xing header for all mp3 modes (cbr, abr, vbr)
             cmd += "! xingmux "
 
     if "id3mux" in available_elements:
