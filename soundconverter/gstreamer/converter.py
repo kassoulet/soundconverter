@@ -540,3 +540,6 @@ class Converter(Task):
         elif message.type == Gst.MessageType.EOS:
             # Conversion done
             self._conversion_done()
+
+
+# test

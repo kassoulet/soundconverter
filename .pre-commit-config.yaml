@@ -6,3 +6,12 @@ repos:
         args: ["--fix", "soundconverter", "bin/soundconverter.py.in"]
     -   id: ruff-format
         args: ["--check", "soundconverter", "bin/soundconverter.py.in"]
+
+-   repo: local
+    hooks:
+    -   id: pytest-unit
+        name: pytest unit tests
+        entry: python3 -m pytest tests/testcases/ -x -q --tb=short
+        language: system
+        pass_filenames: false
+        types: [python]
