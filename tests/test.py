@@ -30,6 +30,9 @@ Gtk.main_quit = lambda: None
 if __name__ == "__main__":
     args = Gst.init(sys.argv)
 
+    if not isinstance(args, list):
+        args = sys.argv
+
     if len(args) > 1 and os.path.isdir(args[1]):
         util.BUILD_DIR = args[1]
         modules = args[2:]

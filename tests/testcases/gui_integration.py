@@ -587,6 +587,60 @@ class GUIIntegration(unittest.TestCase):
             window = win[0]
             window.prefs.update_example()
 
+    def test_add_file_via_file_picker(self):
+        """Test adding a file through the file picker dialog."""
+        launch()
+        window = win[0]
+
+        test_file = "tests/test data/audio/a.wav"
+        test_uri = filename_to_uri(test_file)
+
+        def select_file_in_chooser():
+            window.addchooser.select_uri(test_uri)
+            window.addchooser.response(Gtk.ResponseType.OK)
+
+        GLib.idle_add(select_file_in_chooser)
+        window.on_add_activate()
+
+        while window.filelist.discoverers is None:
+            gtk_iteration()
+
+        discoverer_queue = window.filelist.discoverers
+        while not discoverer_queue.finished:
+            gtk_iteration()
+
+        self.assertIn(test_uri, window.filelist.filelist)
+
+    def test_add_folder_via_file_picker(self):
+        """Test adding a folder through the folder picker dialog."""
+        launch()
+        window = win[0]
+
+        test_folder = "tests/test data/audio"
+        test_uri = filename_to_uri(test_folder)
+
+        def select_folder_in_chooser():
+            window.addfolderchooser.select_uri(test_uri)
+            window.addfolderchooser.response(Gtk.ResponseType.OK)
+
+        GLib.idle_add(select_folder_in_chooser)
+        window.on_addfolder_activate()
+
+        while window.filelist.discoverers is None:
+            gtk_iteration()
+
+        discoverer_queue = window.filelist.discoverers
+        while not discoverer_queue.finished:
+            gtk_iteration()
+
+        expected_files = [
+            "tests/test data/audio/a.wav",
+            "tests/test data/audio/strângë chàrs фЗ.wav",
+            "tests/test data/audio/b/c.mp3",
+        ]
+        for f in expected_files:
+            self.assertIn(filename_to_uri(f), window.filelist.filelist)
+
 
 if __name__ == "__main__":
     unittest.main()

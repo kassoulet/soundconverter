@@ -397,8 +397,8 @@ class SoundConverterWindow(GladeWindow):
         about = self.aboutdialog
         about.set_property("name", NAME)
         about.set_property("version", VERSION)
+        about.set_property("translator_credits", _("translator-credits"))
         about.set_transient_for(self.widget)
-        # TODO: about.set_property('translator_credits', TRANSLATORS)
         about.run()
 
     def on_aboutdialog_response(self, *args):
