@@ -209,9 +209,8 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings["debug"], False)
         self.assertEqual(settings["recursive"], False)
         self.assertTrue(os.path.isfile("tests/tmp/a.mp3"))
-        # lameinfomux writes an Info frame, with which the discoverer reports
-        # no bitrate, like for vbr and abr
-        self.assertEqual(self.get_bitrate("tests/tmp/a.mp3"), 0)
+        # lameinfomux writes an Info frame. Depending on the gstreamer version
+        # the discoverer then reports no bitrate, so read the frame header.
         with open("tests/tmp/a.mp3", "rb") as f:
             data = f.read()
         # skip the id3v2 tag, then the Info frame comes first
