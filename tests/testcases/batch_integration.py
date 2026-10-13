@@ -33,6 +33,7 @@ from soundconverter.gstreamer.converter import available_elements
 from soundconverter.gstreamer.discoverer import Discoverer
 from soundconverter.interface.batch import cli_convert
 from soundconverter.interface.mainloop import gtk_iteration
+from soundconverter.plugins.gstlameinfomux import parse_frame
 from soundconverter.util.fileoperations import filename_to_uri
 from soundconverter.util.settings import get_gio_settings, settings
 from soundconverter.util.soundfile import SoundFile
@@ -208,7 +209,18 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings["debug"], False)
         self.assertEqual(settings["recursive"], False)
         self.assertTrue(os.path.isfile("tests/tmp/a.mp3"))
-        self.assertEqual(self.get_bitrate("tests/tmp/a.mp3"), 256)
+        # lameinfomux writes an Info frame, with which the discoverer reports
+        # no bitrate, like for vbr and abr
+        self.assertEqual(self.get_bitrate("tests/tmp/a.mp3"), 0)
+        with open("tests/tmp/a.mp3", "rb") as f:
+            data = f.read()
+        # skip the id3v2 tag, then the Info frame comes first
+        start = 0
+        if data.startswith(b"ID3"):
+            size = data[6:10]
+            start = 10 + ((size[0] << 21) | (size[1] << 14) | (size[2] << 7) | size[3])
+        self.assertEqual(parse_frame(data[start:]).bitrate, 256)
+        self.assertEqual(data[start + 36 : start + 40], b"Info")
 
     def test_non_recursive_with_folder(self):
         # it should exit with code 1, because no files are supplied

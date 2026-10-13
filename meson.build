@@ -130,7 +130,7 @@ install_data(
 )
 
 install_data(
-    files('soundconverter/plugins/__init__.py', 'soundconverter/plugins/gstcbrinfomux.py'),
+    files('soundconverter/plugins/__init__.py', 'soundconverter/plugins/gstlameinfomux.py'),
     install_dir: join_paths(py_inst.get_install_dir(), 'soundconverter', 'plugins')
 )
 

@@ -25,6 +25,7 @@ from gettext import gettext as _
 
 from gi.repository import Gio, GLib, Gst
 
+from soundconverter.plugins.gstlameinfomux import register_element
 from soundconverter.util.error import show_error
 from soundconverter.util.fileoperations import (
     beautify_uri,
@@ -66,7 +67,7 @@ def find_available_elements():
         ("id3mux", "MP3 tags", "mp3-id-tags", BAD),
         ("id3v2mux", "MP3 tags", "mp3-id-tags", GOOD),
         ("xingmux", "VBR tags", "mp3-vbr-tags", UGLY),
-        ("cbrinfomux", "CBR Info tags", "mp3-cbr-tags", "local"),
+        ("lameinfomux", "CBR Info tags", "mp3-cbr-tags", "local"),
         ("lamemp3enc", "MP3", "mp3-enc", GOOD),
         ("mp4mux", "AAC", "aac-mux", GOOD),
         ("opusenc", "Opus", "opus-enc", BASE),
@@ -102,133 +103,8 @@ def find_available_elements():
         available_elements.discard("avenc_wmav2")
 
 
+register_element()
 find_available_elements()
-
-
-def _add_lame_header_cbr(filepath):
-    """Add a LAME Info tag to a CBR MP3 file for gapless playback."""
-    # Convert URI to local path if needed
-    if filepath.startswith("file://"):
-        from urllib.parse import unquote
-
-        filepath = unquote(filepath[7:])
-
-    logger.debug(f"_add_lame_header_cbr called for {filepath}")
-    try:
-        with open(filepath, "rb") as f:
-            data = f.read()
-    except Exception as e:
-        logger.error(f"Could not read MP3 file for LAME header: {e}")
-        return
-
-    offset = 0
-    if data.startswith(b"ID3"):
-        size = (data[6] << 21) | (data[7] << 14) | (data[8] << 7) | data[9]
-        offset = 10 + size
-        if data[5] & 0x10:
-            offset += 10
-
-    # Find first MPEG frame
-    frame_offset = None
-    for i in range(offset, min(offset + 4096, len(data) - 4)):
-        if data[i] == 0xFF and (data[i + 1] & 0xE0) == 0xE0:
-            frame_offset = i
-            break
-
-    if frame_offset is None:
-        logger.debug(f"No MPEG frame found in {filepath}")
-        return
-
-    # Parse frame header
-    header_bytes = data[frame_offset : frame_offset + 4]
-    if len(header_bytes) < 4:
-        return
-    header = int.from_bytes(header_bytes, "big")
-
-    bitrate_index = (header >> 12) & 0xF
-    sample_rate_index = (header >> 10) & 0x3
-    padding_bit = (header >> 9) & 0x1
-    mode = (header >> 6) & 0x3
-
-    bitrate_table = [
-        0,
-        32,
-        40,
-        48,
-        56,
-        64,
-        80,
-        96,
-        112,
-        128,
-        160,
-        192,
-        224,
-        256,
-        320,
-        0,
-    ]
-    sample_rate_table = [44100, 48000, 32000, 0]
-
-    actual_bitrate = bitrate_table[bitrate_index]
-    actual_sample_rate = sample_rate_table[sample_rate_index]
-
-    if actual_bitrate == 0 or actual_sample_rate == 0:
-        logger.debug(f"Invalid bitrate/sample rate in {filepath}")
-        return
-
-    frame_size_bytes = (144 * actual_bitrate * 1000) // actual_sample_rate + padding_bit
-
-    # Check if there's already a Xing or Info header in the first frame
-    first_frame_end = min(frame_offset + frame_size_bytes, len(data))
-    for i in range(frame_offset + 4, first_frame_end - 3):
-        if data[i : i + 4] in (b"Xing", b"Info"):
-            logger.debug(
-                f"MP3 already has a {data[i : i + 4].decode()} header at offset {i}, skipping"
-            )
-            return
-
-    audio_data_size = len(data) - frame_offset
-    frame_count = audio_data_size // frame_size_bytes
-
-    samples_per_frame = 1152
-    encoder_delay = 528
-    total_samples = frame_count * samples_per_frame
-    encoder_padding = (
-        samples_per_frame - (total_samples % samples_per_frame)
-    ) % samples_per_frame
-
-    logger.debug(
-        f"MP3 info: bitrate={actual_bitrate}, sr={actual_sample_rate}, frames={frame_count}, delay={encoder_delay}, padding={encoder_padding}"
-    )
-
-    info_tag = bytearray()
-    info_tag += b"Info"
-    info_tag += (0x0000000F).to_bytes(4, "big")
-    info_tag += frame_count.to_bytes(4, "big")
-    info_tag += audio_data_size.to_bytes(4, "big")
-    info_tag += b"\x00" * 100
-    info_tag += b"\x00"
-    info_tag += b"LAME3.100"
-    info_tag += encoder_delay.to_bytes(2, "big")
-    info_tag += encoder_padding.to_bytes(2, "big")
-    info_tag += b"\x00\x00"
-    info_tag += b"\x00"
-    info_tag += b"\x00"
-    info_tag += b"\x00"
-    info_tag += b"\x00\x00\x00\x00"
-    info_tag += b"\x00"
-    info_tag += b"\x00\x00\x00"
-
-    insert_pos = frame_offset + 4
-    new_data = data[:insert_pos] + info_tag + data[insert_pos:]
-
-    try:
-        with open(filepath, "wb") as f:
-            f.write(new_data)
-        logger.debug(f"Added LAME header to {filepath}")
-    except Exception as e:
-        logger.error(f"Could not write LAME header to {filepath}: {e}")
 
 
 def create_flac_encoder():
@@ -277,9 +153,9 @@ def create_mp3_encoder():
 
         cmd += properties[mp3_mode] % mp3_quality
 
-        if mp3_mode == "cbr" and "cbrinfomux" in available_elements:
+        if mp3_mode == "cbr" and "lameinfomux" in available_elements:
             # add LAME Info header for CBR MP3 gapless playback
-            cmd += "! cbrinfomux "
+            cmd += "! lameinfomux "
         elif "xingmux" in available_elements and mp3_mode != "cbr":
             # add xing header when creating vbr/abr mp3
             cmd += "! xingmux "
@@ -368,7 +244,6 @@ class Converter(Task):
         self.force_mono = settings.get_boolean("force-mono")
         self.replace_messy_chars = settings.get_boolean("replace-messy-chars")
         self.delete_original = settings.get_boolean("delete-original")
-        self.mp3_mode = settings.get_string("mp3-mode")
 
         # State
         self.command = None
@@ -539,10 +414,6 @@ class Converter(Task):
         logger.info(
             f"converted '{beautify_uri(input_uri)}' to '{beautify_uri(newname)}'",
         )
-
-        # Add LAME Info header for CBR MP3 gapless playback
-        if self.output_mime_type == "audio/mpeg" and self.mp3_mode == "cbr":
-            _add_lame_header_cbr(newname)
 
         # finish up the target file
         try:

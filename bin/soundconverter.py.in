@@ -70,15 +70,6 @@ except (ImportError, ValueError) as error:
     print(f'{NAME} needs GTK >= 3.0 (Error: "{error}")')
     sys.exit(1)
 
-# Prepend local plugins directory to GST_PLUGIN_PATH for cbrinfomux
-plugin_dir = os.path.join(os.path.dirname(__file__), "..", "soundconverter", "plugins")
-plugin_dir = os.path.abspath(plugin_dir)
-existing = os.environ.get("GST_PLUGIN_PATH", "")
-if existing:
-    os.environ["GST_PLUGIN_PATH"] = f"{plugin_dir}:{existing}"
-else:
-    os.environ["GST_PLUGIN_PATH"] = plugin_dir
-
 # Gst.init takes those args it knows from sys.argv and returns the remaining.
 # For args compatible to gstreamer, see `gst-launch-1.0 --help-gst`
 args = Gst.init(sys.argv)
