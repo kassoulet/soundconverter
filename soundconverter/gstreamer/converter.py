@@ -67,7 +67,7 @@ def find_available_elements():
         ("id3mux", "MP3 tags", "mp3-id-tags", BAD),
         ("id3v2mux", "MP3 tags", "mp3-id-tags", GOOD),
         ("xingmux", "VBR tags", "mp3-vbr-tags", UGLY),
-        ("lameinfomux", "CBR Info tags", "mp3-cbr-tags", "local"),
+        ("lameinfomux", "CBR Info tags", "mp3-cbr-tags", "python3-gst-1.0"),
         ("lamemp3enc", "MP3", "mp3-enc", GOOD),
         ("mp4mux", "AAC", "aac-mux", GOOD),
         ("opusenc", "Opus", "opus-enc", BASE),

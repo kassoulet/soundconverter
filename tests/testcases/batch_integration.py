@@ -209,6 +209,8 @@ class BatchIntegration(unittest.TestCase):
         self.assertEqual(settings["debug"], False)
         self.assertEqual(settings["recursive"], False)
         self.assertTrue(os.path.isfile("tests/tmp/a.mp3"))
+        if "lameinfomux" not in available_elements:
+            self.skipTest("lameinfomux needs gst-python")
         # lameinfomux writes an Info frame. Depending on the gstreamer version
         # the discoverer then reports no bitrate, so read the frame header.
         with open("tests/tmp/a.mp3", "rb") as f:

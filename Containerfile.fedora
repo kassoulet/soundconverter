@@ -29,6 +29,7 @@ RUN dnf install -y \
     opus-tools \
     gstreamer1-plugin-libav \
     python3-gobject \
+    python3-gstreamer1 \
     xorg-x11-server-Xvfb \
     xprop \
     xwininfo \
